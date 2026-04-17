@@ -1,0 +1,82 @@
+<nav class="sidebar">
+  <div class="sidebar__logo">
+    <coherence-logo size="md" variant="color" href="/" />
+  </div>
+
+  <ul class="sidebar__nav">
+    <li class="sidebar__section-label">Foundations</li>
+    <li>
+      <a class="sidebar__link" routerLink="/foundations" routerLinkActive="sidebar__link--active" [routerLinkActiveOptions]="{ exact: true }">
+        Overview
+      </a>
+    </li>
+    <li>
+      <a class="sidebar__sub-link" routerLink="/foundations/typography" routerLinkActive="sidebar__sub-link--active">
+        Typography
+      </a>
+    </li>
+    <li>
+      <a class="sidebar__sub-link" routerLink="/foundations/spacing" routerLinkActive="sidebar__sub-link--active">
+        Spacing
+      </a>
+    </li>
+    <li>
+      <a class="sidebar__sub-link" routerLink="/foundations/motion" routerLinkActive="sidebar__sub-link--active">
+        Motion
+      </a>
+    </li>
+
+    <li class="sidebar__section-label">Tokens</li>
+    <li>
+      <a class="sidebar__link" routerLink="/tokens" routerLinkActive="sidebar__link--active" [routerLinkActiveOptions]="{ exact: true }">
+        Overview
+      </a>
+    </li>
+    <li>
+      <a class="sidebar__sub-link" routerLink="/tokens/colors" routerLinkActive="sidebar__sub-link--active">
+        Colors
+      </a>
+    </li>
+    <li>
+      <a class="sidebar__sub-link" routerLink="/tokens/dimensions" routerLinkActive="sidebar__sub-link--active">
+        Dimensions
+      </a>
+    </li>
+
+    <li class="sidebar__section-label">Components</li>
+    <li>
+      <a class="sidebar__link" routerLink="/components" routerLinkActive="sidebar__link--active" [routerLinkActiveOptions]="{ exact: true }">
+        All components
+      </a>
+    </li>
+    <li>
+      <a class="sidebar__sub-link" routerLink="/components/button" routerLinkActive="sidebar__sub-link--active">
+        Button
+      </a>
+    </li>
+    <li>
+      <a class="sidebar__sub-link" routerLink="/components/input" routerLinkActive="sidebar__sub-link--active">
+        Input
+      </a>
+    </li>
+    <li>
+      <a class="sidebar__sub-link" routerLink="/components/select" routerLinkActive="sidebar__sub-link--active">
+        Select
+      </a>
+    </li>
+
+    <li class="sidebar__section-label">Charts</li>
+    <li>
+      <a class="sidebar__link" routerLink="/charts" routerLinkActive="sidebar__link--active">
+        Chart types
+      </a>
+    </li>
+
+    <li class="sidebar__section-label">Flows</li>
+    <li>
+      <a class="sidebar__link" routerLink="/flows" routerLinkActive="sidebar__link--active">
+        Composed flows
+      </a>
+    </li>
+  </ul>
+</nav>

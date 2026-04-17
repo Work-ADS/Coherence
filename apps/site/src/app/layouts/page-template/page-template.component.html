@@ -1,0 +1,48 @@
+<!-- Section 1: Editorial hero band -->
+<header class="pt-hero">
+  @if (eyebrow()) {
+    <span class="pt-hero__eyebrow">{{ eyebrow() }}</span>
+  }
+  <h1 class="pt-hero__title">{{ title() }}</h1>
+  @if (role()) {
+    <p class="pt-hero__role">{{ role() }}</p>
+  }
+</header>
+
+<!-- Section 2: Why this exists -->
+<section class="pt-section pt-why">
+  <ng-content select="[why]" />
+</section>
+
+<!-- Section 3: Visual exhibit -->
+<section class="pt-section pt-exhibit">
+  <ng-content select="[exhibit]" />
+</section>
+
+<!-- Section 4: How to use -->
+<section class="pt-section pt-how-to">
+  <ng-content select="[how-to]" />
+</section>
+
+<!-- Section 5: Code examples -->
+<section class="pt-section pt-code">
+  <ng-content select="[code]" />
+</section>
+
+<!-- Section 6: Rules / do-don't -->
+<section class="pt-section pt-rules">
+  <ng-content select="[rules]" />
+</section>
+
+<!-- Section 7: Related footer -->
+<footer class="pt-related">
+  <ng-content select="[related]" />
+  @if (downloadPath()) {
+    <div class="pt-related__download">
+      <coherence-download-md
+        [filePath]="downloadPath()"
+        [label]="downloadLabel()"
+      />
+    </div>
+  }
+</footer>

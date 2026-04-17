@@ -1,0 +1,1 @@
+This is the Coherence DS repo. First read docs/plan.md. Agent lineup in docs/agents/ — **Planner is live** (session harness over docs/brief-template.md; invoke when starting or activating a brief). Skills in docs/component-skill.md and docs/token-skill.md.

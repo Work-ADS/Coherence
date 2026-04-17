@@ -1,0 +1,12 @@
+.coherence-logo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  // height is set inline via [style.height] from the size input
+
+  &__img {
+    display: block;
+    height: 100%;
+    width: auto;
+  }
+}

@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'styles/tokens.css';
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,300;8..144,400;8..144,500;8..144,600;8..144,700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
+  color: var(--color-neutral-900);
+  background: var(--canvas-base);
+  line-height: 1.5;
+}
+
+// ---------------------------------------------------------------------------
+// Motion rule 7: prefers-reduced-motion — shorten to 0.01ms, don't disable.
+// ---------------------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Editorial hero band — section (1) of the 7-section page template
+// Full-width, airy vertical rhythm, Roboto Serif display heading.
+// ---------------------------------------------------------------------------
+.page-hero {
+  padding: var(--space-3xl) 0 var(--space-2xl);
+  border-bottom: var(--border-thin) solid var(--color-neutral-200);
+  margin-bottom: var(--space-2xl);
+
+  &__title {
+    font-family: 'Roboto Serif', serif;
+    font-size: 40px; /* TODO(type-scale) */
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--color-neutral-900);
+    margin-bottom: var(--space-sm);
+  }
+
+  &__role {
+    font-family: 'Roboto Serif', serif;
+    font-size: 18px; /* TODO(type-scale) */
+    font-weight: 400;
+    color: var(--color-neutral-500);
+    max-width: var(--content-sm);
+    line-height: 1.6;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Related footer — section (7) of the 7-section page template
+// Houses download buttons and cross-links.
+// ---------------------------------------------------------------------------
+.page-related {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-xl);
+  border-top: var(--border-thin) solid var(--color-neutral-200);
+
+  &__heading {
+    font-family: 'Roboto Serif', serif;
+    font-size: 14px; /* TODO(type-scale) */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-neutral-400);
+    margin-bottom: var(--space-md);
+  }
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Sidebar nav link — used in app shell sidebar
+// ---------------------------------------------------------------------------
+.nav-link {
+  @apply flex items-center w-full px-3 py-1 rounded-sm
+         text-sm
+         transition-colors;
+  color: var(--canvas-fg);
+}
+.nav-link:hover {
+  background: var(--surface-muted);
+}
+.nav-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--border-focus);
+}
+
+// ---------------------------------------------------------------------------
+// Page-level utilities used by all pages
+// ---------------------------------------------------------------------------
+.page {
+  max-width: var(--content-md);
+
+  &__title {
+    font-family: 'Roboto Serif', serif;
+    font-size: 32px; /* TODO(type-scale) */
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-xs);
+  }
+
+  &__hero {
+    font-size: 18px; /* TODO(type-scale) */
+    color: var(--color-neutral-500);
+    margin-bottom: var(--space-xl);
+  }
+
+  &__desc {
+    font-size: 15px; /* TODO(type-scale) */
+    color: var(--color-neutral-600);
+    margin-bottom: var(--space-lg);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+  }
+
+  &__card {
+    background: var(--color-neutral-50);
+    border: var(--border-thin) solid var(--color-neutral-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+
+    h3 {
+      font-family: 'Roboto Serif', serif;
+      font-size: 16px; /* TODO(type-scale) */
+      font-weight: 600;
+      margin-bottom: var(--space-2xs);
+    }
+
+    p {
+      font-size: 13px; /* TODO(type-scale) */
+      color: var(--color-neutral-600);
+    }
+  }
+}

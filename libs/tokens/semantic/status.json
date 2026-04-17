@@ -1,0 +1,44 @@
+{
+  "status": {
+    "draft": {
+      "bg":  { "value": "{color.neutral.100}" },
+      "fg":  { "value": "{color.neutral.700}" },
+      "dot": { "value": "{color.neutral.500}" }
+    },
+    "pending": {
+      "bg":  { "value": "{color.amber.100}" },
+      "fg":  { "value": "{color.amber.800}" },
+      "dot": { "value": "{color.amber.500}" }
+    },
+    "approved": {
+      "bg":  { "value": "{color.green.100}" },
+      "fg":  { "value": "{color.green.800}" },
+      "dot": { "value": "{color.green.500}" }
+    },
+    "rejected": {
+      "bg":  { "value": "{color.red.100}" },
+      "fg":  { "value": "{color.red.800}" },
+      "dot": { "value": "{color.red.500}" }
+    },
+    "executed": {
+      "bg":  { "value": "{color.action.100}" },
+      "fg":  { "value": "{color.action.800}" },
+      "dot": { "value": "{color.action.500}" }
+    },
+    "cancelled": {
+      "bg":  { "value": "{color.neutral.100}" },
+      "fg":  { "value": "{color.neutral.600}" },
+      "dot": { "value": "{color.neutral.400}" }
+    },
+    "in-review": {
+      "bg":  { "value": "{color.action.100}" },
+      "fg":  { "value": "{color.action.800}" },
+      "dot": { "value": "{color.action.500}" }
+    },
+    "archived": {
+      "bg":  { "value": "{color.neutral.100}" },
+      "fg":  { "value": "{color.neutral.600}" },
+      "dot": { "value": "{color.neutral.400}" }
+    }
+  }
+}

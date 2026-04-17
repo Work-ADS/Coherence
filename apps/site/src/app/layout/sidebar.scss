@@ -1,0 +1,80 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: var(--dim-256);
+  height: 100vh;
+  background: var(--color-neutral-50);
+  border-right: var(--border-thin) solid var(--color-neutral-200);
+  padding: var(--space-lg) 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    padding: var(--space-md);
+    border-bottom: var(--border-thin) solid var(--color-neutral-200);
+    margin-bottom: var(--space-md);
+  }
+
+  &__nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__section-label {
+    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
+    font-size: 11px; /* TODO(type-scale) */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-neutral-400);
+    padding: var(--space-md) var(--space-lg) var(--space-2xs);
+  }
+
+  &__link {
+    display: block;
+    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
+    font-size: 14px; /* TODO(type-scale) */
+    color: var(--color-neutral-500);
+    text-decoration: none;
+    padding: var(--space-2xs) var(--space-lg);
+    /* Rule 1: container-first. Rule 3: ease-out for enter. Rule 4: 150ms chip. */
+    transition: color 150ms ease-out, background-color 150ms ease-out; /* TODO(motion-tokens) */
+
+    &:hover {
+      color: var(--color-neutral-900);
+      background-color: var(--color-neutral-100);
+    }
+
+    &--active {
+      color: var(--color-neutral-900);
+      font-weight: 500;
+      background-color: var(--color-neutral-200);
+    }
+  }
+
+  &__sub-link {
+    display: block;
+    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
+    font-size: 13px; /* TODO(type-scale) */
+    color: var(--color-neutral-400);
+    text-decoration: none;
+    padding: var(--space-2xs) var(--space-lg) var(--space-2xs) var(--space-2xl);
+    /* Rule 1: container-first. Rule 3: ease-out for enter. Rule 4: 150ms chip. */
+    transition: color 150ms ease-out, background-color 150ms ease-out; /* TODO(motion-tokens) */
+
+    &:hover {
+      color: var(--color-neutral-900);
+      background-color: var(--color-neutral-100);
+    }
+
+    &--active {
+      color: var(--color-neutral-900);
+      font-weight: 500;
+    }
+  }
+}

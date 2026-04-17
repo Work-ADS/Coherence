@@ -1,0 +1,14 @@
+{
+  "control": {
+    "bg":       { "value": "{color.base.white}", "comment": "Input/select background" },
+    "fg":       { "value": "{color.neutral.900}", "comment": "Input text color" },
+    "border":   { "value": "{color.neutral.300}", "comment": "Input border at rest" },
+    "placeholder": { "value": "{color.neutral.400}", "comment": "Placeholder text" },
+    "disabled-bg": { "value": "{color.neutral.100}", "comment": "Disabled input bg" },
+    "disabled-fg": { "value": "{color.neutral.400}", "comment": "Disabled input text" },
+    "h-sm":     { "value": "{dim.32}" },
+    "h-md":     { "value": "{dim.40}" },
+    "h-lg":     { "value": "{dim.48}" },
+    "h-xl":     { "value": "{dim.56}" }
+  }
+}

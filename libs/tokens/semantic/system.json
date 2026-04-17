@@ -1,0 +1,24 @@
+{
+  "system": {
+    "error": {
+      "bg":  { "value": "{color.red.100}" },
+      "fg":  { "value": "{color.red.800}" },
+      "base": { "value": "{color.red.500}" }
+    },
+    "warning": {
+      "bg":  { "value": "{color.amber.100}" },
+      "fg":  { "value": "{color.amber.800}" },
+      "base": { "value": "{color.amber.500}" }
+    },
+    "success": {
+      "bg":  { "value": "{color.green.100}" },
+      "fg":  { "value": "{color.green.800}" },
+      "base": { "value": "{color.green.500}" }
+    },
+    "info": {
+      "bg":  { "value": "{color.action.100}" },
+      "fg":  { "value": "{color.action.800}" },
+      "base": { "value": "{color.action.500}" }
+    }
+  }
+}

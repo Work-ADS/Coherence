@@ -1,0 +1,20 @@
+@if (href()) {
+  <a
+    class="coherence-logo"
+    [href]="href()"
+    role="img"
+    aria-label="AFI"
+    [style.height]="heightVar()"
+  >
+    <img class="coherence-logo__img" [src]="src()" alt="" />
+  </a>
+} @else {
+  <span
+    class="coherence-logo"
+    role="img"
+    aria-label="AFI"
+    [style.height]="heightVar()"
+  >
+    <img class="coherence-logo__img" [src]="src()" alt="" />
+  </span>
+}

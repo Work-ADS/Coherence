@@ -1,0 +1,88 @@
+// ---------------------------------------------------------------------------
+// Page template — 7-section layout
+// plan.md item 6: content max-width content-lg (1024) for reading rhythm.
+// ---------------------------------------------------------------------------
+
+:host {
+  display: block;
+  max-width: var(--content-lg);
+}
+
+// ---------------------------------------------------------------------------
+// Section 1: Hero band
+// Roboto Serif display, 48px/600/1.1 per spec. TODO(type-scale)
+// ---------------------------------------------------------------------------
+.pt-hero {
+  padding-bottom: var(--space-2xl);
+  margin-bottom: var(--space-xl);
+  border-bottom: var(--border-thin) solid var(--color-neutral-200); /* TODO(semantic-border) */
+
+  &__eyebrow {
+    display: block;
+    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
+    font-size: 13px; /* TODO(type-scale) */
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-action-500);
+    margin-bottom: var(--space-xs);
+  }
+
+  &__title {
+    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
+    font-size: 48px; /* TODO(type-scale) — spec: 48px/600/1.1 */
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--color-neutral-900);
+    margin: 0;
+  }
+
+  &__role {
+    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
+    font-size: 18px; /* TODO(type-scale) */
+    font-weight: 400;
+    color: var(--color-neutral-500);
+    max-width: var(--content-sm);
+    line-height: 1.6;
+    margin-top: var(--space-sm);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Section containers — collapsed when empty via :empty
+// ---------------------------------------------------------------------------
+.pt-section {
+  margin-bottom: var(--space-2xl);
+
+  &:empty {
+    display: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Section 2: Why — single paragraph, max-width content-sm
+// ---------------------------------------------------------------------------
+.pt-why {
+  max-width: var(--content-sm);
+  font-size: 16px; /* TODO(type-scale) */
+  line-height: 1.7;
+  color: var(--color-neutral-600);
+}
+
+// ---------------------------------------------------------------------------
+// Section 7: Related footer
+// ---------------------------------------------------------------------------
+.pt-related {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-xl);
+  border-top: var(--border-thin) solid var(--color-neutral-200); /* TODO(semantic-border) */
+
+  &:empty {
+    display: none;
+  }
+
+  &__download {
+    margin-top: var(--space-md);
+  }
+}

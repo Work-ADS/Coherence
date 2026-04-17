@@ -1,0 +1,13 @@
+{
+  "name": "coherence",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Coherence — AFI Design System",
+  "scripts": {
+    "start": "npm run build:tokens && npm start --prefix apps/site",
+    "build": "npm run build:tokens && npm run build --prefix apps/site",
+    "build:tokens": "cd libs/tokens && node build.mjs",
+    "dev": "npm run build:tokens && npm start --prefix apps/site",
+    "prepare": "husky"
+  }
+}

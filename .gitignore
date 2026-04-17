@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.angular/
+.playwright-mcp/
+*.png
+*.jpg
+*.jpeg
+.DS_Store

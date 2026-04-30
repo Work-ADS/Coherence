@@ -1,11 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
-import { SelectComponent } from '@coherence/ui';
+import {
+  SelectComponent,
+  CheckboxComponent,
+  RadioGroupComponent,
+  RadioGroupItemComponent,
+} from '@coherence/ui';
 import type { SelectSize, SelectOption } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../components/doc-page-layout';
@@ -44,6 +44,9 @@ const SELECT_TOKENS: TokenRow[] = [
     CodeBlockComponent,
     TokensTableComponent,
     SelectComponent,
+    CheckboxComponent,
+    RadioGroupComponent,
+    RadioGroupItemComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -56,36 +59,47 @@ const SELECT_TOKENS: TokenRow[] = [
     >
       <!-- ==================== CODE TAB ==================== -->
       <div slot="code-tab">
-
         <!-- Playground -->
         <afi-component-playground [code]="codeSnippet()">
           <div slot="controls" class="space-y-space-4">
             <!-- Size -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Tamaño</legend>
+            <afi-radio-group legend="Tamaño">
               @for (s of sizes; track s) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input type="radio" name="size" [value]="s" [checked]="size() === s" (change)="size.set(s)" class="accent-action" />
-                  {{ s }}
-                </label>
+                <afi-radio-group-item
+                  [value]="s"
+                  [label]="s"
+                  [selected]="size() === s"
+                  (selectedChange)="$any(size).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- Options -->
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Opciones</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="disabled()" (change)="disabled.set(!disabled())" class="accent-action" />
-                disabled
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="required()" (change)="required.set(!required())" class="accent-action" />
-                required
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="hasError()" (change)="hasError.set(!hasError())" class="accent-action" />
-                error
-              </label>
+              <afi-checkbox
+                [checked]="disabled()"
+                (checkedChange)="disabled.set($event)"
+                label="disabled"
+                size="sm"
+                [compact]="true"
+              />
+              <afi-checkbox
+                [checked]="required()"
+                (checkedChange)="required.set($event)"
+                label="required"
+                size="sm"
+                [compact]="true"
+              />
+              <afi-checkbox
+                [checked]="hasError()"
+                (checkedChange)="hasError.set($event)"
+                label="error"
+                size="sm"
+                [compact]="true"
+              />
             </fieldset>
           </div>
 
@@ -108,51 +122,65 @@ const SELECT_TOKENS: TokenRow[] = [
 
         <!-- Importar -->
         <section>
-          <h2 id="importar" class="text-section text-canvas-fg mb-space-4">Importar</h2>
+          <h2 id="importar" class="text-section text-canvas-fg mb-space-6">Importar</h2>
           <afi-code-block [code]="importCode" language="ts" />
         </section>
 
         <!-- Uso -->
         <section>
-          <h2 id="uso" class="text-section text-canvas-fg mb-space-4">Uso</h2>
+          <h2 id="uso" class="text-section text-canvas-fg mb-space-6">Uso</h2>
 
-          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo usar</h3>
+          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Listas de 5–15 opciones predefinidas (países, roles, categorías).</li>
             <li>Formularios donde el espacio vertical es limitado.</li>
             <li>Cuando el usuario debe elegir exactamente una opción.</li>
           </ul>
 
-          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo NO usar</h3>
+          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo NO usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Menos de 4 opciones — use radio buttons.</li>
             <li>Más de 20 opciones — use un autocomplete o combobox con búsqueda.</li>
             <li>Selección múltiple — use checkboxes o un multiselect dedicado.</li>
           </ul>
 
-          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-3">Composiciones</h3>
+          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Composiciones
+          </h3>
           <p class="text-body-md text-neutral-600 mb-space-8">
-            Select con label + hint. Select con grupos de opciones (optgroup).
-            Select dentro de formulario con validación reactiva.
+            Select con label + hint. Select con grupos de opciones (optgroup). Select dentro de
+            formulario con validación reactiva.
           </p>
 
-          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
+          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Ejemplo real
+          </h3>
           <afi-code-block [code]="realWorldCode" language="html" />
         </section>
 
         <!-- API Reference -->
         <section>
-          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-4">API Reference</h2>
+          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-6">API Reference</h2>
 
-          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-3">Entradas</h3>
+          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">Entradas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Predeterminado</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Predeterminado
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -168,14 +196,20 @@ const SELECT_TOKENS: TokenRow[] = [
             </table>
           </div>
 
-          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-3">Salidas</h3>
+          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-4">Salidas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Carga útil</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Carga útil
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -194,71 +228,112 @@ const SELECT_TOKENS: TokenRow[] = [
 
       <!-- ==================== DESIGN TAB ==================== -->
       <div slot="design-tab">
-
         <section>
-          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-4">Tokens consumidos</h2>
+          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-6">
+            Tokens consumidos
+          </h2>
           <afi-tokens-table [rows]="tokenRows" title="" />
         </section>
 
         <section>
-          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-4">Accesibilidad</h2>
+          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-6">Accesibilidad</h2>
 
-          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-3">Reglas</h3>
+          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-4">Reglas</h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Usa <code class="font-mono text-action-700">&lt;select&gt;</code> nativo — lector de pantalla lo anuncia como combobox.</li>
-            <li><code class="font-mono text-action-700">label</code> o <code class="font-mono text-action-700">ariaLabel</code> obligatorio — se emite advertencia en dev si falta.</li>
-            <li><code class="font-mono text-action-700">aria-required</code> se añade cuando <code class="font-mono">required</code> es true.</li>
-            <li><code class="font-mono text-action-700">aria-invalid</code> se añade cuando <code class="font-mono">error</code> tiene valor.</li>
-            <li><code class="font-mono text-action-700">aria-describedby</code> enlaza hint o mensaje de error según estado.</li>
+            <li>
+              Usa <code class="font-mono text-action-700">&lt;select&gt;</code> nativo — lector de
+              pantalla lo anuncia como combobox.
+            </li>
+            <li>
+              <code class="font-mono text-action-700">label</code> o
+              <code class="font-mono text-action-700">ariaLabel</code> obligatorio — se emite
+              advertencia en dev si falta.
+            </li>
+            <li>
+              <code class="font-mono text-action-700">aria-required</code> se añade cuando
+              <code class="font-mono">required</code> es true.
+            </li>
+            <li>
+              <code class="font-mono text-action-700">aria-invalid</code> se añade cuando
+              <code class="font-mono">error</code> tiene valor.
+            </li>
+            <li>
+              <code class="font-mono text-action-700">aria-describedby</code> enlaza hint o mensaje
+              de error según estado.
+            </li>
           </ul>
 
-          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-3">Mapa de teclado</h3>
+          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Mapa de teclado
+          </h3>
           <div class="space-y-space-3 mb-space-8">
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Space / Enter</kbd>
-              <span class="text-body-md text-neutral-600">Abre la lista de opciones (nativo del navegador)</span>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Space / Enter</kbd
+              >
+              <span class="text-body-md text-neutral-600"
+                >Abre la lista de opciones (nativo del navegador)</span
+              >
             </div>
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">↑ ↓</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >↑ ↓</kbd
+              >
               <span class="text-body-md text-neutral-600">Navega entre opciones</span>
             </div>
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Esc</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Esc</kbd
+              >
               <span class="text-body-md text-neutral-600">Cierra la lista sin seleccionar</span>
             </div>
           </div>
         </section>
 
         <section>
-          <h2 id="motion" class="text-section text-canvas-fg mb-space-4">Motion</h2>
+          <h2 id="motion" class="text-section text-canvas-fg mb-space-6">Motion</h2>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-6">
-            <li>Transición de borde: <code class="font-mono">duration-fast ease-out</code> en hover y focus.</li>
+            <li>
+              Transición de borde: <code class="font-mono">duration-fast ease-out</code> en hover y
+              focus.
+            </li>
             <li>El dropdown es nativo del navegador — sin animación personalizada.</li>
             <li>Reduced motion: sin cambios necesarios (ya es instantáneo).</li>
           </ul>
         </section>
 
         <section>
-          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-4">Do & Don't</h2>
+          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-6">Do & Don't</h2>
           <div class="space-y-space-4">
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Incluya siempre un label visible o ariaLabel para accesibilidad.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Incluya siempre un label visible o ariaLabel para accesibilidad.
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Select sin label — el lector de pantalla no puede anunciar el propósito.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Select sin label — el lector de pantalla no puede anunciar el propósito.
+                </p>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Use placeholder descriptivo ("Seleccione un país").</p>
+                <p class="text-body-sm text-neutral-600">
+                  Use placeholder descriptivo ("Seleccione un país").
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Más de 20 opciones sin búsqueda — use autocomplete.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Más de 20 opciones sin búsqueda — use autocomplete.
+                </p>
               </div>
             </div>
           </div>
@@ -308,19 +383,53 @@ export class SelectPage {
 
   readonly apiInputs = [
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", notes: 'Tamaño del control' },
-    { name: 'options', type: 'SelectOption[]', default: '[]', notes: 'Lista de opciones a mostrar' },
+    {
+      name: 'options',
+      type: 'SelectOption[]',
+      default: '[]',
+      notes: 'Lista de opciones a mostrar',
+    },
     { name: 'value', type: 'string | number | null', default: 'null', notes: 'Valor seleccionado' },
     { name: 'label', type: 'string | null', default: 'null', notes: 'Label visible del campo' },
-    { name: 'hint', type: 'string | null', default: 'null', notes: 'Texto de ayuda bajo el select' },
-    { name: 'error', type: 'string | null', default: 'null', notes: 'Mensaje de error (activa estado error)' },
-    { name: 'placeholder', type: 'string | null', default: 'null', notes: 'Opción placeholder deshabilitada' },
+    {
+      name: 'hint',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Texto de ayuda bajo el select',
+    },
+    {
+      name: 'error',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Mensaje de error (activa estado error)',
+    },
+    {
+      name: 'placeholder',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Opción placeholder deshabilitada',
+    },
     { name: 'disabled', type: 'boolean', default: 'false', notes: 'Desactiva el select' },
-    { name: 'required', type: 'boolean', default: 'false', notes: 'Marca como obligatorio (aria-required)' },
-    { name: 'ariaLabel', type: 'string | null', default: 'null', notes: 'Solo cuando label está ausente' },
+    {
+      name: 'required',
+      type: 'boolean',
+      default: 'false',
+      notes: 'Marca como obligatorio (aria-required)',
+    },
+    {
+      name: 'ariaLabel',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Solo cuando label está ausente',
+    },
   ];
 
   readonly apiOutputs = [
-    { name: 'valueChange', payload: 'string | number | null', notes: 'Emitido al seleccionar una opción' },
+    {
+      name: 'valueChange',
+      payload: 'string | number | null',
+      notes: 'Emitido al seleccionar una opción',
+    },
     { name: 'opened', payload: 'void', notes: 'Emitido al abrir el listbox' },
     { name: 'closed', payload: 'void', notes: 'Emitido al cerrar el listbox' },
   ];

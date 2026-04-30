@@ -1,11 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
-import { StatusChipComponent, estadoLabels } from '@coherence/ui';
+import {
+  StatusChipComponent,
+  estadoLabels,
+  CheckboxComponent,
+  RadioGroupComponent,
+  RadioGroupItemComponent,
+} from '@coherence/ui';
 import type { Estado, StatusChipSize, StatusChipVariant } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../components/doc-page-layout';
@@ -14,8 +15,14 @@ import { CodeBlockComponent } from '../../components/code-block';
 import { TokensTableComponent, type TokenRow } from '../../components/tokens-table';
 
 const ESTADOS: Estado[] = [
-  'borrador', 'pendiente', 'aprobada', 'rechazada',
-  'ejecutada', 'cancelada', 'en-revision', 'archivada',
+  'borrador',
+  'pendiente',
+  'aprobada',
+  'rechazada',
+  'ejecutada',
+  'cancelada',
+  'en-revision',
+  'archivada',
 ];
 const SIZES: StatusChipSize[] = ['sm', 'md'];
 const VARIANTS: StatusChipVariant[] = ['subtle', 'solid'];
@@ -42,6 +49,9 @@ const STATUS_CHIP_TOKENS: TokenRow[] = [
     CodeBlockComponent,
     TokensTableComponent,
     StatusChipComponent,
+    CheckboxComponent,
+    RadioGroupComponent,
+    RadioGroupItemComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -54,71 +64,61 @@ const STATUS_CHIP_TOKENS: TokenRow[] = [
     >
       <!-- ==================== CODE TAB ==================== -->
       <div slot="code-tab">
-
         <!-- Playground -->
         <afi-component-playground [code]="codeSnippet()">
           <div slot="controls" class="space-y-space-4">
             <!-- Estado -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Estado</legend>
+            <afi-radio-group legend="Estado">
               @for (e of estados; track e) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input
-                    type="radio"
-                    name="estado"
-                    [value]="e"
-                    [checked]="estado() === e"
-                    (change)="estado.set(e)"
-                    class="accent-action"
-                  />
-                  {{ e }}
-                </label>
+                <afi-radio-group-item
+                  [value]="e"
+                  [label]="e"
+                  [selected]="estado() === e"
+                  (selectedChange)="$any(estado).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- Variant -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Variante</legend>
+            <afi-radio-group legend="Variante">
               @for (v of variants; track v) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input
-                    type="radio"
-                    name="variant"
-                    [value]="v"
-                    [checked]="variant() === v"
-                    (change)="variant.set(v)"
-                    class="accent-action"
-                  />
-                  {{ v }}
-                </label>
+                <afi-radio-group-item
+                  [value]="v"
+                  [label]="v"
+                  [selected]="variant() === v"
+                  (selectedChange)="$any(variant).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- Size -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Tamaño</legend>
+            <afi-radio-group legend="Tamaño">
               @for (s of sizes; track s) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input
-                    type="radio"
-                    name="size"
-                    [value]="s"
-                    [checked]="size() === s"
-                    (change)="size.set(s)"
-                    class="accent-action"
-                  />
-                  {{ s }}
-                </label>
+                <afi-radio-group-item
+                  [value]="s"
+                  [label]="s"
+                  [selected]="size() === s"
+                  (selectedChange)="$any(size).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- showDot -->
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Opciones</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="showDot()" (change)="showDot.set(!showDot())" class="accent-action" />
-                showDot
-              </label>
+              <afi-checkbox
+                [checked]="showDot()"
+                (checkedChange)="showDot.set($event)"
+                label="showDot"
+                size="sm"
+                [compact]="true"
+              />
             </fieldset>
           </div>
 
@@ -135,45 +135,47 @@ const STATUS_CHIP_TOKENS: TokenRow[] = [
 
         <!-- Importar -->
         <section>
-          <h2 id="importar" class="text-section text-canvas-fg mb-space-4">Importar</h2>
-          <afi-code-block
-            [code]="importCode"
-            language="ts"
-          />
+          <h2 id="importar" class="text-section text-canvas-fg mb-space-6">Importar</h2>
+          <afi-code-block [code]="importCode" language="ts" />
         </section>
 
         <!-- Uso -->
         <section>
-          <h2 id="uso" class="text-section text-canvas-fg mb-space-4">Uso</h2>
+          <h2 id="uso" class="text-section text-canvas-fg mb-space-6">Uso</h2>
 
-          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo usar</h3>
+          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Indicar el estado de una operación, transacción o entidad del dominio.</li>
             <li>Dentro de tablas, page headers y cards para comunicar estado rápidamente.</li>
           </ul>
 
-          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo NO usar</h3>
+          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo NO usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Para etiquetas genéricas sin semántica de estado — use Badge.</li>
             <li>Para notificaciones o alertas — use los componentes de sistema.</li>
           </ul>
 
-          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-3">Composiciones</h3>
+          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Composiciones
+          </h3>
           <p class="text-body-md text-neutral-600 mb-space-8">
-            StatusChip dentro de PageHeader junto al título. StatusChip en columna de estado de Table.
-            StatusChip en Card como indicador visual.
+            StatusChip dentro de PageHeader junto al título. StatusChip en columna de estado de
+            Table. StatusChip en Card como indicador visual.
           </p>
 
-          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
-          <afi-code-block
-            [code]="realWorldCode"
-            language="html"
-          />
+          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Ejemplo real
+          </h3>
+          <afi-code-block [code]="realWorldCode" language="html" />
         </section>
 
         <!-- All states gallery -->
         <section>
-          <h2 id="galeria" class="text-section text-canvas-fg mb-space-4">Galería de estados</h2>
+          <h2 id="galeria" class="text-section text-canvas-fg mb-space-6">Galería de estados</h2>
           <div class="flex flex-wrap gap-space-3">
             @for (e of estados; track e) {
               <afi-status-chip [estado]="e" size="md" variant="subtle" />
@@ -188,17 +190,23 @@ const STATUS_CHIP_TOKENS: TokenRow[] = [
 
         <!-- API Reference -->
         <section>
-          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-4">API Reference</h2>
+          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-6">API Reference</h2>
 
-          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-3">Entradas</h3>
+          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">Entradas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Predeterminado</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Predeterminado
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -218,57 +226,78 @@ const STATUS_CHIP_TOKENS: TokenRow[] = [
 
       <!-- ==================== DESIGN TAB ==================== -->
       <div slot="design-tab">
-
         <!-- Tokens consumidos -->
         <section>
-          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-4">Tokens consumidos</h2>
+          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-6">
+            Tokens consumidos
+          </h2>
           <afi-tokens-table [rows]="tokenRows" title="" />
         </section>
 
         <!-- Accesibilidad -->
         <section>
-          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-4">Accesibilidad</h2>
+          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-6">Accesibilidad</h2>
 
-          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-3">Reglas</h3>
+          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-4">Reglas</h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Usa <code class="font-mono text-action-700">role="status"</code> para anunciar cambios a lectoras de pantalla.</li>
-            <li>Incluye <code class="font-mono text-action-700">aria-label</code> con el texto del estado.</li>
-            <li>El dot decorativo tiene <code class="font-mono text-action-700">aria-hidden="true"</code>.</li>
+            <li>
+              Usa <code class="font-mono text-action-700">role="status"</code> para anunciar cambios
+              a lectoras de pantalla.
+            </li>
+            <li>
+              Incluye <code class="font-mono text-action-700">aria-label</code> con el texto del
+              estado.
+            </li>
+            <li>
+              El dot decorativo tiene
+              <code class="font-mono text-action-700">aria-hidden="true"</code>.
+            </li>
             <li>Contraste mínimo 4.5:1 entre texto y fondo en ambas variantes.</li>
           </ul>
         </section>
 
         <!-- Motion -->
         <section>
-          <h2 id="motion" class="text-section text-canvas-fg mb-space-4">Motion</h2>
+          <h2 id="motion" class="text-section text-canvas-fg mb-space-6">Motion</h2>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-6">
-            <li>Transición de color: <code class="font-mono">var(--duration-fast)</code> (150ms) <code class="font-mono">ease-out</code>.</li>
+            <li>
+              Transición de color: <code class="font-mono">var(--duration-fast)</code> (150ms)
+              <code class="font-mono">ease-out</code>.
+            </li>
             <li>Reduced motion: transiciones colapsan a instantáneo.</li>
           </ul>
         </section>
 
         <!-- Do & Don't -->
         <section>
-          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-4">Do & Don't</h2>
+          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-6">Do & Don't</h2>
           <div class="space-y-space-4">
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Usar estados del dominio (borrador, pendiente, aprobada…).</p>
+                <p class="text-body-sm text-neutral-600">
+                  Usar estados del dominio (borrador, pendiente, aprobada…).
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Inventar estados ad-hoc fuera del vocabulario del dominio.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Inventar estados ad-hoc fuera del vocabulario del dominio.
+                </p>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Variant subtle para tablas y listas (menor peso visual).</p>
+                <p class="text-body-sm text-neutral-600">
+                  Variant subtle para tablas y listas (menor peso visual).
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Variant solid en todas partes satura la interfaz de color.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Variant solid en todas partes satura la interfaz de color.
+                </p>
               </div>
             </div>
           </div>
@@ -306,10 +335,20 @@ import type { Estado } from '@coherence/ui/status-chip';`;
   });
 
   readonly apiInputs = [
-    { name: 'estado', type: 'Estado', default: '(required)', notes: 'Estado del dominio (borrador, pendiente, etc.)' },
+    {
+      name: 'estado',
+      type: 'Estado',
+      default: '(required)',
+      notes: 'Estado del dominio (borrador, pendiente, etc.)',
+    },
     { name: 'size', type: "'sm' | 'md'", default: "'md'", notes: 'Tamaño del chip' },
     { name: 'variant', type: "'subtle' | 'solid'", default: "'subtle'", notes: 'Estilo visual' },
     { name: 'showDot', type: 'boolean', default: 'true', notes: 'Muestra dot de color' },
-    { name: 'ariaLabel', type: 'string | null', default: 'null', notes: 'Sobrescribe el aria-label' },
+    {
+      name: 'ariaLabel',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Sobrescribe el aria-label',
+    },
   ];
 }

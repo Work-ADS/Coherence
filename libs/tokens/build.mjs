@@ -14,6 +14,17 @@ const sd = new StyleDictionary({
         },
       ],
     },
+    cssWmPn: {
+      transformGroup: 'css',
+      buildPath: '../../apps/wealth-manager-primeng/src/styles/',
+      files: [
+        {
+          destination: 'tokens.css',
+          format: 'css/variables',
+          options: { outputReferences: true },
+        },
+      ],
+    },
     tailwind: {
       transformGroup: 'js',
       buildPath: 'dist/',

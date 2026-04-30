@@ -20,7 +20,9 @@ import { RouterLink } from '@angular/router';
 
       <!-- Type scale specimen -->
       <section class="mb-space-12">
-        <h2 id="escala-tipografica" class="text-section text-canvas-fg mb-space-4">Escala tipográfica</h2>
+        <h2 id="escala-tipografica" class="text-section text-canvas-fg mb-space-6">
+          Escala tipográfica
+        </h2>
         <p class="text-body-md text-neutral-600 max-w-[640px] mb-space-6">
           Siete roles nombrados definen la escala. Cada rol tiene tamaño, interlineado y peso fijos.
         </p>
@@ -28,7 +30,9 @@ import { RouterLink } from '@angular/router';
           @for (role of typeRoles; track role.name) {
             <div class="border-b border-border-hairline pb-space-4">
               <div class="flex items-baseline justify-between mb-space-2">
-                <span class="text-body-sm-600 text-neutral-500 uppercase tracking-wider">{{ role.name }}</span>
+                <span class="text-body-sm-600 text-neutral-500 uppercase tracking-wider">{{
+                  role.name
+                }}</span>
                 <span class="text-body-sm text-neutral-400 font-mono">{{ role.spec }}</span>
               </div>
               <p [class]="role.class + ' text-canvas-fg'">{{ role.sample }}</p>
@@ -39,17 +43,23 @@ import { RouterLink } from '@angular/router';
 
       <!-- Body variants -->
       <section class="mb-space-12">
-        <h2 id="variantes-de-cuerpo" class="text-section text-canvas-fg mb-space-4">Variantes de cuerpo</h2>
+        <h2 id="variantes-de-cuerpo" class="text-section text-canvas-fg mb-space-6">
+          Variantes de cuerpo
+        </h2>
         <p class="text-body-md text-neutral-600 max-w-[640px] mb-space-6">
-          Body Large, Medium y Small × pesos 400, 500 y 600. Los sufijos <code class="font-mono text-body-sm">-500</code>
-          y <code class="font-mono text-body-sm">-600</code> en las clases Tailwind corresponden a los pesos.
+          Body Large, Medium y Small × pesos 400, 500 y 600. Los sufijos
+          <code class="font-mono text-body-sm">-500</code> y
+          <code class="font-mono text-body-sm">-600</code> en las clases Tailwind corresponden a los
+          pesos.
         </p>
         <div class="overflow-x-auto max-w-[720px]">
           <table class="w-full text-body-sm">
             <thead>
               <tr class="border-b border-border-hairline text-left">
                 <th class="py-space-3 pr-space-4 text-body-sm-600 text-canvas-fg">Clase</th>
-                <th class="py-space-3 pr-space-4 text-body-sm-600 text-canvas-fg">Tamaño / línea</th>
+                <th class="py-space-3 pr-space-4 text-body-sm-600 text-canvas-fg">
+                  Tamaño / línea
+                </th>
                 <th class="py-space-3 text-body-sm-600 text-canvas-fg">Ejemplo</th>
               </tr>
             </thead>
@@ -68,7 +78,9 @@ import { RouterLink } from '@angular/router';
 
       <!-- Utility classes -->
       <section class="mb-space-12">
-        <h2 id="clases-de-utilidad" class="text-section text-canvas-fg mb-space-4">Clases de utilidad</h2>
+        <h2 id="clases-de-utilidad" class="text-section text-canvas-fg mb-space-6">
+          Clases de utilidad
+        </h2>
         <p class="text-body-md text-neutral-600 max-w-[640px] mb-space-6">
           Los tokens tipográficos se mapean directamente a clases Tailwind a través de
           <code class="font-mono text-body-sm">tailwind.config.js → theme.extend.fontSize</code>.
@@ -77,7 +89,9 @@ import { RouterLink } from '@angular/router';
           <table class="w-full text-body-sm">
             <thead>
               <tr class="border-b border-border-hairline text-left">
-                <th class="py-space-3 pr-space-4 text-body-sm-600 text-canvas-fg">Clase Tailwind</th>
+                <th class="py-space-3 pr-space-4 text-body-sm-600 text-canvas-fg">
+                  Clase Tailwind
+                </th>
                 <th class="py-space-3 pr-space-4 text-body-sm-600 text-canvas-fg">Token CSS</th>
                 <th class="py-space-3 text-body-sm-600 text-canvas-fg">Uso</th>
               </tr>
@@ -120,7 +134,7 @@ import { RouterLink } from '@angular/router';
 
       <!-- Rules -->
       <section class="mb-space-12">
-        <h2 id="reglas" class="text-section text-canvas-fg mb-space-4">Reglas</h2>
+        <h2 id="reglas" class="text-section text-canvas-fg mb-space-6">Reglas</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-space-6 max-w-[720px]">
           <div class="p-space-6 border border-border-hairline rounded-md">
             <p class="text-body-sm-600 text-system-success mb-space-2">Hacer</p>
@@ -144,11 +158,21 @@ import { RouterLink } from '@angular/router';
       <!-- Related -->
       <hr class="border-border-hairline mb-space-6" />
       <section>
-        <h2 id="temas-relacionados" class="text-section text-canvas-fg mb-space-4">Temas relacionados</h2>
+        <h2 id="temas-relacionados" class="text-section text-canvas-fg mb-space-6">
+          Temas relacionados
+        </h2>
         <ul class="text-body-sm text-action-700 space-y-space-2">
-          <li><a routerLink="/fundamentos/espacio" class="underline hover:text-action-800">Espacio</a></li>
-          <li><a routerLink="/fundamentos/tokens" class="underline hover:text-action-800">Tokens</a></li>
-          <li><a routerLink="/fundamentos/principios" class="underline hover:text-action-800">Principios</a></li>
+          <li>
+            <a routerLink="/fundamentos/espacio" class="underline hover:text-action-800">Espacio</a>
+          </li>
+          <li>
+            <a routerLink="/fundamentos/tokens" class="underline hover:text-action-800">Tokens</a>
+          </li>
+          <li>
+            <a routerLink="/fundamentos/principios" class="underline hover:text-action-800"
+              >Principios</a
+            >
+          </li>
         </ul>
         <p class="text-body-sm text-neutral-400 mt-space-4">
           Fuente: <code class="font-mono text-body-sm">docs/token-skill.md</code>
@@ -163,8 +187,18 @@ export class TipografiaPage {
     { name: 'Title', spec: '32/40', class: 'text-title', sample: 'Título de página' },
     { name: 'Subtitle', spec: '24/32', class: 'text-subtitle', sample: 'Subtítulo de sección' },
     { name: 'Section', spec: '20/24', class: 'text-section', sample: 'Encabezado de sección' },
-    { name: 'Body', spec: '16/24', class: 'text-body-md', sample: 'Texto de párrafo regular con ritmo de lectura cómodo.' },
-    { name: 'Subtitle Body', spec: '20/20', class: 'text-subtitle-body', sample: 'Subtítulo compacto' },
+    {
+      name: 'Body',
+      spec: '16/24',
+      class: 'text-body-md',
+      sample: 'Texto de párrafo regular con ritmo de lectura cómodo.',
+    },
+    {
+      name: 'Subtitle Body',
+      spec: '20/20',
+      class: 'text-subtitle-body',
+      sample: 'Subtítulo compacto',
+    },
     { name: 'Button', spec: '14/14', class: 'text-button', sample: 'ETIQUETA DE BOTÓN' },
   ];
 

@@ -63,9 +63,10 @@ let nextItemId = 0;
     }
   `,
   template: `
-    <label [for]="radioId" class="inline-flex items-start gap-space-2 min-h-[44px] min-w-[44px] cursor-pointer"
+    <label [for]="radioId"
+           [class]="compact() ? 'inline-flex items-center gap-1.5 cursor-pointer' : 'inline-flex items-start gap-space-2 min-h-[44px] min-w-[44px] cursor-pointer'"
            [class.opacity-50]="disabled()" [class.cursor-not-allowed]="disabled()">
-      <span class="relative flex items-center justify-center min-h-[44px] min-w-[44px]">
+      <span [class]="compact() ? 'relative flex items-center justify-center' : 'relative flex items-center justify-center min-h-[44px] min-w-[44px]'">
         <!-- Hidden native radio for a11y -->
         <input
           type="radio"
@@ -84,8 +85,8 @@ let nextItemId = 0;
         </span>
       </span>
       @if (label()) {
-        <span class="flex flex-col pt-[10px]">
-          <span class="text-body-md text-canvas-fg">{{ label() }}</span>
+        <span [class]="compact() ? 'flex flex-col' : 'flex flex-col pt-[10px]'">
+          <span [class]="compact() ? 'text-body-sm text-canvas-fg' : 'text-body-md text-canvas-fg'">{{ label() }}</span>
           @if (hint()) {
             <span [id]="hintId" class="text-body-sm text-neutral-500">{{ hint() }}</span>
           }
@@ -100,6 +101,7 @@ export class RadioGroupItemComponent {
   readonly hint = input<string | null>(null);
   readonly disabled = input<boolean>(false);
   readonly size = input<RadioSize>('md');
+  readonly compact = input<boolean>(false);
 
   /** Set by parent RadioGroupComponent */
   readonly name = input<string>('');

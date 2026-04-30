@@ -71,9 +71,10 @@ let nextId = 0;
     }
   `,
   template: `
-    <label [for]="checkboxId" class="inline-flex items-start gap-space-2 min-h-[44px] min-w-[44px] cursor-pointer"
+    <label [for]="checkboxId"
+           [class]="compact() ? 'inline-flex items-center gap-1.5 cursor-pointer' : 'inline-flex items-start gap-space-2 min-h-[44px] min-w-[44px] cursor-pointer'"
            [class.opacity-50]="disabled()" [class.cursor-not-allowed]="disabled()">
-      <span class="relative flex items-center justify-center min-h-[44px] min-w-[44px]">
+      <span [class]="compact() ? 'relative flex items-center justify-center' : 'relative flex items-center justify-center min-h-[44px] min-w-[44px]'">
         <!-- Hidden native input for a11y -->
         <input
           #inputEl
@@ -121,8 +122,8 @@ let nextId = 0;
         </span>
       </span>
       @if (label()) {
-        <span class="flex flex-col pt-[10px]">
-          <span class="text-body-md text-canvas-fg">
+        <span [class]="compact() ? 'flex flex-col' : 'flex flex-col pt-[10px]'">
+          <span [class]="compact() ? 'text-body-sm text-canvas-fg' : 'text-body-md text-canvas-fg'">
             {{ label() }}
             @if (required()) {
               <span class="text-system-error" aria-hidden="true"> *</span>
@@ -143,6 +144,7 @@ export class CheckboxComponent implements OnInit {
   readonly checked = input<boolean>(false);
   readonly indeterminate = input<boolean>(false);
   readonly size = input<CheckboxSize>('md');
+  readonly compact = input<boolean>(false);
   readonly label = input<string | null>(null);
   readonly hint = input<string | null>(null);
   readonly error = input<string | null>(null);

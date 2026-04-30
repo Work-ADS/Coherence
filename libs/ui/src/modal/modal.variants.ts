@@ -7,6 +7,7 @@ export const sizeClasses = {
   sm: 'max-w-[400px]',
   md: 'max-w-[560px]',
   lg: 'max-w-[720px]',
+  xl: 'max-w-[960px]',
 } as const;
 
 export type ModalSize = keyof typeof sizeClasses;

@@ -1,11 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
-import { ButtonComponent } from '@coherence/ui';
+import {
+  ButtonComponent,
+  CheckboxComponent,
+  RadioGroupComponent,
+  RadioGroupItemComponent,
+  InputComponent,
+} from '@coherence/ui';
 import type { ButtonVariant, ButtonSize } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../components/doc-page-layout';
@@ -38,6 +39,10 @@ const BUTTON_TOKENS: TokenRow[] = [
     CodeBlockComponent,
     TokensTableComponent,
     ButtonComponent,
+    CheckboxComponent,
+    RadioGroupComponent,
+    RadioGroupItemComponent,
+    InputComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -50,67 +55,65 @@ const BUTTON_TOKENS: TokenRow[] = [
     >
       <!-- ==================== CODE TAB ==================== -->
       <div slot="code-tab">
-
         <!-- Playground -->
         <afi-component-playground [code]="codeSnippet()">
           <div slot="controls" class="space-y-space-4">
             <!-- Variant -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Variante</legend>
+            <afi-radio-group legend="Variante">
               @for (v of variants; track v) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input
-                    type="radio"
-                    name="variant"
-                    [value]="v"
-                    [checked]="variant() === v"
-                    (change)="variant.set(v)"
-                    class="accent-action"
-                  />
-                  {{ v }}
-                </label>
+                <afi-radio-group-item
+                  [value]="v"
+                  [label]="v"
+                  [selected]="variant() === v"
+                  (selectedChange)="$any(variant).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- Size -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Tamaño</legend>
+            <afi-radio-group legend="Tamaño">
               @for (s of sizes; track s) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input
-                    type="radio"
-                    name="size"
-                    [value]="s"
-                    [checked]="size() === s"
-                    (change)="size.set(s)"
-                    class="accent-action"
-                  />
-                  {{ s }}
-                </label>
+                <afi-radio-group-item
+                  [value]="s"
+                  [label]="s"
+                  [selected]="size() === s"
+                  (selectedChange)="$any(size).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- State toggles -->
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Estado</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="disabled()" (change)="disabled.set(!disabled())" class="accent-action" />
-                disabled
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="loading()" (change)="loading.set(!loading())" class="accent-action" />
-                loading
-              </label>
+              <afi-checkbox
+                [checked]="disabled()"
+                (checkedChange)="disabled.set($event)"
+                label="disabled"
+                size="sm"
+                [compact]="true"
+              />
+              <afi-checkbox
+                [checked]="loading()"
+                (checkedChange)="loading.set($event)"
+                label="loading"
+                size="sm"
+                [compact]="true"
+              />
             </fieldset>
 
             <!-- Label -->
             <div>
-              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm">Etiqueta</label>
-              <input
-                type="text"
+              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm"
+                >Etiqueta</label
+              >
+              <afi-input
+                size="sm"
                 [value]="label()"
-                (input)="onLabelInput($event)"
-                class="w-full border border-border-hairline rounded-md px-2 py-1 text-body-sm"
+                (valueChange)="label.set($event?.toString() ?? '')"
               />
             </div>
           </div>
@@ -122,62 +125,72 @@ const BUTTON_TOKENS: TokenRow[] = [
               [size]="size()"
               [disabled]="disabled()"
               [loading]="loading()"
-            >{{ label() }}</afi-button>
+              >{{ label() }}</afi-button
+            >
           </div>
         </afi-component-playground>
 
         <!-- Importar -->
         <section>
-          <h2 id="importar" class="text-section text-canvas-fg mb-space-4">Importar</h2>
-          <afi-code-block
-            [code]="importCode"
-            language="ts"
-          />
+          <h2 id="importar" class="text-section text-canvas-fg mb-space-6">Importar</h2>
+          <afi-code-block [code]="importCode" language="ts" />
         </section>
 
         <!-- Uso -->
         <section>
-          <h2 id="uso" class="text-section text-canvas-fg mb-space-4">Uso</h2>
+          <h2 id="uso" class="text-section text-canvas-fg mb-space-6">Uso</h2>
 
-          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo usar</h3>
+          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Acción principal de una vista o formulario.</li>
             <li>Confirmación de diálogos y flujos de aprobación.</li>
             <li>Navegación contextual cuando la semántica es de acción.</li>
           </ul>
 
-          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo NO usar</h3>
+          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo NO usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Navegación simple entre páginas — use un enlace.</li>
             <li>Más de una acción primaria en la misma vista.</li>
             <li>Acciones destructivas sin confirmación previa.</li>
           </ul>
 
-          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-3">Composiciones</h3>
+          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Composiciones
+          </h3>
           <p class="text-body-md text-neutral-600 mb-space-8">
-            Botón primario + secundario en barra de acciones de Modal. Botón ghost como disparador de Menu.
+            Botón primario + secundario en barra de acciones de Modal. Botón ghost como disparador
+            de Menu.
           </p>
 
-          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
-          <afi-code-block
-            [code]="realWorldCode"
-            language="html"
-          />
+          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Ejemplo real
+          </h3>
+          <afi-code-block [code]="realWorldCode" language="html" />
         </section>
 
         <!-- API Reference -->
         <section>
-          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-4">API Reference</h2>
+          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-6">API Reference</h2>
 
-          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-3">Entradas</h3>
+          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">Entradas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Predeterminado</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Predeterminado
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -193,14 +206,20 @@ const BUTTON_TOKENS: TokenRow[] = [
             </table>
           </div>
 
-          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-3">Salidas</h3>
+          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-4">Salidas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Carga útil</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Carga útil
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -219,72 +238,111 @@ const BUTTON_TOKENS: TokenRow[] = [
 
       <!-- ==================== DESIGN TAB ==================== -->
       <div slot="design-tab">
-
         <!-- Tokens consumidos -->
         <section>
-          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-4">Tokens consumidos</h2>
+          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-6">
+            Tokens consumidos
+          </h2>
           <afi-tokens-table [rows]="tokenRows" title="" />
         </section>
 
         <!-- Accesibilidad -->
         <section>
-          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-4">Accesibilidad</h2>
+          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-6">Accesibilidad</h2>
 
-          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-3">Reglas</h3>
+          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-4">Reglas</h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Usa <code class="font-mono text-action-700">&lt;button&gt;</code> nativo, nunca <code class="font-mono">&lt;div&gt;</code> ni <code class="font-mono">&lt;a&gt;</code> para acciones.</li>
-            <li>Botones con icono sin texto requieren <code class="font-mono text-action-700">ariaLabel</code>.</li>
-            <li>En estado loading, <code class="font-mono text-action-700">aria-busy="true"</code> y texto <code class="font-mono">"Cargando…"</code> en <code class="font-mono">sr-only</code>.</li>
+            <li>
+              Usa <code class="font-mono text-action-700">&lt;button&gt;</code> nativo, nunca
+              <code class="font-mono">&lt;div&gt;</code> ni
+              <code class="font-mono">&lt;a&gt;</code> para acciones.
+            </li>
+            <li>
+              Botones con icono sin texto requieren
+              <code class="font-mono text-action-700">ariaLabel</code>.
+            </li>
+            <li>
+              En estado loading, <code class="font-mono text-action-700">aria-busy="true"</code> y
+              texto <code class="font-mono">"Cargando…"</code> en
+              <code class="font-mono">sr-only</code>.
+            </li>
             <li>Foco visible con anillo de 2px (<code class="font-mono">--border-focus</code>).</li>
           </ul>
 
-          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-3">Mapa de teclado</h3>
+          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Mapa de teclado
+          </h3>
           <div class="space-y-space-3 mb-space-8">
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Tab</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Tab</kbd
+              >
               <span class="text-body-md text-neutral-600">Enfoca el botón</span>
             </div>
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Enter / Space</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Enter / Space</kbd
+              >
               <span class="text-body-md text-neutral-600">Activa el botón</span>
             </div>
           </div>
 
-          <h3 id="demostracion-lectora" class="text-body-md font-medium text-canvas-fg mb-space-3">Demostración lectora de pantalla</h3>
-          <div class="flex items-center gap-space-6 p-space-4 bg-neutral-50 rounded-md border border-border-hairline">
+          <h3 id="demostracion-lectora" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Demostración lectora de pantalla
+          </h3>
+          <div
+            class="flex items-center gap-space-6 p-space-4 bg-neutral-50 rounded-md border border-border-hairline"
+          >
             <afi-button variant="primary" [loading]="true">Guardar</afi-button>
-            <code class="text-body-sm font-mono text-neutral-600">aria-busy="true" · "Cargando…"</code>
+            <code class="text-body-sm font-mono text-neutral-600"
+              >aria-busy="true" · "Cargando…"</code
+            >
           </div>
         </section>
 
         <!-- Motion -->
         <section>
-          <h2 id="motion" class="text-section text-canvas-fg mb-space-4">Motion</h2>
+          <h2 id="motion" class="text-section text-canvas-fg mb-space-6">Motion</h2>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-6">
-            <li>Transición de color: <code class="font-mono">var(--duration-fast)</code> (150ms) <code class="font-mono">ease-out</code></li>
+            <li>
+              Transición de color: <code class="font-mono">var(--duration-fast)</code> (150ms)
+              <code class="font-mono">ease-out</code>
+            </li>
             <li>Reduced motion: transiciones colapsan a instantáneo.</li>
           </ul>
-          <div class="flex items-center gap-space-4 p-space-4 bg-neutral-50 rounded-md border border-border-hairline">
+          <div
+            class="flex items-center gap-space-4 p-space-4 bg-neutral-50 rounded-md border border-border-hairline"
+          >
             <afi-button variant="primary">Hover me</afi-button>
-            <span class="text-body-sm text-neutral-500">Pase el cursor para ver la transición de color.</span>
+            <span class="text-body-sm text-neutral-500"
+              >Pase el cursor para ver la transición de color.</span
+            >
           </div>
         </section>
 
         <!-- Do & Don't -->
         <section>
-          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-4">Do & Don't</h2>
+          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-6">Do & Don't</h2>
           <div class="space-y-space-4">
             <!-- Pair 1 -->
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <div class="mb-space-2"><afi-button variant="danger">Eliminar cuenta</afi-button></div>
-                <p class="text-body-sm text-neutral-600">Usar variante danger solo para acciones destructivas.</p>
+                <div class="mb-space-2">
+                  <afi-button variant="danger">Eliminar cuenta</afi-button>
+                </div>
+                <p class="text-body-sm text-neutral-600">
+                  Usar variante danger solo para acciones destructivas.
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
                 <div class="mb-space-2"><afi-button variant="danger">Guardar</afi-button></div>
-                <p class="text-body-sm text-neutral-600">No usar danger para acciones constructivas.</p>
+                <p class="text-body-sm text-neutral-600">
+                  No usar danger para acciones constructivas.
+                </p>
               </div>
             </div>
 
@@ -309,13 +367,19 @@ const BUTTON_TOKENS: TokenRow[] = [
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <div class="mb-space-2"><afi-button variant="primary" size="md">Guardar cambios</afi-button></div>
+                <div class="mb-space-2">
+                  <afi-button variant="primary" size="md">Guardar cambios</afi-button>
+                </div>
                 <p class="text-body-sm text-neutral-600">Etiqueta describe la acción concreta.</p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <div class="mb-space-2"><afi-button variant="primary" size="md">Aceptar</afi-button></div>
-                <p class="text-body-sm text-neutral-600">Etiqueta genérica no comunica qué ocurrirá.</p>
+                <div class="mb-space-2">
+                  <afi-button variant="primary" size="md">Aceptar</afi-button>
+                </div>
+                <p class="text-body-sm text-neutral-600">
+                  Etiqueta genérica no comunica qué ocurrirá.
+                </p>
               </div>
             </div>
           </div>
@@ -355,23 +419,42 @@ export class ButtonPage {
   });
 
   readonly apiInputs = [
-    { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'primary'", notes: 'Estilo visual' },
+    {
+      name: 'variant',
+      type: "'primary' | 'secondary' | 'ghost' | 'danger'",
+      default: "'primary'",
+      notes: 'Estilo visual',
+    },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", notes: 'Altura del botón' },
-    { name: 'type', type: "'button' | 'submit' | 'reset'", default: "'button'", notes: 'Tipo HTML nativo' },
+    {
+      name: 'type',
+      type: "'button' | 'submit' | 'reset'",
+      default: "'button'",
+      notes: 'Tipo HTML nativo',
+    },
     { name: 'disabled', type: 'boolean', default: 'false', notes: 'Desactiva interacción' },
-    { name: 'loading', type: 'boolean', default: 'false', notes: 'Muestra spinner, desactiva clic' },
+    {
+      name: 'loading',
+      type: 'boolean',
+      default: 'false',
+      notes: 'Muestra spinner, desactiva clic',
+    },
     { name: 'iconStart', type: 'string | null', default: 'null', notes: 'Slot de icono al inicio' },
     { name: 'iconEnd', type: 'string | null', default: 'null', notes: 'Slot de icono al final' },
     { name: 'fullWidth', type: 'boolean', default: 'false', notes: 'Ocupa 100% del ancho' },
-    { name: 'ariaLabel', type: 'string | null', default: 'null', notes: 'Requerido en botones solo-icono' },
+    {
+      name: 'ariaLabel',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Requerido en botones solo-icono',
+    },
   ];
 
   readonly apiOutputs = [
-    { name: 'clicked', payload: '{ event: MouseEvent }', notes: 'Emitido al hacer clic (no emite si disabled/loading)' },
+    {
+      name: 'clicked',
+      payload: '{ event: MouseEvent }',
+      notes: 'Emitido al hacer clic (no emite si disabled/loading)',
+    },
   ];
-
-  onLabelInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.label.set(target.value);
-  }
 }

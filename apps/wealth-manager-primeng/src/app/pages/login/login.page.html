@@ -1,0 +1,79 @@
+<main class="login-page">
+  <section class="login-container">
+    <div class="login-logo-wrap">
+      <awmp-logo />
+    </div>
+
+    <header class="login-heading">
+      <h1>Iniciar sesión</h1>
+      <p class="login-subtitle">Entra en tu gestor de clientes</p>
+    </header>
+
+    <form class="login-form" (ngSubmit)="onSubmit()">
+      <div class="login-field">
+        <label for="email" class="visually-hidden">Email</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          name="email"
+          autocomplete="email"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+        />
+      </div>
+
+      <div class="login-field">
+        <div class="login-field-header">
+          <label for="password" class="visually-hidden">Contraseña</label>
+          <a href="#" class="login-forgot">¿Olvidaste tu contraseña?</a>
+        </div>
+        <input
+          pInputText
+          id="password"
+          type="password"
+          name="password"
+          autocomplete="current-password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+        />
+      </div>
+
+      <div class="login-remember">
+        <p-checkbox
+          inputId="rememberMe"
+          name="rememberMe"
+          binary
+          [ngModel]="rememberMe()"
+          (ngModelChange)="rememberMe.set($event)"
+        />
+        <label for="rememberMe">Mantener sesión iniciada</label>
+      </div>
+
+      <div class="login-actions">
+        <p-button type="submit" label="Entrar" />
+      </div>
+    </form>
+
+    <p-divider align="center"><span class="login-divider-label">O inicia sesión con</span></p-divider>
+
+    <div class="login-providers">
+      <p-button
+        label="Microsoft"
+        severity="secondary"
+        [outlined]="true"
+        [fluid]="true"
+        (onClick)="onProvider('microsoft')"
+      />
+      <p-button
+        label="Afi"
+        severity="secondary"
+        [outlined]="true"
+        [fluid]="true"
+        (onClick)="onProvider('afi')"
+      />
+    </div>
+  </section>
+
+  <footer class="login-footer">© 2026 - Afi Wealth Manager</footer>
+</main>

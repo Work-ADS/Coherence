@@ -1,0 +1,41 @@
+{
+  "evolucion": [
+    { "year": 2025, "optimista": 120000, "base": 120000, "pesimista": 120000 },
+    { "year": 2026, "optimista": 148000, "base": 135000, "pesimista": 122000 },
+    { "year": 2027, "optimista": 180000, "base": 152000, "pesimista": 126000 },
+    { "year": 2028, "optimista": 218000, "base": 171000, "pesimista": 131000 },
+    { "year": 2029, "optimista": 260000, "base": 192000, "pesimista": 138000 },
+    { "year": 2030, "optimista": 305000, "base": 215000, "pesimista": 148000 },
+    { "year": 2031, "optimista": 345000, "base": 240000, "pesimista": 160000 },
+    { "year": 2032, "optimista": 388000, "base": 268000, "pesimista": 174000 },
+    { "year": 2033, "optimista": 432000, "base": 295000, "pesimista": 190000 },
+    { "year": 2034, "optimista": 480000, "base": 320000, "pesimista": 210000 }
+  ],
+  "cashflow": [
+    { "year": 2025, "income": 85000, "expense": 62000, "net": 23000 },
+    { "year": 2026, "income": 88000, "expense": 64000, "net": 24000 },
+    { "year": 2027, "income": 92000, "expense": 66000, "net": 26000 },
+    { "year": 2028, "income": 96000, "expense": 68000, "net": 28000 },
+    { "year": 2029, "income": 101000, "expense": 71000, "net": 30000 },
+    { "year": 2030, "income": 106000, "expense": 73000, "net": 33000 },
+    { "year": 2031, "income": 111000, "expense": 76000, "net": 35000 },
+    { "year": 2032, "income": 117000, "expense": 79000, "net": 38000 },
+    { "year": 2033, "income": 123000, "expense": 82000, "net": 41000 },
+    { "year": 2034, "income": 130000, "expense": 86000, "net": 44000 }
+  ],
+  "assetAllocation": [
+    { "class": "Renta variable", "percentage": 45, "color": "var(--data-neutral-strong)" },
+    { "class": "Renta fija", "percentage": 30, "color": "var(--data-highlight-primary)" },
+    { "class": "Alternativos", "percentage": 15, "color": "var(--data-neutral-medium)" },
+    { "class": "Liquidez", "percentage": 10, "color": "var(--data-highlight-secondary)" }
+  ],
+  "escenarios": {
+    "columns": ["Optimista", "Base", "Pesimista"],
+    "rows": [
+      { "label": "Patrimonio en 10 años", "values": ["€480.000", "€320.000", "€210.000"] },
+      { "label": "Primera jubilación", "values": ["62 años", "65 años", "67 años"] },
+      { "label": "Compra vivienda", "values": ["Viable en 4 años", "Viable en 6 años", "No viable"] },
+      { "label": "Cobertura contingencia", "values": ["24 meses", "18 meses", "9 meses"] }
+    ]
+  }
+}

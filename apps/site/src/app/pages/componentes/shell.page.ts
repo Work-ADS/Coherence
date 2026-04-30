@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
 import type { ShellType } from '@coherence/ui';
 
@@ -43,7 +38,6 @@ const SHELL_TOKENS: TokenRow[] = [
     >
       <!-- ==================== CODE TAB ==================== -->
       <div slot="code-tab">
-
         <!-- Playground -->
         <afi-component-playground [code]="codeSnippet()">
           <div slot="controls" class="space-y-space-4">
@@ -85,34 +79,56 @@ const SHELL_TOKENS: TokenRow[] = [
 
           <!-- Live preview (miniature shell diagram) -->
           <div slot="preview" class="w-full">
-            <div class="border border-border-hairline rounded-md overflow-hidden bg-surface-base text-body-sm" style="height: 200px;">
+            <div
+              class="border border-border-hairline rounded-md overflow-hidden bg-surface-base text-body-sm"
+              style="height: 200px;"
+            >
               @switch (type()) {
                 @case ('workspace') {
-                  <div class="grid h-full" [style.grid-template-columns]="rightRail() ? '60px 1fr 50px' : '60px 1fr'">
-                    <div class="bg-surface-quiet border-r border-border-hairline flex items-center justify-center text-neutral-400 text-body-sm">
-                      <span class="writing-mode-vertical" style="writing-mode: vertical-lr;">Sidebar</span>
+                  <div
+                    class="grid h-full"
+                    [style.grid-template-columns]="rightRail() ? '60px 1fr 50px' : '60px 1fr'"
+                  >
+                    <div
+                      class="bg-surface-quiet border-r border-border-hairline flex items-center justify-center text-neutral-400 text-body-sm"
+                    >
+                      <span class="writing-mode-vertical" style="writing-mode: vertical-lr;"
+                        >Sidebar</span
+                      >
                     </div>
                     <div class="flex items-center justify-center text-neutral-400">Main</div>
                     @if (rightRail()) {
-                      <div class="bg-surface-quiet border-l border-border-hairline flex items-center justify-center text-neutral-400 text-body-sm">
+                      <div
+                        class="bg-surface-quiet border-l border-border-hairline flex items-center justify-center text-neutral-400 text-body-sm"
+                      >
                         <span style="writing-mode: vertical-lr;">Rail</span>
                       </div>
                     }
                   </div>
                 }
                 @case ('auth') {
-                  <div class="h-full bg-surface-quiet flex flex-col items-center justify-center gap-2">
+                  <div
+                    class="h-full bg-surface-quiet flex flex-col items-center justify-center gap-2"
+                  >
                     <div class="w-6 h-6 rounded-full bg-neutral-200"></div>
-                    <div class="w-32 h-20 bg-surface-elevated rounded shadow-sm flex items-center justify-center text-neutral-400">Card</div>
+                    <div
+                      class="w-32 h-20 bg-surface-elevated rounded shadow-sm flex items-center justify-center text-neutral-400"
+                    >
+                      Card
+                    </div>
                   </div>
                 }
                 @case ('docs') {
                   <div class="grid h-full" style="grid-template-columns: 60px 1fr 44px;">
-                    <div class="bg-surface-quiet border-r border-border-hairline flex items-center justify-center text-neutral-400 text-body-sm">
+                    <div
+                      class="bg-surface-quiet border-r border-border-hairline flex items-center justify-center text-neutral-400 text-body-sm"
+                    >
                       <span style="writing-mode: vertical-lr;">Sidebar</span>
                     </div>
                     <div class="flex items-center justify-center text-neutral-400">Contenido</div>
-                    <div class="bg-surface-quiet border-l border-border-hairline flex items-center justify-center text-neutral-400 text-body-sm">
+                    <div
+                      class="bg-surface-quiet border-l border-border-hairline flex items-center justify-center text-neutral-400 text-body-sm"
+                    >
                       <span style="writing-mode: vertical-lr;">TOC</span>
                     </div>
                   </div>
@@ -129,55 +145,63 @@ const SHELL_TOKENS: TokenRow[] = [
 
         <!-- Importar -->
         <section>
-          <h2 id="importar" class="text-section text-canvas-fg mb-space-4">Importar</h2>
-          <afi-code-block
-            [code]="importCode"
-            language="ts"
-          />
+          <h2 id="importar" class="text-section text-canvas-fg mb-space-6">Importar</h2>
+          <afi-code-block [code]="importCode" language="ts" />
         </section>
 
         <!-- Uso -->
         <section>
-          <h2 id="uso" class="text-section text-canvas-fg mb-space-4">Uso</h2>
+          <h2 id="uso" class="text-section text-canvas-fg mb-space-6">Uso</h2>
 
-          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo usar</h3>
+          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Contenedor raíz de toda aplicación AFI — siempre presente.</li>
-            <li><strong>workspace</strong>: aplicaciones de datos con sidebar, main y rail opcional.</li>
-            <li><strong>docs</strong>: documentación con sidebar estática, columna de lectura y TOC.</li>
+            <li>
+              <strong>workspace</strong>: aplicaciones de datos con sidebar, main y rail opcional.
+            </li>
+            <li>
+              <strong>docs</strong>: documentación con sidebar estática, columna de lectura y TOC.
+            </li>
             <li><strong>auth</strong>: login/signup centrado con tarjeta y logo.</li>
           </ul>
 
-          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo NO usar</h3>
+          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo NO usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Fragmentos de página embebidos — Shell ES la página completa.</li>
             <li>Layouts custom que no corresponden a ninguno de los cinco tipos cerrados.</li>
           </ul>
 
-          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-3">Composiciones</h3>
+          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Composiciones
+          </h3>
           <p class="text-body-md text-neutral-600 mb-space-8">
-            Shell workspace compone Sidebar, PageHeader, y opcionalmente un right rail.
-            Shell docs compone Sidebar, contenido principal, y un TOC rail.
-            Shell auth compone un slot de logo y un card centrado.
+            Shell workspace compone Sidebar, PageHeader, y opcionalmente un right rail. Shell docs
+            compone Sidebar, contenido principal, y un TOC rail. Shell auth compone un slot de logo
+            y un card centrado.
           </p>
 
-          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
-          <afi-code-block
-            [code]="realWorldCode"
-            language="html"
-          />
+          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Ejemplo real
+          </h3>
+          <afi-code-block [code]="realWorldCode" language="html" />
         </section>
 
         <!-- Shell types gallery -->
         <section>
-          <h2 id="tipos" class="text-section text-canvas-fg mb-space-4">Tipos de shell</h2>
+          <h2 id="tipos" class="text-section text-canvas-fg mb-space-6">Tipos de shell</h2>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Grid</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Estado v1</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Estado v1
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -195,17 +219,23 @@ const SHELL_TOKENS: TokenRow[] = [
 
         <!-- API Reference -->
         <section>
-          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-4">API Reference</h2>
+          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-6">API Reference</h2>
 
-          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-3">Entradas</h3>
+          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">Entradas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Predeterminado</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Predeterminado
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -221,14 +251,20 @@ const SHELL_TOKENS: TokenRow[] = [
             </table>
           </div>
 
-          <h3 id="slots" class="text-body-md font-medium text-canvas-fg mb-space-3">Slots (content projection)</h3>
+          <h3 id="slots" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Slots (content projection)
+          </h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Slot</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Aplica a</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Aplica a
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -247,32 +283,55 @@ const SHELL_TOKENS: TokenRow[] = [
 
       <!-- ==================== DESIGN TAB ==================== -->
       <div slot="design-tab">
-
         <!-- Tokens consumidos -->
         <section>
-          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-4">Tokens consumidos</h2>
+          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-6">
+            Tokens consumidos
+          </h2>
           <afi-tokens-table [rows]="tokenRows" title="" />
         </section>
 
         <!-- Accesibilidad -->
         <section>
-          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-4">Accesibilidad</h2>
+          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-6">Accesibilidad</h2>
 
-          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-3">Reglas</h3>
+          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-4">Reglas</h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Cada shell incluye un enlace <code class="font-mono text-action-700">skip-to-content</code> como primer elemento focusable.</li>
-            <li>La región principal usa <code class="font-mono text-action-700">id="main-content"</code> y <code class="font-mono text-action-700">&lt;main&gt;</code> landmark.</li>
-            <li>El sidebar se proyecta como <code class="font-mono text-action-700">&lt;nav&gt;</code> (provisto por <code>afi-sidebar</code>).</li>
-            <li>El right rail / TOC usa <code class="font-mono text-action-700">&lt;aside&gt;</code> con <code class="font-mono text-action-700">aria-label</code> descriptivo.</li>
+            <li>
+              Cada shell incluye un enlace
+              <code class="font-mono text-action-700">skip-to-content</code> como primer elemento
+              focusable.
+            </li>
+            <li>
+              La región principal usa
+              <code class="font-mono text-action-700">id="main-content"</code> y
+              <code class="font-mono text-action-700">&lt;main&gt;</code> landmark.
+            </li>
+            <li>
+              El sidebar se proyecta como
+              <code class="font-mono text-action-700">&lt;nav&gt;</code> (provisto por
+              <code>afi-sidebar</code>).
+            </li>
+            <li>
+              El right rail / TOC usa
+              <code class="font-mono text-action-700">&lt;aside&gt;</code> con
+              <code class="font-mono text-action-700">aria-label</code> descriptivo.
+            </li>
           </ul>
 
-          <h3 id="mapa-teclado" class="text-body-md font-medium text-canvas-fg mb-space-3">Mapa de teclado</h3>
+          <h3 id="mapa-teclado" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Mapa de teclado
+          </h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tecla</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Acción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Tecla
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Acción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -289,35 +348,45 @@ const SHELL_TOKENS: TokenRow[] = [
 
         <!-- Motion -->
         <section>
-          <h2 id="motion" class="text-section text-canvas-fg mb-space-4">Motion</h2>
+          <h2 id="motion" class="text-section text-canvas-fg mb-space-6">Motion</h2>
           <p class="text-body-md text-neutral-600">
-            Shell es estático — sin transiciones propias. Los sub-componentes (Sidebar, Drawer) gestionan su propia animación.
-            Reduced motion: sin cambios necesarios en Shell.
+            Shell es estático — sin transiciones propias. Los sub-componentes (Sidebar, Drawer)
+            gestionan su propia animación. Reduced motion: sin cambios necesarios en Shell.
           </p>
         </section>
 
         <!-- Do & Don't -->
         <section>
-          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-4">Do & Don't</h2>
+          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-6">Do & Don't</h2>
           <div class="space-y-space-4">
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Un solo <code class="font-mono">&lt;afi-shell&gt;</code> por aplicación, como contenedor raíz.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Un solo <code class="font-mono">&lt;afi-shell&gt;</code> por aplicación, como
+                  contenedor raíz.
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Anidar shells — cada app tiene exactamente un shell.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Anidar shells — cada app tiene exactamente un shell.
+                </p>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Seleccionar el tipo de shell via route data y dejar que Shell componga el layout.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Seleccionar el tipo de shell via route data y dejar que Shell componga el layout.
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Construir grids manuales fuera de Shell — los cinco tipos están cerrados por diseño.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Construir grids manuales fuera de Shell — los cinco tipos están cerrados por
+                  diseño.
+                </p>
               </div>
             </div>
           </div>
@@ -367,9 +436,24 @@ export class ShellPage {
   ];
 
   readonly apiInputs = [
-    { name: 'type', type: "ShellType", default: "'workspace'", notes: 'Tipo de layout: workspace | docs | auth | focus | canvas' },
-    { name: 'sidebarMode', type: "'static' | 'collapsible' | 'hover-expand'", default: "'hover-expand'", notes: 'Modo del sidebar (pasado al sub-componente)' },
-    { name: 'rightRail', type: 'boolean', default: 'false', notes: 'Muestra el panel lateral derecho (solo workspace)' },
+    {
+      name: 'type',
+      type: 'ShellType',
+      default: "'workspace'",
+      notes: 'Tipo de layout: workspace | docs | auth | focus | canvas',
+    },
+    {
+      name: 'sidebarMode',
+      type: "'static' | 'collapsible' | 'hover-expand'",
+      default: "'hover-expand'",
+      notes: 'Modo del sidebar (pasado al sub-componente)',
+    },
+    {
+      name: 'rightRail',
+      type: 'boolean',
+      default: 'false',
+      notes: 'Muestra el panel lateral derecho (solo workspace)',
+    },
   ];
 
   readonly slotRows = [
@@ -384,6 +468,9 @@ export class ShellPage {
 
   readonly keyboardMap = [
     { key: 'Tab', action: 'Skip-to-content es el primer foco, luego sidebar, luego main.' },
-    { key: 'F6', action: 'Navegar entre landmarks (sidebar ↔ main ↔ rail) en lectoras de pantalla.' },
+    {
+      key: 'F6',
+      action: 'Navegar entre landmarks (sidebar ↔ main ↔ rail) en lectoras de pantalla.',
+    },
   ];
 }

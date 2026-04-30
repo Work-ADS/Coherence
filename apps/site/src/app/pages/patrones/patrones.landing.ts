@@ -8,15 +8,11 @@ import { TeaserTileComponent } from '../../components/teaser-tile/teaser-tile.co
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-[920px] mx-auto px-space-10 py-space-10">
-      <p class="text-body-sm uppercase tracking-wider text-action-700 mb-space-2">
-        Patterns
-      </p>
-      <h1 class="text-subtitle text-canvas-fg mb-space-3">
-        Patrones de composición
-      </h1>
+      <p class="text-body-sm uppercase tracking-wider text-action-700 mb-space-2">Patterns</p>
+      <h1 class="text-subtitle text-canvas-fg mb-space-3">Patrones de composición</h1>
       <p class="max-w-[640px] text-body-md text-neutral-600 mb-space-8">
-        Shells, flujos y gráficos — composiciones de primitivos que resuelven
-        problemas recurrentes de producto.
+        Shells, flujos y gráficos — composiciones de primitivos que resuelven problemas recurrentes
+        de producto.
       </p>
 
       <div class="grid grid-cols-2 md:grid-cols-3 gap-space-4">
@@ -24,7 +20,8 @@ import { TeaserTileComponent } from '../../components/teaser-tile/teaser-tile.co
           <site-teaser-tile
             [title]="p.name"
             [href]="'/patrones/' + p.slug"
-            [description]="p.description" />
+            [description]="p.description"
+          />
         }
       </div>
     </div>
@@ -32,8 +29,27 @@ import { TeaserTileComponent } from '../../components/teaser-tile/teaser-tile.co
 })
 export class PatronesLandingPage {
   readonly patterns = [
-    { slug: 'shells', name: 'Shells', description: '5 tipos de layout: workspace, docs, auth, focus, canvas' },
+    {
+      slug: 'shells',
+      name: 'Shells',
+      description: '5 tipos de layout: workspace, docs, auth, focus, canvas',
+    },
     { slug: 'flujos', name: 'Flujos', description: 'Composiciones interactivas multi-primitivo' },
-    { slug: 'graficos', name: 'Gráficos', description: 'Bar, line, heatmap, dumbbell' },
+    {
+      slug: 'graficos',
+      name: 'Gráficos',
+      description: 'Bar, line, heatmap, dumbbell, Evolución patrimonial V3',
+    },
+    {
+      slug: 'cabeceras',
+      name: 'Cabeceras',
+      description: 'Plantilla de cromo de página — top bar, cabecera, acciones, métricas, tabs',
+    },
+    {
+      slug: 'tablas',
+      name: 'Tablas',
+      description:
+        'Tabla de patrimonio — secciones, columnas dinámicas, filas con menú de acciones',
+    },
   ];
 }

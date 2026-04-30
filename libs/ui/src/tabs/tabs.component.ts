@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   contentChildren,
+  effect,
   input,
   output,
   signal,
@@ -36,9 +37,9 @@ let nextId = 0;
           type="button"
           role="tab"
           [id]="tabId($index)"
-          [attr.aria-selected]="$index === activeIndex()"
+          [attr.aria-selected]="$index === currentIndex()"
           [attr.aria-controls]="panelId($index)"
-          [tabindex]="$index === activeIndex() ? 0 : -1"
+          [tabindex]="$index === currentIndex() ? 0 : -1"
           [disabled]="tab.disabled()"
           [class]="tabClasses($index)"
           (click)="activate($index)"
@@ -57,9 +58,9 @@ let nextId = 0;
         role="tabpanel"
         [id]="panelId($index)"
         [attr.aria-labelledby]="tabId($index)"
-        [hidden]="lazy() ? undefined : $index !== activeIndex()"
+        [hidden]="lazy() ? undefined : $index !== currentIndex()"
       >
-        @if (!lazy() || $index === activeIndex()) {
+        @if (!lazy() || $index === currentIndex()) {
           <ng-content />
         }
       </div>
@@ -79,6 +80,20 @@ export class TabsComponent {
   private readonly baseId = `afi-tabs-${nextId++}`;
   private readonly internalIndex = signal(0);
 
+  /** Current tab index. Tracks `activeIndex` input when bound, otherwise
+   *  driven by internal click handlers — so consumers can use `<afi-tabs>`
+   *  uncontrolled and tabs still switch on click. */
+  readonly currentIndex = computed(() => this.internalIndex());
+
+  constructor() {
+    // Sync the input into internal state when it changes (so two-way binding
+    // and explicit programmatic control still work).
+    effect(() => {
+      const next = this.activeIndex();
+      if (this.internalIndex() !== next) this.internalIndex.set(next);
+    });
+  }
+
   tabId(index: number): string {
     return `${this.baseId}-tab-${index}`;
   }
@@ -88,7 +103,7 @@ export class TabsComponent {
   }
 
   tabClasses(index: number): string {
-    const active = index === this.activeIndex();
+    const active = index === this.currentIndex();
     return [
       'inline-flex items-center gap-space-1 border-b-2 -mb-px',
       'transition-colors duration-fast ease-out',
@@ -111,7 +126,7 @@ export class TabsComponent {
   onKeydown(event: KeyboardEvent): void {
     const allTabs = this.tabs();
     const len = allTabs.length;
-    let current = this.activeIndex();
+    let current = this.currentIndex();
 
     const findNext = (dir: 1 | -1): number => {
       let next = current;

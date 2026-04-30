@@ -1,11 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
-import { InputComponent } from '@coherence/ui';
+import {
+  InputComponent,
+  CheckboxComponent,
+  RadioGroupComponent,
+  RadioGroupItemComponent,
+} from '@coherence/ui';
 import type { InputSize, InputType } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../components/doc-page-layout';
@@ -42,6 +42,9 @@ const INPUT_TOKENS: TokenRow[] = [
     CodeBlockComponent,
     TokensTableComponent,
     InputComponent,
+    CheckboxComponent,
+    RadioGroupComponent,
+    RadioGroupItemComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -54,86 +57,91 @@ const INPUT_TOKENS: TokenRow[] = [
     >
       <!-- ==================== CODE TAB ==================== -->
       <div slot="code-tab">
-
         <!-- Playground -->
         <afi-component-playground [code]="codeSnippet()">
           <div slot="controls" class="space-y-space-4">
             <!-- Type -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Tipo</legend>
+            <afi-radio-group legend="Tipo">
               @for (t of types; track t) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input
-                    type="radio"
-                    name="type"
-                    [value]="t"
-                    [checked]="type() === t"
-                    (change)="type.set(t)"
-                    class="accent-action"
-                  />
-                  {{ t }}
-                </label>
+                <afi-radio-group-item
+                  [value]="t"
+                  [label]="t"
+                  [selected]="type() === t"
+                  (selectedChange)="$any(type).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- Size -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Tamaño</legend>
+            <afi-radio-group legend="Tamaño">
               @for (s of sizes; track s) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input
-                    type="radio"
-                    name="size"
-                    [value]="s"
-                    [checked]="size() === s"
-                    (change)="size.set(s)"
-                    class="accent-action"
-                  />
-                  {{ s }}
-                </label>
+                <afi-radio-group-item
+                  [value]="s"
+                  [label]="s"
+                  [selected]="size() === s"
+                  (selectedChange)="$any(size).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- State toggles -->
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Estado</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="disabled()" (change)="disabled.set(!disabled())" class="accent-action" />
-                disabled
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="readonly()" (change)="readonly.set(!readonly())" class="accent-action" />
-                readonly
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="required()" (change)="required.set(!required())" class="accent-action" />
-                required
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="showError()" (change)="showError.set(!showError())" class="accent-action" />
-                error
-              </label>
+              <afi-checkbox
+                [checked]="disabled()"
+                (checkedChange)="disabled.set($event)"
+                label="disabled"
+                size="sm"
+                [compact]="true"
+              />
+              <afi-checkbox
+                [checked]="readonly()"
+                (checkedChange)="readonly.set($event)"
+                label="readonly"
+                size="sm"
+                [compact]="true"
+              />
+              <afi-checkbox
+                [checked]="required()"
+                (checkedChange)="required.set($event)"
+                label="required"
+                size="sm"
+                [compact]="true"
+              />
+              <afi-checkbox
+                [checked]="showError()"
+                (checkedChange)="showError.set($event)"
+                label="error"
+                size="sm"
+                [compact]="true"
+              />
             </fieldset>
 
             <!-- Label text -->
             <div>
-              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm">Etiqueta</label>
-              <input
-                type="text"
+              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm"
+                >Etiqueta</label
+              >
+              <afi-input
+                size="sm"
                 [value]="labelText()"
-                (input)="onFieldInput($event, 'label')"
-                class="w-full border border-border-hairline rounded-md px-2 py-1 text-body-sm"
+                (valueChange)="labelText.set($event?.toString() ?? '')"
               />
             </div>
 
             <!-- Placeholder -->
             <div>
-              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm">Placeholder</label>
-              <input
-                type="text"
+              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm"
+                >Placeholder</label
+              >
+              <afi-input
+                size="sm"
                 [value]="placeholder()"
-                (input)="onFieldInput($event, 'placeholder')"
-                class="w-full border border-border-hairline rounded-md px-2 py-1 text-body-sm"
+                (valueChange)="placeholder.set($event?.toString() ?? '')"
               />
             </div>
           </div>
@@ -156,59 +164,79 @@ const INPUT_TOKENS: TokenRow[] = [
 
         <!-- Importar -->
         <section>
-          <h2 id="importar" class="text-section text-canvas-fg mb-space-4">Importar</h2>
-          <afi-code-block
-            [code]="importCode"
-            language="ts"
-          />
+          <h2 id="importar" class="text-section text-canvas-fg mb-space-6">Importar</h2>
+          <afi-code-block [code]="importCode" language="ts" />
         </section>
 
         <!-- Uso -->
         <section>
-          <h2 id="uso" class="text-section text-canvas-fg mb-space-4">Uso</h2>
+          <h2 id="uso" class="text-section text-canvas-fg mb-space-6">Uso</h2>
 
-          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo usar</h3>
+          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Entrada de texto libre: nombre, correo electrónico, URL.</li>
-            <li>Texto multilínea (comentarios, notas) con <code class="font-mono text-action-700">type="textarea"</code>.</li>
+            <li>
+              Texto multilínea (comentarios, notas) con
+              <code class="font-mono text-action-700">type="textarea"</code>.
+            </li>
             <li>Valores numéricos con step/min/max.</li>
             <li>Contraseña enmascarada.</li>
           </ul>
 
-          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo NO usar</h3>
+          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo NO usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Selección de una lista conocida — use <code class="font-mono">&lt;afi-select&gt;</code>.</li>
-            <li>Encendido/apagado binario — use <code class="font-mono">&lt;afi-switch&gt;</code>.</li>
-            <li>Selección múltiple — use un grupo de <code class="font-mono">&lt;afi-checkbox&gt;</code>.</li>
+            <li>
+              Selección de una lista conocida — use
+              <code class="font-mono">&lt;afi-select&gt;</code>.
+            </li>
+            <li>
+              Encendido/apagado binario — use <code class="font-mono">&lt;afi-switch&gt;</code>.
+            </li>
+            <li>
+              Selección múltiple — use un grupo de
+              <code class="font-mono">&lt;afi-checkbox&gt;</code>.
+            </li>
             <li>Texto enriquecido — fuera de alcance en v1.</li>
           </ul>
 
-          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-3">Composiciones</h3>
+          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Composiciones
+          </h3>
           <p class="text-body-md text-neutral-600 mb-space-8">
-            Input + Input + Button en formulario. Input con <code class="font-mono">size="sm"</code> en fila de filtros de Table.
-            Consumer controla validación vía la prop <code class="font-mono">error</code>.
+            Input + Input + Button en formulario. Input con
+            <code class="font-mono">size="sm"</code> en fila de filtros de Table. Consumer controla
+            validación vía la prop <code class="font-mono">error</code>.
           </p>
 
-          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
-          <afi-code-block
-            [code]="realWorldCode"
-            language="html"
-          />
+          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Ejemplo real
+          </h3>
+          <afi-code-block [code]="realWorldCode" language="html" />
         </section>
 
         <!-- API Reference -->
         <section>
-          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-4">API Reference</h2>
+          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-6">API Reference</h2>
 
-          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-3">Entradas</h3>
+          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">Entradas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Predeterminado</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Predeterminado
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -224,14 +252,20 @@ const INPUT_TOKENS: TokenRow[] = [
             </table>
           </div>
 
-          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-3">Salidas</h3>
+          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-4">Salidas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Carga útil</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Carga útil
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -250,41 +284,70 @@ const INPUT_TOKENS: TokenRow[] = [
 
       <!-- ==================== DESIGN TAB ==================== -->
       <div slot="design-tab">
-
         <!-- Tokens consumidos -->
         <section>
-          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-4">Tokens consumidos</h2>
+          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-6">
+            Tokens consumidos
+          </h2>
           <afi-tokens-table [rows]="tokenRows" title="" />
         </section>
 
         <!-- Accesibilidad -->
         <section>
-          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-4">Accesibilidad</h2>
+          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-6">Accesibilidad</h2>
 
-          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-3">Reglas</h3>
+          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-4">Reglas</h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Siempre incluya un <code class="font-mono text-action-700">&lt;label&gt;</code> visible, salvo en filtros donde <code class="font-mono text-action-700">ariaLabel</code> es suficiente.</li>
-            <li><code class="font-mono text-action-700">aria-describedby</code> enlaza hint y error de forma reactiva.</li>
-            <li>En estado error: <code class="font-mono text-action-700">aria-invalid="true"</code> y el texto de error se anuncia con <code class="font-mono">role="alert"</code>.</li>
-            <li>Campo requerido: <code class="font-mono text-action-700">aria-required="true"</code> + asterisco visual en la etiqueta.</li>
-            <li><code class="font-mono text-action-700">autocomplete</code> siempre configurado para datos personales (email, name, current-password).</li>
+            <li>
+              Siempre incluya un
+              <code class="font-mono text-action-700">&lt;label&gt;</code> visible, salvo en filtros
+              donde <code class="font-mono text-action-700">ariaLabel</code> es suficiente.
+            </li>
+            <li>
+              <code class="font-mono text-action-700">aria-describedby</code> enlaza hint y error de
+              forma reactiva.
+            </li>
+            <li>
+              En estado error: <code class="font-mono text-action-700">aria-invalid="true"</code> y
+              el texto de error se anuncia con <code class="font-mono">role="alert"</code>.
+            </li>
+            <li>
+              Campo requerido: <code class="font-mono text-action-700">aria-required="true"</code> +
+              asterisco visual en la etiqueta.
+            </li>
+            <li>
+              <code class="font-mono text-action-700">autocomplete</code> siempre configurado para
+              datos personales (email, name, current-password).
+            </li>
             <li>Foco visible con anillo de 2px (<code class="font-mono">--border-focus</code>).</li>
           </ul>
 
-          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-3">Mapa de teclado</h3>
+          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Mapa de teclado
+          </h3>
           <div class="space-y-space-3 mb-space-8">
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Tab</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Tab</kbd
+              >
               <span class="text-body-md text-neutral-600">Enfoca el campo</span>
             </div>
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Shift + Tab</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Shift + Tab</kbd
+              >
               <span class="text-body-md text-neutral-600">Retrocede al campo anterior</span>
             </div>
           </div>
 
-          <h3 id="demostracion-lectora" class="text-body-md font-medium text-canvas-fg mb-space-3">Demostración lectora de pantalla</h3>
-          <div class="p-space-4 bg-neutral-50 rounded-md border border-border-hairline space-y-space-4">
+          <h3 id="demostracion-lectora" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Demostración lectora de pantalla
+          </h3>
+          <div
+            class="p-space-4 bg-neutral-50 rounded-md border border-border-hairline space-y-space-4"
+          >
             <afi-input
               label="Correo electrónico"
               type="email"
@@ -292,38 +355,53 @@ const INPUT_TOKENS: TokenRow[] = [
               autocomplete="email"
               error="Introduzca un correo electrónico válido."
             />
-            <code class="block text-body-sm font-mono text-neutral-600">aria-invalid="true" · aria-describedby → error · role="alert"</code>
+            <code class="block text-body-sm font-mono text-neutral-600"
+              >aria-invalid="true" · aria-describedby → error · role="alert"</code
+            >
           </div>
         </section>
 
         <!-- Motion -->
         <section>
-          <h2 id="motion" class="text-section text-canvas-fg mb-space-4">Motion</h2>
+          <h2 id="motion" class="text-section text-canvas-fg mb-space-6">Motion</h2>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-6">
-            <li>Transición de borde: <code class="font-mono">var(--duration-fast)</code> (150ms) <code class="font-mono">ease-out</code></li>
+            <li>
+              Transición de borde: <code class="font-mono">var(--duration-fast)</code> (150ms)
+              <code class="font-mono">ease-out</code>
+            </li>
             <li>Reduced motion: transiciones colapsan a instantáneo.</li>
           </ul>
           <div class="p-space-4 bg-neutral-50 rounded-md border border-border-hairline">
             <afi-input label="Enfóqueme" placeholder="Observe la transición de borde" />
-            <p class="mt-space-2 text-body-sm text-neutral-500">Haga clic en el campo para ver la transición de foco.</p>
+            <p class="mt-space-2 text-body-sm text-neutral-500">
+              Haga clic en el campo para ver la transición de foco.
+            </p>
           </div>
         </section>
 
         <!-- Do & Don't -->
         <section>
-          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-4">Do & Don't</h2>
+          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-6">Do & Don't</h2>
           <div class="space-y-space-4">
             <!-- Pair 1: Label siempre -->
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <div class="mb-space-2"><afi-input label="Correo electrónico" type="email" placeholder="usuario&#64;ejemplo.com" /></div>
+                <div class="mb-space-2">
+                  <afi-input
+                    label="Correo electrónico"
+                    type="email"
+                    placeholder="usuario&#64;ejemplo.com"
+                  />
+                </div>
                 <p class="text-body-sm text-neutral-600">Label visible describe el campo.</p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
                 <div class="mb-space-2"><afi-input placeholder="Correo electrónico" /></div>
-                <p class="text-body-sm text-neutral-600">Placeholder como única etiqueta desaparece al escribir.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Placeholder como única etiqueta desaparece al escribir.
+                </p>
               </div>
             </div>
 
@@ -331,13 +409,25 @@ const INPUT_TOKENS: TokenRow[] = [
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <div class="mb-space-2"><afi-input label="Importe" type="number" error="El importe debe ser mayor que cero." /></div>
-                <p class="text-body-sm text-neutral-600">Error indica la restricción y la corrección.</p>
+                <div class="mb-space-2">
+                  <afi-input
+                    label="Importe"
+                    type="number"
+                    error="El importe debe ser mayor que cero."
+                  />
+                </div>
+                <p class="text-body-sm text-neutral-600">
+                  Error indica la restricción y la corrección.
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <div class="mb-space-2"><afi-input label="Importe" type="number" error="Valor no válido." /></div>
-                <p class="text-body-sm text-neutral-600">Error genérico no ayuda al usuario a corregir.</p>
+                <div class="mb-space-2">
+                  <afi-input label="Importe" type="number" error="Valor no válido." />
+                </div>
+                <p class="text-body-sm text-neutral-600">
+                  Error genérico no ayuda al usuario a corregir.
+                </p>
               </div>
             </div>
           </div>
@@ -390,29 +480,57 @@ export class InputPage {
   });
 
   readonly apiInputs = [
-    { name: 'type', type: "'text' | 'textarea' | 'number' | 'email' | 'password'", default: "'text'", notes: 'Elemento nativo y tipo de teclado' },
+    {
+      name: 'type',
+      type: "'text' | 'textarea' | 'number' | 'email' | 'password'",
+      default: "'text'",
+      notes: 'Elemento nativo y tipo de teclado',
+    },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", notes: 'Altura del campo' },
-    { name: 'value', type: 'string | number | null', default: 'null', notes: 'Valor actual (bidireccional con valueChange)' },
+    {
+      name: 'value',
+      type: 'string | number | null',
+      default: 'null',
+      notes: 'Valor actual (bidireccional con valueChange)',
+    },
     { name: 'label', type: 'string | null', default: 'null', notes: 'Texto visible del <label>' },
-    { name: 'hint', type: 'string | null', default: 'null', notes: 'Texto de ayuda debajo del campo' },
-    { name: 'error', type: 'string | null', default: 'null', notes: 'Error: borde rojo + aria-invalid' },
+    {
+      name: 'hint',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Texto de ayuda debajo del campo',
+    },
+    {
+      name: 'error',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Error: borde rojo + aria-invalid',
+    },
     { name: 'placeholder', type: 'string | null', default: 'null', notes: 'Texto de marcador' },
     { name: 'disabled', type: 'boolean', default: 'false', notes: 'Desactiva interacción' },
     { name: 'readonly', type: 'boolean', default: 'false', notes: 'Enfocable pero no editable' },
     { name: 'required', type: 'boolean', default: 'false', notes: 'Asterisco + aria-required' },
-    { name: 'autocomplete', type: 'string | null', default: 'null', notes: 'Valor de autocompletado WHATWG' },
-    { name: 'ariaLabel', type: 'string | null', default: 'null', notes: 'Solo cuando label está ausente' },
+    {
+      name: 'autocomplete',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Valor de autocompletado WHATWG',
+    },
+    {
+      name: 'ariaLabel',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Solo cuando label está ausente',
+    },
   ];
 
   readonly apiOutputs = [
-    { name: 'valueChange', payload: 'string | number | null', notes: 'Emitido al escribir (input) o cambiar (change)' },
+    {
+      name: 'valueChange',
+      payload: 'string | number | null',
+      notes: 'Emitido al escribir (input) o cambiar (change)',
+    },
     { name: 'focused', payload: 'FocusEvent', notes: 'Emitido al enfocar el campo' },
     { name: 'blurred', payload: 'FocusEvent', notes: 'Emitido al desenfocar el campo' },
   ];
-
-  onFieldInput(event: Event, field: 'label' | 'placeholder'): void {
-    const target = event.target as HTMLInputElement;
-    if (field === 'label') this.labelText.set(target.value);
-    else this.placeholder.set(target.value);
-  }
 }

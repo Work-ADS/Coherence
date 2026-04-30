@@ -1,0 +1,30 @@
+{
+  "PROP-DEMO-001": {
+    "propuestaId": "PROP-DEMO-001",
+    "propuestaName": "PROP-NUE-2026-0417-001",
+    "client": "Familia Martínez-Solana",
+    "cartera": "ES-001-MART-2024",
+    "carteraModelo": "Conservadora",
+    "carteras": [
+      {
+        "id": "cart-001",
+        "name": "Cartera principal",
+        "positions": [
+          { "isin": "IE00B4L5Y983", "name": "iShares Core MSCI World UCITS ETF", "class": "Renta variable", "pesoActual": 25.0, "pesoObjetivo": 22.0 },
+          { "isin": "LU0290358497", "name": "Xtrackers II Eurozone Gov Bond UCITS ETF", "class": "Renta fija", "pesoActual": 30.0, "pesoObjetivo": 35.0 },
+          { "isin": "IE00B5BMR087", "name": "iShares Core S&P 500 UCITS ETF", "class": "Renta variable", "pesoActual": 15.0, "pesoObjetivo": 12.0 },
+          { "isin": "LU0225880524", "name": "Amundi Euro Government Bond 1-3Y ETF", "class": "Renta fija", "pesoActual": 10.0, "pesoObjetivo": 12.0 },
+          { "isin": "FR0010149161", "name": "Lyxor Euro Cash UCITS ETF", "class": "Monetario", "pesoActual": 8.0, "pesoObjetivo": 10.0 },
+          { "isin": "LU1681043599", "name": "Amundi MSCI Emerging Markets UCITS ETF", "class": "Renta variable", "pesoActual": 5.0, "pesoObjetivo": 4.0 },
+          { "isin": "IE00BSKRJZ44", "name": "Invesco Physical Gold ETC", "class": "Alternativos", "pesoActual": 4.0, "pesoObjetivo": 3.0 },
+          { "isin": "LU0488317701", "name": "Credit Suisse (Lux) Liquid Alt. Beta Fund", "class": "Alternativos", "pesoActual": 3.0, "pesoObjetivo": 2.0 }
+        ]
+      },
+      {
+        "id": "cart-002",
+        "name": "Cartera secundaria",
+        "positions": []
+      }
+    ]
+  }
+}

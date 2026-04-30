@@ -1,11 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
-import { DrawerComponent } from '@coherence/ui';
+import {
+  DrawerComponent,
+  CheckboxComponent,
+  RadioGroupComponent,
+  RadioGroupItemComponent,
+} from '@coherence/ui';
 import type { DrawerSize } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../components/doc-page-layout';
@@ -35,6 +35,9 @@ const DRAWER_TOKENS: TokenRow[] = [
     CodeBlockComponent,
     TokensTableComponent,
     DrawerComponent,
+    CheckboxComponent,
+    RadioGroupComponent,
+    RadioGroupItemComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -47,29 +50,37 @@ const DRAWER_TOKENS: TokenRow[] = [
     >
       <!-- ==================== CODE TAB ==================== -->
       <div slot="code-tab">
-
         <afi-component-playground [code]="codeSnippet()">
           <div slot="controls" class="space-y-space-4">
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Tamaño</legend>
+            <afi-radio-group legend="Tamaño">
               @for (s of sizes; track s) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input type="radio" name="size" [value]="s" [checked]="size() === s" (change)="size.set(s)" class="accent-action" />
-                  {{ s }}
-                </label>
+                <afi-radio-group-item
+                  [value]="s"
+                  [label]="s"
+                  [selected]="size() === s"
+                  (selectedChange)="$any(size).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Opciones</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="showPosition()" (change)="showPosition.set(!showPosition())" class="accent-action" />
-                position (navegación)
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="closeOnOutside()" (change)="closeOnOutside.set(!closeOnOutside())" class="accent-action" />
-                closeOnOutsideClick
-              </label>
+              <afi-checkbox
+                [checked]="showPosition()"
+                (checkedChange)="showPosition.set($event)"
+                label="position (navegación)"
+                size="sm"
+                [compact]="true"
+              />
+              <afi-checkbox
+                [checked]="closeOnOutside()"
+                (checkedChange)="closeOnOutside.set($event)"
+                label="closeOnOutsideClick"
+                size="sm"
+                [compact]="true"
+              />
             </fieldset>
 
             <button
@@ -102,49 +113,63 @@ const DRAWER_TOKENS: TokenRow[] = [
         </afi-component-playground>
 
         <section>
-          <h2 id="importar" class="text-section text-canvas-fg mb-space-4">Importar</h2>
+          <h2 id="importar" class="text-section text-canvas-fg mb-space-6">Importar</h2>
           <afi-code-block [code]="importCode" language="ts" />
         </section>
 
         <section>
-          <h2 id="uso" class="text-section text-canvas-fg mb-space-4">Uso</h2>
+          <h2 id="uso" class="text-section text-canvas-fg mb-space-6">Uso</h2>
 
-          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo usar</h3>
+          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Detalle de fila en Table — patrón click-to-detail.</li>
             <li>Edición rápida sin perder contexto de la lista.</li>
             <li>Paneles de configuración secundarios.</li>
           </ul>
 
-          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo NO usar</h3>
+          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo NO usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Acciones que requieren atención exclusiva — use Modal.</li>
             <li>Navegación principal — use Sidebar.</li>
             <li>Contenido que no se relaciona con la vista actual.</li>
           </ul>
 
-          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-3">Composiciones</h3>
+          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Composiciones
+          </h3>
           <p class="text-body-md text-neutral-600 mb-space-8">
-            Table + Drawer para detalle de fila con navegación ← →. Drawer con formulario
-            y footer con botones de acción. Drawer con LoadingOverlay para carga asíncrona.
+            Table + Drawer para detalle de fila con navegación ← →. Drawer con formulario y footer
+            con botones de acción. Drawer con LoadingOverlay para carga asíncrona.
           </p>
 
-          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
+          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Ejemplo real
+          </h3>
           <afi-code-block [code]="realWorldCode" language="html" />
         </section>
 
         <section>
-          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-4">API Reference</h2>
+          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-6">API Reference</h2>
 
-          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-3">Entradas</h3>
+          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">Entradas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Predeterminado</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Predeterminado
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -160,14 +185,20 @@ const DRAWER_TOKENS: TokenRow[] = [
             </table>
           </div>
 
-          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-3">Salidas</h3>
+          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-4">Salidas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Carga útil</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Carga útil
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -186,57 +217,84 @@ const DRAWER_TOKENS: TokenRow[] = [
 
       <!-- ==================== DESIGN TAB ==================== -->
       <div slot="design-tab">
-
         <section>
-          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-4">Tokens consumidos</h2>
+          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-6">
+            Tokens consumidos
+          </h2>
           <afi-tokens-table [rows]="tokenRows" title="" />
         </section>
 
         <section>
-          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-4">Accesibilidad</h2>
+          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-6">Accesibilidad</h2>
 
-          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-3">Reglas</h3>
+          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-4">Reglas</h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li><code class="font-mono text-action-700">role="region"</code> con <code class="font-mono text-action-700">aria-label</code> o <code class="font-mono text-action-700">aria-labelledby</code>.</li>
+            <li>
+              <code class="font-mono text-action-700">role="region"</code> con
+              <code class="font-mono text-action-700">aria-label</code> o
+              <code class="font-mono text-action-700">aria-labelledby</code>.
+            </li>
             <li>NO es modal — no hay focus trap. La página sigue interactiva.</li>
             <li>Foco inicial en el primer elemento interactivo al abrir.</li>
             <li>Esc cierra el drawer (configurable).</li>
-            <li>Navegación ← → con <code class="font-mono text-action-700">aria-live="polite"</code> para anunciar posición.</li>
-            <li>Botón cerrar con <code class="font-mono text-action-700">aria-label="Cerrar"</code>.</li>
+            <li>
+              Navegación ← → con
+              <code class="font-mono text-action-700">aria-live="polite"</code> para anunciar
+              posición.
+            </li>
+            <li>
+              Botón cerrar con <code class="font-mono text-action-700">aria-label="Cerrar"</code>.
+            </li>
           </ul>
 
-          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-3">Mapa de teclado</h3>
+          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Mapa de teclado
+          </h3>
           <div class="space-y-space-3 mb-space-8">
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Esc</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Esc</kbd
+              >
               <span class="text-body-md text-neutral-600">Cierra el drawer</span>
             </div>
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">← / →</kbd>
-              <span class="text-body-md text-neutral-600">Navega entre filas (cuando position está presente)</span>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >← / →</kbd
+              >
+              <span class="text-body-md text-neutral-600"
+                >Navega entre filas (cuando position está presente)</span
+              >
             </div>
           </div>
         </section>
 
         <section>
-          <h2 id="motion" class="text-section text-canvas-fg mb-space-4">Motion</h2>
+          <h2 id="motion" class="text-section text-canvas-fg mb-space-6">Motion</h2>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-6">
-            <li>Slide-in: <code class="font-mono">translateX(100% → 0)</code> via CSS animation.</li>
+            <li>
+              Slide-in: <code class="font-mono">translateX(100% → 0)</code> via CSS animation.
+            </li>
             <li>Reduced motion: animación deshabilitada, aparición instantánea.</li>
           </ul>
         </section>
 
         <section>
-          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-4">Do & Don't</h2>
+          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-6">Do & Don't</h2>
           <div class="space-y-space-4">
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Drawer para detalle de fila con navegación entre registros.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Drawer para detalle de fila con navegación entre registros.
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Drawer para confirmación destructiva — use Modal.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Drawer para confirmación destructiva — use Modal.
+                </p>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-space-4">
@@ -246,7 +304,9 @@ const DRAWER_TOKENS: TokenRow[] = [
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Múltiples drawers apilados — confunde al usuario.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Múltiples drawers apilados — confunde al usuario.
+                </p>
               </div>
             </div>
           </div>
@@ -296,10 +356,25 @@ export class DrawerPage {
     { name: 'open', type: 'boolean', default: 'false', notes: 'Abre/cierra el drawer' },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", notes: 'Ancho del panel' },
     { name: 'title', type: 'string | null', default: 'null', notes: 'Título del header' },
-    { name: 'position', type: '{ current; total } | null', default: 'null', notes: 'Navegación entre filas' },
+    {
+      name: 'position',
+      type: '{ current; total } | null',
+      default: 'null',
+      notes: 'Navegación entre filas',
+    },
     { name: 'closeOnEsc', type: 'boolean', default: 'true', notes: 'Cierra con Esc' },
-    { name: 'closeOnOutsideClick', type: 'boolean', default: 'true', notes: 'Cierra al clic fuera' },
-    { name: 'ariaLabel', type: 'string | null', default: 'null', notes: 'Solo cuando title está ausente' },
+    {
+      name: 'closeOnOutsideClick',
+      type: 'boolean',
+      default: 'true',
+      notes: 'Cierra al clic fuera',
+    },
+    {
+      name: 'ariaLabel',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Solo cuando title está ausente',
+    },
   ];
 
   readonly apiOutputs = [

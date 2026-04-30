@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "wealth-manager-primeng",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start", "--prefix", "../wealth-manager-primeng"],
+      "port": 4301
+    }
+  ]
+}

@@ -15,9 +15,15 @@ const SIZE_MAP: Record<string, string> = {
  * is provided) or a `<span>` (when it is not). SVGs live in `public/brand/`
  * and are referenced by URL — no inline embedding.
  *
+ * Two forms:
+ * - `mark` (default): full wordmark "Afi" + symbol, widescreen aspect.
+ * - `icon`: symbol only (infinity + diamond), square-ish aspect. Use in
+ *   collapsed navigation, favicons, social/watermark positions.
+ *
  * @example
  * ```html
  * <coherence-logo variant="color" size="md" href="/" />
+ * <coherence-logo form="icon" variant="negativo" size="sm" />
  * ```
  */
 @Component({
@@ -33,10 +39,16 @@ export class LogoComponent {
   /** Display size mapped to --dim-* tokens. */
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
 
+  /** Mark (wordmark + symbol) or icon only (symbol). */
+  readonly form = input<'mark' | 'icon'>('mark');
+
   /** When set, wraps the logo in an anchor. */
   readonly href = input<string | null>(null);
 
-  readonly src = computed(() => `brand/afi-${this.variant()}.svg`);
+  readonly src = computed(() => {
+    const prefix = this.form() === 'icon' ? 'afi-icon' : 'afi';
+    return `brand/${prefix}-${this.variant()}.svg`;
+  });
 
   readonly heightVar = computed(() => SIZE_MAP[this.size()] ?? SIZE_MAP['md']);
 }

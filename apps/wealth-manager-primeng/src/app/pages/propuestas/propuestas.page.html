@@ -1,0 +1,151 @@
+<div class="shell">
+  <aside class="shell__sidebar" aria-label="Navegación principal">
+    <button class="shell__sidebar-btn" type="button" aria-label="Menú">
+      <i class="pi pi-bars" aria-hidden="true"></i>
+    </button>
+    <nav class="shell__nav">
+      <button class="shell__nav-item" type="button" aria-label="Personas">
+        <i class="pi pi-users" aria-hidden="true"></i>
+      </button>
+      <button class="shell__nav-item is-active" type="button" aria-label="Propuestas" aria-current="page">
+        <i class="pi pi-file" aria-hidden="true"></i>
+      </button>
+      <button class="shell__nav-item" type="button" aria-label="Mensajes">
+        <i class="pi pi-comments" aria-hidden="true"></i>
+      </button>
+      <button class="shell__nav-item" type="button" aria-label="Ajustes">
+        <i class="pi pi-cog" aria-hidden="true"></i>
+      </button>
+      <button class="shell__nav-item" type="button" aria-label="Notificaciones">
+        <i class="pi pi-bell" aria-hidden="true"></i>
+      </button>
+      <button class="shell__nav-item" type="button" aria-label="Calculadora">
+        <i class="pi pi-calculator" aria-hidden="true"></i>
+      </button>
+      <button class="shell__nav-item" type="button" aria-label="Informes">
+        <i class="pi pi-chart-line" aria-hidden="true"></i>
+      </button>
+      <button class="shell__nav-item" type="button" aria-label="Documentos">
+        <i class="pi pi-folder" aria-hidden="true"></i>
+      </button>
+      <button class="shell__nav-item" type="button" aria-label="Mensajes" >
+        <i class="pi pi-envelope" aria-hidden="true"></i>
+      </button>
+      <button class="shell__nav-item" type="button" aria-label="Subir">
+        <i class="pi pi-upload" aria-hidden="true"></i>
+      </button>
+    </nav>
+    <div class="shell__sidebar-bottom">
+      <button class="shell__nav-item" type="button" aria-label="Accesibilidad">
+        <i class="pi pi-prime" aria-hidden="true"></i>
+      </button>
+      <button class="shell__avatar" type="button" aria-label="Perfil">P</button>
+    </div>
+  </aside>
+
+  <main class="shell__main">
+    <header class="topbar">
+      <nav class="breadcrumb" aria-label="Ruta">
+        <a class="breadcrumb__item" href="#">
+          <i class="pi pi-users" aria-hidden="true"></i>
+          <span>Personas</span>
+        </a>
+        <i class="breadcrumb__sep pi pi-angle-right" aria-hidden="true"></i>
+        <a class="breadcrumb__item" href="#">[Cliente]</a>
+        <i class="breadcrumb__sep pi pi-angle-right" aria-hidden="true"></i>
+        <span class="breadcrumb__item is-current" aria-current="page">Propuestas</span>
+      </nav>
+      <div class="topbar__search">
+        <p-iconfield iconPosition="left">
+          <p-inputicon class="pi pi-search" />
+          <input
+            pInputText
+            type="search"
+            placeholder="Buscar"
+            [ngModel]="globalSearch()"
+            (ngModelChange)="globalSearch.set($event)"
+          />
+        </p-iconfield>
+      </div>
+    </header>
+
+    <section class="page">
+      <div class="page__header">
+        <h1 class="page__title">Listado de propuestas</h1>
+        <div class="page__toolbar">
+          <p-iconfield iconPosition="left" class="page__search">
+            <p-inputicon class="pi pi-search" />
+            <input
+              pInputText
+              type="search"
+              placeholder="Buscar"
+              [ngModel]="tableSearch()"
+              (ngModelChange)="tableSearch.set($event)"
+            />
+          </p-iconfield>
+          <p-button
+            label="Crear propuesta"
+            size="small"
+            (onClick)="openCreateDialog()"
+          />
+        </div>
+      </div>
+
+      <div class="page__table">
+        <p-table
+          [value]="proposals()"
+          [rows]="10"
+          [paginator]="true"
+          [totalRecords]="200"
+          paginatorPosition="bottom"
+          paginatorStyleClass="awmp-paginator"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+          [showCurrentPageReport]="true"
+          [showFirstLastIcon]="true"
+          dataKey="id"
+          styleClass="awmp-table"
+          [rowHover]="true"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Nombre</th>
+              <th>Tipo de propuesta</th>
+              <th>Estado</th>
+              <th class="nowrap">Fecha de valoración</th>
+              <th class="num">Total compras</th>
+              <th class="num">Total ventas</th>
+              <th class="actions"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-row>
+            <tr>
+              <td>
+                <span class="name-cell">
+                  {{ row.name }}
+                  <i class="pi pi-external-link" aria-hidden="true"></i>
+                </span>
+              </td>
+              <td>{{ typeLabelFor(row) }}</td>
+              <td>
+                <awmp-status-tag [status]="row.status" />
+              </td>
+              <td class="nowrap">{{ row.fechaValoracion }}</td>
+              <td class="num">{{ row.totalCompras }}</td>
+              <td class="num">{{ row.totalVentas }}</td>
+              <td class="actions">
+                <button class="row-actions" type="button" aria-label="Acciones">
+                  <i class="pi pi-ellipsis-h" aria-hidden="true"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<awmp-crear-propuesta-dialog
+  [(visible)]="dialogOpen"
+  (typeSelected)="onTypeSelected($event)"
+/>

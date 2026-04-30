@@ -1,11 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
-import { LoadingOverlayComponent } from '@coherence/ui';
+import {
+  LoadingOverlayComponent,
+  CheckboxComponent,
+  RadioGroupComponent,
+  RadioGroupItemComponent,
+  InputComponent,
+} from '@coherence/ui';
 import type { LoadingOverlayVariant } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../components/doc-page-layout';
@@ -35,6 +36,10 @@ const LO_TOKENS: TokenRow[] = [
     CodeBlockComponent,
     TokensTableComponent,
     LoadingOverlayComponent,
+    CheckboxComponent,
+    RadioGroupComponent,
+    RadioGroupItemComponent,
+    InputComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -47,55 +52,59 @@ const LO_TOKENS: TokenRow[] = [
     >
       <!-- ==================== CODE TAB ==================== -->
       <div slot="code-tab">
-
         <!-- Playground -->
         <afi-component-playground [code]="codeSnippet()">
           <div slot="controls" class="space-y-space-4">
             <!-- Variant -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Variante</legend>
+            <afi-radio-group legend="Variante">
               @for (v of variants; track v) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input
-                    type="radio"
-                    name="variant"
-                    [value]="v"
-                    [checked]="variant() === v"
-                    (change)="variant.set(v)"
-                    class="accent-action"
-                  />
-                  {{ v }}
-                </label>
+                <afi-radio-group-item
+                  [value]="v"
+                  [label]="v"
+                  [selected]="variant() === v"
+                  (selectedChange)="$any(variant).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- State toggles -->
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Estado</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="visible()" (change)="visible.set(!visible())" class="accent-action" />
-                visible
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="blocking()" (change)="blocking.set(!blocking())" class="accent-action" />
-                blocking
-              </label>
+              <afi-checkbox
+                [checked]="visible()"
+                (checkedChange)="visible.set($event)"
+                label="visible"
+                size="sm"
+                [compact]="true"
+              />
+              <afi-checkbox
+                [checked]="blocking()"
+                (checkedChange)="blocking.set($event)"
+                label="blocking"
+                size="sm"
+                [compact]="true"
+              />
             </fieldset>
 
             <!-- Message -->
             <div>
-              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm">Mensaje</label>
-              <input
-                type="text"
+              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm"
+                >Mensaje</label
+              >
+              <afi-input
+                size="sm"
                 [value]="message()"
-                (input)="onMessageInput($event)"
-                class="w-full border border-border-hairline rounded-md px-2 py-1 text-body-sm"
+                (valueChange)="message.set($event?.toString() ?? '')"
               />
             </div>
 
             <!-- Delay -->
             <div>
-              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm">Delay (ms)</label>
+              <label class="font-medium text-canvas-fg mb-space-1 block text-body-sm"
+                >Delay (ms)</label
+              >
               <input
                 type="number"
                 [value]="delay()"
@@ -116,7 +125,9 @@ const LO_TOKENS: TokenRow[] = [
               [blocking]="blocking()"
               [delay]="delay()"
             >
-              <div class="p-space-6 border border-border-hairline rounded-md text-body-md text-neutral-600">
+              <div
+                class="p-space-6 border border-border-hairline rounded-md text-body-md text-neutral-600"
+              >
                 Contenido envuelto por el overlay. Active "visible" para ver el efecto.
               </div>
             </afi-loading-overlay>
@@ -125,57 +136,71 @@ const LO_TOKENS: TokenRow[] = [
 
         <!-- Importar -->
         <section>
-          <h2 id="importar" class="text-section text-canvas-fg mb-space-4">Importar</h2>
-          <afi-code-block
-            [code]="importCode"
-            language="ts"
-          />
+          <h2 id="importar" class="text-section text-canvas-fg mb-space-6">Importar</h2>
+          <afi-code-block [code]="importCode" language="ts" />
         </section>
 
         <!-- Uso -->
         <section>
-          <h2 id="uso" class="text-section text-canvas-fg mb-space-4">Uso</h2>
+          <h2 id="uso" class="text-section text-canvas-fg mb-space-6">Uso</h2>
 
-          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo usar</h3>
+          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Operaciones asíncronas que toman más de 300ms (carga de datos, guardado).</li>
             <li>Transiciones de página con carga progresiva (variante line-reveal).</li>
             <li>Bloquear interacción del usuario mientras se procesa una acción crítica.</li>
           </ul>
 
-          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo NO usar</h3>
+          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo NO usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Cargas instantáneas (&lt;300ms) — el delay evita flashes, pero no añada el componente si no es necesario.</li>
+            <li>
+              Cargas instantáneas (&lt;300ms) — el delay evita flashes, pero no añada el componente
+              si no es necesario.
+            </li>
             <li>Carga de un elemento pequeño — use un skeleton o placeholder inline.</li>
-            <li>Feedback de botón — use el estado loading del <code class="font-mono">&lt;afi-button&gt;</code>.</li>
+            <li>
+              Feedback de botón — use el estado loading del
+              <code class="font-mono">&lt;afi-button&gt;</code>.
+            </li>
           </ul>
 
-          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-3">Composiciones</h3>
+          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Composiciones
+          </h3>
           <p class="text-body-md text-neutral-600 mb-space-8">
             Envuelve secciones de Card o Table para indicar carga parcial. Usa line-reveal en Shell
             para transiciones de página. Combina con delay para evitar flashes en cargas rápidas.
           </p>
 
-          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
-          <afi-code-block
-            [code]="realWorldCode"
-            language="html"
-          />
+          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Ejemplo real
+          </h3>
+          <afi-code-block [code]="realWorldCode" language="html" />
         </section>
 
         <!-- API Reference -->
         <section>
-          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-4">API Reference</h2>
+          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-6">API Reference</h2>
 
-          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-3">Entradas</h3>
+          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">Entradas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Predeterminado</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Predeterminado
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -191,14 +216,20 @@ const LO_TOKENS: TokenRow[] = [
             </table>
           </div>
 
-          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-3">Salidas</h3>
+          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-4">Salidas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Carga útil</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Carga útil
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -217,48 +248,76 @@ const LO_TOKENS: TokenRow[] = [
 
       <!-- ==================== DESIGN TAB ==================== -->
       <div slot="design-tab">
-
         <!-- Tokens consumidos -->
         <section>
-          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-4">Tokens consumidos</h2>
+          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-6">
+            Tokens consumidos
+          </h2>
           <afi-tokens-table [rows]="tokenRows" title="" />
         </section>
 
         <!-- Accesibilidad -->
         <section>
-          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-4">Accesibilidad</h2>
+          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-6">Accesibilidad</h2>
 
-          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-3">Reglas</h3>
+          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-4">Reglas</h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Overlay tiene <code class="font-mono text-action-700">role="status"</code> y <code class="font-mono text-action-700">aria-live="polite"</code>.</li>
-            <li>Host usa <code class="font-mono text-action-700">aria-busy="true"</code> mientras el overlay es visible.</li>
-            <li>Spinner decorativo tiene <code class="font-mono text-action-700">aria-hidden="true"</code>.</li>
-            <li>Si no hay mensaje visible, un <code class="font-mono text-action-700">sr-only</code> anuncia "Cargando…".</li>
-            <li>Variante line-reveal: la barra es decorativa, el anuncio va en un status region oculto.</li>
+            <li>
+              Overlay tiene <code class="font-mono text-action-700">role="status"</code> y
+              <code class="font-mono text-action-700">aria-live="polite"</code>.
+            </li>
+            <li>
+              Host usa <code class="font-mono text-action-700">aria-busy="true"</code> mientras el
+              overlay es visible.
+            </li>
+            <li>
+              Spinner decorativo tiene
+              <code class="font-mono text-action-700">aria-hidden="true"</code>.
+            </li>
+            <li>
+              Si no hay mensaje visible, un
+              <code class="font-mono text-action-700">sr-only</code> anuncia "Cargando…".
+            </li>
+            <li>
+              Variante line-reveal: la barra es decorativa, el anuncio va en un status region
+              oculto.
+            </li>
           </ul>
 
-          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-3">Mapa de teclado</h3>
+          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Mapa de teclado
+          </h3>
           <div class="space-y-space-3 mb-space-8">
             <p class="text-body-md text-neutral-600">
-              No aplica: el componente es informativo, no interactivo. Cuando <code class="font-mono">blocking</code>
+              No aplica: el componente es informativo, no interactivo. Cuando
+              <code class="font-mono">blocking</code>
               es true, las interacciones dentro del contenedor se bloquean vía overlay.
             </p>
           </div>
 
-          <h3 id="demostracion-lectora" class="text-body-md font-medium text-canvas-fg mb-space-3">Demostración lectora de pantalla</h3>
-          <div class="p-space-4 bg-neutral-50 rounded-md border border-border-hairline space-y-space-4">
+          <h3 id="demostracion-lectora" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Demostración lectora de pantalla
+          </h3>
+          <div
+            class="p-space-4 bg-neutral-50 rounded-md border border-border-hairline space-y-space-4"
+          >
             <afi-loading-overlay [visible]="true" [delay]="0" message="Guardando cambios…">
               <div class="p-space-4 text-body-sm text-neutral-400">Contenido bloqueado</div>
             </afi-loading-overlay>
-            <code class="block text-body-sm font-mono text-neutral-600">aria-busy="true" · role="status" · aria-live="polite"</code>
+            <code class="block text-body-sm font-mono text-neutral-600"
+              >aria-busy="true" · role="status" · aria-live="polite"</code
+            >
           </div>
         </section>
 
         <!-- Motion -->
         <section>
-          <h2 id="motion" class="text-section text-canvas-fg mb-space-4">Motion</h2>
+          <h2 id="motion" class="text-section text-canvas-fg mb-space-6">Motion</h2>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-6">
-            <li>Fade-in del overlay: <code class="font-mono">var(--duration-fast)</code> (150ms) ease-out.</li>
+            <li>
+              Fade-in del overlay: <code class="font-mono">var(--duration-fast)</code> (150ms)
+              ease-out.
+            </li>
             <li>Spinner: 700ms rotación lineal infinita.</li>
             <li>Line-reveal barra: 400ms ease-out scaleX(0→1).</li>
             <li>Line-reveal contenido: 200ms ease-out fade-in con 400ms de retraso.</li>
@@ -268,26 +327,34 @@ const LO_TOKENS: TokenRow[] = [
 
         <!-- Do & Don't -->
         <section>
-          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-4">Do & Don't</h2>
+          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-6">Do & Don't</h2>
           <div class="space-y-space-4">
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Use delay ≥ 300ms para evitar flashes en cargas rápidas.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Use delay ≥ 300ms para evitar flashes en cargas rápidas.
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Mostrar spinner para operaciones &lt;300ms causa parpadeo molesto.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Mostrar spinner para operaciones &lt;300ms causa parpadeo molesto.
+                </p>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Line-reveal para transiciones de página completa.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Line-reveal para transiciones de página completa.
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Line-reveal para cargar un solo campo de formulario — demasiado dramático.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Line-reveal para cargar un solo campo de formulario — demasiado dramático.
+                </p>
               </div>
             </div>
           </div>
@@ -329,21 +396,45 @@ export class LoadingOverlayPage {
   });
 
   readonly apiInputs = [
-    { name: 'visible', type: 'boolean', default: 'false', notes: 'Muestra/oculta el overlay (con delay)' },
-    { name: 'variant', type: "'quiet-spinner' | 'line-reveal'", default: "'quiet-spinner'", notes: 'Estilo visual' },
-    { name: 'message', type: 'string | null', default: 'null', notes: 'Texto visible bajo el spinner' },
-    { name: 'blocking', type: 'boolean', default: 'true', notes: 'Bloquea interacción del contenido' },
-    { name: 'delay', type: 'number', default: '300', notes: 'Milisegundos antes de mostrar (evita flash)' },
+    {
+      name: 'visible',
+      type: 'boolean',
+      default: 'false',
+      notes: 'Muestra/oculta el overlay (con delay)',
+    },
+    {
+      name: 'variant',
+      type: "'quiet-spinner' | 'line-reveal'",
+      default: "'quiet-spinner'",
+      notes: 'Estilo visual',
+    },
+    {
+      name: 'message',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Texto visible bajo el spinner',
+    },
+    {
+      name: 'blocking',
+      type: 'boolean',
+      default: 'true',
+      notes: 'Bloquea interacción del contenido',
+    },
+    {
+      name: 'delay',
+      type: 'number',
+      default: '300',
+      notes: 'Milisegundos antes de mostrar (evita flash)',
+    },
   ];
 
   readonly apiOutputs = [
-    { name: 'visibleChange', payload: 'boolean', notes: 'Emitido cuando el overlay se muestra u oculta' },
+    {
+      name: 'visibleChange',
+      payload: 'boolean',
+      notes: 'Emitido cuando el overlay se muestra u oculta',
+    },
   ];
-
-  onMessageInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.message.set(target.value);
-  }
 
   onDelayInput(event: Event): void {
     const target = event.target as HTMLInputElement;

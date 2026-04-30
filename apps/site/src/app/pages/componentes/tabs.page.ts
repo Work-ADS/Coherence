@@ -1,11 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
-import { TabsComponent, TabComponent } from '@coherence/ui';
+import {
+  TabsComponent,
+  TabComponent,
+  CheckboxComponent,
+  RadioGroupComponent,
+  RadioGroupItemComponent,
+} from '@coherence/ui';
 import type { TabsSize } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../components/doc-page-layout';
@@ -36,6 +37,9 @@ const TABS_TOKENS: TokenRow[] = [
     TokensTableComponent,
     TabsComponent,
     TabComponent,
+    CheckboxComponent,
+    RadioGroupComponent,
+    RadioGroupItemComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -48,32 +52,40 @@ const TABS_TOKENS: TokenRow[] = [
     >
       <!-- ==================== CODE TAB ==================== -->
       <div slot="code-tab">
-
         <!-- Playground -->
         <afi-component-playground [code]="codeSnippet()">
           <div slot="controls" class="space-y-space-4">
             <!-- Size -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Tamaño</legend>
+            <afi-radio-group legend="Tamaño">
               @for (s of sizes; track s) {
-                <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                  <input type="radio" name="size" [value]="s" [checked]="size() === s" (change)="size.set(s)" class="accent-action" />
-                  {{ s }}
-                </label>
+                <afi-radio-group-item
+                  [value]="s"
+                  [label]="s"
+                  [selected]="size() === s"
+                  (selectedChange)="$any(size).set($event)"
+                  size="sm"
+                  [compact]="true"
+                />
               }
-            </fieldset>
+            </afi-radio-group>
 
             <!-- Options -->
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Opciones</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="lazy()" (change)="lazy.set(!lazy())" class="accent-action" />
-                lazy
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="disableSecond()" (change)="disableSecond.set(!disableSecond())" class="accent-action" />
-                deshabilitar 2da pestaña
-              </label>
+              <afi-checkbox
+                [checked]="lazy()"
+                (checkedChange)="lazy.set($event)"
+                label="lazy"
+                size="sm"
+                [compact]="true"
+              />
+              <afi-checkbox
+                [checked]="disableSecond()"
+                (checkedChange)="disableSecond.set($event)"
+                label="deshabilitar 2da pestaña"
+                size="sm"
+                [compact]="true"
+              />
             </fieldset>
           </div>
 
@@ -98,51 +110,67 @@ const TABS_TOKENS: TokenRow[] = [
 
         <!-- Importar -->
         <section>
-          <h2 id="importar" class="text-section text-canvas-fg mb-space-4">Importar</h2>
+          <h2 id="importar" class="text-section text-canvas-fg mb-space-6">Importar</h2>
           <afi-code-block [code]="importCode" language="ts" />
         </section>
 
         <!-- Uso -->
         <section>
-          <h2 id="uso" class="text-section text-canvas-fg mb-space-4">Uso</h2>
+          <h2 id="uso" class="text-section text-canvas-fg mb-space-6">Uso</h2>
 
-          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo usar</h3>
+          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Organizar contenido relacionado en secciones horizontales.</li>
             <li>Vistas alternativas del mismo conjunto de datos (tabla vs. gráfico).</li>
             <li>Secciones de configuración (General, Avanzado, Permisos).</li>
           </ul>
 
-          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-3">Cuándo NO usar</h3>
+          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Cuándo NO usar
+          </h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
             <li>Navegación principal de la aplicación — use Sidebar.</li>
             <li>Pasos secuenciales (wizard) — use un stepper.</li>
             <li>Más de 6 pestañas — considere un menú o filtros.</li>
           </ul>
 
-          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-3">Composiciones</h3>
+          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Composiciones
+          </h3>
           <p class="text-body-md text-neutral-600 mb-space-8">
-            Tabs dentro de Card para paneles con secciones. Tabs con badge para indicar
-            contadores. Tabs con lazy loading para pestañas pesadas.
+            Tabs dentro de Card para paneles con secciones. Tabs con badge para indicar contadores.
+            Tabs con lazy loading para pestañas pesadas.
           </p>
 
-          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
+          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Ejemplo real
+          </h3>
           <afi-code-block [code]="realWorldCode" language="html" />
         </section>
 
         <!-- API Reference -->
         <section>
-          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-4">API Reference</h2>
+          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-6">API Reference</h2>
 
-          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-3">Entradas (TabsComponent)</h3>
+          <h3 id="entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Entradas (TabsComponent)
+          </h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Predeterminado</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Predeterminado
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -158,15 +186,23 @@ const TABS_TOKENS: TokenRow[] = [
             </table>
           </div>
 
-          <h3 id="entradas-tab" class="text-body-md font-medium text-canvas-fg mb-space-3">Entradas (TabComponent)</h3>
+          <h3 id="entradas-tab" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Entradas (TabComponent)
+          </h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
                   <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Predeterminado</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Predeterminado
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -182,14 +218,20 @@ const TABS_TOKENS: TokenRow[] = [
             </table>
           </div>
 
-          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-3">Salidas</h3>
+          <h3 id="salidas" class="text-body-md font-medium text-canvas-fg mb-space-4">Salidas</h3>
           <div class="overflow-x-auto rounded-lg border border-border-hairline">
             <table class="w-full text-body-sm">
               <thead>
                 <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Nombre</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Carga útil</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Descripción</th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Nombre
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Carga útil
+                  </th>
+                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
+                    Descripción
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -208,64 +250,103 @@ const TABS_TOKENS: TokenRow[] = [
 
       <!-- ==================== DESIGN TAB ==================== -->
       <div slot="design-tab">
-
         <section>
-          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-4">Tokens consumidos</h2>
+          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-6">
+            Tokens consumidos
+          </h2>
           <afi-tokens-table [rows]="tokenRows" title="" />
         </section>
 
         <section>
-          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-4">Accesibilidad</h2>
+          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-6">Accesibilidad</h2>
 
-          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-3">Reglas</h3>
+          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-4">Reglas</h3>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Contenedor con <code class="font-mono text-action-700">role="tablist"</code> y <code class="font-mono text-action-700">aria-label</code>.</li>
-            <li>Cada botón con <code class="font-mono text-action-700">role="tab"</code>, <code class="font-mono text-action-700">aria-selected</code>, <code class="font-mono text-action-700">aria-controls</code>.</li>
-            <li>Panel con <code class="font-mono text-action-700">role="tabpanel"</code> y <code class="font-mono text-action-700">aria-labelledby</code>.</li>
-            <li>Roving tabindex: solo el tab activo tiene <code class="font-mono">tabindex="0"</code>.</li>
-            <li>Tabs deshabilitados marcados con <code class="font-mono text-action-700">disabled</code> y opacidad reducida.</li>
+            <li>
+              Contenedor con <code class="font-mono text-action-700">role="tablist"</code> y
+              <code class="font-mono text-action-700">aria-label</code>.
+            </li>
+            <li>
+              Cada botón con <code class="font-mono text-action-700">role="tab"</code>,
+              <code class="font-mono text-action-700">aria-selected</code>,
+              <code class="font-mono text-action-700">aria-controls</code>.
+            </li>
+            <li>
+              Panel con <code class="font-mono text-action-700">role="tabpanel"</code> y
+              <code class="font-mono text-action-700">aria-labelledby</code>.
+            </li>
+            <li>
+              Roving tabindex: solo el tab activo tiene <code class="font-mono">tabindex="0"</code>.
+            </li>
+            <li>
+              Tabs deshabilitados marcados con
+              <code class="font-mono text-action-700">disabled</code> y opacidad reducida.
+            </li>
           </ul>
 
-          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-3">Mapa de teclado</h3>
+          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-4">
+            Mapa de teclado
+          </h3>
           <div class="space-y-space-3 mb-space-8">
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Tab</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Tab</kbd
+              >
               <span class="text-body-md text-neutral-600">Enfoca el tab activo</span>
             </div>
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">← / →</kbd>
-              <span class="text-body-md text-neutral-600">Navega entre pestañas (salta deshabilitadas)</span>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >← / →</kbd
+              >
+              <span class="text-body-md text-neutral-600"
+                >Navega entre pestañas (salta deshabilitadas)</span
+              >
             </div>
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Home / End</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Home / End</kbd
+              >
               <span class="text-body-md text-neutral-600">Primera / última pestaña habilitada</span>
             </div>
             <div class="flex items-center gap-space-3">
-              <kbd class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono">Enter / Space</kbd>
+              <kbd
+                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
+                >Enter / Space</kbd
+              >
               <span class="text-body-md text-neutral-600">Activa la pestaña enfocada</span>
             </div>
           </div>
         </section>
 
         <section>
-          <h2 id="motion" class="text-section text-canvas-fg mb-space-4">Motion</h2>
+          <h2 id="motion" class="text-section text-canvas-fg mb-space-6">Motion</h2>
           <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-6">
-            <li>Transición de color en tabs: <code class="font-mono">var(--duration-fast)</code> ease-out.</li>
+            <li>
+              Transición de color en tabs:
+              <code class="font-mono">var(--duration-fast)</code> ease-out.
+            </li>
             <li>Reduced motion: transiciones colapsan a instantáneo.</li>
           </ul>
         </section>
 
         <section>
-          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-4">Do & Don't</h2>
+          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-6">Do & Don't</h2>
           <div class="space-y-space-4">
             <div class="grid grid-cols-2 gap-space-4">
               <div class="p-space-4 border border-system-success rounded-md">
                 <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">Use 2–5 tabs con etiquetas cortas y descriptivas.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Use 2–5 tabs con etiquetas cortas y descriptivas.
+                </p>
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Más de 6 tabs o etiquetas largas que truncan.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Más de 6 tabs o etiquetas largas que truncan.
+                </p>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-space-4">
@@ -275,7 +356,9 @@ const TABS_TOKENS: TokenRow[] = [
               </div>
               <div class="p-space-4 border border-system-error rounded-md">
                 <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">Tabs como navegación principal — use Sidebar.</p>
+                <p class="text-body-sm text-neutral-600">
+                  Tabs como navegación principal — use Sidebar.
+                </p>
               </div>
             </div>
           </div>
@@ -320,13 +403,23 @@ export class TabsPage {
     { name: 'activeIndex', type: 'number', default: '0', notes: 'Índice de la pestaña activa' },
     { name: 'size', type: "'sm' | 'md'", default: "'md'", notes: 'Tamaño de las pestañas' },
     { name: 'lazy', type: 'boolean', default: 'false', notes: 'Renderiza solo el panel activo' },
-    { name: 'ariaLabel', type: 'string | null', default: 'null', notes: 'Etiqueta accesible del tablist' },
+    {
+      name: 'ariaLabel',
+      type: 'string | null',
+      default: 'null',
+      notes: 'Etiqueta accesible del tablist',
+    },
   ];
 
   readonly apiInputsTab = [
     { name: 'label', type: 'string', default: '(requerido)', notes: 'Texto de la pestaña' },
     { name: 'icon', type: 'string | null', default: 'null', notes: 'Icono (reservado)' },
-    { name: 'badge', type: 'number | string | null', default: 'null', notes: 'Indicador numérico o textual' },
+    {
+      name: 'badge',
+      type: 'number | string | null',
+      default: 'null',
+      notes: 'Indicador numérico o textual',
+    },
     { name: 'disabled', type: 'boolean', default: 'false', notes: 'Desactiva la pestaña' },
   ];
 

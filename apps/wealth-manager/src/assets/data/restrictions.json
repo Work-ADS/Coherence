@@ -1,0 +1,26 @@
+{
+  "PROP-DEMO-001": {
+    "propuestaId": "PROP-DEMO-001",
+    "regulatoria": [
+      { "id": "reg-01", "name": "Exposición a renta variable", "threshold": "≤ 70%", "status": "ok", "reference": "MIFID II Art. 24", "rationale": "Perfil conservador del contrato" },
+      { "id": "reg-02", "name": "Concentración por emisor", "threshold": "≤ 10%", "status": "ok", "reference": "MIFID II Art. 25.2", "rationale": "Diversificación mínima requerida" },
+      { "id": "reg-03", "name": "Liquidez mínima", "threshold": "≥ 5%", "status": "ok", "reference": "CNMV Circular 1/2019", "rationale": "Colchón de liquidez regulatorio" },
+      { "id": "reg-04", "name": "Instrumentos complejos", "threshold": "≤ 15%", "status": "atencion", "reference": "MIFID II Art. 25.4", "rationale": "Incluye derivados y productos estructurados" },
+      { "id": "reg-05", "name": "Activos no cotizados", "threshold": "= 0%", "status": "ok", "reference": "CNMV Norma 3/2020", "rationale": "No permitido para perfil conservador" }
+    ],
+    "esg": [
+      { "id": "esg-01", "name": "Exclusión armas controversiales", "threshold": null, "status": "ok", "reference": "SFDR Art. 7", "rationale": "Verificación de exclusión global" },
+      { "id": "esg-02", "name": "Huella de carbono", "threshold": "≤ 120 tCO₂e/M€", "status": "atencion", "reference": "SFDR Art. 4 PAI #1", "rationale": "Acercándose al límite por posición en EM" },
+      { "id": "esg-03", "name": "Alineación Taxonomía UE", "threshold": "≥ 20%", "status": "ok", "reference": "Reglamento Taxonomía Art. 5", "rationale": "Fondos indexados con reporte de alineación" },
+      { "id": "esg-04", "name": "Exposición a combustibles fósiles", "threshold": "≤ 5%", "status": "restringido", "reference": "Política ESG interna v3.2", "rationale": "Sobreponderación en emergentes con exposición energía" },
+      { "id": "esg-05", "name": "Controversias severas", "threshold": null, "status": "ok", "reference": "UN Global Compact", "rationale": "Sin alertas activas en los subyacentes" }
+    ],
+    "contrato": [
+      { "id": "con-01", "name": "Perfil de riesgo", "threshold": "Conservador (3/7)", "status": "ok", "reference": "Contrato 2024-MART §4.1", "rationale": "Asignado en el test de idoneidad" },
+      { "id": "con-02", "name": "Horizonte temporal", "threshold": "≥ 3 años", "status": "ok", "reference": "Contrato 2024-MART §4.2", "rationale": "Declarado por el cliente" },
+      { "id": "con-03", "name": "Restricción divisas", "threshold": "EUR ≥ 80%", "status": "ok", "reference": "Contrato 2024-MART §5.1", "rationale": "Preferencia de divisa del cliente" },
+      { "id": "con-04", "name": "Máximo drawdown", "threshold": "≤ 8%", "status": "atencion", "reference": "Contrato 2024-MART §6.3", "rationale": "VaR simulado al 7.2%, cerca del límite" },
+      { "id": "con-05", "name": "Sectores excluidos", "threshold": "Tabaco, Juego", "status": "ok", "reference": "Contrato 2024-MART §5.4", "rationale": "Preferencia ética del cliente" }
+    ]
+  }
+}

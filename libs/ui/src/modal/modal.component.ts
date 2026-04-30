@@ -92,7 +92,7 @@ export class ModalComponent implements OnDestroy {
 
   readonly panelClasses = computed(() => {
     return [
-      'p-0 border-none bg-transparent w-full',
+      'p-0 border-none bg-transparent w-full mx-auto',
       'backdrop:bg-black/40',
       sizeClasses[this.size()],
     ].join(' ');

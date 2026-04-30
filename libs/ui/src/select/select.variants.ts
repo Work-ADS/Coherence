@@ -15,10 +15,18 @@ export const stateClasses = {
   error: 'border-system-error hover:border-system-error',
 } as const;
 
+/**
+ * Size variants for the trigger button.
+ *
+ * Horizontal padding is symmetric (same left & right). The chevron sits at
+ * the end of the flex row, naturally landing right at the padding edge —
+ * no extra right-padding is needed. Previously pr-8/10/12 created unwanted
+ * empty space between chevron and the container edge.
+ */
 export const sizeClasses = {
-  sm: 'h-8 px-3 pr-8 text-body-sm',
-  md: 'h-10 px-4 pr-10 text-body-md',
-  lg: 'h-12 px-5 pr-12 text-body-md',
+  sm: 'h-8 px-3 text-body-sm',
+  md: 'h-10 px-4 text-body-md',
+  lg: 'h-12 px-5 text-body-md',
 } as const;
 
 /** Tokens consumed by Select — shown on the Design tab. */

@@ -25,18 +25,20 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       type="button"
       (click)="toggle()"
       [attr.aria-expanded]="isOpen()"
-      class="flex items-center w-full px-space-3 py-space-2 rounded-sm
-             text-body-sm font-medium text-canvas-fg
+      class="flex items-center w-full px-3 py-1 rounded-sm
+             text-sm text-canvas-fg
              hover:bg-surface-muted
              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus
-             transition-colors duration-fast">
+             transition-colors"
+    >
       <svg
         class="w-4 h-4 mr-space-2 shrink-0 transition-transform duration-fast"
         [class.rotate-90]="isOpen()"
         viewBox="0 0 16 16"
         fill="none"
         stroke="currentColor"
-        stroke-width="1.5">
+        stroke-width="1.5"
+      >
         <path d="M6 4l4 4-4 4" />
       </svg>
       {{ label() }}
@@ -65,7 +67,7 @@ export class NavSectionComponent {
         filter((e): e is NavigationEnd => e instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(e => {
+      .subscribe((e) => {
         this.currentUrl.set(e.urlAfterRedirects);
         // Reset manual state on navigation so auto-expand takes over
         this.manualState.set(null);

@@ -50,4 +50,8 @@ export const novedades_routes: Routes = [
     path: 'bitacora',
     loadComponent: () => import('./bitacora/bitacora.page').then((m) => m.BitacoraPage),
   },
+  {
+    path: 'iteracion-2',
+    loadComponent: () => import('./iteracion-2/iteracion-2.page').then((m) => m.Iteracion2Page),
+  },
 ];

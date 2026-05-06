@@ -4,7 +4,8 @@
   "private": true,
   "description": "Coherence — AFI Design System",
   "workspaces": [
-    "apps/site"
+    "apps/site",
+    "libs/tokens"
   ],
   "scripts": {
     "start": "npm run build:tokens && npm start --workspace coherence-site",

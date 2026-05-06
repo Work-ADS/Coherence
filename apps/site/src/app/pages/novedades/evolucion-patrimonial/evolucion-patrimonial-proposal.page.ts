@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+  type WritableSignal,
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 import {
@@ -16,6 +22,7 @@ import {
   type Escenario,
   type Detalle,
 } from '../../patrones/graficos/evolucion-patrimonial/evolucion-bar-chart.component';
+import { bridgeDesignReviewVersion } from '../shared/design-review-bridge';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
 import { VersionToggleComponent, type VersionOption } from '../shared/version-toggle.component';
@@ -256,6 +263,7 @@ type LayoutVersion = 'v1' | 'v2' | 'v3';
                 [incluirInmobiliario]="ajusteInmobiliario()"
                 [mostrarObjetivos]="ajusteObjetivos()"
                 [palette]="version()"
+                [legendPlacement]="version() === 'v1' ? 'bottom' : 'top'"
               />
             </ng-template>
 
@@ -517,6 +525,10 @@ export class EvolucionPatrimonialProposalPage {
   readonly vista = signal<Vista>('actual');
   readonly escenario = signal<Escenario>('medio');
   readonly detalle = signal<Detalle>('agregada');
+
+  constructor() {
+    bridgeDesignReviewVersion(this.version as unknown as WritableSignal<string>);
+  }
 
   /** Page-level layout version. V1 = filtros arriba (current),
    *  V2 = filtros a la derecha del header, V3 = filtros debajo del gráfico.

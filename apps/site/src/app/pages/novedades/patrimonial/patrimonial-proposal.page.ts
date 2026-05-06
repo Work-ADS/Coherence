@@ -8,10 +8,10 @@ import {
   signal,
   viewChild,
   viewChildren,
+  type WritableSignal,
 } from '@angular/core';
 
 import {
-  BadgeComponent,
   ButtonComponent,
   InputComponent,
   KbdComponent,
@@ -20,7 +20,9 @@ import {
 } from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
 
+import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patrimonial/graph-card-header.component';
 import { ActionToastComponent } from '../shared/action-toast.component';
+import { bridgeDesignReviewVersion } from '../shared/design-review-bridge';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
 import { VersionToggleComponent, type VersionOption } from '../shared/version-toggle.component';
@@ -50,7 +52,7 @@ type AssetSection = {
   key: string;
   title: string;
   total: string;
-  addLabel: string;
+  description: string;
   columns: AssetColumn[];
   rows: AssetRow[];
 };
@@ -72,12 +74,12 @@ type AddedAsset = {
   selector: 'site-patrimonial-proposal-page',
   standalone: true,
   imports: [
-    BadgeComponent,
     ButtonComponent,
     InputComponent,
     KbdComponent,
     PageHeaderComponent,
     SelectComponent,
+    GraphCardHeaderComponent,
     ActionToastComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
@@ -246,21 +248,21 @@ type AddedAsset = {
                  filter strip so the stable "identity" context is always visible up top. -->
             <div class="mx-space-8 mt-space-6 grid grid-cols-3 gap-space-6">
               <div>
-                <p class="text-body-sm text-neutral-500 mb-space-1">Patrimonio total</p>
+                <p class="text-body-sm text-neutral-500 mb-space-1">Patrimonio neto</p>
                 <p class="text-section text-canvas-fg">1.240.000 €</p>
-                <p class="text-body-sm text-neutral-500 mt-space-1">Patrimonio invertido</p>
+                <p class="text-body-sm text-neutral-500 mt-space-1">Activos menos deudas</p>
               </div>
               <div>
-                <p class="text-body-sm text-neutral-500 mb-space-1">Rentabilidad esperada</p>
-                <p class="text-section text-canvas-fg">
-                  5,4 <span class="text-body text-neutral-500">%</span>
+                <p class="text-body-sm text-neutral-500 mb-space-1">Liquidez disponible</p>
+                <p class="text-section text-canvas-fg">65.200 €</p>
+                <p class="text-body-sm text-neutral-500 mt-space-1">Disponible a corto plazo</p>
+              </div>
+              <div>
+                <p class="text-body-sm text-neutral-500 mb-space-1">Patrimonio invertido</p>
+                <p class="text-section text-canvas-fg">539.600 €</p>
+                <p class="text-body-sm text-neutral-500 mt-space-1">
+                  Inversión, pensiones y private equity
                 </p>
-                <p class="text-body-sm text-neutral-500 mt-space-1">Anual estimada</p>
-              </div>
-              <div>
-                <p class="text-body-sm text-neutral-500 mb-space-1">Perfil seleccionado</p>
-                <div><afi-badge intent="info">Moderado</afi-badge></div>
-                <p class="text-body-sm text-neutral-500 mt-space-1">Tolerancia al riesgo media</p>
               </div>
             </div>
 
@@ -848,54 +850,68 @@ type AddedAsset = {
                 }
               </div>
 
-              <!-- Hairline divider + DS-style icon buttons (square-ish, rounded-md — not circular) -->
               <span class="w-px h-5 bg-border-hairline shrink-0 ml-auto" aria-hidden="true"></span>
-              <div class="shrink-0 flex items-center gap-space-1">
-                <!-- Añadir — primary icon-only -->
-                <span class="relative inline-flex group/tt">
-                  <button
-                    type="button"
-                    (click)="addDialogOpen.set(true)"
-                    class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-action-700 hover:bg-action-700/90 text-white transition-colors"
-                    aria-label="Añadir patrimonio"
-                  >
-                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path
-                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                      />
-                    </svg>
-                  </button>
-                  <span role="tooltip" class="tt-pop">Añadir patrimonio · A</span>
-                </span>
-
-                <!-- Editar global removed — per-row editing belongs in the three-dot
-                     menu, not as a global mode that asks the user to remember state.
-                     The primary "Añadir patrimonio" CTA above is the global action. -->
-              </div>
+              <afi-button
+                variant="primary"
+                size="sm"
+                iconStart="plus"
+                ariaLabel="Añadir patrimonio"
+                (clicked)="addDialogOpen.set(true)"
+              >
+                <svg
+                  slot="iconStart"
+                  class="w-4 h-4"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  />
+                </svg>
+                Añadir patrimonio
+                <kbd
+                  class="inline-flex items-center justify-center h-5 min-w-5 px-1 rounded-sm text-[11px] font-mono bg-white/20 text-white border border-white/25"
+                  >A</kbd
+                >
+              </afi-button>
             </div>
 
             <!-- Table sections — each renders with its own column schema
                  (dynamic CSS grid built from section.columns widths).
                  Track key includes activeTab() so panels re-mount on tab change and
                  re-play the .tab-panel entrance animation. -->
-            <div class="mx-space-8 mt-space-6 flex flex-col gap-space-12 pb-space-10">
+            <div
+              class="mx-space-8 mt-space-6 flex flex-col pb-space-10"
+              [class.gap-space-12]="version() === 'v1'"
+              [class.gap-space-8]="version() !== 'v1'"
+            >
               @for (s of visibleSections(); track s.key + '::' + activeTab()) {
                 @if (filteredRows(s); as rows) {
                   @if (rows.length > 0) {
                     <section
                       class="tab-panel"
+                      [class.border-t]="version() !== 'v1'"
+                      [class.border-border-hairline]="version() !== 'v1'"
+                      [class.pt-space-4]="version() !== 'v1'"
                       [class.tab-panel--backward]="tabDirection() === 'backward'"
                     >
-                      <!-- Header: label → total. Two lines instead of three — the third
-                       line ("Total del segmento") repeated information already implied
-                       by the section title, so it goes. The activo count moves into a
-                       small trailing badge so it's still visible without crowding the
-                       title stack. -->
-                      <div class="flex items-start justify-between gap-space-4 mb-space-4">
-                        <div class="flex flex-col">
+                      @if (version() === 'v1') {
+                        <!-- V1 keeps the original patrimonial table setup: roomy sections
+                             and a floating graph-style header. -->
+                        <div class="mb-space-4 max-w-[760px]">
+                          <afi-graph-card-header
+                            [label]="s.title"
+                            [headline]="s.description"
+                            [comparison]="tableHeaderMeta(s, rows.length)"
+                          />
+                        </div>
+                      } @else {
+                        <!-- V2/V3 keep the newer compact feedback version for comparison. -->
+                        <div class="flex flex-col mb-space-4">
                           <div class="flex items-baseline gap-space-2">
-                            <p class="text-body-sm font-medium text-neutral-700">{{ s.title }}</p>
-                            <span class="text-body-sm text-neutral-700 tabular-nums">
+                            <p class="text-body-md-600 text-canvas-fg">{{ s.title }}</p>
+                            <span class="text-body-sm text-neutral-500 tabular-nums">
                               @if (anyFilterActive() && rows.length !== s.rows.length) {
                                 · {{ rows.length }} de {{ sectionRowCount(s) }}
                               } @else {
@@ -906,26 +922,7 @@ type AddedAsset = {
                           </div>
                           <h2 class="text-section text-canvas-fg">{{ s.total }}</h2>
                         </div>
-                        <afi-button
-                          variant="ghost"
-                          size="sm"
-                          [ariaLabel]="'Añadir activo a ' + s.title"
-                        >
-                          <span class="inline-flex items-center gap-1">
-                            <svg
-                              class="w-3.5 h-3.5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path
-                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                              />
-                            </svg>
-                            <span>Añadir {{ s.addLabel }}</span>
-                          </span>
-                        </afi-button>
-                      </div>
+                      }
                       <!-- Free-flowing table — grid built from section.columns widths -->
                       <div>
                         <!-- Header row -->
@@ -1059,17 +1056,59 @@ type AddedAsset = {
                                 {{ row.cells[c.key] }}
                               </span>
                             }
-                            <button
-                              type="button"
-                              class="inline-flex items-center justify-center w-7 h-7 rounded hover:bg-surface-100 text-neutral-500"
-                              aria-label="Acciones de la fila"
-                            >
-                              <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path
-                                  d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 14a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"
-                                />
-                              </svg>
-                            </button>
+                            <div class="relative">
+                              <button
+                                type="button"
+                                class="inline-flex items-center justify-center w-7 h-7 rounded hover:bg-surface-100 text-neutral-500"
+                                aria-label="Acciones de la fila"
+                                aria-haspopup="menu"
+                                [attr.aria-expanded]="rowActionsOpen() === rowActionId(s, row)"
+                                (click)="toggleRowActions(s, row)"
+                              >
+                                <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                  <path
+                                    d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 14a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"
+                                  />
+                                </svg>
+                              </button>
+                              @if (rowActionsOpen() === rowActionId(s, row)) {
+                                <div
+                                  class="fixed inset-0 z-40"
+                                  (click)="rowActionsOpen.set(null)"
+                                  aria-hidden="true"
+                                ></div>
+                                <div
+                                  role="menu"
+                                  class="absolute right-0 top-full mt-1 z-50 min-w-[160px] p-space-1 bg-canvas-base border border-border-hairline rounded-md shadow-lg"
+                                >
+                                  <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="w-full flex items-center gap-space-2 px-space-2 py-space-2 rounded text-left text-body-sm text-canvas-fg hover:bg-surface-muted"
+                                    (click)="rowActionsOpen.set(null)"
+                                  >
+                                    Editar
+                                  </button>
+                                  <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="w-full flex items-center gap-space-2 px-space-2 py-space-2 rounded text-left text-body-sm text-canvas-fg hover:bg-surface-muted"
+                                    (click)="rowActionsOpen.set(null)"
+                                  >
+                                    Duplicar
+                                  </button>
+                                  <div class="h-px bg-border-hairline my-space-1"></div>
+                                  <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="w-full flex items-center gap-space-2 px-space-2 py-space-2 rounded text-left text-body-sm text-system-error-fg hover:bg-system-error-bg"
+                                    (click)="rowActionsOpen.set(null)"
+                                  >
+                                    Borrar
+                                  </button>
+                                </div>
+                              }
+                            </div>
                           </div>
 
                           <!-- Child rows — indented under the parent, no background -->
@@ -1156,11 +1195,7 @@ type AddedAsset = {
               <p
                 class="text-body-sm text-neutral-500 border-t border-border-hairline pt-space-4 max-w-[640px]"
               >
-                Cada sección define sus propias columnas según el tipo de activo — Deudas aporta
-                <em>Plazo pendiente</em> + <em>Tipo de interés</em>, Seguros de vida
-                <em>Capital de fallecimiento/invalidez</em>, Planes de pensiones
-                <em>Derechos consolidados</em>. Carteras de inversión expanden sus holdings internos
-                al pulsar el chevron. Todo esto se formalizará en variantes del
+                {{ tableExplainer() }} Todo esto se formalizará en variantes del
                 <code class="font-mono">afi-table</code>.
               </p>
             </div>
@@ -1181,7 +1216,7 @@ type AddedAsset = {
             class="bg-canvas-base border border-border-hairline rounded-lg shadow-xl w-[1040px] max-w-full h-[640px] max-h-[calc(100vh-48px)] flex flex-col overflow-hidden"
             (click)="$event.stopPropagation()"
           >
-            <!-- Stripe-style top bar: X · hairline · title …… Esc hint · Cancelar · Guardar activo -->
+            <!-- Stripe-style top bar: X · hairline · title -->
             <header
               class="flex items-center gap-space-3 px-space-4 h-12 border-b border-border-hairline bg-canvas-base shrink-0"
             >
@@ -1201,17 +1236,6 @@ type AddedAsset = {
               </button>
               <span class="w-px h-5 bg-border-hairline shrink-0" aria-hidden="true"></span>
               <h2 class="text-body-md font-medium text-canvas-fg">Añadir activo</h2>
-              <div class="ml-auto flex items-center gap-space-3">
-                <p class="text-caption text-neutral-500 inline-flex items-center gap-space-1">
-                  <afi-kbd [keys]="escShortcut" size="sm" /> para cancelar
-                </p>
-                <afi-button variant="ghost" size="sm" (clicked)="addDialogOpen.set(false)"
-                  >Cancelar</afi-button
-                >
-                <afi-button variant="primary" size="sm" (clicked)="saveNewActivo()"
-                  >Guardar activo</afi-button
-                >
-              </div>
             </header>
 
             <!-- Body: form left · live resumen right -->
@@ -1389,12 +1413,18 @@ type AddedAsset = {
               <!-- Right: reactive resumen — row preview + patrimonio diff -->
               <div class="flex-1 min-w-0 flex flex-col bg-surface-quiet">
                 <div class="flex-1 overflow-y-auto px-space-6 py-space-6 flex flex-col gap-space-4">
-                  <p class="text-caption uppercase tracking-wider text-action-700">Resumen</p>
+                  <div>
+                    <p class="text-body-sm font-medium text-neutral-700 mb-space-2">Resumen</p>
+                    <h3 class="text-section text-canvas-fg">Así quedará el nuevo activo</h3>
+                    <p class="text-body-sm text-neutral-700 mt-space-1">
+                      Revisa la fila y su impacto antes de guardar.
+                    </p>
+                  </div>
 
                   <!-- Card A — Row preview (adapts when Cartera: shows parent + indented children).
                        Typography trimmed to Figma/Granola/Stripe cadence: 11–13px, one bold focal figure. -->
-                  <div>
-                    <p class="text-caption text-neutral-500 mb-space-2">
+                  <div class="mt-space-2">
+                    <p class="text-body-sm font-medium text-canvas-fg mb-space-2">
                       Fila nueva en {{ addSectionForTipo() }}
                     </p>
                     <div
@@ -1476,11 +1506,13 @@ type AddedAsset = {
 
                   <!-- Card B — Patrimonio total diff, tightened -->
                   <div>
-                    <p class="text-caption text-neutral-500 mb-space-2">Impacto en patrimonio</p>
-                    <div class="bg-canvas-base border border-border-hairline rounded-md p-space-3">
-                      <p class="text-caption text-neutral-500">Patrimonio total</p>
-                      <div class="mt-space-1 flex items-baseline gap-space-2">
-                        <span class="text-[12px] tabular-nums text-neutral-500">{{
+                    <p class="text-body-sm font-medium text-canvas-fg mb-space-2">
+                      Impacto en patrimonio
+                    </p>
+                    <div class="bg-canvas-base border border-border-hairline rounded-md p-space-4">
+                      <p class="text-body-sm text-neutral-500">Patrimonio total</p>
+                      <div class="mt-space-1 flex items-center gap-space-2">
+                        <span class="text-body-sm tabular-nums text-neutral-500">{{
                           formatEuro(1240000)
                         }}</span>
                         <svg
@@ -1496,14 +1528,13 @@ type AddedAsset = {
                           <line x1="5" x2="19" y1="12" y2="12" />
                           <polyline points="12 5 19 12 12 19" />
                         </svg>
-                        <span
-                          class="text-[15px] leading-[20px] font-semibold tabular-nums text-canvas-fg"
-                          >{{ formatEuro(1240000 + addImporteNum()) }}</span
-                        >
+                        <strong class="text-body-md font-semibold tabular-nums text-canvas-fg">{{
+                          formatEuro(1240000 + addImporteNum())
+                        }}</strong>
                       </div>
                       @if (addImporteNum() > 0) {
                         <p
-                          class="mt-space-2 inline-flex items-center gap-space-2 text-[12px] text-action-700 tabular-nums"
+                          class="mt-space-3 inline-flex items-center gap-space-2 text-body-sm font-medium text-action-700 tabular-nums"
                         >
                           <svg
                             class="w-3 h-3"
@@ -1524,21 +1555,38 @@ type AddedAsset = {
                           >
                         </p>
                       } @else {
-                        <p class="mt-space-2 text-caption text-neutral-500">
+                        <p class="mt-space-3 text-body-sm text-neutral-500">
                           Introduce un importe para ver el impacto.
                         </p>
                       }
                     </div>
                   </div>
 
-                  <p class="text-caption text-neutral-500 leading-relaxed">
-                    Se añadirá a la sección
-                    <em class="text-canvas-fg not-italic">{{ addSectionForTipo() }}</em
-                    >. Podrás editarlo o moverlo a otra sección desde la fila una vez guardado.
+                  <p class="text-body-sm text-neutral-600 leading-relaxed">
+                    Se guardará en
+                    <span class="font-medium text-canvas-fg">{{ addSectionForTipo() }}</span
+                    >. Después podrás editarlo desde la fila.
                   </p>
                 </div>
               </div>
             </div>
+
+            <!-- Footer actions — committed controls live at the bottom of the modal. -->
+            <footer
+              class="h-14 px-space-4 border-t border-border-hairline bg-canvas-base shrink-0 flex items-center justify-end gap-space-3"
+            >
+              <p
+                class="text-caption text-neutral-500 inline-flex items-center gap-space-1 mr-space-1"
+              >
+                <afi-kbd [keys]="escShortcut" size="sm" /> para cancelar
+              </p>
+              <afi-button variant="ghost" size="sm" (clicked)="addDialogOpen.set(false)"
+                >Cancelar</afi-button
+              >
+              <afi-button variant="primary" size="sm" (clicked)="saveNewActivo()"
+                >Guardar activo</afi-button
+              >
+            </footer>
           </div>
         </div>
       }
@@ -1559,9 +1607,12 @@ export class PatrimonialProposalPage {
     // Measure the tab strip after first render so the left/right chevrons
     // reflect actual overflow from page load (not just after the user scrolls).
     afterNextRender(() => this.measureTabs());
+
+    bridgeDesignReviewVersion(this.version as unknown as WritableSignal<string>);
   }
 
   readonly addDialogOpen = signal(false);
+  readonly rowActionsOpen = signal<string | null>(null);
   readonly addTipo = signal<string>('liquidez');
   readonly addImporte = signal<string>('');
   readonly addEntidad = signal<string>('santander');
@@ -1901,14 +1952,11 @@ export class PatrimonialProposalPage {
 
   @HostListener('document:keydown', ['$event'])
   onKeydown(e: KeyboardEvent): void {
-    const target = e.target as HTMLElement | null;
-    const isTyping =
-      target &&
-      (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+    if (this.isTypingTarget(e)) return;
     if (
-      !isTyping &&
       !e.metaKey &&
       !e.ctrlKey &&
+      !e.altKey &&
       e.key.toLowerCase() === 'a' &&
       !this.addDialogOpen()
     ) {
@@ -1922,6 +1970,19 @@ export class PatrimonialProposalPage {
     }
   }
 
+  private isTypingTarget(e: Event): boolean {
+    // composedPath pierces Shadow DOM (e.g. design-review widget),
+    // so we catch typing in widgets that mount under document.body.
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : [];
+    for (const node of path) {
+      if (!(node instanceof Element)) continue;
+      const tag = node.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
+      if ((node as HTMLElement).isContentEditable) return true;
+    }
+    return false;
+  }
+
   readonly addShortcut: string[] = ['A'];
 
   // ---- Section data model ----
@@ -1933,7 +1994,7 @@ export class PatrimonialProposalPage {
       key: 'liquidez',
       title: 'Liquidez',
       total: '65.200 €',
-      addLabel: 'cuenta',
+      description: '65.200 € disponibles en liquidez.',
       columns: [
         { key: 'tipo', label: 'Tipo', width: '140px' },
         { key: 'entidad', label: 'Entidad', width: '160px' },
@@ -1958,7 +2019,7 @@ export class PatrimonialProposalPage {
       key: 'inversiones',
       title: 'Inversiones',
       total: '205.500 €',
-      addLabel: 'inversión',
+      description: '205.500 € invertidos en carteras, fondos y acciones.',
       columns: [
         { key: 'tipo', label: 'Tipo', width: '140px' },
         { key: 'entidad', label: 'Entidad', width: '160px' },
@@ -2038,7 +2099,7 @@ export class PatrimonialProposalPage {
       key: 'inmobiliario',
       title: 'Inmobiliario',
       total: '730.000 €',
-      addLabel: 'inmueble',
+      description: '730.000 € en patrimonio inmobiliario.',
       columns: [
         { key: 'uso', label: 'Uso', width: '1fr' },
         { key: 'valor', label: 'Valor', align: 'end', emphasis: true, width: '180px' },
@@ -2062,7 +2123,7 @@ export class PatrimonialProposalPage {
       key: 'private-equity',
       title: 'Private equity',
       total: '263.500 €',
-      addLabel: 'fondo',
+      description: '263.500 € en inversiones privadas.',
       columns: [
         { key: 'entidad', label: 'Entidad', width: '160px' },
         { key: 'compromiso', label: 'Compromiso', align: 'end', width: '160px' },
@@ -2089,7 +2150,7 @@ export class PatrimonialProposalPage {
       key: 'planes-pensiones',
       title: 'Planes de pensiones y EPSV',
       total: '70.600 €',
-      addLabel: 'plan',
+      description: '70.600 € en derechos consolidados.',
       columns: [
         { key: 'entidad', label: 'Entidad', width: '140px' },
         {
@@ -2129,7 +2190,7 @@ export class PatrimonialProposalPage {
       key: 'participaciones',
       title: 'Participaciones empresariales',
       total: '205.000 €',
-      addLabel: 'participación',
+      description: '205.000 € en participaciones empresariales.',
       columns: [{ key: 'valor', label: 'Valor', align: 'end', emphasis: true, width: '1fr' }],
       rows: [
         {
@@ -2152,7 +2213,7 @@ export class PatrimonialProposalPage {
       key: 'otros',
       title: 'Otros activos',
       total: '42.000 €',
-      addLabel: 'activo',
+      description: '42.000 € en otros activos.',
       columns: [{ key: 'valor', label: 'Valor', align: 'end', emphasis: true, width: '1fr' }],
       rows: [
         {
@@ -2168,7 +2229,7 @@ export class PatrimonialProposalPage {
       key: 'deudas',
       title: 'Deudas',
       total: '275.000 €',
-      addLabel: 'deuda',
+      description: '275.000 € de deuda pendiente.',
       columns: [
         { key: 'entidad', label: 'Entidad', width: '140px' },
         { key: 'plazo', label: 'Plazo pendiente', align: 'end', width: '1fr' },
@@ -2210,7 +2271,7 @@ export class PatrimonialProposalPage {
       key: 'seguros',
       title: 'Seguros de vida',
       total: '330.000 €',
-      addLabel: 'seguro',
+      description: '330.000 € de capital asegurado.',
       columns: [
         { key: 'vencimiento', label: 'Año de vencimiento', align: 'end', width: '160px' },
         { key: 'prima', label: 'Prima anual', align: 'end', width: '140px' },
@@ -2364,9 +2425,38 @@ export class PatrimonialProposalPage {
     return !!row.id && row.id === this.latestAddedAssetId();
   }
 
+  rowActionId(section: AssetSection, row: AssetRow): string {
+    return `${section.key}::${row.id ?? row.name}`;
+  }
+
+  toggleRowActions(section: AssetSection, row: AssetRow): void {
+    const id = this.rowActionId(section, row);
+    this.rowActionsOpen.set(this.rowActionsOpen() === id ? null : id);
+  }
+
   /** Internal: count of visible rows (including children) for the tab count pill. */
   sectionRowCount(section: AssetSection): number {
     return this.rowsForSection(section).reduce((n, r) => n + 1 + (r.children?.length ?? 0), 0);
+  }
+
+  tableHeaderMeta(section: AssetSection, visibleRows: number): string {
+    const total = this.sectionRowCount(section);
+    const count =
+      this.anyFilterActive() && visibleRows !== section.rows.length
+        ? `${visibleRows} de ${total}`
+        : `${total}`;
+    const noun = total === 1 ? 'activo' : 'activos';
+    const columns = section.columns.map((c) => c.label).join(', ');
+    return `${count} ${noun} · Columnas: ${columns}`;
+  }
+
+  tableExplainer(): string {
+    const active = this.activeTab();
+    const section = this.sections.find((s) => s.key === active);
+    if (section) {
+      return `${section.title} muestra ${section.description.toLowerCase()} Las columnas cambian para enseñar solo los datos útiles de ese tipo de patrimonio.`;
+    }
+    return 'Cada sección define sus propias columnas según el tipo de activo: deudas aporta plazo pendiente, tipo de interés y capital pendiente; seguros aporta vencimiento, prima y capitales asegurados; inversiones permite desplegar holdings internos.';
   }
 
   /** Inversiones has expandable carteras — track which row keys are open. */

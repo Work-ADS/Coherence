@@ -1,23 +1,99 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TabsComponent, TabComponent } from '@coherence/ui';
 import { TeaserTileComponent } from '../../components/teaser-tile/teaser-tile.component';
 import { SectionHeaderComponent } from './shared/section-header.component';
 
 @Component({
   selector: 'site-novedades-landing',
   standalone: true,
-  imports: [RouterLink, TeaserTileComponent, SectionHeaderComponent],
+  imports: [RouterLink, TabsComponent, TabComponent, TeaserTileComponent, SectionHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-[920px] mx-auto px-space-10 py-space-10">
       <p class="text-body-sm uppercase tracking-wider text-action-700 mb-space-2">NOVEDADES</p>
       <h1 class="text-subtitle text-canvas-fg mb-space-3">Novedades propuestas en curso</h1>
-      <p class="max-w-[640px] text-body-md text-neutral-600 mb-space-10">
-        Páginas completas del producto aplicando la nueva identidad visual V3, agrupadas en dos
-        bloques: los <em>Ejemplos</em> son las pantallas reales del Wealth Planner;
-        <em>Decisiones en handoff</em> recoge los casos de estudio — los blogs PRD que explican el
-        porqué de cada decisión.
+      <p class="max-w-[640px] text-body-md text-neutral-600 mb-space-8">
+        Páginas completas aplicando Coherence DS — agrupadas por vertical. <em>Soluciones
+        digitales</em> reúne las pantallas del Wealth Planner; <em>Marketing</em> recoge las
+        propuestas para el hub de contenido AFI Insights.
       </p>
+
+      <!-- ========== Vertical toggle ========== -->
+      <div class="mb-space-10">
+        <afi-tabs
+          [activeIndex]="activeVertical()"
+          (activeChange)="activeVertical.set($event)"
+          ariaLabel="Vertical de novedades"
+        >
+          <afi-tab label="Soluciones digitales" />
+          <afi-tab label="Marketing" />
+        </afi-tabs>
+      </div>
+
+      @if (activeVertical() === 0) {
+      <!-- ========== Soluciones digitales (Wealth Planner) ========== -->
+
+      <!-- ========== Iteración 2 (en curso) ========== -->
+      <afi-section-header
+        eyebrow="En curso"
+        title="Wealth Planner — Iteración 2"
+        snippet="Alcance derivado de la reunión del 4-may y los comentarios sobre la Iteración 1."
+      />
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-space-4 mb-space-12">
+        <site-teaser-tile
+          title="Checklist + propuesta visual"
+          href="/novedades/iteracion-2"
+          description="Los 13 cambios para la siguiente iteración: 8 decisiones de la reunión del 4-may + 5 comentarios anclados sobre la v1. Incluye enlace directo a la propuesta visual v2."
+        >
+          <div
+            slot="preview"
+            class="w-full h-full flex flex-col p-space-3 gap-space-2 overflow-hidden"
+          >
+            <div class="flex items-center justify-between">
+              <p class="text-caption text-neutral-500 uppercase tracking-wider">Iteración 2</p>
+              <span class="text-caption text-action-700 font-medium">13 tareas</span>
+            </div>
+            <div class="flex flex-col gap-1.5 flex-1 justify-center">
+              @for (item of iter2Preview; track $index) {
+                <div class="flex items-center gap-space-2">
+                  <span class="w-2.5 h-2.5 rounded-sm border border-neutral-300 shrink-0"></span>
+                  <span class="flex-1 h-1.5 rounded-sm bg-neutral-200"></span>
+                </div>
+              }
+            </div>
+          </div>
+        </site-teaser-tile>
+
+        <site-teaser-tile
+          title="Top bar — Patrón nuevo"
+          href="/patrones/cabeceras/top-bar"
+          description="Cáscara de página de patrón lista (Handoff / Decisiones / Demo en vivo). Próximo paso: enumerar átomos uno por uno y poblar la auditoría de primitivos."
+        >
+          <div
+            slot="preview"
+            class="w-full h-full flex flex-col p-space-3 gap-space-2 overflow-hidden"
+          >
+            <div class="flex items-center justify-between">
+              <p class="text-caption text-neutral-500 uppercase tracking-wider">Patrón</p>
+              <span class="text-caption text-action-700 font-medium">Cáscara lista</span>
+            </div>
+            <div class="flex flex-col gap-1.5 flex-1 justify-center">
+              <div class="flex gap-space-2 text-caption border-b border-border-hairline pb-[2px]">
+                <span class="text-action border-b-2 border-action -mb-[2px] pb-[1px]">Handoff</span>
+                <span class="text-neutral-500">Decisiones</span>
+                <span class="text-neutral-400">Demo</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <div class="h-1.5 w-3/4 rounded-sm bg-neutral-200"></div>
+                <div class="h-1.5 w-full rounded-sm bg-neutral-200"></div>
+                <div class="h-1.5 w-5/6 rounded-sm bg-neutral-200"></div>
+              </div>
+            </div>
+          </div>
+        </site-teaser-tile>
+      </div>
 
       <!-- ========== Ejemplos ========== -->
       <afi-section-header
@@ -296,10 +372,131 @@ import { SectionHeaderComponent } from './shared/section-header.component';
           </div>
         </site-teaser-tile>
       </div>
+      } @else {
+      <!-- ========== Marketing (AFI Insights) ========== -->
+
+      <!-- ========== Ejemplos ========== -->
+      <afi-section-header
+        eyebrow="Ejemplos"
+        title="Pantallas propuestas para AFI Insights"
+        snippet="Cada página muestra una alternativa al hub de contenido actual en Webflow."
+      />
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-space-4 mb-space-12">
+        <site-teaser-tile
+          title="Home"
+          href="/afi-insights/home"
+          description="Hero tipográfico, suscripción above the fold, pestañas de categorías y grid de artículos."
+        >
+          <div slot="preview" class="w-full h-full flex flex-col items-center justify-center gap-space-2 p-space-3">
+            <p class="text-title font-serif text-canvas-fg leading-tight">AFI Insights</p>
+            <div class="flex items-center gap-space-1">
+              <div class="w-24 h-5 rounded-sm bg-neutral-200"></div>
+              <div class="w-12 h-5 rounded-sm bg-action/20"></div>
+            </div>
+            <div class="flex gap-space-2 text-caption text-neutral-400">
+              <span>Estudios</span>
+              <span>Informes</span>
+              <span>Articulos</span>
+            </div>
+          </div>
+        </site-teaser-tile>
+
+        <site-teaser-tile
+          title="Suscripción"
+          href="/afi-insights/suscripcion"
+          description="Flujo en 3 pasos: email primero, confirmación, preferencias opcionales con defaults inteligentes."
+        >
+          <div slot="preview" class="w-full h-full flex flex-col items-center justify-center gap-space-2 p-space-3">
+            <p class="text-body-sm font-medium text-canvas-fg">Paso 1 de 3</p>
+            <div class="w-full max-w-[180px] flex gap-space-1">
+              <div class="flex-1 h-1.5 rounded-full bg-action"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-neutral-200"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-neutral-200"></div>
+            </div>
+            <div class="w-32 h-6 rounded-sm bg-neutral-200 mt-space-1"></div>
+            <div class="w-20 h-6 rounded-sm bg-action/20"></div>
+          </div>
+        </site-teaser-tile>
+
+        <site-teaser-tile
+          title="Artículos"
+          href="/afi-insights/articulos"
+          description="Listado con hero compacto, pestañas de filtro y grid de tarjetas."
+        >
+          <div slot="preview" class="w-full h-full flex flex-col p-space-3 gap-space-2">
+            <p class="text-body-sm font-serif text-canvas-fg">Articulos</p>
+            <p class="text-caption text-neutral-400">Perspectivas y analisis...</p>
+            <div class="flex gap-space-2 text-caption">
+              <span class="text-action border-b border-action pb-px">Todos</span>
+              <span class="text-neutral-400">Estudios</span>
+              <span class="text-neutral-400">Informes</span>
+            </div>
+            <div class="grid grid-cols-3 gap-1 flex-1">
+              @for (_ of [0, 1, 2]; track $index) {
+                <div class="rounded-sm bg-neutral-100"></div>
+              }
+            </div>
+          </div>
+        </site-teaser-tile>
+
+        <site-teaser-tile
+          title="Artículo (detalle)"
+          href="/afi-insights/articulo"
+          description="Hero oscuro estilo Figma blog, barra TOC lateral y contenido largo con CTA intermedio."
+        >
+          <div slot="preview" class="w-full h-full flex flex-col p-space-3 gap-space-2">
+            <div class="h-10 rounded-sm bg-neutral-800 flex items-end px-2 pb-1">
+              <span class="text-[9px] text-white/80 font-serif leading-tight">Claves de los episodios...</span>
+            </div>
+            <div class="flex gap-space-2 flex-1">
+              <div class="flex-1 flex flex-col gap-1">
+                <div class="h-1.5 w-full rounded-sm bg-neutral-200"></div>
+                <div class="h-1.5 w-3/4 rounded-sm bg-neutral-200"></div>
+                <div class="h-1.5 w-full rounded-sm bg-neutral-200"></div>
+              </div>
+              <div class="w-12 flex flex-col gap-1 border-l border-border-hairline pl-1">
+                <div class="h-1 w-full rounded-sm bg-action/30"></div>
+                <div class="h-1 w-full rounded-sm bg-neutral-200"></div>
+                <div class="h-1 w-full rounded-sm bg-neutral-200"></div>
+              </div>
+            </div>
+          </div>
+        </site-teaser-tile>
+      </div>
+
+      <!-- ========== Caso de estudio ========== -->
+      <afi-section-header
+        eyebrow="Análisis"
+        title="Caso de estudio"
+        snippet="El razonamiento detrás de cada decisión de diseño — psicología conductual aplicada."
+      />
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-space-4">
+        <site-teaser-tile
+          title="Caso de estudio — AFI Insights"
+          href="/afi-insights/caso-de-estudio"
+          description="Por qué eliminamos el hero fotográfico, por qué la suscripción va arriba y cómo aplicamos psicología conductual al flujo."
+        >
+          <div slot="preview" class="w-full h-full flex flex-col items-center justify-center gap-space-2 p-space-3">
+            <p class="text-body-sm font-medium text-canvas-fg">Decisiones</p>
+            <div class="flex flex-wrap gap-1 justify-center">
+              @for (tag of marketingTags; track tag) {
+                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-action/10 text-action-700">{{ tag }}</span>
+              }
+            </div>
+          </div>
+        </site-teaser-tile>
+      </div>
+      }
     </div>
   `,
 })
 export class NovedadesLandingPage {
+  readonly activeVertical = signal(0);
+
+  readonly marketingTags = ['Psicologia', 'UX', 'Conversion'];
+
   // Mock bar heights for the evolución preview — descending curve
   readonly barHeights = [40, 55, 70, 82, 92, 100, 95, 85, 72, 60, 50, 40, 32, 25, 18];
 
@@ -318,6 +515,8 @@ export class NovedadesLandingPage {
   ];
 
   readonly miniBars = [30, 45, 60, 72, 85, 92, 88, 75, 60];
+
+  readonly iter2Preview = [0, 1, 2];
 
   readonly sidebarNav = [
     { icon: '●', label: 'Situación', active: false },

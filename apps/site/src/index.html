@@ -9,5 +9,17 @@
 </head>
 <body>
   <app-root></app-root>
+  <!-- Design review widget. Each page sets window.DesignReview.onVersionChange in afterNextRender. -->
+  <script>
+    window.DesignReview = {
+      project: 'coherence-novedades',
+      versions: [
+        { id: 'v1', label: 'Versión 1' },
+        { id: 'v2', label: 'Versión 2' },
+        { id: 'v3', label: 'Versión 3' }
+      ]
+    };
+  </script>
+  <script src="assets/design-review-widget.js" defer></script>
 </body>
 </html>

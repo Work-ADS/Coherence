@@ -8,6 +8,7 @@ export type Detalle = 'agregada' | 'activo' | 'objetivo';
  *  V2 = higher-contrast monocromático, V3 = brand accents). All three keep
  *  red as the deuda color so any value below zero is unmistakably a debt. */
 export type ChartPalette = 'v1' | 'v2' | 'v3';
+export type LegendPlacement = 'top' | 'bottom';
 
 /** Universal deuda red — applied to any negative value regardless of asset
  *  class or palette. "Debt is debt" — the seniors' rule. */
@@ -266,7 +267,11 @@ const TODOS_SERIES: TodosSerie[] = [
       <!-- Legend (shapes + labels) + inline hover summary on the right edge.
            Summary shows: age + optional event + aggregate (or Patrimonio neto). -->
       <div
-        class="flex flex-wrap justify-end items-center gap-space-3 gap-y-space-1 min-h-[24px] text-body-sm"
+        class="flex flex-wrap items-center gap-space-3 gap-y-space-1 min-h-[24px] text-body-sm"
+        [class.justify-end]="legendPlacement() === 'top'"
+        [class.justify-start]="legendPlacement() === 'bottom'"
+        [class.order-1]="legendPlacement() === 'top'"
+        [class.order-2]="legendPlacement() === 'bottom'"
       >
         @for (s of legendSeries(); track s.key) {
           @if (s.interactive) {
@@ -356,7 +361,14 @@ const TODOS_SERIES: TodosSerie[] = [
       </div>
 
       <!-- Chart -->
-      <svg viewBox="0 0 960 320" class="w-full h-auto" role="img" [attr.aria-label]="ariaLabel()">
+      <svg
+        viewBox="0 0 960 320"
+        class="w-full h-auto"
+        [class.order-1]="legendPlacement() === 'bottom'"
+        [class.order-2]="legendPlacement() === 'top'"
+        role="img"
+        [attr.aria-label]="ariaLabel()"
+      >
         <!-- Grid + Y-axis labels -->
         <g>
           @for (t of yTicks; track t) {
@@ -847,6 +859,7 @@ export class EvolucionBarChartComponent {
   /** Toggle via Ajustes. When true, financial objetivos are pinned at their (age, value) points. */
   readonly mostrarObjetivos = input<boolean>(false);
   readonly palette = input<ChartPalette>('v1');
+  readonly legendPlacement = input<LegendPlacement>('top');
 
   readonly hoveredAge = signal<number | null>(null);
   readonly hiddenSeries = signal<Set<string>>(new Set());
@@ -1250,24 +1263,46 @@ export class EvolucionBarChartComponent {
     if (mode === 'stacked') {
       const palette = PALETTES[this.palette()];
       const includeInmo = this.incluirInmobiliario();
-      return ASSET_CLASSES.filter((a) => includeInmo || a.key !== 'inmobiliario').map((a) => ({
-        key: a.key,
-        label: a.label,
-        color: palette[a.key] ?? palette.base,
-        interactive: true,
-        mark: 'dot' as const,
-      }));
+      const series = ASSET_CLASSES.filter((a) => includeInmo || a.key !== 'inmobiliario').map(
+        (a) => ({
+          key: a.key,
+          label: a.label,
+          color: palette[a.key] ?? palette.base,
+          interactive: true,
+          mark: 'dot' as const,
+        }),
+      );
+      if (this.chartData().some((d) => d.value < 0)) {
+        series.push({
+          key: 'deuda',
+          label: 'Deuda',
+          color: DEUDA_COLOR,
+          interactive: false,
+          mark: 'dot' as const,
+        });
+      }
+      return series;
     }
     const v = this.vista();
-    return [
+    const series = [
       {
         key: 'patrimonio',
         label: v === 'simulada' ? 'Patrimonio · Simulada' : 'Patrimonio · Actual',
         color: 'var(--action-700)',
         interactive: false,
-        mark: 'dot',
+        mark: 'dot' as const,
       },
     ];
+    if (this.chartData().some((d) => d.value < 0)) {
+      series.push({
+        key: 'deuda',
+        label: 'Deuda',
+        color: DEUDA_COLOR,
+        interactive: false,
+        mark: 'dot',
+      });
+    }
+    return series;
   });
 
   isHidden(key: string): boolean {

@@ -453,7 +453,7 @@ import { LogoComponent } from '@coherence/ui';
       }
 
       <!-- Main content -->
-      <main class="flex-1 min-w-0 overflow-y-auto" id="main-content">
+      <main class="flex-1 min-w-0" id="main-content">
         <router-outlet />
       </main>
     </div>
@@ -462,17 +462,21 @@ import { LogoComponent } from '@coherence/ui';
 export class App {
   private readonly router = inject(Router);
   /**
-   * True when the user is viewing a proposal page inside /novedades/*.
-   * Hides the DS site sidebar so the proposal renders full-viewport with its
-   * own product sidebar. Back arrow in the proposal top bar returns here.
+   * True when the user is viewing a proposal page inside /novedades/* or any
+   * /afi-insights/* page. Hides the DS site sidebar so the proposal renders
+   * full-viewport with its own product chrome.
    */
-  readonly isFullScreenRoute = signal(/^\/novedades\/.+/.test(this.router.url));
+  readonly isFullScreenRoute = signal(this.matchFullScreen(this.router.url));
 
   constructor() {
     this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {
-        this.isFullScreenRoute.set(/^\/novedades\/.+/.test(e.urlAfterRedirects));
+        this.isFullScreenRoute.set(this.matchFullScreen(e.urlAfterRedirects));
       }
     });
+  }
+
+  private matchFullScreen(url: string): boolean {
+    return /^\/novedades\/.+/.test(url) || /^\/afi-insights(\/|$)/.test(url);
   }
 }

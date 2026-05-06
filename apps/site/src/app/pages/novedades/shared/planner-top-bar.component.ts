@@ -206,60 +206,62 @@ type PlanState = 'borrador' | 'cumplimentada' | 'descargada' | 'entregada';
           </span>
         } @else {
           <span class="text-neutral-500">{{ clientName() }} planificación:</span>
-          <input
-            #renameInput
-            type="text"
-            class="h-6 w-[180px] px-space-2 text-body-sm font-medium rounded border border-border-focus bg-canvas-base text-canvas-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
-            [value]="simIdDraft()"
-            (input)="simIdDraft.set(inputValue($event))"
-            (keydown.enter)="commitRename()"
-            (keydown.escape)="cancelRename()"
-            aria-label="Nuevo identificador"
-          />
-          <span class="relative inline-flex group/tt">
-            <button
-              type="button"
-              (click)="commitRename()"
-              class="inline-flex items-center justify-center w-7 h-7 rounded hover:bg-surface-muted text-system-success transition-colors"
-              aria-label="Guardar nombre"
-            >
-              <svg
-                class="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
+          <span class="inline-flex items-center gap-space-1">
+            <input
+              #renameInput
+              type="text"
+              class="h-6 w-[170px] px-space-2 text-body-sm font-medium rounded border border-border-focus bg-canvas-base text-canvas-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+              [value]="simIdDraft()"
+              (input)="simIdDraft.set(inputValue($event))"
+              (keydown.enter)="commitRename()"
+              (keydown.escape)="cancelRename()"
+              aria-label="Nuevo identificador"
+            />
+            <span class="relative inline-flex group/tt">
+              <button
+                type="button"
+                (click)="commitRename()"
+                class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-surface-muted text-system-success transition-colors"
+                aria-label="Guardar nombre"
               >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </button>
-            <span role="tooltip" class="tt-pop">Guardar (Enter)</span>
-          </span>
-          <span class="relative inline-flex group/tt">
-            <button
-              type="button"
-              (click)="cancelRename()"
-              class="inline-flex items-center justify-center w-7 h-7 rounded hover:bg-surface-muted text-neutral-600 hover:text-canvas-fg transition-colors"
-              aria-label="Cancelar"
-            >
-              <svg
-                class="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
+                <svg
+                  class="w-4 h-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </button>
+              <span role="tooltip" class="tt-pop">Guardar (Enter)</span>
+            </span>
+            <span class="relative inline-flex group/tt">
+              <button
+                type="button"
+                (click)="cancelRename()"
+                class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-surface-muted text-neutral-600 hover:text-canvas-fg transition-colors"
+                aria-label="Cancelar"
               >
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
-            </button>
-            <span role="tooltip" class="tt-pop">Cancelar (Esc)</span>
+                <svg
+                  class="w-4 h-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+              <span role="tooltip" class="tt-pop">Cancelar (Esc)</span>
+            </span>
           </span>
         }
 
@@ -338,20 +340,35 @@ type PlanState = 'borrador' | 'cumplimentada' | 'descargada' | 'entregada';
         </div>
       </div>
 
-      <!-- Right cluster: Ver decisiones + actions (same visual language as the nav button).
-           Share removed: not part of the planner narrative right now. Notes + Ajustes
-           open dedicated drawers — non-blocking side panels so the gestor can keep
-           the chart in view while editing. -->
-      <!-- Notas removed from the top bar: too easily confused with the case-study
-           "blog" copy. Personal annotations live elsewhere now. Only Configuración
-           (gear) remains as a global session action. -->
+      <!-- Right cluster: Notes + configuration. Decisions link is intentionally
+           removed from the product chrome; it belongs to the review harness. -->
       <div class="flex items-center gap-[2px]">
-        <a
-          [routerLink]="decisionesRoute()"
-          class="text-body-sm text-action-700 hover:underline font-medium mr-space-2"
-        >
-          Ver decisiones
-        </a>
+        <span class="relative inline-flex group/tt">
+          <button
+            type="button"
+            (click)="notesOpen.set(true)"
+            class="inline-flex items-center justify-center w-7 h-7 rounded hover:bg-surface-muted text-neutral-600 hover:text-canvas-fg transition-colors"
+            aria-label="Notas"
+          >
+            <!-- lucide: sticky-note -->
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z" />
+              <path d="M15 3v5h5" />
+              <path d="M8 13h8" />
+              <path d="M8 17h5" />
+            </svg>
+          </button>
+          <span role="tooltip" class="tt-pop">Notas</span>
+        </span>
         <span class="relative inline-flex group/tt">
           <button
             type="button"
@@ -380,6 +397,23 @@ type PlanState = 'borrador' | 'cumplimentada' | 'descargada' | 'entregada';
         </span>
       </div>
     </div>
+
+    <!-- Notes drawer — client/session notes, separate from the review decisions page. -->
+    <afi-drawer size="md" title="Notas" [open]="notesOpen()" (openChange)="notesOpen.set($event)">
+      <div class="flex flex-col gap-space-4">
+        <p class="text-body-sm text-neutral-600">
+          Notas internas de la planificación. Se mantienen junto a la simulación y no cambian los
+          cálculos.
+        </p>
+        <textarea
+          class="min-h-[180px] w-full rounded-md border border-border-hairline bg-canvas-base p-space-3 text-body-sm text-canvas-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+          placeholder="Añade una nota para esta planificación..."
+          [value]="notes()"
+          (input)="notes.set(inputValue($event))"
+          aria-label="Notas de la planificación"
+        ></textarea>
+      </div>
+    </afi-drawer>
 
     <!-- Configuración drawer — non-blocking right panel for global simulation
          settings. Stub content for now: moneda, redondeo, perfil de riesgo,
@@ -454,7 +488,9 @@ export class PlannerTopBarComponent {
   readonly plansOpen = signal(false);
   readonly stateOpen = signal(false);
   readonly renaming = signal(false);
+  readonly notesOpen = signal(false);
   readonly configOpen = signal(false);
+  readonly notes = signal('');
 
   readonly simId = signal('SIM-2025-0011');
   readonly simIdDraft = signal('SIM-2025-0011');

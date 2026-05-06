@@ -39,6 +39,11 @@ export const routes: Routes = [
       import('./pages/novedades/novedades.routes').then((m) => m.novedades_routes),
   },
   {
+    path: 'afi-insights',
+    loadChildren: () =>
+      import('./pages/afi-insights/afi-insights.routes').then((m) => m.afi_insights_routes),
+  },
+  {
     path: 'preview',
     loadComponent: () => import('./preview/preview.page').then((m) => m.PreviewPage),
   },

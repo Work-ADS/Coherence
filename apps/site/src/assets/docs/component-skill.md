@@ -20,6 +20,8 @@ One component file per primitive. Variants are expressed via `@Input()` props + 
 
 5. **One file per primitive** — Button, Input, Select, Checkbox, Switch, Card, Modal, Table, Tabs, Drawer. Each is a single component file. Size, intent, and state variants are `@Input()` props that drive class bindings. No `ButtonPrimary.component.ts` + `ButtonSecondary.component.ts` — one `Button.component.ts` with a `variant` input.
 
-6. **Consulted before first line of code** — this document is read before any component implementation begins. Not after, not during. Before.
+6. **Reuse before creating** — if an existing component already expresses the structure, use it. Do not create a parallel component for a graph header, table header, section header, or any other repeated pattern. Extend the existing component with inputs/slots for optional content such as actions, filters, tags, or controls; change the content per use case, not the component.
+
+7. **Consulted before first line of code** — this document is read before any component implementation begins. Not after, not during. Before.
 
 <!-- TODO: expand with full variant examples + Angular patterns (strategy) -->

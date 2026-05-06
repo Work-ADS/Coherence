@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @import 'styles/tokens.css';
+
+// Inline Versión 1/2/3 pill is replaced by the floating design-review widget
+// embedded from index.html. Hide rather than delete so seniors can compare
+// page variants via the widget bar without two pickers fighting for attention.
+site-version-toggle {
+  display: none !important;
+}
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,300;8..144,400;8..144,500;8..144,600;8..144,700&display=swap');
 
 *,

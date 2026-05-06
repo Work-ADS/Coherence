@@ -8,6 +8,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { LogoComponent, SidebarComponent } from '@coherence/ui';
 
@@ -40,15 +41,13 @@ export type NavItem = {
   label: string;
   state: NavItemState;
   icon: NavIcon;
+  route?: string;
 };
 
 export type NavSection = {
   label: string;
   items: NavItem[];
-  /** When true, items in this section render their right-side state dot.
-   *  Reserved for the "obligatorios" group (Situación actual) — other groups
-   *  are computed/system-driven and don't represent gestor work-in-progress. */
-  mandatory?: boolean;
+  required?: boolean;
   /** Optional icon shown next to the section label as a visual anchor in
    *  the dense expanded sidebar. Per-item icons are removed in expanded
    *  state — they don't earn their space when labels are already clear. */
@@ -58,22 +57,15 @@ export type NavSection = {
 /**
  * Wealth Planner sidebar used across the Novedades proposals.
  *
- * Flat sections (no collapse) + per-item state dot — inspired by the Claude /
- * Cursor sidebar pattern: quiet section labels above a list of items, each
- * carrying a small indicator that tells you where that step is in the flow.
- *
- * State vocabulary (richerd-approved):
- *   - empty        → hollow ring, muted white
- *   - in-progress  → half-filled disc, azul
- *   - complete     → filled disc + check, success green
- *
- * Active = the item the user is currently viewing. Independent from state —
- * any state can also be active.
+ * Flat sections (no collapse), inspired by the Claude / Cursor sidebar pattern:
+ * quiet section labels above a list of items. Active = the item the user is
+ * currently viewing. Required sections show only hollow "needs input" circles
+ * for unfinished items — no half-filled in-progress state.
  */
 @Component({
   selector: 'site-planner-sidebar',
   standalone: true,
-  imports: [LogoComponent, SidebarComponent],
+  imports: [RouterLink, LogoComponent, SidebarComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -105,7 +97,8 @@ export type NavSection = {
     :host ::ng-deep .planner-rail-collapsed coherence-logo {
       height: var(--dim-20, 20px) !important;
     }
-    /* Custom nav item (not using afi-nav-item so we can have a trailing state dot) */
+    /* Custom nav item (not using afi-nav-item so collapsed tooltips and active state
+       can stay tuned to the planner sidebar). */
     .pn-item {
       display: flex;
       align-items: center;
@@ -144,8 +137,7 @@ export type NavSection = {
       color: #ffffff;
       font-weight: 600;
     }
-    .pn-item .pn-icon,
-    .pn-item .pn-state {
+    .pn-item .pn-icon {
       flex-shrink: 0;
       color: currentColor;
     }
@@ -171,8 +163,9 @@ export type NavSection = {
       width: 12px;
       height: 12px;
       opacity: 0.75;
+      flex-shrink: 0;
+      color: currentColor;
     }
-
     /* Gestor footer typography — strong hierarchy between name and role */
     .gestor-avatar-text {
       font-size: 11px;
@@ -268,7 +261,7 @@ export type NavSection = {
         #sidebarRef
         mode="collapsible"
         [ariaLabel]="ariaLabel()"
-        [width]="{ collapsed: '52px', expanded: '244px' }"
+        [width]="{ collapsed: '52px', expanded: '268px' }"
         (expandedChange)="onExpandedChange($event)"
       >
         <!-- Top slot: logo + toggle (stacks vertically when collapsed for narrow rail) -->
@@ -281,7 +274,7 @@ export type NavSection = {
           @if (expanded()) {
             <coherence-logo variant="negativo" size="sm" />
             <div class="w-px h-4 bg-white/30 shrink-0"></div>
-            <span class="text-body-sm font-light truncate flex-1">Wealth planner</span>
+            <span class="text-body-sm font-light whitespace-nowrap flex-1">Wealth planner</span>
           } @else {
             <coherence-logo form="icon" variant="negativo" size="sm" />
           }
@@ -316,7 +309,8 @@ export type NavSection = {
           </button>
         </div>
 
-        <!-- Flat nav groups — section label + items with state dots. No chevrons. -->
+        <!-- Flat nav groups — section label + items. No chevrons. Required
+             sections use hollow circles for unfinished inputs. -->
         <div class="w-full flex flex-col gap-space-5 mt-space-2">
           @for (section of sections(); track section.label) {
             <div class="flex flex-col gap-space-1">
@@ -427,6 +421,7 @@ export type NavSection = {
                   <span class="relative w-full inline-flex group/tt">
                     <button
                       type="button"
+                      [routerLink]="item.route ?? null"
                       class="pn-item"
                       [class.is-active]="item.key === activeKey()"
                       [attr.aria-current]="item.key === activeKey() ? 'page' : null"
@@ -732,47 +727,17 @@ export type NavSection = {
                       @if (expanded()) {
                         <!-- Label -->
                         <span class="pn-label">{{ item.label }}</span>
-                        <!-- Right state dot: only on mandatory sections (Situación actual). Other sections
-                             are computed/system-driven, so a per-item dot would imply gestor work that
-                             can't actually be done — misleading. -->
-                        @if (section.mandatory) {
-                          @switch (item.state) {
-                            @case ('empty') {
-                              <svg
-                                class="pn-state"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                aria-hidden="true"
-                              >
-                                <circle
-                                  cx="8"
-                                  cy="8"
-                                  r="5"
-                                  stroke="currentColor"
-                                  stroke-width="1.3"
-                                  fill="none"
-                                />
-                              </svg>
-                            }
-                            @case ('in-progress') {
-                              <svg
-                                class="pn-state"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                aria-hidden="true"
-                              >
-                                <circle
-                                  cx="8"
-                                  cy="8"
-                                  r="5.25"
-                                  stroke="currentColor"
-                                  stroke-width="1.4"
-                                  fill="none"
-                                />
-                                <path d="M8 2.75 A 5.25 5.25 0 0 1 8 13.25 Z" fill="currentColor" />
-                              </svg>
-                            }
-                          }
+                        @if (section.required && item.state !== 'complete') {
+                          <svg class="pn-state" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <circle
+                              cx="8"
+                              cy="8"
+                              r="5"
+                              stroke="currentColor"
+                              stroke-width="1.3"
+                              fill="none"
+                            />
+                          </svg>
                         }
                       }
                     </button>
@@ -827,18 +792,25 @@ export class PlannerSidebarComponent {
   readonly sections = computed<NavSection[]>(() => [
     {
       label: 'Situación actual',
-      mandatory: true,
+      required: true,
       icon: 'user-check',
       items: [
         { key: 'familia', label: 'Familia', state: 'complete', icon: 'users' },
         { key: 'sociedades', label: 'Sociedades', state: 'complete', icon: 'landmark' },
-        { key: 'patrimonio', label: 'Patrimonio', state: 'complete', icon: 'wallet' },
+        {
+          key: 'patrimonio',
+          label: 'Patrimonio',
+          state: 'complete',
+          icon: 'wallet',
+          route: '/novedades/patrimonial',
+        },
         { key: 'ingresos', label: 'Ingresos', state: 'in-progress', icon: 'arrow-down-to-line' },
         { key: 'gastos', label: 'Gastos', state: 'empty', icon: 'arrow-up-from-line' },
       ],
     },
     {
       label: 'Objetivos',
+      required: true,
       icon: 'target',
       items: [
         { key: 'legado-retiro', label: 'Legado y retiro', state: 'in-progress', icon: 'palmtree' },
@@ -902,6 +874,7 @@ export class PlannerSidebarComponent {
           label: 'Evolución comparada',
           state: 'empty',
           icon: 'line-chart',
+          route: '/novedades/evolucion-patrimonial',
         },
         {
           key: 'consecucion-objetivos',

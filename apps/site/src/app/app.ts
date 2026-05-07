@@ -1,14 +1,23 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { NavSectionComponent } from './components/nav-section/nav-section.component';
+import { PasswordGateComponent } from './components/password-gate/password-gate.component';
 import { LogoComponent } from '@coherence/ui';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NavSectionComponent, LogoComponent],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    NavSectionComponent,
+    LogoComponent,
+    PasswordGateComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    @if (unlocked()) {
     <div class="flex min-h-screen bg-surface-base text-canvas-fg">
       @if (!isFullScreenRoute()) {
         <!-- Sidebar: 260px, bg-surface-quiet, NO border-right -->
@@ -457,10 +466,21 @@ import { LogoComponent } from '@coherence/ui';
         <router-outlet />
       </main>
     </div>
+    } @else {
+    <site-password-gate (unlocked)="onUnlocked()" />
+    }
   `,
 })
 export class App {
+  private static readonly STORAGE_KEY = 'coherence-unlocked';
+
   private readonly router = inject(Router);
+
+  readonly unlocked = signal(
+    typeof localStorage !== 'undefined' &&
+      localStorage.getItem(App.STORAGE_KEY) === '1',
+  );
+
   /**
    * True when the user is viewing a proposal page inside /novedades/* or any
    * /afi-insights/* page. Hides the DS site sidebar so the proposal renders
@@ -474,6 +494,22 @@ export class App {
         this.isFullScreenRoute.set(this.matchFullScreen(e.urlAfterRedirects));
       }
     });
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', (e) => {
+        if (e.key !== App.STORAGE_KEY) return;
+        this.unlocked.set(e.newValue === '1');
+      });
+    }
+  }
+
+  onUnlocked(): void {
+    try {
+      localStorage.setItem(App.STORAGE_KEY, '1');
+    } catch {
+      // Private mode / storage disabled — gate stays open for this tab only.
+    }
+    this.unlocked.set(true);
   }
 
   private matchFullScreen(url: string): boolean {

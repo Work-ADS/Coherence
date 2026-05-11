@@ -54,4 +54,23 @@ export const novedades_routes: Routes = [
     path: 'iteracion-2',
     loadComponent: () => import('./iteracion-2/iteracion-2.page').then((m) => m.Iteracion2Page),
   },
+  {
+    path: 'newsletter-feedback',
+    loadComponent: () =>
+      import('./newsletter-feedback/newsletter-feedback.page').then(
+        (m) => m.NewsletterFeedbackPage,
+      ),
+  },
+  {
+    path: 'newsletter-decisiones',
+    loadComponent: () =>
+      import('./newsletter-decisiones/newsletter-decisiones.page').then(
+        (m) => m.NewsletterDecisionesPage,
+      ),
+  },
+  {
+    path: 'newsletter-demo',
+    loadComponent: () =>
+      import('./newsletter-demo/newsletter-demo.page').then((m) => m.NewsletterDemoPage),
+  },
 ];

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TabsComponent, TabComponent } from '@coherence/ui';
 import { TeaserTileComponent } from '../../components/teaser-tile/teaser-tile.component';
 import { SectionHeaderComponent } from './shared/section-header.component';
@@ -375,6 +375,45 @@ import { SectionHeaderComponent } from './shared/section-header.component';
       } @else {
       <!-- ========== Marketing (AFI Insights) ========== -->
 
+      <!-- ========== Decisiones — Newsletter ========== -->
+      <afi-section-header
+        eyebrow="Newsletter"
+        title="Decisiones sobre el feedback"
+        snippet="Respuestas del owner al feedback del equipo sobre el diseño actual del newsletter. Nueve puntos con estado y la razón en español."
+      />
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-space-4 mb-space-12">
+        <site-teaser-tile
+          title="Newsletter — Decisiones"
+          href="/novedades/newsletter-decisiones"
+          description="Respuestas del owner a los nueve puntos del feedback del equipo. 7 Acepto · 2 Modificado · 0 Rechazo, con la razón bajo cada cita."
+        >
+          <div
+            slot="preview"
+            class="w-full h-full flex flex-col p-space-3 gap-space-2 overflow-hidden"
+          >
+            <div class="flex items-center justify-between">
+              <p class="text-caption text-neutral-500 uppercase tracking-wider">Decisiones</p>
+              <span class="text-caption text-action-700 font-medium">9 puntos</span>
+            </div>
+            <div class="flex flex-col gap-1.5 flex-1 justify-center">
+              @for (row of decisionesPreview; track $index) {
+                <div class="flex items-center gap-space-2">
+                  <span
+                    class="w-3.5 h-3.5 rounded-full bg-action/10 text-action-700 text-[8px] font-semibold flex items-center justify-center shrink-0"
+                  >{{ row.n }}</span>
+                  <span class="flex-1 h-1.5 rounded-sm bg-neutral-200"></span>
+                  <span
+                    class="w-2 h-2 rounded-full shrink-0"
+                    [class]="row.dot"
+                  ></span>
+                </div>
+              }
+            </div>
+          </div>
+        </site-teaser-tile>
+      </div>
+
       <!-- ========== Ejemplos ========== -->
       <afi-section-header
         eyebrow="Ejemplos"
@@ -493,7 +532,11 @@ import { SectionHeaderComponent } from './shared/section-header.component';
   `,
 })
 export class NovedadesLandingPage {
-  readonly activeVertical = signal(0);
+  private readonly route = inject(ActivatedRoute);
+
+  readonly activeVertical = signal(
+    this.route.snapshot.queryParamMap.get('tab') === 'marketing' ? 1 : 0,
+  );
 
   readonly marketingTags = ['Psicologia', 'UX', 'Conversion'];
 
@@ -517,6 +560,12 @@ export class NovedadesLandingPage {
   readonly miniBars = [30, 45, 60, 72, 85, 92, 88, 75, 60];
 
   readonly iter2Preview = [0, 1, 2];
+
+  readonly decisionesPreview = [
+    { n: 1, dot: 'bg-system-warning' },
+    { n: 2, dot: 'bg-system-success' },
+    { n: 3, dot: 'bg-system-success' },
+  ];
 
   readonly sidebarNav = [
     { icon: '●', label: 'Situación', active: false },

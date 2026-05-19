@@ -1,0 +1,177 @@
+// =============================================================================
+// iteracion-3.page.scss — DS Iteración 3 (modo oscuro + revisión foundations)
+// =============================================================================
+//
+// BEM under `.i3`. Token-only — the clean-code hook blocks raw values
+// outside libs/tokens/. Dark mode is automatic via the [data-theme="dark"]
+// block in semantic.scss.
+// =============================================================================
+
+.i3 {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--canvas-base);
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    height: var(--space-2xl);
+    padding: 0 var(--space-md);
+    background: var(--surface-quiet);
+    border-bottom: thin solid var(--border-hairline);
+    flex-shrink: 0;
+    font: var(--type-body-sm-400);
+  }
+
+  &__breadcrumb-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-lg);
+    height: var(--space-lg);
+    border-radius: var(--radius-sm);
+    color: var(--color-neutral-500);
+    transition: background-color var(--duration-fast) var(--easing-enter);
+
+    &:hover {
+      background-color: var(--color-neutral-100);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 0.125rem var(--border-focus);
+    }
+  }
+
+  &__breadcrumb-parent {
+    color: var(--color-neutral-500);
+  }
+
+  &__breadcrumb-separator {
+    color: var(--color-neutral-400);
+  }
+
+  &__breadcrumb-current {
+    color: var(--canvas-fg);
+    font: var(--type-body-sm-500);
+  }
+
+  &__icon {
+    width: var(--space-md);
+    height: var(--space-md);
+  }
+
+  &__main {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  &__layout {
+    max-width: var(--content-xl);
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-xl);
+    display: flex;
+    gap: var(--space-2xl);
+  }
+
+  &__content {
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--color-action-700);
+  }
+
+  &__summary {
+    margin-top: var(--space-2xl);
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+  }
+
+  &__surfaces {
+    margin-top: var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xl);
+    padding-bottom: var(--space-2xl);
+  }
+
+  &__surface {
+    scroll-margin-top: var(--space-2xl);
+  }
+
+  &__tasks {
+    list-style: none;
+    margin: var(--space-md) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__task {
+    padding: var(--space-sm) 0;
+    border-bottom: thin solid var(--border-hairline);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &--done {
+      .i3__task-text {
+        color: var(--color-neutral-500);
+      }
+    }
+  }
+
+  &__task-text {
+    font: var(--type-body-sm-400);
+    color: var(--canvas-fg);
+    margin: 0;
+  }
+
+  &__task-badge {
+    margin-right: var(--space-xs);
+    vertical-align: baseline;
+  }
+
+  &__task-link {
+    color: var(--color-action-700);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--easing-enter);
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 0.125rem var(--border-focus);
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  &__footnote {
+    padding-top: var(--space-md);
+    border-top: thin solid var(--border-hairline);
+    color: var(--color-neutral-500);
+    font: var(--type-body-sm-400);
+  }
+
+  &__code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  &__rail {
+    flex-shrink: 0;
+  }
+}

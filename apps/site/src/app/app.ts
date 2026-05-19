@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/cor
 import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { NavSectionComponent } from './components/nav-section/nav-section.component';
 import { PasswordGateComponent } from './components/password-gate/password-gate.component';
+import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 import { LogoComponent } from '@coherence/ui';
 
 @Component({
@@ -14,6 +15,7 @@ import { LogoComponent } from '@coherence/ui';
     NavSectionComponent,
     LogoComponent,
     PasswordGateComponent,
+    ThemeToggleComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -65,26 +67,18 @@ import { LogoComponent } from '@coherence/ui';
           <site-nav-section label="Primeros pasos" routePrefix="/primeros-pasos">
             <li>
               <a
-                routerLink="/primeros-pasos/nuevo-proyecto"
+                routerLink="/primeros-pasos/cambiar-marca-diseno"
                 routerLinkActive="bg-surface-muted font-medium"
                 class="nav-link"
-                >Nuevo proyecto</a
+                >Cambiar de marca · Diseño</a
               >
             </li>
             <li>
               <a
-                routerLink="/primeros-pasos/nueva-marca"
+                routerLink="/primeros-pasos/cambiar-marca-desarrollo"
                 routerLinkActive="bg-surface-muted font-medium"
                 class="nav-link"
-                >Nueva marca</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/primeros-pasos/clonar-producto"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Clonar producto</a
+                >Cambiar de marca · Desarrollo</a
               >
             </li>
             <li>
@@ -93,14 +87,6 @@ import { LogoComponent } from '@coherence/ui';
                 routerLinkActive="bg-surface-muted font-medium"
                 class="nav-link"
                 >Git y ramas</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/primeros-pasos/actualizar-ds"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Actualizar DS</a
               >
             </li>
           </site-nav-section>
@@ -171,10 +157,92 @@ import { LogoComponent } from '@coherence/ui';
                 >Tokens</a
               >
             </li>
+            <li>
+              <a
+                routerLink="/fundamentos/estructura-tokens"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >Estructura de tokens</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="/fundamentos/color-semantic"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >Color semántico</a
+              >
+            </li>
           </site-nav-section>
 
           <!-- Components -->
           <site-nav-section label="Componentes" routePrefix="/componentes">
+            <li class="nav-subheading">Ready</li>
+            <li>
+              <a
+                routerLink="/componentes/icon-button"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >IconButton</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="/componentes/avatar"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >Avatar</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="/componentes/segmented-control"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >SegmentedControl</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="/componentes/dropdown-panel"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >DropdownPanel</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="/componentes/editable-text"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >EditableText</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="/componentes/top-bar"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >TopBar</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="/componentes/tooltip"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >Tooltip</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="/componentes/toast"
+                routerLinkActive="bg-surface-muted font-medium"
+                class="nav-link"
+                >Toast</a
+              >
+            </li>
+            <li class="nav-subheading">Legacy</li>
             <li>
               <a
                 routerLink="/componentes/button"
@@ -447,17 +515,24 @@ import { LogoComponent } from '@coherence/ui';
           </a>
 
           <!-- Preview gallery (dev) -->
-          <a
-            routerLink="/preview"
-            routerLinkActive="bg-surface-muted text-canvas-fg font-medium"
-            class="flex items-center px-3 py-1 rounded-sm
-                  text-sm text-neutral-400
-                  hover:bg-surface-muted
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus
-                  transition-colors mt-auto"
-          >
-            Galeria (dev)
-          </a>
+          <!-- Footer cluster: theme toggle + dev gallery, pinned to bottom -->
+          <div class="mt-auto flex flex-col gap-space-2">
+            <div class="flex items-center justify-between gap-space-2 px-3 py-1">
+              <span class="text-body-sm text-canvas-fg">Tema</span>
+              <site-theme-toggle />
+            </div>
+            <a
+              routerLink="/preview"
+              routerLinkActive="bg-surface-muted text-canvas-fg font-medium"
+              class="flex items-center px-3 py-1 rounded-sm
+                    text-sm text-neutral-400
+                    hover:bg-surface-muted
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus
+                    transition-colors"
+            >
+              Galeria (dev)
+            </a>
+          </div>
         </nav>
       }
 

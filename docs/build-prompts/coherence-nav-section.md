@@ -1,6 +1,6 @@
 # Build — Coherence NavSection primitive (`libs/ui/nav-section/`)
 
-**Source:** `docs/plan.md` (LOCKED 2026-04-17-rev3)
+**Source:** `docs/strategy/plan.md` (LOCKED 2026-04-17-rev3)
 **Surface:** expandable parent nav row with collapsible children. Calibration: Granola's "Richard HQ" workspace group — chevron + label + hover `+` trailing action + nested folder rows below. Used inside `<afi-sidebar>`. Extends the nav family (Sidebar + NavItem) — composes NavItem for both the parent row and its children.
 **Prereqs:** scaffolding + tokens + Sidebar + NavItem (same-PR or earlier).
 
@@ -19,11 +19,11 @@ One primitive: `<afi-nav-section>`. Renders:
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — `aria-expanded`, disclosure widget pattern, `aria-current` inheritance
-3. `docs/component-skill.md`
-4. `docs/copy-skill.md`
-5. `docs/token-skill.md` — Surface tonal ladder, nav item active state tokens
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — `aria-expanded`, disclosure widget pattern, `aria-current` inheritance
+3. `docs/rules/component-skill.md`
+4. `docs/rules/copy-skill.md`
+5. `docs/rules/token-skill.md` — Surface tonal ladder, nav item active state tokens
 6. `docs/build-prompts/coherence-sidebar.md` — the shell this primitive lives inside
 7. `docs/build-prompts/coherence-menu.md` — the `⋮` menu used for section-level actions (composed, not inlined)
 

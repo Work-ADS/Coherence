@@ -29,19 +29,54 @@ If any of the above is impossible for a legitimate reason, the primitive is prob
 
 ---
 
-## 2. File structure per primitive
+## 2. File structure per primitive (LOCKED 2026-05-18)
+
+> Companion: [dimension-tokens.md](dimension-tokens.md) — the contributor rules for which CSS custom properties to reference and how the responsive system works. Components must use semantic tokens (e.g. `var(--button-height)`); never primitives (`var(--dimension-11)`) and never raw values.
 
 ```
-libs/ui/{primitive}/
-├── {primitive}.component.ts         # class + inline template
-├── {primitive}.variants.ts          # baseClasses + variantClasses + sizeClasses + types
+libs/ui/src/{primitive}/
+├── {primitive}.component.ts         # class only — decorator uses templateUrl + (optional) styleUrls
+├── {primitive}.component.html       # template — ALWAYS external
+├── {primitive}.component.scss       # styles — BEM classes + CSS custom properties (ALWAYS present)
+├── {primitive}.variants.ts          # type exports only (e.g. ButtonVariant, ButtonSize)
 ├── {primitive}.component.spec.ts    # behavior tests (Angular harness when helpful)
 └── index.ts                          # barrel: exports component + types
 ```
 
-No `.html` file unless the template exceeds **40 lines** (rare). No `.scss` file unless Tailwind genuinely can't express it, and then capped at **20 lines** with a comment explaining why.
+**The rule:**
+- **`.html` is always external** — `templateUrl: './{primitive}.component.html'`. Inline `template: \`…\`` is banned.
+- **`.scss` is always external and always present** — `styleUrls: ['./{primitive}.component.scss']`. Inline `styles: [\`…\`]` arrays are **banned** (the pre-commit hook enforces this).
+- **All visual styling lives in `.scss` using BEM classes + CSS custom properties.** No Tailwind utility classes in templates for visual styling. Templates contain only BEM class names bound via `[class]="computed()"` or static `class="block__element"`.
+- **`.variants.ts` exports types only** (e.g., `export type ButtonSize = 'sm' | 'md' | 'lg'`). Class-map strings are banned — size/variant logic lives in SCSS via BEM modifiers (`&--sm`, `&--primary`).
 
-If the primitive grows companion artifacts (e.g., `status-chip.labels.ts`), add them to the folder — one folder per primitive, no shared-grab-bag directories.
+**Why 3-file (not the single-file shadcn style we used to mandate):** AFI production code uses the 3-file Angular convention. The DS shape needs to match what devs already write — otherwise they bypass the DS. Single-file inline templates are a React/shadcn-specific pattern that the previous version of this rule mistakenly imported.
+
+If the primitive grows companion artifacts (e.g., `status-chip.labels.ts`, `{primitive}.types.ts`), add them to the folder — one folder per primitive, no shared-grab-bag directories.
+
+### When the `.scss` file exists (which is ALWAYS), only these belong in it:
+- BEM-structured classes (`.block`, `.block__element`, `.block--modifier`).
+- All visual properties: colors, spacing, radius, typography, motion, borders — via `var(--token-name)`.
+- `@media` responsive overrides. Raw px in `@media` queries is banned — reference named breakpoints from a generated Sass partial (to be added in a later session when first needed).
+- Component-scoped CSS custom property overrides (`:host { --my-padding: var(--space-md); }`).
+- Selectors like `:has()`, sibling combinators on dynamic content.
+- Hover/focus/active/disabled states via `&:hover`, `&:focus-visible`, `&--disabled`, etc.
+
+### NEVER in `.scss`:
+- Raw hex / rgba / px literals — hook blocks them outside `libs/tokens/`.
+- Sass color/dimension variables (`$color-brand-700`, `$dimension-4`) or any `@import` of a Sass tokens partial. **Only CSS custom properties from `tokens.css`.** Why: Sass `@import`s re-bake the brand at build time and break any future per-route or runtime brand switching. CSS vars compose live through the cascade and are brand-swappable for free.
+- `::ng-deep` — banned outright. It leaks DS styling into consumer scope and breaks brand encapsulation. If a primitive needs to style a slotted child, that's a composition redesign, not a `::ng-deep` patch.
+
+### Multi-client theming (whitelabel) — the foundation rule
+- **Brand swap = token-layer swap, not component-layer swap.** Brand overrides live at `libs/tokens/brand/{client}.ts`; style-dictionary builds a brand-specific `tokens.css`. Components stay brand-agnostic — they reference only semantic CSS custom properties (`var(--action-primary)`, `var(--surface-quiet)`, `var(--canvas-fg)`, etc.).
+- The logo is brand-specific but lives at `libs/ui/src/logo/` and swaps via brand config — not via per-brand component duplication.
+- Result: adding a new brand (Mutualidad, etc.) requires zero changes to the 24 primitives.
+
+### Responsive — the foundation rule
+- **SCSS `@media` with semantic breakpoint tokens is the default.** Responsive overrides go in the `.scss` file.
+- Mobile-first throughout.
+
+### Encapsulation note
+CSS custom properties inherit via the cascade, not via Angular's attribute-rewriting scope, so `var(--surface-quiet)` resolves identically inside and outside Emulated ViewEncapsulation. No `ViewEncapsulation.None` or `ShadowDom` is needed (or wanted) for tokens to work.
 
 ---
 
@@ -82,67 +117,70 @@ Rules:
 
 ## 5. Template rules
 
-- **Inline template** in the component file. No separate `.html` for anything under 40 lines.
+- **Template is always external** — `templateUrl: './{primitive}.component.html'`. Inline `template: \`…\`` is banned (see § 2). The pre-commit hook flags inline `styles:` arrays; reviewer flags inline `template:` strings.
 - **Control flow:** Angular 17+ `@if` / `@else` / `@for` / `@switch`. Never `*ngIf` / `*ngFor` / `*ngSwitch`.
-- **Class binding:** `[class]="classes()"` from a `computed()` signal. Never `[ngClass]`.
+- **Class binding:** `[class]="classes()"` from a `computed()` signal that returns BEM class strings (e.g., `'btn btn--primary btn--md'`). Never `[ngClass]`.
 - **Style binding:** reserved for dynamic CSS-var interpolation (e.g., `[style.background-color]="'var(--status-' + estado() + '-dot)'"`). Never hardcode hex / rgba / px in inline styles.
 - **Event binding:** `(click)="onClick($event)"`. Handlers live as class methods, not inline arrow functions.
 - **Content projection:** `<ng-content>` with `select=` for named slots. Name slots semantically (`slot="iconStart"`, `slot="rail"`), not visually (`slot="leftThing"`).
+- **No Tailwind utility classes in templates.** All visual styling is in `.scss`. Templates only use BEM class names. This is a LOCKED rule (2026-05-19).
+- **Sizing is responsive at the token layer, not the component.** Use `var(--button-height)`, `var(--canvas-padding-inline)`, etc. — the value automatically updates per breakpoint via [`semantic.scss`](../../libs/tokens/semantic.scss). Components only need their own `@media` for layout (flex-direction changes, visibility toggles, content reflow), NOT for sizing. See [dimension-tokens.md](dimension-tokens.md) § "Responsive — the load-bearing answer".
 
 ---
 
-## 6. Variants — the class-variance-authority pattern (Angular)
+## 6. Variants — types + SCSS BEM modifiers (LOCKED 2026-05-19)
 
-Every primitive with >1 visual variant uses this pattern verbatim.
+Every primitive with >1 visual variant uses this pattern.
 
-`{primitive}.variants.ts`:
-
-```ts
-export const baseClasses =
-  'inline-flex items-center justify-center gap-2 rounded-md font-button ' +
-  'transition-colors duration-fast ease-out ' +
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ' +
-  'focus-visible:ring-offset-2 ' +
-  'disabled:opacity-50 disabled:cursor-not-allowed';
-
-export const variantClasses = {
-  primary:   'bg-action text-white hover:bg-action-600 active:bg-action-700',
-  secondary: 'bg-surface-quiet text-canvas-fg border border-border-hairline hover:bg-surface-muted',
-  ghost:     'bg-transparent text-canvas-fg hover:bg-surface-quiet',
-  danger:    'bg-system-error text-white hover:bg-system-error-600',
-} as const;
-
-export const sizeClasses = {
-  sm: 'h-8 px-3 text-body-sm',
-  md: 'h-10 px-4 text-button',
-  lg: 'h-12 px-5 text-button',
-} as const;
-
-export type ButtonVariant = keyof typeof variantClasses;
-export type ButtonSize    = keyof typeof sizeClasses;
-```
-
-Component:
+`{primitive}.variants.ts` — **exports types only**:
 
 ```ts
-readonly classes = computed(() => [
-  baseClasses,
-  variantClasses[this.variant()],
-  sizeClasses[this.size()],
-  this.fullWidth() ? 'w-full' : '',
-].filter(Boolean).join(' '));
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+export type ButtonSize = 'sm' | 'md' | 'lg';
 ```
 
-**Every class listed above must resolve against a token at build time.** `bg-action` → `var(--action-500)`. `text-body-sm` → the semantic type role. No literal hex or px anywhere in this file.
+Component computes BEM class string:
+
+```ts
+readonly classes = computed(() =>
+  `btn btn--${this.variant()} btn--${this.size()}${this.fullWidth() ? ' btn--full' : ''}`
+);
+```
+
+`{primitive}.component.scss` — variant logic lives here:
+
+```scss
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  border-radius: var(--radius-control);
+  font: var(--type-button);
+  transition: background var(--duration-fast) var(--easing-enter);
+
+  &--primary {
+    background: var(--action-primary-default);
+    color: var(--action-primary-text);
+    &:hover { background: var(--action-primary-hover); }
+  }
+
+  &--sm { height: var(--control-h-sm); padding: 0 var(--space-sm); }
+  &--md { height: var(--control-h-md); padding: 0 var(--space-md); }
+  &--lg { height: var(--control-h-lg); padding: 0 var(--space-lg); }
+}
+```
+
+**Every value references a CSS custom property.** No raw hex, rgba, or px. No Tailwind class strings in `.ts` files.
 
 ---
 
 ## 7. Token consumption (the rule that keeps drift out)
 
 - **Every visual property reads a token.** Color, spacing, radius, typography, motion, border. No exceptions.
-- **Tokens come from `libs/tokens/dist/tokens.css`**, which is imported by the consuming app's `styles.css`.
-- **Tailwind utility classes resolve to tokens via `tailwind.config.js theme.extend`.** Example: `bg-surface-quiet` → `backgroundColor: var(--surface-quiet)`.
-- **Arbitrary-value Tailwind is permitted only for CSS-var interpolation** (e.g., `bg-[var(--status-pending-bg)]` when the var is dynamic). Never for literal values.
+- **Tokens come from `libs/tokens/semantic.scss`** (and its partials), imported into the consuming app's `styles.scss`.
+- **Components consume tokens via CSS custom properties in SCSS.** `var(--action-primary-default)`, `var(--control-h-md)`, `var(--duration-fast)`.
+- **No Tailwind utility classes for visual styling.** The team uses SCSS + CSS custom properties exclusively.
 - **The clean-code hook blocks** `#[0-9a-fA-F]{3,8}\b` (hex), `\brgba?\s*\(` (rgba), and `\b\d+px\b` outside `libs/tokens/**`.
 - **If you need a token that doesn't exist, define it first.** Never improvise a value. Token Guardian enforces this.
 
@@ -176,7 +214,7 @@ Five semantic surface tokens. Each has a specific job.
 
 ## 10. Accessibility non-negotiables
 
-Consult `docs/accessibility.md` for the per-primitive checklist. These apply to every primitive:
+Consult `docs/rules/accessibility.md` for the per-primitive checklist. These apply to every primitive:
 
 - **Focus-visible ring** — 2px `action-500`, 2px offset. Every focusable element. No exceptions.
 - **Keyboard operable** — Tab / Shift-Tab, Arrow keys for composite widgets, Enter / Space where native, Escape to dismiss overlays. Tested in the spec.
@@ -198,7 +236,7 @@ Prefer the lowest tier that does the job. Never skip straight to Tier 3.
 | **2** | `@angular/animations` | State machines that CSS can't cleanly express (e.g., sidebar collapse with coordinated opacity + width) |
 | **3** | Motion One (~3kb) | Complex timeline choreography (stagger across multiple elements, spring physics) — reserved for the DS site demonstrations |
 
-Choreography rules (from `docs/plan.md` motion discipline, LOCKED 2026-04-16):
+Choreography rules (from `docs/strategy/plan.md` motion discipline, LOCKED 2026-04-16):
 
 1. **Container-first** — animate the container, not its contents. A button's hover moves the button as one unit.
 2. **Fewest properties** — prefer `transform` + `opacity` (GPU-composited). Avoid `width` / `height` / `top` / `left` except when genuinely needed.
@@ -212,7 +250,7 @@ Choreography rules (from `docs/plan.md` motion discipline, LOCKED 2026-04-16):
 
 ## 12. Copy (RAE Spanish, formal `usted`)
 
-- **Every user-visible string** passes `docs/copy-skill.md`.
+- **Every user-visible string** passes `docs/rules/copy-skill.md`.
 - **Every hardcoded string inside a primitive** (screen-reader text, default `aria-label`, "cargando" spinner text) is RAE-verified and glossary-controlled.
 - **No English fallbacks** in shipping primitives. Not even in comments the screen reader might ever see (e.g., `sr-only` text).
 - **Sentence case**, not Title Case. `Guardar cambios`, not `Guardar Cambios`.
@@ -291,11 +329,11 @@ Apply on top of the universal rules.
 Run `docs/build-prompts/_pre-flight.md` for every primitive. Every box closes or the primitive doesn't merge.
 
 Key shared checks:
-- [ ] `scripts/clean-code-check.sh` green (no hex, rgba, px, any, @ts-ignore, as unknown as, @Input, @Output, @NgModule, *.module.ts outside allowlist).
+- [ ] `scripts/clean-code-check.sh` green (no hex, rgba, px, `::ng-deep` outside `libs/tokens/**`; no `any`, `@ts-ignore`, `as unknown as`, `@Input`, `@Output`, `@NgModule`, `*.module.ts` outside allowlist).
 - [ ] All signal inputs + outputs; no decorator-based `@Input()` / `@Output()`.
-- [ ] Template < 40 lines (or `.html` file with comment justifying).
+- [ ] 3-file shape: `.component.ts` references `templateUrl`, `.component.html` exists, `.component.scss` exists iff there's content beyond Tailwind. Inline `template:` / `styles:` arrays are absent.
 - [ ] Variants extracted to `{primitive}.variants.ts`.
-- [ ] Every style property reads a token.
+- [ ] Every style property reads a token via CSS custom property (`var(--…)`) or Tailwind utility mapped to a token. No raw values, no Sass `@import` of token partials.
 - [ ] Spec covers default render + every variant + every size + disabled + loading + keyboard activation + focus ring.
 - [ ] RAE copy on every hardcoded string; `copy-skill.md` glossary verified.
 - [ ] Primitive renders correctly at `/preview`.

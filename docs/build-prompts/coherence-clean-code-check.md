@@ -1,6 +1,6 @@
 # Build — Clean-code check script (`scripts/clean-code-check.sh`)
 
-**Source:** `docs/clean-code.md` non-negotiables
+**Source:** `docs/rules/clean-code.md` non-negotiables
 **Surface:** pre-commit grep that blocks violations before they land. Wired into Husky + lint-staged. This is the automation side of `build-kickoff.md`'s "no `--no-verify` escape" clause.
 **Prereqs:** scaffolding prompt complete (Husky + lint-staged already installed with a placeholder that `exit 0`s; this prompt replaces the placeholder).
 
@@ -17,8 +17,8 @@ No responsibilities beyond what `clean-code.md` specifies. ESLint + Prettier han
 
 ## Required reads
 
-1. `docs/clean-code.md` — the non-negotiables are the spec
-2. `docs/build-kickoff.md` — automation clause, no-bypass policy
+1. `docs/rules/clean-code.md` — the non-negotiables are the spec
+2. `docs/workflow/build-kickoff.md` — automation clause, no-bypass policy
 3. `docs/build-prompts/coherence-scaffolding.md` — Husky + lint-staged setup
 
 ## Rules checked

@@ -1,6 +1,6 @@
 # Build — Coherence Drawer primitive (`libs/ui/drawer/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** DS-specific side panel. **No overlay, page remains interactive.** Click-outside closes immediately. Arrow-nav between sibling rows with "1 de 5" position indicator. This is the AWM Import row-detail pattern.
 **Prereqs:** scaffolding + tokens + Button + Card + Modal (Drawer distinguishes itself from Modal deliberately).
 
@@ -10,11 +10,11 @@ One primitive, `<afi-drawer>`, right-edge-aligned, non-blocking.
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — Drawer section (DS-specific rules)
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — Surface (elevated for the drawer body)
-5. `docs/plan.md` — drawer rules locked from AWM brief: no overlay, click-outside closes, arrow nav, position indicator
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — Drawer section (DS-specific rules)
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — Surface (elevated for the drawer body)
+5. `docs/strategy/plan.md` — drawer rules locked from AWM brief: no overlay, click-outside closes, arrow nav, position indicator
 6. `docs/build-prompts/coherence-modal.md` — the deliberate contrast (Drawer is not a right-side Modal)
 
 ## When to use

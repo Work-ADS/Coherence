@@ -1,6 +1,6 @@
 # Build — Coherence Modal primitive (`libs/ui/modal/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** blocking overlay dialog. Distinct from Drawer (which is non-blocking, DS-specific).
 **Prereqs:** scaffolding + tokens + Button + Card (Modal reuses Card's slot + variant conventions).
 
@@ -10,11 +10,11 @@ One primitive, `<afi-modal>`, for blocking user flow until explicit dismissal.
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — Modal section (FocusTrap, dialog role, aria-modal)
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — Surface + border tokens
-5. `docs/plan.md` — motion rules (enter 200-300ms, exit 150-200ms, container-first)
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — Modal section (FocusTrap, dialog role, aria-modal)
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — Surface + border tokens
+5. `docs/strategy/plan.md` — motion rules (enter 200-300ms, exit 150-200ms, container-first)
 6. `docs/build-prompts/coherence-card.md` — header/body/footer slot convention reused here
 
 ## When to use

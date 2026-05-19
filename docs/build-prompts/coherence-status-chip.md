@@ -1,6 +1,6 @@
 # Build — Coherence StatusChip primitive (`libs/ui/status-chip/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** a small pill that surfaces a resource's state (Pendiente, Aprobada, Rechazada, etc.). Sibling of `<afi-badge>` — semantically distinct: Badge is "count or intent"; StatusChip is "state of a business resource."
 **Prereqs:** scaffolding + tokens (status semantic bucket).
 
@@ -12,12 +12,12 @@ One primitive: `<afi-status-chip>`. Signal input `estado`, maps to token + local
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — live-region rules (chip is not live by default; consumer opts in)
-3. `docs/component-skill.md`
-4. `docs/copy-skill.md` — RAE Spanish; state labels are glossary-controlled
-5. `docs/token-skill.md` — `status-*` semantic bucket (draft / pending / approved / rejected / executed / cancelled)
-6. `docs/plan.md` — estado pattern lock (page-scoped, not global)
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — live-region rules (chip is not live by default; consumer opts in)
+3. `docs/rules/component-skill.md`
+4. `docs/rules/copy-skill.md` — RAE Spanish; state labels are glossary-controlled
+5. `docs/rules/token-skill.md` — `status-*` semantic bucket (draft / pending / approved / rejected / executed / cancelled)
+6. `docs/strategy/plan.md` — estado pattern lock (page-scoped, not global)
 7. `docs/build-prompts/coherence-tokens.md` — status tokens added here
 
 ## When to use

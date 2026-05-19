@@ -1,6 +1,6 @@
 # Build — Coherence Sidebar + NavItem primitives (`libs/ui/sidebar/` + `libs/ui/nav-item/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** primary navigation shell. Hover-expand default (Instagram / Linear / Notion pattern). `surface-quiet` background.
 **Prereqs:** scaffolding + tokens + Button + Tabs (related a11y patterns).
 
@@ -13,11 +13,11 @@ Two primitives in one prompt — they co-design and ship together.
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — keyboard focus = hover for collapsed mode (locked)
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — new `surface-quiet` semantic token (Surface bucket); also needs Action for active state
-5. `docs/plan.md` — sidebar primitives lock 2026-04-16 (full spec: variants, animation, a11y, color)
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — keyboard focus = hover for collapsed mode (locked)
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — new `surface-quiet` semantic token (Surface bucket); also needs Action for active state
+5. `docs/strategy/plan.md` — sidebar primitives lock 2026-04-16 (full spec: variants, animation, a11y, color)
 6. `docs/build-prompts/coherence-button.md` — class-variance pattern for variants
 7. `docs/build-prompts/coherence-tabs.md` — CDK `FocusKeyManager` pattern reused
 

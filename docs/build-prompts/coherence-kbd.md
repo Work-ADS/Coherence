@@ -1,6 +1,6 @@
 # Build — Coherence Kbd primitive (`libs/ui/kbd/`)
 
-**Source:** `docs/plan.md` (LOCKED 2026-04-17-rev6 — primitive #21)
+**Source:** `docs/strategy/plan.md` (LOCKED 2026-04-17-rev6 — primitive #21)
 **Surface:** visual keycap for keyboard shortcuts. Atom-level primitive; display-only, no interaction. Calibration: Animate UI search-field shortcut badges, Linear / Raycast keycaps.
 **Prereqs:** scaffolding + tokens (needs Control-neutral + Surface buckets + body-sm typography).
 
@@ -15,11 +15,11 @@ One primitive: `<afi-kbd>`. Renders one or more keyboard keys as small keycaps. 
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — `kbd` element semantics + shortcut announcement pattern
-3. `docs/component-skill.md`
-4. `docs/copy-skill.md` — Spanish key-name glossary (below)
-5. `docs/token-skill.md` — Surface + Control-neutral buckets
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — `kbd` element semantics + shortcut announcement pattern
+3. `docs/rules/component-skill.md`
+4. `docs/rules/copy-skill.md` — Spanish key-name glossary (below)
+5. `docs/rules/token-skill.md` — Surface + Control-neutral buckets
 
 ## When to use
 

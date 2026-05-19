@@ -124,7 +124,7 @@ construyó.*
 
 ## Voice
 
-Operator. Present tense. Concrete nouns. Active verbs. No emoji. No exclamation points. No marketing adjectives (*innovative*, *robust*, *seamless*, *cutting-edge*). Register matches `docs/manifesto.md`.
+Operator. Present tense. Concrete nouns. Active verbs. No emoji. No exclamation points. No marketing adjectives (*innovative*, *robust*, *seamless*, *cutting-edge*). Register matches `docs/strategy/manifesto.md`.
 
 A reader who doesn't work at AFI should finish the piece knowing:
 1. What was built.

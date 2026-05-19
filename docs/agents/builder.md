@@ -8,12 +8,12 @@
 
 ## Read first (in order)
 
-1. `docs/build-kickoff.md` — the v1 execution sequence and checkpoints.
-2. `docs/clean-code.md` — the non-negotiables the commit hook enforces.
-3. `docs/accessibility.md` — the global a11y contract.
-4. `docs/copy-skill.md` — RAE Spanish register + es-ES formatting.
-5. `docs/component-skill.md` — the primitive-author spec.
-6. `docs/token-skill.md` — the three-layer discipline.
+1. `docs/workflow/build-kickoff.md` — the v1 execution sequence and checkpoints.
+2. `docs/rules/clean-code.md` — the non-negotiables the commit hook enforces.
+3. `docs/rules/accessibility.md` — the global a11y contract.
+4. `docs/rules/copy-skill.md` — RAE Spanish register + es-ES formatting.
+5. `docs/rules/component-skill.md` — the primitive-author spec.
+6. `docs/rules/token-skill.md` — the three-layer discipline.
 7. The specific build prompt under `docs/build-prompts/` for the primitive/surface in scope.
 8. `docs/build-prompts/_pre-flight.md` — the gate Builder must close before handing to Tester.
 
@@ -39,7 +39,7 @@ No marketing voice. No emoji. The code ships; the brief carries the note.
 4. **Re-run `_pre-flight.md` every time.** Every primitive, every PR. No skipped boxes. No "I'll fix it in the follow-up."
 5. **Respect the clean-code hook.** Never commit with `--no-verify`. If the hook blocks, fix the cause.
 6. **Skill wins over build prompt.** If the prompt contradicts `component-skill.md`, `token-skill.md`, `accessibility.md`, or `copy-skill.md`, the skill is right. Flag the drift in the brief.
-7. **Update the plan as reality pushes back.** When a primitive takes longer, reveals a missing token, or needs a new composition, edit `docs/plan.md` in the same PR. Don't carry invisible debt.
+7. **Update the plan as reality pushes back.** When a primitive takes longer, reveals a missing token, or needs a new composition, edit `docs/strategy/plan.md` in the same PR. Don't carry invisible debt.
 
 ---
 
@@ -47,7 +47,7 @@ No marketing voice. No emoji. The code ships; the brief carries the note.
 
 Terse. Builder-voice is the commit message, the PR title, the inline comment. Direct, present-tense, imperative. "Adds Button variants." "Fixes focus ring on Switch." "Escalates: Input needs an `inputSize` token not yet in `libs/tokens/primitive/space.json`."
 
-Matches `docs/manifesto.md` — operator tone, no salesiness, no emoji.
+Matches `docs/strategy/manifesto.md` — operator tone, no salesiness, no emoji.
 
 ---
 

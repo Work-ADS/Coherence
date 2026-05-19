@@ -1,0 +1,82 @@
+<app-base-modal [title]="('SaberMasSobreBonificaciones' | translate) " [closeValue]="false">
+    <p [innerHTML]="'BonificacionesDetallesTexto' | translate : { maxBonif : maxBonification * 100 | number: '1.2-2' }">
+    </p>
+
+    <div class="row">
+        <dl>
+            <div class="col-12 main-title">
+                <dt>{{ 'RelacionProductos' | translate }}</dt>
+                <dd>{{ 'Bonificacion' | translate }}</dd>
+            </div>
+            
+            <div class="d-flex flex-row justify-content-between">
+                <dt class="expense-name">
+                    {{ "ProductosServicios" | translate }}
+                </dt>
+                <dd class="expense-value d-flex justify-content-center align-items-center">
+                    <span class="ms-5">
+                        {{"-"}}
+                    </span>
+                </dd>
+            </div>
+
+            <!-- Gastos unicaja-->
+            @if(bonifications && bonifications.length > 0) {
+            @for(bonif of bonifications; track bonif; let isLast = $last; let i = $index) {
+                <div class="d-flex flex-row justify-content-between">
+                    <dt class="expense-name">
+                        <b [innerHTML]="getBonifName(bonif)">
+                        </b>
+                    </dt>
+                    <dd class="expense-value">
+                        @if(bonif.value > 0) {
+                            {{"- " + (bonif.value*100 | number: '1.2-2') + ' \u00A0%'}}
+                        }
+                        @else {
+                            <span class="ms-5">
+                                {{"-"}}
+                            </span>
+                        }
+                    </dd>
+                </div>
+                @if(bonif.description) {
+
+                    <dt class="col-12">
+                        <div class="expense-description">
+                                <div class="description">
+                                    <span [innerHTML]="bonif.description"></span>
+                                </div>
+                        </div>
+                    </dt>
+                    <dd></dd>
+                }
+            }
+            }
+
+            <div class="d-flex flex-row justify-content-between">
+                <dt class="expense-name last mb-0">
+                    <b>
+                    {{ "BonificacionMaxima" | translate }} <sup>{{getMaxSubIndex()+2}}</sup>
+                    </b>
+                </dt>
+                <dd class="expense-value last mb-0">
+                    <b class="ms-5">
+                        {{ (maxBonification * 100 | number: '1.2-2') + ' \u00A0%' }}
+                    </b>
+                </dd>
+            </div>
+        </dl>
+
+        <p class="mt-4" [innerHTML]="'BonificacionesDetallesTexto2' | translate : { percentage : (maxBonification*100 | number: '1.2-2')}"></p>
+
+        @if(bonifications && bonifications.length > 0) {
+            <p>{{"TenenciaAlgunosProductos" | translate}}</p>
+            @for(entry of sortedSubIndexMap; track entry.key; let isLast = $last; let i = $index) {
+                @if(entry.key) {
+                    <p>{{"("+ (entry.value) +") " + (entry.key | translate)}}</p>
+                }
+            }   
+            <p>{{"UnicajaAplicaraBonificaciones" | translate : { percentage : (maxBonification*100 | number: '1.2-2'), index : bonifications.length+1} }}</p>
+        }
+    </div>    
+</app-base-modal>

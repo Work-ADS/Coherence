@@ -2,7 +2,7 @@
 
 **Source:** Granola note *DS manifesto AFI* — 2026-04-16
 **Purpose:** The philosophical layer behind Coherence and the broader AFI way of working with AI. Coherence is the first concrete instantiation; this document is the *why*. Used as source material for the case-study presentation, as the north-star reference for scoping future work, and as the voice-of-the-project anchor when writing anything outward-facing.
-**Link-back:** `docs/plan.md` references this document for Context / North Star / Case-study.
+**Link-back:** `docs/strategy/plan.md` references this document for Context / North Star / Case-study.
 
 ---
 

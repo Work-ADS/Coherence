@@ -1,6 +1,6 @@
 # Build kickoff — handoff from Planner to build
 
-> Consulted after `docs/briefs/{slug}.md` reaches `**Status:** complete`. Converts the brief into build prompts that Open Code (or any agentic coder) executes. Symmetric twin of `docs/brief-template.md` — brief is strategy, kickoff is execution.
+> Consulted after `docs/briefs/{slug}.md` reaches `**Status:** complete`. Converts the brief into build prompts that Open Code (or any agentic coder) executes. Symmetric twin of `docs/workflow/brief-template.md` — brief is strategy, kickoff is execution.
 
 ## Purpose
 
@@ -20,12 +20,12 @@ If any is missing, return to Planner. Don't guess.
 ## Inputs this step reads (in order)
 
 1. `docs/briefs/{slug}.md` — the completed brief
-2. `docs/component-skill.md` — how components are built
-3. `docs/token-skill.md` — how tokens are built
-4. `docs/clean-code.md` — what code must look like
-5. `docs/accessibility.md` — what a11y must cover
-6. `docs/copy-skill.md` — what user-facing strings must look like
-7. `docs/plan.md` — current Coherence DS state (tokens, primitives already built)
+2. `docs/rules/component-skill.md` — how components are built
+3. `docs/rules/token-skill.md` — how tokens are built
+4. `docs/rules/clean-code.md` — what code must look like
+5. `docs/rules/accessibility.md` — what a11y must cover
+6. `docs/rules/copy-skill.md` — what user-facing strings must look like
+7. `docs/strategy/plan.md` — current Coherence DS state (tokens, primitives already built)
 
 ## Outputs this step produces
 
@@ -49,11 +49,11 @@ For each v1 surface named in the brief's Phase 2 Scope, one file at:
 
 ## Required reads (in order, before writing code)
 
-1. docs/clean-code.md
-2. docs/accessibility.md
-3. docs/component-skill.md
-4. docs/token-skill.md
-5. docs/copy-skill.md              (only if strings render to users)
+1. docs/rules/clean-code.md
+2. docs/rules/accessibility.md
+3. docs/rules/component-skill.md
+4. docs/rules/token-skill.md
+5. docs/rules/copy-skill.md              (only if strings render to users)
 6. docs/briefs/{slug}.md — Phase 2 + Phase 3 only
 
 ## Primitives / components used
@@ -74,9 +74,9 @@ Event sink: {from Phase 3 Spec — SQL dashboard, BI, etc.}
 
 ## Pre-flight before commit (non-negotiable)
 
-- Run the clean-code grep check against docs/clean-code.md rules
-- Run the a11y pass per docs/accessibility.md pre-flight checklist
-- Run the RAE copy check per docs/copy-skill.md (only if strings present)
+- Run the clean-code grep check against docs/rules/clean-code.md rules
+- Run the a11y pass per docs/rules/accessibility.md pre-flight checklist
+- Run the RAE copy check per docs/rules/copy-skill.md (only if strings present)
 
 Any failure → fix in place, re-run. Do not commit on amber.
 
@@ -88,11 +88,11 @@ Any failure → fix in place, re-run. Do not commit on amber.
 ## Rules for generating build prompts
 
 1. **One surface per prompt.** Phase 2 has 5 surfaces → 5 build prompts. Each stands alone.
-2. **Reference skills, don't inline them.** The prompt says "read `docs/clean-code.md`", not a 200-line embedded checklist. Skills are the single source of truth.
+2. **Reference skills, don't inline them.** The prompt says "read `docs/rules/clean-code.md`", not a 200-line embedded checklist. Skills are the single source of truth.
 3. **Primitive gaps block surface prompts.** If the surface needs `<afi-drawer>` and `libs/ui/drawer/` doesn't exist, the drawer prompt ships first. Surface prompt queues behind it.
 4. **Every build prompt ends with the pre-flight check.** Non-negotiable.
 5. **Golden-flow instrumentation is copied from the brief, not invented.** If the brief didn't lock golden-flow steps, return to Planner.
-6. **Token gaps block everything.** A new token referenced by a surface ships first, via `docs/token-skill.md`.
+6. **Token gaps block everything.** A new token referenced by a surface ships first, via `docs/rules/token-skill.md`.
 
 ## Execution order (always)
 
@@ -107,7 +107,7 @@ Open Code runs prompts in that order. The DS team reviews output against the bri
 Every build prompt ends with the same pre-flight grep block. Implementation:
 
 - Pre-commit git hook runs the greps against the staged diff.
-- Regex set lives in `scripts/clean-code-check.sh` (generated from the non-negotiables list in `docs/clean-code.md`).
+- Regex set lives in `scripts/clean-code-check.sh` (generated from the non-negotiables list in `docs/rules/clean-code.md`).
 - Failure = commit blocked + one-line reason printed. Coder (human or agent) fixes in-place.
 - No `--no-verify` escape hatch is acceptable — if the rule is wrong, amend the rule.
 
@@ -129,4 +129,4 @@ When every v1 surface has shipped + passed pre-flight:
 
 ## Voice
 
-Match `docs/manifesto.md` — pragmatic, direct. The build-prompt MDs should read like a work order, not an essay. An engineer opening one should see the surface + the skill references + the pre-flight, and start.
+Match `docs/strategy/manifesto.md` — pragmatic, direct. The build-prompt MDs should read like a work order, not an essay. An engineer opening one should see the surface + the skill references + the pre-flight, and start.

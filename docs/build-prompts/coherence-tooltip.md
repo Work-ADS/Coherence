@@ -1,6 +1,6 @@
 # Build — Coherence Tooltip primitive (`libs/ui/tooltip/`)
 
-**Source:** `docs/plan.md` (LOCKED 2026-04-17-rev7 — primitive #23, made explicit — was implicit v1 dependency of Sidebar's collapsed-mode NavItem tooltip)
+**Source:** `docs/strategy/plan.md` (LOCKED 2026-04-17-rev7 — primitive #23, made explicit — was implicit v1 dependency of Sidebar's collapsed-mode NavItem tooltip)
 **Surface:** supplementary text/content shown on hover or focus of a trigger. CDK Overlay-based. Two forms: directive (sugar for simple text) + component (rich content). Sibling to Modal / Drawer / Menu in the overlay family; distinct in that it's non-interactive (no clicks, no dismiss on content-click).
 **Prereqs:** scaffolding + tokens + Button + CDK Overlay infrastructure (same as Modal / Drawer / Menu).
 
@@ -22,11 +22,11 @@ Plus one internal component:
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — tooltip ARIA pattern (`role="tooltip"`, `aria-describedby`, touch considerations)
-3. `docs/component-skill.md`
-4. `docs/copy-skill.md`
-5. `docs/token-skill.md` — Surface-elevated + shadow-md for the panel; Motion bucket for transitions
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — tooltip ARIA pattern (`role="tooltip"`, `aria-describedby`, touch considerations)
+3. `docs/rules/component-skill.md`
+4. `docs/rules/copy-skill.md`
+5. `docs/rules/token-skill.md` — Surface-elevated + shadow-md for the panel; Motion bucket for transitions
 6. `docs/build-prompts/coherence-modal.md` — CDK Overlay + positioning reference (same infrastructure, different policy)
 7. `docs/build-prompts/coherence-sidebar.md` — Sidebar's collapsed-mode NavItem tooltip consumes this primitive explicitly
 

@@ -22,7 +22,7 @@ For example: `iteration-coherence-novedades-v2-2026-04-30.md`.
 
 Once a few iterations have accumulated, ask an AI assistant in this repo:
 
-> "Read everything in `design-review-iterations/` and group the open feedback by theme. For each theme, propose a 1–2 sentence iteration goal and which files should change."
+> "Read everything in `docs/archive/design-review-iterations/` and group the open feedback by theme. For each theme, propose a 1–2 sentence iteration goal and which files should change."
 
 Or:
 

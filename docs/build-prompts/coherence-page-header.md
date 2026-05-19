@@ -1,6 +1,6 @@
 # Build — Coherence PageHeader primitive (`libs/ui/page-header/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** the page-level chrome that sits above every route's content. Adaptive height. Carries breadcrumb, title, estado chip, primary action, tabs, filters — whichever slots the page populates.
 **Prereqs:** scaffolding + tokens + Button + Tabs + StatusChip + Sidebar (shell composes these).
 
@@ -12,12 +12,12 @@ One primitive: `<afi-page-header>`. Slot-driven, sticky-capable, scroll-fade on 
 
 ## Required reads (in order)
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — landmark + skip-link discipline
-3. `docs/component-skill.md` — slot + signal input pattern
-4. `docs/copy-skill.md` — RAE Spanish; every hardcoded string in this primitive is `usted`-register
-5. `docs/token-skill.md` — Surface tonal ladder (base / quiet / elevated); scroll-fade rules
-6. `docs/plan.md` — Pure-C chrome lock (no top strip above Page-header); estado pattern (page-scoped, not global)
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — landmark + skip-link discipline
+3. `docs/rules/component-skill.md` — slot + signal input pattern
+4. `docs/rules/copy-skill.md` — RAE Spanish; every hardcoded string in this primitive is `usted`-register
+5. `docs/rules/token-skill.md` — Surface tonal ladder (base / quiet / elevated); scroll-fade rules
+6. `docs/strategy/plan.md` — Pure-C chrome lock (no top strip above Page-header); estado pattern (page-scoped, not global)
 7. `docs/build-prompts/coherence-tabs.md` — Tabs slot embeds the existing primitive
 8. `docs/build-prompts/coherence-status-chip.md` — the chip rendered when `estado` input is set
 
@@ -139,14 +139,15 @@ Skip-link target: the primitive exposes an `id="page-header"` anchor consumers c
 ## File structure
 
 ```
-libs/ui/page-header/
-├── page-header.component.ts
-├── page-header.variants.ts       # density + sticky class maps
+libs/ui/src/page-header/
+├── page-header.component.ts         # class only — templateUrl + (optional) styleUrls
+├── page-header.component.html       # template (always external)
+├── page-header.variants.ts          # density + sticky class maps
 ├── page-header.component.spec.ts
 └── index.ts
 ```
 
-No `.html`, no `.scss`. Template inline (~70 lines with conditional rows), Tailwind only, token-driven.
+3-file shape mandatory. `.component.scss` is added only if page-header needs styles beyond Tailwind classes mapped to tokens (currently it doesn't — Tailwind only, token-driven). See `docs/rules/component-skill.md` § 2.
 
 ## Copy (hardcoded, RAE, `usted`)
 

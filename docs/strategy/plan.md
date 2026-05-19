@@ -16,7 +16,7 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
 
 > **A design system developers actually use — because it's built for how *they* consume information, not how designers wish they would.**
 
-**Philosophical backing:** the full manifesto articulating *why Coherence exists and how it fits into the broader AFI way of working with AI* lives in [`docs/manifesto.md`](./manifesto.md) (source: Granola note *DS manifesto AFI*, 2026-04-16). That document carries the project's voice and is the source-of-truth for case-study language, outward-facing writing, and north-star decisions beyond the compressed sentence above.
+**Philosophical backing:** the full manifesto articulating *why Coherence exists and how it fits into the broader AFI way of working with AI* lives in [`docs/strategy/manifesto.md`](./manifesto.md) (source: Granola note *DS manifesto AFI*, 2026-04-16). That document carries the project's voice and is the source-of-truth for case-study language, outward-facing writing, and north-star decisions beyond the compressed sentence above.
 
 ### Intended outcomes
 
@@ -60,7 +60,7 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
    4. **How to use (rules)** — rendered from the corresponding MD skill file. Bullet rules + "don't" examples.
    5. **Code examples** — shadcn-style snippets with copy buttons. Import + applied usage.
    6. **Props / API table** — shadcn-density table (components only).
-   7. **Related** — links to adjacent concepts, components that consume this, and the source-of-truth MD skill file (transparently exposed — "this rule lives in `docs/token-skill.md`").
+   7. **Related** — links to adjacent concepts, components that consume this, and the source-of-truth MD skill file (transparently exposed — "this rule lives in `docs/rules/token-skill.md`").
 
    **Layout:** two-pane — sticky left sidebar (IA), sticky right on-page quick-nav (shadcn pattern). Content max-width `content-lg` (1024) for reading rhythm.
 
@@ -72,7 +72,7 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
 
    **Guiding tension LOCKED:** *"An experience — not over the top but useful and valuable."* Every interactive element has to pass two tests: (1) does it teach, let the user play, or reveal accessibility reality? (2) is it restrained enough that a back-office operator using a Wealth Manager import table all day wouldn't find it tiring? If no to either, cut it. "Useful and valuable" is the ceiling on delight, not a license for restraint-as-austerity.
 
-   **Single-writer / dual-reader rule LOCKED:** MD skill files (`docs/token-skill.md`, `docs/component-skill.md`, `docs/accessibility.md`, `docs/clean-code.md`, `docs/motion-templates.md`) are the **source of truth**. Site pages render their "How to use" sections from those files. One edit updates the rule for agents (Builder / Token Guardian / Tester), for designers, for developers, for the case-study presentation. No drift. The site becomes a rendered, enhanced version of the same content AI agents read as instructions — this IS the case-study story.
+   **Single-writer / dual-reader rule LOCKED:** MD skill files (`docs/rules/token-skill.md`, `docs/rules/component-skill.md`, `docs/rules/accessibility.md`, `docs/rules/clean-code.md`, `docs/motion-templates.md`) are the **source of truth**. Site pages render their "How to use" sections from those files. One edit updates the rule for agents (Builder / Token Guardian / Tester), for designers, for developers, for the case-study presentation. No drift. The site becomes a rendered, enhanced version of the same content AI agents read as instructions — this IS the case-study story.
 
    **Interactive + educational layer LOCKED 2026-04-16 (per user — "play, have fun, understand when to use it, accessibility, thought experiment"):**
 
@@ -108,7 +108,7 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
    7. **Reduced motion = respect, not disable.** `prefers-reduced-motion: reduce` drops to 0–80ms fades. Keep state communication, cut movement. One global CSS rule handles this.
 
    These seven rules are the craft layer under every template. Once locked in `motion-templates.md` they become enforceable — Builder cites them, Tester checks them, Case-study presentation has them as a named artifact.
-17. **Download-MD feature on applicable pages** *(added 2026-04-16 per user request — "allow the user to download the MD files").* A `DownloadMdButton` component appears in the "Related" footer of every page that has a source-of-truth MD worth taking away. **Why it matters:** the MD files are agent-ready context. A visitor clicks Download → the MD lands on their machine → they drop it into their own Claude / Open Code / Cursor session → they inherit the same rules our agents follow. This makes Coherence consumable as reference AND as AI context, which is the single most on-brand feature possible given the manifesto. **Page mapping for v1:** `/foundations/colors` + `/foundations/dimensions` + `/foundations/typography` + `/foundations/motion` → `docs/token-skill.md` (plus `motion-templates.md` on motion page). `/components/*` → `docs/component-skill.md` + `docs/accessibility.md` + `docs/clean-code.md` (eventually a per-component `.md` once components ship). Home → eventual "all" bundle (v2). Component built once, reused on every applicable page — "build once, variants for the rest" applies; `DownloadMdButton` takes `filePath` + `label` inputs.
+17. **Download-MD feature on applicable pages** *(added 2026-04-16 per user request — "allow the user to download the MD files").* A `DownloadMdButton` component appears in the "Related" footer of every page that has a source-of-truth MD worth taking away. **Why it matters:** the MD files are agent-ready context. A visitor clicks Download → the MD lands on their machine → they drop it into their own Claude / Open Code / Cursor session → they inherit the same rules our agents follow. This makes Coherence consumable as reference AND as AI context, which is the single most on-brand feature possible given the manifesto. **Page mapping for v1:** `/foundations/colors` + `/foundations/dimensions` + `/foundations/typography` + `/foundations/motion` → `docs/rules/token-skill.md` (plus `motion-templates.md` on motion page). `/components/*` → `docs/rules/component-skill.md` + `docs/rules/accessibility.md` + `docs/rules/clean-code.md` (eventually a per-component `.md` once components ship). Home → eventual "all" bundle (v2). Component built once, reused on every applicable page — "build once, variants for the rest" applies; `DownloadMdButton` takes `filePath` + `label` inputs.
 7. **Project / feature brief template MD** *(added 2026-04-16 per user request)* — a reusable "plan-agent" template the user can run to scope future digital products/features **while** other builds are in flight. **Form LOCKED 2026-04-16: Agent prompt + questions.** The MD *is* a Claude system prompt: opens with working-style rules + four ordered phases with checkpoints between them. **Structure LOCKED 2026-04-16:**
    - **Phase 0 — Intake:** client / team → project type (new / iteration / redesign) → existing DS → existing Figma → stakeholders. (The *what am I walking into*.) Branches how all subsequent phases are asked.
    - **Phase 1 — Frame:** pains → north star → references → users. (The *why*.)
@@ -117,22 +117,22 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
    - **Phase 4 — Parked:** v2 deferred → backlog. (What not to lose.)
 
    User can stop after any phase for lighter projects. Each phase has a checkpoint — plan file gets a section written, user confirms, next phase begins. **Roadmap / V×C÷E scoring is deliberately NOT in the template** (user note 2026-04-16: "they don't think like this, especially with AI where we can build it"); it remains Coherence's own internal practice, not a universal requirement. The actual prompt text for each phase is co-defined with user during build phase. Lives in `docs/` on the DS site so it is linkable.
-8. **Build-kickoff MD — `docs/build-kickoff.md`** *(added 2026-04-16, **live 2026-04-16**)* — symmetric twin of the brief-template MD. Consulted when a brief reaches `Status: complete`. Converts Phase 2 v1 surfaces into one executable build prompt each under `docs/build-prompts/{slug}-{surface}.md`. Prompts **reference** the skills (clean-code, a11y, component, token, copy) rather than inline them — Open Code follows the links, no "huge prompt" pattern. Every build prompt ends with a clean-code grep pre-flight; commit blocked on failure, no `--no-verify` escape. Execution order locked: token gaps → primitive gaps → surface prompts.
+8. **Build-kickoff MD — `docs/workflow/build-kickoff.md`** *(added 2026-04-16, **live 2026-04-16**)* — symmetric twin of the brief-template MD. Consulted when a brief reaches `Status: complete`. Converts Phase 2 v1 surfaces into one executable build prompt each under `docs/build-prompts/{slug}-{surface}.md`. Prompts **reference** the skills (clean-code, a11y, component, token, copy) rather than inline them — Open Code follows the links, no "huge prompt" pattern. Every build prompt ends with a clean-code grep pre-flight; commit blocked on failure, no `--no-verify` escape. Execution order locked: token gaps → primitive gaps → surface prompts.
 9. **Workflow MD (Start here) — `README.md`** *(added 2026-04-16 per user request)* — the single first-page map of the whole loop: **Meeting** (discovery / research) → **Plan with AI** (brief-template) → **Fill in plan file** → **Build** (build-kickoff → Builder) → **Test** → **Iterate**. One screen. Links out to brief-template, build-kickoff, git-cheatsheet. Placed at `README.md` (not `docs/`) because it IS "start here" — the first thing anyone sees in the repo. `docs/` links to it, not vice versa.
-10. **Git cheatsheet — `docs/git-cheatsheet.md`** *(added 2026-04-16 per user request)* — 5–6 plain-English-named commands: pull, save-and-share (`add` + `commit` + `push`), new branch, see-what-changed, undo-last-commit. Not a git tutorial. Keeps the DS approachable for non-git-power-users (future designers, writers, Miguel, Flavia) and doubles as a case-study artifact: "here's a DS accessible to non-engineers."
-11. **`docs/accessibility.md`** *(added 2026-04-16, **live 2026-04-16**)* — WCAG 2.2 AA minimum / AAA for text + touch. 44×44pt touch targets. Per-primitive checklists (Button, Input, Select, Checkbox, Switch, Modal, Drawer, Table, Tabs, Toast, inline-edit). Pre-flight runs before merge; paired with `clean-code.md` as the component pre-flight. Referenced by `component-skill.md` as a must-check on every component.
-12. **`docs/clean-code.md`** *(added 2026-04-16, **live 2026-04-16**)* — Angular + Tailwind + strict TS + token-only styling. Non-negotiables: standalone + OnPush + signal inputs/outputs / no hex-rgba-px outside `libs/tokens/` / one file per primitive / signals for state, RxJS only for async / no direct DOM / Tailwind over SCSS with 20-line SCSS cap per component. Pre-flight grep runs at commit; blocks commit on failure, no `--no-verify` escape. Referenced by `component-skill.md`.
-13. **`docs/component-skill.md`** *(added 2026-04-16 per user request)* — the agent rules when building ANY component. **Core rules:** reads tokens only (no hard-coded values) / uses the 6 semantic buckets / passes a11y checklist / follows clean-code.md / consulted BEFORE first line of component code / **"Build once, variants for the rest" (LOCKED 2026-04-16) — one component file per primitive, variants via `@Input()` props + class binding, never duplicate component files** (shadcn / `class-variance-authority` philosophy; keeps the ~10 count real).
-14. **`docs/token-skill.md`** *(added 2026-04-16 per user request)* — the agent rules for defining OR consuming tokens. Primitive → semantic → brand three-layer architecture / semantic bucket taxonomy locked (Canvas / Surface / Action / Control-neutral / System / Data-viz) / base-4 spacing scale / naming conventions / brand-manifest slot awareness / JSON as source of truth → CSS variables generated. Referenced by `component-skill.md` as the authoritative token-use guide.
+10. **Git cheatsheet — `docs/workflow/git-cheatsheet.md`** *(added 2026-04-16 per user request)* — 5–6 plain-English-named commands: pull, save-and-share (`add` + `commit` + `push`), new branch, see-what-changed, undo-last-commit. Not a git tutorial. Keeps the DS approachable for non-git-power-users (future designers, writers, Miguel, Flavia) and doubles as a case-study artifact: "here's a DS accessible to non-engineers."
+11. **`docs/rules/accessibility.md`** *(added 2026-04-16, **live 2026-04-16**)* — WCAG 2.2 AA minimum / AAA for text + touch. 44×44pt touch targets. Per-primitive checklists (Button, Input, Select, Checkbox, Switch, Modal, Drawer, Table, Tabs, Toast, inline-edit). Pre-flight runs before merge; paired with `clean-code.md` as the component pre-flight. Referenced by `component-skill.md` as a must-check on every component.
+12. **`docs/rules/clean-code.md`** *(added 2026-04-16, **live 2026-04-16**)* — Angular + Tailwind + strict TS + token-only styling. Non-negotiables: standalone + OnPush + signal inputs/outputs / no hex-rgba-px outside `libs/tokens/` / one file per primitive / signals for state, RxJS only for async / no direct DOM / Tailwind over SCSS with 20-line SCSS cap per component. Pre-flight grep runs at commit; blocks commit on failure, no `--no-verify` escape. Referenced by `component-skill.md`.
+13. **`docs/rules/component-skill.md`** *(added 2026-04-16 per user request)* — the agent rules when building ANY component. **Core rules:** reads tokens only (no hard-coded values) / uses the 6 semantic buckets / passes a11y checklist / follows clean-code.md / consulted BEFORE first line of component code / **"Build once, variants for the rest" (LOCKED 2026-04-16) — one component file per primitive, variants via `@Input()` props + class binding, never duplicate component files** (shadcn / `class-variance-authority` philosophy; keeps the ~10 count real).
+14. **`docs/rules/token-skill.md`** *(added 2026-04-16 per user request)* — the agent rules for defining OR consuming tokens. Primitive → semantic → brand three-layer architecture / semantic bucket taxonomy locked (Canvas / Surface / Action / Control-neutral / System / Data-viz) / base-4 spacing scale / naming conventions / brand-manifest slot awareness / JSON as source of truth → CSS variables generated. Referenced by `component-skill.md` as the authoritative token-use guide.
 15. **`docs/agents/` — 5-agent lineup MDs** *(moved from `.claude/agents/` 2026-04-16 per user accessibility rule)* — `planner.md` **(live 2026-04-16)**, `builder.md`, `tester.md`, `ds-token-guardian.md`, `case-study.md`. Each MD: role, boundaries, consumed artifacts (plan, component-skill, token-skill, etc.), handoff rules. Loaded explicitly by build-kickoff MD into any Claude Code session. Lives in `docs/` (visible, team-readable) instead of `.claude/` (hidden). **Shape locked 2026-04-16: each agent is a session harness — a thin file that points at source-of-truth prompts (e.g. `planner.md` points at `brief-template.md`) and adds the operational details (input/output paths, read-order, voice, handoff). Single-writer rule: phase content lives in one file, harnesses consume it.**
-16. **`docs/copy-skill.md`** *(added 2026-04-16, **live 2026-04-16**)* — RAE Spanish rules + dual-mode posture (team language in, RAE-perfect Spanish out). Orthography + grammar + UI register for B2B Iberian Spanish (formal `usted`). AFI glossary for English-Spanish terms that drift (*Panel*, *Iniciar sesión*, *Proveedor*, *Sobrescribir*, etc.). Pre-flight runs before strings ship. Referenced by `component-skill.md` for any user-facing string.
+16. **`docs/rules/copy-skill.md`** *(added 2026-04-16, **live 2026-04-16**)* — RAE Spanish rules + dual-mode posture (team language in, RAE-perfect Spanish out). Orthography + grammar + UI register for B2B Iberian Spanish (formal `usted`). AFI glossary for English-Spanish terms that drift (*Panel*, *Iniciar sesión*, *Proveedor*, *Sobrescribir*, etc.). Pre-flight runs before strings ship. Referenced by `component-skill.md` for any user-facing string.
 
 **Session locks 2026-04-16 (post-skill-batch):**
 
 - **Typography utility layer = Tailwind.** Token JSON → CSS vars → `tailwind.config.theme.extend` → templates use `text-*`, `font-*`, `leading-*` utility classes. Shadcn-Angular pattern. SCSS is escape-hatch only, capped at 20 lines per component with documented reason.
 - **AWM type scale is the reference structure.** 7 named roles — Display 96/112, Title 32/40, Subtitle 24/32, Section 20/24, Body 16/24, Subtitle body 20/20, Informe 12/14, Button 14/14 — plus Body L/M/S × weights 400/500/600, Roboto Serif throughout. Coherence adopts the *structure*; values go into `libs/tokens/primitive/typography.json` with semantic aliases in `libs/tokens/semantic/typography.json`.
 - **AWM is a future brand slot.** AWM type + color overrides land in `libs/tokens/brand/awm.ts` post-v1. v1 Coherence ships with AFI default brand; AWM manifest then validates the brand-swap proof point.
-- **Data-viz skill source = Visa Product Design System data-viz rules.** `docs/data-viz-skill.md` queued after primitives land; needs Visa DS reference pull first.
+- **Data-viz skill source = Visa Product Design System data-viz rules.** `docs/rules/data-viz-skill.md` queued after primitives land; needs Visa DS reference pull first.
 - **Motion references — motion.dev tutorials locked:**
   - `motion.dev/tutorials/react-command-palette` → inspires `<afi-command>` primitive (**v2 candidate, high-priority**). CDK Overlay + FocusTrap + `@angular/animations`; Motion One (Tier 3) for stagger if CSS can't.
   - `motion.dev/tutorials/react-loading-line-reveal` → inspires `<afi-loading-overlay>` primitive/directive (**v1**). Pure CSS `clip-path` + `transform` (Tier 1) driven by a `revealing` signal.
@@ -233,16 +233,16 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
   2. **¿Cómo cambia la vida del usuario?** — the before → after transformation, concrete.
   3. **¿En qué momento lo abren?** — the anchor moment in the user's day.
   
-  Written **at ship time**, not post-hoc. Closing disclaimer on every post: *"Este artículo se escribió al momento del envío. No es una descripción retrospectiva."* Template lives at `docs/blog-template.md`. Cadence is per meaningful release (waves of primitives, shell types, composed flows), not per primitive. 600–1200 words, hard cap 1500.
+  Written **at ship time**, not post-hoc. Closing disclaimer on every post: *"Este artículo se escribió al momento del envío. No es una descripción retrospectiva."* Template lives at `docs/workflow/blog-template.md`. Cadence is per meaningful release (waves of primitives, shell types, composed flows), not per primitive. 600–1200 words, hard cap 1500.
 
 - **Case-study agent gains two modes — LOCKED 2026-04-17-rev2.** `docs/agents/case-study.md` now carries:
-  - `mode: release` — invoked at ship time, propuesta-framed, filed to `docs/blog/{slug}.md`, consumes `docs/blog-template.md`.
+  - `mode: release` — invoked at ship time, propuesta-framed, filed to `docs/blog/{slug}.md`, consumes `docs/workflow/blog-template.md`.
   - `mode: retrospective` — invoked weeks/months post-ship, receipts-driven (Before/After/Receipts/Lesson), filed to `docs/case-studies/{slug}.md`. This is the existing behavior, preserved.
   
   Retrospectives cover outcomes/adoption/surprises; releases cover propuesta/decision. If both exist for the same feature, cross-link.
 
 - **File-artifact deltas — LOCKED 2026-04-17-rev2:**
-  - **New:** `docs/blog-template.md` (the propuesta-framed structure the agent fills).
+  - **New:** `docs/workflow/blog-template.md` (the propuesta-framed structure the agent fills).
   - **New:** `docs/blog/` directory (release posts land here; each renders at `/blog/{slug}`).
   - **Updated:** `docs/agents/case-study.md` (two modes).
   - **Updated:** `docs/build-prompts/coherence-site.md` (routes restructured to six sections; sidebar template rewritten; file structure updated).
@@ -305,10 +305,10 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
   | Route | Page title | Content source |
   |---|---|---|
   | `/primeros-pasos` | Primeros pasos | Wise-style landing with teaser cards per sub-page |
-  | `/primeros-pasos/nuevo-proyecto` | Iniciar un proyecto | How to run `docs/brief-template.md` (plan-one agent) — step-by-step |
+  | `/primeros-pasos/nuevo-proyecto` | Iniciar un proyecto | How to run `docs/workflow/brief-template.md` (plan-one agent) — step-by-step |
   | `/primeros-pasos/nueva-marca` | Crear una marca nueva | Brand manifest shape + required fields + minimal-access fallback |
   | `/primeros-pasos/clonar-producto` | Clonar un producto o cambiar su marca | Fork an existing product repo + point to a different brand manifest (the white-label moment) |
-  | `/primeros-pasos/git-ramas` | Ramas de Git: crear, enviar, eliminar | Renders `docs/git-cheatsheet.md` sections; practical commands with explanations |
+  | `/primeros-pasos/git-ramas` | Ramas de Git: crear, enviar, eliminar | Renders `docs/workflow/git-cheatsheet.md` sections; practical commands with explanations |
   | `/primeros-pasos/actualizar-ds` | Actualizar el DS en tu proyecto | How to pull the latest Coherence into a consumer product (tokens + primitives) |
 
 - **Content-vs-primitive distinction — LOCKED 2026-04-17-rev4.** Primeros pasos pages are **content pages**, not primitive detail pages. They don't use the `coherence-primitive-page.md` template (playground / tokens table / tabs). They use a simpler prose-plus-command-blocks template. No new build prompt required — Builder authors these pages directly, consuming the existing workflow MDs (`brief-template.md`, `git-cheatsheet.md`) via the `md-excerpt.ts` utility for reusable sections.
@@ -598,7 +598,7 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
 
   **Rationale:** data-viz semantics ≠ UI-feedback semantics. A red bar showing Q2 loss is `data-viz.nega.500` (numeric "below zero"); a red toast saying "upload failed" is `system.error.500` (actionable failure). Different jobs, different tokens. Conflating them muddies both.
 
-  **Downstream:** the data-viz skill (`docs/data-viz-skill.md`) already references `data-positive` / `data-negative` semantic tokens — those now alias the rev11 primitive palettes. Chart primitives (bar / line / heatmap / dumbbell, v1 step 26) consume via these semantics. No primitive change.
+  **Downstream:** the data-viz skill (`docs/rules/data-viz-skill.md`) already references `data-positive` / `data-negative` semantic tokens — those now alias the rev11 primitive palettes. Chart primitives (bar / line / heatmap / dumbbell, v1 step 26) consume via these semantics. No primitive change.
 
 - **File-artifact deltas — LOCKED 2026-04-17-rev11:**
   - **Updated:** `docs/build-prompts/coherence-tokens.md` — AFI White pin annotation added to `neutral-alt.25`; new "Primitive color — data-viz palettes" section documenting the four scales.
@@ -638,7 +638,7 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
 
 **AFI-Marketing Wealth Planner brief** — `/Users/richardgriner/Desktop/Afi Design/afi-wealth-planner/docs/Borja_brief_primavera_2026.md`. Spring 2026 brief from Borja. Covers: family / patrimony management (family members, corporations with shareholding, taxation types — Patrimonial / Holding / SOCIMI), asset management (future assets w/ expected years, income-generating assets w/ frequency / amount / growth), goals (mandatory legacy + retirement, safety age, financial assets, retirement age), diagnostics (3-scenario evolution — optimistic / medium / pessimistic, legacy projections, coverage scenarios), action plans (liquidity optimization, asset allocation with risk profiles, auto-financing calcs), reporting (PDF w/ cover / ToC / current situation / objectives / diagnostics / action plan / conclusions / model-portfolio detail).
 
-**AFI Wealth Planner product plan** — `/Users/richardgriner/Desktop/Afi Design/afi-wealth-planner/docs/plan.md` (25.6 KB). **9-screen map already defined:** Family → Patrimonio → Ingresos → Gastos → Objetivos → Diagnóstico → Estrategias → Plan de Acción → Conclusiones / Informe. Users: advisors at banks, asset managers, family offices, serving HNWI families. **Component inventory already listed:** BannerObjetivos, SociedadDialog, ActivoForm, DeudaForm, IngresoGastoForm, EtiquetaFuturo, EvolucionChart, CashflowChart, EscenarioTable, AssetAllocationChart. → *Ideal source for composed-flow-proof screen pick.*
+**AFI Wealth Planner product plan** — `/Users/richardgriner/Desktop/Afi Design/afi-wealth-planner/docs/strategy/plan.md` (25.6 KB). **9-screen map already defined:** Family → Patrimonio → Ingresos → Gastos → Objetivos → Diagnóstico → Estrategias → Plan de Acción → Conclusiones / Informe. Users: advisors at banks, asset managers, family offices, serving HNWI families. **Component inventory already listed:** BannerObjetivos, SociedadDialog, ActivoForm, DeudaForm, IngresoGastoForm, EtiquetaFuturo, EvolucionChart, CashflowChart, EscenarioTable, AssetAllocationChart. → *Ideal source for composed-flow-proof screen pick.*
 
 **AFI Wealth Manager brief** — `/Users/richardgriner/Desktop/Afi/Afi Products/Afi-Wealth-Manager.pdf` (1.1 MB). B2B platform spec. Modules: User Control, Alerts, Client Management, Portfolio Management, Proposal Control, Configuration, Client Portal. Chart types in use: evolution line, position table, composition pie/donut, ESG scoring, correlation map, drawdown. Informs chart-component scope.
 
@@ -897,8 +897,8 @@ Building **Coherence** — an internal design system for AFI, a fintech consulta
    - Semantic color mapping (Canvas → neutral-100, Surface → white, etc.)
    - Data-viz palette ordering for line/bar/donut
    - Type scale (Roboto Serif + Roboto sizes — font-size, line-height, weight pairs)
-2. **5 agent MD contents** — ~~planner~~ *(live 2026-04-16 — session-harness shape over `docs/brief-template.md`, outputs to `docs/briefs/{client}-{slug}.md`)* / ds-token-guardian / builder / tester / case-study. Remaining four: co-define in strategy in that order (Guardian next — biggest unlock against the tokens-leapfrog pattern).
-3. **Other MD contents** — component-skill, token-skill, accessibility, clean-code, build-kickoff, workflow (README), git-cheatsheet, onboarding, **`docs/copy-skill.md`** *(added 2026-04-16 — first triggered by AWM Sistema de Importación brief, all UI copy Spanish. **Dual-mode posture (LOCKED 2026-04-16):** agents operate in whatever language the team speaks (currently English with the DS owner), but **all output that reaches end users is RAE-perfect Spanish**. This applies to every agent that generates copy — Planner + Builder + Tester reviewing copy + any future copy-writing agent. Scope v1: Spanish following Real Academia Española (RAE) conventions — inverted punctuation ¿? ¡!, accents, imperative vs. infinitive for button labels, gender agreement, sentence-case vs. title-case rules, abbreviation conventions, common false-friends from English. Room to extend for English/Catalan/Portuguese later — internal header makes language scope explicit)*. Co-define in strategy or draft in build.
+2. **5 agent MD contents** — ~~planner~~ *(live 2026-04-16 — session-harness shape over `docs/workflow/brief-template.md`, outputs to `docs/briefs/{client}-{slug}.md`)* / ds-token-guardian / builder / tester / case-study. Remaining four: co-define in strategy in that order (Guardian next — biggest unlock against the tokens-leapfrog pattern).
+3. **Other MD contents** — component-skill, token-skill, accessibility, clean-code, build-kickoff, workflow (README), git-cheatsheet, onboarding, **`docs/rules/copy-skill.md`** *(added 2026-04-16 — first triggered by AWM Sistema de Importación brief, all UI copy Spanish. **Dual-mode posture (LOCKED 2026-04-16):** agents operate in whatever language the team speaks (currently English with the DS owner), but **all output that reaches end users is RAE-perfect Spanish**. This applies to every agent that generates copy — Planner + Builder + Tester reviewing copy + any future copy-writing agent. Scope v1: Spanish following Real Academia Española (RAE) conventions — inverted punctuation ¿? ¡!, accents, imperative vs. infinitive for button labels, gender agreement, sentence-case vs. title-case rules, abbreviation conventions, common false-friends from English. Room to extend for English/Catalan/Portuguese later — internal header makes language scope explicit)*. Co-define in strategy or draft in build.
 4. **AFI's own accent color** — neutral base is locked; AFI's primary accent is the first real swappable slot and needs a value. Pull from `/Users/richardgriner/Desktop/Coherence/Afi brand/Manual Afi_2024-2025.pdf` when locking.
 5. **Dev lead identity** for the AFI Wealth Planner build — who's the beachhead user? (Not blocking architecture, but blocking adoption validation.)
 6. **Design-system inspiration folder** — user mentioned (Homepage / components / foundations / blog / documentation subfolders + IA MDs); not found on disk. Exists elsewhere, or to-be-created.
@@ -924,21 +924,21 @@ All paths rooted at `/Users/richardgriner/Desktop/Coherence/Coherence/` (the can
 - **`README.md`** (repo root) — the **workflow / start-here** MD. Meeting → Plan → Fill plan → Build → Test → Iterate. One screen. Links to everything below.
 - **`CLAUDE.md`** (repo root) — Claude Code entry point. Loads plan, docs, and agent references. File, not hidden folder, so team-visible.
 - **`docs/agents/`** — the 5-agent lineup as individual agent definition MDs: `planner.md`, `builder.md`, `tester.md`, `ds-token-guardian.md`, `case-study.md`. Content co-defined (same pattern as brief-template). **Moved from `.claude/agents/` per user accessibility rule 2026-04-16** — `.claude/` is hidden; `docs/agents/` is visible to the team and serves as documentation of how the AI-driven build works.
-- **`docs/plan.md`** — a copy of this plan file, inside the repo so it's git-tracked and shareable via URL.
-- **`docs/architecture.md`** — the file-layout map (see "File layout — locked 2026-04-16" section below).
-- **`docs/brief-template.md`** — the agent-prompt + question list MD (item 7). Content LOCKED in Appendix A of this plan.
-- **`docs/build-kickoff.md`** — the symmetric build-session MD (item 8). Content co-defined during build.
-- **`docs/git-cheatsheet.md`** — 5–6 plain-English-named commands (item 10).
-- **`docs/accessibility.md`** — aria labels, roles, keyboard nav, focus order, contrast (item 11).
-- **`docs/clean-code.md`** — Angular conventions, naming, SCSS discipline (item 12).
-- **`docs/component-skill.md`** — agent rules for building ANY component (item 13). Consulted before first line of component code.
-- **`docs/token-skill.md`** — agent rules for defining OR consuming tokens (item 14). Primitive → semantic → brand layering.
+- **`docs/strategy/plan.md`** — a copy of this plan file, inside the repo so it's git-tracked and shareable via URL.
+- **`docs/strategy/architecture.md`** — the file-layout map (see "File layout — locked 2026-04-16" section below).
+- **`docs/workflow/brief-template.md`** — the agent-prompt + question list MD (item 7). Content LOCKED in Appendix A of this plan.
+- **`docs/workflow/build-kickoff.md`** — the symmetric build-session MD (item 8). Content co-defined during build.
+- **`docs/workflow/git-cheatsheet.md`** — 5–6 plain-English-named commands (item 10).
+- **`docs/rules/accessibility.md`** — aria labels, roles, keyboard nav, focus order, contrast (item 11).
+- **`docs/rules/clean-code.md`** — Angular conventions, naming, SCSS discipline (item 12).
+- **`docs/rules/component-skill.md`** — agent rules for building ANY component (item 13). Consulted before first line of component code.
+- **`docs/rules/token-skill.md`** — agent rules for defining OR consuming tokens (item 14). Primitive → semantic → brand layering.
 - **`docs/onboarding.md`** — how to clone / run / contribute / start a branch / naming conventions (per user's explicit need from project memory). Pairs with the git cheatsheet.
 - **Brand assets referenced from sibling `/Users/richardgriner/Desktop/Coherence/Afi brand/`** — not copied into the repo. The AFI brand manifest in `libs/tokens/brand/afi.ts` points at this external folder via relative path (`../../../../Afi brand/…`). Santander (and future brands) follow the same pattern as siblings.
 
 ### File layout — LOCKED 2026-04-16
 
-Full map of where every v1 artifact lives and why. Copies into `docs/architecture.md` verbatim.
+Full map of where every v1 artifact lives and why. Copies into `docs/strategy/architecture.md` verbatim.
 
 ```
 /Users/richardgriner/Desktop/Coherence/       ← WORKSPACE (not a repo)
@@ -987,8 +987,8 @@ Full map of where every v1 artifact lives and why. Copies into `docs/architectur
 | `README.md` at root | Auto-rendered by GitHub / Cursor / Open Code. It IS "start here." |
 | `CLAUDE.md` at root | Claude Code convention — first file read per session. It's a file (not a hidden folder), so team sees it. |
 | `docs/agents/` (NOT `.claude/agents/`) | `.claude/` is hidden from Finder / file trees — violates team-accessibility rule. `docs/agents/` is visible, readable as documentation, and loaded explicitly via build-kickoff MD. |
-| `docs/plan.md` | Working artifact, not the front door. README maps to it. |
-| `docs/architecture.md` | Separate from plan — this is the file map everyone references. |
+| `docs/strategy/plan.md` | Working artifact, not the front door. README maps to it. |
+| `docs/strategy/architecture.md` | Separate from plan — this is the file map everyone references. |
 | `docs/*-skill.md` | Human + agent reference. Could later mirror as `.claude/skills/<name>/SKILL.md`. |
 | `libs/tokens/` + `libs/ui/` | Angular monorepo convention. |
 | `libs/tokens/brand/afi.ts` | TypeScript, not JSON — needs to build relative asset paths at compile time. |
@@ -996,7 +996,7 @@ Full map of where every v1 artifact lives and why. Copies into `docs/architectur
 
 ## Build-loop rules (LOCKED 2026-04-16)
 
-These are non-negotiable during build. They also get written verbatim into `docs/build-kickoff.md` so any future Builder agent inherits them.
+These are non-negotiable during build. They also get written verbatim into `docs/workflow/build-kickoff.md` so any future Builder agent inherits them.
 
 1. **Preview at every green checkpoint.** Whenever the Builder finishes an iteration that compiles and is visually verifiable — build and preview it. Don't stack 3 unverified changes. The loop is: implement → `ng serve` (or equivalent) → user looks → next iteration. This is how we catch drift early and how the case-study captures actual intermediate states, not just before/after.
 2. **Ask instead of guess.** Builder is allowed — encouraged — to stop and ask Strategy (this plan + the user) before making any decision that isn't already locked in the plan. "I'm about to pick a radius value — is there one locked, or should I ask?" beats silent invention every time. Token Guardian agent enforces this for token use; the same rule extends to every unresolved question.
@@ -1068,7 +1068,7 @@ Re-evaluate per epic; anything here is allowed to graduate into Wave 1/2 if a co
 
 ## Appendix A — Brief template MD (LOCKED 2026-04-16)
 
-*v1 item 7 content. Builder in Open Code writes this verbatim to `/Users/richardgriner/Desktop/Coherence/Coherence/docs/brief-template.md`.*
+*v1 item 7 content. Builder in Open Code writes this verbatim to `/Users/richardgriner/Desktop/Coherence/Coherence/docs/workflow/brief-template.md`.*
 
 ````markdown
 # Brief template — plan agent prompt

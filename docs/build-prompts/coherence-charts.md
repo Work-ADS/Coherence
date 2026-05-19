@@ -1,6 +1,6 @@
 # Build — Coherence Chart primitives (`libs/ui/chart/`)
 
-**Source:** `docs/data-viz-skill.md` (primary) + `docs/plan.md`
+**Source:** `docs/rules/data-viz-skill.md` (primary) + `docs/strategy/plan.md`
 **Surface:** four v1 chart primitives that share axes, legend, tooltip, data-table fallback, a11y contract, color palette, motion. Visa PDS alignment. Ships last in the v1 sequence.
 **Prereqs:** scaffolding + tokens + all 14 primitives (charts compose Modal for the keyboard-instructions dialog, Card for wrapping, LoadingOverlay for fetch state, Table for the data-table fallback).
 
@@ -15,13 +15,13 @@ One library, `libs/ui/chart/`, with:
 
 ## Required reads
 
-1. `docs/data-viz-skill.md` — the spec
-2. `docs/clean-code.md`
-3. `docs/accessibility.md` — global a11y rules
-4. `docs/copy-skill.md` — RAE Spanish labels, es-ES number formatting
-5. `docs/component-skill.md`
-6. `docs/token-skill.md` — `data-*` token bucket (new; see Tokens section below)
-7. `docs/plan.md` — motion context rule
+1. `docs/rules/data-viz-skill.md` — the spec
+2. `docs/rules/clean-code.md`
+3. `docs/rules/accessibility.md` — global a11y rules
+4. `docs/rules/copy-skill.md` — RAE Spanish labels, es-ES number formatting
+5. `docs/rules/component-skill.md`
+6. `docs/rules/token-skill.md` — `data-*` token bucket (new; see Tokens section below)
+7. `docs/strategy/plan.md` — motion context rule
 8. `docs/build-prompts/coherence-modal.md` — keyboard-instructions dialog
 9. `docs/build-prompts/coherence-table.md` — data-table fallback uses Table primitive
 10. `docs/build-prompts/coherence-loading-badge.md` — fetch state uses `quiet-spinner` variant

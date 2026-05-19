@@ -1,57 +1,53 @@
-## File layout — LOCKED 2026-04-16
+# Coherence Repo Architecture
 
-Full map of where every v1 artifact lives and why. Copies into `docs/architecture.md` verbatim.
+This map is optimized for onboarding: a designer should be able to tell which docs are active, which docs are rules, and which docs are old context.
 
 ```
-/Users/richardgriner/Desktop/Coherence/       ← WORKSPACE (not a repo)
-├── Coherence/                                 ← THE GIT REPO — open in Cursor/Open Code
-│   ├── README.md                              (v1 item 9 — workflow / start here)
-│   ├── CLAUDE.md                              (Claude Code entry point — file, not folder)
-│   ├── docs/
-│   │   ├── plan.md                            (copy of this plan file)
-│   │   ├── architecture.md                    (this layout map)
-│   │   ├── brief-template.md                  (v1 item 7 — content LOCKED in Appendix A)
-│   │   ├── build-kickoff.md                   (v1 item 8)
-│   │   ├── git-cheatsheet.md                  (v1 item 10)
-│   │   ├── accessibility.md                   (v1 item 11)
-│   │   ├── clean-code.md                      (v1 item 12)
-│   │   ├── component-skill.md                 (v1 item 13 — build-once-variants-rest rule)
-│   │   ├── token-skill.md                     (v1 item 14 — 6 semantic buckets, base-4)
-│   │   ├── onboarding.md
-│   │   └── agents/                            (v1 item 15 — 5-agent lineup, visible)
-│   │       ├── planner.md
-│   │       ├── builder.md
-│   │       ├── tester.md
-│   │       ├── ds-token-guardian.md
-│   │       └── case-study.md
-│   ├── libs/
-│   │   ├── tokens/
-│   │   │   ├── primitive/                     (raw values — JSON)
-│   │   │   ├── semantic/                      (Canvas / Surface / Action / Control-neutral / System / Data-viz — JSON)
-│   │   │   └── brand/
-│   │   │       ├── afi.ts                     (manifest — points at ../../../../Afi brand/)
-│   │   │       └── default.ts                 (fallback)
-│   │   └── ui/                                (Angular components — v1 item 3)
-│   └── apps/
-│       └── site/                              (DS reference site — v1 item 6)
-│           └── src/flows/diagnostico/         (composed-flow proof — v1 item 5)
-└── Afi brand/                                 ← SIBLING OF REPO (brand assets)
-    ├── logos/
-    ├── Manual Afi_2024-2025.pdf
-    ├── Brand guide photos/
-    └── Logo screenshots/
+Coherence/
+├── README.md                         # repo front door
+├── AGENTS.md                         # AI/session orientation
+├── CLAUDE.md                         # Claude Code entry point
+├── docs/
+│   ├── README.md                     # docs front door for new designers
+│   ├── strategy/                     # why + direction
+│   │   ├── manifesto.md
+│   │   ├── plan.md
+│   │   └── architecture.md
+│   ├── workflow/                     # how work moves from notes to build
+│   │   ├── design-process-assistant.md
+│   │   ├── brief-template.md
+│   │   ├── build-kickoff.md
+│   │   ├── git-cheatsheet.md
+│   │   └── blog-template.md
+│   ├── rules/                        # constraints for anything built
+│   │   ├── component-skill.md
+│   │   ├── token-skill.md
+│   │   ├── clean-code.md
+│   │   ├── accessibility.md
+│   │   ├── copy-skill.md
+│   │   └── data-viz-skill.md
+│   ├── agents/                       # Planner / Builder / Tester / Guardian / Case-study
+│   ├── build-prompts/                # executable work orders
+│   ├── briefs/                       # project briefs created from workflow
+│   └── archive/                      # old experiments and reference material
+├── libs/
+│   ├── tokens/                       # primitive / semantic / brand token sources
+│   └── ui/                           # Angular component library
+└── apps/
+    └── site/                         # Coherence reference site
 ```
 
-**Placement rationale:**
+## Placement Rationale
 
-| Path | Why there, not elsewhere |
+| Path | Why there |
 |---|---|
-| `README.md` at root | Auto-rendered by GitHub / Cursor / Open Code. It IS "start here." |
-| `CLAUDE.md` at root | Claude Code convention — first file read per session. It's a file (not a hidden folder), so team sees it. |
-| `docs/agents/` (NOT `.claude/agents/`) | `.claude/` is hidden from Finder / file trees — violates team-accessibility rule. `docs/agents/` is visible, readable as documentation, and loaded explicitly via build-kickoff MD. |
-| `docs/plan.md` | Working artifact, not the front door. README maps to it. |
-| `docs/architecture.md` | Separate from plan — this is the file map everyone references. |
-| `docs/*-skill.md` | Human + agent reference. Could later mirror as `.claude/skills/<name>/SKILL.md`. |
-| `libs/tokens/` + `libs/ui/` | Angular monorepo convention. |
-| `libs/tokens/brand/afi.ts` | TypeScript, not JSON — needs to build relative asset paths at compile time. |
-| `Afi brand/` as sibling | Already locked. Brand-agnostic repo; brand swap = point at different sibling. |
+| `docs/README.md` | The docs map. This is where a new designer starts. |
+| `docs/strategy/` | Stable direction: why Coherence exists, what is planned, how the repo is structured. |
+| `docs/workflow/` | Process docs used by humans and AI: messy notes to brief, brief to build, Git basics, release writing. |
+| `docs/rules/` | Build constraints. These override individual build prompts when there is a conflict. |
+| `docs/agents/` | AI role harnesses. Useful for understanding who does what in an AI-assisted workflow. |
+| `docs/build-prompts/` | Concrete work orders for components, pages, and system surfaces. |
+| `docs/briefs/` | Active project/function briefs. Empty is acceptable. |
+| `docs/archive/` | Old session briefs, code examples, and design review exports. Useful history, not source of truth. |
+| `libs/tokens/` + `libs/ui/` | The actual design system implementation. |
+| `apps/site/` | The browsable documentation/reference site. |

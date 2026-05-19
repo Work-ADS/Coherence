@@ -26,24 +26,21 @@
   }
 
   &__section-label {
-    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
-    font-size: 11px; /* TODO(type-scale) */
-    font-weight: 600;
+    font: var(--type-body-sm-600);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: var(--tracking-wider);
     color: var(--color-neutral-400);
     padding: var(--space-md) var(--space-lg) var(--space-2xs);
   }
 
   &__link {
     display: block;
-    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
-    font-size: 14px; /* TODO(type-scale) */
+    font: var(--type-body-md-400);
     color: var(--color-neutral-500);
     text-decoration: none;
     padding: var(--space-2xs) var(--space-lg);
     /* Rule 1: container-first. Rule 3: ease-out for enter. Rule 4: 150ms chip. */
-    transition: color 150ms ease-out, background-color 150ms ease-out; /* TODO(motion-tokens) */
+    transition: color var(--duration-fast) var(--easing-enter), background-color var(--duration-fast) var(--easing-enter);
 
     &:hover {
       color: var(--color-neutral-900);
@@ -51,21 +48,20 @@
     }
 
     &--active {
+      font: var(--type-body-md-500);
       color: var(--color-neutral-900);
-      font-weight: 500;
       background-color: var(--color-neutral-200);
     }
   }
 
   &__sub-link {
     display: block;
-    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
-    font-size: 13px; /* TODO(type-scale) */
+    font: var(--type-body-sm-400);
     color: var(--color-neutral-400);
     text-decoration: none;
     padding: var(--space-2xs) var(--space-lg) var(--space-2xs) var(--space-2xl);
     /* Rule 1: container-first. Rule 3: ease-out for enter. Rule 4: 150ms chip. */
-    transition: color 150ms ease-out, background-color 150ms ease-out; /* TODO(motion-tokens) */
+    transition: color var(--duration-fast) var(--easing-enter), background-color var(--duration-fast) var(--easing-enter);
 
     &:hover {
       color: var(--color-neutral-900);

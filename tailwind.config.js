@@ -5,6 +5,19 @@ module.exports = {
     './libs/ui/**/*.{html,ts}',
   ],
   theme: {
+    // OVERRIDE Tailwind's default `screens` (640/768/1024/1280/1536) with the
+    // Bootstrap-style values designers use in Figma. Locked 2026-05-18.
+    // Source of truth: libs/tokens/dimensions.scss `$bp-*`.
+    // The semantic.scss @media blocks use the same numeric thresholds, so
+    // `sm:flex` in a template and `@media (min-width: 576px)` in semantic.scss
+    // fire at exactly the same viewport.
+    screens: {
+      sm:  '576px',
+      md:  '768px',
+      lg:  '992px',
+      xl:  '1200px',
+      '2xl': '1400px',
+    },
     extend: {
       colors: {
         canvas: {
@@ -34,18 +47,21 @@ module.exports = {
           800: 'var(--action-800)',
           900: 'var(--action-900)',
         },
+        // `neutral-*` Tailwind classes resolve to the afi-control ramp (the
+        // proper primitive name). Kept under the `neutral` Tailwind namespace
+        // because that's the conventional class-name shape devs reach for.
         neutral: {
-          50:  'var(--color-neutral-50)',
-          100: 'var(--color-neutral-100)',
-          200: 'var(--color-neutral-200)',
-          300: 'var(--color-neutral-300)',
-          400: 'var(--color-neutral-400)',
-          500: 'var(--color-neutral-500)',
-          600: 'var(--color-neutral-600)',
-          700: 'var(--color-neutral-700)',
-          800: 'var(--color-neutral-800)',
-          900: 'var(--color-neutral-900)',
-          950: 'var(--color-neutral-950)',
+          50:  'var(--color-afi-control-50)',
+          100: 'var(--color-afi-control-100)',
+          200: 'var(--color-afi-control-200)',
+          300: 'var(--color-afi-control-300)',
+          400: 'var(--color-afi-control-400)',
+          500: 'var(--color-afi-control-500)',
+          600: 'var(--color-afi-control-600)',
+          700: 'var(--color-afi-control-700)',
+          800: 'var(--color-afi-control-800)',
+          900: 'var(--color-afi-control-900)',
+          950: 'var(--color-afi-control-950)',
         },
         system: {
           error: {

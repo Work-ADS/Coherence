@@ -8,9 +8,9 @@
     "libs/tokens"
   ],
   "scripts": {
-    "start": "npm run build:tokens && npm start --workspace coherence-site",
-    "build": "npm run build:tokens && npm run build --workspace coherence-site",
-    "build:tokens": "cd libs/tokens && node build.mjs",
-    "dev": "npm run build:tokens && npm start --workspace coherence-site"
+    "start": "npm start --workspace coherence-site",
+    "build": "npm run build --workspace coherence-site",
+    "dev": "npm start --workspace coherence-site",
+    "prepare": "husky"
   }
 }

@@ -95,8 +95,8 @@ git push origin --delete feature/mi-cambio</code></pre>
       <footer>
         <h2 class="text-section text-canvas-fg mb-space-3">Temas relacionados</h2>
         <ul class="space-y-space-2">
-          <li><a routerLink="/primeros-pasos/nuevo-proyecto" class="text-body-md text-action-700 hover:underline">Iniciar un proyecto nuevo</a></li>
-          <li><a routerLink="/primeros-pasos/actualizar-ds" class="text-body-md text-action-700 hover:underline">Actualizar el DS</a></li>
+          <li><a routerLink="/primeros-pasos/cambiar-marca-diseno" class="text-body-md text-action-700 hover:underline">Cambiar de marca · Diseño</a></li>
+          <li><a routerLink="/primeros-pasos/cambiar-marca-desarrollo" class="text-body-md text-action-700 hover:underline">Cambiar de marca · Desarrollo</a></li>
         </ul>
       </footer>
     </div>

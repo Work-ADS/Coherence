@@ -16,22 +16,7 @@ import type { BadgeIntent, BadgeSize } from './badge.variants';
   selector: 'afi-badge',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    @if (dot()) {
-      <span
-        [class]="dotClasses()"
-        role="status"
-        [attr.aria-label]="ariaLabel()"
-      ></span>
-    } @else {
-      <span [class]="classes()" role="status">
-        @if (icon()) {
-          <span class="inline-flex shrink-0" aria-hidden="true">{{ icon() }}</span>
-        }
-        <ng-content />
-      </span>
-    }
-  `,
+  templateUrl: './badge.component.html',
 })
 export class BadgeComponent {
   readonly intent = input<BadgeIntent>('neutral');

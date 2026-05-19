@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { NavSectionComponent } from './components/nav-section/nav-section.component';
 import { PasswordGateComponent } from './components/password-gate/password-gate.component';
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
-import { LogoComponent } from '@coherence/ui';
+import { LogoComponent, TopBarComponent } from '@coherence/ui';
 
 @Component({
   selector: 'app-root',
@@ -14,537 +14,13 @@ import { LogoComponent } from '@coherence/ui';
     RouterLinkActive,
     NavSectionComponent,
     LogoComponent,
+    TopBarComponent,
     PasswordGateComponent,
     ThemeToggleComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    @if (unlocked()) {
-    <div class="flex min-h-screen bg-surface-base text-canvas-fg">
-      @if (!isFullScreenRoute()) {
-        <!-- Sidebar: 260px, bg-surface-quiet, NO border-right -->
-        <nav
-          class="w-[260px] shrink-0 bg-surface-quiet px-space-6 py-space-8 flex flex-col gap-space-4"
-          aria-label="Navegacion principal"
-        >
-          <!-- Brand lockup: AFI logo | divider | submarca -->
-          <div class="mb-space-4 flex items-center gap-space-3">
-            <coherence-logo variant="positivo" size="md" href="/" />
-            <div class="w-px h-6 bg-neutral-300 shrink-0"></div>
-            <span class="text-body-sm font-light text-canvas-fg whitespace-nowrap tracking-wide"
-              >Coherence</span
-            >
-          </div>
-
-          <!-- Home -->
-          <a
-            routerLink="/"
-            routerLinkActive="bg-surface-muted text-canvas-fg font-medium"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="flex items-center px-3 py-1 rounded-sm
-                  text-sm text-canvas-fg
-                  hover:bg-surface-muted
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus
-                  transition-colors"
-          >
-            Design at AFI
-          </a>
-
-          <!-- Novedades (top-level, highlights current proposals) -->
-          <a
-            routerLink="/novedades"
-            routerLinkActive="bg-surface-muted text-canvas-fg font-medium"
-            class="flex items-center px-3 py-1 rounded-sm
-                  text-sm text-canvas-fg
-                  hover:bg-surface-muted
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus
-                  transition-colors"
-          >
-            Novedades
-          </a>
-
-          <!-- Primeros pasos -->
-          <site-nav-section label="Primeros pasos" routePrefix="/primeros-pasos">
-            <li>
-              <a
-                routerLink="/primeros-pasos/cambiar-marca-diseno"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Cambiar de marca · Diseño</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/primeros-pasos/cambiar-marca-desarrollo"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Cambiar de marca · Desarrollo</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/primeros-pasos/git-ramas"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Git y ramas</a
-              >
-            </li>
-          </site-nav-section>
-
-          <!-- Foundations -->
-          <site-nav-section label="Fundamentos" routePrefix="/fundamentos">
-            <li>
-              <a
-                routerLink="/fundamentos/principios"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Principios</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/fundamentos/color"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Color</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/fundamentos/tipografia"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Tipografia</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/fundamentos/espacio"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Espacio</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/fundamentos/movimiento"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Movimiento</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/fundamentos/accesibilidad"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Accesibilidad</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/fundamentos/copy"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Copy</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/fundamentos/tokens"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Tokens</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/fundamentos/estructura-tokens"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Estructura de tokens</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/fundamentos/color-semantic"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Color semántico</a
-              >
-            </li>
-          </site-nav-section>
-
-          <!-- Components -->
-          <site-nav-section label="Componentes" routePrefix="/componentes">
-            <li class="nav-subheading">Ready</li>
-            <li>
-              <a
-                routerLink="/componentes/icon-button"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >IconButton</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/avatar"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Avatar</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/segmented-control"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >SegmentedControl</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/dropdown-panel"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >DropdownPanel</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/editable-text"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >EditableText</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/top-bar"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >TopBar</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/tooltip"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Tooltip</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/toast"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Toast</a
-              >
-            </li>
-            <li class="nav-subheading">Legacy</li>
-            <li>
-              <a
-                routerLink="/componentes/button"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Button</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/input"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Input</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/select"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Select</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/checkbox"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Checkbox</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/switch"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Switch</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/radio-group"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >RadioGroup</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/card"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Card</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/modal"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Modal</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/tabs"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Tabs</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/table"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Table</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/drawer"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Drawer</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/sidebar"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Sidebar</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/nav-item"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >NavItem</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/status-chip"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >StatusChip</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/badge"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Badge</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/loading-overlay"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >LoadingOverlay</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/page-header"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >PageHeader</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/shell"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Shell</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/kbd"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Kbd</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/nav-section"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >NavSection</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/componentes/menu"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Menu</a
-              >
-            </li>
-          </site-nav-section>
-
-          <!-- Patrones -->
-          <site-nav-section label="Patrones" routePrefix="/patrones">
-            <li>
-              <a
-                routerLink="/patrones/shells"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Shells</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/patrones/flujos"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Flujos</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/patrones/graficos"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Gráficos</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/patrones/tarjetas"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Tarjetas</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/patrones/cabeceras"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Cabeceras</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/patrones/tablas"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Tablas</a
-              >
-            </li>
-          </site-nav-section>
-
-          <!-- Recursos -->
-          <site-nav-section label="Recursos" routePrefix="/recursos">
-            <li>
-              <a
-                routerLink="/recursos/descargas"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Descargas</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/recursos/changelog"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Changelog</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/recursos/roadmap"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >Roadmap</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/recursos/faq"
-                routerLinkActive="bg-surface-muted font-medium"
-                class="nav-link"
-                >FAQ</a
-              >
-            </li>
-          </site-nav-section>
-
-          <!-- Blog -->
-          <a
-            routerLink="/blog"
-            routerLinkActive="bg-surface-muted text-canvas-fg font-medium"
-            class="flex items-center px-3 py-1 rounded-sm
-                  text-sm text-canvas-fg
-                  hover:bg-surface-muted
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus
-                  transition-colors"
-          >
-            Blog
-          </a>
-
-          <!-- Preview gallery (dev) -->
-          <!-- Footer cluster: theme toggle + dev gallery, pinned to bottom -->
-          <div class="mt-auto flex flex-col gap-space-2">
-            <div class="flex items-center justify-between gap-space-2 px-3 py-1">
-              <span class="text-body-sm text-canvas-fg">Tema</span>
-              <site-theme-toggle />
-            </div>
-            <a
-              routerLink="/preview"
-              routerLinkActive="bg-surface-muted text-canvas-fg font-medium"
-              class="flex items-center px-3 py-1 rounded-sm
-                    text-sm text-neutral-400
-                    hover:bg-surface-muted
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus
-                    transition-colors"
-            >
-              Galeria (dev)
-            </a>
-          </div>
-        </nav>
-      }
-
-      <!-- Main content -->
-      <main class="flex-1 min-w-0" id="main-content">
-        <router-outlet />
-      </main>
-    </div>
-    } @else {
-    <site-password-gate (unlocked)="onUnlocked()" />
-    }
-  `,
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
 })
 export class App {
   private static readonly STORAGE_KEY = 'coherence-unlocked';
@@ -556,16 +32,40 @@ export class App {
       localStorage.getItem(App.STORAGE_KEY) === '1',
   );
 
+  private readonly currentUrl = signal(this.router.url);
+
   /**
    * True when the user is viewing a proposal page inside /novedades/* or any
-   * /afi-insights/* page. Hides the DS site sidebar so the proposal renders
+   * /afi-insights/* page. Hides the top nav so the page renders
    * full-viewport with its own product chrome.
    */
   readonly isFullScreenRoute = signal(this.matchFullScreen(this.router.url));
 
+  /** Which top-level section is active (drives contextual sidebar) */
+  readonly activeSection = computed(() => {
+    const url = this.currentUrl();
+    if (url.startsWith('/fundamentos')) return 'fundamentos';
+    if (url.startsWith('/componentes')) return 'componentes';
+    if (url.startsWith('/patrones')) return 'patrones';
+    if (url.startsWith('/recursos')) return 'recursos';
+    return null;
+  });
+
+  /** Show sidebar only inside sections that have sub-pages */
+  readonly showSidebar = computed(() => {
+    return this.activeSection() !== null && !this.isFullScreenRoute() && !this.isHomepage();
+  });
+
+  /** True on the homepage — hides top nav, shows centered logo instead */
+  readonly isHomepage = computed(() => {
+    const url = this.currentUrl();
+    return url === '/' || url === '';
+  });
+
   constructor() {
     this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {
+        this.currentUrl.set(e.urlAfterRedirects);
         this.isFullScreenRoute.set(this.matchFullScreen(e.urlAfterRedirects));
       }
     });

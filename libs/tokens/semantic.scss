@@ -427,6 +427,12 @@
   --chip-height:        var(--control-h-sm);
 
   // -----------------------------------------------------------------------
+  // NAV chrome — fixed dimensions for app shell navigation.
+  // -----------------------------------------------------------------------
+  --top-bar-height:   var(--dimension-14);   // 56 px
+  --sidebar-width:    var(--dimension-16);   // 64 px
+
+  // -----------------------------------------------------------------------
   // CANVAS chrome (page-level padding) — grows with viewport.
   // -----------------------------------------------------------------------
   @include responsive-token(--canvas-padding-inline, (

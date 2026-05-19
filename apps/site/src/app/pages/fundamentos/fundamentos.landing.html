@@ -1,0 +1,25 @@
+<article class="page">
+
+  <header class="page__header">
+    <span class="page__label">Foundations</span>
+    <h1 class="page__title">The shared rules</h1>
+    <p class="page__intro">
+      Five topics govern the entire system. Primitives describe what things <em>are</em>
+      (a blue ramp, a 4px unit). Semantic tokens describe what things <em>do</em>
+      (a primary CTA background, a page margin). Components only speak semantic —
+      brands swap the mapping, not the components.
+    </p>
+  </header>
+
+  <hr class="divider" />
+
+  <div class="card-grid">
+    @for (f of foundations; track f.slug) {
+      <a [routerLink]="'/fundamentos/' + f.slug" class="card">
+        <span class="card__name">{{ f.name }}</span>
+        <span class="card__desc">{{ f.description }}</span>
+      </a>
+    }
+  </div>
+
+</article>

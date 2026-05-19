@@ -1,0 +1,48 @@
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--control-background-default);
+  color: var(--foreground-tertiary-default);
+  font-weight: 500;
+  flex-shrink: 0;
+
+  &__img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  // Sizes — map to --avatar-* semantic tokens
+  &--xs {
+    height: var(--avatar-xs);
+    width: var(--avatar-xs);
+    font-size: 10px;
+  }
+
+  &--sm {
+    height: var(--avatar-sm);
+    width: var(--avatar-sm);
+    font: var(--type-body-sm-500);
+  }
+
+  &--md {
+    height: var(--avatar-md);
+    width: var(--avatar-md);
+    font: var(--type-body-md-500);
+  }
+
+  &--lg {
+    height: var(--avatar-lg);
+    width: var(--avatar-lg);
+    font: var(--type-body);
+  }
+
+  &--xl {
+    height: var(--avatar-xl);
+    width: var(--avatar-xl);
+    font: var(--type-body-lg-500);
+  }
+}

@@ -1,0 +1,66 @@
+<article class="page">
+  <header class="page__header">
+    <a routerLink="/novedades" class="page__back">← Handoffs</a>
+    <h1 class="page__title">Wealth Planner 2026</h1>
+    <p class="page__intro">Rediseño completo del planificador patrimonial. Decisiones, rationale, y demo en vivo.</p>
+
+    <a routerLink="/novedades/wealth-planner-demo" class="demo-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+      Abrir demo
+    </a>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="tabs">
+    <button class="tab" [class.tab--active]="activeTab() === 'overview'" (click)="activeTab.set('overview')">Overview</button>
+    <button class="tab" [class.tab--active]="activeTab() === 'patrimonio'" (click)="activeTab.set('patrimonio')">Patrimonio</button>
+    <button class="tab" [class.tab--active]="activeTab() === 'evolucion'" (click)="activeTab.set('evolucion')">Evolución Patrimonial</button>
+  </nav>
+
+  <!-- OVERVIEW -->
+  @if (activeTab() === 'overview') {
+    <section class="content">
+      <h2 class="section__title">Contexto</h2>
+      <p class="section__body">
+        Rediseño del Wealth Planner para AFI. Patrimonio, evolución y simulación unificados bajo Coherence DS.
+      </p>
+
+      <h2 class="section__title">Alcance</h2>
+      <ul class="scope-list">
+        <li>Tabla de patrimonio con secciones por clase de activo</li>
+        <li>Gráfico de evolución patrimonial interactivo</li>
+        <li>Top bar global con estado de simulación</li>
+        <li>Sidebar con navegación por secciones</li>
+        <li>Diálogo de añadir activo con vista previa</li>
+      </ul>
+
+      <h2 class="section__title">Estado</h2>
+      <div class="status-grid">
+        <div class="status-item status-item--done">
+          <span class="status-item__dot"></span>
+          <span>Patrimonio — diseño cerrado</span>
+        </div>
+        <div class="status-item status-item--done">
+          <span class="status-item__dot"></span>
+          <span>Evolución — diseño cerrado</span>
+        </div>
+        <div class="status-item status-item--progress">
+          <span class="status-item__dot"></span>
+          <span>Implementación en curso</span>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- PATRIMONIO DECISIONES -->
+  @if (activeTab() === 'patrimonio') {
+    <site-patrimonial-decisiones-page />
+  }
+
+  <!-- EVOLUCIÓN PATRIMONIAL DECISIONES -->
+  @if (activeTab() === 'evolucion') {
+    <site-evolucion-patrimonial-decisiones-page />
+  }
+</article>

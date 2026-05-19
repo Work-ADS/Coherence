@@ -1,0 +1,133 @@
+@import './colors.scss';
+@import './dimensions.scss';
+
+:root {
+    --text-font-body: 'Roboto', sans-serif;
+    --text-font-header: 'Rufina', serif;
+
+    --surface-canvas-color: #{$color-neutral-50};
+    --surface-primary-color: #{$color-neutral-50};
+    --surface-secondary-color: #{$color-neutral-100};
+    --surface-accent-color: #{$color-accent-50};
+    --surface-elevated-color: #{$color-neutral-50};
+    --surface-field-color: #{$color-neutral-50};
+    --surface-field-input-color: #{$color-surface-field-100};
+    --surface-dropdown-color: #{$color-surface-dropdown-100};
+    --surface-option-hover-color: #{$color-brand-alt-150};
+    --surface-option-selected-color: #{$color-brand-alt-100};
+    --surface-overlay-color: #{$color-neutral-900};
+
+    --text-primary-color: #{$color-neutral-900};
+    --text-secondary-color: #{$color-neutral-700};
+    --text-muted-color: #{$color-neutral-550};
+    --text-inverse-color: #{$color-neutral-50};
+    --text-disabled-color: #{$color-neutral-500};
+    --text-placeholder-color: #{$color-neutral-500};
+
+    --action-primary-default-color: #{$color-brand-900};
+    --action-primary-hover-color: #{$color-brand-800};
+    --action-primary-active-color: #{$color-brand-900};
+    --action-primary-disabled-color: #{$color-neutral-300};
+    --action-primary-text-color: #{$color-brand-alt-500};
+
+    --action-secondary-default-color: #{$color-accent-400};
+    --action-secondary-color: #{$color-accent-400};
+    --action-secondary-text-color: #{$color-brand-900};
+    --action-secondary-hover-color: #{$color-accent-500};
+    --action-secondary-active-color: #{$color-accent-600};
+    --action-secondary-disabled-color: #{$color-neutral-300};
+
+    --action-neutral-default-color: #{$color-neutral-150};
+    --action-neutral-text-color: #{$color-neutral-975};
+    --action-neutral-hover-color: #{$color-neutral-375};
+    --action-neutral-active-color: #{$color-neutral-150};
+    --action-neutral-disabled-color: #{$color-surface-dropdown-100};
+
+    --action-destructive-default-color: #{$color-error-500};
+    --action-destructive-hover-color: #{$color-error-700};
+    --action-destructive-active-color: #{$color-error-900};
+    --action-destructive-disabled-color: #{$color-neutral-300};
+
+    --border-default-color: #{$color-neutral-300};
+    --border-field-color: #{$color-neutral-350};
+    --border-subtle-color: #{$color-neutral-200};
+    --border-focus-color: #{$color-brand-700};
+    --border-error-color: #{$color-error-500};
+    --border-disabled-color: #{$color-neutral-200};
+
+    --feedback-success-surface-color: #{$color-success-50};
+    --feedback-success-text-color: #{$color-success-900};
+    --feedback-success-border-color: #{$color-success-300};
+
+    --feedback-warning-surface-color: #{$color-warning-50};
+    --feedback-warning-text-color: #{$color-warning-900};
+    --feedback-warning-border-color: #{$color-warning-300};
+
+    --feedback-error-surface-color: #{$color-error-50};
+    --feedback-error-text-color: #{$color-error-900};
+    --feedback-error-border-color: #{$color-error-300};
+
+    // --feedback-info-surface-color: $primitives-MISSING_TOKEN_PATH;
+    // --feedback-info-text-color: $primitives-MISSING_TOKEN_PATH;
+    // --feedback-info-border-color: $primitives-MISSING_TOKEN_PATH;
+
+    --focus-ring-color: #{$color-brand-700};
+
+    --border-radius-none: #{$dimension-0};
+    --border-radius-sm: #{$dimension-1};
+    --border-radius-md: #{$dimension-2};
+    --border-radius-lg: #{$dimension-3};
+    --border-radius-xl: #{$dimension-4};
+    --border-radius-2xl: #{$dimension-6};
+    --border-radius-full: #{$dimension-999};
+
+    --spacing-none: #{$dimension-0};
+    --spacing-xxs: #{$dimension-0-5};
+    --spacing-xs: #{$dimension-1};
+    --spacing-sm: #{$dimension-1-5};
+    --spacing-md: #{$dimension-2};
+    --spacing-lg: #{$dimension-3};
+    --spacing-xl: #{$dimension-4};
+    --spacing-2xl: #{$dimension-5};
+    --spacing-3xl: #{$dimension-6};
+    --spacing-4xl: #{$dimension-8};
+    --spacing-5xl: #{$dimension-10};
+    --spacing-6xl: #{$dimension-12};
+    --spacing-7xl: #{$dimension-14};
+
+    --border-none: #{$dimension-0};
+    --border-thin: #{$dimension-0-5};
+    --border-default: #{$dimension-0-5};
+    --border-thick: #{$dimension-1};
+
+    --size-xs: #{$dimension-3};
+    --size-sm: #{$dimension-4};
+    --size-md: #{$dimension-5};
+    --size-lg: #{$dimension-6};
+    --size-xl: #{$dimension-8};
+    --size-2xl: #{$dimension-10};
+    --size-3xl: #{$dimension-12};
+    --size-4xl: #{$dimension-14};
+    --size-5xl: #{$dimension-16};
+
+    --dimension-0: #{$dimension-0};
+    --dimension-0-5: #{$dimension-0-5};
+    --dimension-1: #{$dimension-1};
+    --dimension-1-5: #{$dimension-1-5};
+    --dimension-2: #{$dimension-2};
+    --dimension-2-5: #{$dimension-2-5};
+    --dimension-3: #{$dimension-3};
+    --dimension-3-5: #{$dimension-3-5};
+    --dimension-4: #{$dimension-4};
+    --dimension-4-5: #{$dimension-4-5};
+    --dimension-5: #{$dimension-5};
+    --dimension-5-5: #{$dimension-5-5};
+    --dimension-6: #{$dimension-6};
+    --dimension-7: #{$dimension-7};
+    --dimension-8: #{$dimension-8};
+    
+    --swiper-pagination-bullet-size: #{$dimension-3};
+    --swiper-pagination-color: #{$color-brand-900};
+
+    --swiper-pagination-bottom: #{$dimension-0};
+}

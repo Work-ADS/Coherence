@@ -1,0 +1,109 @@
+:host {
+  display: contents;
+}
+
+.toast__anchor {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 70;
+  pointer-events: none;
+}
+
+.toast__pill {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  height: 40px;
+  padding-left: var(--space-xs);
+  padding-right: var(--space-2xs);
+  border-radius: 999px;
+  background: var(--color-neutral-900);
+  color: var(--color-base-white);
+  box-shadow: var(--elevation-2);
+  animation: toast-enter var(--duration-normal) var(--easing-enter);
+}
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast__pill {
+    animation: none;
+  }
+}
+
+// ─── Action (undo) ───────────────────────────────────────────────────────────
+.toast__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 var(--space-xs);
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  font: var(--type-body-sm-500);
+  transition: background var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-base-white);
+  }
+}
+
+.toast__action-label {
+  font: var(--type-body-sm-500);
+}
+
+// ─── Message ─────────────────────────────────────────────────────────────────
+.toast__message {
+  font: var(--type-body-sm);
+  padding: 0 var(--space-2xs);
+}
+
+// ─── Divider ─────────────────────────────────────────────────────────────────
+.toast__divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+// ─── Dismiss ─────────────────────────────────────────────────────────────────
+.toast__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-enter),
+              color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-base-white);
+  }
+}
+
+// ─── Icon ────────────────────────────────────────────────────────────────────
+.toast__icon {
+  width: 16px;
+  height: 16px;
+}

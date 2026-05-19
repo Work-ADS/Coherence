@@ -1,0 +1,99 @@
+:host {
+  display: block;
+}
+
+.page {
+  max-width: 920px;
+  margin-inline: auto;
+  padding: var(--space-2xl) var(--space-xl);
+}
+
+.page__header {
+  margin-bottom: var(--space-xl);
+}
+
+.page__label {
+  display: block;
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--brand-primary-background-default);
+  margin-bottom: var(--space-xs);
+}
+
+.page__title {
+  font: var(--type-title);
+  color: var(--color-afi-control-900);
+  margin-bottom: var(--space-xs);
+}
+
+.page__intro {
+  font: var(--type-body-md-400);
+  color: var(--color-afi-control-500);
+  max-width: 540px;
+}
+
+// ─── Card grid ─────────────────────────────────────────────────────────────────
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  border: var(--border-width-hairline) solid var(--color-afi-control-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--duration-fast) var(--easing-standard),
+              box-shadow var(--duration-fast) var(--easing-standard);
+  position: relative;
+
+  &:hover {
+    border-color: var(--brand-primary-background-default);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.project-card__preview {
+  height: 140px;
+  background: var(--color-afi-control-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-card__icon {
+  color: var(--color-afi-control-400);
+}
+
+.project-card__body {
+  padding: var(--space-md);
+  flex: 1;
+}
+
+.project-card__title {
+  font: var(--type-body-md-500);
+  color: var(--color-afi-control-900);
+  margin-bottom: var(--space-2xs);
+}
+
+.project-card__desc {
+  font: var(--type-body-sm-400);
+  color: var(--color-afi-control-500);
+}
+
+.project-card__badge {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  font: var(--type-body-sm-500);
+  font-size: 11px;
+  color: var(--color-success-700);
+  background: var(--color-success-50);
+  padding: var(--space-2xs) var(--space-xs);
+  border-radius: var(--radius-sm);
+}

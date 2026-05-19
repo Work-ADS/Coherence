@@ -6,6 +6,18 @@ export const novedades_routes: Routes = [
     loadComponent: () => import('./novedades.landing').then((m) => m.NovedadesLandingPage),
   },
   {
+    path: 'wealth-planner',
+    loadComponent: () =>
+      import('./wealth-planner/wealth-planner.page').then((m) => m.WealthPlannerPage),
+  },
+  {
+    path: 'wealth-planner-demo',
+    loadComponent: () =>
+      import('./wealth-planner-demo/wealth-planner-demo.page').then(
+        (m) => m.WealthPlannerDemoPage,
+      ),
+  },
+  {
     path: 'evolucion-patrimonial',
     loadComponent: () =>
       import('./evolucion-patrimonial/evolucion-patrimonial-proposal.page').then(
@@ -31,20 +43,19 @@ export const novedades_routes: Routes = [
         (m) => m.PatrimonialDecisionesPage,
       ),
   },
+  // Legacy routes kept for backwards compatibility (hidden from nav)
+  // sidebar-decisiones, nav-bar-decisiones, dialog-decisiones → moved to /patrones/
   {
     path: 'sidebar-decisiones',
-    loadComponent: () =>
-      import('./sidebar-decisiones/sidebar-decisiones.page').then((m) => m.SidebarDecisionesPage),
+    redirectTo: '/patrones/sidebar-decisiones',
   },
   {
     path: 'nav-bar-decisiones',
-    loadComponent: () =>
-      import('./nav-bar-decisiones/nav-bar-decisiones.page').then((m) => m.NavBarDecisionesPage),
+    redirectTo: '/patrones/top-bar-decisiones',
   },
   {
     path: 'dialog-decisiones',
-    loadComponent: () =>
-      import('./dialog-decisiones/dialog-decisiones.page').then((m) => m.DialogDecisionesPage),
+    redirectTo: '/patrones/dialog-decisiones',
   },
   {
     path: 'bitacora',

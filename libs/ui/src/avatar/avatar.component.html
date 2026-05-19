@@ -1,0 +1,12 @@
+<span [class]="hostClasses()" [attr.aria-label]="name()" role="img">
+  @if (src() && !imgError) {
+    <img
+      [src]="src()"
+      [alt]="name()"
+      class="avatar__img"
+      (error)="imgError = true"
+    />
+  } @else {
+    {{ initials() }}
+  }
+</span>

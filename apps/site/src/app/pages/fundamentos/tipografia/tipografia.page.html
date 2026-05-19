@@ -1,0 +1,105 @@
+<article class="page">
+
+  <header class="page__header">
+    <span class="page__label">Foundations</span>
+    <h1 class="page__title">Typography</h1>
+    <p class="page__intro">
+      One family everywhere: Roboto Serif. Hierarchy comes from weight, size, and
+      tracking — not from a second typeface. The register is editorial-software:
+      Medium pre-redesign, NYT web, Bloomberg Terminal.
+    </p>
+  </header>
+
+  <hr class="divider" />
+
+  <!-- ─── Heading scale ────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Heading scale</h2>
+    <p class="section__body">
+      Responsive — mobile-first values scale up at the <code>lg</code> breakpoint (992px).
+      Uses the <code>font</code> shorthand: weight size/line-height family.
+    </p>
+    <div class="type-list">
+      @for (t of headingScale; track t.name) {
+        <div class="type-sample">
+          <span class="type-sample__text" [style.font]="'var(' + t.token + ')'">{{ t.sample }}</span>
+          <div class="type-sample__meta">
+            <code class="type-sample__token">{{ t.token }}</code>
+            <span class="type-sample__note">{{ t.note }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Body scale ───────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Body scale</h2>
+    <p class="section__body">
+      Fixed across breakpoints — readability at 12–16px doesn't benefit from scaling.
+      Token naming: <code>--type-body-[size]-[weight]</code>.
+    </p>
+    <div class="type-list">
+      @for (t of bodyScale; track t.name) {
+        <div class="type-sample">
+          <span class="type-sample__text" [style.font]="'var(' + t.token + ')'">The quick brown fox jumps</span>
+          <div class="type-sample__meta">
+            <code class="type-sample__token">{{ t.token }}</code>
+            <span class="type-sample__spec">{{ t.spec }}</span>
+            <span class="type-sample__note">{{ t.note }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Tracking ─────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Letter spacing</h2>
+    <p class="section__body">
+      Five tracking tokens. Tight for large headings, wide for uppercase utility text.
+    </p>
+    <div class="tracking-list">
+      @for (t of trackingScale; track t.name) {
+        <div class="tracking-item">
+          <span class="tracking-item__sample" [style.letter-spacing]="t.value">COHERENCE DESIGN</span>
+          <div class="tracking-item__meta">
+            <code class="tracking-item__token">{{ t.token }}</code>
+            <span class="tracking-item__value">{{ t.value }}</span>
+            <span class="tracking-item__use">{{ t.use }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Rules ────────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Rules</h2>
+    <div class="rules-grid">
+      <div class="rules-card rules-card--do">
+        <span class="rules-card__label">Do</span>
+        <ul class="rules-card__list">
+          <li>Use <code>font: var(--type-*)</code> shorthand — sets size, weight, line-height, and family in one declaration</li>
+          <li>Deliver hierarchy through weight + size + tracking only</li>
+          <li>Use tabular figures for data-heavy contexts</li>
+        </ul>
+      </div>
+      <div class="rules-card rules-card--dont">
+        <span class="rules-card__label">Don't</span>
+        <ul class="rules-card__list">
+          <li>Never add a second font family (sans is deferred to v2 brand modes)</li>
+          <li>Never use <code>font-size</code> or <code>font-weight</code> individually — use the shorthand token</li>
+          <li>Never set raw pixel sizes outside <code>libs/tokens/</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</article>

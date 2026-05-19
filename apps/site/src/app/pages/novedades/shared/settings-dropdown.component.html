@@ -1,0 +1,96 @@
+<ng-content />
+
+@if (open()) {
+  <div class="settings-dd" role="dialog" aria-label="Ajustes de la simulación">
+    <!-- Header -->
+    <div class="settings-dd__header">
+      <h3 class="settings-dd__title">Ajustes</h3>
+      <button
+        type="button"
+        class="settings-dd__close"
+        (click)="closed.emit()"
+        aria-label="Cerrar ajustes"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="settings-dd__body">
+      <!-- Currency -->
+      <section class="settings-dd__section">
+        <label class="settings-dd__label">Moneda</label>
+        <afi-segmented-control
+          [options]="currencyOptions"
+          [(value)]="currency"
+          size="sm"
+        />
+      </section>
+
+      <!-- Rounding -->
+      <section class="settings-dd__section">
+        <label class="settings-dd__label">Redondeo</label>
+        <afi-segmented-control
+          [options]="roundingOptions"
+          [(value)]="rounding"
+          size="sm"
+        />
+      </section>
+
+      <!-- Risk profile -->
+      <section class="settings-dd__section">
+        <label class="settings-dd__label">Perfil de riesgo</label>
+        <afi-segmented-control
+          [options]="riskOptions"
+          [(value)]="riskProfile"
+          size="sm"
+        />
+      </section>
+
+      <div class="settings-dd__divider"></div>
+
+      <!-- Inflation rate -->
+      <section class="settings-dd__section settings-dd__section--row">
+        <label class="settings-dd__label" for="inflation-input">Inflación esperada</label>
+        <div class="settings-dd__number-field">
+          <input
+            id="inflation-input"
+            type="number"
+            class="settings-dd__number-input"
+            [value]="inflationRate()"
+            (input)="onInflationInput($event)"
+            step="0.1"
+            min="0"
+            max="20"
+          />
+          <span class="settings-dd__unit">%</span>
+        </div>
+      </section>
+
+      <!-- Life expectancy -->
+      <section class="settings-dd__section settings-dd__section--row">
+        <label class="settings-dd__label" for="life-input">Esperanza de vida</label>
+        <div class="settings-dd__number-field">
+          <input
+            id="life-input"
+            type="number"
+            class="settings-dd__number-input"
+            [value]="lifeExpectancy()"
+            (input)="onLifeExpectancyInput($event)"
+            step="1"
+            min="50"
+            max="120"
+          />
+          <span class="settings-dd__unit">años</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer hint -->
+    <div class="settings-dd__footer">
+      <p class="settings-dd__hint">Los cambios se aplican automáticamente.</p>
+    </div>
+  </div>
+}

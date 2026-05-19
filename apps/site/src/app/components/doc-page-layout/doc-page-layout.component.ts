@@ -12,14 +12,12 @@ import { RouterLink } from '@angular/router';
 import { MenuComponent } from '@coherence/ui';
 import { TocComponent } from '../toc';
 
-export type DocPageTab = 'code' | 'design';
+export type DocPageTab = 'preview' | 'tokens' | 'accessibility' | 'animation';
 
 /**
- * Shell for every primitive detail page (rev5 layout).
+ * Shell for every primitive detail page.
  * Renders: breadcrumb → kicker → title → subtitle → author → actions row →
- * 2 page-level tabs (Code / Design) → right-rail TOC.
- *
- * Replaces the old <site-primitive-page> 4-tab layout.
+ * 4 page-level tabs (Preview / Tokens / Accessibility / Animation) → right-rail TOC.
  */
 @Component({
   selector: 'afi-doc-page-layout',
@@ -79,7 +77,7 @@ export type DocPageTab = 'code' | 'design';
                 (click)="promptMenuOpen.set(false)"
               >Descargar {{ buildPromptSlug() }}.md</a>
               <a
-                href="https://raw.githubusercontent.com/AfiLabs/coherence/main/docs/component-skill.md"
+                href="https://raw.githubusercontent.com/AfiLabs/coherence/main/docs/rules/component-skill.md"
                 target="_blank"
                 rel="noopener"
                 role="menuitem"
@@ -88,7 +86,7 @@ export type DocPageTab = 'code' | 'design';
                 (click)="promptMenuOpen.set(false)"
               >Descargar component-skill.md</a>
               <a
-                href="https://raw.githubusercontent.com/AfiLabs/coherence/main/docs/accessibility.md"
+                href="https://raw.githubusercontent.com/AfiLabs/coherence/main/docs/rules/accessibility.md"
                 target="_blank"
                 rel="noopener"
                 role="menuitem"
@@ -106,45 +104,46 @@ export type DocPageTab = 'code' | 'design';
           role="tablist"
           aria-label="Secciones de la página"
         >
-          <button
-            type="button"
-            role="tab"
-            [attr.aria-selected]="activeTab() === 'code'"
-            class="px-space-4 py-space-3 text-body-sm transition-colors duration-fast -mb-px"
-            [class.border-b-2]="activeTab() === 'code'"
-            [class.border-action]="activeTab() === 'code'"
-            [class.text-canvas-fg]="activeTab() === 'code'"
-            [class.font-medium]="activeTab() === 'code'"
-            [class.text-neutral-400]="activeTab() !== 'code'"
-            [class.hover:text-canvas-fg]="activeTab() !== 'code'"
-            (click)="switchTab('code')"
-          >Code</button>
-          <button
-            type="button"
-            role="tab"
-            [attr.aria-selected]="activeTab() === 'design'"
-            class="px-space-4 py-space-3 text-body-sm transition-colors duration-fast -mb-px"
-            [class.border-b-2]="activeTab() === 'design'"
-            [class.border-action]="activeTab() === 'design'"
-            [class.text-canvas-fg]="activeTab() === 'design'"
-            [class.font-medium]="activeTab() === 'design'"
-            [class.text-neutral-400]="activeTab() !== 'design'"
-            [class.hover:text-canvas-fg]="activeTab() !== 'design'"
-            (click)="switchTab('design')"
-          >Design</button>
+          @for (tab of tabs; track tab.id) {
+            <button
+              type="button"
+              role="tab"
+              [attr.aria-selected]="activeTab() === tab.id"
+              class="px-space-4 py-space-3 text-body-sm transition-colors duration-fast -mb-px"
+              [class.border-b-2]="activeTab() === tab.id"
+              [class.border-action]="activeTab() === tab.id"
+              [class.text-canvas-fg]="activeTab() === tab.id"
+              [class.font-medium]="activeTab() === tab.id"
+              [class.text-neutral-400]="activeTab() !== tab.id"
+              [class.hover:text-canvas-fg]="activeTab() !== tab.id"
+              (click)="switchTab(tab.id)"
+            >{{ tab.label }}</button>
+          }
         </div>
 
         <!-- Tab content -->
         <div #contentArea>
           @switch (activeTab()) {
-            @case ('code') {
+            @case ('preview') {
               <div class="space-y-space-16">
+                <ng-content select="[slot=preview-tab]" />
+                <!-- Fallback: render legacy code-tab slot for backwards compat -->
                 <ng-content select="[slot=code-tab]" />
               </div>
             }
-            @case ('design') {
+            @case ('tokens') {
               <div class="space-y-space-16">
-                <ng-content select="[slot=design-tab]" />
+                <ng-content select="[slot=tokens-tab]" />
+              </div>
+            }
+            @case ('accessibility') {
+              <div class="space-y-space-16">
+                <ng-content select="[slot=accessibility-tab]" />
+              </div>
+            }
+            @case ('animation') {
+              <div class="space-y-space-16">
+                <ng-content select="[slot=animation-tab]" />
               </div>
             }
           }
@@ -169,7 +168,14 @@ export class DocPageLayoutComponent implements AfterViewInit {
   readonly docsSource = input.required<string>();
   readonly buildPromptSlug = input.required<string>();
 
-  readonly activeTab = signal<DocPageTab>('code');
+  readonly tabs: { id: DocPageTab; label: string }[] = [
+    { id: 'preview', label: 'Preview' },
+    { id: 'tokens', label: 'Tokens' },
+    { id: 'accessibility', label: 'Accessibility' },
+    { id: 'animation', label: 'Animation' },
+  ];
+
+  readonly activeTab = signal<DocPageTab>('preview');
   readonly promptMenuOpen = signal(false);
   readonly tocRefresh = signal(0);
 

@@ -1,0 +1,388 @@
+// =============================================================================
+// Planner Top Bar — product-level composition (Wealth Planner)
+//
+// All values reference verified CSS custom properties from libs/tokens/.
+// Mapping source: original Tailwind classes on deployed Vercel build.
+// =============================================================================
+
+// ─── Shell ───────────────────────────────────────────────────────────────────
+.ptb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--dimension-10); // 40px — original h-10
+  padding-inline: var(--space-md); // 16px — original px-space-4
+  border-bottom: var(--border-width-hairline) solid var(--border-hairline);
+  background: var(--surface-default);
+  flex-shrink: 0;
+}
+
+// ─── Start zone ──────────────────────────────────────────────────────────────
+.ptb__start {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm); // 12px — original gap-space-3
+  font: var(--type-body-sm-400); // 12px/16px — original text-body-sm
+  color: var(--foreground-primary-default); // original text-canvas-fg
+  min-width: 0;
+}
+
+.ptb__end {
+  display: flex;
+  align-items: center;
+  gap: 2px; // original gap-[2px]
+}
+
+// ─── Tooltip ─────────────────────────────────────────────────────────────────
+.ptb__tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 6px;
+  padding: var(--space-2xs) var(--space-xs); // 4px 8px
+  font: var(--type-body-sm-400);
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--surface-default); // white text
+  background: var(--color-afi-control-950); // near-black
+  border-radius: var(--radius-control); // 4px
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing-enter);
+  z-index: 60;
+}
+
+// Trigger wrap — replaces Tailwind's group/tt pattern
+.ptb__trigger-wrap {
+  position: relative;
+  display: inline-flex;
+
+  &:hover .ptb__tooltip,
+  &:focus-within .ptb__tooltip {
+    opacity: 1;
+  }
+}
+
+// ─── Plan switcher ───────────────────────────────────────────────────────────
+.ptb__plan-switcher {
+  position: relative;
+}
+
+.ptb__nav-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px; // original gap-[3px]
+  height: var(--dimension-7); // 28px — original h-7
+  padding: 0 var(--space-xs); // 0 8px — original px-space-2
+  border: none;
+  border-radius: var(--radius-control); // 4px
+  background: transparent;
+  color: var(--foreground-secondary-default); // original text-neutral-600
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-enter),
+              color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle); // original hover:bg-surface-muted
+    color: var(--foreground-primary-default); // original hover:text-canvas-fg
+  }
+}
+
+// ─── Dropdown (shared) ───────────────────────────────────────────────────────
+.ptb__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.ptb__dropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: var(--space-2xs); // 4px — original mt-1
+  z-index: 50;
+  min-width: 260px; // original min-w-[260px]
+  padding: var(--space-xs); // 8px — original p-space-2
+  background: var(--surface-raised); // white — original bg-canvas-base
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-card); // 8px — original rounded-md (close enough)
+  box-shadow: var(--elevation-lg); // original shadow-lg
+  animation: ptb-dropdown-enter var(--duration-fast) var(--easing-enter);
+
+  &--state {
+    min-width: 220px; // original min-w-[220px]
+  }
+}
+
+@keyframes ptb-dropdown-enter {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ptb__menu-heading {
+  padding: var(--space-2xs) var(--space-xs) var(--space-xs); // original px-space-2 pt-space-1 pb-space-2
+  font: var(--type-body-sm-400);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider); // original tracking-wider
+  color: var(--foreground-tertiary-default); // original text-neutral-500
+}
+
+.ptb__menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm); // 12px — original gap-space-3
+  width: 100%;
+  text-align: left;
+  padding: var(--space-xs); // 8px — original px-space-2 py-space-2
+  border: none;
+  border-radius: var(--radius-control); // 4px — original rounded
+  background: transparent;
+  font: var(--type-body-sm-400); // original text-body-sm
+  color: var(--foreground-primary-default); // original text-canvas-fg
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle); // original hover:bg-surface-muted
+  }
+}
+
+.ptb__menu-item-label {
+  font-weight: 500; // original font-medium
+}
+
+.ptb__divider {
+  height: 1px;
+  background: var(--border-hairline); // original bg-border-hairline
+  margin: var(--space-2xs) calc(var(--space-xs) * -1); // original my-space-1 -mx-space-2
+}
+
+.ptb__plan-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.ptb__plan-name {
+  font-weight: 500; // original font-medium
+}
+
+.ptb__plan-id {
+  font: var(--type-body-sm-400);
+  font-size: 11px;
+  color: var(--foreground-tertiary-default); // original text-neutral-500
+  // Note: font-mono pending — using default for now
+}
+
+// ─── Client meta + rename ────────────────────────────────────────────────────
+.ptb__meta {
+  color: var(--foreground-tertiary-default); // original text-neutral-500
+  white-space: nowrap;
+}
+
+.ptb__sim-id-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs); // 4px — original gap-space-1
+}
+
+.ptb__sim-id {
+  font-weight: 500; // original font-medium
+  color: var(--foreground-primary-default); // original text-canvas-fg
+}
+
+.ptb__micro-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-6); // 24px — original w-6 h-6
+  height: var(--dimension-6);
+  border: none;
+  border-radius: var(--radius-control); // 4px — original rounded
+  background: transparent;
+  color: var(--foreground-secondary-default); // original text-neutral-600
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-enter),
+              color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle); // original hover:bg-surface-muted
+    color: var(--foreground-primary-default); // original hover:text-canvas-fg
+  }
+
+  &--success {
+    color: var(--feedback-success-foreground); // original text-system-success
+  }
+}
+
+.ptb__rename-form {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs); // 4px — original gap-space-1
+}
+
+.ptb__rename-input {
+  height: var(--dimension-6); // 24px — original h-6
+  width: 170px; // original w-[170px]
+  padding: 0 var(--space-xs); // 0 8px — original px-space-2
+  font: var(--type-body-sm-500); // original text-body-sm font-medium
+  border-radius: var(--radius-control); // 4px — original rounded
+  border: var(--border-width-hairline) solid var(--border-focus); // original border-border-focus
+  background: var(--surface-default); // original bg-canvas-base
+  color: var(--foreground-primary-default); // original text-canvas-fg
+  outline: none;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--border-focus); // original ring-2 ring-border-focus
+  }
+}
+
+// ─── State chip ──────────────────────────────────────────────────────────────
+.ptb__state-switcher {
+  position: relative;
+}
+
+.ptb__state-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs); // 4px — original gap-[4px]
+  height: var(--dimension-5); // 20px — original h-5
+  padding: 0 var(--space-xs); // 0 8px — original px-space-2
+  border: none;
+  border-radius: var(--radius-pill); // 9999px — original rounded-full
+  font: var(--type-body-sm-500); // original text-body-sm font-medium
+  cursor: pointer;
+  transition: filter var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+
+  &--inline {
+    cursor: default;
+    &:hover { filter: none; }
+  }
+}
+
+// ─── Icons ───────────────────────────────────────────────────────────────────
+.ptb__icon {
+  width: var(--icon-sm); // 16px — original w-4 h-4
+  height: var(--icon-sm);
+  flex-shrink: 0;
+
+  &--xs {
+    width: var(--icon-xs); // 12px — original w-3 h-3
+    height: var(--icon-xs);
+    opacity: 0.7; // original opacity-70
+  }
+
+  &--muted {
+    color: var(--foreground-tertiary-default); // original text-neutral-500
+  }
+
+  &--action {
+    color: var(--brand-primary-foreground-default); // original text-action
+  }
+}
+
+// ─── Right-side action buttons ───────────────────────────────────────────────
+.ptb__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-7); // 28px — original w-7 h-7
+  height: var(--dimension-7);
+  border: none;
+  border-radius: var(--radius-control); // 4px — original rounded
+  background: transparent;
+  color: var(--foreground-secondary-default); // original text-neutral-600
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-enter),
+              color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle); // original hover:bg-surface-muted
+    color: var(--foreground-primary-default); // original hover:text-canvas-fg
+  }
+}
+
+// ─── Drawer content ──────────────────────────────────────────────────────────
+.ptb__drawer-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md); // 16px — original gap-space-4
+}
+
+.ptb__drawer-description {
+  font: var(--type-body-sm-400); // original text-body-sm
+  color: var(--foreground-secondary-default); // original text-neutral-600
+}
+
+.ptb__notes-textarea {
+  min-height: 180px; // original min-h-[180px]
+  width: 100%;
+  border-radius: var(--radius-card); // original rounded-md
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  background: var(--surface-default); // original bg-canvas-base
+  padding: var(--space-sm); // 12px — original p-space-3
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default); // original text-canvas-fg
+  outline: none;
+  resize: vertical;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--border-focus);
+  }
+}
+
+// ─── Config drawer ───────────────────────────────────────────────────────────
+.ptb__config-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg); // 24px — original gap-space-5 (20px close enough)
+}
+
+.ptb__config-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs); // 8px — original gap-space-2
+}
+
+.ptb__config-heading {
+  font: var(--type-body-sm-400);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default); // original text-neutral-500
+  margin: 0;
+}
+
+.ptb__config-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm); // 12px — original gap-space-3
+  padding-block: var(--space-xs); // 8px — original py-space-2
+  border-bottom: var(--border-width-hairline) solid var(--border-hairline);
+}
+
+.ptb__config-label {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default); // original text-canvas-fg
+}
+
+.ptb__config-value {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default); // original text-neutral-600
+}
+
+.ptb__config-footnote {
+  font: var(--type-body-sm-400);
+  font-size: 11px;
+  color: var(--foreground-tertiary-default); // original text-neutral-500
+  margin: 0;
+}

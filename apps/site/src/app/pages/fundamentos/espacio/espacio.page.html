@@ -1,0 +1,105 @@
+<article class="page">
+
+  <header class="page__header">
+    <span class="page__label">Foundations</span>
+    <h1 class="page__title">Space</h1>
+    <p class="page__intro">
+      Everything sits on a 4px grid. The dimension scale is the primitive —
+      <code>--dimension-N</code> = N × 4px. Semantic spacing tokens give those
+      numbers a role so you never have to think about pixel values.
+    </p>
+  </header>
+
+  <hr class="divider" />
+
+  <!-- ─── Dimension scale ──────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Dimension scale</h2>
+    <p class="section__body">
+      137 tokens from 0 to 800px. Below are the ones you'll use 90% of the time.
+      The rule: components never use these directly — they consume semantic tokens
+      like <code>--space-md</code> or <code>--button-height</code>.
+    </p>
+    <div class="dim-grid">
+      @for (d of baseScale; track d.index) {
+        <div class="dim-item">
+          <div class="dim-item__bar" [style.width.px]="d.px"></div>
+          <div class="dim-item__meta">
+            <code class="dim-item__token">--dimension-{{ d.index }}</code>
+            <span class="dim-item__px">{{ d.px }}px</span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Semantic spacing ─────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Semantic spacing</h2>
+    <p class="section__body">
+      Named by T-shirt size. Each maps to a dimension primitive and carries a usage role.
+      Use these in components — never raw dimension tokens.
+    </p>
+    <div class="spacing-list">
+      @for (s of semanticSpacing; track s.name) {
+        <div class="spacing-item">
+          <code class="spacing-item__token">{{ s.name }}</code>
+          <span class="spacing-item__maps">{{ s.maps }}</span>
+          <span class="spacing-item__use">{{ s.use }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Radius ───────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Border radius</h2>
+    <p class="section__body">
+      Radius lives in the dimension file because it's a spatial value — but it's
+      not on the 4px grid (radius-full = 9999px for pills). Kept separate from
+      the main scale so the rule is clear.
+    </p>
+    <div class="radius-grid">
+      @for (r of radiusScale; track r.name) {
+        <div class="radius-item">
+          <div class="radius-item__box" [style.border-radius]="r.value"></div>
+          <div class="radius-item__meta">
+            <code class="radius-item__token">{{ r.name }}</code>
+            <span class="radius-item__value">{{ r.value }}</span>
+            <span class="radius-item__use">{{ r.use }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Rules ────────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Rules</h2>
+    <div class="rules-grid">
+      <div class="rules-card rules-card--do">
+        <span class="rules-card__label">Do</span>
+        <ul class="rules-card__list">
+          <li>Use semantic spacing: <code>padding: var(--space-md)</code></li>
+          <li>Use semantic radius: <code>border-radius: var(--radius-md)</code></li>
+          <li>Let responsive tokens handle breakpoint scaling</li>
+        </ul>
+      </div>
+      <div class="rules-card rules-card--dont">
+        <span class="rules-card__label">Don't</span>
+        <ul class="rules-card__list">
+          <li>Never <code>padding: 16px</code> — use the token</li>
+          <li>Never reference <code>--dimension-4</code> in a component — use <code>--space-md</code></li>
+          <li>Never invent radius values outside the scale</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</article>

@@ -1,0 +1,232 @@
+<div class="ptb">
+  <!-- Left cluster: plan switcher · ID · rename · state -->
+  <div class="ptb__start">
+    <!-- Combined nav button (chevron-left + list) — opens planifications dropdown -->
+    <div class="ptb__plan-switcher">
+      <span class="ptb__trigger-wrap">
+        <button
+          type="button"
+          class="ptb__nav-trigger"
+          (click)="plansOpen.set(!plansOpen())"
+          aria-haspopup="menu"
+          [attr.aria-expanded]="plansOpen()"
+          aria-label="Cambiar planificación"
+        >
+          <!-- lucide: chevron-left -->
+          <svg class="ptb__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          <!-- lucide: list -->
+          <svg class="ptb__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/>
+          </svg>
+        </button>
+        @if (!plansOpen()) {
+          <span role="tooltip" class="ptb__tooltip">Cambiar planificación</span>
+        }
+      </span>
+
+      @if (plansOpen()) {
+        <div class="ptb__backdrop" (click)="plansOpen.set(false)" aria-hidden="true"></div>
+        <div role="menu" class="ptb__dropdown">
+          <!-- Back to listado -->
+          <a
+            [routerLink]="listadoRoute()"
+            role="menuitem"
+            (click)="plansOpen.set(false)"
+            class="ptb__menu-item"
+          >
+            <!-- lucide: arrow-left -->
+            <svg class="ptb__icon ptb__icon--muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+            </svg>
+            <span class="ptb__menu-item-label">Ir al listado</span>
+          </a>
+          <div class="ptb__divider"></div>
+          <p class="ptb__menu-heading">Planificaciones</p>
+          @for (p of plans; track p.id) {
+            <button
+              type="button"
+              role="menuitem"
+              (click)="selectPlan(p.id)"
+              class="ptb__menu-item"
+            >
+              <span class="ptb__plan-info">
+                <span class="ptb__plan-name">{{ p.name }}</span>
+                <span class="ptb__plan-id">{{ p.id }}</span>
+              </span>
+              @if (p.id === simId()) {
+                <svg class="ptb__icon ptb__icon--action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              }
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Client + ID — display or edit -->
+    @if (!renaming()) {
+      <span class="ptb__meta">{{ clientName() }} planificación:</span>
+      <span class="ptb__sim-id-group">
+        <span class="ptb__sim-id">{{ simId() }}</span>
+        <span class="ptb__trigger-wrap">
+          <button
+            type="button"
+            class="ptb__micro-action"
+            (click)="startRename()"
+            aria-label="Renombrar planificación"
+          >
+            <!-- lucide: pencil -->
+            <svg class="ptb__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+            </svg>
+          </button>
+          <span role="tooltip" class="ptb__tooltip">Renombrar planificación</span>
+        </span>
+      </span>
+    } @else {
+      <span class="ptb__meta">{{ clientName() }} planificación:</span>
+      <span class="ptb__rename-form">
+        <input
+          #renameInput
+          type="text"
+          class="ptb__rename-input"
+          [value]="simIdDraft()"
+          (input)="simIdDraft.set(inputValue($event))"
+          (keydown.enter)="commitRename()"
+          (keydown.escape)="cancelRename()"
+          aria-label="Nuevo identificador"
+        />
+        <span class="ptb__trigger-wrap">
+          <button
+            type="button"
+            class="ptb__micro-action ptb__micro-action--success"
+            (click)="commitRename()"
+            aria-label="Guardar nombre"
+          >
+            <svg class="ptb__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </button>
+          <span role="tooltip" class="ptb__tooltip">Guardar (Enter)</span>
+        </span>
+        <span class="ptb__trigger-wrap">
+          <button
+            type="button"
+            class="ptb__micro-action"
+            (click)="cancelRename()"
+            aria-label="Cancelar"
+          >
+            <svg class="ptb__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </svg>
+          </button>
+          <span role="tooltip" class="ptb__tooltip">Cancelar (Esc)</span>
+        </span>
+      </span>
+    }
+
+    <!-- State chip (dropdown trigger) -->
+    <div class="ptb__state-switcher">
+      <span class="ptb__trigger-wrap">
+        <button
+          type="button"
+          class="ptb__state-chip"
+          (click)="stateOpen.set(!stateOpen())"
+          [style]="stateStyleFor(currentState())"
+          aria-haspopup="menu"
+          [attr.aria-expanded]="stateOpen()"
+          [attr.aria-label]="'Cambiar estado — actual: ' + stateLabelFor(currentState())"
+        >
+          <span>{{ stateLabelFor(currentState()) }}</span>
+          <svg class="ptb__icon ptb__icon--xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+        @if (!stateOpen()) {
+          <span role="tooltip" class="ptb__tooltip">Cambiar estado</span>
+        }
+      </span>
+
+      @if (stateOpen()) {
+        <div class="ptb__backdrop" (click)="stateOpen.set(false)" aria-hidden="true"></div>
+        <div role="menu" class="ptb__dropdown ptb__dropdown--state">
+          <p class="ptb__menu-heading">Estado</p>
+          @for (s of states; track s.value) {
+            <button
+              type="button"
+              role="menuitem"
+              (click)="setState(s.value)"
+              class="ptb__menu-item"
+            >
+              <span class="ptb__state-chip ptb__state-chip--inline" [style]="stateStyleFor(s.value)">
+                {{ s.label }}
+              </span>
+              @if (s.value === currentState()) {
+                <svg class="ptb__icon ptb__icon--action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              }
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Right cluster: Notes + configuration -->
+  <div class="ptb__end">
+    <site-notes-dropdown
+      [open]="notesOpen()"
+      [notes]="notes()"
+      (closed)="notesOpen.set(false)"
+      (noteAdded)="addNote($event)"
+      (noteDeleted)="deleteNote($event)"
+    >
+      <span class="ptb__trigger-wrap">
+        <button
+          type="button"
+          class="ptb__action-btn"
+          (click)="notesOpen.set(!notesOpen())"
+          aria-label="Notas"
+        >
+          <svg class="ptb__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z"/><path d="M15 3v5h5"/><path d="M8 13h8"/><path d="M8 17h5"/>
+          </svg>
+        </button>
+        <span role="tooltip" class="ptb__tooltip">Notas</span>
+      </span>
+    </site-notes-dropdown>
+
+    <site-settings-dropdown
+      [open]="configOpen()"
+      [settings]="simulationSettings()"
+      (closed)="configOpen.set(false)"
+      (settingsChanged)="onSettingsChanged($event)"
+    >
+      <span class="ptb__trigger-wrap">
+        <button
+          type="button"
+          class="ptb__action-btn"
+          (click)="configOpen.set(!configOpen())"
+          aria-label="Ajustes de la simulación"
+        >
+          <svg class="ptb__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+        <span role="tooltip" class="ptb__tooltip">Ajustes de la simulación</span>
+      </span>
+    </site-settings-dropdown>
+  </div>
+</div>
+
+<site-action-toast
+  [visible]="toastVisible()"
+  [message]="toastMessage()"
+  (undo)="onToastUndo()"
+  (dismissed)="hideToast()"
+/>

@@ -1,0 +1,90 @@
+<article class="page">
+
+  <header class="page__header">
+    <span class="page__label">Foundations</span>
+    <h1 class="page__title">Motion</h1>
+    <p class="page__intro">
+      Three durations. Three easings. Simple rules. Motion communicates hierarchy
+      and confirms interaction — it's never decorative. Animate the container,
+      not the text inside.
+    </p>
+  </header>
+
+  <hr class="divider" />
+
+  <!-- ─── Principles ───────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Principles</h2>
+    <ul class="principles-list">
+      @for (p of principles; track p) {
+        <li class="principles-list__item">{{ p }}</li>
+      }
+    </ul>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Duration ─────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Duration</h2>
+    <p class="section__body">
+      Duration scales with element size. A chip hover is 150ms; a modal entrance
+      is 300ms. Never go below 100ms (invisible) or above 400ms (sluggish).
+    </p>
+    <div class="token-list">
+      @for (d of durations; track d.name) {
+        <div class="token-row">
+          <code class="token-row__name">{{ d.name }}</code>
+          <span class="token-row__value">{{ d.value }}</span>
+          <span class="token-row__use">{{ d.use }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Easing ───────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Easing</h2>
+    <p class="section__body">
+      Standard for in-place state changes. Enter (ease-out) for things appearing.
+      Exit (ease-in) for things leaving. These three cover every case.
+    </p>
+    <div class="token-list">
+      @for (e of easings; track e.name) {
+        <div class="token-row">
+          <code class="token-row__name">{{ e.name }}</code>
+          <span class="token-row__value">{{ e.value }}</span>
+          <span class="token-row__use">{{ e.use }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Rules ────────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Rules</h2>
+    <div class="rules-grid">
+      <div class="rules-card rules-card--do">
+        <span class="rules-card__label">Do</span>
+        <ul class="rules-card__list">
+          <li>Use <code>transition: var(--duration-base) var(--easing-standard)</code></li>
+          <li>Animate transform and opacity (GPU-composited)</li>
+          <li>Provide <code>&#64;media (prefers-reduced-motion: reduce)</code> fallback</li>
+        </ul>
+      </div>
+      <div class="rules-card rules-card--dont">
+        <span class="rules-card__label">Don't</span>
+        <ul class="rules-card__list">
+          <li>Never animate layout properties (width, height, top, left)</li>
+          <li>Never exceed 400ms — if it feels slow, the motion is wrong</li>
+          <li>Never animate text independently of its container</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</article>

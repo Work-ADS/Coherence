@@ -1,0 +1,6 @@
+<site-demo-shell #shell>
+  @switch (shell.activeView()) {
+    @case (0) { <site-patrimonial-proposal-page /> }
+    @case (1) { <site-evolucion-patrimonial-proposal-page /> }
+  }
+</site-demo-shell>

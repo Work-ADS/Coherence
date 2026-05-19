@@ -1,0 +1,143 @@
+<article class="page">
+
+  <header class="page__header">
+    <span class="page__label">Foundations</span>
+    <h1 class="page__title">Color</h1>
+    <p class="page__intro">
+      Base monocromática neutra. Acento azul para acción e intención.
+    </p>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="tabs">
+    <button class="tab" [class.tab--active]="activeTab() === 'overview'" (click)="activeTab.set('overview')">Overview</button>
+    <button class="tab" [class.tab--active]="activeTab() === 'primitivos'" (click)="activeTab.set('primitivos')">Primitivos</button>
+    <button class="tab" [class.tab--active]="activeTab() === 'semanticos'" (click)="activeTab.set('semanticos')">Semánticos</button>
+  </nav>
+
+  <!-- ═══ OVERVIEW ═══════════════════════════════════════════════════════════ -->
+  @if (activeTab() === 'overview') {
+    <section class="content">
+      <h2 class="section__title">Cómo funciona</h2>
+      <p class="section__body">
+        Dos capas. Primitivos = lo que el color <em>es</em>. Semánticos = lo que <em>hace</em>.
+      </p>
+      <p class="section__body">
+        Componentes solo consumen semánticos. Cuando cambia la marca, solo cambia el mapeo.
+      </p>
+
+      <h3 class="section__subtitle">Reglas</h3>
+      <div class="rules-grid">
+        <div class="rules-card rules-card--do">
+          <span class="rules-card__label">Hacer</span>
+          <ul class="rules-card__list">
+            <li>Usar tokens semánticos siempre.</li>
+            <li>Color nunca como único indicador.</li>
+            <li>Respetar la escalera de superficie.</li>
+          </ul>
+        </div>
+        <div class="rules-card rules-card--dont">
+          <span class="rules-card__label">No hacer</span>
+          <ul class="rules-card__list">
+            <li>Nunca hex en un componente.</li>
+            <li>Nunca mezclar tono y sombra.</li>
+            <li>Nunca grises fuera de afi-control.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- ═══ PRIMITIVOS ═════════════════════════════════════════════════════════ -->
+  @if (activeTab() === 'primitivos') {
+    <section class="content">
+
+      <!-- Brand ramps -->
+      @for (ramp of brandRamps; track ramp.name) {
+        <div class="ramp">
+          <div class="ramp__header">
+            <h3 class="ramp__name">{{ ramp.name }}</h3>
+            <span class="ramp__role">{{ ramp.role }}</span>
+          </div>
+          <div class="swatch-row">
+            @for (s of ramp.steps; track s.shade) {
+              <button class="swatch" (click)="copyToken(s.token)" [attr.aria-label]="'Copy ' + s.token">
+                <div class="swatch__color" [style.background]="'var(' + s.token + ')'">
+                  <span class="swatch__overlay">
+                    @if (copiedToken() === s.token) {
+                      <span class="swatch__copied">Copied!</span>
+                    } @else {
+                      <span class="swatch__hex">{{ s.hex }}</span>
+                    }
+                  </span>
+                </div>
+                <span class="swatch__label">{{ s.shade }}</span>
+                <code class="swatch__token">{{ s.token }}</code>
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <hr class="divider" />
+
+      <!-- Signal ramps -->
+      <h2 class="section__title">Señales (universales)</h2>
+      <p class="section__body">Info, success, warning, error. No cambian entre marcas.</p>
+
+      @for (ramp of signalRamps; track ramp.name) {
+        <div class="ramp">
+          <h3 class="ramp__name">{{ ramp.name }}</h3>
+          <div class="swatch-row">
+            @for (s of ramp.steps; track s.shade) {
+              <button class="swatch" (click)="copyToken(s.token)" [attr.aria-label]="'Copy ' + s.token">
+                <div class="swatch__color" [style.background]="'var(' + s.token + ')'">
+                  <span class="swatch__overlay">
+                    @if (copiedToken() === s.token) {
+                      <span class="swatch__copied">Copied!</span>
+                    } @else {
+                      <span class="swatch__hex">{{ s.hex }}</span>
+                    }
+                  </span>
+                </div>
+                <span class="swatch__label">{{ s.shade }}</span>
+                <code class="swatch__token">{{ s.token }}</code>
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </section>
+  }
+
+  <!-- ═══ SEMÁNTICOS ═════════════════════════════════════════════════════════ -->
+  @if (activeTab() === 'semanticos') {
+    <section class="content">
+      <p class="section__body">
+        Tokens con nombre de rol. Componentes nunca tocan primitivos directamente.
+      </p>
+
+      @for (group of semanticGroups; track group.name) {
+        <div class="semantic-group">
+          <div class="semantic-group__header">
+            <h3 class="semantic-group__name">{{ group.name }}</h3>
+            <span class="semantic-group__desc">{{ group.desc }}</span>
+          </div>
+          <div class="semantic-list">
+            @for (t of group.tokens; track t.token) {
+              <button class="semantic-item" (click)="copyToken(t.token)" [attr.aria-label]="'Copy ' + t.token">
+                <div class="semantic-item__swatch" [style.background]="'var(' + t.token + ')'"></div>
+                <code class="semantic-item__token">{{ t.token }}</code>
+                <span class="semantic-item__role">{{ t.role }}</span>
+                @if (copiedToken() === t.token) {
+                  <span class="semantic-item__copied">Copied!</span>
+                }
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </section>
+  }
+
+</article>

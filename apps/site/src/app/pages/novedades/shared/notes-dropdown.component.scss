@@ -1,0 +1,211 @@
+// =============================================================================
+// Notes Dropdown — product-level composition (Wealth Planner)
+// =============================================================================
+
+:host {
+  position: relative;
+  display: inline-block;
+}
+
+.notes-dd {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 50;
+  margin-top: var(--space-2xs);
+  width: 320px;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-hairline);
+  background: var(--surface-raised);
+  box-shadow: var(--elevation-lg);
+  animation: notes-dd-enter var(--duration-fast) var(--easing-enter);
+}
+
+@keyframes notes-dd-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+.notes-dd__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xs) var(--space-sm);
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.notes-dd__title {
+  font: var(--type-body-sm-500);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--foreground-secondary-default);
+  margin: 0;
+}
+
+.notes-dd__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-5);
+  height: var(--dimension-5);
+  border: none;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--foreground-tertiary-default);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle);
+    color: var(--foreground-primary-default);
+  }
+
+  svg {
+    width: var(--icon-xs);
+    height: var(--icon-xs);
+  }
+}
+
+// ─── Body (scrollable list) ──────────────────────────────────────────────────
+.notes-dd__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.notes-dd__empty {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  text-align: center;
+  padding: var(--space-lg) 0;
+}
+
+// ─── Individual note ─────────────────────────────────────────────────────────
+.notes-dd__note {
+  padding: var(--space-xs) 0;
+
+  & + & {
+    border-top: 1px solid var(--border-hairline);
+  }
+}
+
+.notes-dd__note-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2xs);
+}
+
+.notes-dd__timestamp {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  opacity: 0.7;
+}
+
+.notes-dd__note-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-5);
+  height: var(--dimension-5);
+  border: none;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--foreground-tertiary-default);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing-enter),
+              background var(--duration-fast) var(--easing-enter);
+
+  .notes-dd__note:hover & {
+    opacity: 1;
+  }
+
+  &:hover {
+    background: var(--surface-subtle);
+    color: var(--foreground-primary-default);
+  }
+
+  svg {
+    width: var(--icon-xs);
+    height: var(--icon-xs);
+  }
+}
+
+.notes-dd__note-text {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default);
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+// ─── Footer (input) ──────────────────────────────────────────────────────────
+.notes-dd__footer {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-top: 1px solid var(--border-hairline);
+}
+
+.notes-dd__input {
+  flex: 1;
+  min-height: 36px;
+  padding: var(--space-2xs) var(--space-xs);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-control);
+  background: var(--surface-default);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default);
+  resize: none;
+  outline: none;
+
+  &:focus {
+    border-color: var(--border-focus);
+  }
+
+  &::placeholder {
+    color: var(--foreground-tertiary-default);
+  }
+}
+
+.notes-dd__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-7);
+  height: var(--dimension-7);
+  border: none;
+  border-radius: var(--radius-control);
+  background: var(--brand-primary-foreground-default);
+  color: var(--surface-default);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity var(--duration-fast) var(--easing-enter);
+
+  &:hover:not(:disabled) {
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+  }
+}

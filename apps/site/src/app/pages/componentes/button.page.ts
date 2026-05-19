@@ -401,21 +401,22 @@ export class ButtonPage {
 
   readonly importCode = "import { ButtonComponent } from '@coherence/ui/button';";
 
-  readonly realWorldCode = `<afi-button
-  variant="primary"
-  (clicked)="activarOptimizacionLiquidez()">
+  readonly realWorldCode = `<button
+  (click)="activarOptimizacionLiquidez()"
+  class="btn btn-primary">
   {{ 'activar_optimizacion_liquidez' | translate }}
-</afi-button>`;
+</button>`;
 
   readonly codeSnippet = computed(() => {
-    const props: string[] = [];
-    if (this.variant() !== 'primary') props.push(`  variant="${this.variant()}"`);
-    if (this.size() !== 'md') props.push(`  size="${this.size()}"`);
-    if (this.disabled()) props.push('  [disabled]="true"');
-    if (this.loading()) props.push('  [loading]="true"');
+    const classes = ['btn', `btn-${this.variant()}`];
+    if (this.size() !== 'md') classes.push(`btn-${this.size()}`);
+    if (this.loading()) classes.push('is-loading');
 
-    const propsStr = props.length ? '\n' + props.join('\n') + '\n' : '';
-    return `<afi-button${propsStr ? propsStr : ' '}>\n  ${this.label()}\n</afi-button>`;
+    const attrs = [`  (click)="function()"`, `  class="${classes.join(' ')}"`];
+    if (this.disabled() || this.loading()) attrs.push('  [disabled]="true"');
+    if (this.loading()) attrs.push('  [attr.aria-busy]="true"');
+
+    return `<button\n${attrs.join('\n')}>\n  ${this.label()}\n</button>`;
   });
 
   readonly apiInputs = [

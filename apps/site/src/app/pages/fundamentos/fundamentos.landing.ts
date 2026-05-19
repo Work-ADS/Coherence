@@ -1,46 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TeaserTileComponent } from '../../components/teaser-tile/teaser-tile.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'site-fundamentos-landing',
   standalone: true,
-  imports: [TeaserTileComponent],
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div class="max-w-[920px] mx-auto px-space-10 py-space-10">
-      <p class="text-body-sm uppercase tracking-wider text-action-700 mb-space-2">
-        Foundations
-      </p>
-      <h1 class="text-subtitle text-canvas-fg mb-space-3">
-        Fundamentos del sistema
-      </h1>
-      <p class="max-w-[640px] text-body-md text-neutral-600 mb-space-8">
-        Las reglas compartidas que gobiernan todo el sistema: color, tipografía,
-        espacio, movimiento, accesibilidad y copy.
-      </p>
-
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-space-4">
-        @for (f of foundations; track f.slug) {
-          <site-teaser-tile
-            [title]="f.name"
-            [href]="'/fundamentos/' + f.slug"
-            [description]="f.description" />
-        }
-      </div>
-    </div>
-  `,
+  templateUrl: './fundamentos.landing.html',
+  styleUrl: './fundamentos.landing.scss',
 })
 export class FundamentosLandingPage {
   readonly foundations = [
-    { slug: 'principios', name: 'Principios', description: 'Manifiesto y filosofía de diseño' },
-    { slug: 'color', name: 'Color', description: 'Escalas, mapeo semántico, contraste' },
-    { slug: 'tipografia', name: 'Tipografía', description: 'Escala de 7 roles tipográficos' },
-    { slug: 'espacio', name: 'Espacio', description: 'Escala base-4 + semántica t-shirt' },
-    { slug: 'movimiento', name: 'Movimiento', description: 'Disciplina de movimiento y tokens' },
-    { slug: 'accesibilidad', name: 'Accesibilidad', description: 'WCAG 2.1 AA y checklists' },
-    { slug: 'copy', name: 'Copy', description: 'RAE, registro formal, glosario' },
-    { slug: 'tokens', name: 'Tokens', description: 'Primitivo → semántico → marca' },
-    { slug: 'estructura-tokens', name: 'Estructura de tokens', description: 'Cómo están organizados los archivos de libs/tokens/' },
-    { slug: 'color-semantic', name: 'Color semántico', description: '171 roles de color (canvas / surface / brand / feedback / chart…)' },
+    { slug: 'color', name: 'Color', description: 'Brand ramps, semantic roles, surfaces, signals. All in one place.' },
+    { slug: 'tipografia', name: 'Typography', description: 'One family (Roboto Serif), hierarchy through weight + size + tracking.' },
+    { slug: 'espacio', name: 'Space', description: '4px grid, dimension scale, semantic spacing, radius.' },
+    { slug: 'movimiento', name: 'Motion', description: '3 durations, 3 easings, container-first animation.' },
+    { slug: 'accesibilidad', name: 'Accessibility', description: 'Contrast, focus, ARIA, keyboard — shipped from day one.' },
   ];
 }

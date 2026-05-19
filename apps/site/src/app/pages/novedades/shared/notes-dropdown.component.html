@@ -1,0 +1,72 @@
+<ng-content />
+
+@if (open()) {
+  <div class="notes-dd" role="dialog" aria-label="Notas de la planificación">
+    <!-- Header -->
+    <div class="notes-dd__header">
+      <h3 class="notes-dd__title">Notas</h3>
+      <button
+        type="button"
+        class="notes-dd__close"
+        (click)="closed.emit()"
+        aria-label="Cerrar notas"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Notes list -->
+    <div class="notes-dd__body">
+      @if (notes().length === 0) {
+        <p class="notes-dd__empty">
+          Sin notas aún. Añade una nota para esta planificación.
+        </p>
+      } @else {
+        @for (note of notes(); track note.id) {
+          <div class="notes-dd__note">
+            <div class="notes-dd__note-header">
+              <time class="notes-dd__timestamp">{{ formatTime(note.timestamp) }}</time>
+              <button
+                type="button"
+                class="notes-dd__note-delete"
+                (click)="deleteNote(note.id)"
+                aria-label="Eliminar nota"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+            <p class="notes-dd__note-text">{{ note.text }}</p>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Input area -->
+    <div class="notes-dd__footer">
+      <textarea
+        #textareaEl
+        class="notes-dd__input"
+        placeholder="Añadir nota..."
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+        (keydown)="onKeydown($event)"
+        rows="2"
+      ></textarea>
+      <button
+        type="button"
+        class="notes-dd__submit"
+        [disabled]="!draft().trim()"
+        (click)="addNote()"
+        aria-label="Añadir nota"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+}

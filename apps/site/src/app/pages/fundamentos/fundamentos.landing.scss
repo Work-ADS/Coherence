@@ -1,0 +1,81 @@
+:host {
+  display: block;
+}
+
+.page {
+  max-width: 920px;
+  margin-inline: auto;
+  padding: var(--space-2xl) var(--space-xl);
+}
+
+.page__header {
+  margin-bottom: var(--space-xl);
+}
+
+.page__label {
+  display: block;
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--brand-primary-background-default);
+  margin-bottom: var(--space-xs);
+}
+
+.page__title {
+  font: var(--type-title);
+  color: var(--color-afi-control-900);
+  margin-bottom: var(--space-sm);
+}
+
+.page__intro {
+  font: var(--type-body-md-400);
+  color: var(--color-afi-control-500);
+  max-width: 640px;
+
+  em {
+    font-style: italic;
+  }
+}
+
+.divider {
+  border: none;
+  border-top: var(--border-width-hairline) solid var(--color-afi-control-200);
+  margin-block: var(--space-xl);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-lg);
+  border: var(--border-width-hairline) solid var(--color-afi-control-200);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: border-color var(--duration-fast) var(--easing-standard),
+              background-color var(--duration-fast) var(--easing-standard);
+
+  &:hover {
+    border-color: var(--brand-primary-background-default);
+    background: var(--surface-subtle);
+  }
+}
+
+.card__name {
+  font: var(--type-body-md-500);
+  color: var(--color-afi-control-900);
+}
+
+.card__desc {
+  font: var(--type-body-sm-400);
+  color: var(--color-afi-control-500);
+}

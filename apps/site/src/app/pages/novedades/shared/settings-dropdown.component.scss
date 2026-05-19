@@ -1,0 +1,172 @@
+// =============================================================================
+// Settings Dropdown — product-level composition (Wealth Planner)
+//
+// Compact dropdown matching the planner top bar's tight proportions.
+// =============================================================================
+
+:host {
+  position: relative;
+  display: inline-block;
+}
+
+.settings-dd {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 50;
+  margin-top: var(--space-2xs);
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-hairline);
+  background: var(--surface-raised);
+  box-shadow: var(--elevation-lg);
+  animation: settings-dd-enter var(--duration-fast) var(--easing-enter);
+}
+
+@keyframes settings-dd-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+.settings-dd__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xs) var(--space-sm);
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.settings-dd__title {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+  margin: 0;
+}
+
+.settings-dd__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-5); // 20px
+  height: var(--dimension-5);
+  border: none;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--foreground-tertiary-default);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle);
+    color: var(--foreground-primary-default);
+  }
+
+  svg {
+    width: var(--icon-xs); // 12px
+    height: var(--icon-xs);
+  }
+}
+
+// ─── Body ────────────────────────────────────────────────────────────────────
+.settings-dd__body {
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.settings-dd__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+
+  &--row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+}
+
+.settings-dd__label {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.settings-dd__divider {
+  height: 1px;
+  background: var(--border-hairline);
+}
+
+// ─── Segmented control override for compact context ──────────────────────────
+// The DS segmented-control "sm" maps to --control-h-sm (32px) which is too big
+// for a tight dropdown. Force a smaller height here.
+:host ::ng-deep afi-segmented-control {
+  .seg-ctrl {
+    height: var(--dimension-7); // 28px
+  }
+
+  .seg-ctrl__btn {
+    font-size: 12px;
+    padding: 0 var(--space-xs);
+  }
+}
+
+// ─── Number input ────────────────────────────────────────────────────────────
+.settings-dd__number-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.settings-dd__number-input {
+  width: 56px;
+  height: var(--dimension-7); // 28px
+  padding: 0 var(--space-xs);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-control);
+  background: var(--surface-raised);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default);
+  text-align: right;
+  outline: none;
+
+  &:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px var(--border-focus);
+  }
+
+  // Hide native spinner
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  -moz-appearance: textfield;
+}
+
+.settings-dd__unit {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+// ─── Footer ──────────────────────────────────────────────────────────────────
+.settings-dd__footer {
+  padding: var(--space-2xs) var(--space-sm) var(--space-xs);
+  border-top: 1px solid var(--border-hairline);
+}
+
+.settings-dd__hint {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  margin: 0;
+}

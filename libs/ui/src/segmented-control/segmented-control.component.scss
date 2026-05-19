@@ -1,0 +1,59 @@
+.seg-control {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-hairline);
+  background: var(--surface-secondary-default);
+  padding: 2px;
+  gap: 2px;
+
+  // ─── Sizes ──────────────────────────────────────────────
+  &--sm .seg-control__option {
+    padding: 2px 8px;
+    font: var(--type-body-sm);
+  }
+
+  &--md .seg-control__option {
+    padding: 4px 12px;
+    font: var(--type-body-sm-500);
+  }
+
+  &--lg .seg-control__option {
+    padding: 6px 16px;
+    font: var(--type-body);
+  }
+
+  // ─── Option (button) ───────────────────────────────────
+  &__option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: calc(var(--radius-control) - 2px);
+    background: transparent;
+    color: var(--foreground-tertiary-default);
+    cursor: pointer;
+    user-select: none;
+    transition: color var(--duration-fast) var(--easing-enter),
+                background var(--duration-fast) var(--easing-enter),
+                box-shadow var(--duration-fast) var(--easing-enter);
+
+    &:hover:not(.seg-control__option--active):not(.seg-control__option--disabled) {
+      color: var(--foreground-secondary-default);
+      background: var(--surface-tertiary-default);
+    }
+
+    // Active state
+    &--active {
+      background: var(--surface-primary-default);
+      color: var(--foreground-primary-default);
+      box-shadow: var(--elevation-1);
+    }
+
+    // Disabled state
+    &--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

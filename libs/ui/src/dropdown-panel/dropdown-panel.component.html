@@ -1,0 +1,22 @@
+@if (open()) {
+  <div
+    class="panel"
+    [style.width.px]="width()"
+    [style.max-height.px]="maxHeight()"
+    role="dialog"
+    [attr.aria-label]="ariaLabel()"
+  >
+    <!-- Header -->
+    <div class="panel__header">
+      <ng-content select="[slot=header]" />
+    </div>
+
+    <!-- Body (scrollable) -->
+    <div class="panel__body">
+      <ng-content select="[slot=body]" />
+    </div>
+
+    <!-- Footer (optional) -->
+    <ng-content select="[slot=footer]" />
+  </div>
+}

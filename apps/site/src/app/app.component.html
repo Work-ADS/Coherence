@@ -1,0 +1,107 @@
+@if (unlocked()) {
+<div class="shell">
+
+  <!-- Sidebar: logo + section nav (hidden on fullscreen/homepage) -->
+  @if (!isFullScreenRoute() && !isHomepage()) {
+    <aside class="sidebar" aria-label="Navegación lateral">
+      <!-- Logo lockup — matches top-bar height -->
+      <div class="sidebar__logo-row">
+        <coherence-logo variant="positivo" size="sm" href="/" />
+        <div class="sidebar__divider"></div>
+        <a routerLink="/" class="sidebar__title">Coherence</a>
+      </div>
+
+      <!-- Section sub-nav -->
+      <nav class="section-nav" aria-label="Navegación de sección">
+        @switch (activeSection()) {
+          @case ('fundamentos') {
+            <a routerLink="/fundamentos/color" routerLinkActive="active" class="nav-link">Color</a>
+            <a routerLink="/fundamentos/tipografia" routerLinkActive="active" class="nav-link">Typography</a>
+            <a routerLink="/fundamentos/espacio" routerLinkActive="active" class="nav-link">Space</a>
+            <a routerLink="/fundamentos/movimiento" routerLinkActive="active" class="nav-link">Motion</a>
+            <a routerLink="/fundamentos/accesibilidad" routerLinkActive="active" class="nav-link">Accessibility</a>
+          }
+          @case ('componentes') {
+            <span class="section-nav__label">Ready</span>
+            <a routerLink="/componentes/icon-button" routerLinkActive="active" class="nav-link">IconButton</a>
+            <a routerLink="/componentes/avatar" routerLinkActive="active" class="nav-link">Avatar</a>
+            <a routerLink="/componentes/segmented-control" routerLinkActive="active" class="nav-link">SegmentedControl</a>
+            <a routerLink="/componentes/dropdown-panel" routerLinkActive="active" class="nav-link">DropdownPanel</a>
+            <a routerLink="/componentes/editable-text" routerLinkActive="active" class="nav-link">EditableText</a>
+            <a routerLink="/componentes/top-bar" routerLinkActive="active" class="nav-link">TopBar</a>
+            <a routerLink="/componentes/tooltip" routerLinkActive="active" class="nav-link">Tooltip</a>
+            <a routerLink="/componentes/toast" routerLinkActive="active" class="nav-link">Toast</a>
+            <span class="section-nav__label">All</span>
+            <a routerLink="/componentes/button" routerLinkActive="active" class="nav-link">Button</a>
+            <a routerLink="/componentes/input" routerLinkActive="active" class="nav-link">Input</a>
+            <a routerLink="/componentes/select" routerLinkActive="active" class="nav-link">Select</a>
+            <a routerLink="/componentes/checkbox" routerLinkActive="active" class="nav-link">Checkbox</a>
+            <a routerLink="/componentes/switch" routerLinkActive="active" class="nav-link">Switch</a>
+            <a routerLink="/componentes/radio-group" routerLinkActive="active" class="nav-link">RadioGroup</a>
+            <a routerLink="/componentes/card" routerLinkActive="active" class="nav-link">Card</a>
+            <a routerLink="/componentes/modal" routerLinkActive="active" class="nav-link">Modal</a>
+            <a routerLink="/componentes/tabs" routerLinkActive="active" class="nav-link">Tabs</a>
+            <a routerLink="/componentes/table" routerLinkActive="active" class="nav-link">Table</a>
+            <a routerLink="/componentes/drawer" routerLinkActive="active" class="nav-link">Drawer</a>
+            <a routerLink="/componentes/sidebar" routerLinkActive="active" class="nav-link">Sidebar</a>
+            <a routerLink="/componentes/nav-item" routerLinkActive="active" class="nav-link">NavItem</a>
+            <a routerLink="/componentes/status-chip" routerLinkActive="active" class="nav-link">StatusChip</a>
+            <a routerLink="/componentes/badge" routerLinkActive="active" class="nav-link">Badge</a>
+            <a routerLink="/componentes/loading-overlay" routerLinkActive="active" class="nav-link">LoadingOverlay</a>
+            <a routerLink="/componentes/page-header" routerLinkActive="active" class="nav-link">PageHeader</a>
+            <a routerLink="/componentes/shell" routerLinkActive="active" class="nav-link">Shell</a>
+            <a routerLink="/componentes/kbd" routerLinkActive="active" class="nav-link">Kbd</a>
+            <a routerLink="/componentes/nav-section" routerLinkActive="active" class="nav-link">NavSection</a>
+            <a routerLink="/componentes/menu" routerLinkActive="active" class="nav-link">Menu</a>
+          }
+          @case ('patrones') {
+            <a routerLink="/patrones/shells" routerLinkActive="active" class="nav-link">Shells</a>
+            <a routerLink="/patrones/flujos" routerLinkActive="active" class="nav-link">Flujos</a>
+            <a routerLink="/patrones/graficos" routerLinkActive="active" class="nav-link">Gráficos</a>
+            <a routerLink="/patrones/tarjetas" routerLinkActive="active" class="nav-link">Tarjetas</a>
+            <a routerLink="/patrones/cabeceras" routerLinkActive="active" class="nav-link">Cabeceras</a>
+            <a routerLink="/patrones/tablas" routerLinkActive="active" class="nav-link">Tablas</a>
+            <a routerLink="/patrones/sidebar-decisiones" routerLinkActive="active" class="nav-link">Sidebar</a>
+            <a routerLink="/patrones/top-bar-decisiones" routerLinkActive="active" class="nav-link">Top Bar</a>
+            <a routerLink="/patrones/dialog-decisiones" routerLinkActive="active" class="nav-link">Diálogo</a>
+          }
+          @case ('recursos') {
+            <a routerLink="/recursos/descargas" routerLinkActive="active" class="nav-link">Descargas</a>
+            <a routerLink="/recursos/changelog" routerLinkActive="active" class="nav-link">Changelog</a>
+            <a routerLink="/recursos/roadmap" routerLinkActive="active" class="nav-link">Roadmap</a>
+            <a routerLink="/recursos/faq" routerLinkActive="active" class="nav-link">FAQ</a>
+          }
+        }
+      </nav>
+    </aside>
+  }
+
+  <!-- Right column: top bar + content -->
+  <div class="main-column">
+
+    <!-- Top bar (nav tabs left, theme toggle right) — hidden on homepage/fullscreen -->
+    @if (!isFullScreenRoute() && !isHomepage()) {
+      <afi-top-bar>
+        <nav slot="start" class="top-nav" aria-label="Navegación principal">
+          <a routerLink="/fundamentos" routerLinkActive="active" class="top-nav__link">Foundations</a>
+          <a routerLink="/componentes" routerLinkActive="active" class="top-nav__link">Components</a>
+          <a routerLink="/patrones" routerLinkActive="active" class="top-nav__link">Patterns</a>
+          <a routerLink="/novedades" routerLinkActive="active" class="top-nav__link">Handoffs</a>
+          <a routerLink="/blog" routerLinkActive="active" class="top-nav__link">Blog</a>
+        </nav>
+
+        <div slot="end" class="top-bar__end">
+          <site-theme-toggle />
+        </div>
+      </afi-top-bar>
+    }
+
+    <!-- Main content -->
+    <main class="content" id="main-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
+} @else {
+<site-password-gate (unlocked)="onUnlocked()" />
+}

@@ -1,0 +1,96 @@
+<article class="page">
+
+  <header class="page__header">
+    <span class="page__label">Foundations</span>
+    <h1 class="page__title">Accessibility</h1>
+    <p class="page__intro">
+      Accessibility is in the markup from the first commit — not a follow-up task.
+      Every component ships with ARIA, keyboard support, and contrast compliance.
+      If it doesn't pass these checks, it doesn't ship.
+    </p>
+  </header>
+
+  <hr class="divider" />
+
+  <!-- ─── Contrast ─────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Color contrast</h2>
+    <p class="section__body">
+      WCAG 2.1 AA is the baseline. Our action-500 achieves ~6.3:1 against white.
+      All semantic color pairings are pre-validated — if you use tokens correctly,
+      contrast is guaranteed.
+    </p>
+    <div class="table">
+      <div class="table__header">
+        <span>Ratio</span>
+        <span>Applies to</span>
+        <span>Level</span>
+      </div>
+      @for (r of contrastRules; track r.ratio) {
+        <div class="table__row">
+          <code class="table__code">{{ r.ratio }}</code>
+          <span class="table__text">{{ r.applies }}</span>
+          <span class="table__badge">{{ r.level }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Focus ────────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Focus management</h2>
+    <p class="section__body">
+      Keyboard users need to know where they are. The focus ring is a system-level
+      token — consistent across every component, never suppressed.
+    </p>
+    <ul class="rule-list">
+      @for (f of focusRules; track f) {
+        <li class="rule-list__item">{{ f }}</li>
+      }
+    </ul>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Component checklist ──────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Per-component checklist</h2>
+    <p class="section__body">
+      Every component must pass these before merging. This list is enforced at
+      review — not optional.
+    </p>
+    <ul class="rule-list">
+      @for (c of checklist; track c) {
+        <li class="rule-list__item">{{ c }}</li>
+      }
+    </ul>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ─── Rules ────────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section__title">Rules</h2>
+    <div class="rules-grid">
+      <div class="rules-card rules-card--do">
+        <span class="rules-card__label">Do</span>
+        <ul class="rules-card__list">
+          <li>Use Angular CDK for focus trap, a11y, overlay</li>
+          <li>Test with keyboard-only navigation before shipping</li>
+          <li>Use semantic HTML (button, nav, main, aside) first</li>
+        </ul>
+      </div>
+      <div class="rules-card rules-card--dont">
+        <span class="rules-card__label">Don't</span>
+        <ul class="rules-card__list">
+          <li>Never use <code>outline: none</code> without a replacement indicator</li>
+          <li>Never rely on color alone to communicate state</li>
+          <li>Never use <code>tabindex > 0</code> — fix DOM order instead</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</article>

@@ -1,0 +1,179 @@
+<div class="demo-shell">
+
+  <!-- ═══ TOOLBAR ═══════════════════════════════════════════════════════════ -->
+  <header class="toolbar">
+    <div class="toolbar__left">
+      <button class="toolbar__btn" (click)="goBack()" aria-label="Back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
+        </svg>
+      </button>
+
+      <span class="toolbar__title">{{ views()[activeView()] }}</span>
+    </div>
+
+    <div class="toolbar__center">
+      <!-- View switcher -->
+      @for (view of views(); track view; let i = $index) {
+        <button
+          class="toolbar__view-btn"
+          [class.toolbar__view-btn--active]="activeView() === i"
+          (click)="activeView.set(i)"
+        >{{ view }}</button>
+      }
+    </div>
+
+    <div class="toolbar__right">
+      <button
+        class="toolbar__btn"
+        (click)="restart()"
+        aria-label="Restart flow"
+        title="Restart (R)"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+          <path d="M21 3v5h-5"/>
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+          <path d="M3 21v-5h5"/>
+        </svg>
+      </button>
+
+      <div class="toolbar__divider"></div>
+
+      <button
+        class="toolbar__btn"
+        [class.toolbar__btn--active]="activeMode() === 'comment'"
+        (click)="toggleComment()"
+        aria-label="Comment mode"
+        title="Comment"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </button>
+
+      <button
+        class="toolbar__btn"
+        [class.toolbar__btn--active]="activeMode() === 'inspect'"
+        (click)="toggleInspect()"
+        aria-label="Inspect mode"
+        title="Inspect"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M2 12h4"/><path d="M18 12h4"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ BODY (demo + panel) ═══════════════════════════════════════════════ -->
+  <div class="demo-body" [class.demo-body--panel-open]="activeMode() !== null">
+
+    <!-- Demo content area -->
+    <div class="demo-content" #demoArea>
+      <ng-content />
+    </div>
+
+    <!-- Side panel -->
+    @if (activeMode() !== null) {
+      <aside class="side-panel">
+
+        <!-- INSPECT PANEL -->
+        @if (activeMode() === 'inspect') {
+          <div class="panel__header">
+            <h3 class="panel__title">Inspect</h3>
+            <span class="panel__hint">Hover elements to inspect</span>
+          </div>
+
+          @if (inspect.activeResult(); as result) {
+            <!-- Component name -->
+            @if (result.componentName) {
+              <div class="panel__component">
+                <span class="panel__component-label">Component</span>
+                <code class="panel__component-name">{{ result.componentName }}</code>
+              </div>
+            }
+
+            <!-- Hierarchy -->
+            @if (result.hierarchy.length > 0) {
+              <div class="panel__hierarchy">
+                @for (item of result.hierarchy; track $index) {
+                  <span class="hierarchy-item" [class.hierarchy-item--component]="item.isComponent">
+                    @if ($index > 0) { <span class="hierarchy-sep">›</span> }
+                    {{ item.name }}
+                  </span>
+                }
+              </div>
+            }
+
+            <div class="panel__selector">
+              <code>{{ result.selector }}</code>
+            </div>
+
+            <div class="panel__tokens">
+              @for (t of result.tokens; track t.property) {
+                <div class="token-row" [class.token-row--violation]="t.isViolation">
+                  <span class="token-row__prop">{{ t.property }}</span>
+                  @if (t.token) {
+                    <code class="token-row__token">{{ t.token }}</code>
+                  }
+                  <span class="token-row__value">{{ t.value }}</span>
+                  @if (t.isViolation) {
+                    <span class="token-row__flag" title="Raw value — not connected to a token">⚠</span>
+                  }
+                </div>
+              }
+            </div>
+
+            @if (result.tokens.length === 0) {
+              <p class="panel__empty">No tracked properties on this element.</p>
+            }
+          } @else {
+            <p class="panel__empty">Hover over an element to see its tokens.</p>
+          }
+        }
+
+        <!-- COMMENT PANEL -->
+        @if (activeMode() === 'comment') {
+          <div class="panel__header">
+            <h3 class="panel__title">Comments</h3>
+            <span class="panel__hint">Click an element to comment</span>
+          </div>
+
+          @if (commentTarget()) {
+            <div class="comment-form">
+              <div class="panel__selector">
+                <code>{{ commentTarget() }}</code>
+              </div>
+              <textarea
+                class="comment-form__input"
+                placeholder="Leave a comment..."
+                [value]="commentText()"
+                (input)="commentText.set($any($event.target).value)"
+                rows="3"
+              ></textarea>
+              <button class="comment-form__submit" (click)="submitComment()">Post</button>
+            </div>
+          }
+
+          <div class="comment-list">
+            @for (c of demoComments; track c.id) {
+              <div class="comment-item">
+                <div class="comment-item__header">
+                  <span class="comment-item__author">{{ c.author }}</span>
+                  <button class="comment-item__resolve" (click)="comments.resolve(c.id)" title="Resolve">✓</button>
+                </div>
+                <p class="comment-item__text">{{ c.text }}</p>
+                <code class="comment-item__target">{{ c.elementSelector }}</code>
+              </div>
+            }
+
+            @if (demoComments.length === 0 && !commentTarget()) {
+              <p class="panel__empty">No comments yet. Click an element to start.</p>
+            }
+          </div>
+        }
+      </aside>
+    }
+  </div>
+</div>

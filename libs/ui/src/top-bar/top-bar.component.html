@@ -1,0 +1,20 @@
+<header
+  class="top-bar"
+  [class.top-bar--borderless]="borderless()"
+  role="banner"
+>
+  <!-- Start zone -->
+  <div class="top-bar__start">
+    <ng-content select="[slot=start]" />
+  </div>
+
+  <!-- Center zone (optional) -->
+  <div class="top-bar__center">
+    <ng-content select="[slot=center]" />
+  </div>
+
+  <!-- End zone -->
+  <div class="top-bar__end">
+    <ng-content select="[slot=end]" />
+  </div>
+</header>

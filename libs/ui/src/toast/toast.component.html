@@ -1,0 +1,27 @@
+@if (visible()) {
+  <div class="toast__anchor">
+    <div class="toast__pill" role="status" aria-live="polite">
+      <!-- Undo button -->
+      @if (showUndo()) {
+        <button type="button" class="toast__action" (click)="undo.emit()" aria-label="Deshacer">
+          <svg class="toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/>
+          </svg>
+          <span class="toast__action-label">{{ undoLabel() }}</span>
+        </button>
+        <span class="toast__divider" aria-hidden="true"></span>
+      }
+
+      <!-- Message -->
+      <span class="toast__message">{{ message() }}</span>
+
+      <!-- Dismiss -->
+      <span class="toast__divider" aria-hidden="true"></span>
+      <button type="button" class="toast__dismiss" (click)="dismissed.emit()" aria-label="Cerrar aviso">
+        <svg class="toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+}

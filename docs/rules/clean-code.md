@@ -6,8 +6,8 @@
 
 - **Angular** — standalone components, signal inputs/outputs, OnPush, Angular 17+ patterns.
 - **TypeScript** strict. No `any`. No `as unknown as`. No `@ts-ignore` without a tracked issue link.
-- **Tailwind** for utility styling. `tailwind.config` extends from CSS vars emitted by `libs/tokens/`.
-- **SCSS** only when Tailwind can't express it — component-scoped, under 20 lines, with a comment explaining why Tailwind wasn't enough.
+- **SCSS** for all component styling — component-scoped, token-only (CSS vars from `libs/tokens/`). No Tailwind inline classes in templates.
+- **No Tailwind utility classes in templates.** All layout, spacing, color, and typography expressed via SCSS using design tokens. Tailwind config may still exist for legacy pages being migrated — do not add new usages.
 - **RxJS** only for async streams (HTTP, WebSocket). Component state = signals.
 - **Angular CDK** for focus trap, overlay, portal, a11y. Never hand-roll.
 
@@ -36,17 +36,17 @@
 
 7. **No direct DOM access** unless unavoidable. `ElementRef` / `Renderer2` only when Angular CDK can't cover it — and comment the reason. No `document.querySelector`. Ever.
 
-8. **Tailwind over SCSS.** Template uses `class="text-body-md font-medium text-foreground"`, not a SCSS class. SCSS is the escape hatch for: complex selectors, `:host` sizing, animation keyframes the `@angular/animations` API can't express. If you write over 20 lines of SCSS in a component, you're probably solving the wrong problem.
+8. **SCSS over Tailwind.** Templates use semantic classes styled in the component's `.scss` file with design tokens — not inline utility classes. Every visual property (color, spacing, radius, font) reads from a CSS var. SCSS files have no arbitrary line-count limit but should remain focused on one component's concerns.
 
 9. **File structure per primitive:**
    ```
-   libs/ui/button/
-   ├── button.component.ts       # class + template (inline if < 40 lines)
-   ├── button.component.html     # template, if extracted
-   ├── button.component.scss     # styles, only if required, < 20 lines
-   ├── button.component.spec.ts  # behavior tests
-   ├── button.types.ts           # Variant, Size, Intent types
-   └── index.ts                  # public exports only
+    libs/ui/button/
+    ├── button.component.ts       # class only (no inline template)
+    ├── button.component.html     # template (always extracted)
+    ├── button.component.scss     # styles using design tokens
+    ├── button.component.spec.ts  # behavior tests
+    ├── button.types.ts           # Variant, Size, Intent types
+    └── index.ts                  # public exports only
    ```
 
 10. **Naming.**

@@ -1,0 +1,6 @@
+<span class="tooltip">
+  <ng-content />
+  @if (!disabled()) {
+    <span role="tooltip" [class]="popClass()">{{ text() }}</span>
+  }
+</span>

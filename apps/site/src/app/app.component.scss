@@ -1,0 +1,134 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--surface-base);
+  color: var(--canvas-fg);
+}
+
+// ─── Sidebar ───────────────────────────────────────────────────────────────────
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  border-right: var(--border-width-hairline) solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar__logo-row {
+  height: var(--top-bar-height);
+  padding-inline: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border-bottom: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+.sidebar__divider {
+  width: 1px;
+  height: var(--dimension-5);
+  background: var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.sidebar__title {
+  font: var(--type-body-md-500);
+  color: var(--canvas-fg);
+  text-decoration: none;
+  transition: color 150ms ease;
+
+  &:hover {
+    color: var(--action-700);
+  }
+}
+
+// ─── Section nav ───────────────────────────────────────────────────────────────
+.section-nav {
+  flex: 1;
+  padding: var(--space-xs) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.section-nav__label {
+  font: var(--type-body-sm-400);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-muted);
+  padding: var(--space-xs) var(--space-sm);
+  padding-bottom: var(--space-2xs);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font: var(--type-body-md-400);
+  color: var(--canvas-fg);
+  text-decoration: none;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background: var(--surface-muted);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--border-focus);
+  }
+
+  &.active {
+    background: var(--surface-muted);
+    font: var(--type-body-md-500);
+  }
+}
+
+// ─── Right column ──────────────────────────────────────────────────────────────
+.main-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+// ─── Top bar nav ───────────────────────────────────────────────────────────────
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.top-nav__link {
+  font: var(--type-body-md-400);
+  color: var(--canvas-fg);
+  text-decoration: none;
+  transition: color 150ms ease;
+
+  &:hover,
+  &.active {
+    color: var(--action-700);
+  }
+
+  &.active {
+    font: var(--type-body-md-500);
+  }
+}
+
+.top-bar__end {
+  display: flex;
+  align-items: center;
+}
+
+// ─── Content ───────────────────────────────────────────────────────────────────
+.content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}

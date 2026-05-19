@@ -6,6 +6,16 @@ export const componentes_routes: Routes = [
     loadComponent: () =>
       import('./componentes.landing').then(m => m.ComponentesLandingPage),
   },
+  // ─── Ready (new DS atoms) ─────────────────────────────────────────────────
+  { path: 'icon-button', loadComponent: () => import('./icon-button.page').then(m => m.IconButtonPage) },
+  { path: 'avatar', loadComponent: () => import('./avatar.page').then(m => m.AvatarPage) },
+  { path: 'segmented-control', loadComponent: () => import('./segmented-control.page').then(m => m.SegmentedControlPage) },
+  { path: 'dropdown-panel', loadComponent: () => import('./dropdown-panel.page').then(m => m.DropdownPanelPage) },
+  { path: 'editable-text', loadComponent: () => import('./editable-text.page').then(m => m.EditableTextPage) },
+  { path: 'top-bar', loadComponent: () => import('./top-bar.page').then(m => m.TopBarPage) },
+  { path: 'tooltip', loadComponent: () => import('./tooltip.page').then(m => m.TooltipPage) },
+  { path: 'toast', loadComponent: () => import('./toast.page').then(m => m.ToastPage) },
+  // ─── Legacy ───────────────────────────────────────────────────────────────
   // Explicit primitive detail pages
   { path: 'button', loadComponent: () => import('./button.page').then(m => m.ButtonPage) },
   { path: 'input', loadComponent: () => import('./input.page').then(m => m.InputPage) },

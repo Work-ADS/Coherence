@@ -1,0 +1,114 @@
+// =============================================================================
+// Icon Button — styles (Coherence DS)
+//
+// All visual properties reference CSS custom properties from libs/tokens/.
+// No raw hex, rgba, or px values. See docs/rules/component-skill.md §7.
+// =============================================================================
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--duration-fast) var(--easing-enter),
+              color var(--duration-fast) var(--easing-enter);
+
+  // Focus ring
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--border-focus);
+  }
+
+  // Disabled
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // Icon sizing (SVGs inside the button)
+  svg {
+    display: block;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Sizes
+  // ---------------------------------------------------------------------------
+  &--sm {
+    height: var(--control-h-sm);
+    width: var(--control-h-sm);
+
+    svg {
+      height: var(--icon-sm);
+      width: var(--icon-sm);
+    }
+  }
+
+  &--md {
+    height: var(--control-h-md);
+    width: var(--control-h-md);
+
+    svg {
+      height: var(--icon-md);
+      width: var(--icon-md);
+    }
+  }
+
+  &--lg {
+    height: var(--control-h-lg);
+    width: var(--control-h-lg);
+
+    svg {
+      height: var(--icon-lg);
+      width: var(--icon-lg);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Variants
+  // ---------------------------------------------------------------------------
+  &--ghost {
+    background: transparent;
+    color: var(--foreground-tertiary-default);
+
+    &:hover:not(:disabled) {
+      background: var(--control-background-hover);
+      color: var(--foreground-primary-default);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--control-background-active);
+    }
+  }
+
+  &--subtle {
+    background: var(--control-background-default);
+    color: var(--foreground-tertiary-default);
+
+    &:hover:not(:disabled) {
+      background: var(--control-background-hover);
+      color: var(--foreground-primary-default);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--control-background-active);
+    }
+  }
+
+  &--outline {
+    background: transparent;
+    color: var(--foreground-tertiary-default);
+    border: var(--border-width-hairline) solid var(--border-default);
+
+    &:hover:not(:disabled) {
+      background: var(--control-background-default);
+      color: var(--foreground-primary-default);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--control-background-hover);
+    }
+  }
+}

@@ -1,0 +1,201 @@
+:host {
+  display: block;
+}
+
+.page {
+  max-width: 920px;
+  margin-inline: auto;
+  padding: var(--space-2xl) var(--space-xl);
+}
+
+.page__header {
+  margin-bottom: var(--space-xl);
+}
+
+.page__label {
+  display: block;
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--brand-primary-background-default);
+  margin-bottom: var(--space-xs);
+}
+
+.page__title {
+  font: var(--type-title);
+  color: var(--color-afi-control-900);
+  margin-bottom: var(--space-sm);
+}
+
+.page__intro {
+  font: var(--type-body-md-400);
+  color: var(--color-afi-control-500);
+  max-width: 640px;
+}
+
+.divider {
+  border: none;
+  border-top: var(--border-width-hairline) solid var(--color-afi-control-200);
+  margin-block: var(--space-xl);
+}
+
+.section {
+  margin-bottom: var(--space-xl);
+}
+
+.section__title {
+  font: var(--type-section);
+  color: var(--color-afi-control-900);
+  margin-bottom: var(--space-sm);
+}
+
+.section__body {
+  font: var(--type-body-md-400);
+  color: var(--color-afi-control-600);
+  max-width: 640px;
+  margin-bottom: var(--space-lg);
+
+  code {
+    font-family: monospace;
+    font-size: 12px;
+    background: var(--color-afi-control-100);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+// ─── Type samples ──────────────────────────────────────────────────────────────
+.type-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-width: 720px;
+}
+
+.type-sample {
+  border-bottom: var(--border-width-hairline) solid var(--color-afi-control-100);
+  padding-bottom: var(--space-md);
+}
+
+.type-sample__text {
+  display: block;
+  color: var(--color-afi-control-900);
+  margin-bottom: var(--space-xs);
+}
+
+.type-sample__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+.type-sample__token {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--color-afi-control-500);
+}
+
+.type-sample__spec {
+  font: var(--type-body-sm-400);
+  color: var(--color-afi-control-400);
+}
+
+.type-sample__note {
+  font: var(--type-body-sm-400);
+  color: var(--color-afi-control-400);
+}
+
+// ─── Tracking ──────────────────────────────────────────────────────────────────
+.tracking-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 720px;
+}
+
+.tracking-item {
+  border-bottom: var(--border-width-hairline) solid var(--color-afi-control-100);
+  padding-bottom: var(--space-sm);
+}
+
+.tracking-item__sample {
+  display: block;
+  font: var(--type-body-md-500);
+  color: var(--color-afi-control-900);
+  margin-bottom: var(--space-2xs);
+}
+
+.tracking-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+.tracking-item__token {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--color-afi-control-500);
+}
+
+.tracking-item__value {
+  font: var(--type-body-sm-400);
+  color: var(--color-afi-control-400);
+}
+
+.tracking-item__use {
+  font: var(--type-body-sm-400);
+  color: var(--color-afi-control-400);
+}
+
+// ─── Rules ─────────────────────────────────────────────────────────────────────
+.rules-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  max-width: 720px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rules-card {
+  padding: var(--space-lg);
+  border: var(--border-width-hairline) solid var(--color-afi-control-200);
+  border-radius: var(--radius-md);
+}
+
+.rules-card__label {
+  display: block;
+  font: var(--type-body-md-500);
+  margin-bottom: var(--space-xs);
+}
+
+.rules-card--do .rules-card__label {
+  color: var(--color-success-700);
+}
+
+.rules-card--dont .rules-card__label {
+  color: var(--color-error-700);
+}
+
+.rules-card__list {
+  list-style: disc;
+  padding-left: var(--space-md);
+  font: var(--type-body-sm-400);
+  color: var(--color-afi-control-600);
+
+  li + li {
+    margin-top: var(--space-2xs);
+  }
+
+  code {
+    font-family: monospace;
+    font-size: 11px;
+    background: var(--color-afi-control-100);
+    padding: 1px 4px;
+    border-radius: var(--radius-sm);
+  }
+}

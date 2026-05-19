@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+#
+# Pre-commit hook — Coherence DS
+#
+# Blocks raw hex/rgba/px values and ::ng-deep from being committed in
+# .component.ts, .component.html, and .scss files (outside libs/tokens/).
+#
+# Rules: docs/component-skill.md § 2 + § 5
+# Patterns: docs/build-prompts/_pre-flight.md § 1
+#
+# To bypass in an emergency: DO NOT use --no-verify. Add the missing
+# token to libs/tokens/ instead and re-commit.
+
+files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(component\.(ts|html)|scss)$' || true)
+
+if [ -z "$files" ]; then
+  exit 0
+fi
+
+# Pass file list as args to the check script.
+# shellcheck disable=SC2086
+bash scripts/clean-code-check.sh $files

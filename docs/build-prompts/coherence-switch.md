@@ -1,6 +1,6 @@
 # Build — Coherence Switch primitive (`libs/ui/switch/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** binary on/off toggle with `role="switch"`. Not a Checkbox alias.
 **Prereqs:** scaffolding + tokens + Button + Checkbox (similar a11y wiring pattern).
 
@@ -10,10 +10,10 @@ One primitive, `<afi-switch>`, for true on/off state.
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — Checkbox / Switch section (scroll to Switch rule)
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — Control-neutral + Action buckets
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — Checkbox / Switch section (scroll to Switch rule)
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — Control-neutral + Action buckets
 5. `docs/build-prompts/coherence-checkbox.md` — form-field conventions + 44pt hit area pattern
 
 ## When to use

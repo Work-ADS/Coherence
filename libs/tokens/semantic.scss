@@ -1,0 +1,685 @@
+// =============================================================================
+// semantic.scss — semantic tokens + responsive + brand + theme overrides
+// =============================================================================
+//
+// This is the load-bearing file. It maps brand-specific primitives to
+// role-named CSS custom properties and re-binds those values at:
+//
+//   - Each breakpoint     (@media (min-width: ...)) — responsive sizing
+//   - Each brand          ([data-brand="..."])      — multi-brand support
+//   - Each theme          ([data-theme="..."])      — dark mode
+//
+// Color taxonomy follows AFI Figma "Semantic Colors" 1:1 — 171 tokens across
+// 12 categories: canvas, surface, brand (primary/secondary/secondary-neutral/
+// tertiary), control, input, nav, overlay, feedback, disabled, foreground,
+// border, chart. Each color token has an inline `// Role: …` comment.
+//
+// Rule for contributors:
+//   - Components consume ONLY semantic vars (--button-height, --canvas-primary, etc.).
+//   - To change responsive behavior, edit the responsive-token mixin calls in §1.
+//   - To remap a brand's roles, edit its [data-brand="..."] block in §3.
+//   - To remap dark mode, edit the [data-theme="dark"] block in §4.
+//   - To add a new semantic token, follow docs/rules/dimension-tokens.md.
+//
+// Loaded by variables.scss after the primitive files. No @import here —
+// primitives already exist at :root by the time this file is parsed.
+// =============================================================================
+
+
+// =============================================================================
+//
+//   §1 — DEFAULT SEMANTIC TOKENS (AFI brand, light theme, mobile-first)
+//
+// =============================================================================
+
+:root {
+
+  // ===========================================================================
+  // CANVAS (2) — page-level surfaces
+  // ===========================================================================
+
+  --canvas-primary:   var(--color-afi-white-25);
+  // Role: main page background. Default wrapper of every route.
+  --canvas-secondary: var(--color-afi-white-50);
+  // Role: softly recessed page band — sub-sections, filter rails, secondary content blocks.
+
+
+  // ===========================================================================
+  // SURFACE (4) — mid-level surfaces (cards, panels, modals)
+  // ===========================================================================
+
+  --surface-default:  var(--color-afi-white-0);
+  // Role: default surface — cards, panels, basic containers.
+  --surface-subtle:   var(--color-afi-white-50);
+  // Role: subtle tinted surface — secondary panels, filter rails.
+  --surface-raised:   var(--color-afi-white-0);
+  // Role: elevated surface — modals, popovers (combine with elevation shadow).
+  --surface-selected: var(--color-afi-azul-profundo-25);
+  // Role: currently-selected surface — selected row in a table, active nav item bg.
+
+
+  // ===========================================================================
+  // DISABLED (4) — referenced by other categories' disabled states.
+  // Declared first so cascade order resolves correctly.
+  // ===========================================================================
+
+  --disabled-background: var(--color-afi-white-50);
+  // Role: bg of any disabled UI element.
+  --disabled-foreground: var(--color-afi-white-500);
+  // Role: text/icon of any disabled UI element.
+  --disabled-border:     var(--color-afi-white-300);
+  // Role: border of any disabled UI element.
+  --disabled-icon:       var(--color-afi-white-500);
+  // Role: icon-specific disabled tint.
+
+
+  // ===========================================================================
+  // BRAND - PRIMARY (12) — afi-azul, primary CTAs
+  // ===========================================================================
+
+  --brand-primary-background-default:  var(--color-afi-azul-500);
+  // Role: primary CTA bg. Default state of "Guardar", "Continuar", "Enviar" buttons.
+  --brand-primary-background-hover:    var(--color-afi-azul-600);
+  // Role: primary CTA bg on hover.
+  --brand-primary-background-active:   var(--color-afi-azul-700);
+  // Role: primary CTA bg on press.
+  --brand-primary-background-disabled: var(--disabled-background);
+  // Role: primary CTA bg when disabled.
+
+  --brand-primary-foreground-default:  var(--color-afi-azul-0);
+  // Role: text/icon on primary CTA — white against the blue bg.
+  --brand-primary-foreground-hover:    var(--color-afi-azul-25);
+  // Role: text/icon on primary CTA hover.
+  --brand-primary-foreground-active:   var(--color-afi-azul-0);
+  // Role: text/icon on primary CTA active.
+  --brand-primary-foreground-disabled: var(--disabled-foreground);
+  // Role: text/icon on disabled primary CTA.
+
+  --brand-primary-border-default:  var(--color-afi-azul-500);
+  // Role: border of primary outlined buttons / cards.
+  --brand-primary-border-hover:    var(--color-afi-azul-600);
+  --brand-primary-border-active:   var(--color-afi-azul-700);
+  --brand-primary-border-disabled: var(--disabled-border);
+
+
+  // ===========================================================================
+  // BRAND - SECONDARY (12) — afi-azul-profundo, primary chrome elements
+  // ===========================================================================
+
+  --brand-secondary-background-default:  var(--color-afi-azul-profundo-500);
+  // Role: secondary brand bg — main nav header, primary toolbar tint.
+  --brand-secondary-background-hover:    var(--color-afi-azul-profundo-400);
+  --brand-secondary-background-active:   var(--color-afi-azul-profundo-500);
+  --brand-secondary-background-disabled: var(--disabled-background);
+
+  --brand-secondary-foreground-default:  var(--color-afi-azul-profundo-0);
+  // Role: text/icon on secondary brand bg — white against deep teal.
+  --brand-secondary-foreground-hover:    var(--color-afi-azul-profundo-25);
+  --brand-secondary-foreground-active:   var(--color-afi-azul-profundo-50);
+  --brand-secondary-foreground-disabled: var(--disabled-foreground);
+
+  --brand-secondary-border-default:  var(--color-afi-azul-profundo-500);
+  // Role: border of secondary outlined elements.
+  --brand-secondary-border-hover:    var(--color-afi-azul-profundo-400);
+  --brand-secondary-border-active:   var(--color-afi-azul-profundo-500);
+  --brand-secondary-border-disabled: var(--disabled-border);
+
+
+  // ===========================================================================
+  // BRAND - SECONDARY-NEUTRAL (12) — light tinted backgrounds with brand text
+  // ===========================================================================
+
+  --brand-secondary-neutral-background-default:  var(--color-afi-azul-profundo-50);
+  // Role: soft brand bg — info-card tinted panel, hover state of a brand item.
+  --brand-secondary-neutral-background-hover:    var(--color-afi-azul-profundo-100);
+  --brand-secondary-neutral-background-active:   var(--color-afi-azul-profundo-200);
+  --brand-secondary-neutral-background-disabled: var(--disabled-background);
+
+  --brand-secondary-neutral-foreground-default:  var(--color-afi-azul-900);
+  // Role: brand text on soft brand bg — readable contrast against the light tint.
+  --brand-secondary-neutral-foreground-hover:    var(--color-afi-azul-700);
+  --brand-secondary-neutral-foreground-active:   var(--color-afi-azul-900);
+  --brand-secondary-neutral-foreground-disabled: var(--disabled-foreground);
+
+  --brand-secondary-neutral-border-default:  var(--color-afi-azul-profundo-300);
+  --brand-secondary-neutral-border-hover:    var(--color-afi-azul-profundo-400);
+  --brand-secondary-neutral-border-active:   var(--color-afi-azul-profundo-500);
+  --brand-secondary-neutral-border-disabled: var(--disabled-border);
+
+
+  // ===========================================================================
+  // BRAND - TERTIARY (12) — afi-gris, most subtle brand expression
+  // ===========================================================================
+
+  --brand-tertiary-background-default:  var(--color-afi-gris-50);
+  // Role: tertiary brand bg — ghost button, very subtle tinted block.
+  --brand-tertiary-background-hover:    var(--color-afi-gris-100);
+  --brand-tertiary-background-active:   var(--color-afi-gris-200);
+  --brand-tertiary-background-disabled: var(--disabled-background);
+
+  --brand-tertiary-foreground-default:  var(--color-afi-control-700);
+  // Role: tertiary text — neutral but slightly stronger than secondary.
+  --brand-tertiary-foreground-hover:    var(--color-afi-control-900);
+  --brand-tertiary-foreground-active:   var(--color-afi-control-950);
+  --brand-tertiary-foreground-disabled: var(--disabled-foreground);
+
+  --brand-tertiary-border-default:  var(--color-afi-gris-300);
+  --brand-tertiary-border-hover:    var(--color-afi-gris-400);
+  --brand-tertiary-border-active:   var(--color-afi-gris-500);
+  --brand-tertiary-border-disabled: var(--disabled-border);
+
+
+  // ===========================================================================
+  // FOREGROUND (20) — text + icon roles
+  // ===========================================================================
+
+  --foreground-placeholder: var(--color-afi-control-500);
+  // Role: placeholder text in inputs, search fields, empty selects.
+
+  --foreground-primary-default:  var(--color-afi-control-950);
+  // Role: primary body text — headlines, default reading copy.
+  --foreground-primary-hover:    var(--color-afi-control-700);
+  --foreground-primary-active:   var(--color-afi-control-900);
+  --foreground-primary-disabled: var(--disabled-foreground);
+
+  --foreground-secondary-default:  var(--color-afi-control-800);
+  // Role: secondary text — sub-labels, less prominent reading copy.
+  --foreground-secondary-hover:    var(--color-afi-control-900);
+  --foreground-secondary-active:   var(--color-afi-control-950);
+  --foreground-secondary-disabled: var(--disabled-foreground);
+
+  --foreground-tertiary-default:  var(--color-afi-control-700);
+  // Role: tertiary text — captions, metadata, helper text.
+  --foreground-tertiary-hover:    var(--color-afi-control-800);
+  --foreground-tertiary-active:   var(--color-afi-control-900);
+  --foreground-tertiary-disabled: var(--color-afi-control-400);
+
+  --foreground-brand-default:  var(--color-afi-azul-profundo-500);
+  // Role: brand-tinted text — link colors, branded headings, key value emphasis.
+  --foreground-brand-hover:    var(--color-afi-azul-profundo-600);
+  --foreground-brand-active:   var(--color-afi-azul-profundo-800);
+  --foreground-brand-disabled: var(--disabled-foreground);
+
+  --foreground-inverse-default:   var(--color-afi-control-0);
+  // Role: text on dark/branded backgrounds — white against secondary brand bg.
+  --foreground-inverse-secondary: var(--color-afi-control-100);
+  --foreground-inverse-tertiary:  var(--color-afi-control-300);
+
+
+  // ===========================================================================
+  // BORDER (5) — general-purpose borders
+  // ===========================================================================
+
+  --border-subtle:   var(--color-afi-control-100);
+  // Role: minimal divider — section breaks, table row separators.
+  --border-default:  var(--color-afi-control-300);
+  // Role: standard border — cards, panels, inputs at rest.
+  --border-strong:   var(--color-afi-control-700);
+  // Role: emphatic border — selected states, strong divisions.
+  --border-focus:    var(--color-afi-control-500);
+  // Role: generic focus ring on neutral controls. Brand-specific focus uses brand-*-border-* tokens.
+  --border-disabled: var(--color-afi-control-300);
+  // Role: border on any disabled element.
+
+  // Border widths (sizes, not colors)
+  --border-width-hairline: var(--dimension-0-25);  // 1px
+  --border-width-thick:    var(--dimension-0-5);   // 2px
+
+
+  // ===========================================================================
+  // CONTROL (17) — generic interactive control surfaces (buttons, switches, etc.)
+  // ===========================================================================
+
+  --control-background-default:  var(--color-afi-control-50);
+  // Role: default control bg — secondary buttons, neutral toggles at rest.
+  --control-background-hover:    var(--color-afi-control-100);
+  --control-background-active:   var(--color-afi-control-100);
+  --control-background-selected: var(--color-afi-control-100);
+  --control-background-focus:    var(--brand-secondary-background-active);
+  --control-background-disabled: var(--disabled-background);
+
+  --control-foreground-default:  var(--foreground-secondary-default);
+  // Role: default control text.
+  --control-foreground-hover:    var(--foreground-secondary-hover);
+  --control-foreground-active:   var(--brand-secondary-background-active);
+  --control-foreground-selected: var(--brand-secondary-background-active);
+  --control-foreground-disabled: var(--disabled-foreground);
+
+  --control-border-default:  var(--border-subtle);
+  // Role: default control border.
+  --control-border-hover:    var(--border-default);
+  --control-border-active:   var(--brand-secondary-border-active);
+  --control-border-selected: var(--brand-secondary-border-active);
+  --control-border-focus:    var(--border-focus);
+  --control-border-disabled: var(--disabled-border);
+
+
+  // ===========================================================================
+  // INPUT (11) — text inputs, selects, textareas
+  // ===========================================================================
+
+  --input-background-default:  var(--canvas-secondary);
+  // Role: input bg at rest.
+  --input-background-disabled: var(--disabled-background);
+
+  --input-foreground-default:     var(--foreground-secondary-default);
+  // Role: typed-in text.
+  --input-foreground-placeholder: var(--foreground-placeholder);
+  // Role: placeholder/hint text.
+  --input-foreground-disabled:    var(--disabled-foreground);
+
+  --input-border-default:  var(--color-afi-control-300);
+  // Role: input border at rest.
+  --input-border-hover:    var(--color-afi-control-500);
+  --input-border-focus:    var(--border-focus);
+  --input-border-disabled: var(--disabled-border);
+
+  --input-icon-default:  var(--color-afi-control-500);
+  // Role: icon inside the input (search glyph, dropdown chevron).
+  --input-icon-disabled: var(--disabled-icon);
+
+
+  // ===========================================================================
+  // NAV (19) — sidebar, navbar, toolbar + nav items
+  // ===========================================================================
+
+  --nav-sidebar: var(--color-afi-white-0);
+  // Role: left/right rail container bg.
+  --nav-navbar:  var(--color-afi-white-0);
+  // Role: top app bar container bg.
+  --nav-toolbar: var(--color-afi-white-0);
+  // Role: secondary toolbar/breadcrumb-strip container bg.
+
+  --nav-item-background-default:  var(--color-afi-white-0);
+  // Role: nav-item bg at rest.
+  --nav-item-background-hover:    var(--color-afi-white-50);
+  --nav-item-background-active:   var(--color-afi-white-100);
+  --nav-item-background-selected: var(--color-afi-white-100);
+  --nav-item-background-disabled: var(--disabled-background);
+
+  --nav-item-foreground-default:  var(--foreground-primary-default);
+  // Role: nav-item label text at rest.
+  --nav-item-foreground-hover:    var(--foreground-primary-hover);
+  --nav-item-foreground-active:   var(--color-afi-azul-700);
+  --nav-item-foreground-selected: var(--color-afi-azul-700);
+  --nav-item-foreground-disabled: var(--disabled-foreground);
+
+  --nav-item-icon-default:  var(--color-afi-control-500);
+  // Role: nav-item leading/trailing icon at rest.
+  --nav-item-icon-hover:    var(--color-afi-control-700);
+  --nav-item-icon-active:   var(--color-afi-control-500);
+  --nav-item-icon-selected: var(--color-afi-control-500);
+  --nav-item-icon-disabled: var(--disabled-icon);
+
+  --nav-item-border-selected: var(--color-afi-control-300);
+  // Role: indicator border on currently-selected nav item (e.g. left rail accent line).
+
+
+  // ===========================================================================
+  // OVERLAY (4) — modal scrim + floating surface backgrounds
+  // ===========================================================================
+
+  --overlay-blanket:  hsla(215, 25%, 6%, 0.60);
+  // Role: modal scrim — dims the page under a blocking dialog.
+  --overlay-modal:    var(--color-afi-white-0);
+  // Role: modal dialog body bg.
+  --overlay-popover:  var(--color-afi-white-0);
+  // Role: popover body bg (tooltips that ARE clickable, mini dropdowns).
+  --overlay-dropdown: var(--color-afi-white-0);
+  // Role: dropdown menu / select-option-list body bg.
+
+
+  // ===========================================================================
+  // FEEDBACK (15) — system feedback states (success / error / warning / info)
+  // ===========================================================================
+
+  --feedback-success-background: var(--color-success-50);
+  // Role: success notification bg, success status chip bg.
+  --feedback-success-foreground: var(--color-success-700);
+  --feedback-success-border:     var(--color-success-300);
+
+  --feedback-error-background:   var(--color-error-50);
+  // Role: error notification bg, error status chip bg.
+  --feedback-error-foreground:   var(--color-error-700);
+  --feedback-error-border:       var(--color-error-300);
+
+  --feedback-warning-background: var(--color-warning-50);
+  // Role: warning notification bg, warning status chip bg.
+  --feedback-warning-foreground: var(--color-warning-700);
+  --feedback-warning-border:     var(--color-warning-300);
+
+  --feedback-info-background:    var(--color-info-50);
+  // Role: info notification bg, info status chip bg.
+  --feedback-info-foreground:    var(--color-info-700);
+  --feedback-info-border:        var(--color-info-300);
+
+  --feedback-disabled-background: var(--color-afi-control-100);
+  // Role: disabled state of any feedback chip / notification.
+  --feedback-disabled-foreground: var(--color-afi-control-500);
+  --feedback-disabled-border:     var(--color-afi-control-300);
+
+
+  // ===========================================================================
+  // CHART (22) — data visualization roles
+  // ===========================================================================
+
+  --chart-data-primary:    var(--color-data-viz-series-1);
+  // Role: first data series in a categorical chart (most-emphasized).
+  --chart-data-secondary:  var(--color-data-viz-series-2);
+  --chart-data-tertiary:   var(--color-data-viz-series-3);
+  --chart-data-quaternary: var(--color-data-viz-series-4);
+  --chart-data-quinary:    var(--color-data-viz-series-5);
+  --chart-data-senary:     var(--color-data-viz-series-6);
+  --chart-data-septenary:  var(--color-data-viz-series-7);
+  --chart-data-octonary:   var(--color-data-viz-series-8);
+
+  --chart-monochrome-1: var(--color-data-viz-monochrome-1);
+  // Role: monochrome scale step 1 (lightest) — heatmaps, sequential data.
+  --chart-monochrome-2: var(--color-data-viz-monochrome-2);
+  --chart-monochrome-3: var(--color-data-viz-monochrome-3);
+  --chart-monochrome-4: var(--color-data-viz-monochrome-4);
+  --chart-monochrome-5: var(--color-data-viz-monochrome-5);
+  --chart-monochrome-6: var(--color-data-viz-monochrome-6);
+  // Role: monochrome scale step 6 (darkest).
+
+  --chart-positive-subtle:  var(--color-data-viz-positive-subtle);
+  // Role: positive-trend bar/area fill, subtle tier.
+  --chart-positive-default: var(--color-data-viz-positive-default);
+  --chart-positive-strong:  var(--color-data-viz-positive-strong);
+
+  --chart-negative-subtle:  var(--color-data-viz-negative-subtle);
+  // Role: negative-trend bar/area fill, subtle tier.
+  --chart-negative-default: var(--color-data-viz-negative-default);
+
+  --chart-neutral-axis:  var(--color-data-viz-neutral-axis);
+  // Role: chart axis line.
+  --chart-neutral-grid:  var(--color-data-viz-neutral-grid);
+  // Role: chart background grid line.
+  --chart-neutral-label: var(--color-data-viz-neutral-label);
+  // Role: chart label text (axis ticks, data labels).
+
+
+  // ===========================================================================
+  // SIZING / DIMENSION SEMANTIC TOKENS — orthogonal to color taxonomy
+  // ===========================================================================
+
+  // -----------------------------------------------------------------------
+  // CONTROL HEIGHT — generic scale every interactive element reaches for.
+  // Responsive: mobile floor 44 px (WCAG AA touch target). Densifies on lg+.
+  // -----------------------------------------------------------------------
+  @include responsive-token(--control-h-sm, (
+    base: var(--dimension-11),   // 44 px
+    lg:   var(--dimension-8),    // 32 px on desktop
+  ));
+  @include responsive-token(--control-h-md, (
+    base: var(--dimension-11),   // 44 px
+    lg:   var(--dimension-10),   // 40 px on desktop
+  ));
+  --control-h-lg: var(--dimension-12);   // 48 px — same across breakpoints
+
+  // -----------------------------------------------------------------------
+  // COMPONENT HEIGHT ALIASES — reference the generic control scale.
+  // -----------------------------------------------------------------------
+  --field-input-height: var(--control-h-md);
+  --button-height:      var(--control-h-md);
+  --icon-button-height: var(--control-h-md);
+  --tab-height:         var(--control-h-md);
+  --chip-height:        var(--control-h-sm);
+
+  // -----------------------------------------------------------------------
+  // CANVAS chrome (page-level padding) — grows with viewport.
+  // -----------------------------------------------------------------------
+  @include responsive-token(--canvas-padding-inline, (
+    base: var(--dimension-4),    // 16 px on mobile
+    sm:   var(--dimension-5),    // 20 px
+    md:   var(--dimension-6),    // 24 px
+    lg:   var(--dimension-8),    // 32 px
+    xl:   var(--dimension-10),   // 40 px
+    xxl:  var(--dimension-12),   // 48 px
+  ));
+  @include responsive-token(--canvas-padding-block, (
+    base: var(--dimension-4),
+    sm:   var(--dimension-5),
+  ));
+
+  // -----------------------------------------------------------------------
+  // SECTION chrome (mid-level padding + radius + gaps) — partially responsive.
+  // -----------------------------------------------------------------------
+  @include responsive-token(--section-padding-inline, (
+    base: var(--dimension-4),
+    md:   var(--dimension-5),
+    lg:   var(--dimension-6),
+  ));
+  --section-padding-block:  var(--dimension-5);
+  --section-gap:            var(--dimension-6);
+  --section-radius:         var(--radius-md);
+
+  // -----------------------------------------------------------------------
+  // GAP — semantic spacing-between roles.
+  // -----------------------------------------------------------------------
+  --gap-content-to-content: var(--dimension-4);
+  @include responsive-token(--gap-section-to-section, (
+    base: var(--dimension-8),    // 32 px
+    md:   var(--dimension-10),   // 40 px
+  ));
+  --gap-content-to-footer:  var(--dimension-6);
+
+  // -----------------------------------------------------------------------
+  // ICONS — sizes + adjacent gap. NOT responsive.
+  // -----------------------------------------------------------------------
+  --icon-xs:  var(--dimension-3);   // 12 px
+  --icon-sm:  var(--dimension-4);   // 16 px
+  --icon-md:  var(--dimension-5);   // 20 px
+  --icon-lg:  var(--dimension-6);   // 24 px
+  --icon-gap: var(--dimension-2);   // 8 px
+
+  // -----------------------------------------------------------------------
+  // AVATARS — sizes.
+  // -----------------------------------------------------------------------
+  --avatar-xs: var(--dimension-6);   // 24 px
+  --avatar-sm: var(--dimension-8);   // 32 px
+  --avatar-md: var(--dimension-10);  // 40 px
+  --avatar-lg: var(--dimension-12);  // 48 px
+  --avatar-xl: var(--dimension-16);  // 64 px
+
+  // -----------------------------------------------------------------------
+  // SPACING utility scale — Tailwind-compatible. NOT responsive.
+  // -----------------------------------------------------------------------
+  --space-2xs: var(--dimension-1);   // 4 px
+  --space-xs:  var(--dimension-2);   // 8 px
+  --space-sm:  var(--dimension-3);   // 12 px
+  --space-md:  var(--dimension-4);   // 16 px
+  --space-lg:  var(--dimension-6);   // 24 px
+  --space-xl:  var(--dimension-8);   // 32 px
+  --space-2xl: var(--dimension-12);  // 48 px
+  --space-3xl: var(--dimension-16);  // 64 px
+
+  // -----------------------------------------------------------------------
+  // RADIUS semantic roles.
+  // -----------------------------------------------------------------------
+  --radius-control: var(--radius-sm);   // buttons, inputs, chips
+  --radius-card:    var(--radius-md);   // cards, panels
+  --radius-modal:   var(--radius-lg);   // modals, drawers
+  --radius-pill:    var(--radius-full); // status chips, pills
+
+  // -----------------------------------------------------------------------
+  // SEPARATORS.
+  // -----------------------------------------------------------------------
+  --separator-thickness: var(--dimension-0-25);   // 1px
+
+  // -----------------------------------------------------------------------
+  // CONTENT widths — page max-widths per breakpoint.
+  // -----------------------------------------------------------------------
+  --content-sm:  100%;
+  --content-md:  100%;
+  --content-lg:  var(--dimension-240);   // 960 px
+  --content-xl:  var(--dimension-285);   // 1140 px
+  --content-xxl: var(--dimension-330);   // 1320 px
+}
+
+
+// =============================================================================
+//
+//   §2 — RESPONSIVE OVERRIDES
+//
+// Handled inline above via `responsive-token` mixin (libs/tokens/_mixins.scss).
+// Each responsive token's per-breakpoint values live in its own block in §1,
+// next to its declaration — no scattered @media blocks. The mixin emits the
+// :root default + each defined breakpoint override automatically.
+// =============================================================================
+
+
+// =============================================================================
+//
+//   §3 — BRAND OVERRIDES (re-bind semantic values per [data-brand])
+//
+// Each block below re-maps brand-specific color roles to that brand's
+// primitives. Sizing tokens are universal across brands (unless a brand
+// uses a different scale, in which case override them here too).
+// =============================================================================
+
+// ----- Mutualidad -----
+[data-brand="mutualidad"] {
+  // ⚠️  STUB. Fill in once colors-mutualidad.scss has real primitive values.
+  // Example shape — re-bind brand colors to Mutualidad's primitives:
+  //
+  // --brand-primary-background-default:  var(--color-mutualidad-verde-500);
+  // --brand-primary-background-hover:    var(--color-mutualidad-verde-600);
+  // --brand-primary-background-active:   var(--color-mutualidad-verde-700);
+  // --brand-secondary-background-default: var(--color-mutualidad-verde-profundo-500);
+  // ...
+  //
+  // Feedback (success/error/warning/info), foreground, and chart tokens are
+  // usually inherited from :root — universal across brands. Override only
+  // if Mutualidad needs different signal colors.
+}
+
+// ----- Unicaja -----
+[data-brand="unicaja"] {
+  // ⚠️  STUB. Fill in once colors-unicaja.scss has real primitive values.
+}
+
+
+// =============================================================================
+//
+//   §4 — DARK MODE OVERRIDES ([data-theme="dark"])
+//
+// PROPOSED MAPPINGS — open for visual review. Pattern:
+//   - Canvas + surfaces invert (white → near-black, surfaces step up by one shade)
+//   - Foreground text inverts (near-black → near-white)
+//   - Status chip / feedback bgs go dark-tinted; fgs go light-tinted
+//   - Borders soften (less contrast against dark canvas)
+//   - --foreground-brand uses a brighter shade for contrast
+//
+// Combinations: <html data-brand="mutualidad" data-theme="dark"> works —
+// Mutualidad's brand block runs first, then dark mode overrides on top.
+// =============================================================================
+
+[data-theme="dark"] {
+
+  // ===== CANVAS + SURFACES — invert =====
+  --canvas-primary:   var(--color-afi-control-950);
+  --canvas-secondary: var(--color-afi-control-900);
+  --surface-default:  var(--color-afi-control-900);
+  --surface-subtle:   var(--color-afi-control-800);
+  --surface-raised:   var(--color-afi-control-800);   // slightly lifted
+  --surface-selected: var(--color-afi-azul-profundo-800);
+
+  // ===== DISABLED — re-tint for dark =====
+  --disabled-background: var(--color-afi-control-800);
+  --disabled-foreground: var(--color-afi-control-600);
+  --disabled-border:     var(--color-afi-control-700);
+  --disabled-icon:       var(--color-afi-control-600);
+
+  // ===== BRAND - PRIMARY — bump up to brighter shades for contrast =====
+  --brand-primary-background-default: var(--color-afi-azul-400);
+  --brand-primary-background-hover:   var(--color-afi-azul-300);
+  --brand-primary-background-active:  var(--color-afi-azul-200);
+  --brand-primary-foreground-default: var(--color-afi-control-950);  // dark text on bright bg
+
+  // ===== BRAND - SECONDARY (afi-azul-profundo) — bump up =====
+  --brand-secondary-background-default: var(--color-afi-azul-profundo-300);
+  --brand-secondary-background-hover:   var(--color-afi-azul-profundo-200);
+  --brand-secondary-background-active:  var(--color-afi-azul-profundo-100);
+  --brand-secondary-foreground-default: var(--color-afi-control-950);
+
+  // ===== BRAND - SECONDARY-NEUTRAL — dark tinted bg, light text =====
+  --brand-secondary-neutral-background-default: var(--color-afi-azul-profundo-900);
+  --brand-secondary-neutral-foreground-default: var(--color-afi-azul-200);
+
+  // ===== BRAND - TERTIARY — dark surface, light text =====
+  --brand-tertiary-background-default: var(--color-afi-gris-900);
+  --brand-tertiary-foreground-default: var(--color-afi-control-200);
+
+  // ===== FOREGROUND — invert text colors =====
+  --foreground-placeholder:       var(--color-afi-control-500);
+  --foreground-primary-default:   var(--color-afi-control-50);
+  --foreground-primary-hover:     var(--color-afi-control-200);
+  --foreground-secondary-default: var(--color-afi-control-200);
+  --foreground-tertiary-default:  var(--color-afi-control-400);
+  --foreground-brand-default:     var(--color-afi-azul-300);   // brighter for dark bg
+  --foreground-inverse-default:   var(--color-afi-control-950);
+
+  // ===== BORDER — less contrast against dark canvas =====
+  --border-subtle:  var(--color-afi-control-800);
+  --border-default: var(--color-afi-control-700);
+  --border-strong:  var(--color-afi-control-400);
+  --border-focus:   var(--color-afi-azul-400);   // brighter focus ring
+
+  // ===== CONTROL — inputs / buttons on dark =====
+  --control-background-default: var(--color-afi-control-800);
+  --control-background-hover:   var(--color-afi-control-700);
+  --control-foreground-default: var(--foreground-secondary-default);
+  --control-border-default:     var(--border-default);
+
+  // ===== INPUT — text inputs on dark =====
+  --input-background-default:  var(--color-afi-control-900);
+  --input-foreground-default:  var(--color-afi-control-50);
+  --input-border-default:      var(--color-afi-control-700);
+
+  // ===== NAV — sidebar/navbar/toolbar on dark =====
+  --nav-sidebar: var(--color-afi-control-900);
+  --nav-navbar:  var(--color-afi-control-900);
+  --nav-toolbar: var(--color-afi-control-900);
+  --nav-item-background-default:  var(--color-afi-control-900);
+  --nav-item-background-hover:    var(--color-afi-control-800);
+  --nav-item-background-selected: var(--color-afi-control-700);
+  --nav-item-foreground-default:  var(--color-afi-control-200);
+  --nav-item-foreground-selected: var(--color-afi-azul-300);
+  --nav-item-icon-default:        var(--color-afi-control-400);
+
+  // ===== OVERLAY — darker scrim, dark surface bodies =====
+  --overlay-blanket:  hsla(0, 0%, 0%, 0.70);
+  --overlay-modal:    var(--color-afi-control-900);
+  --overlay-popover:  var(--color-afi-control-900);
+  --overlay-dropdown: var(--color-afi-control-900);
+
+  // ===== FEEDBACK — bg goes -900 (dark tinted), fg goes -200 (light tinted) =====
+  --feedback-success-background: var(--color-success-900);
+  --feedback-success-foreground: var(--color-success-200);
+  --feedback-success-border:     var(--color-success-700);
+  --feedback-error-background:   var(--color-error-900);
+  --feedback-error-foreground:   var(--color-error-200);
+  --feedback-error-border:       var(--color-error-700);
+  --feedback-warning-background: var(--color-warning-900);
+  --feedback-warning-foreground: var(--color-warning-200);
+  --feedback-warning-border:     var(--color-warning-700);
+  --feedback-info-background:    var(--color-info-900);
+  --feedback-info-foreground:    var(--color-info-200);
+  --feedback-info-border:        var(--color-info-700);
+
+  // ===== CHART — only adjust chart chrome; series/positive/negative palettes
+  // keep their hues (they need to read against both light + dark backgrounds).
+  --chart-neutral-axis:  var(--color-afi-control-400);
+  --chart-neutral-grid:  var(--color-afi-control-700);
+  --chart-neutral-label: var(--color-afi-control-200);
+}
+
+// Optional: auto-dark when the OS / browser prefers dark mode AND no
+// explicit data-theme is set. Uncomment when product is ready.
+//
+// @media (prefers-color-scheme: dark) {
+//   :root:not([data-theme="light"]) {
+//     // … same overrides as [data-theme="dark"] above
+//   }
+// }

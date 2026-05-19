@@ -1,6 +1,6 @@
 # Build — Coherence scaffolding
 
-**Source:** `docs/plan.md` (Coherence is built against plan.md directly, not a brief)
+**Source:** `docs/strategy/plan.md` (Coherence is built against plan.md directly, not a brief)
 **Surface:** monorepo bootstrap
 **Goal:** produce an Angular workspace ready to hold `libs/tokens/`, `libs/ui/`, `apps/site/` with Tailwind + Style Dictionary + lint + pre-commit wired. Nothing custom. No fiddling.
 
@@ -19,9 +19,9 @@
 
 ## Required reads (in order, before writing code)
 
-1. `docs/clean-code.md` — stack + non-negotiables
-2. `docs/plan.md` — monorepo convention (`apps/` + `libs/`), strict TS, pre-flight
-3. `docs/token-skill.md` — confirms `libs/tokens/` folder layout (primitive / semantic / brand)
+1. `docs/rules/clean-code.md` — stack + non-negotiables
+2. `docs/strategy/plan.md` — monorepo convention (`apps/` + `libs/`), strict TS, pre-flight
+3. `docs/rules/token-skill.md` — confirms `libs/tokens/` folder layout (primitive / semantic / brand)
 
 ## Steps (do in this order; stop and report if any step fails)
 

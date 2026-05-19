@@ -1,6 +1,6 @@
 # Build — Coherence Button primitive (`libs/ui/button/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** first primitive. This is the review checkpoint — the pattern this prompt establishes propagates to the remaining 11 primitives.
 **Prereqs:** `coherence-scaffolding.md` + `coherence-tokens.md` completed.
 
@@ -12,12 +12,12 @@ One component: `<afi-button>`. Single file, variants via signal inputs, tokens o
 
 ## Required reads (in order, before writing code)
 
-1. `docs/clean-code.md` — Angular + Tailwind + strict TS + token-only + pre-flight grep
-2. `docs/accessibility.md` — Button checklist + focus + 44pt touch target
-3. `docs/component-skill.md` — "build once, variants for the rest"; one file per primitive
-4. `docs/token-skill.md` — bucket rules (Action, Control-neutral, System, Border)
-5. `docs/copy-skill.md` — button labels = infinitive verb (`Guardar`, `Importar`, `Cancelar`) or formal imperative; never `OK`/`Done`
-6. `docs/plan.md` — motion discipline (container-first, ease-out enters, 150-200ms for button press/hover), focus ring (2px `action-500`)
+1. `docs/rules/clean-code.md` — Angular + Tailwind + strict TS + token-only + pre-flight grep
+2. `docs/rules/accessibility.md` — Button checklist + focus + 44pt touch target
+3. `docs/rules/component-skill.md` — "build once, variants for the rest"; one file per primitive
+4. `docs/rules/token-skill.md` — bucket rules (Action, Control-neutral, System, Border)
+5. `docs/rules/copy-skill.md` — button labels = infinitive verb (`Guardar`, `Importar`, `Cancelar`) or formal imperative; never `OK`/`Done`
+6. `docs/strategy/plan.md` — motion discipline (container-first, ease-out enters, 150-200ms for button press/hover), focus ring (2px `action-500`)
 
 ## Component API
 
@@ -113,14 +113,15 @@ readonly classes = computed(() => [
 ## File structure
 
 ```
-libs/ui/button/
-├── button.component.ts       # class + template (inline, ~60 lines)
+libs/ui/src/button/
+├── button.component.ts       # class only — templateUrl + (optional) styleUrls
+├── button.component.html     # template (always external — see component-skill.md § 2)
 ├── button.variants.ts        # classes map + types
 ├── button.component.spec.ts  # behavior tests
 └── index.ts                  # export ButtonComponent, ButtonVariant, ButtonSize
 ```
 
-No `.html` file (template inline, under 40 lines). No `.scss` file (all Tailwind).
+3-file shape mandatory. `.component.scss` is added only if button needs styles beyond Tailwind classes mapped to tokens (usually unnecessary — button is entirely Tailwind today). Inline `template:` strings and inline `styles:` arrays are banned (the pre-commit hook flags `styles:` arrays via clean-code-check.sh; reviewer flags inline `template:`).
 
 ## Behavior requirements
 

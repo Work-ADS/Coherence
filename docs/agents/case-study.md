@@ -1,6 +1,6 @@
 # Case-study — session harness
 
-**Role:** Writes the narrative artifact for a shipped feature. Operates in one of two modes depending on *when* it's invoked: **release** (at ship time, propuesta-framed, filed to `/blog/`) or **retrospective** (weeks to months after ship, receipts-driven, filed to `/case-studies/`). Both modes share the voice anchor (`docs/manifesto.md`); the frame + source material differ.
+**Role:** Writes the narrative artifact for a shipped feature. Operates in one of two modes depending on *when* it's invoked: **release** (at ship time, propuesta-framed, filed to `/blog/`) or **retrospective** (weeks to months after ship, receipts-driven, filed to `/case-studies/`). Both modes share the voice anchor (`docs/strategy/manifesto.md`); the frame + source material differ.
 
 ---
 
@@ -13,7 +13,7 @@
 | **Source material** | The brief, the ship-day knowledge, the decision that mattered | PRs, Guardian + clean-code logs, iteration screenshots, downstream adoption signals |
 | **Filed at** | `docs/blog/{slug}.md` → rendered at `/blog/{slug}` | `docs/case-studies/{slug}.md` → rendered as reading material (and eventually surfaced via the Feature-Kanban backlog item) |
 | **Length** | 600–1200 words (hard cap 1500) | 400–800 words (hard cap 1200) |
-| **Template** | `docs/blog-template.md` | Inline below (§ Mode: retrospective) |
+| **Template** | `docs/workflow/blog-template.md` | Inline below (§ Mode: retrospective) |
 
 **Pick the mode explicitly when invoking.** Ambiguity between the two dilutes both.
 
@@ -33,13 +33,13 @@ Do not invoke `release` mode weeks after ship — that's retrospective territory
 
 1. The brief under `docs/briefs/{slug}.md` — the original propuesta and assumptions.
 2. The PR(s) that shipped — commit messages, review threads, screenshots.
-3. `docs/blog-template.md` — the exact structure the output follows.
-4. `docs/manifesto.md` — voice anchor.
+3. `docs/workflow/blog-template.md` — the exact structure the output follows.
+4. `docs/strategy/manifesto.md` — voice anchor.
 5. Recent blog posts under `docs/blog/` — cadence calibration, don't repeat framings.
 
 ### Output
 
-A single Markdown file at `docs/blog/{slug}.md` following `docs/blog-template.md` exactly:
+A single Markdown file at `docs/blog/{slug}.md` following `docs/workflow/blog-template.md` exactly:
 
 - Frontmatter block (title, slug, date, author, release, summary, tags).
 - One-sentence italicized lead.
@@ -82,7 +82,7 @@ A single Markdown file at `docs/blog/{slug}.md` following `docs/blog-template.md
 1. The closed brief under `docs/briefs/{slug}.md` — the original plan, assumptions, unknowns.
 2. The PR(s) that shipped the feature — commit messages, diffs, review threads.
 3. `docs/briefs/logs/{slug}.jsonl` — clean-code + Token-Guardian append-only log (when the Feature-Kanban backlog item ships). Until then, mine PR comments manually.
-4. `docs/manifesto.md` — voice anchor.
+4. `docs/strategy/manifesto.md` — voice anchor.
 5. Any iteration screenshots under `docs/case-studies/_screens/{slug}/` — before, during, after.
 6. The original release-mode blog post if one exists (`docs/blog/{slug}.md`) — so the retrospective doesn't re-cover the same ground.
 
@@ -147,7 +147,7 @@ Length: 400–800 words target. Hard cap 1200. Every claim has a receipt in the 
 
 Editorial. Think New Yorker feature, not product blog. Short sentences. Active verbs. Concrete nouns. A reader who doesn't work at AFI should finish the piece knowing what was built, what it cost, and (for retrospectives) what generalizes — without the reader ever feeling sold to.
 
-Matches `docs/manifesto.md` verbatim on tone. Operator, not evangelist.
+Matches `docs/strategy/manifesto.md` verbatim on tone. Operator, not evangelist.
 
 **No emoji. No exclamation points. No marketing adjectives** (*innovative*, *robust*, *seamless*, *cutting-edge*).
 
@@ -181,8 +181,8 @@ If both a release and a retrospective exist for the same feature, cross-link the
 
 ## Related
 
-- `docs/blog-template.md` — the exact structure for release-mode output.
-- `docs/manifesto.md` — voice anchor for both modes.
+- `docs/workflow/blog-template.md` — the exact structure for release-mode output.
+- `docs/strategy/manifesto.md` — voice anchor for both modes.
 - `docs/agents/planner.md` — voice reviewer.
 - `docs/agents/tester.md` — receipt accuracy reviewer (retrospective mode).
-- `docs/plan.md` Backlog — the Feature-Kanban item that will eventually surface retrospectives; the Blog IA entry that publishes releases.
+- `docs/strategy/plan.md` Backlog — the Feature-Kanban item that will eventually surface retrospectives; the Blog IA entry that publishes releases.

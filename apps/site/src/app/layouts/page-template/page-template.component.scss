@@ -9,8 +9,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// Section 1: Hero band
-// Roboto Serif display, 48px/600/1.1 per spec. TODO(type-scale)
+// Section 1: Hero band — uses --type-display (responsive)
 // ---------------------------------------------------------------------------
 .pt-hero {
   padding-bottom: var(--space-2xl);
@@ -19,32 +18,24 @@
 
   &__eyebrow {
     display: block;
-    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
-    font-size: 13px; /* TODO(type-scale) */
-    font-weight: 500;
+    font: var(--type-body-sm-500);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: var(--tracking-wider);
     color: var(--color-action-500);
     margin-bottom: var(--space-xs);
   }
 
   &__title {
-    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
-    font-size: 48px; /* TODO(type-scale) — spec: 48px/600/1.1 */
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -0.025em;
+    font: var(--type-display);
+    letter-spacing: var(--tracking-tight);
     color: var(--color-neutral-900);
     margin: 0;
   }
 
   &__role {
-    font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
-    font-size: 18px; /* TODO(type-scale) */
-    font-weight: 400;
+    font: var(--type-subtitle-body);
     color: var(--color-neutral-500);
     max-width: var(--content-sm);
-    line-height: 1.6;
     margin-top: var(--space-sm);
   }
 }
@@ -65,7 +56,7 @@
 // ---------------------------------------------------------------------------
 .pt-why {
   max-width: var(--content-sm);
-  font-size: 16px; /* TODO(type-scale) */
+  font: var(--type-body);
   line-height: 1.7;
   color: var(--color-neutral-600);
 }

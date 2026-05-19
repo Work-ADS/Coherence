@@ -1,6 +1,6 @@
 # Build — Coherence Checkbox primitive (`libs/ui/checkbox/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** multi-select + bulk-action affordance. Supports `indeterminate` state for Table parent rows.
 **Prereqs:** scaffolding + tokens + Button + Input.
 
@@ -10,12 +10,12 @@ One primitive, `<afi-checkbox>`. Pair with an external wrapper for checkbox grou
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — Checkbox / Switch section
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — Control-neutral + System buckets
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — Checkbox / Switch section
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — Control-neutral + System buckets
 5. `docs/build-prompts/coherence-button.md` — class-variance pattern
-6. `docs/plan.md` — touch target 44+ (checkbox visual may be smaller but the clickable area is padded to 44)
+6. `docs/strategy/plan.md` — touch target 44+ (checkbox visual may be smaller but the clickable area is padded to 44)
 
 ## When to use
 

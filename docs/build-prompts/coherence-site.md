@@ -1,6 +1,6 @@
 # Build — Coherence DS Site (`apps/site/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** the design system's public face — lives + documents the primitives, ships the MD artifacts for download into consumer projects, and is the ONE place in the ecosystem where decorative motion is authorized (motion context rule, locked 2026-04-16).
 **Prereqs:** scaffolding + tokens + all 14 primitives (the site consumes them, so it ships last).
 
@@ -13,7 +13,7 @@ One Angular app, `apps/site/`, organized as the **Coherence docs umbrella** with
 - **Components** (`/componentes`) — all 17 primitives with playground + tokens table + tabs.
 - **Patterns** (`/patrones`) — the 5 shell types + composed flujos + chart primitives.
 - **Resources** (`/recursos`) — descargas, changelog, roadmap, FAQ.
-- **Blog** (`/blog`) — propuesta-framed release posts written at ship time. Template in `docs/blog-template.md`.
+- **Blog** (`/blog`) — propuesta-framed release posts written at ship time. Template in `docs/workflow/blog-template.md`.
 
 Plus one feature component: `<afi-download-md-button>`.
 
@@ -25,11 +25,11 @@ Plus one feature component: `<afi-download-md-button>`.
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — the site itself must pass the same checks as the primitives
-3. `docs/component-skill.md`
-4. `docs/copy-skill.md` — all labels RAE, `usted` register
-5. `docs/plan.md` — site IA + motion context rule (DS site = decorative motion's only authorized home)
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — the site itself must pass the same checks as the primitives
+3. `docs/rules/component-skill.md`
+4. `docs/rules/copy-skill.md` — all labels RAE, `usted` register
+5. `docs/strategy/plan.md` — site IA + motion context rule (DS site = decorative motion's only authorized home)
 6. `docs/build-prompts/coherence-sidebar.md` — site shell uses Sidebar (hover-expand)
 7. `docs/build-prompts/coherence-loading-badge.md` — site init uses LoadingOverlay `line-reveal` variant
 8. `docs/build-prompts/coherence-tabs.md` — each primitive page uses Tabs (Demo / API / Accesibilidad / Do & Don't)
@@ -453,5 +453,5 @@ Site-specific additions:
 - **Live demos:** render the real primitive from `libs/ui`. Do NOT build "isolated demo boxes" with synthetic props — dogfood the real thing; bugs surface faster that way.
 - **Don't auto-generate API tables from TypeDoc in v1.** Manual tables are fine and less brittle. Revisit when the DS stabilizes.
 - **Gráficos stub:** leave it honest. No fake placeholder SVGs. Say "v1.1", link Visa, move on.
-- **MD sync:** if `/docs/clean-code.md` changes, `/assets/docs/clean-code.md` must update too. The copy step is one script. Don't let these drift.
+- **MD sync:** if `/docs/rules/clean-code.md` changes, `/assets/docs/rules/clean-code.md` must update too. The copy step is one script. Don't let these drift.
 - **Sidebar logo slot:** keep the logo simple in v1 — wordmark or single glyph. Animation is backlog.

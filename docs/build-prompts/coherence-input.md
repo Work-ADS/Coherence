@@ -1,6 +1,6 @@
 # Build — Coherence Input primitive (`libs/ui/input/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** form input. Covers text / textarea / number / email / password via `type` input.
 **Prereqs:** `coherence-scaffolding.md` + `coherence-tokens.md` + `coherence-button.md` (establishes the class-variance pattern this prompt extends).
 
@@ -12,13 +12,13 @@ One primitive, `<afi-input>`, with label + hint + error props bundled in (no sep
 
 ## Required reads (in order)
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — Input / Textarea section
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — Control-neutral bucket
-5. `docs/copy-skill.md` — error message patterns (constraint + recovery)
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — Input / Textarea section
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — Control-neutral bucket
+5. `docs/rules/copy-skill.md` — error message patterns (constraint + recovery)
 6. `docs/build-prompts/coherence-button.md` — class-variance pattern to extend
-7. `docs/plan.md` — control heights (`sm` 32 / `md` 40 / `lg` 48)
+7. `docs/strategy/plan.md` — control heights (`sm` 32 / `md` 40 / `lg` 48)
 
 ## When to use
 

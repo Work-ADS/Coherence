@@ -1,6 +1,6 @@
 # Build — Coherence Card primitive (`libs/ui/card/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** container for grouping related content. Low-opinion; consumers compose.
 **Prereqs:** scaffolding + tokens + Button.
 
@@ -10,10 +10,10 @@ One primitive, `<afi-card>`, with three slots (header, body, footer) via content
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — landmark / region semantics
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — Surface bucket (default / 100 / 200 / elevated / quiet)
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — landmark / region semantics
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — Surface bucket (default / 100 / 200 / elevated / quiet)
 5. `docs/build-prompts/coherence-button.md` — class-variance pattern
 
 ## When to use

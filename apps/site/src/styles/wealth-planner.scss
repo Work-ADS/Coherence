@@ -1,0 +1,52 @@
+// =============================================================================
+// wealth-planner.scss — product-level tokens (Wealth Planner)
+// =============================================================================
+//
+// PRODUCT-LEVEL token file. NOT part of the design system.
+//
+// These tokens are specific to the Wealth Planner product (planificaciones,
+// estados de plan, cards de propuesta). Other AFI products (Mortgages,
+// Insurance, etc.) get their own product-level file with their own vocabulary.
+//
+// Pattern:
+//   - DS exposes universal roles (e.g. --feedback-success-background).
+//   - This file maps PRODUCT concepts (plan-state "Entregada") onto DS roles.
+//   - Components inside Wealth Planner consume --plan-state-* tokens.
+//
+// Imported by apps/site/src/styles.scss after the DS variables.scss so the
+// cascade resolves correctly (DS first, product second).
+//
+// See docs/rules/dimension-tokens.md → "Product-level tokens".
+// =============================================================================
+
+:root {
+
+  // -------------------------------------------------------------------------
+  // Plan states — colors for the chip in the planner-top-bar
+  //
+  // Mapping (PRODUCT decision):
+  //   - borrador     → disabled (neutral gray, work-in-progress)
+  //   - cumplimentada → info (blue, in-progress filled-in but not yet acted on)
+  //   - descargada    → info (blue — same family; downloaded for review)
+  //   - entregada     → success (green, delivered to client)
+  //
+  // To add a new plan state: add a `--plan-state-<name>-{bg,fg,dot}` trio here
+  // and map it to a DS --feedback-* role. The chip dropdown updates automatically.
+  // -------------------------------------------------------------------------
+
+  --plan-state-borrador-bg:  var(--feedback-disabled-background);
+  --plan-state-borrador-fg:  var(--feedback-disabled-foreground);
+  --plan-state-borrador-dot: var(--color-afi-control-500);
+
+  --plan-state-cumplimentada-bg:  var(--feedback-info-background);
+  --plan-state-cumplimentada-fg:  var(--feedback-info-foreground);
+  --plan-state-cumplimentada-dot: var(--color-info-500);
+
+  --plan-state-descargada-bg:  var(--feedback-info-background);
+  --plan-state-descargada-fg:  var(--feedback-info-foreground);
+  --plan-state-descargada-dot: var(--color-info-500);
+
+  --plan-state-entregada-bg:  var(--feedback-success-background);
+  --plan-state-entregada-fg:  var(--feedback-success-foreground);
+  --plan-state-entregada-dot: var(--color-success-500);
+}

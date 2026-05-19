@@ -201,7 +201,7 @@ import { RouterLink } from '@angular/router';
           </li>
         </ul>
         <p class="text-body-sm text-neutral-400 mt-space-4">
-          Fuente: <code class="font-mono text-body-sm">docs/token-skill.md</code>
+          Fuente: <code class="font-mono text-body-sm">docs/rules/token-skill.md</code>
         </p>
       </section>
     </div>

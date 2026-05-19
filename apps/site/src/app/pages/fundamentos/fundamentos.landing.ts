@@ -40,5 +40,7 @@ export class FundamentosLandingPage {
     { slug: 'accesibilidad', name: 'Accesibilidad', description: 'WCAG 2.1 AA y checklists' },
     { slug: 'copy', name: 'Copy', description: 'RAE, registro formal, glosario' },
     { slug: 'tokens', name: 'Tokens', description: 'Primitivo → semántico → marca' },
+    { slug: 'estructura-tokens', name: 'Estructura de tokens', description: 'Cómo están organizados los archivos de libs/tokens/' },
+    { slug: 'color-semantic', name: 'Color semántico', description: '171 roles de color (canvas / surface / brand / feedback / chart…)' },
   ];
 }

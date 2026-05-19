@@ -1,6 +1,6 @@
 # Build — Coherence Select primitive (`libs/ui/select/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** choose one value from a known list. Native `<select>` OR CDK Listbox combobox — same API surface, `mode` input switches implementation.
 **Prereqs:** `coherence-scaffolding.md` + `coherence-tokens.md` + `coherence-button.md` + `coherence-input.md` (establishes form field conventions: label/hint/error props).
 
@@ -12,13 +12,13 @@ One primitive, `<afi-select>`, with two rendering modes.
 
 ## Required reads (in order)
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — Select / Combobox section
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — Control-neutral bucket
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — Select / Combobox section
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — Control-neutral bucket
 5. `docs/build-prompts/coherence-input.md` — form field conventions (label/hint/error) applied identically
 6. `docs/build-prompts/coherence-button.md` — class-variance pattern
-7. `docs/plan.md` — CDK Listbox is in the dependency list (Angular CDK a11y module)
+7. `docs/strategy/plan.md` — CDK Listbox is in the dependency list (Angular CDK a11y module)
 
 ## When to use
 

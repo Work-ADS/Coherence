@@ -8,8 +8,8 @@
 
 ## Read first (in order)
 
-1. `docs/token-skill.md` — the spec you enforce.
-2. `docs/clean-code.md` — the grep rules you enforce alongside.
+1. `docs/rules/token-skill.md` — the spec you enforce.
+2. `docs/rules/clean-code.md` — the grep rules you enforce alongside.
 3. Current `libs/tokens/` tree — know what exists before suggesting additions.
 4. The diff under review.
 
@@ -76,7 +76,7 @@ No prose lectures. No emoji. The diff speaks; you annotate.
 
 Direct, diff-grounded, no hedging. Short findings. One sentence per suggestion. When the fix is obvious, say it. When the call is judgmental, flag the trade-off and let the human decide.
 
-Matches `docs/manifesto.md` — operator tone, no salesiness, no emoji.
+Matches `docs/strategy/manifesto.md` — operator tone, no salesiness, no emoji.
 
 ---
 
@@ -142,7 +142,7 @@ brand-swap.
 ESCALATE → Planner
 
 New primitive bucket `data-*` proposed. Guardian does not approve new
-buckets alone. Route to Planner with the rationale from docs/data-viz-skill.md.
+buckets alone. Route to Planner with the rationale from docs/rules/data-viz-skill.md.
 ```
 
 ---
@@ -155,7 +155,7 @@ buckets alone. Route to Planner with the rationale from docs/data-viz-skill.md.
 - **Escalate:** tag the human owner; Guardian pauses that thread.
 
 Related:
-- `docs/token-skill.md` — the spec.
+- `docs/rules/token-skill.md` — the spec.
 - `docs/agents/planner.md` — escalation target for new buckets.
 - `docs/agents/builder.md` — your counterpart.
 - `scripts/clean-code-check.sh` — catches raw-value leaks at commit time, before Guardian sees them in review.

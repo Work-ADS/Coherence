@@ -55,6 +55,10 @@ export const novedades_routes: Routes = [
     loadComponent: () => import('./iteracion-2/iteracion-2.page').then((m) => m.Iteracion2Page),
   },
   {
+    path: 'iteracion-3',
+    loadComponent: () => import('./iteracion-3/iteracion-3.page').then((m) => m.Iteracion3Page),
+  },
+  {
     path: 'newsletter-feedback',
     loadComponent: () =>
       import('./newsletter-feedback/newsletter-feedback.page').then(

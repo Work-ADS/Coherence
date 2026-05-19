@@ -1,6 +1,6 @@
 # Build — Coherence Radio + RadioGroup primitives (`libs/ui/radio/`)
 
-**Source:** `docs/plan.md` (LOCKED 2026-04-17-rev7 — primitive #22)
+**Source:** `docs/strategy/plan.md` (LOCKED 2026-04-17-rev7 — primitive #22)
 **Surface:** one-of-N selection form control. Sibling of Checkbox (binary, no bias), Switch (binary with on/off bias), and Select (one-of-N in a dropdown). Radio is for when all options should be visible at once — typically 2–5 options. Calibration: Animate UI base radio with the scale-in dot animation, translated to Tier 1 CSS with the new `easing-spring-soft` token.
 **Prereqs:** scaffolding + tokens (now including `easing-spring-soft` motion token) + Button (variant pattern reference) + Checkbox (sibling form control, density-aligned).
 
@@ -19,11 +19,11 @@ Two primitives in one prompt — they co-design and ship together:
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — radiogroup ARIA pattern + keyboard map
-3. `docs/component-skill.md`
-4. `docs/copy-skill.md`
-5. `docs/token-skill.md` — Motion bucket (`easing-spring-soft` added rev7), Action bucket (brand accent for checked state)
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — radiogroup ARIA pattern + keyboard map
+3. `docs/rules/component-skill.md`
+4. `docs/rules/copy-skill.md`
+5. `docs/rules/token-skill.md` — Motion bucket (`easing-spring-soft` added rev7), Action bucket (brand accent for checked state)
 6. `docs/build-prompts/coherence-checkbox.md` — sibling form control; size + density aligned
 7. `docs/build-prompts/coherence-button.md` — class-variance-authority pattern
 
@@ -216,16 +216,18 @@ label:has(input:focus-visible) .afi-radio__dot {
 ## File structure
 
 ```
-libs/ui/radio/
-├── radio-group.component.ts
-├── radio.component.ts
-├── radio.variants.ts              # size + orientation class maps (minimal)
+libs/ui/src/radio-group/
+├── radio-group.component.ts         # class only — templateUrl + (optional) styleUrls
+├── radio-group.component.html       # template (always external)
+├── radio.component.ts               # class only — templateUrl + (optional) styleUrls
+├── radio.component.html             # template (always external)
+├── radio.variants.ts                # size + orientation class maps (minimal)
 ├── radio-group.component.spec.ts
 ├── radio.component.spec.ts
-└── index.ts                        # exports RadioGroupComponent, RadioComponent
+└── index.ts                          # exports RadioGroupComponent, RadioComponent
 ```
 
-Single folder, two components. No `.html`, no `.scss` — inline template + styles.
+Single folder, two components, 3-file shape each. `.component.scss` added only if styles can't be expressed via Tailwind + token utilities. See `docs/rules/component-skill.md` § 2.
 
 ## Accessibility
 

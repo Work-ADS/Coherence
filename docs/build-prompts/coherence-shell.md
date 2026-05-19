@@ -1,6 +1,6 @@
 # Build — Coherence Shell primitive (`libs/ui/shell/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** the top-level layout composer. Reads the route's `data.shell` and renders one of five locked shell types. Every AFI product uses `<afi-shell>` at its root.
 **Prereqs:** scaffolding + tokens + Sidebar + PageHeader + Button + Input + Card.
 
@@ -15,12 +15,12 @@ One composition primitive: `<afi-shell>`. Five named types, each a fixed composi
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — landmark structure per shell type
-3. `docs/component-skill.md`
-4. `docs/copy-skill.md`
-5. `docs/token-skill.md` — Surface tonal ladder (`base` / `quiet` / `muted` / `elevated` / `overlay`)
-6. `docs/plan.md` — Pure-C chrome lock; shell catalog lock
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — landmark structure per shell type
+3. `docs/rules/component-skill.md`
+4. `docs/rules/copy-skill.md`
+5. `docs/rules/token-skill.md` — Surface tonal ladder (`base` / `quiet` / `muted` / `elevated` / `overlay`)
+6. `docs/strategy/plan.md` — Pure-C chrome lock; shell catalog lock
 7. `docs/build-prompts/coherence-sidebar.md` — shell composes Sidebar in workspace/docs/canvas types
 8. `docs/build-prompts/coherence-page-header.md` — shell composes PageHeader in workspace/canvas/docs types
 

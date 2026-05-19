@@ -1,6 +1,6 @@
 # Build — Coherence tokens (`libs/tokens/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** token layer (primitive → semantic → brand)
 **Prereq:** `coherence-scaffolding.md` completed — workspace + Style Dictionary pipeline exists.
 
@@ -12,8 +12,8 @@ Fill `libs/tokens/` with primitive + semantic + AFI-default brand token JSON; wi
 
 ## Required reads (in order, before writing)
 
-1. `docs/token-skill.md` — three-layer architecture, 6 semantic buckets, base-4 spacing, JSON-as-source-of-truth
-2. `docs/plan.md` — all locked token values (search for "LOCKED 2026-04-16"); in particular:
+1. `docs/rules/token-skill.md` — three-layer architecture, 6 semantic buckets, base-4 spacing, JSON-as-source-of-truth
+2. `docs/strategy/plan.md` — all locked token values (search for "LOCKED 2026-04-16"); in particular:
    - Color hue 200° (AFI blue), step 100 = Blanco Afi, 300 = AFI blue pin, 900 = Azul profundo pin, full 50-900 scale derivable
    - Base-4 spacing: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96
    - Radius scale including `radius-sm: 4`
@@ -22,7 +22,7 @@ Fill `libs/tokens/` with primitive + semantic + AFI-default brand token JSON; wi
    - Focus ring 2px, `action-500`
    - **Surface tonal ladder** — `surface-base` / `surface-quiet` / `surface-muted` / `surface-elevated` / `surface-overlay`. Tonal step = context change; shadow = elevation change. They don't mix. Claude / Granola / Perplexity sidebars are the calibration anchor for `quiet`.
    - **Status semantic bucket** — 8 estados (borrador / pendiente / aprobada / rechazada / ejecutada / cancelada / en-revision / archivada), each with bg + fg + dot tokens. Feeds `<afi-status-chip>`.
-3. `docs/clean-code.md` — token-only styling rule, no hex/rgba/px leakage
+3. `docs/rules/clean-code.md` — token-only styling rule, no hex/rgba/px leakage
 
 ## Structure
 

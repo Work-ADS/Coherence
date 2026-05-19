@@ -1,0 +1,215 @@
+// =============================================================================
+// aliases.scss — backward-compatibility aliases (Coherence DS)
+// =============================================================================
+//
+// Keeps deprecated CSS custom property names alive while downstream code is
+// migrated to the new AFI Figma-aligned semantic vocabulary.
+//
+// Each alias is a var() chain pointing at the proper new name. Deleting this
+// file is the goal — when no references to a legacy name remain in
+// apps/site/ and libs/ui/, remove the alias.
+//
+// Status: ~21 downstream files still reference legacy names (`--color-action-*`,
+// `--color-neutral-*`, `--color-red/green/amber/blue-*`, `--action-*`,
+// `--canvas-fg`, `--surface-elevated`, `--control-*`, `--system-*`, `--data-*`).
+// New code MUST use the new names from semantic.scss directly.
+//
+// See docs/rules/dimension-tokens.md and docs/rules/component-skill.md.
+// =============================================================================
+
+:root {
+
+  // ===========================================================================
+  // PRIMITIVE-LEVEL ALIASES (color name renames done in earlier session)
+  // ===========================================================================
+
+  // Old `--color-action-*` → afi-azul-profundo (the deep accent ramp).
+  --color-action-0:   var(--color-afi-azul-profundo-0);
+  --color-action-25:  var(--color-afi-azul-profundo-25);
+  --color-action-50:  var(--color-afi-azul-profundo-50);
+  --color-action-100: var(--color-afi-azul-profundo-100);
+  --color-action-200: var(--color-afi-azul-profundo-200);
+  --color-action-300: var(--color-afi-azul-profundo-300);
+  --color-action-400: var(--color-afi-azul-profundo-400);
+  --color-action-500: var(--color-afi-azul-profundo-500);
+  --color-action-600: var(--color-afi-azul-profundo-600);
+  --color-action-700: var(--color-afi-azul-profundo-700);
+  --color-action-800: var(--color-afi-azul-profundo-800);
+  --color-action-900: var(--color-afi-azul-profundo-900);
+
+  // Old `--color-neutral-*` → afi-control (text + input surfaces).
+  --color-neutral-0:   var(--color-afi-control-0);
+  --color-neutral-25:  var(--color-afi-control-25);
+  --color-neutral-50:  var(--color-afi-control-50);
+  --color-neutral-100: var(--color-afi-control-100);
+  --color-neutral-200: var(--color-afi-control-200);
+  --color-neutral-300: var(--color-afi-control-300);
+  --color-neutral-400: var(--color-afi-control-400);
+  --color-neutral-500: var(--color-afi-control-500);
+  --color-neutral-600: var(--color-afi-control-600);
+  --color-neutral-700: var(--color-afi-control-700);
+  --color-neutral-800: var(--color-afi-control-800);
+  --color-neutral-900: var(--color-afi-control-900);
+  --color-neutral-950: var(--color-afi-control-950);
+
+  // Old `--color-{red,green,amber}-*` → error/success/warning (sparse 8-shade).
+  --color-red-100: var(--color-error-100);
+  --color-red-500: var(--color-error-500);
+  --color-red-800: var(--color-error-700);
+
+  --color-green-100: var(--color-success-100);
+  --color-green-500: var(--color-success-500);
+  --color-green-800: var(--color-success-700);
+
+  --color-amber-100: var(--color-warning-100);
+  --color-amber-500: var(--color-warning-500);
+  --color-amber-800: var(--color-warning-700);
+
+  // Old `--color-blue-*` → afi-azul.
+  --color-blue-100: var(--color-afi-azul-100);
+  --color-blue-500: var(--color-afi-azul-500);
+  --color-blue-800: var(--color-afi-azul-800);
+
+
+  // ===========================================================================
+  // SEMANTIC-LEVEL ALIASES (color name renames from this session)
+  // ===========================================================================
+
+  // Old `--action-*` (flat scale) → new brand-secondary-background-* (afi-azul-profundo).
+  // Action was a legacy name from the JSON token system; never matched Figma.
+  --action-50:  var(--color-afi-azul-profundo-50);
+  --action-100: var(--color-afi-azul-profundo-100);
+  --action-200: var(--color-afi-azul-profundo-200);
+  --action-300: var(--color-afi-azul-profundo-300);
+  --action-400: var(--color-afi-azul-profundo-400);
+  --action-500: var(--brand-secondary-background-default);
+  --action-600: var(--color-afi-azul-profundo-600);
+  --action-700: var(--brand-secondary-background-active);
+  --action-800: var(--color-afi-azul-profundo-800);
+  --action-900: var(--color-afi-azul-profundo-900);
+
+  // Old `--canvas-*` (combined bg + fg) → new canvas-* (bg only) + foreground-* (text).
+  --canvas-base: var(--canvas-primary);
+  --canvas-fg:   var(--foreground-primary-default);
+
+  // Old `--surface-*` (5 levels) → new surface-* (4 levels).
+  --surface-base:     var(--canvas-primary);          // page background
+  --surface-elevated: var(--surface-raised);
+  --surface-quiet:    var(--canvas-secondary);
+  --surface-muted:    var(--surface-subtle);
+  --surface-overlay:  var(--overlay-blanket);
+
+  // Old `--border-{hairline,focus}` → new border-* roles.
+  --border-hairline: var(--border-subtle);
+  // --border-focus stays the same name; new value is already set.
+
+  // Old `--control-{bg,fg,border,placeholder,disabled-bg,disabled-fg}` (flat)
+  // → new control-* roles with state breakdown.
+  --control-bg:          var(--control-background-default);
+  --control-fg:          var(--control-foreground-default);
+  --control-border:      var(--input-border-default);
+  --control-placeholder: var(--input-foreground-placeholder);
+  --control-disabled-bg: var(--control-background-disabled);
+  --control-disabled-fg: var(--control-foreground-disabled);
+
+  // Old `--system-*` → new feedback-*. Add -base shim pointing at -foreground.
+  --system-error-bg:     var(--feedback-error-background);
+  --system-error-fg:     var(--feedback-error-foreground);
+  --system-error-base:   var(--color-error-500);
+  --system-warning-bg:   var(--feedback-warning-background);
+  --system-warning-fg:   var(--feedback-warning-foreground);
+  --system-warning-base: var(--color-warning-500);
+  --system-success-bg:   var(--feedback-success-background);
+  --system-success-fg:   var(--feedback-success-foreground);
+  --system-success-base: var(--color-success-500);
+  --system-info-bg:      var(--feedback-info-background);
+  --system-info-fg:      var(--feedback-info-foreground);
+  --system-info-base:    var(--color-info-500);
+
+  // Old `--data-*` → new chart-*.
+  --data-neutral-strong:      var(--chart-neutral-label);
+  --data-neutral-medium:      var(--chart-neutral-axis);
+  --data-neutral-muted:       var(--chart-neutral-grid);
+  --data-highlight-primary:   var(--chart-data-primary);
+  --data-highlight-secondary: var(--chart-data-secondary);
+  --data-semantic-positive:   var(--chart-positive-default);
+  --data-semantic-negative:   var(--chart-negative-default);
+  --data-semantic-warning:    var(--color-warning-500);
+
+
+  // ===========================================================================
+  // DIMENSION ALIASES (preserved from earlier session)
+  // ===========================================================================
+
+  --dim-0:   var(--dimension-0);
+  --dim-4:   var(--dimension-1);
+  --dim-8:   var(--dimension-2);
+  --dim-12:  var(--dimension-3);
+  --dim-16:  var(--dimension-4);
+  --dim-20:  var(--dimension-5);
+  --dim-24:  var(--dimension-6);
+  --dim-32:  var(--dimension-8);
+  --dim-40:  var(--dimension-10);
+  --dim-48:  var(--dimension-12);
+  --dim-56:  var(--dimension-14);
+  --dim-64:  var(--dimension-16);
+  --dim-80:  var(--dimension-20);
+  --dim-96:  var(--dimension-24);
+  --dim-128: var(--dimension-32);
+  --dim-160: var(--dimension-40);
+  --dim-192: var(--dimension-48);
+  --dim-256: var(--dimension-64);
+
+  --spacing-4:  var(--dimension-1);
+  --spacing-8:  var(--dimension-2);
+  --spacing-12: var(--dimension-3);
+  --spacing-16: var(--dimension-4);
+  --spacing-20: var(--dimension-5);
+  --spacing-24: var(--dimension-6);
+  --spacing-32: var(--dimension-8);
+  --spacing-40: var(--dimension-10);
+  --spacing-48: var(--dimension-12);
+  --spacing-64: var(--dimension-16);
+  --spacing-80: var(--dimension-20);
+  --spacing-96: var(--dimension-24);
+
+  --bp-2xl: var(--bp-xxl);
+
+  --control-h-xl: var(--dimension-14);   // 56px — extra-large controls
+
+
+  // ===========================================================================
+  // STATUS-CHIP ALIASES (DS-only — for the generic afi-status-chip primitive)
+  //
+  // The DS status-chip component supports a finite enum of status names
+  // (draft / pending / approved / rejected / executed / cancelled / in-review
+  // / archived). These resolve to DS feedback colors — never to product
+  // tokens. Product-specific plan states (Wealth Planner: borrador /
+  // cumplimentada / etc.) live separately in apps/site/src/styles/wealth-planner.scss.
+  // ===========================================================================
+
+  --status-draft-bg:     var(--feedback-disabled-background);
+  --status-draft-fg:     var(--feedback-disabled-foreground);
+  --status-draft-dot:    var(--color-afi-control-500);
+  --status-pending-bg:   var(--feedback-warning-background);
+  --status-pending-fg:   var(--feedback-warning-foreground);
+  --status-pending-dot:  var(--color-warning-500);
+  --status-approved-bg:  var(--feedback-success-background);
+  --status-approved-fg:  var(--feedback-success-foreground);
+  --status-approved-dot: var(--color-success-500);
+  --status-rejected-bg:  var(--feedback-error-background);
+  --status-rejected-fg:  var(--feedback-error-foreground);
+  --status-rejected-dot: var(--color-error-500);
+  --status-executed-bg:  var(--feedback-info-background);
+  --status-executed-fg:  var(--feedback-info-foreground);
+  --status-executed-dot: var(--color-info-500);
+  --status-cancelled-bg:  var(--feedback-disabled-background);
+  --status-cancelled-fg:  var(--feedback-disabled-foreground);
+  --status-cancelled-dot: var(--color-afi-control-400);
+  --status-in-review-bg:  var(--feedback-info-background);
+  --status-in-review-fg:  var(--feedback-info-foreground);
+  --status-in-review-dot: var(--color-info-500);
+  --status-archived-bg:   var(--feedback-disabled-background);
+  --status-archived-fg:   var(--feedback-disabled-foreground);
+  --status-archived-dot:  var(--color-afi-control-400);
+}

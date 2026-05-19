@@ -14,4 +14,6 @@ export const fundamentos_routes: Routes = [
   { path: 'accesibilidad', loadComponent: () => import('./accesibilidad.page').then(m => m.AccesibilidadPage) },
   { path: 'copy', loadComponent: () => import('./copy.page').then(m => m.CopyPage) },
   { path: 'tokens', loadComponent: () => import('./tokens.page').then(m => m.TokensPage) },
+  { path: 'estructura-tokens', loadComponent: () => import('./estructura-tokens.page').then(m => m.EstructuraTokensPage) },
+  { path: 'color-semantic', loadComponent: () => import('./color-semantic.page').then(m => m.ColorSemanticPage) },
 ];

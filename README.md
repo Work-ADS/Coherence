@@ -8,18 +8,16 @@ Internal design system for AFI. Angular-first. White-label-ready.
 
 ## Start here
 
+New designers should start with [docs/README.md](docs/README.md). It explains what each folder is for and gives the main paths through the system.
+
 ```
-Meeting          →  discovery / research
+Messy notes      →  docs/workflow/design-process-assistant.md
   ↓
-Plan with AI     →  docs/brief-template.md
+Formal brief     →  docs/workflow/brief-template.md
   ↓
-Fill in plan     →  docs/plan.md (living artifact)
+Build prompts    →  docs/workflow/build-kickoff.md
   ↓
-Build            →  docs/build-kickoff.md → Builder agent
-  ↓
-Test             →  Tester agent verifies
-  ↓
-Iterate          →  repeat from Build or Plan
+Build + review   →  docs/rules/* + docs/build-prompts/*
 ```
 
 ---
@@ -28,16 +26,18 @@ Iterate          →  repeat from Build or Plan
 
 | Doc | What it is |
 |---|---|
-| [docs/plan.md](docs/plan.md) | The master plan — scope, decisions, roadmap |
-| [docs/architecture.md](docs/architecture.md) | File layout map |
-| [docs/brief-template.md](docs/brief-template.md) | Plan-agent prompt for scoping new products/features |
-| [docs/build-kickoff.md](docs/build-kickoff.md) | Paste into a fresh session to start building |
-| [docs/component-skill.md](docs/component-skill.md) | Agent rules for building any component |
-| [docs/token-skill.md](docs/token-skill.md) | Agent rules for defining or consuming tokens |
-| [docs/accessibility.md](docs/accessibility.md) | A11y checklist per component |
-| [docs/clean-code.md](docs/clean-code.md) | Angular conventions + code discipline |
-| [docs/git-cheatsheet.md](docs/git-cheatsheet.md) | 5-6 plain-English git commands |
-| [docs/onboarding.md](docs/onboarding.md) | Clone, run, contribute, branch naming |
+| [docs/README.md](docs/README.md) | Docs map for onboarding and navigation |
+| [docs/strategy/manifesto.md](docs/strategy/manifesto.md) | Why Coherence exists |
+| [docs/strategy/plan.md](docs/strategy/plan.md) | The master plan — scope, decisions, roadmap |
+| [docs/strategy/architecture.md](docs/strategy/architecture.md) | Repo and docs structure map |
+| [docs/workflow/design-process-assistant.md](docs/workflow/design-process-assistant.md) | Turns messy stakeholder notes into a clear design direction |
+| [docs/workflow/brief-template.md](docs/workflow/brief-template.md) | Formal prompt for scoping new products/features |
+| [docs/workflow/build-kickoff.md](docs/workflow/build-kickoff.md) | Converts a completed brief into build prompts |
+| [docs/workflow/git-cheatsheet.md](docs/workflow/git-cheatsheet.md) | 5-6 plain-English Git commands for designers |
+| [docs/rules/component-skill.md](docs/rules/component-skill.md) | Rules for building components |
+| [docs/rules/token-skill.md](docs/rules/token-skill.md) | Rules for defining or consuming tokens |
+| [docs/rules/accessibility.md](docs/rules/accessibility.md) | Accessibility checklist per component |
+| [docs/rules/clean-code.md](docs/rules/clean-code.md) | Angular conventions + code discipline |
 
 ## Agents
 
@@ -52,10 +52,10 @@ Five-agent lineup in [docs/agents/](docs/agents/):
 ## Repo structure
 
 ```
-libs/tokens/     primitive / semantic / brand (JSON source → CSS generated)
-libs/ui/         ~10 core Angular components + 3 chart types
-apps/site/       DS reference site (sidebar IA, live components, linkable URLs)
-docs/            plans, skills, agents, guides
+libs/tokens/     primitive / semantic / brand token sources
+libs/ui/         Angular component library
+apps/site/       DS reference site
+docs/            strategy, workflow, rules, agents, build prompts, briefs, archive
 ```
 
 ## Visual identity

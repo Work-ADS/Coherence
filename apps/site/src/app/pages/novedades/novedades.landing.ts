@@ -34,6 +34,42 @@ import { SectionHeaderComponent } from './shared/section-header.component';
       @if (activeVertical() === 0) {
       <!-- ========== Soluciones digitales (Wealth Planner) ========== -->
 
+      <!-- ========== Iteración 3 — DS foundations (en curso) ========== -->
+      <afi-section-header
+        eyebrow="En curso"
+        title="DS — Iteración 3"
+        snippet="Modo oscuro cerrado, revisión de tipografía bajo control y elevación esperando export de Figma."
+      />
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-space-4 mb-space-12">
+        <site-teaser-tile
+          title="Modo oscuro + foundations review"
+          href="/novedades/iteracion-3"
+          description="Toggle de modo oscuro vivo en la sidebar. Tipografía: sidebar y page-template ahora consumen --type-*; el @import de Google Fonts movido a index.html. Elevación: pendiente de export de Figma."
+        >
+          <div
+            slot="preview"
+            class="w-full h-full flex flex-col p-space-3 gap-space-2 overflow-hidden"
+          >
+            <div class="flex items-center justify-between">
+              <p class="text-caption text-neutral-500 uppercase tracking-wider">Iteración 3</p>
+              <span class="text-caption text-action-700 font-medium">3 surfaces</span>
+            </div>
+            <div class="flex flex-col gap-1.5 flex-1 justify-center">
+              @for (item of iter3Preview; track item.label) {
+                <div class="flex items-center gap-space-2">
+                  <span
+                    class="w-2.5 h-2.5 rounded-sm shrink-0"
+                    [class]="item.dot"
+                  ></span>
+                  <span class="flex-1 text-caption text-neutral-600">{{ item.label }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </site-teaser-tile>
+      </div>
+
       <!-- ========== Iteración 2 (en curso) ========== -->
       <afi-section-header
         eyebrow="En curso"
@@ -560,6 +596,12 @@ export class NovedadesLandingPage {
   readonly miniBars = [30, 45, 60, 72, 85, 92, 88, 75, 60];
 
   readonly iter2Preview = [0, 1, 2];
+
+  readonly iter3Preview = [
+    { label: 'Modo oscuro', dot: 'bg-system-success' },
+    { label: 'Tipografía', dot: 'bg-system-success' },
+    { label: 'Elevación', dot: 'bg-system-warning' },
+  ];
 
   readonly decisionesPreview = [
     { n: 1, dot: 'bg-system-warning' },

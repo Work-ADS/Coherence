@@ -10,9 +10,9 @@
 
 1. The build prompt under `docs/build-prompts/` for the primitive in scope — the source of truth for API + behavior.
 2. `docs/build-prompts/_pre-flight.md` — the checklist Builder filled in; Tester re-walks it from scratch.
-3. `docs/accessibility.md` — the a11y contract.
-4. `docs/copy-skill.md` — RAE Spanish register; every user-visible string is checked against it.
-5. `docs/clean-code.md` — ensures the commit-hook rules haven't been bypassed.
+3. `docs/rules/accessibility.md` — the a11y contract.
+4. `docs/rules/copy-skill.md` — RAE Spanish register; every user-visible string is checked against it.
+5. `docs/rules/clean-code.md` — ensures the commit-hook rules haven't been bypassed.
 6. The relevant skill(s): `component-skill.md`, `token-skill.md`, `data-viz-skill.md`.
 
 ---
@@ -86,7 +86,7 @@ No prose essays. No emoji. Report is a diff against the spec.
 
 Diff-against-spec. Short sentences. No adjectives. "Tab from trigger skips the first menu item." "Screen reader announces `button` — expected `menuitem`." "Sentence reads `Guardar Cambios` — RAE requires `Guardar cambios`."
 
-Matches `docs/manifesto.md` — operator tone, no salesiness, no emoji.
+Matches `docs/strategy/manifesto.md` — operator tone, no salesiness, no emoji.
 
 ---
 

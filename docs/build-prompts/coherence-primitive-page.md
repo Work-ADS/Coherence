@@ -1,6 +1,6 @@
 # Build — Coherence primitive-page template (site-local)
 
-**Source:** `docs/plan.md` (LOCKED 2026-04-17-rev5 — Animate UI layout calibration)
+**Source:** `docs/strategy/plan.md` (LOCKED 2026-04-17-rev5 — Animate UI layout calibration)
 **Surface:** the reusable page template at `/componentes/{name}` on the Coherence site. **Two page-level tabs (Code / Design), right-rail playground controls, right-rail "On this page" TOC, actions row (Edit on GitHub + Copy Markdown + Descargar prompt).** Calibration: Animate UI's Files doc page, adjusted to Coherence's operator register.
 **Prereqs:** scaffolding + tokens + Button + Tabs + Table + Card + Switch + the site bootstrap.
 
@@ -15,11 +15,11 @@ One page template + five site-local components. Every primitive fills this templ
 
 ## Required reads (in order)
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md`
-3. `docs/component-skill.md` — this template is itself composed of primitives per those rules
-4. `docs/copy-skill.md`
-5. `docs/token-skill.md`
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md`
+3. `docs/rules/component-skill.md` — this template is itself composed of primitives per those rules
+4. `docs/rules/copy-skill.md`
+5. `docs/rules/token-skill.md`
 6. `docs/build-prompts/coherence-site.md` — the full-site spec this template plugs into
 7. `docs/build-prompts/coherence-site-bootstrap.md` — the bootstrap this template eventually supersedes for primitive pages
 8. `docs/build-prompts/coherence-tabs.md` — powers both page-level and nested tabs

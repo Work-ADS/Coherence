@@ -1,6 +1,6 @@
 # Build — Coherence Table primitive (`libs/ui/table/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** interactive data table. Notion + Stripe reference behavior. The v1 stress test for the DS — if Table ships clean, the DS earns credibility.
 **Prereqs:** scaffolding + tokens + Button + Checkbox + Drawer (Table composes all three heavily).
 
@@ -12,11 +12,11 @@ One primitive, `<afi-table>`, + its supporting column / cell directives. Covers:
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — Table section (scope, aria-sort, selection)
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — Surface bucket (row hover, selection), border hairline for dividers
-5. `docs/plan.md` — Notion + Stripe reference locks; 36px row default; horizontal scroll only when forced
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — Table section (scope, aria-sort, selection)
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — Surface bucket (row hover, selection), border hairline for dividers
+5. `docs/strategy/plan.md` — Notion + Stripe reference locks; 36px row default; horizontal scroll only when forced
 6. `docs/build-prompts/coherence-checkbox.md` — row selection uses Checkbox with `indeterminate`
 7. `docs/build-prompts/coherence-drawer.md` — row detail opens Drawer
 

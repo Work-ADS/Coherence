@@ -10,13 +10,13 @@ One component file per primitive. Variants are expressed via `@Input()` props + 
 
 ## Core rules
 
-1. **Reads tokens only** — no hard-coded color, spacing, radius, or typography values. Every visual property references a token from `libs/tokens/`. If a token doesn't exist, define it first (see `docs/token-skill.md`).
+1. **Reads tokens only** — no hard-coded color, spacing, radius, or typography values. Every visual property references a token from `libs/tokens/`. If a token doesn't exist, define it first (see `docs/rules/token-skill.md`).
 
-2. **Uses the 6 semantic buckets** — Canvas / Surface / Action / Control-neutral / System / Data-viz. Every token reference maps to one of these buckets. See `docs/token-skill.md` for the authoritative taxonomy.
+2. **Uses the 6 semantic buckets** — Canvas / Surface / Action / Control-neutral / System / Data-viz. Every token reference maps to one of these buckets. See `docs/rules/token-skill.md` for the authoritative taxonomy.
 
-3. **Passes the a11y checklist** — aria labels, roles, keyboard nav, focus order, contrast ratios. See `docs/accessibility.md` for the per-component checklist. No component ships without passing.
+3. **Passes the a11y checklist** — aria labels, roles, keyboard nav, focus order, contrast ratios. See `docs/rules/accessibility.md` for the per-component checklist. No component ships without passing.
 
-4. **Follows clean-code.md** — Angular conventions, component file structure, naming, input/output discipline, SCSS organization, no-magic-values rule, token-only styling. See `docs/clean-code.md`.
+4. **Follows clean-code.md** — Angular conventions, component file structure, naming, input/output discipline, SCSS organization, no-magic-values rule, token-only styling. See `docs/rules/clean-code.md`.
 
 5. **One file per primitive** — Button, Input, Select, Checkbox, Switch, Card, Modal, Table, Tabs, Drawer. Each is a single component file. Size, intent, and state variants are `@Input()` props that drive class bindings. No `ButtonPrimary.component.ts` + `ButtonSecondary.component.ts` — one `Button.component.ts` with a `variant` input.
 

@@ -12,7 +12,7 @@ That file contains:
 For messy product/design tasks:
 
 - When the user says **plan project**, follow:
-  `design/design_process_assistant.md`
+  `docs/workflow/design-process-assistant.md`
 
 This means:
 - Guide step by step

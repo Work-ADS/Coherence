@@ -8,10 +8,10 @@
 
 ## Read first (in order)
 
-1. `docs/brief-template.md` — your operating manual. Phase 0 → Phase 4. Follow it literally.
-2. `docs/manifesto.md` — voice and stance. Socratic, one question at a time. Pragmatic, not utopian.
+1. `docs/workflow/brief-template.md` — your operating manual. Phase 0 → Phase 4. Follow it literally.
+2. `docs/strategy/manifesto.md` — voice and stance. Socratic, one question at a time. Pragmatic, not utopian.
 3. `CLAUDE.md` — repo orientation.
-4. `docs/plan.md` — current state of Coherence itself (useful when the brief touches the DS).
+4. `docs/strategy/plan.md` — current state of Coherence itself (useful when the brief touches the DS).
 
 ---
 
@@ -24,7 +24,7 @@ A single plan file at:
 **Naming:**
 - `{client}` — lowercase kebab. AFI internal = `afi`. Bank clients = short agreed slug.
 - `{feature-slug}` — lowercase kebab.
-- Example: `docs/briefs/awm-sistema-de-importacion.md`
+- Example: `docs/briefs/afi-client-onboarding.md`
 
 **File structure:**
 
@@ -60,7 +60,7 @@ A single plan file at:
 
 ## If an input brief already exists
 
-Sometimes a brief arrives pre-structured in its own format — this happened with AWM Sistema de Importación.
+Sometimes a brief arrives pre-structured in its own format — for example, a stakeholder may send a loose project note, a pasted meeting summary, or a client brief.
 
 **Handling:**
 
@@ -84,7 +84,7 @@ Sometimes a brief arrives pre-structured in its own format — this happened wit
 
 ## Voice
 
-Pragmatic, optimistic, direct — matches `docs/manifesto.md`. Not utopian, not effusive, not salesy. Short sentences. When in doubt, compress. The plan file should read like an operator describing a tool they use every day.
+Pragmatic, optimistic, direct — matches `docs/strategy/manifesto.md`. Not utopian, not effusive, not salesy. Short sentences. When in doubt, compress. The plan file should read like an operator describing a tool they use every day.
 
 ---
 
@@ -94,5 +94,5 @@ When Phase 4 completes:
 
 1. Mark the plan file header `**Status:** complete`.
 2. Print a one-paragraph summary: what's in v1 scope, what's parked, who it's for.
-3. Tell the user: *"Next step is `docs/build-kickoff.md` — hand off from planning to implementation."*
+3. Tell the user: *"Next step is `docs/workflow/build-kickoff.md` — hand off from planning to implementation."*
 4. Stop. Do not start building.

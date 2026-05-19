@@ -1,0 +1,102 @@
+<div class="i3">
+  <!-- Breadcrumb top bar -->
+  <div class="i3__breadcrumb">
+    <a
+      routerLink="/novedades"
+      class="i3__breadcrumb-back"
+      aria-label="Volver a Novedades"
+    >
+      <svg class="i3__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+    <span class="i3__breadcrumb-parent">Novedades</span>
+    <span class="i3__breadcrumb-separator" aria-hidden="true">/</span>
+    <span class="i3__breadcrumb-current">Iteración 3</span>
+  </div>
+
+  <main class="i3__main">
+    <div class="i3__layout">
+      <div class="i3__content">
+        <afi-page-header
+          title="DS — Iteración 3"
+          subtitle="Modo oscuro, revisión de tipografía y elevación. Cada tarea indica su origen para que el equipo pueda rastrear el porqué del cambio."
+          [sticky]="false"
+          [scrollFade]="false"
+        >
+          <span slot="breadcrumb" class="i3__eyebrow">ITERACIÓN 3 · EN CURSO</span>
+        </afi-page-header>
+
+        <!-- Summary -->
+        <section class="i3__summary">
+          <afi-section-header
+            eyebrow="Resumen"
+            title="Alcance de la iteración"
+            snippet="Tres focos en foundations: dark mode (cerrado), tipografía (bajo control) y elevación (esperando export de Figma)."
+          />
+          <div class="i3__badges">
+            <afi-badge size="sm" intent="success">8 · Hecho</afi-badge>
+            <afi-badge size="sm" intent="neutral">3 · Pendiente</afi-badge>
+          </div>
+        </section>
+
+        <!-- Surfaces -->
+        <div class="i3__surfaces">
+          @for (s of surfaces; track s.id) {
+            <article class="i3__surface" [id]="s.id">
+              <afi-section-header
+                [eyebrow]="s.eyebrow"
+                [title]="s.title"
+                [snippet]="s.snippet"
+              />
+
+              <ul class="i3__tasks">
+                @for (t of s.tasks; track t.text) {
+                  <li class="i3__task" [class.i3__task--done]="t.status === 'Hecho'">
+                    <p class="i3__task-text">
+                      <afi-badge
+                        class="i3__task-badge"
+                        size="sm"
+                        [intent]="
+                          t.status === 'Hecho'
+                            ? 'success'
+                            : t.status === 'En curso'
+                              ? 'info'
+                              : 'neutral'
+                        "
+                      >
+                        {{ t.status }}
+                      </afi-badge>
+                      <afi-badge class="i3__task-badge" size="sm" intent="neutral">
+                        {{ t.source }}
+                      </afi-badge>
+                      @if (t.href) {
+                        <a [routerLink]="t.href" class="i3__task-link">{{ t.text }}</a>
+                      } @else {
+                        {{ t.text }}
+                      }
+                    </p>
+                  </li>
+                }
+              </ul>
+            </article>
+          }
+
+          <p class="i3__footnote">
+            Para añadir una tarea: edita
+            <code class="i3__code"
+              >apps/site/src/app/pages/novedades/iteracion-3/iteracion-3.page.ts</code
+            >
+            y prepende un objeto al array <code class="i3__code">tasks</code> de la sección.
+          </p>
+        </div>
+      </div>
+
+      <site-on-this-page class="i3__rail" [sections]="tocSections" />
+    </div>
+  </main>
+</div>

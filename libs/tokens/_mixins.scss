@@ -1,0 +1,79 @@
+// =============================================================================
+// _mixins.scss — Sass mixins for token authoring (Coherence DS)
+// =============================================================================
+//
+// Underscore prefix `_mixins.scss` is Sass convention for "partial" — a file
+// that only contains mixins / functions / variables and never emits CSS by
+// itself. Imported by semantic.scss when needed.
+//
+// Available mixins:
+//   - responsive-token($name, $map)   — emits a CSS custom property with
+//                                       per-breakpoint overrides
+// =============================================================================
+
+
+// -----------------------------------------------------------------------------
+// $coherence-breakpoints — the breakpoint scale shared with dimensions.scss
+// + tailwind.config.js. Single source of truth in Sass for mixin loops.
+// -----------------------------------------------------------------------------
+
+$coherence-breakpoints: (
+  sm:  576px,
+  md:  768px,
+  lg:  992px,
+  xl:  1200px,
+  xxl: 1400px,
+);
+
+
+// -----------------------------------------------------------------------------
+// @mixin responsive-token($name, $map)
+//
+// Emits a CSS custom property + breakpoint overrides in one block.
+//
+// Usage:
+//   :root {
+//     @include responsive-token(--canvas-padding-inline, (
+//       base: var(--dimension-4),    // < 576px (mobile)
+//       sm:   var(--dimension-5),    // ≥ 576px
+//       md:   var(--dimension-6),    // ≥ 768px
+//       lg:   var(--dimension-8),    // ≥ 992px
+//       xl:   var(--dimension-10),   // ≥ 1200px
+//       xxl:  var(--dimension-12),   // ≥ 1400px
+//     ));
+//   }
+//
+// Equivalent hand-written CSS:
+//   :root { --canvas-padding-inline: var(--dimension-4); }
+//   @media (min-width: 576px)  { :root { --canvas-padding-inline: var(--dimension-5); } }
+//   @media (min-width: 768px)  { :root { --canvas-padding-inline: var(--dimension-6); } }
+//   @media (min-width: 992px)  { :root { --canvas-padding-inline: var(--dimension-8); } }
+//   @media (min-width: 1200px) { :root { --canvas-padding-inline: var(--dimension-10); } }
+//   @media (min-width: 1400px) { :root { --canvas-padding-inline: var(--dimension-12); } }
+//
+// Skip any breakpoint by omitting it from the map. `base` is required (the
+// mobile-first default). Each other key must be one of the breakpoint
+// names in `$coherence-breakpoints`.
+//
+// NOTE: Currently this mixin must be called inside a selector block; it does
+// NOT wrap its own `:root { … }`. That keeps it composable with other
+// selector contexts ([data-brand], [data-theme], etc.) — but if you call it
+// at the top level, wrap it in `:root { }` yourself.
+// -----------------------------------------------------------------------------
+
+@mixin responsive-token($name, $map) {
+  // Emit the mobile-first default in the current selector context.
+  @if not map-has-key($map, base) {
+    @error "responsive-token('#{$name}', …) requires a `base` key for the mobile-first default.";
+  }
+  #{$name}: map-get($map, base);
+
+  // Emit one @media per defined breakpoint.
+  @each $bp-name, $bp-value in $coherence-breakpoints {
+    @if map-has-key($map, $bp-name) {
+      @media (min-width: $bp-value) {
+        #{$name}: map-get($map, $bp-name);
+      }
+    }
+  }
+}

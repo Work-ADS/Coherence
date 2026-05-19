@@ -1,8 +1,8 @@
-This is the Coherence DS repo. First read docs/plan.md. Agent lineup in docs/agents/ — **Planner is live** (session harness over docs/brief-template.md; invoke when starting or activating a brief). Skills in docs/component-skill.md and docs/token-skill.md.
+This is the Coherence DS repo. First read docs/strategy/plan.md. Agent lineup in docs/agents/ — **Planner is live** (session harness over docs/workflow/brief-template.md; invoke when starting or activating a brief). Skills in docs/rules/component-skill.md and docs/rules/token-skill.md.
 
 ## Design planning command
 
-For messy product/design work, use `design/design_process_assistant.md`.
+For messy product/design work, use `docs/workflow/design-process-assistant.md`.
 
 When the user says **plan project**, follow that file:
 - guide step by step

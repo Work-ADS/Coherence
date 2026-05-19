@@ -1,0 +1,52 @@
+// =============================================================================
+// variables.scss — Coherence DS token entrypoint
+// =============================================================================
+//
+// Single entrypoint imported by apps/site/src/styles.scss. Loads every token
+// file in cascade order:
+//
+//   1. AFI primitive CSS custom properties     (colors / dimensions /
+//                                               typography / elevation)
+//   2. Other-brand overrides                   (colors-mutualidad,
+//                                               colors-unicaja, …)
+//      → scoped under [data-brand="<name>"]; activated by HTML attribute
+//   3. Semantic CSS custom properties + responsive @media + brand overrides
+//      + dark-mode overrides                   (semantic.scss)
+//   4. Backward-compat aliases                 (aliases.scss)
+//
+// Order matters because CSS cascade. Later @imports take precedence at equal
+// selector specificity.
+//
+// Brand-switching pattern (Figma-style modes):
+//   <html data-brand="afi">           → default, AFI palette
+//   <html data-brand="mutualidad">    → Mutualidad palette + Mutualidad semantic mappings
+//   <html data-brand="unicaja">       → Unicaja
+//
+// Theme-switching pattern (independent of brand):
+//   <html data-theme="dark">          → dark-mode semantic overrides
+//
+// Combinations: <html data-brand="mutualidad" data-theme="dark"> works —
+// both attributes apply, cascade picks the right values.
+//
+// See docs/rules/dimension-tokens.md for the rules.
+// =============================================================================
+
+// Layer 0 — Sass utilities (mixins / functions). Pure-Sass, no CSS emitted.
+@import './mixins';
+
+// Layer 1 — AFI default primitives (live at :root)
+@import './colors.scss';
+@import './dimensions.scss';
+@import './typography.scss';
+@import './elevation.scss';
+@import './motion.scss';
+
+// Layer 2 — Other brands (live under [data-brand="<name>"])
+@import './colors-mutualidad.scss';
+@import './colors-unicaja.scss';
+
+// Layer 3 — Semantic tokens (roles, responsive @media, brand overrides, dark mode)
+@import './semantic.scss';
+
+// Layer 4 — Backward-compat aliases
+@import './aliases.scss';

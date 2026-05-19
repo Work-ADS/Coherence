@@ -9,12 +9,10 @@
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-neutral-700);
-  font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
-  font-size: 13px; /* TODO(type-scale) */
-  font-weight: 500;
+  font: var(--type-body-sm-500);
   cursor: pointer;
   /* plan.md item 16 rule 1: container-first — transition the container, not children */
-  transition: background-color 150ms ease-out; /* TODO(motion-tokens) */
+  transition: background-color var(--duration-fast) var(--easing-enter);
 
   &:hover {
     background-color: var(--color-neutral-100);

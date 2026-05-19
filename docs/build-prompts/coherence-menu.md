@@ -1,6 +1,6 @@
 # Build — Coherence Menu + MenuItem primitives (`libs/ui/menu/`)
 
-**Source:** `docs/plan.md` (LOCKED 2026-04-17-rev3)
+**Source:** `docs/strategy/plan.md` (LOCKED 2026-04-17-rev3)
 **Surface:** contextual action list triggered by a button — typically `⋮`. Calibration: Granola's folder-context menu (Create folder / Add to favorites / Rename / Sharing settings / Delete folder). CDK Overlay-based. Sibling to `<afi-modal>` and `<afi-drawer>` in the overlay family; distinct from `<afi-select>` which is a form control.
 **Prereqs:** scaffolding + tokens + Button (triggers) + Modal or Drawer already shipped (CDK Overlay infrastructure reused).
 
@@ -18,11 +18,11 @@ Plus one trivial helper:
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — Menu + Menubar ARIA patterns (WAI-ARIA Authoring Practices)
-3. `docs/component-skill.md` — CVA variant pattern + §13 integration sanity
-4. `docs/copy-skill.md`
-5. `docs/token-skill.md`
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — Menu + Menubar ARIA patterns (WAI-ARIA Authoring Practices)
+3. `docs/rules/component-skill.md` — CVA variant pattern + §13 integration sanity
+4. `docs/rules/copy-skill.md`
+5. `docs/rules/token-skill.md`
 6. `docs/build-prompts/coherence-modal.md` — CDK Overlay + FocusTrap pattern, reused here
 7. `docs/build-prompts/coherence-button.md` — trigger button variants (`ghost` + icon-only is the default trigger)
 

@@ -1,6 +1,6 @@
 # Build — Coherence token-detail page template (site-local)
 
-**Source:** `docs/plan.md` (LOCKED 2026-04-17-rev6 — token-detail page + Stripe filter-chip pattern)
+**Source:** `docs/strategy/plan.md` (LOCKED 2026-04-17-rev6 — token-detail page + Stripe filter-chip pattern)
 **Surface:** the reusable page template at `/fundamentos/color/{bucket}/{tokenName}` on the Coherence site. Shows a semantic color token with its contrast grade, foreground-text-in-color preview, Stripe-style filter-chip instance browser, and right-rail "On this page" TOC. Calibration: Animate UI Preview/Code layout + Stripe parameter-bar chips (user's screenshot, LOCKED 2026-04-17).
 **Prereqs:** scaffolding + tokens + Button + Tabs + Menu + MenuItem + site bootstrap + primitive-page template infrastructure (reuses `<afi-doc-page-layout>`, `<afi-code-block>`, `<afi-toc>`).
 
@@ -22,11 +22,11 @@ One page template + four site-local components + one static registry file. Every
 
 ## Required reads (in order)
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — contrast measurement + AAA/AA rules
-3. `docs/component-skill.md`
-4. `docs/copy-skill.md`
-5. `docs/token-skill.md` — the seven semantic color buckets the page's tabs reflect
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — contrast measurement + AAA/AA rules
+3. `docs/rules/component-skill.md`
+4. `docs/rules/copy-skill.md`
+5. `docs/rules/token-skill.md` — the seven semantic color buckets the page's tabs reflect
 6. `docs/build-prompts/coherence-primitive-page.md` — sibling template; shares `<afi-doc-page-layout>`'s header + actions row + right-rail TOC
 7. `docs/build-prompts/coherence-site.md` — IA tree; dynamic routes under `/fundamentos/color`
 8. `docs/build-prompts/coherence-menu.md` — `<afi-filter-chip>` value-selector uses `<afi-menu>` under the hood

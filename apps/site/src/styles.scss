@@ -2,7 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'styles/tokens.css';
+// Token authoring lives in libs/tokens/ as Sass partials (AFI house convention).
+// `variables.scss` @imports colors.scss + dimensions.scss and produces the
+// :root block with every CSS custom property the DS exposes. Editing the
+// brand palette = editing libs/tokens/colors.scss. See docs/rules/component-skill.md § 2.
+@import '../../../libs/tokens/variables';
+
+// Product-level tokens — Wealth Planner. Imported AFTER the DS so its
+// --plan-state-* tokens can reference DS --feedback-* values.
+// See docs/rules/dimension-tokens.md → "Product-level tokens".
+@import './styles/wealth-planner';
 
 // Inline Versión 1/2/3 pill is replaced by the floating design-review widget
 // embedded from index.html. Hide rather than delete so seniors can compare
@@ -10,7 +19,10 @@
 site-version-toggle {
   display: none !important;
 }
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,300;8..144,400;8..144,500;8..144,600;8..144,700&display=swap');
+
+// Roboto Serif is loaded via <link rel="stylesheet"> in index.html so it's
+// available on first paint. Previously `@import url(...)` here was placed
+// after a rule block, which the CSS spec says browsers must ignore.
 
 *,
 *::before,
@@ -21,13 +33,13 @@ site-version-toggle {
 }
 
 html {
-  font-size: 16px;
+  font-size: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  font-family: 'Roboto Serif', serif; /* TODO(type-scale) */
+  font-family: var(--font-family-serif);
   color: var(--color-neutral-900);
   background: var(--canvas-base);
   line-height: 1.5;
@@ -55,8 +67,7 @@ body {
   margin-bottom: var(--space-2xl);
 
   &__title {
-    font-family: 'Roboto Serif', serif;
-    font-size: 40px; /* TODO(type-scale) */
+    font: var(--type-title);
     font-weight: 700;
     letter-spacing: -0.025em;
     color: var(--color-neutral-900);
@@ -64,12 +75,10 @@ body {
   }
 
   &__role {
-    font-family: 'Roboto Serif', serif;
-    font-size: 18px; /* TODO(type-scale) */
+    font: var(--type-section);
     font-weight: 400;
     color: var(--color-neutral-500);
     max-width: var(--content-sm);
-    line-height: 1.6;
   }
 }
 
@@ -83,9 +92,7 @@ body {
   border-top: var(--border-thin) solid var(--color-neutral-200);
 
   &__heading {
-    font-family: 'Roboto Serif', serif;
-    font-size: 14px; /* TODO(type-scale) */
-    font-weight: 600;
+    font: var(--type-body-md-600);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--color-neutral-400);
@@ -102,6 +109,15 @@ body {
 // ---------------------------------------------------------------------------
 // Sidebar nav link — used in app shell sidebar
 // ---------------------------------------------------------------------------
+.nav-subheading {
+  font: var(--type-body-sm-500);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--foreground-tertiary-default);
+  padding: var(--space-sm) var(--space-sm) var(--space-2xs);
+  list-style: none;
+}
+
 .nav-link {
   @apply flex items-center w-full px-3 py-1 rounded-sm
          text-sm
@@ -113,7 +129,7 @@ body {
 }
 .nav-link:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--border-focus);
+  box-shadow: 0 0 0 0.125rem var(--border-focus);
 }
 
 // ---------------------------------------------------------------------------
@@ -123,21 +139,20 @@ body {
   max-width: var(--content-md);
 
   &__title {
-    font-family: 'Roboto Serif', serif;
-    font-size: 32px; /* TODO(type-scale) */
+    font: var(--type-title);
     font-weight: 600;
     letter-spacing: -0.02em;
     margin-bottom: var(--space-xs);
   }
 
   &__hero {
-    font-size: 18px; /* TODO(type-scale) */
+    font: var(--type-section);
     color: var(--color-neutral-500);
     margin-bottom: var(--space-xl);
   }
 
   &__desc {
-    font-size: 15px; /* TODO(type-scale) */
+    font: var(--type-body);
     color: var(--color-neutral-600);
     margin-bottom: var(--space-lg);
   }
@@ -156,14 +171,12 @@ body {
     padding: var(--space-lg);
 
     h3 {
-      font-family: 'Roboto Serif', serif;
-      font-size: 16px; /* TODO(type-scale) */
-      font-weight: 600;
+      font: var(--type-body-lg-600);
       margin-bottom: var(--space-2xs);
     }
 
     p {
-      font-size: 13px; /* TODO(type-scale) */
+      font: var(--type-body-sm-400);
       color: var(--color-neutral-600);
     }
   }

@@ -1,6 +1,6 @@
 # Build — Coherence Tabs primitive (`libs/ui/tabs/`)
 
-**Source:** `docs/plan.md`
+**Source:** `docs/strategy/plan.md`
 **Surface:** in-page section navigation. CDK tablist pattern.
 **Prereqs:** scaffolding + tokens + Button.
 
@@ -10,11 +10,11 @@ One primitive (pair), `<afi-tabs>` + `<afi-tab>`, following the ARIA tablist →
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — Tabs section (arrow keys, Home/End, role wiring)
-3. `docs/component-skill.md`
-4. `docs/token-skill.md` — Action (active indicator), Control-neutral (inactive)
-5. `docs/plan.md` — Angular CDK a11y module is a locked dependency
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — Tabs section (arrow keys, Home/End, role wiring)
+3. `docs/rules/component-skill.md`
+4. `docs/rules/token-skill.md` — Action (active indicator), Control-neutral (inactive)
+5. `docs/strategy/plan.md` — Angular CDK a11y module is a locked dependency
 
 ## When to use
 

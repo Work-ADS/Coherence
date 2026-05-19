@@ -1,9 +1,0 @@
-{
-  "elevation": {
-    "none": { "value": "none" },
-    "sm":   { "value": "0 1px 2px 0 hsla(200, 5%, 9%, 0.05)" },
-    "md":   { "value": "0 4px 6px -1px hsla(200, 5%, 9%, 0.07), 0 2px 4px -2px hsla(200, 5%, 9%, 0.05)" },
-    "lg":   { "value": "0 10px 15px -3px hsla(200, 5%, 9%, 0.08), 0 4px 6px -4px hsla(200, 5%, 9%, 0.04)" },
-    "xl":   { "value": "0 20px 25px -5px hsla(200, 5%, 9%, 0.10), 0 8px 10px -6px hsla(200, 5%, 9%, 0.04)" }
-  }
-}

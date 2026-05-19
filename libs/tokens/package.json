@@ -1,16 +1,14 @@
 {
   "name": "tokens",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "Coherence DS token authoring — Sass partials matching AFI house convention. Source: colors.scss + dimensions.scss + variables.scss. Consumed by apps/site/src/styles.scss via Sass @import.",
+  "private": true,
+  "main": "variables.scss",
+  "files": [
+    "colors.scss",
+    "dimensions.scss",
+    "variables.scss"
+  ],
   "type": "commonjs",
-  "dependencies": {
-    "style-dictionary": "^4.4.0"
-  }
+  "license": "UNLICENSED"
 }

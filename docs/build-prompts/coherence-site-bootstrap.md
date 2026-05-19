@@ -1,6 +1,6 @@
 # Build — Coherence site bootstrap (`apps/site/`, minimal)
 
-**Source:** `docs/plan.md` (v1 build-order step 4, LOCKED 2026-04-17)
+**Source:** `docs/strategy/plan.md` (v1 build-order step 4, LOCKED 2026-04-17)
 **Surface:** a minimal Angular site that exists *only* to render every shipped primitive in one gallery route, so the user can see each primitive at `localhost:4200/preview` as Builder ships it.
 **Prereqs:** `coherence-scaffolding.md` + `coherence-tokens.md` + at least one primitive shipped (Button, shipped 2026-04-17).
 
@@ -25,10 +25,10 @@ Do not build any of the above here. They come back in v1 step 22 when the full s
 
 ## Required reads
 
-1. `docs/clean-code.md`
-2. `docs/accessibility.md` — the site still respects a11y even in bootstrap form
-3. `docs/copy-skill.md` — all labels RAE, `usted`
-4. `docs/plan.md` — **Session locks 2026-04-17**, specifically the "Build sequence amendment" item explaining why this bootstrap exists
+1. `docs/rules/clean-code.md`
+2. `docs/rules/accessibility.md` — the site still respects a11y even in bootstrap form
+3. `docs/rules/copy-skill.md` — all labels RAE, `usted`
+4. `docs/strategy/plan.md` — **Session locks 2026-04-17**, specifically the "Build sequence amendment" item explaining why this bootstrap exists
 5. `docs/build-prompts/coherence-site.md` — the full-site prompt; **do not implement it here**. It's the endgame. This file is the staging ground.
 
 ## File structure

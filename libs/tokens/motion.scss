@@ -1,0 +1,28 @@
+// =============================================================================
+// motion.scss — motion primitives (Coherence DS)
+// =============================================================================
+//
+// Duration and easing tokens for transitions and animations.
+//
+// Rules (from plan.md motion guidelines):
+//   1. Container-first — transition the container, not children.
+//   2. Enter = ease-out (decelerate into view).
+//   3. Exit  = ease-in (accelerate out of view).
+//   4. Duration scales with element size: small (chips, icons) = fast,
+//      medium (cards, panels) = base, large (modals, page) = slow.
+//
+// Brand override: per-brand file can scope overrides under
+// `[data-brand="<name>"]` if a brand needs different motion feel.
+// =============================================================================
+
+:root {
+  // Duration
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+
+  // Easing
+  --easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-enter:    cubic-bezier(0.16, 1, 0.3, 1);
+  --easing-exit:     cubic-bezier(0.7, 0, 0.84, 0);
+}

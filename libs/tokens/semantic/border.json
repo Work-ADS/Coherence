@@ -1,6 +1,0 @@
-{
-  "border": {
-    "hairline": { "value": "{color.neutral.200}", "comment": "1px divider color" },
-    "focus":    { "value": "{color.action.500}", "comment": "2px focus ring color" }
-  }
-}

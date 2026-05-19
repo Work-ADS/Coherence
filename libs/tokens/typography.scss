@@ -1,0 +1,90 @@
+// =============================================================================
+// typography.scss — typography primitives (Coherence DS, AFI default brand)
+// =============================================================================
+//
+// Font families + the type-scale shorthand strings.
+//
+// Shorthand format: <font-size>/<line-height> <font-weight> <font-family>
+//
+// Responsive: heading tokens (display, title, subtitle, section) scale down on
+// mobile via the `responsive-token` mixin. Body tokens are fixed across
+// breakpoints — readability at 14–16px doesn't benefit from scaling.
+//
+// Brand override: a per-brand file (e.g. `typography-mutualidad.scss`)
+// scopes overrides under `[data-brand="<name>"]` to swap the family or the
+// scale. Components consume --type-* roles only. See docs/rules/dimension-tokens.md.
+//
+// AFI uses Roboto Serif at every weight. Roboto Serif is loaded via Google
+// Fonts in apps/site/src/styles.scss.
+// =============================================================================
+
+:root {
+  // ---------------------------------------------------------------------------
+  // Family
+  // ---------------------------------------------------------------------------
+  --font-family-serif: 'Roboto Serif', serif;
+
+  // (sans + mono families are referenced by tailwind.config.js but not yet
+  //  in the token system. Add as primitives if brands need them differentiated.)
+
+
+  // ---------------------------------------------------------------------------
+  // Type-scale — heading tokens (responsive)
+  //
+  // Mobile-first values scale up at `lg` (992px). Uses responsive-token mixin.
+  // ---------------------------------------------------------------------------
+  @include responsive-token(--type-display, (
+    base: 400 48px/56px var(--font-family-serif),
+    lg:   400 96px/112px var(--font-family-serif),
+  ));
+
+  @include responsive-token(--type-title, (
+    base: 500 24px/32px var(--font-family-serif),
+    lg:   500 32px/40px var(--font-family-serif),
+  ));
+
+  @include responsive-token(--type-subtitle, (
+    base: 500 20px/28px var(--font-family-serif),
+    lg:   500 24px/32px var(--font-family-serif),
+  ));
+
+  @include responsive-token(--type-section, (
+    base: 500 18px/24px var(--font-family-serif),
+    lg:   500 20px/24px var(--font-family-serif),
+  ));
+
+  @include responsive-token(--type-subtitle-body, (
+    base: 400 18px/20px var(--font-family-serif),
+    lg:   400 20px/20px var(--font-family-serif),
+  ));
+
+
+  // ---------------------------------------------------------------------------
+  // Type-scale — body + utility tokens (fixed, not responsive)
+  // ---------------------------------------------------------------------------
+  --type-body:          400 16px/24px var(--font-family-serif);
+  --type-body-lg-600:   600 16px/24px var(--font-family-serif);
+  --type-body-lg-500:   500 16px/24px var(--font-family-serif);
+  --type-body-md-600:   600 14px/20px var(--font-family-serif);
+  --type-body-md-500:   500 14px/20px var(--font-family-serif);
+  --type-body-md-400:   400 14px/20px var(--font-family-serif);
+  --type-body-sm-600:   600 12px/16px var(--font-family-serif);
+  --type-body-sm-500:   500 12px/16px var(--font-family-serif);
+  --type-body-sm-400:   400 12px/16px var(--font-family-serif);
+  --type-button:        500 14px/14px var(--font-family-serif);
+  --type-informe:       400 12px/14px var(--font-family-serif);
+
+
+  // ---------------------------------------------------------------------------
+  // Letter-spacing — tracking tokens for headings and utility text
+  //
+  // Tight: large headings (negative tracking aids readability at display sizes)
+  // Normal: body text (browser default 0)
+  // Wide: uppercase labels, small caps, overlines
+  // ---------------------------------------------------------------------------
+  --tracking-tight:  -0.025em;
+  --tracking-snug:   -0.02em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.025em;
+  --tracking-wider:   0.06em;
+}

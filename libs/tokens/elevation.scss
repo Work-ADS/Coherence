@@ -1,0 +1,23 @@
+// =============================================================================
+// elevation.scss — elevation + motion primitives (Coherence DS)
+// =============================================================================
+//
+// ⚠️  TODO: REDO against AFI Figma's "Primitive Elevation" collection (48 tokens).
+//     The values below are hand-guessed and ship as a placeholder. When the
+//     Figma elevation tokens are exported, replace this file. The semantic
+//     mappings in semantic.scss (--elevation-sm/md/lg/xl) will continue to
+//     resolve correctly regardless of the underlying values.
+//
+// Source (not yet ingested): docs/archive/AFI foundational tokens Mayo 2026/Elevation primitives/
+//
+// Brand override: per-brand file scopes overrides under `[data-brand="<name>"]`.
+// =============================================================================
+
+:root {
+  // Shadows — TODO: replace with Figma values (48 tokens in AFI Primitive Elevation)
+  --elevation-none: none;
+  --elevation-sm:   0 1px 2px 0 hsla(200, 5%, 9%, 0.05);
+  --elevation-md:   0 4px 6px -1px hsla(200, 5%, 9%, 0.07), 0 2px 4px -2px hsla(200, 5%, 9%, 0.05);
+  --elevation-lg:   0 10px 15px -3px hsla(200, 5%, 9%, 0.08), 0 4px 6px -4px hsla(200, 5%, 9%, 0.04);
+  --elevation-xl:   0 20px 25px -5px hsla(200, 5%, 9%, 0.10), 0 8px 10px -6px hsla(200, 5%, 9%, 0.04);
+}

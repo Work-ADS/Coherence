@@ -1,0 +1,209 @@
+// =============================================================================
+// colors.scss — color primitives (Coherence DS, AFI default brand)
+// =============================================================================
+//
+// Mirrors the Figma `Primitive Colors` collection 1:1 (118 tokens).
+// Source: docs/archive/AFI foundational tokens Mayo 2026/Color primitives/.
+//
+// Naming rule: primitives describe what the color IS (brand ramps, signal
+// ramps, data-viz ramps). Semantic CSS custom properties in semantic.scss
+// describe what each role DOES (--action-*, --canvas-*, --border-*, etc.)
+// and reference these primitives.
+//
+// Multi-brand pattern (LOCKED 2026-05-19):
+//   - AFI is the default brand and lives at `:root` (no attribute needed).
+//   - Sibling files `colors-mutualidad.scss`, `colors-unicaja.scss`, etc.
+//     scope their values under `[data-brand="<name>"]` so the cascade
+//     activates them when <html data-brand="…"> is set — just like
+//     Figma's variable modes.
+//   - The AFI-specific primitives below stay AFI-named (afi-azul, afi-gris,
+//     afi-control, etc.) because that's what the brand calls them. Other
+//     brands use their own names (e.g. mutualidad-verde). Semantic tokens
+//     in semantic.scss bridge brand-specific names to roles.
+//
+// Components NEVER reference these primitives directly. See
+// docs/rules/dimension-tokens.md.
+// =============================================================================
+
+:root {
+  // ---------------------------------------------------------------------------
+  // Base — not brand-tinted, used as primitive-of-primitives.
+  // Shared across all brands; living at :root means every brand inherits.
+  // ---------------------------------------------------------------------------
+  --color-base-white: #FFFFFF;
+  --color-base-black: #000000;
+
+
+  // ---------------------------------------------------------------------------
+  // afi-azul — AFI primary brand ramp (12 shades)
+  // ---------------------------------------------------------------------------
+  --color-afi-azul-0:   #FFFFFF;
+  --color-afi-azul-25:  #F2FAFE;
+  --color-afi-azul-50:  #E6F4FB;
+  --color-afi-azul-100: #CDE9F6;
+  --color-afi-azul-200: #A6D8EE;
+  --color-afi-azul-300: #80C6E5;
+  --color-afi-azul-400: #37BBF4;
+  --color-afi-azul-500: #0085CA;
+  --color-afi-azul-600: #0076B4;
+  --color-afi-azul-700: #00629A;
+  --color-afi-azul-800: #004A74;
+  --color-afi-azul-900: #003B5F;
+
+
+  // ---------------------------------------------------------------------------
+  // afi-azul-profundo — AFI deep accent ramp (12 shades)
+  // Used by the "action" semantic role.
+  // ---------------------------------------------------------------------------
+  --color-afi-azul-profundo-0:   #FFFFFF;
+  --color-afi-azul-profundo-25:  #F2F7FA;
+  --color-afi-azul-profundo-50:  #E6EFF3;
+  --color-afi-azul-profundo-100: #CCDDE5;
+  --color-afi-azul-profundo-200: #AFC4CF;
+  --color-afi-azul-profundo-300: #8AA8B6;
+  --color-afi-azul-profundo-400: #5E8294;
+  --color-afi-azul-profundo-500: #062D3F;
+  --color-afi-azul-profundo-600: #052636;
+  --color-afi-azul-profundo-700: #041F2C;
+  --color-afi-azul-profundo-800: #031823;
+  --color-afi-azul-profundo-900: #020F15;
+
+
+  // ---------------------------------------------------------------------------
+  // afi-gris — AFI cool gray ramp (12 shades)
+  // ---------------------------------------------------------------------------
+  --color-afi-gris-0:   #FFFFFF;
+  --color-afi-gris-25:  #FBFCFD;
+  --color-afi-gris-50:  #F4F8FA;
+  --color-afi-gris-100: #EAF1F5;
+  --color-afi-gris-200: #D8E5EC;
+  --color-afi-gris-300: #C8DAE2;
+  --color-afi-gris-400: #B4C9D2;
+  --color-afi-gris-500: #9CB2BC;
+  --color-afi-gris-600: #839AA5;
+  --color-afi-gris-700: #6A808A;
+  --color-afi-gris-800: #51666F;
+  --color-afi-gris-900: #394C54;
+
+
+  // ---------------------------------------------------------------------------
+  // afi-white — AFI warm off-white ramp (12 shades)
+  // ---------------------------------------------------------------------------
+  --color-afi-white-0:   #FFFFFF;
+  --color-afi-white-25:  #FAFAFA;
+  --color-afi-white-50:  #F5F5F5;
+  --color-afi-white-100: #F1F3F5;
+  --color-afi-white-200: #E4E7EB;
+  --color-afi-white-300: #D1D6DB;
+  --color-afi-white-400: #B0B8C1;
+  --color-afi-white-500: #8A949E;
+  --color-afi-white-600: #6B7480;
+  --color-afi-white-700: #4F5761;
+  --color-afi-white-800: #343A40;
+  --color-afi-white-900: #1F2328;
+
+
+  // ---------------------------------------------------------------------------
+  // afi-control — neutral ramp for controllable surfaces and text (inputs,
+  // borders, default text). 13 shades. Note: this is not part of the AFI
+  // brand book — it's a DS addition to help disambiguate neutral roles.
+  // ---------------------------------------------------------------------------
+  --color-afi-control-0:   #FFFFFF;
+  --color-afi-control-25:  #FCFCFD;
+  --color-afi-control-50:  #F9FAFB;
+  --color-afi-control-100: #F2F4F7;
+  --color-afi-control-200: #E4E7EC;
+  --color-afi-control-300: #D0D5DD;
+  --color-afi-control-400: #98A2B3;
+  --color-afi-control-500: #667085;
+  --color-afi-control-600: #475467;
+  --color-afi-control-700: #344054;
+  --color-afi-control-800: #1D2939;
+  --color-afi-control-900: #101828;
+  --color-afi-control-950: #0C111D;
+
+
+  // ---------------------------------------------------------------------------
+  // Signal ramps — universal (NOT brand-specific). Same semantic meaning
+  // regardless of brand: info, success, warning, error.
+  // Sparse scale (25 / 50 / 100 / 200 / 300 / 500 / 700 / 900) — matches Figma.
+  // ---------------------------------------------------------------------------
+  --color-info-25:  #F8FBFF;
+  --color-info-50:  #F0F6FF;
+  --color-info-100: #E0EDFF;
+  --color-info-200: #C7DBFF;
+  --color-info-300: #9EC5FE;
+  --color-info-500: #4C8DFF;
+  --color-info-700: #2F5FCC;
+  --color-info-900: #1C3A80;
+
+  --color-success-25:  #F8FDF9;
+  --color-success-50:  #F2FBF5;
+  --color-success-100: #E3F6E8;
+  --color-success-200: #C1E9CD;
+  --color-success-300: #97D7AD;
+  --color-success-500: #3FAE6A;
+  --color-success-700: #2C7A4A;
+  --color-success-900: #1A4A2D;
+
+  --color-warning-25:  #FFFEF5;
+  --color-warning-50:  #FFFBEA;
+  --color-warning-100: #FFF5CC;
+  --color-warning-200: #FFE9A3;
+  --color-warning-300: #FFD666;
+  --color-warning-500: #FFC107;
+  --color-warning-700: #B28704;
+  --color-warning-900: #6D5300;
+
+  --color-error-25:  #FFF8F8;
+  --color-error-50:  #FEF3F2;
+  --color-error-100: #FDECEC;
+  --color-error-200: #F9D3D3;
+  --color-error-300: #F5A3A3;
+  --color-error-500: #E54848;
+  --color-error-700: #B53030;
+  --color-error-900: #6E1D1D;
+
+
+  // ---------------------------------------------------------------------------
+  // data-viz — chart palettes, split into 5 sub-categories (25 tokens total).
+  // Universal (not brand-specific). Brands could override individual values
+  // in their per-brand file if needed.
+  // ---------------------------------------------------------------------------
+
+  // data-viz/series — 8 distinct hues for categorical comparisons
+  --color-data-viz-series-1: #062D3F;
+  --color-data-viz-series-2: #37BBF4;
+  --color-data-viz-series-3: #C8DAE2;
+  --color-data-viz-series-4: #F3F3F3;
+  --color-data-viz-series-5: #72C971;
+  --color-data-viz-series-6: #367B35;
+  --color-data-viz-series-7: #EB5656;
+  --color-data-viz-series-8: #EB8787;
+
+  // data-viz/monochrome — 6 shades (afi-azul tinted)
+  --color-data-viz-monochrome-1: #F2FAFE;
+  --color-data-viz-monochrome-2: #E6F4FB;
+  --color-data-viz-monochrome-3: #80C6E5;
+  --color-data-viz-monochrome-4: #0085CA;
+  --color-data-viz-monochrome-5: #00629A;
+  --color-data-viz-monochrome-6: #003B5F;
+
+  // data-viz/positive — named tiers (3 shades)
+  --color-data-viz-positive-subtle:  #C6F3C6;
+  --color-data-viz-positive-default: #72C971;
+  --color-data-viz-positive-strong:  #367B35;
+
+  // data-viz/negative — named tiers (2 shades)
+  --color-data-viz-negative-subtle:  #EB8787;
+  --color-data-viz-negative-default: #EB5656;
+
+  // data-viz/neutral — purpose-named chart chrome
+  --color-data-viz-neutral-axis:               #D0D5DD;
+  --color-data-viz-neutral-grid:               #F2F4F7;
+  --color-data-viz-neutral-label:              #344054;
+  --color-data-viz-neutral-tooltip-background: #FFFFFF;
+  --color-data-viz-neutral-tooltip-border:     #E4E7EC;
+  --color-data-viz-neutral-tooltip-text:       #0C111D;
+
+}

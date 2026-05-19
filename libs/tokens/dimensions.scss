@@ -1,0 +1,207 @@
+// =============================================================================
+// dimensions.scss — dimension primitives (Coherence DS)
+// =============================================================================
+//
+// Mirrors the Figma `Primitive Numbers` collection 1:1 (137 tokens).
+// Source: docs/archive/AFI foundational tokens Mayo 2026/Dimension primitives/.
+//
+// Pattern:  --dimension-N  →  N × 4 px  (with fractional indices for sub-4px steps)
+//
+// Shared across all brands. If a future brand needs a different dimension
+// scale, it can override individual values in its per-brand file under
+// `[data-brand="<name>"] { --dimension-N: …; }`.
+//
+// Rule: components NEVER reference --dimension-* directly. They consume
+// semantic CSS custom properties from semantic.scss (e.g. --button-height,
+// --canvas-padding-inline). Primitives feed the semantic layer.
+// See docs/rules/dimension-tokens.md.
+// =============================================================================
+
+:root {
+  // ---------------------------------------------------------------------------
+  // Fractional / sub-grid scale — only at the low end where 1-2 px nuance
+  // matters (focus ring offset, hairline borders, micro-icons)
+  // ---------------------------------------------------------------------------
+  --dimension-0:    0;
+  --dimension-0-25: 1px;
+  --dimension-0-5:  2px;
+  --dimension-1:    4px;
+  --dimension-1-5:  6px;
+  --dimension-2:    8px;
+  --dimension-2-5:  10px;
+  --dimension-3:    12px;
+  --dimension-3-5:  14px;
+  --dimension-4:    16px;
+  --dimension-4-5:  18px;
+  --dimension-5:    20px;
+
+
+  // ---------------------------------------------------------------------------
+  // Continuous integer scale (24 → 200 px). Base unit = 4 px.
+  // ---------------------------------------------------------------------------
+  --dimension-6:  24px;
+  --dimension-7:  28px;
+  --dimension-8:  32px;
+  --dimension-9:  36px;
+  --dimension-10: 40px;
+  --dimension-11: 44px;
+  --dimension-12: 48px;
+  --dimension-13: 52px;
+  --dimension-14: 56px;
+  --dimension-15: 60px;
+  --dimension-16: 64px;
+  --dimension-17: 68px;
+  --dimension-18: 72px;
+  --dimension-19: 76px;
+  --dimension-20: 80px;
+  --dimension-21: 84px;
+  --dimension-22: 88px;
+  --dimension-23: 92px;
+  --dimension-24: 96px;
+  --dimension-25: 100px;
+  --dimension-26: 104px;
+  --dimension-27: 108px;
+  --dimension-28: 112px;
+  --dimension-29: 116px;
+  --dimension-30: 120px;
+  --dimension-31: 124px;
+  --dimension-32: 128px;
+  --dimension-33: 132px;
+  --dimension-34: 136px;
+  --dimension-35: 140px;
+  --dimension-36: 144px;
+  --dimension-37: 148px;
+  --dimension-38: 152px;
+  --dimension-39: 156px;
+  --dimension-40: 160px;
+  --dimension-41: 164px;
+  --dimension-42: 168px;
+  --dimension-43: 172px;
+  --dimension-44: 176px;
+  --dimension-45: 180px;
+  --dimension-46: 184px;
+  --dimension-47: 188px;
+  --dimension-48: 192px;
+  --dimension-49: 196px;
+  --dimension-50: 200px;
+
+
+  // ---------------------------------------------------------------------------
+  // Even-indexed scale (208 → 800 px). 8-px steps at this size range.
+  // Exceptions: --dimension-55 (220 px) and --dimension-135 (540 px) are
+  // explicitly included because Figma uses them.
+  // ---------------------------------------------------------------------------
+  --dimension-52:  208px;
+  --dimension-54:  216px;
+  --dimension-55:  220px;
+  --dimension-56:  224px;
+  --dimension-58:  232px;
+  --dimension-60:  240px;
+  --dimension-62:  248px;
+  --dimension-64:  256px;
+  --dimension-66:  264px;
+  --dimension-68:  272px;
+  --dimension-70:  280px;
+  --dimension-72:  288px;
+  --dimension-74:  296px;
+  --dimension-76:  304px;
+  --dimension-78:  312px;
+  --dimension-80:  320px;
+  --dimension-82:  328px;
+  --dimension-84:  336px;
+  --dimension-86:  344px;
+  --dimension-88:  352px;
+  --dimension-90:  360px;
+  --dimension-92:  368px;
+  --dimension-94:  376px;
+  --dimension-96:  384px;
+  --dimension-98:  392px;
+  --dimension-100: 400px;
+  --dimension-102: 408px;
+  --dimension-104: 416px;
+  --dimension-106: 424px;
+  --dimension-108: 432px;
+  --dimension-110: 440px;
+  --dimension-112: 448px;
+  --dimension-114: 456px;
+  --dimension-116: 464px;
+  --dimension-118: 472px;
+  --dimension-120: 480px;
+  --dimension-122: 488px;
+  --dimension-124: 496px;
+  --dimension-126: 504px;
+  --dimension-128: 512px;
+  --dimension-130: 520px;
+  --dimension-132: 528px;
+  --dimension-134: 536px;
+  --dimension-135: 540px;
+  --dimension-136: 544px;
+  --dimension-138: 552px;
+  --dimension-140: 560px;
+  --dimension-142: 568px;
+  --dimension-144: 576px;
+  --dimension-146: 584px;
+  --dimension-148: 592px;
+  --dimension-150: 600px;
+  --dimension-152: 608px;
+  --dimension-154: 616px;
+  --dimension-156: 624px;
+  --dimension-158: 632px;
+  --dimension-160: 640px;
+  --dimension-162: 648px;
+  --dimension-164: 656px;
+  --dimension-166: 664px;
+  --dimension-168: 672px;
+  --dimension-170: 680px;
+  --dimension-172: 688px;
+  --dimension-174: 696px;
+  --dimension-176: 704px;
+  --dimension-178: 712px;
+  --dimension-180: 720px;
+  --dimension-182: 728px;
+  --dimension-184: 736px;
+  --dimension-186: 744px;
+  --dimension-188: 752px;
+  --dimension-190: 760px;
+  --dimension-192: 768px;
+  --dimension-194: 776px;
+  --dimension-196: 784px;
+  --dimension-198: 792px;
+  --dimension-200: 800px;
+
+
+  // ---------------------------------------------------------------------------
+  // Content-width primitives (≥ 960 px). Bootstrap-style container widths.
+  // ---------------------------------------------------------------------------
+  --dimension-240: 960px;
+  --dimension-285: 1140px;
+  --dimension-330: 1320px;
+
+
+  // ---------------------------------------------------------------------------
+  // Radius primitives — kept separate from --dimension because `radius-full`
+  // (9999 px) isn't on the 4-px grid. Semantic radius roles (--radius-control,
+  // --radius-card, --radius-modal, --radius-pill) live in semantic.scss.
+  // ---------------------------------------------------------------------------
+  --radius-none: 0;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+
+  // ---------------------------------------------------------------------------
+  // Breakpoint primitives — Bootstrap-style (LOCKED 2026-05-18).
+  //
+  // Mirrors Figma's "Dimensions semantic (Responsive design)" columns. The
+  // standard Tailwind `sm:`/`md:`/`lg:`/`xl:`/`2xl:` prefixes resolve to these
+  // values (via tailwind.config.js `screens`), so designers and devs use the
+  // same numbers.
+  // ---------------------------------------------------------------------------
+  --bp-sm:  576px;   // small phones → tablets
+  --bp-md:  768px;   // tablets → small desktops
+  --bp-lg:  992px;   // small desktops → desktops
+  --bp-xl:  1200px;  // desktops → large desktops
+  --bp-xxl: 1400px;  // large desktops → ultra-wide
+}

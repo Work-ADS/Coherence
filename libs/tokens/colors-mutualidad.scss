@@ -1,0 +1,45 @@
+// =============================================================================
+// colors-mutualidad.scss — Mutualidad brand primitives
+// =============================================================================
+//
+// ⚠️  STUB. Values not yet sourced from Mutualidad's Figma.
+//
+// When the brand palette is ready, replace the placeholder ramps below with
+// Mutualidad's actual primitives. Naming convention: `--color-mutualidad-{ramp}-{shade}`.
+// Each ramp follows the same shade scale as AFI (0 / 25 / 50 / 100 / 200 / 300
+// / 400 / 500 / 600 / 700 / 800 / 900, + 950 for control-style ramps).
+//
+// Activation: <html data-brand="mutualidad"> in the consuming app. The
+// `[data-brand="mutualidad"]` selector wins over `:root` defaults via CSS
+// specificity, just like Figma's variable modes.
+//
+// Semantic re-bindings (mapping --action-*, --canvas-*, etc. to these
+// Mutualidad primitives) live in semantic.scss under the same selector.
+// =============================================================================
+
+[data-brand="mutualidad"] {
+  // ---------------------------------------------------------------------------
+  // TODO: Mutualidad brand ramps (provide values from Figma)
+  //
+  // Example placeholder values (green-based palette per the design/Code
+  // examples reference). REPLACE with real Mutualidad primitives.
+  // ---------------------------------------------------------------------------
+
+  // --color-mutualidad-verde-0:   #FFFFFF;
+  // --color-mutualidad-verde-25:  #__;
+  // --color-mutualidad-verde-50:  #__;
+  // --color-mutualidad-verde-100: #__;
+  // --color-mutualidad-verde-200: #__;
+  // --color-mutualidad-verde-300: #__;
+  // --color-mutualidad-verde-400: #__;
+  // --color-mutualidad-verde-500: #4F9B68;  // from design/Code examples reference
+  // --color-mutualidad-verde-600: #__;
+  // --color-mutualidad-verde-700: #__;
+  // --color-mutualidad-verde-800: #__;
+  // --color-mutualidad-verde-900: #004136;  // from design/Code examples reference
+
+  // Other Mutualidad ramps go here. The signal ramps (info/success/warning/
+  // error) and data-viz tokens are inherited from :root — universal across
+  // brands. Override individual values only if Mutualidad needs different
+  // signal colors.
+}

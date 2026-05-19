@@ -1,6 +1,0 @@
-{
-  "canvas": {
-    "base": { "value": "{color.base.white}", "comment": "Page-level background" },
-    "fg":   { "value": "{color.neutral.900}", "comment": "Default text on canvas" }
-  }
-}

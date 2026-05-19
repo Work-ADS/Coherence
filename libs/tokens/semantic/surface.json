@@ -1,9 +1,0 @@
-{
-  "surface": {
-    "base":     { "value": "{color.base.white}", "comment": "Main content background. Brightest step." },
-    "quiet":    { "value": "hsl(200, 8%, 97%)",  "comment": "Persistent chrome (sidebar, toolbar). Claude/Granola/Perplexity calibration. LOCKED 2026-04-16." },
-    "muted":    { "value": "hsl(200, 8%, 94%)",  "comment": "Deeper quiet for nested panels, filter rails, secondary sidebars." },
-    "elevated": { "value": "{color.base.white}", "comment": "Lifted above base — cards, modals, popovers. Shadow distinguishes." },
-    "overlay":  { "value": "hsla(215, 25%, 15%, 0.55)", "comment": "Modal scrim." }
-  }
-}

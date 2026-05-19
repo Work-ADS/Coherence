@@ -1,9 +1,0 @@
-{
-  "avatar": {
-    "xs": { "value": "{dim.24}" },
-    "sm": { "value": "{dim.32}" },
-    "md": { "value": "{dim.40}" },
-    "lg": { "value": "{dim.48}" },
-    "xl": { "value": "{dim.64}" }
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "icon": {
-    "xs": { "value": "{dim.12}" },
-    "sm": { "value": "{dim.16}" },
-    "md": { "value": "{dim.20}" },
-    "lg": { "value": "{dim.24}" }
-  }
-}

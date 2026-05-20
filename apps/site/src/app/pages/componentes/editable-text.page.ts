@@ -37,7 +37,7 @@ const EDITABLE_TOKENS: TokenRow[] = [
       <div slot="code-tab">
         <afi-component-playground [code]="codeSnippet()">
           <div slot="preview">
-            <afi-editable-text
+            <afi-inline-edit
               [value]="text()"
               (committed)="text.set($event)"
             />

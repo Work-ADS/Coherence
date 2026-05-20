@@ -1,0 +1,14 @@
+// =============================================================================
+// status-chip.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--dimension-40);
+  width: 100%;
+  padding: var(--space-2xl);
+}

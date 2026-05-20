@@ -1,0 +1,86 @@
+<site-doc-page-shell
+  title="Filter Chip"
+  overline="COMPONENTS"
+  description="Chip de filtro toggleable — se activa/desactiva para aplicar filtros en listas y tablas. Opcionalmente muestra un dropdown con opciones de filtrado."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Filter Chip</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Table filters</span> — pills above una tabla para filtrar por Tipo, Estado, Fecha, Importe.</li>
+    <li><span class="use-cases__label">List refinement</span> — narrow results in a list view without a full filter panel.</li>
+    <li><span class="use-cases__label">Multi-select facets</span> — combinable filters where multiple can be active simultaneously.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Click chips to toggle</span>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div slot="preview" class="preview">
+    <div class="preview__chip-row">
+      @for (filter of filters(); track filter.label; let i = $index) {
+        <button
+          class="preview__chip"
+          [class.preview__chip--active]="filter.active"
+          (click)="toggleFilter(i)"
+          [attr.aria-pressed]="filter.active"
+        >
+          {{ filter.label }}
+          @if (filter.active) {
+            <svg class="preview__chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+            </svg>
+          }
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Tokens -->
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li><code>aria-pressed</code> reflects active/inactive state on each chip.</li>
+      <li>Chips are focusable buttons — Enter/Space toggles the filter.</li>
+      <li>Active state is communicated via both visual change (background + text weight) and ARIA.</li>
+      <li>When a chip opens a dropdown, add <code>aria-haspopup="listbox"</code> and <code>aria-expanded</code>.</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Show a chevron when the chip opens a sub-filter dropdown.</li>
+          <li>Allow multiple filters to be active simultaneously.</li>
+          <li>Keep labels short (1–2 words).</li>
+          <li>Update the filtered content immediately on toggle (no submit button).</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't use for navigation — use tabs or segmented control instead.</li>
+          <li>Don't mix filter chips with status chips in the same row.</li>
+          <li>Don't use more than 6–8 filter chips — group into a filter panel.</li>
+          <li>Don't use color alone to indicate active state — weight + background must both change.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

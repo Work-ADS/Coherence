@@ -1,0 +1,82 @@
+<site-doc-page-shell
+  title="Inline Edit"
+  overline="COMPONENTS"
+  description="Texto inline que se convierte en input al hacer clic. Confirma con Enter, cancela con Escape."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Inline Edit</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Renombrar planificación</span> — editar nombre del plan directamente en la cabecera.</li>
+    <li><span class="use-cases__label">Títulos editables</span> — cualquier texto que el usuario pueda modificar in-place.</li>
+    <li><span class="use-cases__label">Notas rápidas</span> — editar un label sin abrir un formulario completo.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Interactúa con el preview para editar</span>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div slot="preview" class="preview">
+    <afi-tooltip text="Renombrar" [shortcut]="['Enter']" position="bottom">
+      <afi-inline-edit
+        [value]="planName()"
+        placeholder="Nombre del plan"
+        ariaLabel="nombre del plan"
+        (committed)="onCommit($event)"
+      />
+    </afi-tooltip>
+    <afi-toast
+      [message]="toastMessage()"
+      [visible]="toastVisible()"
+      (undo)="onUndo()"
+      (dismissed)="toastVisible.set(false)"
+    />
+  </div>
+
+  <!-- Tokens -->
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Trigger button has <code>aria-label="Editar [ariaLabel]"</code> for screen readers.</li>
+      <li><code>Enter</code> commits the edit, <code>Escape</code> cancels — standard keyboard interaction.</li>
+      <li>Input receives focus automatically when edit mode activates.</li>
+      <li>Commit and cancel buttons have descriptive <code>aria-label</code> attributes.</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Show a toast confirmation after successful edit.</li>
+          <li>Wrap with <code>afi-tooltip</code> showing the shortcut hint.</li>
+          <li>Trim whitespace before committing.</li>
+          <li>Only emit <code>committed</code> when value actually changes.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't use for multi-line text — use a textarea component instead.</li>
+          <li>Don't allow empty commits — validate before emitting.</li>
+          <li>Don't use when the text is not user-editable (use plain text).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

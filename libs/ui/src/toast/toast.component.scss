@@ -16,10 +16,10 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  height: 40px;
+  height: var(--dim-40);
   padding-left: var(--space-xs);
   padding-right: var(--space-2xs);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--color-neutral-900);
   color: var(--color-base-white);
   box-shadow: var(--elevation-2);
@@ -29,7 +29,7 @@
 @keyframes toast-enter {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(var(--space-sm));
   }
   to {
     opacity: 1;
@@ -47,20 +47,21 @@
 .toast__action {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  height: 28px;
+  gap: var(--space-2xs);
+  height: var(--dimension-7);
   padding: 0 var(--space-xs);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: transparent;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--toast-action-color, var(--color-base-white));
+  opacity: 0.9;
   cursor: pointer;
   font: var(--type-body-sm-500);
   transition: background var(--duration-fast) var(--easing-enter);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--color-base-white);
+    background: var(--toast-hover-bg, var(--color-neutral-800));
+    opacity: 1;
   }
 }
 
@@ -76,9 +77,10 @@
 
 // ─── Divider ─────────────────────────────────────────────────────────────────
 .toast__divider {
-  width: 1px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.2);
+  width: var(--separator-thickness);
+  height: var(--dim-20);
+  background: var(--color-base-white);
+  opacity: 0.2;
 }
 
 // ─── Dismiss ─────────────────────────────────────────────────────────────────
@@ -86,24 +88,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: var(--dimension-7);
+  height: var(--dimension-7);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: transparent;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-base-white);
+  opacity: 0.7;
   cursor: pointer;
   transition: background var(--duration-fast) var(--easing-enter),
-              color var(--duration-fast) var(--easing-enter);
+              opacity var(--duration-fast) var(--easing-enter);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--color-base-white);
+    background: var(--toast-hover-bg, var(--color-neutral-800));
+    opacity: 1;
   }
 }
 
 // ─── Icon ────────────────────────────────────────────────────────────────────
 .toast__icon {
-  width: 16px;
-  height: 16px;
+  width: var(--dim-16);
+  height: var(--dim-16);
 }

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { IconButtonVariant, IconButtonSize } from './icon-button.variants';
+import { ChangeDetectionStrategy, Component, computed, input, output, ViewEncapsulation } from '@angular/core';
+import { IconButtonVariant, IconButtonVariantLegacy, IconButtonSize } from './icon-button.variants';
 
 /**
  * Icon Button — a square interactive button containing only an icon.
@@ -10,11 +10,12 @@ import { IconButtonVariant, IconButtonSize } from './icon-button.variants';
   selector: 'afi-icon-button',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './icon-button.component.html',
   styleUrls: ['./icon-button.component.scss'],
 })
 export class IconButtonComponent {
-  readonly variant = input<IconButtonVariant>('ghost');
+  readonly variant = input<IconButtonVariant | IconButtonVariantLegacy>('ghost');
   readonly size = input<IconButtonSize>('md');
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input.required<string>();

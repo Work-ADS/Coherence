@@ -235,6 +235,10 @@
   --border-width-hairline: var(--dimension-0-25);  // 1px
   --border-width-thick:    var(--dimension-0-5);   // 2px
 
+  // Focus ring
+  --focus-ring-width: var(--border-width-thick);   // 2px
+  --focus-ring: 0 0 0 var(--focus-ring-width) var(--border-focus);
+
 
   // ===========================================================================
   // CONTROL (17) — generic interactive control surfaces (buttons, switches, etc.)
@@ -611,10 +615,10 @@
   --disabled-border:     var(--color-afi-control-700);
   --disabled-icon:       var(--color-afi-control-600);
 
-  // ===== BRAND - PRIMARY — light azul-profundo shades for contrast on dark =====
-  --brand-primary-background-default: var(--color-afi-azul-profundo-300);
-  --brand-primary-background-hover:   var(--color-afi-azul-profundo-200);
-  --brand-primary-background-active:  var(--color-afi-azul-profundo-100);
+  // ===== BRAND - PRIMARY — white/light buttons for max contrast on dark =====
+  --brand-primary-background-default: var(--color-afi-control-50);
+  --brand-primary-background-hover:   var(--color-afi-control-200);
+  --brand-primary-background-active:  var(--color-afi-control-300);
   --brand-primary-foreground-default: var(--color-afi-control-950);  // dark text on light bg
 
   // ===== BRAND - SECONDARY (afi-azul-profundo) — bump up =====
@@ -653,7 +657,9 @@
   // ===== CONTROL — inputs / buttons on dark =====
   --control-background-default:  var(--color-afi-control-800);
   --control-background-hover:    var(--color-afi-control-700);
+  --control-background-active:   var(--color-afi-control-600);
   --control-background-selected: var(--color-afi-control-700);
+  --control-background-focus:    var(--brand-secondary-background-active);
   --control-foreground-default:  var(--foreground-secondary-default);
   --control-foreground-hover:    var(--foreground-secondary-hover);
   --control-foreground-active:   var(--brand-secondary-background-active);
@@ -671,12 +677,15 @@
   --nav-toolbar: var(--color-afi-control-900);
   --nav-item-background-default:  transparent;
   --nav-item-background-hover:    var(--control-background-hover);
+  --nav-item-background-active:   var(--control-background-active);
   --nav-item-background-selected: var(--control-background-selected);
-  --nav-item-foreground-default:  var(--control-foreground-default);
-  --nav-item-foreground-hover:    var(--control-foreground-hover);
-  --nav-item-foreground-active:   var(--control-foreground-active);
-  --nav-item-foreground-selected: var(--control-foreground-selected);
-  --nav-item-icon-default:        var(--control-foreground-default);
+  --nav-item-foreground-default:  var(--color-afi-control-100);
+  --nav-item-foreground-hover:    var(--color-afi-control-50);
+  --nav-item-foreground-active:   var(--color-afi-control-50);
+  --nav-item-foreground-selected: var(--color-afi-control-50);
+  --nav-item-icon-default:        var(--color-afi-control-300);
+  --nav-item-icon-hover:          var(--color-afi-control-100);
+  --nav-item-icon-selected:       var(--color-afi-control-50);
 
   // ===== OVERLAY — darker scrim, dark surface bodies =====
   --overlay-blanket:  hsla(0, 0%, 0%, 0.70);

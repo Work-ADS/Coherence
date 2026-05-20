@@ -48,5 +48,8 @@
 // Layer 3 — Semantic tokens (roles, responsive @media, brand overrides, dark mode)
 @import './semantic.scss';
 
-// Layer 4 — Backward-compat aliases
+// Layer 4 — Component tokens (per-component sizing, spacing; references semantics)
+@import './components.scss';
+
+// Layer 5 — Backward-compat aliases
 @import './aliases.scss';

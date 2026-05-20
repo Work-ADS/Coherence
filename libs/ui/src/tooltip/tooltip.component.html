@@ -1,6 +1,15 @@
-<span class="tooltip">
+<span class="tooltip" [attr.aria-describedby]="disabled() ? null : tooltipId">
   <ng-content />
   @if (!disabled()) {
-    <span role="tooltip" [class]="popClass()">{{ text() }}</span>
+    <span
+      [id]="tooltipId"
+      role="tooltip"
+      [class]="popClass()"
+      [style.transition-delay]="delayStyle()">
+      {{ text() }}
+      @if (shortcut(); as keys) {
+        <afi-kbd [keys]="keys" size="sm" class="tooltip__kbd" />
+      }
+    </span>
   }
 </span>

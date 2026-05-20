@@ -1,0 +1,121 @@
+<site-doc-page-shell
+  title="Icon Button"
+  overline="COMPONENTS"
+  description="Botón cuadrado con icono para acciones compactas sin etiqueta de texto. Siempre requiere aria-label y se recomienda acompañar con afi-tooltip."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Icon Button</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Toolbar actions</span> — compact row of actions (bold, italic, align) in an editor toolbar.</li>
+    <li><span class="use-cases__label">Top bar chrome</span> — notes, settings, and back-navigation buttons without text labels.</li>
+    <li><span class="use-cases__label">Card actions</span> — edit, delete, or overflow menu triggers on cards.</li>
+    <li><span class="use-cases__label">Close / dismiss</span> — modal close button, toast dismiss, panel collapse.</li>
+    <li><span class="use-cases__label">Expandable triggers</span> — tree node expansion, accordion chevrons.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Variant</span>
+      <afi-segmented-control
+        [options]="variantOptions"
+        [(value)]="variant"
+        size="sm"
+        ariaLabel="Icon button variant"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Icon button size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Disabled</span>
+      <afi-icon-button
+        [ariaLabel]="disabled() ? 'Enable buttons' : 'Disable buttons'"
+        variant="outline"
+        size="sm"
+        (clicked)="toggleDisabled()"
+      >
+        <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          @if (disabled()) {
+            <circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+          } @else {
+            <circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/>
+          }
+        </svg>
+      </afi-icon-button>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div slot="preview" class="preview">
+    <afi-tooltip text="Descargar" position="bottom">
+      <afi-icon-button
+        [variant]="variant()"
+        [size]="size()"
+        [disabled]="disabled()"
+        ariaLabel="Descargar"
+      >
+        <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+      </afi-icon-button>
+    </afi-tooltip>
+  </div>
+
+  <!-- Tokens -->
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories()" />
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li><code>ariaLabel</code> is <strong>required</strong> — icon-only buttons have no visible text, so the label is the only way screen readers announce the purpose.</li>
+      <li>When <code>pressed</code> is set, renders <code>aria-pressed</code> for toggle buttons.</li>
+      <li>When <code>expanded</code> is set, renders <code>aria-expanded</code> for disclosure triggers.</li>
+      <li>Focus ring uses <code>var(--border-focus)</code> and meets WCAG 2.2 focus-visible requirements.</li>
+      <li>Disabled state uses <code>aria-disabled="true"</code> and prevents click emission.</li>
+      <li>Always pair with <code>afi-tooltip</code> to provide a visible hint for sighted keyboard users.</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Always provide a descriptive <code>ariaLabel</code> (e.g. "Cerrar modal", not "X").</li>
+          <li>Wrap with <code>afi-tooltip</code> so hover reveals the action name.</li>
+          <li>Use <code>ghost</code> variant for chrome/toolbar contexts where buttons should be invisible until hovered.</li>
+          <li>Use <code>outline</code> variant when the button sits on a surface that needs visual boundary.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't use an icon button when a text label fits — prefer clarity over compactness.</li>
+          <li>Don't use identical icons for different actions in the same context.</li>
+          <li>Don't skip <code>ariaLabel</code> — the component requires it and will error.</li>
+          <li>Don't set custom sizes via CSS — use the <code>size</code> input for consistent hit areas.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

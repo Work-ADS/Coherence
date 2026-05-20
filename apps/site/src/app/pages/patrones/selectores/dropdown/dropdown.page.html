@@ -1,0 +1,158 @@
+<site-doc-page-shell
+  title="Dropdown"
+  overline="PATTERNS · SELECTORES"
+  description="Panel overlay genérico que se despliega desde un trigger — icon button, tag, select. Contiene items de acción, name-tags, o formularios."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/patrones">Patterns</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Dropdown</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Plan switcher</span> — name-tags con nombre de plan + metadata para navegar entre planificaciones.</li>
+    <li><span class="use-cases__label">Action menu</span> — duplicar, exportar, eliminar u otras acciones contextuales.</li>
+    <li><span class="use-cases__label">Notes panel</span> — textarea embebido con acciones guardar/descartar.</li>
+    <li><span class="use-cases__label">Filters / Settings</span> — formulario con sliders, inputs, toggles dentro del panel.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Trigger</span>
+      <afi-segmented-control
+        [options]="triggerOptions"
+        [(value)]="trigger"
+        size="sm"
+        ariaLabel="Dropdown trigger type"
+      />
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div slot="preview" class="preview">
+    <div class="preview__trigger-area">
+      @if (trigger() === 'icon-button') {
+        <afi-tooltip text="Cambiar plan" position="bottom">
+          <afi-icon-button
+            ariaLabel="Cambiar plan"
+            variant="ghost"
+            size="sm"
+            [attr.aria-haspopup]="'menu'"
+            [attr.aria-expanded]="dropdownOpen()"
+            (click)="toggleDropdown()"
+          >
+            <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/>
+            </svg>
+          </afi-icon-button>
+        </afi-tooltip>
+      } @else {
+        <div class="preview__trigger-area">
+          <afi-status-chip
+            estado="borrador"
+            [interactive]="true"
+            (triggered)="toggleDropdown()"
+          />
+
+          <!-- Dropdown panel -->
+          @if (dropdownOpen()) {
+            <div
+              class="preview__backdrop"
+              (click)="closeDropdown()"
+              aria-hidden="true"
+            ></div>
+            <div role="menu" class="preview__panel">
+              <button role="menuitem" class="preview__item">
+                <span class="preview__item-title">Borrador</span>
+              </button>
+              <button role="menuitem" class="preview__item">
+                <span class="preview__item-title">Aprobada</span>
+              </button>
+              <button role="menuitem" class="preview__item">
+                <span class="preview__item-title">Pendiente</span>
+              </button>
+              <button role="menuitem" class="preview__item">
+                <span class="preview__item-title">Rechazada</span>
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Dropdown panel -->
+      @if (dropdownOpen()) {
+        <div
+          class="preview__backdrop"
+          (click)="closeDropdown()"
+          aria-hidden="true"
+        ></div>
+        <div role="menu" class="preview__panel">
+          <button role="menuitem" class="preview__item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="preview__item-icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/>
+            </svg>
+            <span>Ir al listado</span>
+          </button>
+          <div role="separator" class="preview__divider"></div>
+          <p class="preview__heading">PLANIFICACIONES</p>
+          <button role="menuitem" class="preview__item preview__item--nametag preview__item--active">
+            <span class="preview__item-title">Plan 1 — Familia Torres</span>
+            <span class="preview__item-meta">SIM-2025-0011</span>
+          </button>
+          <button role="menuitem" class="preview__item preview__item--nametag">
+            <span class="preview__item-title">Plan 2 — Escenario conservador</span>
+            <span class="preview__item-meta">SIM-2025-0010</span>
+          </button>
+          <button role="menuitem" class="preview__item preview__item--nametag">
+            <span class="preview__item-title">Plan 3 — Pre-jubilación</span>
+            <span class="preview__item-meta">SIM-2025-0009</span>
+          </button>
+          <button role="menuitem" class="preview__item preview__item--nametag">
+            <span class="preview__item-title">Plan 4 — Legado familiar</span>
+            <span class="preview__item-meta">SIM-2025-0008</span>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li><code>aria-haspopup="menu"</code> on the trigger element.</li>
+      <li><code>aria-expanded</code> reflects open/closed state dynamically.</li>
+      <li><code>role="menu"</code> on the panel, <code>role="menuitem"</code> on each item.</li>
+      <li>Escape closes and returns focus to the trigger.</li>
+      <li>Arrow keys navigate between items (planned).</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Always include a transparent backdrop to handle click-outside dismissal.</li>
+          <li>Use the same animation pattern (<code>opacity + translateY</code>) across all dropdown instances.</li>
+          <li>Group related items with dividers and optional section headings.</li>
+          <li>Keep the panel narrow (260–320px) for action menus; wider for forms/filters.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't nest dropdowns inside other dropdowns — use a full panel or dialog instead.</li>
+          <li>Don't use a dropdown for more than 8–10 items — consider a searchable list.</li>
+          <li>Don't omit <code>aria-expanded</code> — screen readers need state changes announced.</li>
+          <li>Don't hardcode pixel sizes — use component tokens for spacing and dimensions.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

@@ -1,0 +1,24 @@
+// =============================================================================
+// tooltip.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--dimension-40);
+  width: 100%;
+  padding: var(--space-2xl);
+
+  &__trigger {
+    padding: var(--space-xs) var(--space-md);
+    border: var(--separator-thickness) solid var(--border-default);
+    border-radius: var(--radius-control);
+    font: var(--type-body-sm-400);
+    color: var(--foreground-primary-default);
+    background: var(--surface-primary);
+    cursor: default;
+  }
+}

@@ -1,0 +1,111 @@
+<site-doc-page-shell
+  title="Status Chip"
+  overline="COMPONENTS"
+  description="Chip de estado interactivo que refleja el estado de una planificación. En modo interactivo, actúa como trigger de un dropdown para cambiar estado."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Status Chip</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Plan status</span> — muestra el estado actual de una planificación (Borrador, Aprobada, Pendiente, etc.).</li>
+    <li><span class="use-cases__label">Interactive state switch</span> — click para abrir un dropdown y cambiar el estado.</li>
+    <li><span class="use-cases__label">Table cell badge</span> — indicador compacto de estado en filas de tabla.</li>
+    <li><span class="use-cases__label">Card metadata</span> — badge en tarjetas de listado.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Estado</span>
+      <afi-segmented-control
+        [options]="estadoOptions"
+        [(value)]="estado"
+        size="sm"
+        ariaLabel="Estado del chip"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Variant</span>
+      <afi-segmented-control
+        [options]="variantOptions"
+        [(value)]="variant"
+        size="sm"
+        ariaLabel="Chip variant"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Chip size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Mode</span>
+      <afi-segmented-control
+        [options]="interactiveOptions"
+        [(value)]="interactiveStr"
+        size="sm"
+        ariaLabel="Interactive mode"
+      />
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div slot="preview" class="preview">
+    <afi-status-chip
+      [estado]="estado()"
+      [variant]="variant()"
+      [size]="size()"
+      [interactive]="interactive()"
+      (triggered)="onTriggered()"
+    />
+  </div>
+
+  <!-- Tokens -->
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Interactive mode renders <code>aria-haspopup="menu"</code> on the button.</li>
+      <li>Static mode uses <code>role="status"</code> for live announcements.</li>
+      <li><code>aria-label</code> defaults to the estado label text; override with custom label for more context.</li>
+      <li>Color alone does not convey state — the dot + text label ensure accessibility.</li>
+      <li>Focus ring follows <code>var(--border-focus)</code> standard.</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Always show the dot + text label together for colorblind users.</li>
+          <li>Use <code>interactive</code> mode when clicking should open a state-change menu.</li>
+          <li>Use <code>subtle</code> variant in most contexts; <code>solid</code> for high-emphasis callouts.</li>
+          <li>Pair with a dropdown when interactive — never use the chip alone for state changes.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't use as a generic tag/label — this component is specifically for workflow states.</li>
+          <li>Don't remove the chevron in interactive mode — it signals clickability.</li>
+          <li>Don't use solid variant in dense table views — it's too heavy visually.</li>
+          <li>Don't cycle states on click without a confirming dropdown.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

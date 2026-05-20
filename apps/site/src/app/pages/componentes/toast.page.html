@@ -1,0 +1,79 @@
+<site-doc-page-shell
+  title="Toast"
+  overline="COMPONENTS"
+  description="Notificación temporal no intrusiva anclada en la parte inferior de la pantalla. Pill oscuro con acción de deshacer opcional y cierre."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Toast</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Confirmación de acción</span> — renombrar planificación, cambiar estado, guardar borrador.</li>
+    <li><span class="use-cases__label">Deshacer destructivo</span> — acción con botón "Deshacer" antes del auto-dismiss.</li>
+    <li><span class="use-cases__label">Feedback del sistema</span> — notificar éxito/error de operaciones asíncronas.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Demo</span>
+      <afi-button size="sm" variant="secondary" (clicked)="showToast()">
+        Show toast
+      </afi-button>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div slot="preview" class="preview">
+    <p class="preview__hint">Click "Show toast" to trigger the notification below.</p>
+    <afi-toast
+      [message]="toastMessage()"
+      [visible]="toastVisible()"
+      (undo)="onUndo()"
+      (dismissed)="onDismiss()"
+    />
+  </div>
+
+  <!-- Tokens -->
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Uses <code>role="status"</code> with <code>aria-live="polite"</code> — screen readers announce the message without interrupting the user.</li>
+      <li>Action and dismiss buttons have descriptive <code>aria-label</code> attributes.</li>
+      <li>Auto-dismiss timer gives sufficient time (5s default) for the user to read and act.</li>
+      <li>Respects <code>prefers-reduced-motion</code> — entrance animation is disabled.</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Keep messages short — one sentence max.</li>
+          <li>Provide an undo action for destructive or hard-to-reverse operations.</li>
+          <li>Auto-dismiss after 5 seconds to avoid stale notifications.</li>
+          <li>Stack multiple toasts if needed (future enhancement).</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't use for errors that require user action — use a modal or inline alert.</li>
+          <li>Don't show more than one toast at a time (currently single instance).</li>
+          <li>Don't put long multi-line content in the toast pill.</li>
+          <li>Don't set auto-dismiss below 3 seconds — too fast to read.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

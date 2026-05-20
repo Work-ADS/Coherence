@@ -1,0 +1,227 @@
+<site-pattern-page
+  title="Top Nav"
+  subtitle="Barra de navegación superior del Wealth Planner — identidad de la planificación a la izquierda, acciones globales a la derecha."
+  eyebrow="Patrones · Cabeceras"
+>
+  <!-- ============================================ -->
+  <!-- Handoff tab                                  -->
+  <!-- ============================================ -->
+  <div slot="handoff" class="handoff">
+    <!-- Live preview -->
+    <section class="preview-section">
+      <h2 class="preview-section__title">Live preview</h2>
+      <div class="top-nav-preview">
+        <!-- Left cluster -->
+        <div class="top-nav-preview__start">
+          <!-- Atom 1: Plan switcher (dual icon button) -->
+          <div class="top-nav-preview__switcher">
+            <afi-tooltip text="Cambiar planificación" position="bottom">
+              <afi-icon-button
+                ariaLabel="Cambiar planificación"
+                variant="ghost"
+                size="md"
+                (clicked)="plansOpen.set(!plansOpen())"
+              >
+                <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h.01M3 18h.01M3 6h.01M8 12h13M8 18h13M8 6h13"/>
+                </svg>
+              </afi-icon-button>
+            </afi-tooltip>
+
+            <afi-dropdown-panel
+              [open]="plansOpen()"
+              ariaLabel="Planificaciones"
+              (closed)="plansOpen.set(false)"
+            >
+              <p slot="header" class="dropdown-heading">Planificaciones</p>
+              <div slot="body" class="dropdown-list">
+                @for (p of plans; track p.id) {
+                  <button
+                    type="button"
+                    class="dropdown-item"
+                    (click)="selectPlan(p.id)"
+                  >
+                    <span class="dropdown-item__name">{{ p.name }}</span>
+                    <span class="dropdown-item__id">{{ p.id }}</span>
+                  </button>
+                }
+              </div>
+            </afi-dropdown-panel>
+          </div>
+
+          <!-- Atom 2: Identity + inline edit -->
+          <div class="top-nav-preview__identity">
+            <span class="top-nav-preview__client">{{ clientName() }}</span>
+            <span class="top-nav-preview__label">planificación:</span>
+            <afi-inline-edit
+              [value]="simId()"
+              ariaLabel="nombre de la planificación"
+              (committed)="onRename($event)"
+            />
+          </div>
+
+          <!-- Atom 3: Status chip (interactive) -->
+          <div class="top-nav-preview__state">
+            <afi-status-chip
+              [estado]="estado()"
+              [interactive]="true"
+              (triggered)="stateOpen.set(!stateOpen())"
+            />
+
+            <afi-dropdown-panel
+              [open]="stateOpen()"
+              ariaLabel="Cambiar estado"
+              [width]="200"
+              (closed)="stateOpen.set(false)"
+            >
+              <p slot="header" class="dropdown-heading">Estado</p>
+              <div slot="body" class="dropdown-list">
+                @for (s of states; track s.value) {
+                  <button
+                    type="button"
+                    class="dropdown-item"
+                    (click)="onEstadoChange(s.value)"
+                  >
+                    {{ s.label }}
+                  </button>
+                }
+              </div>
+            </afi-dropdown-panel>
+          </div>
+        </div>
+
+        <!-- Right cluster -->
+        <div class="top-nav-preview__end">
+          <!-- Atom 4: Notes -->
+          <div class="top-nav-preview__action">
+            <afi-tooltip text="Notas" position="bottom">
+              <afi-icon-button
+                ariaLabel="Notas"
+                variant="ghost"
+                size="md"
+                (clicked)="notesOpen.set(!notesOpen())"
+              >
+                <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 3v5h5"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 13h8M8 17h5"/>
+                </svg>
+              </afi-icon-button>
+            </afi-tooltip>
+
+            <afi-dropdown-panel
+              [open]="notesOpen()"
+              ariaLabel="Notas de la planificación"
+              (closed)="notesOpen.set(false)"
+            >
+              <p slot="header" class="dropdown-heading">Notas</p>
+              <div slot="body" class="dropdown-list">
+                <p class="dropdown-empty">No hay notas todavía.</p>
+              </div>
+            </afi-dropdown-panel>
+          </div>
+
+          <!-- Atom 5: Settings -->
+          <div class="top-nav-preview__action">
+            <afi-tooltip text="Ajustes de simulación" position="bottom">
+              <afi-icon-button
+                ariaLabel="Ajustes de simulación"
+                variant="ghost"
+                size="md"
+                (clicked)="settingsOpen.set(!settingsOpen())"
+              >
+                <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </afi-icon-button>
+            </afi-tooltip>
+
+            <afi-dropdown-panel
+              [open]="settingsOpen()"
+              ariaLabel="Ajustes de simulación"
+              (closed)="settingsOpen.set(false)"
+            >
+              <p slot="header" class="dropdown-heading">Ajustes</p>
+              <div slot="body" class="dropdown-list">
+                <p class="dropdown-empty">Ajustes de simulación aquí.</p>
+              </div>
+            </afi-dropdown-panel>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Atom cards -->
+    <p class="handoff__intro">
+      Cinco átomos componen el top-nav. Cada tarjeta enumera el primitivo que lo respalda y el snippet de código.
+    </p>
+
+    @for (a of atoms; track a.name) {
+      <site-atom-card [atom]="a" />
+    }
+
+    <!-- Toast (global for preview) -->
+    <afi-toast
+      [message]="toastMessage()"
+      [visible]="toastVisible()"
+      (undo)="onToastUndo()"
+      (dismissed)="toastVisible.set(false)"
+    />
+  </div>
+
+  <!-- ============================================ -->
+  <!-- Decisiones tab                               -->
+  <!-- ============================================ -->
+  <div slot="decisiones" class="decisiones">
+    <section>
+      <h2 class="decisiones__heading">El problema</h2>
+      <p class="decisiones__text">
+        La versión anterior del top bar usaba componentes ad-hoc con estilos inline y no era reutilizable ni testeable.
+        El nuevo <strong>Top Nav</strong> compone primitivos del Design System (icon-button, inline-edit, status-chip,
+        dropdown-panel, tooltip, toast) para lograr la misma funcionalidad de forma modular y white-label-ready.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="decisiones__heading">Composición</h2>
+      <ul class="decisiones__list">
+        <li><strong>Cluster izquierdo:</strong> plan-switcher (dual-icon button + dropdown), identity (client name + inline-edit para simId), state chip (interactive + dropdown).</li>
+        <li><strong>Cluster derecho:</strong> Notes (icon-button + dropdown-panel), Settings (icon-button + dropdown-panel).</li>
+        <li><strong>Feedback:</strong> Toast con undo para todas las acciones mutantes.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="decisiones__heading">Tokens de patrón</h2>
+      <p class="decisiones__text">
+        El top-nav no define tokens propios — hereda de los tokens de componente de cada primitivo
+        (icon-button, inline-edit, status-chip, dropdown). La superficie es <code>--surface-primary</code>
+        con borde inferior <code>--border-hairline</code>.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="decisiones__heading">Decisiones de interacción</h2>
+      <div class="decisiones__grid">
+        <div class="decisiones__card">
+          <p class="decisiones__card-title">Dual-icon button</p>
+          <p class="decisiones__card-text">Un solo botón con dos iconos SVG (chevron + list) en lugar de dos botones separados. Reduce el noise visual y el target count.</p>
+        </div>
+        <div class="decisiones__card">
+          <p class="decisiones__card-title">Inline-edit sin modo explícito</p>
+          <p class="decisiones__card-text">El nombre de la planificación se edita in-situ. No hay modal ni formulario separado. Enter/Esc como atajos con toast deshacible.</p>
+        </div>
+        <div class="decisiones__card">
+          <p class="decisiones__card-title">State chip → dropdown</p>
+          <p class="decisiones__card-text">El chip es un trigger. Click abre un menú con los estados disponibles. Selección cambia inmediatamente (optimistic) + toast con undo.</p>
+        </div>
+        <div class="decisiones__card">
+          <p class="decisiones__card-title">Acciones derechas = icon-only</p>
+          <p class="decisiones__card-text">Notas y Ajustes son icon-only con tooltip. Los paneles usan dropdown-panel con slots header/body/footer.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</site-pattern-page>

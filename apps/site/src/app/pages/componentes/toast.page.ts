@@ -1,64 +1,62 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-import { ToastComponent } from '@coherence/ui';
+import { ToastComponent, ButtonComponent } from '@coherence/ui';
 
-import { DocPageLayoutComponent } from '../../components/doc-page-layout';
-import { ComponentPlaygroundComponent } from '../../components/component-playground';
-import { CodeBlockComponent } from '../../components/code-block';
-import { TokensTableComponent, type TokenRow } from '../../components/tokens-table';
-
-const TOAST_TOKENS: TokenRow[] = [
-  { property: 'Fondo', token: 'var(--canvas-bg)' },
-  { property: 'Borde', token: 'var(--border-hairline)' },
-  { property: 'Sombra', token: 'var(--shadow-lg)' },
-  { property: 'Radio', token: 'var(--radius-lg)' },
-  { property: 'Duración animación', token: 'var(--duration-normal)' },
-];
+import { DocPageShellComponent } from '../../components/doc-page-shell';
+import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
 
 @Component({
   selector: 'app-toast-page',
   standalone: true,
   imports: [
-    DocPageLayoutComponent,
-    ComponentPlaygroundComponent,
-    CodeBlockComponent,
-    TokensTableComponent,
+    RouterLink,
     ToastComponent,
+    ButtonComponent,
+    DocPageShellComponent,
+    DocTokensComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <afi-doc-page-layout
-      kicker="COMPONENTS"
-      title="Toast"
-      subtitle="Notificación temporal no intrusiva para feedback del sistema."
-      docsSource="libs/ui/src/toast/"
-      buildPromptSlug="coherence-toast"
-    >
-      <div slot="code-tab">
-        <afi-component-playground [code]="codeSnippet()">
-          <div slot="preview" class="space-y-space-3">
-            <afi-toast intent="success" message="Guardado correctamente" />
-            <afi-toast intent="error" message="Error al guardar" />
-            <afi-toast intent="info" message="Procesando solicitud" />
-          </div>
-        </afi-component-playground>
-
-        <section>
-          <h2 id="tokens" class="text-section text-canvas-fg mb-space-6">Tokens consumidos</h2>
-          <afi-tokens-table [rows]="tokenRows" title="" />
-        </section>
-      </div>
-    </afi-doc-page-layout>
-  `,
+  templateUrl: './toast.page.html',
+  styleUrl: './toast.page.scss',
 })
 export class ToastPage {
-  readonly tokenRows = TOAST_TOKENS;
+  readonly toastVisible = signal(false);
+  readonly toastMessage = signal('Planificación renombrada correctamente');
 
-  readonly codeSnippet = signal(`import { ToastComponent } from '@coherence/ui';
+  readonly tokenCategories: DocTokenCategory[] = [
+    {
+      value: 'visual',
+      label: 'Visual',
+      rows: [
+        { property: 'Background', token: '--color-neutral-900' },
+        { property: 'Text color', token: '--color-base-white' },
+        { property: 'Border radius', token: '--radius-full' },
+        { property: 'Height', token: '--dim-40' },
+        { property: 'Shadow', token: '--elevation-2' },
+      ],
+    },
+    {
+      value: 'motion',
+      label: 'Motion',
+      rows: [
+        { property: 'Enter animation', token: '--duration-normal' },
+        { property: 'Easing', token: '--easing-enter' },
+        { property: 'Hover transition', token: '--duration-fast' },
+      ],
+    },
+  ];
 
-<afi-toast
-  intent="success"
-  message="Guardado correctamente"
-  [duration]="4000"
-/>`);
+  showToast(): void {
+    this.toastVisible.set(true);
+    setTimeout(() => this.toastVisible.set(false), 5000);
+  }
+
+  onUndo(): void {
+    this.toastVisible.set(false);
+  }
+
+  onDismiss(): void {
+    this.toastVisible.set(false);
+  }
 }

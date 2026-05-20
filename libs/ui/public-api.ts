@@ -52,7 +52,9 @@ export type { AvatarSize } from './src/avatar';
 export { SegmentedControlComponent } from './src/segmented-control';
 export type { SegmentedControlSize } from './src/segmented-control';
 export { DropdownPanelComponent } from './src/dropdown-panel';
-export { EditableTextComponent } from './src/editable-text';
+export { InlineEditComponent } from './src/inline-edit';
+/** @deprecated Use InlineEditComponent instead */
+export { InlineEditComponent as EditableTextComponent } from './src/inline-edit';
 export { TopBarComponent } from './src/top-bar';
 export { TooltipComponent } from './src/tooltip';
 export type { TooltipPosition } from './src/tooltip';

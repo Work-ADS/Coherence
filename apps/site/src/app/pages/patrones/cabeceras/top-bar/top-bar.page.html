@@ -1,0 +1,132 @@
+<site-pattern-page
+  title="Top bar (nav bar)"
+  subtitle="Chrome superior del Wealth Planner — identidad de la planificación a la izquierda, acciones globales a la derecha."
+  eyebrow="Patrones · Cabeceras"
+>
+  <!-- ============================================ -->
+  <!-- Handoff tab                                  -->
+  <!-- ============================================ -->
+  <div slot="handoff" class="handoff">
+    <!-- Live preview -->
+    <section class="preview-section">
+      <h2 class="preview-section__title">Live preview</h2>
+      <div class="top-bar-preview">
+        <div class="top-bar-preview__left">
+          <!-- Atom 1: Back button -->
+          <afi-tooltip text="Cambiar planificación" position="bottom">
+            <afi-icon-button ariaLabel="Cambiar planificación" variant="ghost" size="sm">
+              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/>
+              </svg>
+            </afi-icon-button>
+          </afi-tooltip>
+
+          <!-- Atom 2+3: Identity + inline edit -->
+          <div class="top-bar-preview__identity">
+            <span class="top-bar-preview__client">{{ clienteName() }}</span>
+            <span class="top-bar-preview__sep" aria-hidden="true">·</span>
+            <afi-tooltip text="Renombrar" [shortcut]="['Enter']" position="bottom">
+              <afi-inline-edit
+                [value]="planName()"
+                ariaLabel="nombre del plan"
+                (committed)="onRename($event)"
+              />
+            </afi-tooltip>
+          </div>
+
+          <!-- Atom 4: Status chip -->
+          <afi-status-chip
+            [estado]="estado()"
+            [interactive]="true"
+            (triggered)="onEstadoChange(estado() === 'borrador' ? 'aprobada' : 'borrador')"
+          />
+        </div>
+
+        <div class="top-bar-preview__right">
+          <!-- Atom 5: Notes -->
+          <afi-tooltip text="Notas" position="bottom">
+            <afi-icon-button ariaLabel="Notas" variant="ghost" size="sm">
+              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838.838-2.872a2 2 0 0 1 .506-.854z"/>
+              </svg>
+            </afi-icon-button>
+          </afi-tooltip>
+
+          <!-- Atom 6: Settings -->
+          <afi-tooltip text="Ajustes de simulación" position="bottom">
+            <afi-icon-button ariaLabel="Ajustes de simulación" variant="ghost" size="sm">
+              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                <line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/>
+                <line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/>
+                <line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/>
+                <line x1="2" x2="6" y1="14" y2="14"/><line x1="10" x2="14" y1="8" y2="8"/>
+                <line x1="18" x2="22" y1="16" y2="16"/>
+              </svg>
+            </afi-icon-button>
+          </afi-tooltip>
+        </div>
+      </div>
+    </section>
+
+    <!-- Atom cards -->
+    <p class="handoff__intro">
+      Siete átomos. Cada tarjeta enumera el primitivo que lo respalda y el snippet de código.
+    </p>
+
+    @for (a of atoms; track a.name) {
+      <site-atom-card [atom]="a" />
+    }
+
+    <!-- Toast (global for preview) -->
+    <afi-toast
+      [message]="toastMessage()"
+      [visible]="toastVisible()"
+      (undo)="onToastUndo()"
+      (dismissed)="toastVisible.set(false)"
+    />
+  </div>
+
+  <!-- ============================================ -->
+  <!-- Decisiones tab                               -->
+  <!-- ============================================ -->
+  <div slot="decisiones" class="decisiones">
+    <!-- Problema -->
+    <section>
+      <h2 class="decisiones__heading">El problema</h2>
+      <p class="decisiones__text">
+        La versión anterior del top bar se sentía vieja y poco funcional. No era obvio que se podía interactuar con sus elementos.
+      </p>
+      <ul class="decisiones__list">
+        <li><strong>Sin contexto inmediato.</strong> El usuario no sabía en qué cliente ni en qué planificación estaba.</li>
+        <li><strong>Información inútil arriba.</strong> El nombre del propio asesor ocupaba espacio premium.</li>
+        <li><strong>Affordances opacas.</strong> Iconos y textos se mezclaban sin distinguir lo clicable de lo decorativo.</li>
+      </ul>
+    </section>
+
+    <!-- Solución -->
+    <section>
+      <h2 class="decisiones__heading">La solución</h2>
+      <ul class="decisiones__list">
+        <li><strong>Cliente · Plan visibles siempre.</strong> Lo load-bearing primero.</li>
+        <li><strong>Renombrar inline.</strong> Click → input → Enter guarda → toast con Deshacer.</li>
+        <li><strong>Estado como dropdown interactivo.</strong> Cambio con toast deshacible.</li>
+        <li><strong>Iconos sin texto + tooltip.</strong> Reduce ruido visual; preserva jerarquía tipográfica.</li>
+      </ul>
+    </section>
+
+    <!-- Distinción -->
+    <section>
+      <h2 class="decisiones__heading">Distinción · page-scope vs global-scope</h2>
+      <div class="decisiones__grid">
+        <div class="decisiones__card">
+          <p class="decisiones__card-title">Top bar · global-scope</p>
+          <p class="decisiones__card-text">Habla de la simulación entera. Ajustes que viven aquí afectan a todas las páginas.</p>
+        </div>
+        <div class="decisiones__card">
+          <p class="decisiones__card-title">Page header · page-scope</p>
+          <p class="decisiones__card-text">Habla de la pantalla actual. Filtros y acciones afectan solo lo que el usuario ve ahora.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</site-pattern-page>

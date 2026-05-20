@@ -1,0 +1,91 @@
+// =============================================================================
+// Inline Edit — component styles
+// Matches production planner-top-bar styling with component tokens.
+// =============================================================================
+
+.edt__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--inline-edit-trigger-gap);
+  padding: var(--inline-edit-trigger-padding);
+  margin: 0 calc(var(--inline-edit-trigger-padding) * -1);
+  border: none;
+  border-radius: var(--inline-edit-trigger-radius);
+  background: transparent;
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--inline-edit-trigger-bg-hover);
+  }
+
+  &:hover .edt__icon {
+    opacity: 1;
+  }
+}
+
+.edt__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: var(--dimension-50);
+}
+
+.edt__icon {
+  height: var(--inline-edit-icon-size);
+  width: var(--inline-edit-icon-size);
+  color: var(--inline-edit-icon-color);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing-enter);
+}
+
+// ─── Edit mode ─────────────────────────────────────────────
+.edt__form {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--inline-edit-trigger-gap);
+}
+
+.edt__input {
+  height: var(--inline-edit-input-height);
+  width: var(--inline-edit-input-width);
+  padding: 0 var(--inline-edit-input-padding-x);
+  border-radius: var(--inline-edit-input-radius);
+  border: var(--separator-thickness) solid var(--inline-edit-input-border);
+  background: var(--inline-edit-input-bg);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+  outline: none;
+
+  &:focus-visible {
+    border-color: var(--inline-edit-input-focus-ring);
+    box-shadow: var(--focus-ring);
+  }
+}
+
+.edt__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--inline-edit-action-size);
+  width: var(--inline-edit-action-size);
+  border: none;
+  border-radius: var(--inline-edit-action-radius);
+  background: transparent;
+  color: var(--foreground-secondary-default);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-enter),
+              color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--inline-edit-trigger-bg-hover);
+    color: var(--foreground-primary-default);
+  }
+}
+
+.edt__action-icon {
+  height: var(--inline-edit-action-icon-size);
+  width: var(--inline-edit-action-icon-size);
+}

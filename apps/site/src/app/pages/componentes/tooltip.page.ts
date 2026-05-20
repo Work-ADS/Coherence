@@ -1,68 +1,65 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-import { TooltipComponent } from '@coherence/ui';
+import {
+  TooltipComponent,
+  SegmentedControlComponent,
+  IconButtonComponent,
+} from '@coherence/ui';
 import type { TooltipPosition } from '@coherence/ui';
 
-import { DocPageLayoutComponent } from '../../components/doc-page-layout';
-import { ComponentPlaygroundComponent } from '../../components/component-playground';
-import { CodeBlockComponent } from '../../components/code-block';
-import { TokensTableComponent, type TokenRow } from '../../components/tokens-table';
-
-const TOOLTIP_TOKENS: TokenRow[] = [
-  { property: 'Fondo', token: 'var(--neutral-900)' },
-  { property: 'Texto', token: 'var(--neutral-50)' },
-  { property: 'Radio', token: 'var(--radius-sm)' },
-  { property: 'Padding', token: 'var(--space-1) var(--space-2)' },
-  { property: 'Sombra', token: 'var(--shadow-md)' },
-];
+import { DocPageShellComponent } from '../../components/doc-page-shell';
+import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
 
 @Component({
   selector: 'app-tooltip-page',
   standalone: true,
   imports: [
-    DocPageLayoutComponent,
-    ComponentPlaygroundComponent,
-    CodeBlockComponent,
-    TokensTableComponent,
+    RouterLink,
     TooltipComponent,
+    SegmentedControlComponent,
+    IconButtonComponent,
+    DocPageShellComponent,
+    DocTokensComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <afi-doc-page-layout
-      kicker="COMPONENTS"
-      title="Tooltip"
-      subtitle="Información contextual que aparece al pasar el cursor sobre un elemento."
-      docsSource="libs/ui/src/tooltip/"
-      buildPromptSlug="coherence-tooltip"
-    >
-      <div slot="code-tab">
-        <afi-component-playground [code]="codeSnippet()">
-          <div slot="preview" class="flex items-center gap-space-8 py-space-8">
-            @for (pos of positions; track pos) {
-              <afi-tooltip [text]="'Tooltip ' + pos" [position]="pos">
-                <button class="px-space-3 py-space-2 border border-border-default rounded-md text-body-sm">
-                  {{ pos }}
-                </button>
-              </afi-tooltip>
-            }
-          </div>
-        </afi-component-playground>
-
-        <section>
-          <h2 id="tokens" class="text-section text-canvas-fg mb-space-6">Tokens consumidos</h2>
-          <afi-tokens-table [rows]="tokenRows" title="" />
-        </section>
-      </div>
-    </afi-doc-page-layout>
-  `,
+  templateUrl: './tooltip.page.html',
+  styleUrl: './tooltip.page.scss',
 })
 export class TooltipPage {
-  readonly positions: TooltipPosition[] = ['top', 'right', 'bottom', 'left'];
-  readonly tokenRows = TOOLTIP_TOKENS;
+  readonly position = signal<TooltipPosition>('bottom');
+  readonly showShortcut = signal(false);
 
-  readonly codeSnippet = signal(`import { TooltipComponent } from '@coherence/ui';
+  readonly positionOptions = [
+    { value: 'top', label: 'Top' },
+    { value: 'bottom', label: 'Bottom' },
+    { value: 'left', label: 'Left' },
+    { value: 'right', label: 'Right' },
+  ];
 
-<afi-tooltip text="Guardar cambios" position="top">
-  <button>Hover me</button>
-</afi-tooltip>`);
+  readonly tokenCategories: DocTokenCategory[] = [
+    {
+      value: 'visual',
+      label: 'Visual',
+      rows: [
+        { property: 'Background', token: '--color-neutral-900' },
+        { property: 'Text color', token: '--color-base-white' },
+        { property: 'Border radius', token: '--dim-4' },
+        { property: 'Padding block', token: '--space-2xs' },
+        { property: 'Padding inline', token: '--space-xs' },
+      ],
+    },
+    {
+      value: 'motion',
+      label: 'Motion',
+      rows: [
+        { property: 'Fade duration', token: '--duration-fast' },
+        { property: 'Easing', token: '--easing-enter' },
+      ],
+    },
+  ];
+
+  toggleShortcut(): void {
+    this.showShortcut.set(!this.showShortcut());
+  }
 }

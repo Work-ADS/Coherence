@@ -19,7 +19,7 @@
   // Focus ring
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--border-focus);
+    box-shadow: var(--focus-ring);
   }
 
   // Disabled
@@ -28,42 +28,29 @@
     cursor: not-allowed;
   }
 
-  // Icon sizing (SVGs inside the button)
+  // Icon sizing — always consistent regardless of container size
   svg {
     display: block;
+    height: var(--icon-button-icon-size);
+    width: var(--icon-button-icon-size);
   }
 
   // ---------------------------------------------------------------------------
-  // Sizes
+  // Sizes — container changes, icon stays at --icon-button-icon-size
   // ---------------------------------------------------------------------------
   &--sm {
-    height: var(--control-h-sm);
-    width: var(--control-h-sm);
-
-    svg {
-      height: var(--icon-sm);
-      width: var(--icon-sm);
-    }
+    height: var(--icon-button-size-sm);
+    width: var(--icon-button-size-sm);
   }
 
   &--md {
-    height: var(--control-h-md);
-    width: var(--control-h-md);
-
-    svg {
-      height: var(--icon-md);
-      width: var(--icon-md);
-    }
+    height: var(--icon-button-size-md);
+    width: var(--icon-button-size-md);
   }
 
   &--lg {
-    height: var(--control-h-lg);
-    width: var(--control-h-lg);
-
-    svg {
-      height: var(--icon-lg);
-      width: var(--icon-lg);
-    }
+    height: var(--icon-button-size-lg);
+    width: var(--icon-button-size-lg);
   }
 
   // ---------------------------------------------------------------------------
@@ -83,17 +70,19 @@
     }
   }
 
+  // @deprecated — use &--secondary instead
   &--subtle {
-    background: var(--control-background-default);
-    color: var(--foreground-tertiary-default);
+    background: var(--brand-secondary-neutral-background-default);
+    color: var(--brand-secondary-neutral-foreground-default);
 
     &:hover:not(:disabled) {
-      background: var(--control-background-hover);
-      color: var(--foreground-primary-default);
+      background: var(--brand-secondary-neutral-background-hover);
+      color: var(--brand-secondary-neutral-foreground-hover);
     }
 
     &:active:not(:disabled) {
-      background: var(--control-background-active);
+      background: var(--brand-secondary-neutral-background-active);
+      color: var(--brand-secondary-neutral-foreground-active);
     }
   }
 
@@ -109,6 +98,51 @@
 
     &:active:not(:disabled) {
       background: var(--control-background-hover);
+    }
+  }
+
+  &--primary {
+    background: var(--brand-primary-background-default);
+    color: var(--brand-primary-foreground-default);
+
+    &:hover:not(:disabled) {
+      background: var(--brand-primary-background-hover);
+      color: var(--brand-primary-foreground-hover);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--brand-primary-background-active);
+      color: var(--brand-primary-foreground-active);
+    }
+  }
+
+  &--secondary {
+    background: var(--brand-secondary-neutral-background-default);
+    color: var(--brand-secondary-neutral-foreground-default);
+
+    &:hover:not(:disabled) {
+      background: var(--brand-secondary-neutral-background-hover);
+      color: var(--brand-secondary-neutral-foreground-hover);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--brand-secondary-neutral-background-active);
+      color: var(--brand-secondary-neutral-foreground-active);
+    }
+  }
+
+  &--destruction {
+    background: transparent;
+    color: var(--feedback-error-foreground);
+
+    &:hover:not(:disabled) {
+      background: var(--feedback-error-background);
+      color: var(--feedback-error-foreground);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--feedback-error-border);
+      color: var(--feedback-error-foreground);
     }
   }
 }

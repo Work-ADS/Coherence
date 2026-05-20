@@ -1,0 +1,57 @@
+// =============================================================================
+// status-chip.component.scss — full BEM styles matching production top-bar
+// Uses component tokens from libs/tokens/components.scss
+// =============================================================================
+
+:host {
+  display: inline-flex;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--status-chip-radius);
+  font: var(--type-body-sm-500);
+  transition: filter var(--duration-fast) var(--easing-enter);
+
+  // Sizes
+  &--sm {
+    height: var(--status-chip-height-sm);
+    padding: 0 var(--status-chip-padding-x);
+  }
+
+  &--md {
+    height: var(--status-chip-height-md);
+    padding: 0 var(--status-chip-padding-x);
+  }
+
+  // Interactive (button)
+  &--interactive {
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      filter: brightness(0.95);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+  }
+}
+
+.status-chip__dot {
+  display: inline-block;
+  width: var(--status-chip-dot-size);
+  height: var(--status-chip-dot-size);
+  border-radius: var(--status-chip-dot-radius);
+  margin-right: var(--status-chip-gap);
+}
+
+.status-chip__chevron {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+  margin-left: var(--status-chip-gap);
+  opacity: 0.7;
+}

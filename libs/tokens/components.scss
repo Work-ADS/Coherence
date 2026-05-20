@@ -1,0 +1,139 @@
+// =============================================================================
+// components.scss — Component-level tokens (Coherence DS)
+// =============================================================================
+//
+// This file defines per-component tokens that reference semantic tokens.
+// The component layer enables white-labeling: change a brand's component tokens
+// without touching component SCSS files.
+//
+// Naming convention:  --{component}-{property}-{variant/state}
+//
+// Loaded by variables.scss after semantic.scss. All semantic tokens are
+// already available at :root by the time this file is parsed.
+// =============================================================================
+
+:root {
+
+  // ===========================================================================
+  // ICON BUTTON
+  // ===========================================================================
+
+  // Sizes (container dimensions)
+  --icon-button-size-sm: var(--avatar-sm);   // 32px
+  --icon-button-size-md: var(--avatar-md);   // 40px
+  --icon-button-size-lg: var(--avatar-lg);   // 48px
+
+  // Icon size inside button (always consistent)
+  --icon-button-icon-size: var(--icon-sm);   // 16px
+
+  // Radius
+  --icon-button-radius: var(--radius-control);
+
+
+  // ===========================================================================
+  // NAV ITEM
+  // ===========================================================================
+
+  // Sizing
+  --nav-item-height: var(--control-h-sm);
+  --nav-item-padding-x: var(--space-sm);
+  --nav-item-gap: var(--space-xs);
+  --nav-item-icon-size: var(--icon-sm);      // 16px
+  --nav-item-radius: var(--radius-control);
+
+
+  // ===========================================================================
+  // INLINE EDIT
+  // ===========================================================================
+
+  // Trigger (display mode)
+  --inline-edit-trigger-padding: var(--space-2xs);
+  --inline-edit-trigger-radius: var(--radius-control);
+  --inline-edit-trigger-bg-hover: var(--surface-subtle);
+  --inline-edit-trigger-gap: var(--space-2xs);
+
+  // Icon
+  --inline-edit-icon-size: var(--icon-sm);             // 16px
+  --inline-edit-icon-color: var(--foreground-secondary-default);
+
+  // Input (edit mode)
+  --inline-edit-input-height: var(--dimension-6);      // 24px — compact like top-bar
+  --inline-edit-input-width: var(--dimension-42);      // 170px — fits plan names
+  --inline-edit-input-padding-x: var(--space-xs);
+  --inline-edit-input-radius: var(--radius-control);
+  --inline-edit-input-border: var(--border-focus);
+  --inline-edit-input-bg: var(--surface-default);
+  --inline-edit-input-focus-ring: var(--border-focus);
+
+  // Action buttons (confirm/cancel)
+  --inline-edit-action-size: var(--dimension-6);       // 24px
+  --inline-edit-action-radius: var(--radius-control);
+  --inline-edit-action-icon-size: var(--icon-sm);
+
+
+  // ===========================================================================
+  // TABS
+  // ===========================================================================
+
+  --tab-item-height: var(--tab-height);
+  --tab-item-padding-x: var(--space-md);
+  --tab-item-gap: var(--space-xs);
+
+
+  // ===========================================================================
+  // STATUS CHIP
+  // ===========================================================================
+
+  --status-chip-height-sm: var(--dimension-5);         // 20px
+  --status-chip-height-md: var(--dimension-6);         // 24px
+  --status-chip-padding-x: var(--space-xs);
+  --status-chip-radius: var(--radius-pill);
+  --status-chip-dot-size: var(--space-2xs);            // 4px
+  --status-chip-dot-radius: var(--radius-full);
+  --status-chip-chevron-size: var(--icon-sm);          // 16px
+  --status-chip-gap: var(--space-2xs);
+
+
+  // ===========================================================================
+  // FILTER CHIP
+  // ===========================================================================
+
+  --filter-chip-height: var(--dimension-7);            // 28px
+  --filter-chip-padding-x: var(--space-sm);
+  --filter-chip-gap: var(--space-xs);
+  --filter-chip-radius: var(--radius-pill);
+  --filter-chip-icon-size: var(--icon-xs);             // 12px
+
+  // Colors
+  --filter-chip-bg-default: var(--surface-default);
+  --filter-chip-bg-active: var(--brand-secondary-neutral-background-default);
+  --filter-chip-fg-default: var(--foreground-secondary-default);
+  --filter-chip-fg-active: var(--foreground-primary-default);
+  --filter-chip-border: var(--border-default);
+  --filter-chip-border-active: var(--brand-secondary-neutral-background-hover);
+
+
+  // ===========================================================================
+  // DROPDOWN (pattern)
+  // ===========================================================================
+
+  --dropdown-min-width: var(--dimension-65);          // 260px
+  --dropdown-padding: var(--space-xs);
+  --dropdown-radius: var(--radius-card);
+  --dropdown-elevation: var(--elevation-lg);
+  --dropdown-offset-y: var(--space-xs);               // gap between trigger and panel
+
+  // Menu items
+  --dropdown-item-padding-x: var(--space-sm);
+  --dropdown-item-padding-y: var(--space-xs);
+  --dropdown-item-radius: var(--radius-sm);
+  --dropdown-item-icon-size: var(--icon-sm);          // 16px
+
+  // Divider
+  --dropdown-divider-color: var(--border-default);
+
+  // Animation
+  --dropdown-enter-duration: var(--duration-fast);
+  --dropdown-enter-easing: var(--easing-enter);
+  --dropdown-enter-distance: var(--space-2xs);        // 4px translateY
+}

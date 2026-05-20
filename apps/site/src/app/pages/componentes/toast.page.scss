@@ -1,0 +1,21 @@
+// =============================================================================
+// toast.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--dimension-40);
+  width: 100%;
+  padding: var(--space-2xl);
+  position: relative;
+
+  &__hint {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default);
+  }
+}

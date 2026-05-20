@@ -3,35 +3,18 @@ import {
   ChangeDetectionStrategy,
   computed,
   input,
+  output,
 } from '@angular/core';
 import type { Estado } from './status-chip.labels';
 import { estadoLabels } from './status-chip.labels';
-import {
-  baseClasses,
-  sizeClasses,
-  variantClasses,
-} from './status-chip.variants';
 import type { StatusChipSize, StatusChipVariant } from './status-chip.variants';
 
 @Component({
   selector: 'afi-status-chip',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <span
-      [class]="classes()"
-      [attr.data-estado]="estado()"
-      [attr.aria-label]="computedAriaLabel()"
-      role="status"
-    >
-      @if (showDot()) {
-        <span class="inline-block w-1.5 h-1.5 rounded-full mr-1.5"
-              [style.background-color]="dotColor()"
-              aria-hidden="true"></span>
-      }
-      <span>{{ label() }}</span>
-    </span>
-  `,
+  templateUrl: './status-chip.component.html',
+  styleUrls: ['./status-chip.component.scss'],
 })
 export class StatusChipComponent {
   readonly estado = input.required<Estado>();
@@ -39,6 +22,12 @@ export class StatusChipComponent {
   readonly variant = input<StatusChipVariant>('subtle');
   readonly showDot = input(true);
   readonly ariaLabel = input<string | null>(null);
+
+  /** When true, renders as a button with haspopup semantics. */
+  readonly interactive = input(false);
+
+  /** Emitted when interactive chip is clicked (parent composes with afi-menu). */
+  readonly triggered = output<void>();
 
   protected readonly label = computed(() => estadoLabels[this.estado()]);
 
@@ -51,14 +40,16 @@ export class StatusChipComponent {
     return `var(--status-${key}-dot)`;
   });
 
-  protected readonly classes = computed(() => {
-    const parts = [
-      baseClasses,
-      sizeClasses[this.size()],
-      variantClasses(this.variant(), this.estado()),
-    ];
-    return parts.join(' ');
+  protected readonly chipStyle = computed(() => {
+    const key = estadoToCssKey(this.estado());
+    const v = this.variant();
+    if (v === 'solid') {
+      return `background: var(--status-${key}-dot); color: white;`;
+    }
+    return `background: var(--status-${key}-bg); color: var(--status-${key}-fg);`;
   });
+
+  protected readonly sizeClass = computed(() => `status-chip--${this.size()}`);
 }
 
 function estadoToCssKey(estado: Estado): string {

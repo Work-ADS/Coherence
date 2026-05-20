@@ -1,0 +1,101 @@
+<site-doc-page-shell
+  title="Tooltip"
+  overline="COMPONENTS"
+  description="Información contextual que aparece al pasar el cursor o enfocar un elemento. Soporta texto plano y atajos de teclado vía afi-kbd."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Tooltip</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Icon buttons</span> — label for icon-only actions (notes, settings, back).</li>
+    <li><span class="use-cases__label">Keyboard shortcut hints</span> — show Enter/Esc next to an inline-edit trigger.</li>
+    <li><span class="use-cases__label">Truncated text</span> — reveal full content on hover when space is limited.</li>
+    <li><span class="use-cases__label">Disabled elements</span> — explain why a control is unavailable.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Position</span>
+      <afi-segmented-control
+        [options]="positionOptions"
+        [(value)]="position"
+        size="sm"
+        ariaLabel="Tooltip position"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Shortcut</span>
+      <afi-icon-button
+        [ariaLabel]="showShortcut() ? 'Hide shortcut' : 'Show shortcut'"
+        variant="outline"
+        size="sm"
+        (clicked)="toggleShortcut()"
+      >
+        <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <line x1="6" y1="8" x2="6" y2="8"/><line x1="10" y1="8" x2="10" y2="8"/>
+          <line x1="14" y1="8" x2="14" y2="8"/><line x1="18" y1="8" x2="18" y2="8"/>
+          <line x1="6" y1="16" x2="18" y2="16"/>
+        </svg>
+      </afi-icon-button>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div slot="preview" class="preview">
+    <afi-tooltip
+      text="Guardar cambios"
+      [position]="position()"
+      [shortcut]="showShortcut() ? ['⌘', 'S'] : null"
+    >
+      <button class="preview__trigger">Hover me</button>
+    </afi-tooltip>
+  </div>
+
+  <!-- Tokens -->
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>The tooltip popup has <code>role="tooltip"</code> and a unique <code>id</code>.</li>
+      <li>The trigger element receives <code>aria-describedby</code> pointing to the tooltip id — screen readers announce the tooltip content when the trigger is focused.</li>
+      <li>Tooltip dismisses on <code>Escape</code> key and on blur (via CSS <code>:focus-within</code>).</li>
+      <li>Respects <code>prefers-reduced-motion</code> — fade transition is disabled.</li>
+      <li>When <code>disabled</code> is true, the tooltip DOM is not rendered and <code>aria-describedby</code> is removed.</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Keep tooltip text short (1–2 words or a brief phrase).</li>
+          <li>Use <code>shortcut</code> input to show keyboard hints inline.</li>
+          <li>Set <code>position</code> to avoid overflow outside the viewport.</li>
+          <li>Use on icon-only buttons that lack visible labels.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't put interactive content inside a tooltip — use a popover instead.</li>
+          <li>Don't duplicate the visible label text in the tooltip.</li>
+          <li>Don't rely on tooltip as the only way to convey critical information.</li>
+          <li>Don't set <code>delayMs</code> to 0 — a small delay prevents accidental triggers.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

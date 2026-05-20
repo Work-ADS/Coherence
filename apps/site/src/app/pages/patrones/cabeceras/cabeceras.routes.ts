@@ -19,4 +19,8 @@ export const cabeceras_routes: Routes = [
     path: 'top-bar',
     loadComponent: () => import('./top-bar/top-bar.page').then((m) => m.TopBarPatternPage),
   },
+  {
+    path: 'top-nav',
+    loadComponent: () => import('./top-nav/top-nav.page').then((m) => m.TopNavPage),
+  },
 ];

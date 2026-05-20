@@ -1,11 +1,13 @@
 // =============================================================================
 // Icon Button — variants (Coherence DS)
-// =============================================================================
 //
-// Defines variant and size types. The actual styling lives in the .scss file
-// using CSS custom properties. This file provides the variant/size type system
-// so the component can expose typed inputs.
+// Matches Figma component spec: 5 types × 3 sizes × 4 states.
+// Figma token names: --button/{type}/background/{state}
 // =============================================================================
 
-export type IconButtonVariant = 'ghost' | 'subtle' | 'outline';
+export type IconButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'destruction';
+
+/** @deprecated Use 'secondary' instead */
+export type IconButtonVariantLegacy = 'subtle';
+
 export type IconButtonSize = 'sm' | 'md' | 'lg';

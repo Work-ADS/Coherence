@@ -30,6 +30,10 @@ export const patrones_routes: Routes = [
     loadChildren: () => import('./tablas/tablas.routes').then((m) => m.tablas_routes),
   },
   {
+    path: 'selectores',
+    loadChildren: () => import('./selectores/selectores.routes').then((m) => m.selectores_routes),
+  },
+  {
     path: 'sidebar-decisiones',
     loadComponent: () =>
       import('../novedades/sidebar-decisiones/sidebar-decisiones.page').then(

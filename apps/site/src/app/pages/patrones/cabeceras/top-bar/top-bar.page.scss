@@ -1,0 +1,122 @@
+// =============================================================================
+// top-bar.page.scss — Pattern page styles for top-bar
+// =============================================================================
+
+.handoff {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.handoff__intro {
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-width: var(--content-prose);
+}
+
+// ─── Live preview ──────────────────────────────────────────────────────────
+.preview-section {
+  &__title {
+    font: var(--type-section);
+    color: var(--foreground-primary-default);
+    margin: 0 0 var(--space-md);
+  }
+}
+
+.top-bar-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--dimension-12);
+  padding: 0 var(--space-md);
+  background: var(--surface-primary);
+  border: var(--separator-thickness) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  &__identity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  &__client {
+    font: var(--type-body-sm-500);
+    color: var(--foreground-primary-default);
+  }
+
+  &__sep {
+    color: var(--foreground-tertiary-default);
+  }
+}
+
+// ─── Decisiones tab ────────────────────────────────────────────────────────
+.decisiones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  max-width: var(--content-prose);
+
+  &__heading {
+    font: var(--type-section);
+    color: var(--foreground-primary-default);
+    margin: 0 0 var(--space-sm);
+  }
+
+  &__text {
+    font: var(--type-body-md-400);
+    color: var(--foreground-secondary-default);
+    margin: 0 0 var(--space-sm);
+  }
+
+  &__list {
+    list-style: disc;
+    padding-left: var(--space-lg);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    font: var(--type-body-md-400);
+    color: var(--foreground-secondary-default);
+
+    strong {
+      color: var(--foreground-primary-default);
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+  }
+
+  &__card {
+    border-radius: var(--radius-md);
+    border: var(--separator-thickness) solid var(--border-hairline);
+    background: var(--surface-secondary-default);
+    padding: var(--space-md);
+  }
+
+  &__card-title {
+    font: var(--type-body-sm-500);
+    color: var(--foreground-primary-default);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  &__card-text {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+    margin: 0;
+  }
+}

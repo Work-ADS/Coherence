@@ -1,0 +1,25 @@
+// =============================================================================
+// doc-tokens.component.scss — tokens block for component/pattern doc pages
+// =============================================================================
+
+.doc-tokens {
+  display: block;
+}
+
+.doc-tokens__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.doc-tokens__title {
+  font: var(--type-section);
+  color: var(--foreground-primary-default);
+  margin: 0;
+}
+
+.doc-tokens__filter {
+  margin-bottom: var(--space-md);
+}

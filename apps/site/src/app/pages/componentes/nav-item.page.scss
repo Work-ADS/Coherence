@@ -1,0 +1,23 @@
+// =============================================================================
+// nav-item.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--dimension-14) var(--space-lg);
+  min-height: var(--dimension-35);
+
+  &__item {
+    width: var(--dimension-64);
+  }
+
+  &__icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}

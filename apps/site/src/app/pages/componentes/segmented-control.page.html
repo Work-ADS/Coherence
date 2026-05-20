@@ -1,0 +1,120 @@
+<site-doc-page-shell
+  title="Segmented Control"
+  overline="COMPONENTS"
+  description="A pill-style toggle bar for mutually exclusive options. A sliding indicator animates to the active selection, providing clear visual feedback. Ideal for switching between views or modes within the same context without navigating away."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Segmented Control</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">View switching</span> — toggle between Preview/Code in a playground.</li>
+    <li><span class="use-cases__label">Time ranges</span> — Day / Week / Month / Year filters.</li>
+    <li><span class="use-cases__label">Mode selection</span> — Grid vs List, Map vs Table.</li>
+    <li><span class="use-cases__label">Doc page navigation</span> — switching between Diseño / Code tabs.</li>
+    <li><span class="use-cases__label">Small option sets (2–5)</span> — where all labels fit without scrolling.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-select
+        [options]="sizeOptions"
+        [value]="size()"
+        (valueChange)="onSizeChange($event + '')"
+        size="sm"
+        ariaLabel="Size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Options count</span>
+      <afi-select
+        [options]="countOptions"
+        [value]="count()"
+        (valueChange)="onCountChange($event + '')"
+        size="sm"
+        ariaLabel="Number of options"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Mode</span>
+      <afi-icon-button
+        [ariaLabel]="mode() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+        variant="outline"
+        size="sm"
+        (clicked)="toggleMode()"
+      >
+        @if (mode() === 'light') {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        } @else {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        }
+      </afi-icon-button>
+    </div>
+  </div>
+
+  <!-- Live preview -->
+  <div slot="preview" class="preview" [class.preview--dark]="mode() === 'dark'">
+    <afi-segmented-control
+      [options]="demoOptions()"
+      [(value)]="selected"
+      [size]="$any(size())"
+      ariaLabel="Demo segmented control"
+    />
+  </div>
+
+  <!-- Tokens -->
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Container uses <code>role="radiogroup"</code> with <code>aria-label</code>.</li>
+      <li>Each option uses <code>role="radio"</code> with <code>aria-checked</code>.</li>
+      <li>Focus ring uses <code>var(--border-focus)</code> meeting WCAG 2.2.</li>
+      <li>Disabled options have <code>opacity: 0.5</code> and <code>cursor: not-allowed</code>.</li>
+      <li>Respects <code>prefers-reduced-motion</code> — pill transition disabled.</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Use for 2–5 mutually exclusive options.</li>
+          <li>Keep labels short (1–2 words).</li>
+          <li>Use when all options should be visible at once.</li>
+          <li>Pair with external content that reacts to the selection.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't use for more than 5 options — use tabs or a select instead.</li>
+          <li>Don't use when options have their own panel content — use tabs.</li>
+          <li>Don't nest segmented controls inside each other.</li>
+          <li>Don't truncate labels — if they don't fit, reconsider the pattern.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

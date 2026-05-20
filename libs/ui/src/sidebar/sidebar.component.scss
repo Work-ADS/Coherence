@@ -6,7 +6,7 @@
 .sidebar {
   height: 100%;
   background: var(--nav-sidebar);
-  border-right: 1px solid var(--border-subtle);
+  border-right: var(--separator-thickness) solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   transition: width var(--duration-base) var(--easing-standard);
@@ -15,11 +15,11 @@
 }
 
 .sidebar__logo-row {
-  height: var(--dimension-12); /* 48px */
+  height: var(--dimension-12);
   display: flex;
   align-items: center;
   padding-inline: var(--space-md);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--separator-thickness) solid var(--border-subtle);
   flex-shrink: 0;
 }
 
@@ -29,7 +29,7 @@
   padding: var(--space-xs);
 
   &::-webkit-scrollbar {
-    width: 4px;
+    width: var(--dimension-1);
   }
   &::-webkit-scrollbar-thumb {
     background: var(--border-subtle);
@@ -38,7 +38,7 @@
 }
 
 .sidebar__footer {
-  border-top: 1px solid var(--border-subtle);
+  border-top: var(--separator-thickness) solid var(--border-subtle);
   padding: var(--space-xs) var(--space-md);
   flex-shrink: 0;
 }
@@ -111,18 +111,20 @@
 
 /* ─── Brand variant ─── */
 .sidebar--brand {
+  color: var(--brand-secondary-foreground-default);
   --nav-sidebar: var(--brand-secondary-background-default);
   --border-subtle: var(--brand-secondary-background-hover);
   --nav-item-background-default: transparent;
   --nav-item-background-hover: var(--brand-secondary-background-hover);
   --nav-item-background-active: var(--brand-secondary-background-active);
-  --nav-item-background-selected: var(--brand-secondary-background-hover);
-  --nav-item-foreground-default: var(--brand-secondary-foreground-default);
-  --nav-item-foreground-hover: var(--brand-secondary-foreground-hover);
-  --nav-item-foreground-active: var(--brand-secondary-foreground-active);
+  --nav-item-background-selected: var(--overlay-darken-20);
+  --nav-item-foreground-default: var(--brand-secondary-foreground-hover);
+  --nav-item-foreground-hover: var(--brand-secondary-foreground-default);
+  --nav-item-foreground-active: var(--brand-secondary-foreground-default);
   --nav-item-foreground-selected: var(--brand-secondary-foreground-default);
-  --nav-item-icon-default: var(--brand-secondary-foreground-default);
-  --nav-item-icon-hover: var(--brand-secondary-foreground-hover);
-  --nav-item-icon-active: var(--brand-secondary-foreground-active);
-  --foreground-tertiary-default: var(--brand-secondary-foreground-default);
+  --nav-item-icon-default: var(--brand-secondary-foreground-hover);
+  --nav-item-icon-hover: var(--brand-secondary-foreground-default);
+  --nav-item-icon-active: var(--brand-secondary-foreground-default);
+  --nav-item-icon-selected: var(--brand-secondary-foreground-default);
+  --foreground-tertiary-default: var(--brand-secondary-foreground-hover);
 }

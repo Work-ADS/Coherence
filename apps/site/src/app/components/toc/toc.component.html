@@ -1,0 +1,27 @@
+<aside
+  role="complementary"
+  aria-label="Índice de la página"
+  class="sticky top-space-12"
+>
+  <p class="text-body-sm font-medium text-canvas-fg mb-space-3">{{ title() }}</p>
+  <nav>
+    <ul class="space-y-space-1">
+      @for (entry of entries(); track entry.id) {
+        <li [class.pl-space-4]="entry.level === 3">
+          <a
+            [href]="'#' + entry.id"
+            class="block text-body-sm py-space-1 transition-colors duration-fast
+                   border-l-2 pl-space-3 -ml-px"
+            [class.border-action]="activeId() === entry.id"
+            [class.text-action-700]="activeId() === entry.id"
+            [class.font-medium]="activeId() === entry.id"
+            [class.border-transparent]="activeId() !== entry.id"
+            [class.text-neutral-400]="activeId() !== entry.id"
+            [class.hover:text-canvas-fg]="activeId() !== entry.id"
+            (click)="onLinkClick($event, entry.id)"
+          >{{ entry.text }}</a>
+        </li>
+      }
+    </ul>
+  </nav>
+</aside>

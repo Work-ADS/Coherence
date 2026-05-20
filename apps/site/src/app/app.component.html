@@ -19,6 +19,7 @@
       <!-- Patterns section -->
       <afi-nav-section label="Patterns" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
         <afi-nav-item label="Sidebar" [showIcon]="false" [active]="isActive('/componentes/sidebar')" (clicked)="navigate('/componentes/sidebar')" />
+        <afi-nav-item label="Headers" [showIcon]="false" [active]="isActive('/patrones/cabeceras/cabecera-de-pagina')" (clicked)="navigate('/patrones/cabeceras/cabecera-de-pagina')" />
       </afi-nav-section>
     </afi-sidebar>
   }
@@ -32,7 +33,7 @@
         <nav slot="start" class="top-nav" aria-label="Main navigation">
           <a routerLink="/fundamentos" routerLinkActive="active" class="top-nav__link">Foundations</a>
           <a routerLink="/componentes" routerLinkActive="active" class="top-nav__link">Components</a>
-          <a routerLink="/patrones" routerLinkActive="active" class="top-nav__link">Patterns</a>
+          <!-- <a routerLink="/patrones" routerLinkActive="active" class="top-nav__link">Patterns</a> -->
           <a routerLink="/novedades" routerLinkActive="active" class="top-nav__link">Handoffs</a>
           <a routerLink="/blog" routerLinkActive="active" class="top-nav__link">Blog</a>
         </nav>

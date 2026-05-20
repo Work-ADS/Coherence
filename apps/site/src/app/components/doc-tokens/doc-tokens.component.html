@@ -1,0 +1,27 @@
+<div class="doc-tokens">
+  <div class="doc-tokens__header">
+    <h2 class="doc-tokens__title">{{ title() }}</h2>
+    <afi-button
+      variant="secondary"
+      size="sm"
+      [ariaLabel]="copied() ? 'Copiado' : 'Copiar tokens'"
+      (clicked)="copyTokens()"
+    >
+      {{ copied() ? 'Copiado' : 'Copy' }}
+    </afi-button>
+  </div>
+
+  @if (options().length > 1) {
+    <div class="doc-tokens__filter">
+      <afi-segmented-control
+        [options]="options()"
+        [value]="active()"
+        (valueChange)="onCategoryChange($event)"
+        size="sm"
+        ariaLabel="Token category"
+      />
+    </div>
+  }
+
+  <afi-tokens-table [rows]="activeRows()" />
+</div>

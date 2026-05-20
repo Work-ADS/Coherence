@@ -1,0 +1,50 @@
+<nav
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-expanded]="isExpanded() ? 'true' : 'false'"
+  [style.width]="currentWidth()"
+  class="sidebar"
+  [class.sidebar--brand]="variant() === 'brand'">
+
+  <!-- Top slot (logo) -->
+  <div class="sidebar__logo-row">
+    <ng-content select="[slot=top]" />
+  </div>
+
+  <!-- Pin button (hover-expand mode) -->
+  @if (mode() === 'hover-expand' && isExpanded()) {
+    <button
+      type="button"
+      class="sidebar__pin"
+      [class.is-pinned]="pinned()"
+      [attr.aria-label]="pinned() ? 'Unpin sidebar' : 'Pin sidebar'"
+      (click)="togglePin()">
+      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d="M10 2a.75.75 0 01.75.75v5.59l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 011.06-1.06l3.22 3.22V2.75A.75.75 0 0110 2z" />
+      </svg>
+    </button>
+  }
+
+  <!-- Collapse toggle (collapsible mode) -->
+  @if (mode() === 'collapsible') {
+    <button
+      type="button"
+      class="sidebar__toggle"
+      [class.is-collapsed]="!isExpanded()"
+      [attr.aria-label]="isExpanded() ? 'Collapse navigation' : 'Expand navigation'"
+      (click)="toggleCollapse()">
+      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+      </svg>
+    </button>
+  }
+
+  <!-- Nav items -->
+  <div class="sidebar__content" role="list">
+    <ng-content />
+  </div>
+
+  <!-- Bottom slot (user/settings) -->
+  <div class="sidebar__footer">
+    <ng-content select="[slot=bottom]" />
+  </div>
+</nav>

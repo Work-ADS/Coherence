@@ -1,0 +1,28 @@
+<button
+  type="button"
+  (click)="toggle()"
+  [attr.aria-expanded]="isOpen()"
+  class="flex items-center w-full px-3 py-1 rounded-sm
+         text-sm text-canvas-fg
+         hover:bg-surface-muted
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus
+         transition-colors"
+>
+  <svg
+    class="w-4 h-4 mr-space-2 shrink-0 transition-transform duration-fast"
+    [class.rotate-90]="isOpen()"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+  >
+    <path d="M6 4l4 4-4 4" />
+  </svg>
+  {{ label() }}
+</button>
+
+@if (isOpen()) {
+  <ul class="flex flex-col gap-space-1 pl-space-6 mt-space-1">
+    <ng-content />
+  </ul>
+}

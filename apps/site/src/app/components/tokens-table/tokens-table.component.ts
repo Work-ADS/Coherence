@@ -19,20 +19,8 @@ import type { TokenRow } from './tokens-table.types';
   standalone: true,
   imports: [TableComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <section>
-      @if (title()) {
-        <h3 class="text-section text-canvas-fg mb-space-6">{{ title() }}</h3>
-      }
-      <afi-table
-        [columns]="computedColumns()"
-        [rows]="tableRows()"
-        trackByKey="property"
-        density="compact"
-        [rowHoverable]="true"
-      />
-    </section>
-  `,
+  templateUrl: './tokens-table.component.html',
+  styleUrl: './tokens-table.component.scss',
 })
 export class TokensTableComponent {
   readonly title = input<string>('');

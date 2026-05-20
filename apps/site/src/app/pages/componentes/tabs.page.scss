@@ -1,0 +1,26 @@
+// =============================================================================
+// tabs.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: block;
+  width: 100%;
+  padding: var(--space-md);
+  background: var(--surface-primary);
+  color: var(--foreground-primary-default);
+  transition: background-color var(--duration-base) var(--easing-enter),
+              color var(--duration-base) var(--easing-enter);
+
+  &--dark {
+    background: var(--color-neutral-950);
+    color: var(--color-neutral-50);
+  }
+
+  &__panel {
+    padding: var(--space-lg);
+    font: var(--type-body-md-400);
+    opacity: 0.75;
+  }
+}

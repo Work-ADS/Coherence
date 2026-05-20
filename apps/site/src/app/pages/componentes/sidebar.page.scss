@@ -1,0 +1,31 @@
+// =============================================================================
+// sidebar.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: block;
+  width: 100%;
+  height: var(--dimension-120);
+  padding: 0;
+  background: var(--surface-primary);
+  color: var(--foreground-primary-default);
+  transition: background-color var(--duration-base) var(--easing-enter),
+              color var(--duration-base) var(--easing-enter);
+
+  &--dark {
+    background: var(--color-neutral-950);
+    color: var(--color-neutral-50);
+  }
+
+  &__icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &__footer {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default);
+  }
+}

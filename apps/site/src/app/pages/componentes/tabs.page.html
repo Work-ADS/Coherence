@@ -1,0 +1,124 @@
+<site-doc-page-shell
+  title="Tabs"
+  overline="COMPONENTS"
+  description="Underline-style horizontal tabs with a sliding indicator and animated slide+blur panel transitions. Implements the WAI-ARIA tablist/tab/tabpanel pattern with full keyboard navigation. Content lives inside each tab item and is conditionally rendered into panels."
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Tabs</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Content sections</span> — organize related content (General, Settings, Activity).</li>
+    <li><span class="use-cases__label">Code viewers</span> — switch between HTML / TypeScript / SCSS files.</li>
+    <li><span class="use-cases__label">Data views</span> — table vs chart alternate views of the same dataset.</li>
+    <li><span class="use-cases__label">Configuration panels</span> — group settings into logical sections.</li>
+    <li><span class="use-cases__label">Detail pages</span> — overview, history, permissions on a resource.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-select
+        [options]="sizeOptions"
+        [value]="size()"
+        (valueChange)="size.set($event + '')"
+        size="sm"
+        ariaLabel="Size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Tabs count</span>
+      <afi-select
+        [options]="countOptions"
+        [value]="count()"
+        (valueChange)="onCountChange($event + '')"
+        size="sm"
+        ariaLabel="Number of tabs"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Mode</span>
+      <afi-icon-button
+        [ariaLabel]="mode() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+        variant="outline"
+        size="sm"
+        (clicked)="toggleMode()"
+      >
+        @if (mode() === 'light') {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        } @else {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        }
+      </afi-icon-button>
+    </div>
+  </div>
+
+  <div slot="preview" class="preview" [class.preview--dark]="mode() === 'dark'">
+    <afi-tabs
+      [activeIndex]="activeTab()"
+      [size]="$any(size())"
+      ariaLabel="Demo tabs"
+      (activeChange)="activeTab.set($event)"
+    >
+      @for (tab of demoTabs(); track $index) {
+        <afi-tab-item [label]="tab.label" [badge]="tab.badge" [disabled]="tab.disabled">
+          <div class="preview__panel">{{ tab.content }}</div>
+        </afi-tab-item>
+      }
+    </afi-tabs>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Container uses <code>role="tablist"</code> with <code>aria-label</code>.</li>
+      <li>Each trigger uses <code>role="tab"</code>, <code>aria-selected</code>, and <code>aria-controls</code>.</li>
+      <li>Panels use <code>role="tabpanel"</code> with <code>aria-labelledby</code>.</li>
+      <li>Roving tabindex — only the active tab has <code>tabindex="0"</code>.</li>
+      <li>Arrow keys navigate between tabs, Home/End jump to first/last.</li>
+      <li>Disabled tabs are skipped during keyboard navigation.</li>
+      <li>Focus ring uses <code>var(--border-focus)</code> with inset box-shadow.</li>
+      <li>Respects <code>prefers-reduced-motion</code> — all transitions and animations disabled.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Use 2–5 tabs with short, descriptive labels.</li>
+          <li>Put content inside <code>afi-tab-item</code> for proper panel semantics.</li>
+          <li>Provide an <code>ariaLabel</code> on the tabs container.</li>
+          <li>Use <code>lazy</code> for tabs with heavy content.</li>
+          <li>Use badges sparingly to indicate counts or status.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't use tabs for primary app navigation — use the sidebar.</li>
+          <li>Don't use for sequential steps (wizards) — use a stepper.</li>
+          <li>Don't exceed 6 tabs — consider a menu or filter pattern instead.</li>
+          <li>Don't use tabs when options have no panel content — use segmented control.</li>
+          <li>Don't truncate labels — shorten them or reduce the tab count.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

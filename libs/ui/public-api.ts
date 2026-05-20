@@ -39,7 +39,7 @@ export type { BadgeIntent, BadgeSize } from './src/badge';
 export { LoadingOverlayComponent } from './src/loading-overlay';
 export type { LoadingOverlayVariant } from './src/loading-overlay';
 export { PageHeaderComponent } from './src/page-header';
-export type { PageHeaderDensity } from './src/page-header';
+export type { PageHeaderDensity, PageHeaderLevel } from './src/page-header';
 export { ShellComponent, ShellWorkspaceComponent, ShellAuthComponent, ShellDocsComponent, ShellFocusComponent, ShellCanvasComponent, shellTypeFromRoute, coerceShellType } from './src/shell';
 export type { ShellType } from './src/shell';
 export { ChartBarComponent, ChartLineComponent, ChartHeatmapComponent, ChartDumbbellComponent, ChartAxisComponent, ChartLegendComponent, ChartTooltipComponent, ChartInstructionsComponent, ChartDataTableComponent } from './src/chart';

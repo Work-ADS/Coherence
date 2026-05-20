@@ -1,0 +1,40 @@
+<!-- Breadcrumb row -->
+<div class="page-header__breadcrumb">
+  <ng-content select="[slot=breadcrumb]" />
+  <div class="page-header__global-actions">
+    <ng-content select="[slot=globalActions]" />
+  </div>
+</div>
+
+<!-- Main row: left (title stack) + right (actions) -->
+<div class="page-header__main">
+  <div class="page-header__left">
+    @switch (level()) {
+      @case ('page') { <h1 class="page-header__title">{{ title() }}</h1> }
+      @case ('section') { <h2 class="page-header__title">{{ title() }}</h2> }
+      @case ('subsection') { <h3 class="page-header__title">{{ title() }}</h3> }
+    }
+    @if (estado()) {
+      <afi-status-chip [estado]="estado()!" size="sm" />
+    }
+    @if (subtitle()) {
+      <p class="page-header__subtitle">{{ subtitle() }}</p>
+    }
+  </div>
+  <div class="page-header__actions">
+    <ng-content select="[slot=actions],[slot=primaryAction]" />
+  </div>
+</div>
+
+<!-- Stacked slots: cards → filters → tabs -->
+<div class="page-header__slot page-header__slot--cards">
+  <ng-content select="[slot=cards]" />
+</div>
+
+<div class="page-header__slot page-header__slot--filters">
+  <ng-content select="[slot=filters]" />
+</div>
+
+<div class="page-header__slot page-header__slot--tabs">
+  <ng-content select="[slot=tabs]" />
+</div>

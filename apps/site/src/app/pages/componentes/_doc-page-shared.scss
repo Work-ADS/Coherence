@@ -1,0 +1,156 @@
+// =============================================================================
+// _doc-page-shared.scss — shared styles for component/pattern doc pages
+//
+// Provides the repeated bits that every page documentation slot needs:
+// breadcrumb separator, use-cases list, control-group, prose section
+// (Accessibility), and Dos & Don'ts grid. Page-local SCSS @use's this and
+// only adds the playground preview style.
+// =============================================================================
+
+@use '../../../../../../libs/tokens/mixins' as t;
+
+.breadcrumb-sep {
+  margin-inline: var(--space-xs);
+  color: var(--foreground-tertiary-default);
+}
+
+// ---------------------------------------------------------------------------
+// Use cases bullet list (slot=use-cases)
+// ---------------------------------------------------------------------------
+.use-cases {
+  list-style: disc;
+  padding-left: var(--space-lg);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  color: var(--foreground-secondary-default);
+  font: var(--type-body-md-400);
+  max-width: var(--content-prose);
+
+  &__label {
+    font-weight: 500;
+    color: var(--foreground-primary-default);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Controls row helpers (slot=controls)
+// ---------------------------------------------------------------------------
+.controls {
+  display: contents; // shell already provides flex layout
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+
+  &__label {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default);
+  }
+}
+
+.control-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+// ---------------------------------------------------------------------------
+// Generic prose section (used by Accessibility)
+// ---------------------------------------------------------------------------
+.prose-section {
+  &__title {
+    font: var(--type-section);
+    color: var(--foreground-primary-default);
+    margin: 0 0 var(--space-md);
+  }
+
+  &__list {
+    list-style: disc;
+    padding-left: var(--space-lg);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    color: var(--foreground-secondary-default);
+    font: var(--type-body-md-400);
+    max-width: var(--content-prose);
+
+    code {
+      font-family: var(--font-family-mono, ui-monospace, monospace);
+      font-size: 0.9em;
+      background: var(--surface-quiet);
+      padding: 0 0.25em;
+      border-radius: var(--radius-xs);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Dos & Don'ts grid
+// ---------------------------------------------------------------------------
+.dos-donts {
+  &__title {
+    font: var(--type-section);
+    color: var(--foreground-primary-default);
+    margin: 0 0 var(--space-md);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+
+    @include t.breakpoint-up(md) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__card {
+    border-radius: var(--radius-md);
+    border: var(--separator-thickness) solid;
+    padding: var(--space-lg);
+
+    ul {
+      list-style: disc;
+      padding-left: var(--space-md);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      color: var(--foreground-secondary-default);
+      font: var(--type-body-sm-400);
+
+      code {
+        font-family: var(--font-family-mono, ui-monospace, monospace);
+        font-size: 0.9em;
+      }
+    }
+
+    &--do {
+      border-color: var(--feedback-success-border);
+      background: var(--feedback-success-background);
+
+      .dos-donts__label {
+        color: var(--feedback-success-foreground);
+      }
+    }
+
+    &--dont {
+      border-color: var(--feedback-error-border);
+      background: var(--feedback-error-background);
+
+      .dos-donts__label {
+        color: var(--feedback-error-foreground);
+      }
+    }
+  }
+
+  &__label {
+    font: var(--type-body-sm-500);
+    font-weight: 500;
+    margin: 0 0 var(--space-sm);
+  }
+}

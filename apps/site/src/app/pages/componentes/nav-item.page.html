@@ -1,0 +1,137 @@
+<site-doc-page-shell
+  title="Nav Item"
+  overline="COMPONENTS"
+  description="A single navigation row used inside sidebars and vertical menus. Renders as a native button with icon, label, optional badge, and tooltip when the sidebar is collapsed. Supports active, hover, disabled states with semantic color tokens for each."
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Nav Item</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Sidebar navigation</span> — primary and secondary nav items within a collapsible sidebar.</li>
+    <li><span class="use-cases__label">Active state indicator</span> — marks the current page/section with distinct background and text color.</li>
+    <li><span class="use-cases__label">Notification badges</span> — numeric or text badges for unread counts or alerts.</li>
+    <li><span class="use-cases__label">Collapsed tooltip</span> — when the sidebar is collapsed, shows a tooltip with the full label on hover.</li>
+    <li><span class="use-cases__label">Keyboard navigation</span> — supports arrow keys, Home, End within the sidebar context.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Variant</span>
+      <afi-select
+        [options]="variantOptions"
+        [value]="variant()"
+        (valueChange)="variant.set($event + '')"
+        size="sm"
+        ariaLabel="Variant"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">State</span>
+      <afi-select
+        [options]="stateOptions"
+        [value]="state()"
+        (valueChange)="state.set($event + '')"
+        size="sm"
+        ariaLabel="State"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Badge</span>
+      <afi-select
+        [options]="badgeOptions"
+        [value]="badgeChoice()"
+        (valueChange)="badgeChoice.set($event + '')"
+        size="sm"
+        ariaLabel="Badge"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Mode</span>
+      <afi-icon-button
+        [ariaLabel]="mode() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+        variant="outline"
+        size="sm"
+        (clicked)="toggleMode()"
+      >
+        @if (mode() === 'light') {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        } @else {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        }
+      </afi-icon-button>
+    </div>
+  </div>
+
+  <div
+    slot="preview"
+    class="preview"
+    [style.background]="previewBg()"
+  >
+    <div class="preview__item" [style]="previewTokenOverrides()">
+      <afi-nav-item
+        label="Dashboard"
+        [active]="state() === 'active'"
+        [disabled]="state() === 'disabled'"
+        [badge]="computedBadge()"
+        [sidebarExpanded]="true"
+      >
+        <svg slot="icon" class="preview__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+      </afi-nav-item>
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories()" title="Tokens" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Renders as native <code>&lt;button&gt;</code> — fully keyboard accessible.</li>
+      <li>Active item marked with <code>aria-current="page"</code>.</li>
+      <li>Collapsed state shows tooltip with label on hover/focus for screen readers.</li>
+      <li>Focus ring uses <code>var(--border-focus)</code> at 2px offset.</li>
+      <li>Disabled items have <code>opacity: 0.4</code> and <code>pointer-events: none</code>.</li>
+      <li>Supports <code>prefers-reduced-motion</code> — transitions disabled.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Use one active nav-item at a time within a sidebar.</li>
+          <li>Keep labels short (1–3 words).</li>
+          <li>Include a leading icon for visual scannability.</li>
+          <li>Use badge for notification counts ("99+" max).</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't mark multiple items as active simultaneously.</li>
+          <li>Don't use for actions (use Button or Menu Item instead).</li>
+          <li>Don't use long labels that truncate — shorten or use a tooltip.</li>
+          <li>Don't show large badge numbers — cap at 99+.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

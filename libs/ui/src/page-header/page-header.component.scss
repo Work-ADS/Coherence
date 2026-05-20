@@ -1,0 +1,148 @@
+// =============================================================================
+// page-header.component.scss — BEM + CSS custom properties
+// =============================================================================
+
+:host {
+  display: block;
+  background: var(--canvas-primary);
+}
+
+:host(.page-header--sticky) {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+:host(.page-header--scrolled) {
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border-bottom: var(--separator-thickness) solid var(--border-hairline);
+  transition:
+    backdrop-filter var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host(.page-header--scrolled) {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Block — density
+// ---------------------------------------------------------------------------
+.page-header--default {
+  padding-inline: var(--space-lg);
+  padding-block: var(--space-sm);
+}
+
+.page-header--compact {
+  padding-inline: var(--space-lg);
+  padding-block: var(--space-xs);
+}
+
+// ---------------------------------------------------------------------------
+// Breadcrumb row
+// ---------------------------------------------------------------------------
+.page-header__breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-height: var(--dimension-7);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.page-header__global-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+
+  &:empty {
+    display: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Main row: title+subtitle left, actions right (Figma auto-layout)
+// ---------------------------------------------------------------------------
+.page-header__main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+.page-header__left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.page-header__title {
+  margin: 0;
+  color: var(--foreground-primary-default);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Level-based typography via host class
+:host(.page-header--page) .page-header__title {
+  font: var(--type-title);
+  letter-spacing: var(--tracking-snug);
+}
+
+:host(.page-header--section) .page-header__title {
+  font: var(--type-subtitle);
+}
+
+:host(.page-header--subsection) .page-header__title {
+  font: var(--type-section);
+}
+
+.page-header__subtitle {
+  margin: 0;
+  color: var(--foreground-secondary-default);
+}
+
+:host(.page-header--page) .page-header__subtitle {
+  font: var(--type-body);
+}
+
+:host(.page-header--section) .page-header__subtitle {
+  font: var(--type-body-md-400);
+}
+
+:host(.page-header--subsection) .page-header__subtitle {
+  font: var(--type-body-sm-400);
+}
+
+.page-header__actions {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Stacked slots (cards, filters, tabs) — consistent spacing
+// ---------------------------------------------------------------------------
+.page-header__slot {
+  margin-top: var(--space-md);
+
+  &:empty {
+    display: none;
+    margin: 0;
+  }
+}

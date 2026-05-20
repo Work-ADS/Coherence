@@ -1,0 +1,167 @@
+<site-doc-page-shell
+  title="Sidebar"
+  overline="PATTERN"
+  description="A vertical navigation rail that houses the app's primary navigation structure. Supports three modes — static (always open), collapsible (toggle button), and hover-expand (expand on hover, pin to lock open). Composes NavSection groups with NavItem children, tree-line visuals, and a logo slot at the top."
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Sidebar</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">App shell navigation</span> — persistent sidebar with grouped nav items for multi-section apps.</li>
+    <li><span class="use-cases__label">Collapsible mode</span> — sidebar collapses to icon-only rail to save space; labels reappear on expand.</li>
+    <li><span class="use-cases__label">Hover-expand mode</span> — sidebar stays collapsed until hovered; pinnable for permanent expansion.</li>
+    <li><span class="use-cases__label">Grouped sections</span> — NavSections with chevron expand/collapse and optional tree-line visuals.</li>
+    <li><span class="use-cases__label">Logo + footer slots</span> — top slot for branding, bottom slot for user info or settings.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Mode</span>
+      <afi-select
+        [options]="modeOptions"
+        [value]="sidebarMode()"
+        (valueChange)="sidebarMode.set($event + '')"
+        size="sm"
+        ariaLabel="Sidebar mode"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Variant</span>
+      <afi-select
+        [options]="variantOptions"
+        [value]="sidebarVariant()"
+        (valueChange)="sidebarVariant.set($event + '')"
+        size="sm"
+        ariaLabel="Sidebar variant"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Active item</span>
+      <afi-select
+        [options]="activeOptions"
+        [value]="activeItem()"
+        (valueChange)="activeItem.set($event + '')"
+        size="sm"
+        ariaLabel="Active item"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Theme</span>
+      <afi-icon-button
+        [ariaLabel]="mode() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+        variant="outline"
+        size="sm"
+        (clicked)="toggleMode()"
+      >
+        @if (mode() === 'light') {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        } @else {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        }
+      </afi-icon-button>
+    </div>
+  </div>
+
+  <div slot="preview" class="preview" [class.preview--dark]="mode() === 'dark'">
+    <afi-sidebar [mode]="$any(sidebarMode())" [variant]="$any(sidebarVariant())" ariaLabel="Demo sidebar">
+      <div slot="top">
+        <coherence-logo variant="color" size="sm" />
+      </div>
+
+      <afi-nav-section label="Platform" [defaultExpanded]="true">
+        <afi-nav-item label="Dashboard" [active]="activeItem() === 'dashboard'">
+          <svg slot="icon" class="preview__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </afi-nav-item>
+        <afi-nav-item label="Analytics" [active]="activeItem() === 'analytics'">
+          <svg slot="icon" class="preview__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+        </afi-nav-item>
+        <afi-nav-item label="Settings" [active]="activeItem() === 'settings'">
+          <svg slot="icon" class="preview__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        </afi-nav-item>
+      </afi-nav-section>
+
+      <afi-nav-section label="Resources">
+        <afi-nav-item label="Documentation" [active]="activeItem() === 'docs'">
+          <svg slot="icon" class="preview__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </afi-nav-item>
+        <afi-nav-item label="Support" [active]="activeItem() === 'support'" [badge]="3">
+          <svg slot="icon" class="preview__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </afi-nav-item>
+      </afi-nav-section>
+
+      <div slot="bottom" class="preview__footer">v1.0.0</div>
+    </afi-sidebar>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" title="Tokens" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Sidebar uses <code>&lt;nav&gt;</code> with <code>aria-label</code>.</li>
+      <li>Expand/collapse state exposed via <code>aria-expanded</code>.</li>
+      <li>NavSection triggers use <code>aria-expanded</code> and <code>aria-controls</code>.</li>
+      <li>Keyboard navigation: Arrow Up/Down moves between items, Home/End jump to first/last.</li>
+      <li>Pin and collapse buttons have descriptive <code>aria-label</code>.</li>
+      <li>Supports <code>prefers-reduced-motion</code> — width and expand transitions disabled.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Group related nav items into sections with clear labels.</li>
+          <li>Use tree lines to show hierarchy in nested navigation.</li>
+          <li>Place logo in the top slot for consistent branding.</li>
+          <li>Provide a pin option for hover-expand mode.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't nest more than 2 levels deep — flatten the hierarchy.</li>
+          <li>Don't use more than 7±2 items per section.</li>
+          <li>Don't hide critical navigation behind hover-expand without pin.</li>
+          <li>Don't mix navigation and action buttons in the same section.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

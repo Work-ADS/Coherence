@@ -21,7 +21,7 @@ module.exports = {
     extend: {
       colors: {
         canvas: {
-          base:           'var(--canvas-base)',
+          base:           'var(--canvas-primary)',
           fg:             'var(--canvas-fg)',
           'fg-muted':     'var(--canvas-fg-muted)',
           'fg-on-action': 'var(--canvas-fg-on-action)',

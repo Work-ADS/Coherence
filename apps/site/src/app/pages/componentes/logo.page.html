@@ -1,0 +1,129 @@
+<site-doc-page-shell
+  title="Logo"
+  overline="COMPONENTS"
+  description="The AFI brand mark rendered as inline SVG so colors resolve against semantic tokens and adapt to light/dark mode without swapping assets. Built once in code so developers can drop it in anywhere without cluttering the codebase with SVG files. The component responds to its context through semantic tokens that flip automatically with the theme."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Logo</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">App shell header</span> — persistent brand presence in the sidebar or top nav.</li>
+    <li><span class="use-cases__label">Login / splash screens</span> — large icon-only mark centered on the page.</li>
+    <li><span class="use-cases__label">Email templates &amp; PDFs</span> — monochrome variant for constrained color contexts.</li>
+    <li><span class="use-cases__label">Favicons &amp; PWA manifest</span> — icon-only at small sizes (sm/md).</li>
+    <li><span class="use-cases__label">Footer / legal</span> — wordmark at sm paired with copyright text.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Shape</span>
+      <afi-segmented-control
+        [options]="shapeOptions"
+        [(value)]="shape"
+        size="sm"
+        ariaLabel="Logo shape"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Variant</span>
+      <afi-segmented-control
+        [options]="variantOptions"
+        [(value)]="variant"
+        size="sm"
+        ariaLabel="Logo variant"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Mode</span>
+      <afi-icon-button
+        [ariaLabel]="mode() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+        variant="outline"
+        size="sm"
+        (clicked)="toggleMode()"
+      >
+        @if (mode() === 'light') {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        } @else {
+          <svg slot="icon" class="control-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        }
+      </afi-icon-button>
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-select
+        [options]="sizeOptions"
+        [value]="size()"
+        (valueChange)="size.set($event + '')"
+        size="sm"
+        ariaLabel="Logo size"
+      />
+    </div>
+  </div>
+
+  <!-- Live preview -->
+  <div slot="preview" class="preview" [class.preview--dark]="mode() === 'dark'">
+    <coherence-logo
+      [variant]="variant()"
+      [size]="$any(size())"
+      [showWordmark]="shape() === 'wordmark'"
+    />
+  </div>
+
+  <!-- Tokens -->
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories()" />
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>The logo renders with <code>role="img"</code> and <code>aria-label="AFI"</code> so screen readers announce it as a single meaningful image.</li>
+      <li>The inner SVG is marked <code>aria-hidden="true"</code> to prevent assistive tech from traversing individual paths.</li>
+      <li>When <code>href</code> is set, the component wraps in an <code>&lt;a&gt;</code> element — focus ring uses <code>var(--border-focus)</code> and meets WCAG 2.2 focus-visible requirements.</li>
+      <li>Color contrast: in <strong>color</strong> variant the symbol (azul-500) meets 4.5:1 against both light and dark canvas backgrounds. In <strong>monochrome</strong>, the logo inherits <code>currentColor</code> which is always the page's foreground — guaranteed contrast by design.</li>
+      <li>Respects <code>prefers-reduced-motion</code> — no animation is applied to the logo itself.</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Use the <code>color</code> variant on light/dark canvas backgrounds.</li>
+          <li>Use <code>monochrome</code> when printing or in single-color contexts.</li>
+          <li>Keep minimum clear space equal to the symbol height around the mark.</li>
+          <li>Let the component inherit <code>currentColor</code> from its parent for monochrome.</li>
+          <li>Use the <code>href</code> input when the logo should navigate home.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>Don't stretch or distort — the SVG aspect ratio is locked.</li>
+          <li>Don't override the symbol fill with arbitrary colors.</li>
+          <li>Don't place the color variant on busy backgrounds where the blue symbol loses contrast.</li>
+          <li>Don't use external SVG/PNG files — always use this component.</li>
+          <li>Don't add drop shadows or effects to the logo mark.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

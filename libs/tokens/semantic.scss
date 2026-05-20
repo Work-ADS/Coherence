@@ -333,6 +333,9 @@
   // Role: popover body bg (tooltips that ARE clickable, mini dropdowns).
   --overlay-dropdown: var(--color-afi-white-0);
   // Role: dropdown menu / select-option-list body bg.
+  --overlay-darken-20: hsla(0, 0%, 0%, 0.20);
+  // Role: 20% black overlay — used to darken arbitrary brand surfaces
+  // (e.g. selected nav-item over brand sidebar).
 
 
   // ===========================================================================
@@ -527,6 +530,11 @@
   --content-lg:  var(--dimension-240);   // 960 px
   --content-xl:  var(--dimension-285);   // 1140 px
   --content-xxl: var(--dimension-330);   // 1320 px
+
+  // Doc-page content (component/pattern documentation pages).
+  --content-doc:   var(--dimension-230);   // 920 px
+  // Readable prose line length (descriptions, accessibility lists, etc.).
+  --content-prose: var(--dimension-160);   // 640 px
 }
 
 

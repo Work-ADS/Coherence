@@ -1,0 +1,287 @@
+<site-doc-page-shell
+  title="Page Header"
+  overline="PATTERNS"
+  description="Un componente, tres niveles. Controla la escala tipográfica con [level] y enciende slots según necesidad. Action bar y data cards se enchufan como slots — serán patrones/componentes propios."
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a href="/patrones">Patterns</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Headers</span>
+  </span>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <!-- Level -->
+    <div class="control-group">
+      <span class="control-group__label">Level</span>
+      <afi-segmented-control
+        [options]="levelOptions"
+        [value]="level()"
+        (valueChange)="onLevelChange($event)"
+        size="sm"
+      />
+    </div>
+
+    <!-- Slot toggles -->
+    <div class="control-group">
+      <span class="control-group__label">Slots</span>
+      <div class="toggle-row">
+        <button
+          type="button"
+          class="toggle-chip"
+          [class.toggle-chip--active]="showActions()"
+          (click)="toggleActions()">
+          Actions
+        </button>
+        <button
+          type="button"
+          class="toggle-chip"
+          [class.toggle-chip--active]="showCards()"
+          (click)="toggleCards()">
+          Cards
+        </button>
+        <button
+          type="button"
+          class="toggle-chip"
+          [class.toggle-chip--active]="showFilters()"
+          (click)="toggleFilters()">
+          Filters
+        </button>
+        <button
+          type="button"
+          class="toggle-chip"
+          [class.toggle-chip--active]="showTabs()"
+          (click)="toggleTabs()">
+          Tabs
+        </button>
+      </div>
+    </div>
+
+    <!-- Content type -->
+    <div class="control-group">
+      <span class="control-group__label">Content</span>
+      <afi-segmented-control
+        [options]="contentOptions"
+        [value]="contentType()"
+        (valueChange)="onContentChange($event)"
+        size="sm"
+      />
+    </div>
+  </div>
+
+  <!-- Live preview -->
+  <div slot="preview" class="preview-wrapper">
+    <afi-page-header
+      [level]="level()"
+      title="Patrimonio"
+      subtitle="Gestiona y visualiza todos tus activos y pasivos."
+      [sticky]="false"
+      [scrollFade]="false"
+    >
+      <span slot="breadcrumb" class="preview-breadcrumb">
+        Planificación / Situación actual
+      </span>
+
+      @if (showActions()) {
+        <div slot="actions" class="slot-placeholder slot-placeholder--actions">
+          <span class="slot-placeholder__label">actions</span>
+          <span class="slot-placeholder__hint">Búsqueda + Añadir</span>
+        </div>
+      }
+
+      @if (showCards()) {
+        <div slot="cards" class="slot-placeholder slot-placeholder--cards">
+          <span class="slot-placeholder__label">cards</span>
+          <div class="mock-cards">
+            <div class="mock-card">
+              <span class="mock-card__label">Patrimonio total</span>
+              <span class="mock-card__value">1.240.000 €</span>
+            </div>
+            <div class="mock-card">
+              <span class="mock-card__label">Rentabilidad</span>
+              <span class="mock-card__value">5,4 %</span>
+            </div>
+            <div class="mock-card">
+              <span class="mock-card__label">Perfil</span>
+              <span class="mock-card__value">Moderado</span>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (showFilters()) {
+        <div slot="filters" class="slot-placeholder slot-placeholder--filters">
+          <span class="slot-placeholder__label">filters</span>
+          <div class="mock-filters">
+            <span class="mock-chip">Entidad: Todos</span>
+            <span class="mock-chip">Min €</span>
+            <span class="mock-chip">Max €</span>
+          </div>
+        </div>
+      }
+
+      @if (showTabs()) {
+        <div slot="tabs">
+          <afi-tabs ariaLabel="Vistas de patrimonio" size="sm">
+            <afi-tab-item label="Todos (19)" />
+            <afi-tab-item label="Liquidez (2)" />
+            <afi-tab-item label="Inversiones (5)" />
+            <afi-tab-item label="Inmobiliario (2)" />
+          </afi-tabs>
+        </div>
+      }
+    </afi-page-header>
+
+    <!-- Content area below header -->
+    @if (contentType() !== 'none') {
+      <div class="content-area">
+        @if (contentType() === 'graph') {
+          <div class="mock-content mock-content--graph">
+            <div class="mock-graph">
+              <div class="mock-graph__bar" style="height: 60%"></div>
+              <div class="mock-graph__bar" style="height: 80%"></div>
+              <div class="mock-graph__bar" style="height: 45%"></div>
+              <div class="mock-graph__bar" style="height: 90%"></div>
+              <div class="mock-graph__bar" style="height: 70%"></div>
+              <div class="mock-graph__bar" style="height: 55%"></div>
+            </div>
+            <span class="mock-content__label">Graph content area</span>
+          </div>
+        }
+        @if (contentType() === 'table') {
+          <div class="mock-content mock-content--table">
+            <div class="mock-table">
+              <div class="mock-table__header">
+                <span>Nombre</span>
+                <span>Tipo</span>
+                <span>Valor</span>
+                <span>Renta.</span>
+              </div>
+              <div class="mock-table__row">
+                <span>Fondo Global</span>
+                <span>FI</span>
+                <span>240.000 €</span>
+                <span>6,2%</span>
+              </div>
+              <div class="mock-table__row">
+                <span>Cartera mixta</span>
+                <span>PP</span>
+                <span>180.000 €</span>
+                <span>4,8%</span>
+              </div>
+              <div class="mock-table__row">
+                <span>Inmueble BCN</span>
+                <span>INM</span>
+                <span>520.000 €</span>
+                <span>3,1%</span>
+              </div>
+            </div>
+            <span class="mock-content__label">Table content area</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Tokens table -->
+  <div slot="tokens">
+    <h2 class="tokens-title">Semantic Tokens</h2>
+    <afi-tokens-table [rows]="tokenRows" />
+  </div>
+
+  <!-- Decisions / Explanation section -->
+  <section class="decisions">
+    <h2 class="decisions__title">Decisiones</h2>
+
+    <article class="decision-card">
+      <header class="decision-card__header">
+        <span class="decision-card__status decision-card__status--done">Decidido</span>
+        <h3 class="decision-card__title">Un componente, tres niveles</h3>
+      </header>
+      <div class="decision-card__body">
+        <p>
+          <strong>Consistencia cognitiva.</strong> Si cada página coloca el título, las acciones y
+          las tabs en sitios distintos, el usuario paga un coste de aprendizaje por cada vista.
+          Una plantilla común reduce ese coste a cero.
+        </p>
+        <p>
+          <strong>Un componente, no tres.</strong> El mismo <code>&lt;afi-page-header&gt;</code>
+          con <code>[level]="page | section | subsection"</code> controla la escala tipográfica.
+          Las variantes de densidad se controlan con <code>[density]</code>.
+        </p>
+        <p>
+          <strong>Slots opcionales.</strong> Cada slot (actions, cards, filters, tabs) se enciende
+          solo si se proyecta contenido. La cabecera nunca muestra filas vacías.
+        </p>
+      </div>
+    </article>
+
+    <article class="decision-card">
+      <header class="decision-card__header">
+        <span class="decision-card__status decision-card__status--done">Decidido</span>
+        <h3 class="decision-card__title">Tabs — siempre el componente real</h3>
+      </header>
+      <div class="decision-card__body">
+        <p>
+          <strong>El slot <code>[slot=tabs]</code> recibe <code>&lt;afi-tabs&gt;</code> directamente.</strong>
+          No es un mock ni un placeholder — es el componente de tabs que ya tenemos construido. Esto
+          garantiza que los estilos, la accesibilidad y el keyboard navigation funcionan idéntico en
+          todas las páginas.
+        </p>
+        <p>
+          <strong>Contadores opcionales.</strong> Cada tab puede incluir el número de elementos que
+          contiene para anticipar el peso informativo antes del click.
+        </p>
+      </div>
+    </article>
+
+    <article class="decision-card">
+      <header class="decision-card__header">
+        <span class="decision-card__status decision-card__status--pending">Pendiente</span>
+        <h3 class="decision-card__title">Action bar — patrón propio</h3>
+      </header>
+      <div class="decision-card__body">
+        <p>
+          El action bar (chips de filtro + búsqueda + acción primaria) será un componente propio
+          (<code>afi-action-bar</code>). Por ahora se proyecta como contenido libre en
+          <code>[slot=actions]</code>. El patrón definirá la composición estándar: filtros a la
+          izquierda, búsqueda y primary action a la derecha.
+        </p>
+      </div>
+    </article>
+
+    <article class="decision-card">
+      <header class="decision-card__header">
+        <span class="decision-card__status decision-card__status--pending">Pendiente</span>
+        <h3 class="decision-card__title">Data cards — patrón propio</h3>
+      </header>
+      <div class="decision-card__body">
+        <p>
+          Las métricas KPI (label + valor + trend) serán un componente propio
+          (<code>afi-data-card</code>) que se proyecta en <code>[slot=cards]</code>.
+          El patrón define el layout (grid row), el componente define la card individual.
+        </p>
+      </div>
+    </article>
+
+    <article class="decision-card">
+      <header class="decision-card__header">
+        <span class="decision-card__status decision-card__status--done">Decidido</span>
+        <h3 class="decision-card__title">Contenido — bajo las tabs</h3>
+      </header>
+      <div class="decision-card__body">
+        <p>
+          <strong>El contenido de página vive debajo del header.</strong> El page-header define el
+          "cromo" (contexto, navegación, acciones), y el contenido va en el flujo natural del
+          documento — no dentro del componente header.
+        </p>
+        <p>
+          <strong>Tipos de contenido comunes:</strong> gráficos (evolución patrimonial, distribución),
+          tablas (listados de activos, movimientos), o subsecciones que reusan el mismo page-header
+          a un nivel inferior.
+        </p>
+      </div>
+    </article>
+  </section>
+</site-doc-page-shell>

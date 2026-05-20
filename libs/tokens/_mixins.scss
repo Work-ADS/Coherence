@@ -77,3 +77,34 @@ $coherence-breakpoints: (
     }
   }
 }
+
+
+// -----------------------------------------------------------------------------
+// @mixin breakpoint-up($name)
+//
+// Wraps content in `@media (min-width: <breakpoint>) { … }` using the value
+// from `$coherence-breakpoints`. Lets component .scss files do layout reflow
+// at named breakpoints without putting a bare px literal in component code
+// (which the clean-code-check pre-commit hook blocks).
+//
+// Usage:
+//   @use '../../../../libs/tokens/mixins' as t;
+//
+//   .dos-donts__grid {
+//     grid-template-columns: 1fr;
+//     @include t.breakpoint-up(md) { grid-template-columns: 1fr 1fr; }
+//   }
+//
+// Use ONLY for layout reflow (grid columns, flex-direction, visibility).
+// Per docs/rules/component-skill.md § 5, components must NOT @media for
+// sizing — sizing is responsive at the token layer.
+// -----------------------------------------------------------------------------
+
+@mixin breakpoint-up($name) {
+  @if not map-has-key($coherence-breakpoints, $name) {
+    @error "breakpoint-up('#{$name}') — unknown breakpoint. Known: #{map-keys($coherence-breakpoints)}.";
+  }
+  @media (min-width: map-get($coherence-breakpoints, $name)) {
+    @content;
+  }
+}

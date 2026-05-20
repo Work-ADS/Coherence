@@ -1,0 +1,52 @@
+<div class="doc-page">
+  <!-- Breadcrumb -->
+  <nav class="doc-page__breadcrumb" aria-label="Breadcrumb">
+    <ng-content select="[slot=breadcrumb]" />
+  </nav>
+
+  <!-- Overline (e.g. COMPONENTS, PATTERNS) -->
+  @if (overline()) {
+    <p class="doc-page__overline">{{ overline() }}</p>
+  }
+
+  <!-- Title -->
+  <h1 class="doc-page__title">{{ title() }}</h1>
+
+  <!-- Description -->
+  @if (description()) {
+    <p class="doc-page__description">{{ description() }}</p>
+  }
+
+  <!-- Use cases -->
+  <div class="doc-page__section doc-page__section--use-cases">
+    <ng-content select="[slot=use-cases]" />
+  </div>
+
+  <!-- Controls (filters: variant, size, level, mode, etc.) -->
+  <div class="doc-page__controls">
+    <ng-content select="[slot=controls]" />
+  </div>
+
+  <!-- Live preview -->
+  <div class="doc-page__preview">
+    <ng-content select="[slot=preview]" />
+  </div>
+
+  <!-- Tokens table -->
+  <div class="doc-page__section doc-page__section--tokens">
+    <ng-content select="[slot=tokens]" />
+  </div>
+
+  <!-- Accessibility -->
+  <div class="doc-page__section doc-page__section--accessibility">
+    <ng-content select="[slot=accessibility]" />
+  </div>
+
+  <!-- Dos & Don'ts -->
+  <div class="doc-page__section doc-page__section--dos-donts">
+    <ng-content select="[slot=dos-donts]" />
+  </div>
+
+  <!-- Any additional content -->
+  <ng-content />
+</div>

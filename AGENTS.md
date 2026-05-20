@@ -1,4 +1,4 @@
-This is the Coherence DS repo. First read docs/strategy/plan.md. Agent lineup in docs/agents/ — **Planner is live** (session harness over docs/workflow/brief-template.md; invoke when starting or activating a brief). Skills in docs/rules/component-skill.md and docs/rules/token-skill.md.
+This is the Coherence DS repo. First read docs/strategy/plan.md. Agent lineup in docs/agents/ — **Planner is live** (session harness over docs/workflow/brief-template.md; invoke when starting or activating a brief). Skills in docs/rules/component-skill.md (build), docs/rules/component-design-skill.md (design — upstream of build), docs/rules/motion-skill.md (named motion patterns + tokens), and docs/rules/token-skill.md.
 
 ## Design planning command
 

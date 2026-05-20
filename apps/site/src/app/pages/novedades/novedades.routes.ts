@@ -18,6 +18,13 @@ export const novedades_routes: Routes = [
       ),
   },
   {
+    path: 'proceso-componente',
+    loadComponent: () =>
+      import('./proceso-componente/proceso-componente.page').then(
+        (m) => m.ProcesoComponentePage,
+      ),
+  },
+  {
     path: 'evolucion-patrimonial',
     loadComponent: () =>
       import('./evolucion-patrimonial/evolucion-patrimonial-proposal.page').then(

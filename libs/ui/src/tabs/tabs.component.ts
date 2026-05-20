@@ -1,97 +1,112 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   contentChildren,
   effect,
+  ElementRef,
   input,
   output,
   signal,
   computed,
+  viewChildren,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 
-import { TabComponent } from './tab.component';
-import { tabSizeClasses, TabsSize } from './tabs.variants';
+import { TabItemComponent } from './tab-item.component';
+import { TabsSize } from './tabs.variants';
 
 let nextId = 0;
 
 /**
- * Tabs primitive.
+ * Tabs — underline-style tab bar with animated sliding underline indicator.
  *
- * Implements ARIA tablist/tab/tabpanel pattern with keyboard navigation.
- * No CDK dependency — manual arrow/Home/End handling.
+ * Content lives inside `<afi-tab-item>` children and is conditionally
+ * rendered into tab panels. Supports lazy rendering via the `lazy` input.
+ *
+ * Implements WAI-ARIA tablist/tab/tabpanel with full keyboard navigation.
+ *
+ * @example
+ * ```html
+ * <afi-tabs [activeIndex]="tab()" (activeChange)="tab.set($event)">
+ *   <afi-tab-item label="Ejemplo">
+ *     <p>Content for first tab...</p>
+ *   </afi-tab-item>
+ *   <afi-tab-item label="Decisiones">
+ *     <p>Content for second tab...</p>
+ *   </afi-tab-item>
+ * </afi-tabs>
+ * ```
  */
 @Component({
   selector: 'afi-tabs',
   standalone: true,
-  imports: [],
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div
-      role="tablist"
-      [attr.aria-label]="ariaLabel()"
-      class="flex border-b border-border-hairline"
-      (keydown)="onKeydown($event)"
-    >
-      @for (tab of tabs(); track $index) {
-        <button
-          type="button"
-          role="tab"
-          [id]="tabId($index)"
-          [attr.aria-selected]="$index === currentIndex()"
-          [attr.aria-controls]="panelId($index)"
-          [tabindex]="$index === currentIndex() ? 0 : -1"
-          [disabled]="tab.disabled()"
-          [class]="tabClasses($index)"
-          (click)="activate($index)"
-        >
-          {{ tab.label() }}
-          @if (tab.badge() !== null) {
-            <span class="ml-space-1 inline-flex items-center justify-center rounded-full bg-action text-white text-body-sm px-1.5 min-w-[20px] h-5">
-              {{ tab.badge() }}
-            </span>
-          }
-        </button>
-      }
-    </div>
-    @for (tab of tabs(); track $index) {
-      <div
-        role="tabpanel"
-        [id]="panelId($index)"
-        [attr.aria-labelledby]="tabId($index)"
-        [hidden]="lazy() ? undefined : $index !== currentIndex()"
-      >
-        @if (!lazy() || $index === currentIndex()) {
-          <ng-content />
-        }
-      </div>
-    }
-  `,
+  templateUrl: './tabs.component.html',
+  styleUrl: './tabs.component.scss',
 })
-export class TabsComponent {
+export class TabsComponent implements AfterViewInit {
+  /** Controlled active tab index. */
   readonly activeIndex = input<number>(0);
+
+  /** Size variant — affects trigger height and font size. */
   readonly size = input<TabsSize>('md');
+
+  /** Lazy rendering — only mount the active panel's content. */
   readonly lazy = input<boolean>(false);
+
+  /** Accessible label for the tablist. */
   readonly ariaLabel = input<string | null>(null);
 
+  /** Emits the new index when the user activates a tab. */
   readonly activeChange = output<number>();
 
-  readonly tabs = contentChildren(TabComponent);
+  /** Projected `<afi-tab-item>` children. */
+  readonly tabs = contentChildren(TabItemComponent);
+
+  /** References to trigger button elements for indicator measurement. */
+  readonly triggerEls = viewChildren<ElementRef>('tabTrigger');
 
   private readonly baseId = `afi-tabs-${nextId++}`;
   private readonly internalIndex = signal(0);
+  private readonly previousIndex = signal(0);
 
-  /** Current tab index. Tracks `activeIndex` input when bound, otherwise
-   *  driven by internal click handlers — so consumers can use `<afi-tabs>`
-   *  uncontrolled and tabs still switch on click. */
+  /** Direction of the panel transition: 'left' or 'right'. */
+  readonly slideDirection = computed(() =>
+    this.currentIndex() >= this.previousIndex() ? 'left' : 'right',
+  );
+
+  /** Increments on every tab change to trigger CSS animation restart. */
+  readonly animationKey = signal(0);
+
+  /** Current active tab index. */
   readonly currentIndex = computed(() => this.internalIndex());
 
+  // ─── Indicator positioning ───
+  readonly indicatorWidth = signal(0);
+  readonly indicatorOffset = signal(0);
+  readonly indicatorTransform = computed(
+    () => `translateX(${this.indicatorOffset()}px)`,
+  );
+
   constructor() {
-    // Sync the input into internal state when it changes (so two-way binding
-    // and explicit programmatic control still work).
+    // Sync controlled input → internal state
     effect(() => {
       const next = this.activeIndex();
       if (this.internalIndex() !== next) this.internalIndex.set(next);
     });
+
+    // Recalculate indicator when index or tabs change
+    effect(() => {
+      const _ = this.currentIndex();
+      const __ = this.tabs();
+      requestAnimationFrame(() => this.updateIndicator());
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.updateIndicator();
   }
 
   tabId(index: number): string {
@@ -102,31 +117,19 @@ export class TabsComponent {
     return `${this.baseId}-panel-${index}`;
   }
 
-  tabClasses(index: number): string {
-    const active = index === this.currentIndex();
-    return [
-      'inline-flex items-center gap-space-1 border-b-2 -mb-px',
-      'transition-colors duration-fast ease-out',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-inset',
-      'disabled:opacity-50 disabled:cursor-not-allowed',
-      tabSizeClasses[this.size()],
-      active
-        ? 'border-action text-action font-medium'
-        : 'border-transparent text-neutral-500 hover:text-canvas-fg hover:bg-surface-100',
-    ].join(' ');
-  }
-
   activate(index: number): void {
     const tab = this.tabs()[index];
     if (tab?.disabled()) return;
+    this.previousIndex.set(this.internalIndex());
     this.internalIndex.set(index);
+    this.animationKey.update((k) => k + 1);
     this.activeChange.emit(index);
   }
 
   onKeydown(event: KeyboardEvent): void {
     const allTabs = this.tabs();
     const len = allTabs.length;
-    let current = this.currentIndex();
+    const current = this.currentIndex();
 
     const findNext = (dir: 1 | -1): number => {
       let next = current;
@@ -149,11 +152,10 @@ export class TabsComponent {
         break;
       case 'Home':
         event.preventDefault();
-        this.focusTab(findNext(1 - len as 1)); // find first non-disabled from start
+        this.focusTab(findNext(1 - len as 1));
         break;
       case 'End':
         event.preventDefault();
-        // find last non-disabled
         for (let i = len - 1; i >= 0; i--) {
           const t = allTabs[i];
           if (t && !t.disabled()) {
@@ -168,6 +170,21 @@ export class TabsComponent {
         this.activate(current);
         break;
     }
+  }
+
+  private updateIndicator(): void {
+    const triggers = this.triggerEls();
+    const idx = this.currentIndex();
+    if (!triggers || idx < 0 || idx >= triggers.length) return;
+    const el = triggers[idx]?.nativeElement as HTMLElement | undefined;
+    if (!el) return;
+    const parent = el.parentElement;
+    if (!parent) return;
+
+    const parentRect = parent.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    this.indicatorOffset.set(elRect.left - parentRect.left);
+    this.indicatorWidth.set(elRect.width);
   }
 
   private focusTab(index: number): void {

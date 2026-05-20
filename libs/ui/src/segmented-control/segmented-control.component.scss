@@ -1,59 +1,104 @@
+// =============================================================================
+// afi-segmented-control — pill toggle with sliding indicator
+// =============================================================================
+
+:host {
+  display: inline-block;
+}
+
 .seg-control {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  border-radius: var(--radius-control);
-  border: 1px solid var(--border-hairline);
-  background: var(--surface-secondary-default);
-  padding: 2px;
-  gap: 2px;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs);
+  border-radius: var(--radius-lg);
+  background: var(--control-background-default);
 
-  // ─── Sizes ──────────────────────────────────────────────
-  &--sm .seg-control__option {
-    padding: 2px 8px;
-    font: var(--type-body-sm);
+  // ─── Sliding indicator ───
+  &__indicator {
+    position: absolute;
+    top: var(--space-2xs);
+    bottom: var(--space-2xs);
+    left: 0;
+    border-radius: var(--radius-md);
+    background: var(--surface-default);
+    box-shadow: var(--elevation-sm);
+    transition:
+      transform var(--duration-base) var(--easing-standard),
+      width var(--duration-fast) var(--easing-standard);
+    will-change: transform, width;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
   }
 
-  &--md .seg-control__option {
-    padding: 4px 12px;
-    font: var(--type-body-sm-500);
-  }
-
-  &--lg .seg-control__option {
-    padding: 6px 16px;
-    font: var(--type-body);
-  }
-
-  // ─── Option (button) ───────────────────────────────────
+  // ─── Option button ───
   &__option {
+    position: relative;
+    z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border: none;
-    border-radius: calc(var(--radius-control) - 2px);
+    border-radius: var(--radius-md);
     background: transparent;
     color: var(--foreground-tertiary-default);
     cursor: pointer;
     user-select: none;
-    transition: color var(--duration-fast) var(--easing-enter),
-                background var(--duration-fast) var(--easing-enter),
-                box-shadow var(--duration-fast) var(--easing-enter);
+    white-space: nowrap;
+    font: var(--type-body-md-400);
+    transition: color var(--duration-fast) ease-out;
 
     &:hover:not(.seg-control__option--active):not(.seg-control__option--disabled) {
       color: var(--foreground-secondary-default);
-      background: var(--surface-tertiary-default);
     }
 
-    // Active state
     &--active {
-      background: var(--surface-primary-default);
       color: var(--foreground-primary-default);
-      box-shadow: var(--elevation-1);
+      font: var(--type-body-md-500);
     }
 
-    // Disabled state
     &--disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--border-focus);
+    }
+  }
+
+  // ─── Size variants ───
+  &--sm .seg-control__option {
+    height: var(--dimension-7);
+    padding: 0 var(--space-sm);
+    font: var(--type-body-sm-400);
+
+    &.seg-control__option--active {
+      font: var(--type-body-sm-500);
+    }
+  }
+
+  &--md .seg-control__option {
+    height: var(--dimension-9);
+    padding: 0 var(--space-md);
+    font: var(--type-body-md-400);
+
+    &.seg-control__option--active {
+      font: var(--type-body-md-500);
+    }
+  }
+
+  &--lg .seg-control__option {
+    height: var(--dimension-10);
+    padding: 0 var(--space-md);
+    font: var(--type-body-md-400);
+
+    &.seg-control__option--active {
+      font: var(--type-body-md-500);
     }
   }
 }

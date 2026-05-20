@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbdComponent, PageHeaderComponent, TabsComponent, TabComponent } from '@coherence/ui';
+import { KbdComponent, PageHeaderComponent, TabsComponent, TabItemComponent } from '@coherence/ui';
 
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.component';
@@ -21,7 +21,7 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
     KbdComponent,
     PageHeaderComponent,
     TabsComponent,
-    TabComponent,
+    TabItemComponent,
     PlannerSidebarComponent,
     OnThisPageComponent,
   ],
@@ -66,7 +66,7 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
             <div class="mt-space-8 px-space-8 pb-space-10">
               <afi-tabs [lazy]="true" ariaLabel="Vistas del caso de estudio Barra lateral">
                 <!-- ==================== DECISIONES ==================== -->
-                <afi-tab label="Decisiones">
+                <afi-tab-item label="Decisiones">
                   <div class="py-space-6 flex flex-col gap-space-8">
                     <!-- IA / secciones -->
                     <article
@@ -467,10 +467,10 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       </div>
                     </article>
                   </div>
-                </afi-tab>
+                </afi-tab-item>
 
                 <!-- ==================== HISTORIAS DE USUARIO ==================== -->
-                <afi-tab label="Historias de usuario">
+                <afi-tab-item label="Historias de usuario">
                   <div class="py-space-6 flex flex-col gap-space-6">
                     <p class="text-body-md text-neutral-600 max-w-[640px]">
                       Escenarios reales del gestor que el sidebar tiene que soportar. Sirven como
@@ -508,10 +508,10 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       }
                     </ol>
                   </div>
-                </afi-tab>
+                </afi-tab-item>
 
                 <!-- ==================== REQUISITOS TÉCNICOS ==================== -->
-                <afi-tab label="Requisitos técnicos">
+                <afi-tab-item label="Requisitos técnicos">
                   <div class="py-space-6 flex flex-col gap-space-6">
                     <p class="text-body-md text-neutral-600 max-w-[640px]">
                       Restricciones de implementación que respetar para que el sidebar siga
@@ -533,10 +533,10 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       </article>
                     }
                   </div>
-                </afi-tab>
+                </afi-tab-item>
 
                 <!-- ==================== REQUISITOS NO TÉCNICOS ==================== -->
-                <afi-tab label="Requisitos no técnicos">
+                <afi-tab-item label="Requisitos no técnicos">
                   <div class="py-space-6 flex flex-col gap-space-6">
                     <p class="text-body-md text-neutral-600 max-w-[640px]">
                       Accesibilidad, cognitive-load y políticas — todo lo que no es código pero sin
@@ -558,10 +558,10 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       </article>
                     }
                   </div>
-                </afi-tab>
+                </afi-tab-item>
 
                 <!-- ==================== ESPECIFICACIONES FIGMA ==================== -->
-                <afi-tab label="Especificaciones Figma">
+                <afi-tab-item label="Especificaciones Figma">
                   <div class="py-space-6 flex flex-col gap-space-6">
                     <p class="text-body-md text-neutral-600 max-w-[640px]">
                       Tokens y dimensiones para reconstruir el sidebar en Figma sin abrir el código.
@@ -621,7 +621,7 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       </table>
                     </article>
                   </div>
-                </afi-tab>
+                </afi-tab-item>
               </afi-tabs>
             </div>
           </div>

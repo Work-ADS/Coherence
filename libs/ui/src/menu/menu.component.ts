@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   contentChildren,
-  effect,
   ElementRef,
   HostListener,
   inject,
@@ -18,21 +17,18 @@ import { MenuItemComponent } from './menu-item.component';
  * Contextual action menu overlay.
  *
  * Positions itself relative to a trigger element. Manages open state,
- * focus, keyboard navigation, and dismiss behavior. No CDK dependency —
- * uses absolute positioning relative to the trigger.
+ * focus, keyboard navigation, and dismiss behavior.
  */
 @Component({
   selector: 'afi-menu',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[class]': '"relative inline-block"',
-  },
+  styleUrl: './menu.component.scss',
   template: `
     @if (open()) {
       <!-- Backdrop for click-outside dismiss -->
       <div
-        class="fixed inset-0 z-40"
+        class="menu__backdrop"
         (click)="dismiss('click-outside')"
         aria-hidden="true">
       </div>
@@ -42,46 +38,18 @@ import { MenuItemComponent } from './menu-item.component';
         role="menu"
         [attr.aria-label]="ariaLabel()"
         aria-orientation="vertical"
-        class="absolute z-50 min-w-[12rem] py-1 bg-surface-elevated border border-border-hairline rounded-lg shadow-lg
-               animate-menu-enter"
-        [class.left-0]="placement() === 'bottom-start' || placement() === 'top-start'"
-        [class.right-0]="placement() === 'bottom-end' || placement() === 'top-end'"
-        [class.top-full]="placement() === 'bottom-start' || placement() === 'bottom-end'"
-        [class.bottom-full]="placement() === 'top-start' || placement() === 'top-end'"
-        [class.mt-1]="placement() === 'bottom-start' || placement() === 'bottom-end'"
-        [class.mb-1]="placement() === 'top-start' || placement() === 'top-end'"
+        class="menu__panel"
+        [class]="'menu__panel placement-' + placement()"
         (keydown)="onKeydown($event)">
         <ng-content />
       </div>
     }
   `,
-  styles: [`
-    .animate-menu-enter {
-      animation: menu-enter 150ms ease-out;
-    }
-
-    @keyframes menu-enter {
-      from {
-        opacity: 0;
-        transform: translateY(-4px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .animate-menu-enter {
-        animation: none;
-      }
-    }
-  `],
 })
 export class MenuComponent {
   readonly open = input<boolean>(false);
   readonly placement = input<MenuPlacement>('bottom-start');
-  readonly ariaLabel = input<string>('Menú contextual');
+  readonly ariaLabel = input<string>('Context menu');
 
   readonly openChange = output<boolean>();
   readonly dismissed = output<'escape' | 'click-outside' | 'item-select'>();
@@ -89,15 +57,6 @@ export class MenuComponent {
   private readonly items = contentChildren(MenuItemComponent, { descendants: true });
   private readonly focusedIndex = signal(-1);
   private readonly el = inject(ElementRef);
-
-  constructor() {
-    // Auto-close when an item is clicked
-    effect(() => {
-      const itemList = this.items();
-      // Re-subscribe whenever items change — but we can't do event subscriptions in effect
-      // Instead, rely on the parent wiring item clicks to close
-    });
-  }
 
   dismiss(reason: 'escape' | 'click-outside' | 'item-select'): void {
     this.openChange.emit(false);

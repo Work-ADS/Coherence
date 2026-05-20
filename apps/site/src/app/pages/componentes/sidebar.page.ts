@@ -1,610 +1,329 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import {
   SidebarComponent,
+  NavSectionComponent,
   NavItemComponent,
-  CheckboxComponent,
-  RadioGroupComponent,
-  RadioGroupItemComponent,
+  SelectComponent,
+  IconButtonComponent,
+  ButtonComponent,
+  SegmentedControlComponent,
+  LogoComponent,
 } from '@coherence/ui';
-import type { SidebarMode } from '@coherence/ui';
+import type { SelectOption } from '@coherence/ui';
 
-import { DocPageLayoutComponent } from '../../components/doc-page-layout';
-import { ComponentPlaygroundComponent } from '../../components/component-playground';
-import { CodeBlockComponent } from '../../components/code-block';
 import { TokensTableComponent, type TokenRow } from '../../components/tokens-table';
 
-const SIDEBAR_MODES: SidebarMode[] = ['static', 'collapsible', 'hover-expand'];
+type ThemeMode = 'light' | 'dark';
 
-const SIDEBAR_TOKENS: TokenRow[] = [
-  { property: 'Fondo', token: 'var(--surface-quiet)' },
-  { property: 'Borde derecho', token: 'var(--border-hairline)' },
-  { property: 'Pin activo', token: 'var(--action-500)' },
-  { property: 'Pin inactivo', token: 'var(--neutral-400)' },
-  { property: 'Ancho colapsado', token: '64px' },
-  { property: 'Ancho expandido', token: '240px' },
-  { property: 'Transición', token: 'var(--duration-200) ease-out' },
-];
-
-const NAV_ITEM_TOKENS: TokenRow[] = [
-  { property: 'Texto (idle)', token: 'var(--neutral-700)' },
-  { property: 'Texto (activo)', token: 'var(--action-900)' },
-  { property: 'Fondo hover', token: 'var(--surface-100)' },
-  { property: 'Fondo activo', token: 'var(--action) / 5%' },
-  { property: 'Borde activo', token: 'var(--action)' },
-  { property: 'Badge fondo', token: 'var(--system-error-500)' },
-  { property: 'Tooltip fondo', token: 'var(--neutral-900)' },
-  { property: 'Foco', token: 'var(--action)', note: '2px offset' },
-  { property: 'Transición', token: 'var(--duration-fast) ease-out' },
-];
-
-const NAV_ITEMS = [
-  { label: 'Inicio', icon: 'home', active: false, badge: null },
-  { label: 'Proyectos', icon: 'folder', active: true, badge: 3 },
-  { label: 'Equipo', icon: 'users', active: false, badge: null },
-  { label: 'Configuración', icon: 'settings', active: false, badge: null },
+const ALL_TOKEN_ROWS: (TokenRow & { category: string })[] = [
+  // Color
+  { category: 'Color', property: 'Sidebar background', token: '--nav-sidebar', semantic: '--control-background-default', primitive: '--color-afi-control-50' },
+  { category: 'Color', property: 'Border', token: '--border-subtle', semantic: '--border-subtle', primitive: '--color-afi-control-100' },
+  { category: 'Color', property: 'Pin (active)', token: '--brand-primary-foreground-default', semantic: '--brand-primary-foreground-default', primitive: '--color-afi-azul-profundo-0 (#FFFFFF)' },
+  { category: 'Color', property: 'Pin (idle)', token: '--foreground-tertiary-default', semantic: '--foreground-tertiary-default', primitive: '--color-afi-control-400' },
+  { category: 'Color', property: 'Section trigger hover', token: '--nav-item-background-hover', semantic: '--control-background-hover', primitive: '--color-afi-control-100' },
+  { category: 'Color', property: 'Section active text', token: '--nav-item-foreground-selected', semantic: '—', primitive: '--color-afi-azul-profundo-500 (#062D3F)' },
+  { category: 'Color', property: 'Tree line', token: '--border-subtle', semantic: '--border-subtle', primitive: '--color-afi-control-100' },
+  { category: 'Color', property: 'Trail marker', token: '--brand-primary-border-default', semantic: '--brand-primary-border-default', primitive: '--color-afi-azul-profundo-500 (#062D3F)' },
+  // Spacing
+  { category: 'Spacing', property: 'Logo row height', token: '--dimension-12', semantic: '--dimension-12', primitive: '48px' },
+  { category: 'Spacing', property: 'Logo row padding', token: '--space-md', semantic: '--space-md', primitive: '--dimension-4 (16px)' },
+  { category: 'Spacing', property: 'Content padding', token: '--space-xs', semantic: '--space-xs', primitive: '--dimension-2 (8px)' },
+  { category: 'Spacing', property: 'Children indent', token: '--space-md', semantic: '--space-md', primitive: '--dimension-4 (16px)' },
+  // Border Radius
+  { category: 'Border Radius', property: 'Pin/toggle buttons', token: '--radius-sm', semantic: '--radius-sm', primitive: '6px' },
+  { category: 'Border Radius', property: 'Section trigger', token: '--radius-sm', semantic: '--radius-sm', primitive: '6px' },
+  // Motion
+  { category: 'Motion', property: 'Width transition', token: '--duration-base', semantic: '--duration-base', primitive: '200ms' },
+  { category: 'Motion', property: 'Easing', token: '--easing-standard', semantic: '--easing-standard', primitive: 'cubic-bezier(0.2, 0, 0, 1)' },
+  { category: 'Motion', property: 'Chevron rotation', token: '--duration-fast', semantic: '--duration-fast', primitive: '150ms' },
+  { category: 'Motion', property: 'Expand/collapse', token: '--duration-base', semantic: '--duration-base', primitive: '200ms (grid-template-rows)' },
 ];
 
 @Component({
-  selector: 'site-sidebar-page',
+  selector: 'app-sidebar-page',
   standalone: true,
   imports: [
-    DocPageLayoutComponent,
-    ComponentPlaygroundComponent,
-    CodeBlockComponent,
-    TokensTableComponent,
+    RouterLink,
     SidebarComponent,
+    NavSectionComponent,
     NavItemComponent,
-    CheckboxComponent,
-    RadioGroupComponent,
-    RadioGroupItemComponent,
+    SelectComponent,
+    IconButtonComponent,
+    ButtonComponent,
+    SegmentedControlComponent,
+    LogoComponent,
+    TokensTableComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <afi-doc-page-layout
-      kicker="COMPONENTS"
-      title="Sidebar + NavItem"
-      subtitle="Barra lateral de navegación con tres modos (estática, colapsable, hover-expand) y elementos NavItem con ícono, label, badge y tooltip."
-      docsSource="docs/build-prompts/coherence-primitive-page.md"
-      buildPromptSlug="coherence-primitive-page"
-    >
-      <!-- ==================== CODE TAB ==================== -->
-      <div slot="code-tab">
-        <!-- Playground -->
-        <afi-component-playground [code]="codeSnippet()">
-          <div slot="controls" class="space-y-space-4">
-            <!-- Mode -->
-            <afi-radio-group legend="Modo">
-              @for (m of modes; track m) {
-                <afi-radio-group-item
-                  [value]="m"
-                  [label]="m"
-                  [selected]="mode() === m"
-                  (selectedChange)="$any(mode).set($event)"
-                  size="sm"
-                  [compact]="true"
-                />
-              }
-            </afi-radio-group>
+    <div class="max-w-[920px] mx-auto px-space-10 py-space-12">
+      <!-- Breadcrumb -->
+      <nav class="text-body-sm text-neutral-400 mb-space-4" aria-label="Breadcrumb">
+        <a routerLink="/componentes" class="hover:text-canvas-fg transition-colors duration-fast">Components</a>
+        <span class="mx-1.5 text-neutral-300">/</span>
+        <span class="text-canvas-fg">Sidebar</span>
+      </nav>
 
-            <!-- Options -->
-            <fieldset>
-              <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Opciones</legend>
-              <afi-checkbox
-                [checked]="pinned()"
-                (checkedChange)="pinned.set($event)"
-                label="pinned (hover-expand)"
-                size="sm"
-                [compact]="true"
-              />
-              <afi-checkbox
-                [checked]="showBadges()"
-                (checkedChange)="showBadges.set($event)"
-                label="Mostrar badges"
-                size="sm"
-                [compact]="true"
-              />
-              <afi-checkbox
-                [checked]="disabledItem()"
-                (checkedChange)="disabledItem.set($event)"
-                label="Item deshabilitado"
-                size="sm"
-                [compact]="true"
-              />
-            </fieldset>
-          </div>
+      <!-- Header -->
+      <p class="text-body-sm uppercase tracking-wider text-action-700 mb-space-2">PATTERN</p>
+      <h1 class="text-subtitle text-canvas-fg mb-space-3">Sidebar</h1>
 
-          <!-- Live preview -->
-          <div
-            slot="preview"
-            class="h-[360px] flex border border-border-hairline rounded-lg overflow-hidden"
+      <!-- Context -->
+      <p class="max-w-[640px] text-body-md text-neutral-500 mb-space-6">
+        A vertical navigation rail that houses the app's primary navigation structure.
+        Supports three modes — static (always open), collapsible (toggle button), and
+        hover-expand (expand on hover, pin to lock open). Composes NavSection groups
+        with NavItem children, tree-line visuals, and a logo slot at the top.
+      </p>
+
+      <!-- Use Cases -->
+      <section class="mb-space-10">
+        <h2 id="use-cases" class="text-section text-canvas-fg mb-space-4">Use Cases</h2>
+        <ul class="list-disc pl-space-6 space-y-space-2 text-body-md text-neutral-500 max-w-[640px]">
+          <li><span class="font-medium">App shell navigation</span> — persistent sidebar with grouped nav items for multi-section apps.</li>
+          <li><span class="font-medium">Collapsible mode</span> — sidebar collapses to icon-only rail to save space; labels reappear on expand.</li>
+          <li><span class="font-medium">Hover-expand mode</span> — sidebar stays collapsed until hovered; pinnable for permanent expansion.</li>
+          <li><span class="font-medium">Grouped sections</span> — NavSections with chevron expand/collapse and optional tree-line visuals.</li>
+          <li><span class="font-medium">Logo + footer slots</span> — top slot for branding, bottom slot for user info or settings.</li>
+        </ul>
+      </section>
+
+      <!-- ─── Controls ─── -->
+      <div class="flex flex-wrap items-center gap-space-6 mb-space-8">
+        <div class="flex flex-col gap-space-1">
+          <span class="text-body-sm text-neutral-400">Mode</span>
+          <afi-select
+            [options]="modeOptions"
+            [value]="sidebarMode()"
+            (valueChange)="sidebarMode.set($event + '')"
+            size="sm"
+            ariaLabel="Sidebar mode"
+          />
+        </div>
+        <div class="flex flex-col gap-space-1">
+          <span class="text-body-sm text-neutral-400">Variant</span>
+          <afi-select
+            [options]="variantOptions"
+            [value]="sidebarVariant()"
+            (valueChange)="sidebarVariant.set($event + '')"
+            size="sm"
+            ariaLabel="Sidebar variant"
+          />
+        </div>
+        <div class="flex flex-col gap-space-1">
+          <span class="text-body-sm text-neutral-400">Active item</span>
+          <afi-select
+            [options]="activeOptions"
+            [value]="activeItem()"
+            (valueChange)="activeItem.set($event + '')"
+            size="sm"
+            ariaLabel="Active item"
+          />
+        </div>
+        <!-- Theme toggle -->
+        <div class="flex flex-col gap-space-1">
+          <span class="text-body-sm text-neutral-400">Theme</span>
+          <afi-icon-button
+            [ariaLabel]="mode() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+            variant="outline"
+            size="sm"
+            (clicked)="toggleMode()"
           >
-            <afi-sidebar [mode]="mode()" [pinned]="pinned()" ariaLabel="Navegación de ejemplo">
-              <span slot="top" class="text-body-md font-medium text-canvas-fg truncate">Logo</span>
-
-              @for (item of navItems; track item.label; let i = $index) {
-                <afi-nav-item
-                  [label]="item.label"
-                  [active]="item.active"
-                  [badge]="showBadges() ? item.badge : null"
-                  [disabled]="disabledItem() && i === 3"
-                >
-                  <svg
-                    slot="icon"
-                    class="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                  >
-                    @switch (item.icon) {
-                      @case ('home') {
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"
-                        />
-                      }
-                      @case ('folder') {
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-                        />
-                      }
-                      @case ('users') {
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      }
-                      @case ('settings') {
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                        />
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      }
-                    }
-                  </svg>
-                </afi-nav-item>
-              }
-
-              <span slot="bottom" class="text-body-sm text-neutral-500 truncate">v1.0.0</span>
-            </afi-sidebar>
-            <div class="flex-1 bg-surface-base p-space-6 text-body-sm text-neutral-500">
-              Contenido principal
-            </div>
-          </div>
-        </afi-component-playground>
-
-        <!-- Importar -->
-        <section>
-          <h2 id="importar" class="text-section text-canvas-fg mb-space-6">Importar</h2>
-          <afi-code-block [code]="importCode" language="ts" />
-        </section>
-
-        <!-- Uso -->
-        <section>
-          <h2 id="uso" class="text-section text-canvas-fg mb-space-6">Uso</h2>
-
-          <h3 id="cuando-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
-            Cuándo usar
-          </h3>
-          <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Navegación principal de aplicación con 4–12 destinos.</li>
-            <li>Layouts donde la navegación debe ser persistente y accesible.</li>
-            <li>Aplicaciones de escritorio o dashboards con espacio lateral disponible.</li>
-          </ul>
-
-          <h3 id="cuando-no-usar" class="text-body-md font-medium text-canvas-fg mb-space-4">
-            Cuándo NO usar
-          </h3>
-          <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>Menos de 3 destinos — use tabs o un header nav.</li>
-            <li>Viewports móviles — use un drawer o bottom nav en su lugar.</li>
-            <li>Navegación secundaria dentro de una sección — use NavSection o tabs.</li>
-          </ul>
-
-          <h3 id="composiciones" class="text-body-md font-medium text-canvas-fg mb-space-4">
-            Composiciones
-          </h3>
-          <p class="text-body-md text-neutral-600 mb-space-8">
-            Sidebar con NavItems agrupados por secciones. Sidebar con slot top para logo y slot
-            bottom para avatar de usuario. Sidebar hover-expand con pin para fijar.
-          </p>
-
-          <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-4">
-            Ejemplo real
-          </h3>
-          <afi-code-block [code]="realWorldCode" language="html" />
-        </section>
-
-        <!-- API Reference — Sidebar -->
-        <section>
-          <h2 id="api-reference" class="text-section text-canvas-fg mb-space-6">API Reference</h2>
-
-          <h3 id="sidebar-entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">
-            Sidebar — Entradas
-          </h3>
-          <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
-            <table class="w-full text-body-sm">
-              <thead>
-                <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Nombre
-                  </th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Predeterminado
-                  </th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Descripción
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (row of sidebarInputs; track row.name) {
-                  <tr class="border-b border-border-hairline last:border-b-0">
-                    <td class="px-space-4 py-space-3 font-mono text-action-700">{{ row.name }}</td>
-                    <td class="px-space-4 py-space-3 font-mono text-body-sm">{{ row.type }}</td>
-                    <td class="px-space-4 py-space-3 font-mono text-body-sm">{{ row.default }}</td>
-                    <td class="px-space-4 py-space-3 text-neutral-500">{{ row.notes }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-
-          <h3 id="sidebar-salidas" class="text-body-md font-medium text-canvas-fg mb-space-4">
-            Sidebar — Salidas
-          </h3>
-          <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
-            <table class="w-full text-body-sm">
-              <thead>
-                <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Nombre
-                  </th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Carga útil
-                  </th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Descripción
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (row of sidebarOutputs; track row.name) {
-                  <tr class="border-b border-border-hairline last:border-b-0">
-                    <td class="px-space-4 py-space-3 font-mono text-action-700">{{ row.name }}</td>
-                    <td class="px-space-4 py-space-3 font-mono">{{ row.payload }}</td>
-                    <td class="px-space-4 py-space-3 text-neutral-500">{{ row.notes }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-
-          <!-- API Reference — NavItem -->
-          <h3 id="navitem-entradas" class="text-body-md font-medium text-canvas-fg mb-space-4">
-            NavItem — Entradas
-          </h3>
-          <div class="overflow-x-auto rounded-lg border border-border-hairline mb-space-8">
-            <table class="w-full text-body-sm">
-              <thead>
-                <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Nombre
-                  </th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">Tipo</th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Predeterminado
-                  </th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Descripción
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (row of navItemInputs; track row.name) {
-                  <tr class="border-b border-border-hairline last:border-b-0">
-                    <td class="px-space-4 py-space-3 font-mono text-action-700">{{ row.name }}</td>
-                    <td class="px-space-4 py-space-3 font-mono text-body-sm">{{ row.type }}</td>
-                    <td class="px-space-4 py-space-3 font-mono text-body-sm">{{ row.default }}</td>
-                    <td class="px-space-4 py-space-3 text-neutral-500">{{ row.notes }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-
-          <h3 id="navitem-salidas" class="text-body-md font-medium text-canvas-fg mb-space-4">
-            NavItem — Salidas
-          </h3>
-          <div class="overflow-x-auto rounded-lg border border-border-hairline">
-            <table class="w-full text-body-sm">
-              <thead>
-                <tr class="bg-neutral-50 border-b border-border-hairline">
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Nombre
-                  </th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Carga útil
-                  </th>
-                  <th class="text-left px-space-4 py-space-3 font-medium text-neutral-500">
-                    Descripción
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (row of navItemOutputs; track row.name) {
-                  <tr class="border-b border-border-hairline last:border-b-0">
-                    <td class="px-space-4 py-space-3 font-mono text-action-700">{{ row.name }}</td>
-                    <td class="px-space-4 py-space-3 font-mono">{{ row.payload }}</td>
-                    <td class="px-space-4 py-space-3 text-neutral-500">{{ row.notes }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        </section>
+            @if (mode() === 'light') {
+              <svg slot="icon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            } @else {
+              <svg slot="icon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            }
+          </afi-icon-button>
+        </div>
       </div>
 
-      <!-- ==================== DESIGN TAB ==================== -->
-      <div slot="design-tab">
-        <section>
-          <h2 id="tokens-consumidos" class="text-section text-canvas-fg mb-space-6">
-            Tokens consumidos
-          </h2>
-          <h3 class="text-body-md font-medium text-canvas-fg mb-space-4">Sidebar</h3>
-          <afi-tokens-table [rows]="sidebarTokenRows" title="" />
-          <h3 class="text-body-md font-medium text-canvas-fg mb-space-4 mt-space-6">NavItem</h3>
-          <afi-tokens-table [rows]="navItemTokenRows" title="" />
-        </section>
-
-        <section>
-          <h2 id="accesibilidad" class="text-section text-canvas-fg mb-space-6">Accesibilidad</h2>
-
-          <h3 id="reglas" class="text-body-md font-medium text-canvas-fg mb-space-4">Reglas</h3>
-          <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-8">
-            <li>
-              Sidebar renderiza un <code class="font-mono text-action-700">&lt;nav&gt;</code> con
-              <code class="font-mono text-action-700">aria-label</code> y
-              <code class="font-mono text-action-700">aria-expanded</code>.
-            </li>
-            <li>
-              NavItem usa <code class="font-mono text-action-700">aria-current="page"</code> cuando
-              está activo.
-            </li>
-            <li>
-              Tooltip aparece cuando el sidebar está colapsado — accesible vía
-              <code class="font-mono text-action-700">role="tooltip"</code>.
-            </li>
-            <li>
-              Items deshabilitados usan
-              <code class="font-mono text-action-700">disabled</code> nativo del botón.
-            </li>
-            <li>
-              Proporcione siempre <code class="font-mono text-action-700">ariaLabel</code> en el
-              Sidebar (predeterminado: "Navegación principal").
-            </li>
-          </ul>
-
-          <h3 id="mapa-de-teclado" class="text-body-md font-medium text-canvas-fg mb-space-4">
-            Mapa de teclado
-          </h3>
-          <div class="space-y-space-3 mb-space-8">
-            <div class="flex items-center gap-space-3">
-              <kbd
-                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
-                >↑ ↓</kbd
-              >
-              <span class="text-body-md text-neutral-600">Navega entre items</span>
-            </div>
-            <div class="flex items-center gap-space-3">
-              <kbd
-                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
-                >Home / End</kbd
-              >
-              <span class="text-body-md text-neutral-600">Primer / último item</span>
-            </div>
-            <div class="flex items-center gap-space-3">
-              <kbd
-                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
-                >Enter / Space</kbd
-              >
-              <span class="text-body-md text-neutral-600">Activa el item enfocado</span>
-            </div>
-            <div class="flex items-center gap-space-3">
-              <kbd
-                class="px-2 py-1 bg-neutral-100 border border-border-hairline rounded text-body-sm font-mono"
-                >Tab</kbd
-              >
-              <span class="text-body-md text-neutral-600">Entra/sale del sidebar</span>
-            </div>
+      <!-- ─── Live preview ─── -->
+      <div
+        class="rounded-lg border border-neutral-700 overflow-hidden mb-space-8"
+        [class.bg-white]="mode() === 'light'"
+        [class.bg-neutral-950]="mode() === 'dark'"
+        style="height: 480px;"
+      >
+        <afi-sidebar [mode]="$any(sidebarMode())" [variant]="$any(sidebarVariant())" ariaLabel="Demo sidebar">
+          <div slot="top">
+            <coherence-logo variant="color" size="sm" />
           </div>
-        </section>
 
-        <section>
-          <h2 id="motion" class="text-section text-canvas-fg mb-space-6">Motion</h2>
-          <ul class="list-disc pl-space-6 text-body-md text-neutral-600 space-y-space-2 mb-space-6">
-            <li>
-              Ancho del sidebar: <code class="font-mono">duration-200 ease-out</code> al
-              expandir/colapsar.
-            </li>
-            <li>
-              Label opacity: <code class="font-mono">duration-fast</code> — aparece al expandir.
-            </li>
-            <li>Tooltip: <code class="font-mono">opacity duration-fast</code> en hover/focus.</li>
-            <li>Chevron (collapsible): <code class="font-mono">rotate-180 duration-fast</code>.</li>
-            <li>
-              Reduced motion: todas las transiciones colapsan a 0ms vía
-              <code class="font-mono">prefers-reduced-motion</code>.
-            </li>
-          </ul>
-        </section>
+          <afi-nav-section label="Platform" [defaultExpanded]="true">
+            <afi-nav-item label="Dashboard" [active]="activeItem() === 'dashboard'">
+              <svg slot="icon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </afi-nav-item>
+            <afi-nav-item label="Analytics" [active]="activeItem() === 'analytics'">
+              <svg slot="icon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
+            </afi-nav-item>
+            <afi-nav-item label="Settings" [active]="activeItem() === 'settings'">
+              <svg slot="icon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </afi-nav-item>
+          </afi-nav-section>
 
-        <section>
-          <h2 id="do-dont" class="text-section text-canvas-fg mb-space-6">Do & Don't</h2>
-          <div class="space-y-space-4">
-            <div class="grid grid-cols-2 gap-space-4">
-              <div class="p-space-4 border border-system-success rounded-md">
-                <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">
-                  Use íconos claros y reconocibles en cada NavItem para contexto cuando el sidebar
-                  está colapsado.
-                </p>
-              </div>
-              <div class="p-space-4 border border-system-error rounded-md">
-                <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">
-                  NavItem sin ícono — al colapsar el sidebar, el usuario pierde contexto.
-                </p>
-              </div>
-            </div>
-            <div class="grid grid-cols-2 gap-space-4">
-              <div class="p-space-4 border border-system-success rounded-md">
-                <p class="text-body-sm font-medium text-system-success mb-space-2">Correcto</p>
-                <p class="text-body-sm text-neutral-600">
-                  Máximo 8–10 items de primer nivel. Agrupe con NavSection si necesita más.
-                </p>
-              </div>
-              <div class="p-space-4 border border-system-error rounded-md">
-                <p class="text-body-sm font-medium text-system-error mb-space-2">Incorrecto</p>
-                <p class="text-body-sm text-neutral-600">
-                  Más de 15 items sin agrupación — el usuario no puede escanear rápido.
-                </p>
-              </div>
-            </div>
+          <afi-nav-section label="Resources">
+            <afi-nav-item label="Documentation" [active]="activeItem() === 'docs'">
+              <svg slot="icon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              </svg>
+            </afi-nav-item>
+            <afi-nav-item label="Support" [active]="activeItem() === 'support'" [badge]="3">
+              <svg slot="icon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </afi-nav-item>
+          </afi-nav-section>
+
+          <div slot="bottom" class="text-body-sm text-neutral-400">
+            v1.0.0
           </div>
-        </section>
+        </afi-sidebar>
       </div>
-    </afi-doc-page-layout>
+
+      <!-- ─── Tokens ─── -->
+      <section class="mb-space-10">
+        <div class="flex items-center justify-between mb-space-4">
+          <h2 id="tokens" class="text-section text-canvas-fg">Tokens</h2>
+          <afi-button
+            variant="secondary"
+            size="sm"
+            [ariaLabel]="tokensCopied() ? 'Copied' : 'Copy tokens'"
+            (clicked)="copyTokens()"
+          >
+            {{ tokensCopied() ? 'Copied' : 'Copy' }}
+          </afi-button>
+        </div>
+        <div class="mb-space-4">
+          <afi-segmented-control
+            [options]="tokenCategoryOptions"
+            [(value)]="tokenCategory"
+            size="sm"
+            ariaLabel="Token category"
+          />
+        </div>
+        <afi-tokens-table [rows]="filteredTokenRows()" title="" />
+      </section>
+
+      <!-- ─── Accessibility ─── -->
+      <section class="mb-space-10">
+        <h2 id="accessibility" class="text-section text-canvas-fg mb-space-4">Accessibility</h2>
+        <ul class="list-disc pl-space-6 space-y-space-2 text-body-md text-neutral-500 max-w-[640px]">
+          <li>Sidebar uses <code class="font-mono text-body-sm">&lt;nav&gt;</code> with <code class="font-mono text-body-sm">aria-label</code>.</li>
+          <li>Expand/collapse state exposed via <code class="font-mono text-body-sm">aria-expanded</code>.</li>
+          <li>NavSection triggers use <code class="font-mono text-body-sm">aria-expanded</code> and <code class="font-mono text-body-sm">aria-controls</code>.</li>
+          <li>Keyboard navigation: Arrow Up/Down moves between items, Home/End jump to first/last.</li>
+          <li>Pin and collapse buttons have descriptive <code class="font-mono text-body-sm">aria-label</code>.</li>
+          <li>Supports <code class="font-mono text-body-sm">prefers-reduced-motion</code> — width and expand transitions disabled.</li>
+        </ul>
+      </section>
+
+      <!-- ─── Dos & Don'ts ─── -->
+      <section class="mb-space-10">
+        <h2 id="dos-donts" class="text-section text-canvas-fg mb-space-4">Dos & Don'ts</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-6">
+          <div class="rounded-lg border border-green-200 bg-green-50/40 p-space-6">
+            <p class="text-body-sm font-medium text-green-700 mb-space-3">Do</p>
+            <ul class="list-disc pl-space-5 space-y-space-2 text-body-sm text-neutral-600">
+              <li>Group related nav items into sections with clear labels.</li>
+              <li>Use tree lines to show hierarchy in nested navigation.</li>
+              <li>Place logo in the top slot for consistent branding.</li>
+              <li>Provide a pin option for hover-expand mode.</li>
+            </ul>
+          </div>
+          <div class="rounded-lg border border-red-200 bg-red-50/40 p-space-6">
+            <p class="text-body-sm font-medium text-red-700 mb-space-3">Don't</p>
+            <ul class="list-disc pl-space-5 space-y-space-2 text-body-sm text-neutral-600">
+              <li>Don't nest more than 2 levels deep — flatten the hierarchy.</li>
+              <li>Don't use more than 7±2 items per section.</li>
+              <li>Don't hide critical navigation behind hover-expand without pin.</li>
+              <li>Don't mix navigation and action buttons in the same section.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
   `,
 })
 export class SidebarPage {
-  readonly mode = signal<SidebarMode>('hover-expand');
-  readonly pinned = signal(false);
-  readonly showBadges = signal(true);
-  readonly disabledItem = signal(false);
+  readonly sidebarMode = signal('static');
+  readonly sidebarVariant = signal('neutral');
+  readonly activeItem = signal('dashboard');
+  readonly mode = signal<ThemeMode>('dark');
+  readonly tokenCategory = signal('Color');
+  readonly tokensCopied = signal(false);
 
-  readonly modes = SIDEBAR_MODES;
-  readonly navItems = NAV_ITEMS;
-  readonly sidebarTokenRows = SIDEBAR_TOKENS;
-  readonly navItemTokenRows = NAV_ITEM_TOKENS;
+  readonly modeOptions: SelectOption[] = [
+    { label: 'Static', value: 'static' },
+    { label: 'Collapsible', value: 'collapsible' },
+    { label: 'Hover-expand', value: 'hover-expand' },
+  ];
 
-  readonly importCode = `import { SidebarComponent, NavItemComponent } from '@coherence/ui';`;
+  readonly variantOptions: SelectOption[] = [
+    { label: 'Neutral', value: 'neutral' },
+    { label: 'Brand', value: 'brand' },
+  ];
 
-  readonly realWorldCode = `<afi-sidebar mode="hover-expand" ariaLabel="Navegación principal">
-  <img slot="top" src="/logo.svg" alt="Coherence" class="h-8" />
+  readonly activeOptions: SelectOption[] = [
+    { label: 'Dashboard', value: 'dashboard' },
+    { label: 'Analytics', value: 'analytics' },
+    { label: 'Settings', value: 'settings' },
+    { label: 'Documentation', value: 'docs' },
+    { label: 'Support', value: 'support' },
+  ];
 
-  <afi-nav-item label="Inicio" [active]="router.isActive('/inicio')">
-    <svg slot="icon" ...><!-- home --></svg>
-  </afi-nav-item>
+  readonly tokenCategoryOptions = [
+    { value: 'Color', label: 'Color' },
+    { value: 'Spacing', label: 'Spacing' },
+    { value: 'Border Radius', label: 'Border Radius' },
+    { value: 'Motion', label: 'Motion' },
+  ];
 
-  <afi-nav-item label="Proyectos" [badge]="pendientes()">
-    <svg slot="icon" ...><!-- folder --></svg>
-  </afi-nav-item>
-
-  <span slot="bottom">
-    <afi-nav-item label="Mi cuenta">
-      <img slot="icon" [src]="avatarUrl()" class="rounded-full" />
-    </afi-nav-item>
-  </span>
-</afi-sidebar>`;
-
-  readonly codeSnippet = computed(() => {
-    const props: string[] = [];
-    if (this.mode() !== 'hover-expand') props.push(`  mode="${this.mode()}"`);
-    if (this.pinned()) props.push('  [pinned]="true"');
-    props.push('  ariaLabel="Navegación principal"');
-
-    const items = this.navItems
-      .map((item) => {
-        const itemProps: string[] = [`    label="${item.label}"`];
-        if (item.active) itemProps.push('    [active]="true"');
-        if (this.showBadges() && item.badge !== null) itemProps.push(`    [badge]="${item.badge}"`);
-        return `  <afi-nav-item\n${itemProps.join('\n')}\n  >\n    <svg slot="icon" ...></svg>\n  </afi-nav-item>`;
-      })
-      .join('\n');
-
-    return `<afi-sidebar\n${props.join('\n')}\n>\n${items}\n</afi-sidebar>`;
+  readonly filteredTokenRows = computed(() => {
+    const cat = this.tokenCategory();
+    return ALL_TOKEN_ROWS
+      .filter(r => r.category === cat)
+      .map(({ category, ...rest }) => rest);
   });
 
-  readonly sidebarInputs = [
-    {
-      name: 'mode',
-      type: "'static' | 'collapsible' | 'hover-expand'",
-      default: "'hover-expand'",
-      notes: 'Modo de interacción del sidebar',
-    },
-    {
-      name: 'expanded',
-      type: 'boolean | null',
-      default: 'null',
-      notes: 'Override manual del estado expandido',
-    },
-    {
-      name: 'pinned',
-      type: 'boolean',
-      default: 'false',
-      notes: 'Fija el sidebar abierto (hover-expand)',
-    },
-    {
-      name: 'ariaLabel',
-      type: 'string',
-      default: "'Navegación principal'",
-      notes: 'Label accesible del nav',
-    },
-    {
-      name: 'width',
-      type: '{ collapsed: string; expanded: string }',
-      default: "{ collapsed: '64px', expanded: '240px' }",
-      notes: 'Anchos personalizados',
-    },
-  ];
+  toggleMode(): void {
+    this.mode.set(this.mode() === 'light' ? 'dark' : 'light');
+  }
 
-  readonly sidebarOutputs = [
-    { name: 'expandedChange', payload: 'boolean', notes: 'Emitido al cambiar el estado expandido' },
-    { name: 'pinnedChange', payload: 'boolean', notes: 'Emitido al fijar/desfijar el sidebar' },
-  ];
-
-  readonly navItemInputs = [
-    { name: 'label', type: 'string', default: '(required)', notes: 'Texto del item de navegación' },
-    {
-      name: 'active',
-      type: 'boolean',
-      default: 'false',
-      notes: 'Marca el item como activo (aria-current="page")',
-    },
-    {
-      name: 'badge',
-      type: 'number | string | null',
-      default: 'null',
-      notes: 'Badge de notificación',
-    },
-    { name: 'disabled', type: 'boolean', default: 'false', notes: 'Desactiva el item' },
-    {
-      name: 'sidebarExpanded',
-      type: 'boolean',
-      default: 'true',
-      notes: 'Controla visibilidad del label (set por Sidebar)',
-    },
-  ];
-
-  readonly navItemOutputs = [
-    {
-      name: 'clicked',
-      payload: '{ event: MouseEvent }',
-      notes: 'Emitido al hacer clic en el item',
-    },
-  ];
+  copyTokens(): void {
+    const text = ALL_TOKEN_ROWS.map(r => `${r.property}: ${r.token}`).join('\n');
+    navigator.clipboard.writeText(text);
+    this.tokensCopied.set(true);
+    setTimeout(() => this.tokensCopied.set(false), 2000);
+  }
 }

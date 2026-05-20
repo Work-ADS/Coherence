@@ -23,7 +23,7 @@ const PASSWORD = 'simulatorinnovation2026';
              px-space-6 py-space-8"
     >
       <div class="w-full max-w-md flex flex-col gap-space-6 items-center">
-        <coherence-logo variant="positivo" size="lg" />
+        <coherence-logo variant="color" size="lg" />
 
         <div
           class="w-full bg-surface-elevated rounded-md shadow-md

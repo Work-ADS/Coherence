@@ -1,0 +1,195 @@
+// =============================================================================
+// afi-tabs — underline-style tabs with sliding indicator
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.tabs {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  border-bottom: 1px solid var(--border-subtle);
+
+  // ─── Sliding underline indicator ───
+  &__underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--brand-primary-background-default);
+    border-radius: var(--radius-full);
+    transition:
+      transform var(--duration-base) var(--easing-standard),
+      width var(--duration-fast) var(--easing-standard);
+    will-change: transform, width;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  // ─── Tab trigger ───
+  &__trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    font: var(--type-body-md-400);
+    color: var(--foreground-tertiary-default);
+    transition: color var(--duration-fast) ease-out;
+
+    &:hover:not([disabled]) {
+      color: var(--foreground-primary-default);
+    }
+
+    &--active {
+      color: var(--foreground-brand-default);
+      font: var(--type-body-md-500);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: inset 0 0 0 2px var(--border-focus);
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  // ─── Badge ───
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    background: var(--brand-primary-background-default);
+    color: var(--brand-primary-foreground-default);
+    font: var(--type-body-sm-400);
+    padding: 0 var(--space-xs);
+    min-width: var(--dimension-5);
+    height: var(--dimension-5);
+  }
+
+  // ─── Panel ───
+  &__panels {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__panel {
+    &[hidden] {
+      display: none;
+    }
+
+    // Slide + blur entrance animations
+    &--enter-left {
+      animation: tab-slide-in-left var(--duration-base) var(--easing-standard) both;
+    }
+
+    &--enter-left-alt {
+      animation: tab-slide-in-left-alt var(--duration-base) var(--easing-standard) both;
+    }
+
+    &--enter-right {
+      animation: tab-slide-in-right var(--duration-base) var(--easing-standard) both;
+    }
+
+    &--enter-right-alt {
+      animation: tab-slide-in-right-alt var(--duration-base) var(--easing-standard) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &--enter-left,
+      &--enter-left-alt,
+      &--enter-right,
+      &--enter-right-alt {
+        animation: none;
+      }
+    }
+  }
+
+  // ─── Size variants ───
+  &--sm .tabs__trigger {
+    height: var(--dimension-9);
+    padding: 0 var(--space-sm);
+    font: var(--type-body-sm-400);
+
+    &.tabs__trigger--active {
+      font: var(--type-body-sm-500);
+    }
+  }
+
+  &--md .tabs__trigger {
+    height: var(--dimension-11);
+    padding: 0 var(--space-md);
+    font: var(--type-body-md-400);
+
+    &.tabs__trigger--active {
+      font: var(--type-body-md-500);
+    }
+  }
+}
+
+// ─── Keyframes: slide + blur ───
+@keyframes tab-slide-in-left {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes tab-slide-in-left-alt {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes tab-slide-in-right {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes tab-slide-in-right-alt {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+  }
+}

@@ -1,9 +1,14 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { NavSectionComponent } from './components/nav-section/nav-section.component';
 import { PasswordGateComponent } from './components/password-gate/password-gate.component';
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
-import { LogoComponent, TopBarComponent } from '@coherence/ui';
+import {
+  LogoComponent,
+  TopBarComponent,
+  SidebarComponent,
+  NavItemComponent,
+  NavSectionComponent,
+} from '@coherence/ui';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +17,11 @@ import { LogoComponent, TopBarComponent } from '@coherence/ui';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    NavSectionComponent,
     LogoComponent,
     TopBarComponent,
+    SidebarComponent,
+    NavItemComponent,
+    NavSectionComponent,
     PasswordGateComponent,
     ThemeToggleComponent,
   ],
@@ -85,6 +92,14 @@ export class App {
       // Private mode / storage disabled — gate stays open for this tab only.
     }
     this.unlocked.set(true);
+  }
+
+  isActive(path: string): boolean {
+    return this.currentUrl().startsWith(path);
+  }
+
+  navigate(path: string): void {
+    this.router.navigateByUrl(path);
   }
 
   private matchFullScreen(url: string): boolean {

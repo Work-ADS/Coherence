@@ -5,7 +5,7 @@ import {
 
 /**
  * Visual separator between groups of menu items.
- * Renders a 1px hairline with vertical spacing.
+ * Renders a 1px line with vertical spacing.
  */
 @Component({
   selector: 'afi-menu-divider',
@@ -13,8 +13,17 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'separator',
-    '[class]': '"block my-1"',
   },
-  template: `<div class="h-px bg-border-hairline"></div>`,
+  template: `<div class="divider"></div>`,
+  styles: [`
+    :host {
+      display: block;
+      margin: var(--space-2xs) 0;
+    }
+    .divider {
+      height: 1px;
+      background: var(--border-subtle);
+    }
+  `],
 })
 export class MenuDividerComponent {}

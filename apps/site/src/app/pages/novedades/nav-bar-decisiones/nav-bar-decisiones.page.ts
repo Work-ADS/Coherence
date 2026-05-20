@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { PageHeaderComponent, TabsComponent, TabComponent } from '@coherence/ui';
+import { PageHeaderComponent, TabsComponent, TabItemComponent } from '@coherence/ui';
 
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
 import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.component';
@@ -19,7 +19,7 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
     RouterLink,
     PageHeaderComponent,
     TabsComponent,
-    TabComponent,
+    TabItemComponent,
     PlannerTopBarComponent,
     OnThisPageComponent,
   ],
@@ -108,7 +108,7 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
             <div class="mt-space-8 px-space-8 pb-space-10">
               <afi-tabs [lazy]="true" ariaLabel="Vistas del caso de estudio Top bar">
                 <!-- ==================== DECISIONES ==================== -->
-                <afi-tab label="Decisiones">
+                <afi-tab-item label="Decisiones">
                   <div class="py-space-6 flex flex-col gap-space-10">
                     <!-- TIER 1: identidad del componente -->
                     <section id="resumen" class="scroll-mt-space-8">
@@ -572,10 +572,10 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       </div>
                     </section>
                   </div>
-                </afi-tab>
+                </afi-tab-item>
 
                 <!-- ==================== HISTORIAS DE USUARIO ==================== -->
-                <afi-tab label="Historias de usuario">
+                <afi-tab-item label="Historias de usuario">
                   <div class="py-space-6 flex flex-col gap-space-6">
                     <p class="text-body-md text-neutral-600 max-w-[640px]">
                       Cada historia describe un escenario real del gestor durante una sesión de
@@ -614,10 +614,10 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       }
                     </ol>
                   </div>
-                </afi-tab>
+                </afi-tab-item>
 
                 <!-- ==================== REQUISITOS TÉCNICOS ==================== -->
-                <afi-tab label="Requisitos técnicos">
+                <afi-tab-item label="Requisitos técnicos">
                   <div class="py-space-6 flex flex-col gap-space-6">
                     <p class="text-body-md text-neutral-600 max-w-[640px]">
                       Restricciones de implementación que el equipo de frontend debe respetar para
@@ -640,10 +640,10 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       </article>
                     }
                   </div>
-                </afi-tab>
+                </afi-tab-item>
 
                 <!-- ==================== REQUISITOS NO TÉCNICOS ==================== -->
-                <afi-tab label="Requisitos no técnicos">
+                <afi-tab-item label="Requisitos no técnicos">
                   <div class="py-space-6 flex flex-col gap-space-6">
                     <p class="text-body-md text-neutral-600 max-w-[640px]">
                       Accesibilidad, internacionalización, comportamiento y políticas — todo lo que
@@ -666,10 +666,10 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       </article>
                     }
                   </div>
-                </afi-tab>
+                </afi-tab-item>
 
                 <!-- ==================== ESPECIFICACIONES FIGMA ==================== -->
-                <afi-tab label="Especificaciones Figma">
+                <afi-tab-item label="Especificaciones Figma">
                   <div class="py-space-6 flex flex-col gap-space-6">
                     <p class="text-body-md text-neutral-600 max-w-[640px]">
                       Tokens, dimensiones e iconografía para que un diseñador pueda reconstruir el
@@ -793,7 +793,7 @@ import { OnThisPageComponent, type TocItem } from '../shared/on-this-page.compon
                       Figma — los seniors entran a la página y leen lo mismo que ven en el design.
                     </p>
                   </div>
-                </afi-tab>
+                </afi-tab-item>
               </afi-tabs>
             </div>
           </div>

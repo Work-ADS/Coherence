@@ -6,7 +6,7 @@ import {
   SelectComponent,
   SwitchComponent,
   TabsComponent,
-  TabComponent,
+  TabItemComponent,
 } from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
 
@@ -33,7 +33,7 @@ import {
   standalone: true,
   imports: [
     TabsComponent,
-    TabComponent,
+    TabItemComponent,
     SelectComponent,
     SwitchComponent,
     ButtonComponent,
@@ -60,7 +60,7 @@ import {
       <div class="mt-space-6 px-space-8">
         <afi-tabs [lazy]="true" ariaLabel="Vistas de la pestaña Evolución patrimonial V3">
           <!-- ==================== EJEMPLO ==================== -->
-          <afi-tab label="Ejemplo">
+          <afi-tab-item label="Ejemplo">
             <div class="py-space-6 flex flex-col gap-space-6">
               <div class="rounded-md">
                 <!-- Header (reactive to Vista) — hover readout lives inline in
@@ -297,10 +297,10 @@ import {
                 {{ viewExplainer() }}
               </p>
             </div>
-          </afi-tab>
+          </afi-tab-item>
 
           <!-- ==================== DECISIONES ==================== -->
-          <afi-tab label="Decisiones">
+          <afi-tab-item label="Decisiones">
             <div class="py-space-6 flex flex-col gap-space-8">
               <!-- Cabecera -->
               <article class="border border-border-hairline rounded-md p-space-6">
@@ -606,7 +606,7 @@ comparison = "Al final del plan, a los &#123;endAge&#125; años"</code></pre>
                 </p>
               </article>
             </div>
-          </afi-tab>
+          </afi-tab-item>
         </afi-tabs>
       </div>
     </div>

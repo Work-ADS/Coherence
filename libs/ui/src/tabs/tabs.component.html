@@ -1,0 +1,59 @@
+<div
+  class="tabs"
+  [class.tabs--sm]="size() === 'sm'"
+  [class.tabs--md]="size() === 'md'"
+  role="tablist"
+  [attr.aria-label]="ariaLabel()"
+  (keydown)="onKeydown($event)"
+>
+  <!-- Sliding underline indicator -->
+  <div
+    class="tabs__underline"
+    [style.transform]="indicatorTransform()"
+    [style.width.px]="indicatorWidth()"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Tab triggers -->
+  @for (tab of tabs(); track $index) {
+    <button
+      #tabTrigger
+      type="button"
+      role="tab"
+      [id]="tabId($index)"
+      [attr.aria-selected]="$index === currentIndex()"
+      [attr.aria-controls]="panelId($index)"
+      [tabindex]="$index === currentIndex() ? 0 : -1"
+      [disabled]="tab.disabled()"
+      class="tabs__trigger"
+      [class.tabs__trigger--active]="$index === currentIndex()"
+      (click)="activate($index)"
+    >
+      {{ tab.label() }}
+      @if (tab.badge() !== null) {
+        <span class="tabs__badge">{{ tab.badge() }}</span>
+      }
+    </button>
+  }
+</div>
+
+<!-- Tab panels -->
+<div class="tabs__panels">
+  @for (tab of tabs(); track $index) {
+    <div
+      role="tabpanel"
+      [id]="panelId($index)"
+      [attr.aria-labelledby]="tabId($index)"
+      [hidden]="$index !== currentIndex()"
+      class="tabs__panel"
+      [class.tabs__panel--enter-left]="$index === currentIndex() && slideDirection() === 'left' && animationKey() % 2 === 0"
+      [class.tabs__panel--enter-left-alt]="$index === currentIndex() && slideDirection() === 'left' && animationKey() % 2 === 1"
+      [class.tabs__panel--enter-right]="$index === currentIndex() && slideDirection() === 'right' && animationKey() % 2 === 0"
+      [class.tabs__panel--enter-right-alt]="$index === currentIndex() && slideDirection() === 'right' && animationKey() % 2 === 1"
+    >
+      @if (!lazy() || $index === currentIndex()) {
+        <ng-container [ngTemplateOutlet]="tab.contentTpl()!" />
+      }
+    </div>
+  }
+</div>

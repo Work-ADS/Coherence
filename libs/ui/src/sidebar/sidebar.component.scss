@@ -1,0 +1,128 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+.sidebar {
+  height: 100%;
+  background: var(--nav-sidebar);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--duration-base) var(--easing-standard);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidebar__logo-row {
+  height: var(--dimension-12); /* 48px */
+  display: flex;
+  align-items: center;
+  padding-inline: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.sidebar__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-xs);
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-subtle);
+    border-radius: var(--radius-full);
+  }
+}
+
+.sidebar__footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-xs) var(--space-md);
+  flex-shrink: 0;
+}
+
+/* Pin button (hover-expand mode) */
+.sidebar__pin {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-xs);
+  padding: var(--space-2xs);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--foreground-tertiary-default);
+  transition: color var(--duration-fast) var(--easing-standard),
+              background var(--duration-fast) var(--easing-standard);
+  z-index: 10;
+
+  &:hover {
+    background: var(--nav-item-background-hover);
+  }
+
+  &.is-pinned {
+    color: var(--brand-primary-foreground-default);
+  }
+
+  svg {
+    width: var(--dimension-4);
+    height: var(--dimension-4);
+  }
+}
+
+/* Collapse toggle (collapsible mode) */
+.sidebar__toggle {
+  align-self: flex-end;
+  margin: var(--space-xs) var(--space-xs) 0;
+  padding: var(--space-2xs);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--foreground-tertiary-default);
+  transition: color var(--duration-fast) var(--easing-standard),
+              background var(--duration-fast) var(--easing-standard);
+
+  &:hover {
+    background: var(--nav-item-background-hover);
+  }
+
+  svg {
+    width: var(--dimension-5);
+    height: var(--dimension-5);
+    transition: transform var(--duration-fast) var(--easing-standard);
+  }
+
+  &.is-collapsed svg {
+    transform: rotate(180deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar__pin,
+  .sidebar__toggle,
+  .sidebar__toggle svg {
+    transition-duration: 0ms !important;
+  }
+}
+
+/* ─── Brand variant ─── */
+.sidebar--brand {
+  --nav-sidebar: var(--brand-secondary-background-default);
+  --border-subtle: var(--brand-secondary-background-hover);
+  --nav-item-background-default: transparent;
+  --nav-item-background-hover: var(--brand-secondary-background-hover);
+  --nav-item-background-active: var(--brand-secondary-background-active);
+  --nav-item-background-selected: var(--brand-secondary-background-hover);
+  --nav-item-foreground-default: var(--brand-secondary-foreground-default);
+  --nav-item-foreground-hover: var(--brand-secondary-foreground-hover);
+  --nav-item-foreground-active: var(--brand-secondary-foreground-active);
+  --nav-item-foreground-selected: var(--brand-secondary-foreground-default);
+  --nav-item-icon-default: var(--brand-secondary-foreground-default);
+  --nav-item-icon-hover: var(--brand-secondary-foreground-hover);
+  --nav-item-icon-active: var(--brand-secondary-foreground-active);
+  --foreground-tertiary-default: var(--brand-secondary-foreground-default);
+}

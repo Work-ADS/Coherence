@@ -7,6 +7,7 @@ export const componentes_routes: Routes = [
       import('./componentes.landing').then(m => m.ComponentesLandingPage),
   },
   // ─── Ready (new DS atoms) ─────────────────────────────────────────────────
+  { path: 'logo', loadComponent: () => import('./logo.page').then(m => m.LogoPage) },
   { path: 'icon-button', loadComponent: () => import('./icon-button.page').then(m => m.IconButtonPage) },
   { path: 'avatar', loadComponent: () => import('./avatar.page').then(m => m.AvatarPage) },
   { path: 'segmented-control', loadComponent: () => import('./segmented-control.page').then(m => m.SegmentedControlPage) },

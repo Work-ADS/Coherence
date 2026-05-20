@@ -1,12 +1,47 @@
+// =============================================================================
+// coherence-logo — BEM styles
+// =============================================================================
+
 .coherence-logo {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  // height is set inline via [style.height] from the size input
+  color: inherit;
 
-  &__img {
+  // ---------------------------------------------------------------------------
+  // Size modifiers — height maps to dimension tokens
+  // ---------------------------------------------------------------------------
+  &--sm { height: var(--dim-24); }
+  &--md { height: var(--dim-32); }
+  &--lg { height: var(--dim-48); }
+  &--xl { height: var(--dim-64); }
+
+  // ---------------------------------------------------------------------------
+  // SVG fills the height, width follows aspect ratio
+  // ---------------------------------------------------------------------------
+  &__svg {
     display: block;
     height: 100%;
     width: auto;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Interactive state when rendered as anchor
+  // ---------------------------------------------------------------------------
+  a#{&} {
+    border-radius: var(--radius-xs, 4px);
+    outline: none;
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px var(--border-focus);
+    }
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:active {
+      opacity: 0.7;
+    }
   }
 }

@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  input,
+  model,
+  signal,
+  viewChildren,
+} from '@angular/core';
+
 import { SegmentedControlSize } from './segmented-control.variants';
 
 export interface SegmentedOption {
@@ -8,33 +20,95 @@ export interface SegmentedOption {
 }
 
 /**
- * Segmented Control — a set of mutually exclusive options rendered as a button bar.
+ * Segmented Control — a set of mutually exclusive options rendered as a
+ * pill-style toggle bar with a sliding indicator that animates to the
+ * active option.
+ *
+ * Uses semantic tokens for all visual values. Respects prefers-reduced-motion.
+ *
+ * Accessibility:
+ * - `role="radiogroup"` on the container
+ * - `role="radio"` + `aria-checked` on each option
+ * - Focus ring via `--border-focus`
+ *
+ * @example
+ * ```html
+ * <afi-segmented-control
+ *   [options]="[{value: 'a', label: 'A'}, {value: 'b', label: 'B'}]"
+ *   [(value)]="selected"
+ *   size="sm"
+ * />
+ * ```
  */
 @Component({
   selector: 'afi-segmented-control',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './segmented-control.component.html',
-  styleUrls: ['./segmented-control.component.scss'],
+  styleUrl: './segmented-control.component.scss',
 })
-export class SegmentedControlComponent {
+export class SegmentedControlComponent implements AfterViewInit {
+  /** The available options to render. */
   readonly options = input.required<SegmentedOption[]>();
+
+  /** Two-way bound value — the currently selected option's value. */
   readonly value = model.required<string>();
+
+  /** Size variant (sm | md | lg). */
   readonly size = input<SegmentedControlSize>('md');
+
+  /** Accessible label for the radiogroup. */
   readonly ariaLabel = input<string>('');
 
-  readonly containerClass = computed(() => `seg-control seg-control--${this.size()}`);
+  /** References to option button elements for indicator measurement. */
+  readonly optionEls = viewChildren<ElementRef>('optionEl');
 
-  optionClass(option: SegmentedOption): string {
-    const base = 'seg-control__option';
-    const active = option.value === this.value() ? `${base}--active` : '';
-    const disabled = option.disabled ? `${base}--disabled` : '';
-    return [base, active, disabled].filter(Boolean).join(' ');
+  // ─── Indicator state ───
+  readonly indicatorWidth = signal(0);
+  readonly indicatorOffset = signal(0);
+  readonly indicatorTransform = computed(
+    () => `translateX(${this.indicatorOffset()}px)`,
+  );
+
+  constructor() {
+    // Recalculate indicator when value, options, size, or view children change
+    effect(() => {
+      const _ = this.value();
+      const __ = this.options();
+      const ___ = this.optionEls();
+      const ____ = this.size();
+      // Double rAF to ensure layout has settled after size change
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => this.updateIndicator()),
+      );
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.updateIndicator();
   }
 
   select(option: SegmentedOption): void {
     if (!(option.disabled ?? false)) {
       this.value.set(option.value);
     }
+  }
+
+  private updateIndicator(): void {
+    const els = this.optionEls();
+    const opts = this.options();
+    const currentValue = this.value();
+    const idx = opts.findIndex(o => o.value === currentValue);
+    if (idx < 0 || idx >= els.length) return;
+
+    const el = els[idx]?.nativeElement as HTMLElement | undefined;
+    if (!el) return;
+    const parent = el.parentElement;
+    if (!parent) return;
+
+    const parentRect = parent.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    this.indicatorOffset.set(elRect.left - parentRect.left);
+    this.indicatorWidth.set(elRect.width);
   }
 }

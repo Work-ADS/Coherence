@@ -1,12 +1,12 @@
-/** Tokens consumed by NavSection — shown on the Design tab. */
+/** Tokens consumed by NavSection. */
 export const tokenUsage = [
-  { property: 'Fondo hover (fila padre)', token: 'var(--surface-muted)' },
-  { property: 'Texto padre (activo)', token: 'var(--canvas-fg), font-medium' },
-  { property: 'Chevron', token: 'var(--neutral-400)' },
-  { property: 'Línea guía', token: 'var(--border-hairline)' },
-  { property: 'Trail hover', token: 'var(--action-300)' },
-  { property: 'Marker', token: 'var(--action-500)', note: '2×16px rounded' },
-  { property: 'Sangría hijos', token: 'var(--space-8)' },
-  { property: 'Rotación chevron', token: 'var(--duration-fast) var(--easing-enter)' },
-  { property: 'Expand/collapse', token: 'grid-template-rows 0fr→1fr, var(--duration-200)' },
+  { property: 'Background hover (parent)', token: '--nav-item-background-hover' },
+  { property: 'Text (active child)', token: '--nav-item-foreground-selected' },
+  { property: 'Chevron', token: '--foreground-tertiary-default' },
+  { property: 'Guide line', token: '--border-subtle' },
+  { property: 'Trail hover', token: '--brand-primary-border-default' },
+  { property: 'Marker', token: '--brand-primary-border-default', note: '2×16px rounded' },
+  { property: 'Children indent', token: '--space-lg (24px)' },
+  { property: 'Chevron rotation', token: '--duration-fast + --easing-standard' },
+  { property: 'Expand/collapse', token: 'grid-template-rows, --duration-base + --easing-standard' },
 ] as const;

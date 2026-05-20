@@ -1,3 +1,3 @@
 export { TabsComponent } from './tabs.component';
-export { TabComponent } from './tab.component';
+export { TabItemComponent } from './tab-item.component';
 export type { TabsSize } from './tabs.variants';

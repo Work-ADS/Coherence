@@ -1,19 +1,14 @@
 export type NavItemVariant = 'default' | 'active';
 
-export const navItemClasses: Record<NavItemVariant, string> = {
-  default: 'hover:bg-surface-100 text-neutral-700',
-  active: 'bg-action/5 border-l-2 border-l-action text-action-900',
-};
-
-/** Tokens consumed by NavItem — shown on the Design tab. */
+/** Tokens consumed by NavItem. */
 export const tokenUsage = [
-  { property: 'Texto (idle)', token: 'var(--neutral-700)' },
-  { property: 'Texto (activo)', token: 'var(--action-900)' },
-  { property: 'Fondo hover', token: 'var(--surface-100)' },
-  { property: 'Fondo activo', token: 'var(--action) / 5%' },
-  { property: 'Borde activo', token: 'var(--action)' },
-  { property: 'Badge fondo', token: 'var(--system-error-500)' },
-  { property: 'Tooltip fondo', token: 'var(--neutral-900)' },
-  { property: 'Foco', token: 'var(--action)', note: '2px offset' },
-  { property: 'Transición', token: 'var(--duration-fast) ease-out' },
+  { property: 'Text (idle)', token: '--nav-item-foreground-default' },
+  { property: 'Text (hover)', token: '--nav-item-foreground-hover' },
+  { property: 'Text (active)', token: '--nav-item-foreground-selected' },
+  { property: 'Background (hover)', token: '--nav-item-background-hover' },
+  { property: 'Background (active)', token: '--nav-item-background-selected' },
+  { property: 'Icon (idle)', token: '--nav-item-icon-default' },
+  { property: 'Icon (hover)', token: '--nav-item-icon-hover' },
+  { property: 'Focus ring', token: '--border-focus' },
+  { property: 'Transition', token: '--duration-fast + --easing-standard' },
 ] as const;

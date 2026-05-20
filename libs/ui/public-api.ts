@@ -1,4 +1,5 @@
 export { LogoComponent } from './src/logo';
+export type { LogoVariant, LogoSize } from './src/logo';
 export { DownloadMdButtonComponent } from './src/download-md-button';
 export { ButtonComponent } from './src/button';
 export type { ButtonVariant, ButtonSize } from './src/button';
@@ -16,7 +17,7 @@ export { CardComponent } from './src/card';
 export type { CardVariant, CardPadding } from './src/card';
 export { ModalComponent } from './src/modal';
 export type { ModalSize } from './src/modal';
-export { TabsComponent, TabComponent } from './src/tabs';
+export { TabsComponent, TabItemComponent } from './src/tabs';
 export type { TabsSize } from './src/tabs';
 export { TableComponent } from './src/table';
 export type { TableColumn, TableSortState, TableDensity } from './src/table';

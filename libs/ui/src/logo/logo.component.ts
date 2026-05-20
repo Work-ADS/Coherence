@@ -1,54 +1,69 @@
-// TODO(brand-manifest): once brand/mode architecture lands, read variant from a provider instead of input.
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-const SIZE_MAP: Record<string, string> = {
-  sm: 'var(--dim-24)',
-  md: 'var(--dim-32)',
-  lg: 'var(--dim-48)',
-  xl: 'var(--dim-64)',
-};
+import type { LogoSize, LogoVariant } from './logo.variants';
 
 /**
- * AFI Logo component.
+ * Coherence logo — the AFI brand mark rendered as inline SVG so its fills
+ * resolve against semantic color tokens (and `currentColor`) and adapt to
+ * light/dark mode without swapping assets.
  *
- * Renders the AFI brand mark as an `<img>` inside either an `<a>` (when `href`
- * is provided) or a `<span>` (when it is not). SVGs live in `public/brand/`
- * and are referenced by URL — no inline embedding.
+ * Variants:
+ * - `color` (default): symbol uses `--brand-mark-symbol` (afi-azul-500), wordmark
+ *   inherits `currentColor` (flips with mode via body text color).
+ * - `monochrome`: both symbol and wordmark inherit `currentColor`. Works on any
+ *   surface — set `color` on a wrapper to force a specific tone.
  *
- * Two forms:
- * - `mark` (default): full wordmark "Afi" + symbol, widescreen aspect.
- * - `icon`: symbol only (infinity + diamond), square-ish aspect. Use in
- *   collapsed navigation, favicons, social/watermark positions.
+ * Shape:
+ * - `showWordmark` (default `true`) toggles the "Afi" letterforms. When `false`,
+ *   only the symbol renders and the viewBox tightens to the icon-only crop.
+ * - `size` maps to a height token (sm/md/lg/xl → --dim-24/32/48/64).
+ * - `href` wraps the SVG in an anchor when set; the anchor owns focus/hover/active.
  *
  * @example
  * ```html
- * <coherence-logo variant="color" size="md" href="/" />
- * <coherence-logo form="icon" variant="negativo" size="sm" />
+ * <coherence-logo size="md" href="/" />
+ * <coherence-logo variant="monochrome" [showWordmark]="false" size="sm" />
  * ```
  */
 @Component({
   selector: 'coherence-logo',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './logo.component.html',
   styleUrl: './logo.component.scss',
 })
 export class LogoComponent {
-  /** Logo color variant. */
-  readonly variant = input<'color' | 'positivo' | 'negativo'>('color');
+  /** Fill scheme — `color` keeps the symbol brand-blue; `monochrome` follows currentColor. */
+  readonly variant = input<LogoVariant>('color');
 
-  /** Display size mapped to --dim-* tokens. */
-  readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
+  /** Display size — maps to `--dim-24/32/48/64` via BEM modifier. */
+  readonly size = input<LogoSize>('md');
 
-  /** Mark (wordmark + symbol) or icon only (symbol). */
-  readonly form = input<'mark' | 'icon'>('mark');
+  /** Render the "Afi" wordmark next to the symbol. Toggle off for icon-only use. */
+  readonly showWordmark = input<boolean>(true);
 
-  /** When set, wraps the logo in an anchor. */
+  /** When set, the logo is wrapped in an `<a>` and the anchor owns interactive states. */
   readonly href = input<string | null>(null);
 
-  readonly src = computed(() => {
-    const prefix = this.form() === 'icon' ? 'afi-icon' : 'afi';
-    return `brand/${prefix}-${this.variant()}.svg`;
+  /** BEM class string driven by size + variant + wordmark presence. */
+  readonly classes = computed(() => {
+    const base = 'coherence-logo';
+    const parts = [
+      base,
+      `${base}--${this.size()}`,
+      `${base}--${this.variant()}`,
+      this.showWordmark() ? `${base}--mark` : `${base}--icon`,
+    ];
+    return parts.join(' ');
   });
 
-  readonly heightVar = computed(() => SIZE_MAP[this.size()] ?? SIZE_MAP['md']);
+  /** Symbol fill — `currentColor` for monochrome, otherwise the brand-mark token. */
+  readonly symbolFill = computed(() =>
+    this.variant() === 'monochrome' ? 'currentColor' : 'var(--brand-mark-symbol)',
+  );
+
+  /** SVG viewBox switches between full wordmark crop and icon-only crop. */
+  readonly viewBox = computed(() =>
+    this.showWordmark() ? '0 0 95 32' : '50 6 45 26',
+  );
 }

@@ -1,0 +1,156 @@
+:host {
+  display: block;
+}
+
+.nav-section__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100%;
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--nav-item-foreground-default);
+  font: var(--type-body-sm-400);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--duration-fast) var(--easing-standard),
+              color var(--duration-fast) var(--easing-standard);
+
+  &:hover {
+    background: var(--nav-item-background-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+  }
+
+  &.has-active-child {
+    font: var(--type-body-sm-500);
+    color: var(--nav-item-foreground-selected);
+  }
+}
+
+.nav-section__chevron {
+  width: var(--dimension-4);
+  height: var(--dimension-4);
+  flex-shrink: 0;
+  color: var(--foreground-tertiary-default);
+  transition: transform var(--duration-fast) var(--easing-standard);
+
+  &.is-expanded {
+    transform: rotate(90deg);
+  }
+
+  &--right {
+    margin-left: auto;
+  }
+}
+
+.nav-section__label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-section__trailing {
+  margin-left: auto;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing-standard);
+
+  .nav-section__trigger:hover &,
+  :host:focus-within & {
+    opacity: 1;
+  }
+}
+
+/* Collapsible children region */
+.nav-section__children-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-base) var(--easing-standard);
+
+  &.is-expanded {
+    grid-template-rows: 1fr;
+  }
+}
+
+.nav-section__children-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Tree lines */
+.nav-section__children {
+  position: relative;
+  padding-left: var(--space-xs);
+
+  /* Vertical guide line */
+  &::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border-subtle);
+  }
+
+  /* Active trail — smooth color from top to active item */
+  &[data-trail="true"]::before {
+    background: var(--border-subtle);
+    background-image: linear-gradient(
+      to bottom,
+      var(--brand-primary-border-default) 0px,
+      var(--brand-primary-border-default) var(--trail-end-y, 0px),
+      var(--border-subtle) var(--trail-end-y, 0px)
+    );
+    transition: background-image var(--duration-base) var(--easing-standard);
+  }
+}
+
+/* Horizontal stubs for child items — removed for cleaner alignment */
+.nav-section__children ::ng-deep > :not(.nav-section__marker) {
+  position: relative;
+}
+
+/* Active marker dot */
+.nav-section__marker {
+  position: absolute;
+  left: 3px;
+  top: var(--marker-y, 0px);
+  width: 2px;
+  height: 16px;
+  transform: translateY(-50%);
+  background: var(--brand-primary-border-default);
+  border-radius: 1px;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: top var(--duration-base) var(--easing-standard),
+              opacity var(--duration-fast) var(--easing-standard);
+
+  &.is-visible {
+    opacity: 1;
+  }
+}
+
+/* No tree lines variant */
+.nav-section__children--flat {
+  padding-left: var(--space-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-section__chevron,
+  .nav-section__children-wrapper,
+  .nav-section__children::before,
+  .nav-section__marker,
+  .nav-section__trigger,
+  .nav-section__trailing {
+    transition-duration: 0ms !important;
+  }
+}

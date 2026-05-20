@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { TabsComponent, TabComponent, ButtonComponent } from '@coherence/ui';
+import { TabsComponent, TabItemComponent, ButtonComponent } from '@coherence/ui';
 import { InsightsHeaderComponent } from '../shared/insights-header.component';
 import { InsightsFooterComponent } from '../shared/insights-footer.component';
 import { ArticleCardComponent } from '../shared/article-card.component';
@@ -10,7 +10,7 @@ import { MOCK_ARTICLES, CATEGORIES } from '../data/mock-articles';
   standalone: true,
   imports: [
     TabsComponent,
-    TabComponent,
+    TabItemComponent,
     ButtonComponent,
     InsightsHeaderComponent,
     InsightsFooterComponent,
@@ -39,9 +39,9 @@ import { MOCK_ARTICLES, CATEGORIES } from '../data/mock-articles';
             (activeChange)="activeTab.set($event)"
             ariaLabel="Filtrar por categoria"
           >
-            <afi-tab label="Todos" />
+            <afi-tab-item label="Todos" />
             @for (cat of categories; track cat.key) {
-              <afi-tab [label]="cat.label" />
+              <afi-tab-item [label]="cat.label" />
             }
           </afi-tabs>
         </section>

@@ -2,13 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   input,
   output,
   signal,
 } from '@angular/core';
 
-import type { SidebarMode } from './sidebar.variants';
+import type { SidebarMode, SidebarVariant } from './sidebar.variants';
 import { sidebarWidths } from './sidebar.variants';
 
 /**
@@ -22,6 +21,7 @@ import { sidebarWidths } from './sidebar.variants';
   selector: 'afi-sidebar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './sidebar.component.scss',
   host: {
     '(mouseenter)': 'onMouseEnter()',
     '(mouseleave)': 'onMouseLeave()',
@@ -34,70 +34,60 @@ import { sidebarWidths } from './sidebar.variants';
       [attr.aria-label]="ariaLabel()"
       [attr.aria-expanded]="isExpanded() ? 'true' : 'false'"
       [style.width]="currentWidth()"
-      class="h-full bg-surface-quiet border-r border-border-hairline flex flex-col transition-[width] duration-200 ease-out overflow-hidden shrink-0">
+      class="sidebar"
+      [class.sidebar--brand]="variant() === 'brand'">
 
       <!-- Top slot (logo) -->
-      <div class="h-16 flex items-center px-space-4 border-b border-border-hairline shrink-0">
+      <div class="sidebar__logo-row">
         <ng-content select="[slot=top]" />
       </div>
 
-      <!-- Pin / Toggle buttons -->
+      <!-- Pin button (hover-expand mode) -->
       @if (mode() === 'hover-expand' && isExpanded()) {
         <button
           type="button"
-          class="absolute top-3 right-2 p-1 rounded hover:bg-surface-100 transition-colors duration-fast z-10"
-          [attr.aria-label]="pinned() ? 'Desfijar barra lateral' : 'Fijar barra lateral'"
+          class="sidebar__pin"
+          [class.is-pinned]="pinned()"
+          [attr.aria-label]="pinned() ? 'Unpin sidebar' : 'Pin sidebar'"
           (click)="togglePin()">
-          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-            [class.text-action]="pinned()"
-            [class.text-neutral-400]="!pinned()">
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path d="M10 2a.75.75 0 01.75.75v5.59l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 011.06-1.06l3.22 3.22V2.75A.75.75 0 0110 2z" />
           </svg>
         </button>
       }
 
+      <!-- Collapse toggle (collapsible mode) -->
       @if (mode() === 'collapsible') {
         <button
           type="button"
-          class="mx-space-2 mt-space-2 p-1 rounded hover:bg-surface-100 transition-colors duration-fast self-end"
-          [attr.aria-label]="isExpanded() ? 'Ocultar navegación' : 'Mostrar navegación'"
+          class="sidebar__toggle"
+          [class.is-collapsed]="!isExpanded()"
+          [attr.aria-label]="isExpanded() ? 'Collapse navigation' : 'Expand navigation'"
           (click)="toggleCollapse()">
-          <svg class="h-5 w-5 transition-transform duration-fast" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-            [class.rotate-180]="!isExpanded()">
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
           </svg>
         </button>
       }
 
       <!-- Nav items -->
-      <div class="flex-1 overflow-y-auto py-space-2 px-space-2" role="list">
+      <div class="sidebar__content" role="list">
         <ng-content />
       </div>
 
       <!-- Bottom slot (user/settings) -->
-      <div class="border-t border-border-hairline px-space-4 py-space-2 shrink-0">
+      <div class="sidebar__footer">
         <ng-content select="[slot=bottom]" />
       </div>
     </nav>
   `,
-  styles: [`
-    :host {
-      display: block;
-      position: relative;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      nav {
-        transition-duration: 0ms !important;
-      }
-    }
-  `],
 })
 export class SidebarComponent {
   readonly mode = input<SidebarMode>('hover-expand');
+  readonly variant = input<SidebarVariant>('neutral');
   readonly expanded = input<boolean | null>(null);
   readonly pinned = input<boolean>(false);
-  readonly ariaLabel = input<string>('Navegación principal');
+  readonly ariaLabel = input<string>('Main navigation');
   readonly width = input<{ collapsed: string; expanded: string }>(sidebarWidths);
 
   readonly expandedChange = output<boolean>();
@@ -108,7 +98,6 @@ export class SidebarComponent {
   private readonly focused = signal(false);
 
   readonly isExpanded = computed(() => {
-    // Manual override
     const manual = this.expanded();
     if (manual !== null) return manual;
 
@@ -149,8 +138,6 @@ export class SidebarComponent {
   onFocusOut(event: FocusEvent): void {
     if (this.mode() === 'hover-expand' && !this.pinned()) {
       const related = event.relatedTarget as Node | null;
-      // Only collapse if focus left the sidebar entirely
-      // Use a microtask to check since relatedTarget may not be set yet
       queueMicrotask(() => {
         if (related && !(event.currentTarget as HTMLElement)?.contains(related)) {
           this.focused.set(false);

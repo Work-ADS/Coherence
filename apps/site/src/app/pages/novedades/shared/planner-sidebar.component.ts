@@ -272,11 +272,11 @@ export type NavSection = {
           [class.!gap-[6px]]="!expanded()"
         >
           @if (expanded()) {
-            <coherence-logo variant="negativo" size="sm" />
+            <coherence-logo variant="monochrome" size="sm" />
             <div class="w-px h-4 bg-white/30 shrink-0"></div>
             <span class="text-body-sm font-light whitespace-nowrap flex-1">Wealth planner</span>
           } @else {
-            <coherence-logo form="icon" variant="negativo" size="sm" />
+            <coherence-logo [showWordmark]="false" variant="monochrome" size="sm" />
           }
           <button
             type="button"

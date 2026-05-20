@@ -9,7 +9,7 @@ import {
   CardComponent,
   ModalComponent,
   TabsComponent,
-  TabComponent,
+  TabItemComponent,
   TableComponent,
   DrawerComponent,
   SidebarComponent,
@@ -46,7 +46,7 @@ import type {
     CardComponent,
     ModalComponent,
     TabsComponent,
-    TabComponent,
+    TabItemComponent,
     TableComponent,
     DrawerComponent,
     SidebarComponent,
@@ -300,18 +300,18 @@ import type {
         >
           <div class="w-full">
             <afi-tabs ariaLabel="Secciones de ejemplo">
-              <afi-tab label="General">
+              <afi-tab-item label="General">
                 <div class="p-space-4">Contenido de la pestaña General.</div>
-              </afi-tab>
-              <afi-tab label="Detalles" badge="3">
+              </afi-tab-item>
+              <afi-tab-item label="Detalles" badge="3">
                 <div class="p-space-4">Contenido de la pestaña Detalles con insignia.</div>
-              </afi-tab>
-              <afi-tab label="Historial">
+              </afi-tab-item>
+              <afi-tab-item label="Historial">
                 <div class="p-space-4">Contenido de la pestaña Historial.</div>
-              </afi-tab>
-              <afi-tab label="Deshabilitada" [disabled]="true">
+              </afi-tab-item>
+              <afi-tab-item label="Deshabilitada" [disabled]="true">
                 <div class="p-space-4">No visible.</div>
-              </afi-tab>
+              </afi-tab-item>
             </afi-tabs>
           </div>
         </afi-primitive-card>

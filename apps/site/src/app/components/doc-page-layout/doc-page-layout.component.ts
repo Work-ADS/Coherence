@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { MenuComponent } from '@coherence/ui';
+import { MenuComponent, SegmentedControlComponent } from '@coherence/ui';
 import { TocComponent } from '../toc';
 
 export type DocPageTab = 'preview' | 'tokens' | 'accessibility' | 'animation';
@@ -22,7 +22,7 @@ export type DocPageTab = 'preview' | 'tokens' | 'accessibility' | 'animation';
 @Component({
   selector: 'afi-doc-page-layout',
   standalone: true,
-  imports: [RouterLink, TocComponent, MenuComponent],
+  imports: [RouterLink, TocComponent, MenuComponent, SegmentedControlComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="flex gap-space-10">
@@ -99,26 +99,13 @@ export type DocPageTab = 'preview' | 'tokens' | 'accessibility' | 'animation';
         </div>
 
         <!-- Page-level tabs -->
-        <div
-          class="flex gap-space-1 border-b border-border-hairline mb-space-10"
-          role="tablist"
-          aria-label="Secciones de la página"
-        >
-          @for (tab of tabs; track tab.id) {
-            <button
-              type="button"
-              role="tab"
-              [attr.aria-selected]="activeTab() === tab.id"
-              class="px-space-4 py-space-3 text-body-sm transition-colors duration-fast -mb-px"
-              [class.border-b-2]="activeTab() === tab.id"
-              [class.border-action]="activeTab() === tab.id"
-              [class.text-canvas-fg]="activeTab() === tab.id"
-              [class.font-medium]="activeTab() === tab.id"
-              [class.text-neutral-400]="activeTab() !== tab.id"
-              [class.hover:text-canvas-fg]="activeTab() !== tab.id"
-              (click)="switchTab(tab.id)"
-            >{{ tab.label }}</button>
-          }
+        <div class="mb-space-10">
+          <afi-segmented-control
+            [options]="tabOptions"
+            [(value)]="activeTab"
+            size="sm"
+            ariaLabel="Secciones de la página"
+          />
         </div>
 
         <!-- Tab content -->
@@ -175,7 +162,9 @@ export class DocPageLayoutComponent implements AfterViewInit {
     { id: 'animation', label: 'Animation' },
   ];
 
-  readonly activeTab = signal<DocPageTab>('preview');
+  readonly tabOptions = this.tabs.map(t => ({ value: t.id, label: t.label }));
+
+  readonly activeTab = signal<string>('preview');
   readonly promptMenuOpen = signal(false);
   readonly tocRefresh = signal(0);
 

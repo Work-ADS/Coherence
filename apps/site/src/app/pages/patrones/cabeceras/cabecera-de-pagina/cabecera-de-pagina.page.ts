@@ -6,7 +6,7 @@ import {
   PageHeaderComponent,
   StatusChipComponent,
   TabsComponent,
-  TabComponent,
+  TabItemComponent,
 } from '@coherence/ui';
 
 /**
@@ -31,7 +31,7 @@ import {
     PageHeaderComponent,
     StatusChipComponent,
     TabsComponent,
-    TabComponent,
+    TabItemComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -52,7 +52,7 @@ import {
       <div class="mt-space-8">
         <afi-tabs [lazy]="true" ariaLabel="Vistas de la pestaña Cabecera de página">
           <!-- ==================== EJEMPLO ==================== -->
-          <afi-tab label="Ejemplo">
+          <afi-tab-item label="Ejemplo">
             <div class="py-space-6">
               <p class="text-body-sm text-neutral-500 mb-space-3">
                 Mock realista de la plantilla aplicada a la página <em>Patrimonio</em>. Todas las
@@ -445,10 +445,10 @@ import {
                 </div>
               </div>
             </div>
-          </afi-tab>
+          </afi-tab-item>
 
           <!-- ==================== DECISIONES ==================== -->
-          <afi-tab label="Decisiones">
+          <afi-tab-item label="Decisiones">
             <div class="py-space-6 flex flex-col gap-space-8">
               <!-- Why page chrome -->
               <article class="border border-border-hairline rounded-md p-space-6">
@@ -634,7 +634,7 @@ import {
                 </div>
               </article>
             </div>
-          </afi-tab>
+          </afi-tab-item>
         </afi-tabs>
       </div>
     </div>

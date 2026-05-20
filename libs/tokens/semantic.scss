@@ -77,28 +77,28 @@
   // BRAND - PRIMARY (12) — afi-azul, primary CTAs
   // ===========================================================================
 
-  --brand-primary-background-default:  var(--color-afi-azul-500);
+  --brand-primary-background-default:  var(--color-afi-azul-profundo-500);
   // Role: primary CTA bg. Default state of "Guardar", "Continuar", "Enviar" buttons.
-  --brand-primary-background-hover:    var(--color-afi-azul-600);
+  --brand-primary-background-hover:    var(--color-afi-azul-profundo-600);
   // Role: primary CTA bg on hover.
-  --brand-primary-background-active:   var(--color-afi-azul-700);
+  --brand-primary-background-active:   var(--color-afi-azul-profundo-700);
   // Role: primary CTA bg on press.
   --brand-primary-background-disabled: var(--disabled-background);
   // Role: primary CTA bg when disabled.
 
-  --brand-primary-foreground-default:  var(--color-afi-azul-0);
-  // Role: text/icon on primary CTA — white against the blue bg.
-  --brand-primary-foreground-hover:    var(--color-afi-azul-25);
+  --brand-primary-foreground-default:  var(--color-afi-azul-profundo-0);
+  // Role: text/icon on primary CTA — white against the deep blue bg.
+  --brand-primary-foreground-hover:    var(--color-afi-azul-profundo-25);
   // Role: text/icon on primary CTA hover.
-  --brand-primary-foreground-active:   var(--color-afi-azul-0);
+  --brand-primary-foreground-active:   var(--color-afi-azul-profundo-0);
   // Role: text/icon on primary CTA active.
   --brand-primary-foreground-disabled: var(--disabled-foreground);
   // Role: text/icon on disabled primary CTA.
 
-  --brand-primary-border-default:  var(--color-afi-azul-500);
+  --brand-primary-border-default:  var(--color-afi-azul-profundo-500);
   // Role: border of primary outlined buttons / cards.
-  --brand-primary-border-hover:    var(--color-afi-azul-600);
-  --brand-primary-border-active:   var(--color-afi-azul-700);
+  --brand-primary-border-hover:    var(--color-afi-azul-profundo-600);
+  --brand-primary-border-active:   var(--color-afi-azul-profundo-700);
   --brand-primary-border-disabled: var(--disabled-border);
 
 
@@ -109,7 +109,7 @@
   --brand-secondary-background-default:  var(--color-afi-azul-profundo-500);
   // Role: secondary brand bg — main nav header, primary toolbar tint.
   --brand-secondary-background-hover:    var(--color-afi-azul-profundo-400);
-  --brand-secondary-background-active:   var(--color-afi-azul-profundo-500);
+  --brand-secondary-background-active:   var(--color-afi-azul-profundo-600);
   --brand-secondary-background-disabled: var(--disabled-background);
 
   --brand-secondary-foreground-default:  var(--color-afi-azul-profundo-0);
@@ -167,6 +167,16 @@
   --brand-tertiary-border-hover:    var(--color-afi-gris-400);
   --brand-tertiary-border-active:   var(--color-afi-gris-500);
   --brand-tertiary-border-disabled: var(--disabled-border);
+
+
+  // ===========================================================================
+  // BRAND - MARK (1) — logo / brand-mark fill colors
+  // ===========================================================================
+
+  --brand-mark-symbol: var(--color-afi-azul-500);
+  // Role: fill of the logo's symbol path (infinity + diamond). Stays brand blue
+  // across light/dark mode. The wordmark uses `currentColor` so it inherits the
+  // surrounding text color — no token needed for it.
 
 
   // ===========================================================================
@@ -283,32 +293,28 @@
   // NAV (19) — sidebar, navbar, toolbar + nav items
   // ===========================================================================
 
-  --nav-sidebar: var(--color-afi-white-0);
-  // Role: left/right rail container bg.
-  --nav-navbar:  var(--color-afi-white-0);
-  // Role: top app bar container bg.
-  --nav-toolbar: var(--color-afi-white-0);
-  // Role: secondary toolbar/breadcrumb-strip container bg.
+  --nav-sidebar: var(--control-background-default);
 
-  --nav-item-background-default:  var(--color-afi-white-0);
-  // Role: nav-item bg at rest.
-  --nav-item-background-hover:    var(--color-afi-white-50);
-  --nav-item-background-active:   var(--color-afi-white-100);
-  --nav-item-background-selected: var(--color-afi-white-100);
+
+  --nav-item-background-default:  transparent;
+  // Role: nav-item bg at rest — same as sidebar, invisible until interaction.
+  --nav-item-background-hover:    var(--control-background-hover);
+  --nav-item-background-active:   var(--control-background-active);
+  --nav-item-background-selected: var(--control-background-selected);
   --nav-item-background-disabled: var(--disabled-background);
 
-  --nav-item-foreground-default:  var(--foreground-primary-default);
-  // Role: nav-item label text at rest.
-  --nav-item-foreground-hover:    var(--foreground-primary-hover);
-  --nav-item-foreground-active:   var(--color-afi-azul-700);
-  --nav-item-foreground-selected: var(--color-afi-azul-700);
+  --nav-item-foreground-default:  var(--control-foreground-default);
+  // Role: nav-item label/icon text at rest.
+  --nav-item-foreground-hover:    var(--control-foreground-hover);
+  --nav-item-foreground-active:   var(--control-foreground-active);
+  --nav-item-foreground-selected: var(--control-foreground-selected);
   --nav-item-foreground-disabled: var(--disabled-foreground);
 
-  --nav-item-icon-default:  var(--color-afi-control-500);
+  --nav-item-icon-default:  var(--control-foreground-default);
   // Role: nav-item leading/trailing icon at rest.
-  --nav-item-icon-hover:    var(--color-afi-control-700);
-  --nav-item-icon-active:   var(--color-afi-control-500);
-  --nav-item-icon-selected: var(--color-afi-control-500);
+  --nav-item-icon-hover:    var(--control-foreground-hover);
+  --nav-item-icon-active:   var(--control-foreground-active);
+  --nav-item-icon-selected: var(--control-foreground-selected);
   --nav-item-icon-disabled: var(--disabled-icon);
 
   --nav-item-border-selected: var(--color-afi-control-300);
@@ -597,11 +603,11 @@
   --disabled-border:     var(--color-afi-control-700);
   --disabled-icon:       var(--color-afi-control-600);
 
-  // ===== BRAND - PRIMARY — bump up to brighter shades for contrast =====
-  --brand-primary-background-default: var(--color-afi-azul-400);
-  --brand-primary-background-hover:   var(--color-afi-azul-300);
-  --brand-primary-background-active:  var(--color-afi-azul-200);
-  --brand-primary-foreground-default: var(--color-afi-control-950);  // dark text on bright bg
+  // ===== BRAND - PRIMARY — light azul-profundo shades for contrast on dark =====
+  --brand-primary-background-default: var(--color-afi-azul-profundo-300);
+  --brand-primary-background-hover:   var(--color-afi-azul-profundo-200);
+  --brand-primary-background-active:  var(--color-afi-azul-profundo-100);
+  --brand-primary-foreground-default: var(--color-afi-control-950);  // dark text on light bg
 
   // ===== BRAND - SECONDARY (afi-azul-profundo) — bump up =====
   --brand-secondary-background-default: var(--color-afi-azul-profundo-300);
@@ -621,7 +627,7 @@
   --foreground-placeholder:       var(--color-afi-control-500);
   --foreground-primary-default:   var(--color-afi-control-50);
   --foreground-primary-hover:     var(--color-afi-control-200);
-  --foreground-secondary-default: var(--color-afi-control-200);
+  --foreground-secondary-default: var(--color-afi-control-50);
   --foreground-tertiary-default:  var(--color-afi-control-400);
   --foreground-brand-default:     var(--color-afi-azul-300);   // brighter for dark bg
   --foreground-inverse-default:   var(--color-afi-control-950);
@@ -632,11 +638,19 @@
   --border-strong:  var(--color-afi-control-400);
   --border-focus:   var(--color-afi-azul-400);   // brighter focus ring
 
+  // ===== FOREGROUND SECONDARY — hover/active for dark =====
+  --foreground-secondary-hover:   var(--color-afi-control-100);
+  --foreground-secondary-active:  var(--color-afi-control-50);
+
   // ===== CONTROL — inputs / buttons on dark =====
-  --control-background-default: var(--color-afi-control-800);
-  --control-background-hover:   var(--color-afi-control-700);
-  --control-foreground-default: var(--foreground-secondary-default);
-  --control-border-default:     var(--border-default);
+  --control-background-default:  var(--color-afi-control-800);
+  --control-background-hover:    var(--color-afi-control-700);
+  --control-background-selected: var(--color-afi-control-700);
+  --control-foreground-default:  var(--foreground-secondary-default);
+  --control-foreground-hover:    var(--foreground-secondary-hover);
+  --control-foreground-active:   var(--brand-secondary-background-active);
+  --control-foreground-selected: var(--brand-secondary-background-active);
+  --control-border-default:      var(--border-default);
 
   // ===== INPUT — text inputs on dark =====
   --input-background-default:  var(--color-afi-control-900);
@@ -644,15 +658,17 @@
   --input-border-default:      var(--color-afi-control-700);
 
   // ===== NAV — sidebar/navbar/toolbar on dark =====
-  --nav-sidebar: var(--color-afi-control-900);
+  --nav-sidebar: var(--control-background-default);
   --nav-navbar:  var(--color-afi-control-900);
   --nav-toolbar: var(--color-afi-control-900);
-  --nav-item-background-default:  var(--color-afi-control-900);
-  --nav-item-background-hover:    var(--color-afi-control-800);
-  --nav-item-background-selected: var(--color-afi-control-700);
-  --nav-item-foreground-default:  var(--color-afi-control-200);
-  --nav-item-foreground-selected: var(--color-afi-azul-300);
-  --nav-item-icon-default:        var(--color-afi-control-400);
+  --nav-item-background-default:  transparent;
+  --nav-item-background-hover:    var(--control-background-hover);
+  --nav-item-background-selected: var(--control-background-selected);
+  --nav-item-foreground-default:  var(--control-foreground-default);
+  --nav-item-foreground-hover:    var(--control-foreground-hover);
+  --nav-item-foreground-active:   var(--control-foreground-active);
+  --nav-item-foreground-selected: var(--control-foreground-selected);
+  --nav-item-icon-default:        var(--control-foreground-default);
 
   // ===== OVERLAY — darker scrim, dark surface bodies =====
   --overlay-blanket:  hsla(0, 0%, 0%, 0.70);

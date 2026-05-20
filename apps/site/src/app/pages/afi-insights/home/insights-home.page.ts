@@ -3,7 +3,7 @@ import {
   InputComponent,
   ButtonComponent,
   TabsComponent,
-  TabComponent,
+  TabItemComponent,
   BadgeComponent,
   ModalComponent,
   CheckboxComponent,
@@ -41,7 +41,7 @@ const TOPICS: TopicOption[] = [
     InputComponent,
     ButtonComponent,
     TabsComponent,
-    TabComponent,
+    TabItemComponent,
     BadgeComponent,
     ModalComponent,
     CheckboxComponent,
@@ -141,9 +141,9 @@ const TOPICS: TopicOption[] = [
             (activeChange)="activeTab.set($event)"
             ariaLabel="Categorias de contenido"
           >
-            <afi-tab label="Todos" />
+            <afi-tab-item label="Todos" />
             @for (cat of categories; track cat.key) {
-              <afi-tab [label]="cat.label" />
+              <afi-tab-item [label]="cat.label" />
             }
           </afi-tabs>
 

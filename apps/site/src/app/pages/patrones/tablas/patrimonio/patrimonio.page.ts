@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { PageHeaderComponent, TabsComponent, TabComponent } from '@coherence/ui';
+import { PageHeaderComponent, TabsComponent, TabItemComponent } from '@coherence/ui';
 
 import { SectionHeaderComponent } from '../../../novedades/shared/section-header.component';
 
@@ -15,7 +15,7 @@ import { SectionHeaderComponent } from '../../../novedades/shared/section-header
 @Component({
   selector: 'site-tabla-patrimonio-page',
   standalone: true,
-  imports: [PageHeaderComponent, TabsComponent, TabComponent, SectionHeaderComponent],
+  imports: [PageHeaderComponent, TabsComponent, TabItemComponent, SectionHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-[1080px] mx-auto px-space-10 py-space-10">
@@ -33,7 +33,7 @@ import { SectionHeaderComponent } from '../../../novedades/shared/section-header
       <div class="mt-space-8">
         <afi-tabs [lazy]="true" ariaLabel="Vistas de la pestaña Tabla de Patrimonio">
           <!-- ==================== EJEMPLO ==================== -->
-          <afi-tab label="Ejemplo">
+          <afi-tab-item label="Ejemplo">
             <div class="py-space-6 flex flex-col gap-space-12">
               <section>
                 <afi-section-header title="Activos de inversión" snippet="450 K € · 4 activos" />
@@ -97,10 +97,10 @@ import { SectionHeaderComponent } from '../../../novedades/shared/section-header
                 >.
               </p>
             </div>
-          </afi-tab>
+          </afi-tab-item>
 
           <!-- ==================== DECISIONES ==================== -->
-          <afi-tab label="Decisiones">
+          <afi-tab-item label="Decisiones">
             <div class="py-space-6 flex flex-col gap-space-6">
               <article class="border border-border-hairline rounded-md p-space-6">
                 <header class="flex items-center gap-space-2 mb-space-3">
@@ -224,7 +224,7 @@ import { SectionHeaderComponent } from '../../../novedades/shared/section-header
                 </div>
               </article>
             </div>
-          </afi-tab>
+          </afi-tab-item>
         </afi-tabs>
       </div>
     </div>

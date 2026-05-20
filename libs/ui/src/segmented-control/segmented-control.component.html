@@ -1,14 +1,29 @@
 <div
-  [class]="containerClass()"
+  class="seg-control"
+  [class.seg-control--sm]="size() === 'sm'"
+  [class.seg-control--md]="size() === 'md'"
+  [class.seg-control--lg]="size() === 'lg'"
   role="radiogroup"
   [attr.aria-label]="ariaLabel()"
 >
+  <!-- Sliding pill indicator -->
+  <div
+    class="seg-control__indicator"
+    [style.transform]="indicatorTransform()"
+    [style.width.px]="indicatorWidth()"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Options -->
   @for (option of options(); track option.value) {
     <button
+      #optionEl
       type="button"
       role="radio"
       [attr.aria-checked]="option.value === value()"
-      [class]="optionClass(option)"
+      class="seg-control__option"
+      [class.seg-control__option--active]="option.value === value()"
+      [class.seg-control__option--disabled]="option.disabled ?? false"
       [disabled]="option.disabled ?? false"
       (click)="select(option)"
     >

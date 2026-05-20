@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core
 import {
   PageHeaderComponent,
   TabsComponent,
-  TabComponent,
+  TabItemComponent,
 } from '@coherence/ui';
 
 @Component({
   selector: 'site-pattern-page',
   standalone: true,
-  imports: [PageHeaderComponent, TabsComponent, TabComponent],
+  imports: [PageHeaderComponent, TabsComponent, TabItemComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen flex flex-col bg-canvas-base">
@@ -34,8 +34,8 @@ import {
               ariaLabel="Vistas del patrón"
               (activeChange)="onTabChange($event)"
             >
-              <afi-tab label="Decisiones" />
-              <afi-tab label="Handoff" />
+              <afi-tab-item label="Decisiones" />
+              <afi-tab-item label="Handoff" />
             </afi-tabs>
 
             <div class="mt-space-8">

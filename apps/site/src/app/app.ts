@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@a
 import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { PasswordGateComponent } from './components/password-gate/password-gate.component';
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
+import { FeedbackOverlayComponent } from './components/feedback-overlay/feedback-overlay.component';
 import {
   LogoComponent,
   TopBarComponent,
@@ -24,6 +25,7 @@ import {
     NavSectionComponent,
     PasswordGateComponent,
     ThemeToggleComponent,
+    FeedbackOverlayComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.component.html',

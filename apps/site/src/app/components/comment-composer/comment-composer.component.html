@@ -1,0 +1,30 @@
+<div
+  class="composer"
+  [class.composer--left]="pos().placement === 'left'"
+  [style.top.px]="pos().top"
+  [style.left.px]="pos().left"
+  role="dialog"
+  aria-label="Nuevo comentario"
+>
+  <code class="composer__selector">{{ selector() }}</code>
+
+  <textarea
+    #textarea
+    class="composer__input"
+    placeholder="Deja un comentario… (Enter para publicar, Shift+Enter para salto de línea)"
+    [value]="text()"
+    (input)="onInput($event)"
+    (keydown)="onKeyDown($event)"
+    rows="3"
+  ></textarea>
+
+  <div class="composer__actions">
+    <afi-button variant="ghost" size="sm" (clicked)="cancel()">Cancelar</afi-button>
+    <afi-button
+      variant="primary"
+      size="sm"
+      [disabled]="!canSubmit()"
+      (clicked)="submit()"
+    >Publicar</afi-button>
+  </div>
+</div>

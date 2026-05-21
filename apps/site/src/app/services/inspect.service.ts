@@ -1,10 +1,45 @@
 import { Injectable, signal } from '@angular/core';
 
+export type TokenCategory =
+  | 'color'
+  | 'spacing'
+  | 'sizing'
+  | 'border'
+  | 'typography'
+  | 'effects'
+  | 'motion';
+
 export interface TokenInfo {
   property: string;
   value: string;
-  token: string | null; // null = raw value (violation)
+  token: string | null;
   isViolation: boolean;
+  category: TokenCategory;
+}
+
+export interface HierarchyItem {
+  name: string;
+  isComponent: boolean;
+}
+
+export interface TokenGroup {
+  category: TokenCategory;
+  label: string;
+  tokens: TokenInfo[];
+  violationCount: number;
+}
+
+export interface StateInfo {
+  property: string;
+  value: string;
+  token: string | null;
+  category: TokenCategory;
+}
+
+export interface StateGroup {
+  state: string;
+  label: string;
+  tokens: StateInfo[];
 }
 
 export interface InspectResult {
@@ -13,67 +48,100 @@ export interface InspectResult {
   componentName: string | null;
   hierarchy: HierarchyItem[];
   tokens: TokenInfo[];
+  groups: TokenGroup[];
+  states: StateGroup[];
 }
 
-export interface HierarchyItem {
-  name: string;
-  isComponent: boolean;
-}
+const PROPERTY_CATEGORIES: Record<string, TokenCategory> = {
+  color: 'color',
+  'background-color': 'color',
+  background: 'color',
+  'border-color': 'color',
+  'border-top-color': 'color',
+  'border-right-color': 'color',
+  'border-bottom-color': 'color',
+  'border-left-color': 'color',
+  'outline-color': 'color',
+  'box-shadow': 'color',
+
+  padding: 'spacing',
+  'padding-top': 'spacing',
+  'padding-right': 'spacing',
+  'padding-bottom': 'spacing',
+  'padding-left': 'spacing',
+  margin: 'spacing',
+  'margin-top': 'spacing',
+  'margin-right': 'spacing',
+  'margin-bottom': 'spacing',
+  'margin-left': 'spacing',
+  gap: 'spacing',
+  'row-gap': 'spacing',
+  'column-gap': 'spacing',
+
+  width: 'sizing',
+  height: 'sizing',
+  'min-width': 'sizing',
+  'min-height': 'sizing',
+  'max-width': 'sizing',
+  'max-height': 'sizing',
+
+  'border-width': 'border',
+  'border-radius': 'border',
+
+  font: 'typography',
+  'font-size': 'typography',
+  'font-weight': 'typography',
+  'font-family': 'typography',
+  'line-height': 'typography',
+  'letter-spacing': 'typography',
+
+  opacity: 'effects',
+
+  transition: 'motion',
+};
+
+const CATEGORY_ORDER: TokenCategory[] = [
+  'color',
+  'spacing',
+  'sizing',
+  'border',
+  'typography',
+  'effects',
+  'motion',
+];
+
+const CATEGORY_LABELS: Record<TokenCategory, string> = {
+  color: 'Color',
+  spacing: 'Spacing',
+  sizing: 'Sizing',
+  border: 'Border',
+  typography: 'Typography',
+  effects: 'Effects',
+  motion: 'Motion',
+};
+
+const STATE_PSEUDOS: { state: string; label: string }[] = [
+  { state: ':hover', label: 'Hover' },
+  { state: ':focus-visible', label: 'Focus' },
+  { state: ':focus', label: 'Focus (legacy)' },
+  { state: ':active', label: 'Active (pressed)' },
+  { state: ':disabled', label: 'Disabled' },
+  { state: ':checked', label: 'Checked' },
+];
+
 
 /**
- * Reads computed styles from a hovered DOM element,
- * resolves which CSS properties use design tokens vs raw values,
- * and reports violations (hardcoded hex/px not from a token).
+ * Reads computed styles from an inspected DOM element, resolves which CSS
+ * properties use design tokens vs raw values, and groups them by category
+ * with violations sorted first.
  */
 @Injectable({ providedIn: 'root' })
 export class InspectService {
   readonly activeResult = signal<InspectResult | null>(null);
   readonly isActive = signal(false);
 
-  /** CSS properties we care about inspecting */
-  private readonly TRACKED_PROPERTIES = [
-    'color',
-    'background-color',
-    'background',
-    'border-color',
-    'border-top-color',
-    'border-right-color',
-    'border-bottom-color',
-    'border-left-color',
-    'outline-color',
-    'box-shadow',
-    'font',
-    'font-size',
-    'font-weight',
-    'font-family',
-    'line-height',
-    'letter-spacing',
-    'padding',
-    'padding-top',
-    'padding-right',
-    'padding-bottom',
-    'padding-left',
-    'margin',
-    'margin-top',
-    'margin-right',
-    'margin-bottom',
-    'margin-left',
-    'gap',
-    'row-gap',
-    'column-gap',
-    'width',
-    'height',
-    'min-width',
-    'min-height',
-    'max-width',
-    'max-height',
-    'border-radius',
-    'border-width',
-    'opacity',
-    'transition',
-  ];
+  private readonly TRACKED_PROPERTIES = Object.keys(PROPERTY_CATEGORIES);
 
-  /** Known token prefixes from the design system */
   private readonly TOKEN_PREFIXES = [
     '--color-',
     '--brand-',
@@ -111,40 +179,41 @@ export class InspectService {
     }
   }
 
-  /**
-   * Inspect an element: read its inline + computed styles,
-   * check which ones resolve from CSS custom properties.
-   */
   inspect(element: HTMLElement): void {
     if (!this.isActive()) return;
 
     const tokens: TokenInfo[] = [];
     const computed = getComputedStyle(element);
-    const inlineStyle = element.style;
-
-    // Get all CSS custom properties applied to this element by walking up stylesheets
-    const appliedTokens = this.getAppliedTokens(element);
+    const applied = this.getAppliedDeclarations(element);
 
     for (const prop of this.TRACKED_PROPERTIES) {
       const computedValue = computed.getPropertyValue(prop).trim();
-      if (!computedValue || computedValue === 'none' || computedValue === 'normal' || computedValue === '0px') {
+      if (
+        !computedValue ||
+        computedValue === 'none' ||
+        computedValue === 'normal' ||
+        computedValue === '0px'
+      ) {
         continue;
       }
 
-      // Check if this property's value comes from a token
-      const token = appliedTokens.get(prop) ?? null;
+      const token = applied.tokens.get(prop) ?? null;
+      const authoredValue = applied.values.get(prop) ?? null;
       const isViolation = this.isRawValue(computedValue, prop) && !token;
 
-      // Skip boring inherited defaults
       if (this.isDefaultValue(prop, computedValue)) continue;
 
       tokens.push({
         property: prop,
-        value: computedValue,
+        value: authoredValue ?? computedValue,
         token,
         isViolation,
+        category: PROPERTY_CATEGORIES[prop] ?? 'effects',
       });
     }
+
+    const groups = this.buildGroups(tokens);
+    const states = this.buildStates(element);
 
     this.activeResult.set({
       element,
@@ -152,41 +221,179 @@ export class InspectService {
       componentName: this.findComponentName(element),
       hierarchy: this.buildHierarchy(element),
       tokens,
+      groups,
+      states,
     });
+  }
+
+  private buildStates(element: HTMLElement): StateGroup[] {
+    const out: StateGroup[] = [];
+
+    for (const { state, label } of STATE_PSEUDOS) {
+      const tokens: StateInfo[] = [];
+      const seen = new Set<string>();
+
+      for (const sheet of Array.from(document.styleSheets)) {
+        try {
+          for (const rule of Array.from(sheet.cssRules)) {
+            if (!(rule instanceof CSSStyleRule)) continue;
+            if (!rule.selectorText.includes(state)) continue;
+
+            if (!this.selectorMatchesWithState(rule.selectorText, state, element)) continue;
+
+            for (const prop of Array.from(rule.style)) {
+              if (seen.has(prop)) continue;
+              const value = rule.style.getPropertyValue(prop).trim();
+              if (!value) continue;
+              const token = this.extractToken(value);
+              tokens.push({
+                property: prop,
+                value,
+                token,
+                category: PROPERTY_CATEGORIES[prop] ?? 'effects',
+              });
+              seen.add(prop);
+            }
+          }
+        } catch {
+          // cross-origin sheet, skip
+        }
+      }
+
+      if (tokens.length > 0) {
+        out.push({ state, label, tokens });
+      }
+    }
+
+    return out;
+  }
+
+  private selectorMatchesWithState(
+    selectorText: string,
+    state: string,
+    element: HTMLElement,
+  ): boolean {
+    const list = selectorText.split(',').map((s) => s.trim()).filter(Boolean);
+    for (const sel of list) {
+      const lastCombinatorIdx = Math.max(
+        sel.lastIndexOf(' '),
+        sel.lastIndexOf('>'),
+        sel.lastIndexOf('+'),
+        sel.lastIndexOf('~'),
+      );
+      const lastCompound = lastCombinatorIdx >= 0 ? sel.slice(lastCombinatorIdx + 1) : sel;
+      if (!lastCompound.includes(state)) continue;
+      const strippedCompound = lastCompound.split(state).join('');
+      if (!strippedCompound) continue;
+      const fullStripped =
+        lastCombinatorIdx >= 0
+          ? sel.slice(0, lastCombinatorIdx + 1) + strippedCompound
+          : strippedCompound;
+      try {
+        if (element.matches(fullStripped)) return true;
+      } catch {
+        // invalid selector after strip, skip
+      }
+    }
+    return false;
   }
 
   clear(): void {
     this.activeResult.set(null);
   }
 
-  /**
-   * Walk the element's matched CSS rules to find which properties
-   * are set via var(--token-name).
-   */
-  private getAppliedTokens(element: HTMLElement): Map<string, string> {
-    const map = new Map<string, string>();
+  exportCurrentMarkdown(): string {
+    const result = this.activeResult();
+    if (!result) return '';
+
+    const lines: string[] = [];
+    const componentLabel = result.componentName ?? 'element';
+
+    lines.push(`# Inspect — ${componentLabel}`);
+    lines.push('');
+    lines.push(`\`${result.selector}\``);
+    lines.push('');
+
+    if (result.hierarchy.length > 0) {
+      lines.push('## Hierarchy');
+      lines.push(result.hierarchy.map((h) => h.name).join(' › '));
+      lines.push('');
+    }
+
+    if (result.states.length > 0) {
+      lines.push('## States');
+      lines.push('');
+      for (const s of result.states) {
+        lines.push(`### ${s.label} (\`${s.state}\`)`);
+        for (const t of s.tokens) {
+          const tokenPart = t.token ? `\`${t.token}\`` : `\`${t.value}\``;
+          lines.push(`- ${t.property} → ${tokenPart}`);
+        }
+        lines.push('');
+      }
+    }
+
+    if (result.groups.length > 0) {
+      lines.push('## Tokens');
+      lines.push('');
+      for (const g of result.groups) {
+        lines.push(`### ${g.label}${g.violationCount > 0 ? ` (${g.violationCount} ⚠)` : ''}`);
+        for (const t of g.tokens) {
+          if (t.token) {
+            lines.push(`- ${t.property} → \`${t.token}\` · ${t.value}`);
+          } else {
+            const flag = t.isViolation ? ' ⚠' : '';
+            lines.push(`- ${t.property} → \`${t.value}\`${flag}`);
+          }
+        }
+        lines.push('');
+      }
+    }
+
+    return lines.join('\n').trimEnd() + '\n';
+  }
+
+  private buildGroups(tokens: TokenInfo[]): TokenGroup[] {
+    return CATEGORY_ORDER.map((category) => {
+      const inCategory = tokens.filter((t) => t.category === category);
+      const sorted = [
+        ...inCategory.filter((t) => t.isViolation),
+        ...inCategory.filter((t) => !t.isViolation),
+      ];
+      return {
+        category,
+        label: CATEGORY_LABELS[category],
+        tokens: sorted,
+        violationCount: inCategory.filter((t) => t.isViolation).length,
+      };
+    }).filter((g) => g.tokens.length > 0);
+  }
+
+  private getAppliedDeclarations(
+    element: HTMLElement,
+  ): { tokens: Map<string, string>; values: Map<string, string> } {
+    const tokens = new Map<string, string>();
+    const values = new Map<string, string>();
+
+    const record = (prop: string, value: string) => {
+      const trimmed = value.trim();
+      if (!trimmed) return;
+      values.set(prop, trimmed);
+      const token = this.extractToken(trimmed);
+      if (token) tokens.set(prop, token);
+    };
 
     try {
-      // Check inline style for var() usage
-      for (let i = 0; i < element.style.length; i++) {
-        const prop = element.style[i]!;
-        const value = element.style.getPropertyValue(prop);
-        const token = this.extractToken(value);
-        if (token) map.set(prop, token);
+      for (const prop of Array.from(element.style)) {
+        record(prop, element.style.getPropertyValue(prop));
       }
 
-      // Walk matched CSS rules
       for (const sheet of Array.from(document.styleSheets)) {
         try {
-          const rules = sheet.cssRules;
-          for (let i = 0; i < rules.length; i++) {
-            const rule = rules[i];
+          for (const rule of Array.from(sheet.cssRules)) {
             if (rule instanceof CSSStyleRule && element.matches(rule.selectorText)) {
-              for (let j = 0; j < rule.style.length; j++) {
-                const prop = rule.style[j]!;
-                const value = rule.style.getPropertyValue(prop);
-                const token = this.extractToken(value);
-                if (token) map.set(prop, token);
+              for (const prop of Array.from(rule.style)) {
+                record(prop, rule.style.getPropertyValue(prop));
               }
             }
           }
@@ -198,41 +405,46 @@ export class InspectService {
       // Safety net
     }
 
-    return map;
+    return { tokens, values };
   }
 
-  /** Extract a --token-name from a var(--token-name) value */
   private extractToken(value: string): string | null {
     const match = value.match(/var\((--[^,)]+)/);
     return match ? match[1]! : null;
   }
 
-  /** Check if a computed value looks like a hardcoded/raw value */
   private isRawValue(value: string, property: string): boolean {
-    // Colors: rgb/rgba with specific values that aren't black/white/transparent
-    if (property.includes('color') || property === 'background' || property === 'background-color') {
+    if (
+      property.includes('color') ||
+      property === 'background' ||
+      property === 'background-color'
+    ) {
       if (value === 'transparent' || value === 'inherit' || value === 'currentcolor') return false;
       if (value.startsWith('rgb') || value.startsWith('#')) return true;
     }
 
-    // Spacing/sizing: px values
-    if (property.includes('padding') || property.includes('margin') || property.includes('gap') ||
-        property === 'width' || property === 'height' || property.includes('radius')) {
+    if (
+      property.includes('padding') ||
+      property.includes('margin') ||
+      property.includes('gap') ||
+      property === 'width' ||
+      property === 'height' ||
+      property.includes('radius')
+    ) {
       if (value.includes('px') && !value.startsWith('0')) return true;
     }
 
     return false;
   }
 
-  /** Filter out boring default values that every element has */
   private isDefaultValue(prop: string, value: string): boolean {
     if (prop === 'color' && value === 'rgb(0, 0, 0)') return true;
-    if (prop === 'background-color' && (value === 'rgba(0, 0, 0, 0)' || value === 'transparent')) return true;
+    if (prop === 'background-color' && (value === 'rgba(0, 0, 0, 0)' || value === 'transparent'))
+      return true;
     if (value === 'auto' || value === 'initial') return true;
     return false;
   }
 
-  /** Build a readable CSS selector path for the element */
   private buildSelector(el: HTMLElement): string {
     const parts: string[] = [];
     let current: HTMLElement | null = el;
@@ -251,10 +463,6 @@ export class InspectService {
     return parts.join(' > ');
   }
 
-  /**
-   * Find the nearest Angular component host element.
-   * Angular components use custom element names (contain a dash).
-   */
   private findComponentName(el: HTMLElement): string | null {
     let current: HTMLElement | null = el;
     while (current) {
@@ -267,10 +475,6 @@ export class InspectService {
     return null;
   }
 
-  /**
-   * Build hierarchy showing component nesting from the element up.
-   * Stops at the demo area boundary.
-   */
   private buildHierarchy(el: HTMLElement): HierarchyItem[] {
     const items: HierarchyItem[] = [];
     let current: HTMLElement | null = el;
@@ -278,15 +482,14 @@ export class InspectService {
 
     while (current && depth < 6) {
       const tag = current.tagName.toLowerCase();
-      // Stop at demo boundary
       if (current.classList.contains('demo-content')) break;
 
       const isComponent = tag.includes('-') && !tag.startsWith('ng-');
       const name = isComponent
         ? tag
-        : (current.classList.length > 0
+        : current.classList.length > 0
           ? tag + '.' + Array.from(current.classList)[0]
-          : tag);
+          : tag;
 
       items.unshift({ name, isComponent });
       current = current.parentElement;

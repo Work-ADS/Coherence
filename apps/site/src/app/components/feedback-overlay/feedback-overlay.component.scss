@@ -1,0 +1,179 @@
+:host {
+  position: fixed;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  z-index: 50;
+  display: inline-flex;
+  filter: drop-shadow(var(--shadow-fab));
+}
+
+.feedback-overlay__empty {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  text-align: center;
+  padding: var(--space-xl) 0;
+}
+
+.feedback-overlay__groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.feedback-overlay__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1;
+  min-width: 0;
+}
+
+.feedback-overlay__title {
+  font: var(--type-body-md-500);
+  color: var(--canvas-fg);
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.feedback-overlay__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.feedback-overlay__view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-left: var(--space-sm);
+  padding-left: var(--space-sm);
+  border-left: var(--border-width-thick) solid var(--border-hairline);
+}
+
+.feedback-overlay__view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feedback-overlay__view-title {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin: 0;
+}
+
+.feedback-overlay__view-count {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-tertiary-default);
+}
+
+.feedback-overlay__group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-xs);
+  border-bottom: var(--border-width-hairline) solid var(--border-hairline);
+}
+
+.feedback-overlay__group-title {
+  font: var(--type-body-md-500);
+  color: var(--canvas-fg);
+  margin: 0;
+}
+
+.feedback-overlay__group-count {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-tertiary-default);
+  background: var(--surface-quiet);
+  border-radius: var(--radius-pill);
+  padding-inline: var(--space-sm);
+  min-width: var(--dimension-6);
+  text-align: center;
+}
+
+.feedback-overlay__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.feedback-overlay__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-sm);
+  background: var(--surface-base);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+}
+
+.feedback-overlay__item-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.feedback-overlay__author {
+  font: var(--type-body-sm-500);
+  color: var(--canvas-fg);
+}
+
+.feedback-overlay__time {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.feedback-overlay__text {
+  font: var(--type-body-sm-400);
+  color: var(--canvas-fg);
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.feedback-overlay__selector {
+  font: var(--type-body-sm-400);
+  font-family: monospace;
+  color: var(--foreground-tertiary-default);
+  background: var(--surface-quiet);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xs) var(--space-xs);
+  word-break: break-all;
+}
+
+.feedback-overlay__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-2xs);
+}
+
+.feedback-overlay__edit-input {
+  font: var(--type-body-sm-400);
+  color: var(--canvas-fg);
+  background: var(--surface-base);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  resize: vertical;
+  width: 100%;
+  min-height: var(--dimension-12);
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: calc(-1 * var(--border-width-hairline));
+  }
+}
+
+.feedback-overlay__edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+}

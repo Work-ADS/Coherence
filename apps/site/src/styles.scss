@@ -20,6 +20,30 @@ site-version-toggle {
   display: none !important;
 }
 
+// Highlight classes used by <site-demo-shell>'s inspect/comment modes.
+// Defined globally because they're applied to elements inside the projected
+// <ng-content /> (each with its own view encapsulation), so component-scoped
+// rules wouldn't reach them.
+.demo-shell-highlight-inspect {
+  outline: var(--border-width-thick) dashed var(--brand-primary-background-default) !important;
+  outline-offset: var(--border-width-hairline) !important;
+}
+
+.demo-shell-highlight-comment {
+  outline: var(--border-width-thick) dashed var(--color-warning-500) !important;
+  outline-offset: var(--border-width-hairline) !important;
+}
+
+.demo-shell-pinned-inspect {
+  outline: var(--border-width-thick) solid var(--brand-primary-background-default) !important;
+  outline-offset: var(--border-width-hairline) !important;
+}
+
+.demo-shell-pinned-comment {
+  outline: var(--border-width-thick) solid var(--color-warning-500) !important;
+  outline-offset: var(--border-width-hairline) !important;
+}
+
 // Roboto Serif is loaded via <link rel="stylesheet"> in index.html so it's
 // available on first paint. Previously `@import url(...)` here was placed
 // after a rule block, which the CSS spec says browsers must ignore.

@@ -1,0 +1,141 @@
+<afi-icon-button
+  variant="ghost"
+  size="md"
+  ariaLabel="Abrir comentarios de feedback"
+  [badge]="commentService.openCount() || null"
+  (clicked)="openDrawer()"
+>
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+</afi-icon-button>
+
+<afi-drawer
+  [open]="drawerOpen()"
+  (openChange)="drawerOpen.set($event)"
+  title="Feedback"
+  ariaLabel="Comentarios de feedback"
+>
+  <div slot="header" class="feedback-overlay__header">
+    <h2 class="feedback-overlay__title">Feedback</h2>
+    @if (commentService.openCount() > 0) {
+      <afi-button
+        variant="secondary"
+        size="sm"
+        ariaLabel="Descargar todos los comentarios como Markdown"
+        (clicked)="downloadMarkdown()"
+      >Descargar .md</afi-button>
+      <afi-button
+        variant="danger"
+        size="sm"
+        ariaLabel="Borrar todos los comentarios"
+        (clicked)="askClearAll($event.event)"
+      >Borrar todo</afi-button>
+    }
+  </div>
+
+  @if (demoGroups().length === 0) {
+    <p class="feedback-overlay__empty">Sin comentarios pendientes.</p>
+  } @else {
+    <div class="feedback-overlay__groups">
+      @for (group of demoGroups(); track group.demoSlug) {
+        <section class="feedback-overlay__group">
+          <header class="feedback-overlay__group-header">
+            <h3 class="feedback-overlay__group-title">{{ group.label }}</h3>
+            <span class="feedback-overlay__group-count">{{ group.totalCount }}</span>
+          </header>
+
+          @for (view of group.views; track view.viewIndex) {
+            <div class="feedback-overlay__view">
+              <header class="feedback-overlay__view-header">
+                <h4 class="feedback-overlay__view-title">{{ view.viewLabel }}</h4>
+                <span class="feedback-overlay__view-count">{{ view.comments.length }}</span>
+              </header>
+
+              <ul class="feedback-overlay__list">
+                @for (c of view.comments; track c.id) {
+                  <li class="feedback-overlay__item">
+                    <div class="feedback-overlay__item-meta">
+                      <span class="feedback-overlay__author">{{ c.author }}</span>
+                      <span class="feedback-overlay__time">{{ formatTime(c.timestamp) }}</span>
+                    </div>
+
+                    @if (editingId() === c.id) {
+                      <textarea
+                        class="feedback-overlay__edit-input"
+                        [value]="editingText()"
+                        (input)="onEditInput($event)"
+                        (keydown)="onEditKey($event)"
+                        aria-label="Editar texto del comentario"
+                        rows="3"
+                      ></textarea>
+                      <div class="feedback-overlay__edit-actions">
+                        <afi-button variant="ghost" size="sm" (clicked)="cancelEdit()">Cancelar</afi-button>
+                        <afi-button
+                          variant="primary"
+                          size="sm"
+                          [disabled]="!editingText().trim()"
+                          (clicked)="saveEdit()"
+                        >Guardar</afi-button>
+                      </div>
+                    } @else {
+                      <p class="feedback-overlay__text">{{ c.text }}</p>
+                    }
+
+                    <code class="feedback-overlay__selector">{{ c.elementSelector }}</code>
+                    <div class="feedback-overlay__actions">
+                      <afi-button
+                        variant="ghost"
+                        size="sm"
+                        (clicked)="jumpTo(group.demoRoute)"
+                      >Saltar a demo</afi-button>
+                      @if (editingId() !== c.id) {
+                        <afi-button
+                          variant="ghost"
+                          size="sm"
+                          (clicked)="startEdit(c)"
+                        >Editar</afi-button>
+                      }
+                      <afi-button
+                        variant="danger"
+                        size="sm"
+                        (clicked)="askDelete(c.id, $event.event)"
+                      >Borrar</afi-button>
+                      <afi-button
+                        variant="secondary"
+                        size="sm"
+                        (clicked)="resolve(c.id)"
+                      >Resolver</afi-button>
+                    </div>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </section>
+      }
+    </div>
+  }
+</afi-drawer>
+
+@if (deleteConfirmAnchor(); as deleteAnchor) {
+  <site-confirm-action
+    [anchor]="deleteAnchor"
+    message="¿Borrar este comentario? Esta acción no se puede deshacer."
+    confirmLabel="Borrar"
+    variant="danger"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  />
+}
+
+@if (clearAllAnchor(); as clearAnchor) {
+  <site-confirm-action
+    [anchor]="clearAnchor"
+    [message]="'¿Borrar todos los ' + commentService.openCount() + ' comentarios? Esta acción no se puede deshacer.'"
+    confirmLabel="Borrar todo"
+    variant="danger"
+    (confirmed)="confirmClearAll()"
+    (cancelled)="cancelClearAll()"
+  />
+}

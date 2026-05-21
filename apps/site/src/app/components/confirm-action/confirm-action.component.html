@@ -1,0 +1,21 @@
+<div
+  class="confirm"
+  [style.top.px]="pos().top"
+  [style.left.px]="pos().left"
+  role="alertdialog"
+  aria-modal="true"
+  [attr.aria-label]="message()"
+>
+  <p class="confirm__message">{{ message() }}</p>
+  <div class="confirm__actions">
+    <afi-button variant="ghost" size="sm" (clicked)="onCancel()">
+      {{ cancelLabel() }}
+    </afi-button>
+    <afi-button
+      #confirmBtn
+      [variant]="variant()"
+      size="sm"
+      (clicked)="onConfirm()"
+    >{{ confirmLabel() }}</afi-button>
+  </div>
+</div>

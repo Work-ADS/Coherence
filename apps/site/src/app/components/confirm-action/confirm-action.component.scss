@@ -1,0 +1,42 @@
+:host {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 70;
+}
+
+.confirm {
+  position: absolute;
+  width: var(--dimension-60);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--surface-base);
+  border: var(--border-width-hairline) solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  animation: confirm-in var(--duration-fast) var(--easing-enter);
+}
+
+@keyframes confirm-in {
+  from { opacity: 0; transform: translateY(calc(-1 * var(--space-2xs))); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirm { animation: none; }
+}
+
+.confirm__message {
+  font: var(--type-body-sm-400);
+  color: var(--canvas-fg);
+  margin: 0;
+}
+
+.confirm__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+}

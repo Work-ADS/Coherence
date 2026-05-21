@@ -1,0 +1,52 @@
+:host {
+  display: contents;
+}
+
+.pin {
+  position: absolute;
+  width: var(--dimension-6);
+  height: var(--dimension-6);
+  border-radius: 50%;
+  border: var(--border-width-thick) solid var(--surface-base);
+  background: var(--feedback-warning-foreground);
+  color: var(--surface-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  pointer-events: auto;
+  box-shadow: var(--shadow-sm);
+  transform: translate(-50%, -50%);
+  transition:
+    transform var(--duration-fast) var(--easing-enter),
+    box-shadow var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    transform: translate(-50%, -50%) scale(1.15);
+    box-shadow: var(--shadow-md);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  &--active {
+    background: var(--brand-primary-background-default);
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+.pin__dot {
+  width: var(--dimension-2);
+  height: var(--dimension-2);
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pin__count {
+  font: var(--type-body-sm-500);
+  color: currentColor;
+  line-height: 1;
+}

@@ -145,4 +145,21 @@
       color: var(--feedback-error-foreground);
     }
   }
+
+  // Toggled / pressed state — overrides per-variant defaults so it's
+  // visually obvious that a toggle button is currently active.
+  &[aria-pressed="true"]:not(:disabled) {
+    background: var(--brand-primary-background-default);
+    color: var(--brand-primary-foreground-default);
+
+    &:hover {
+      background: var(--brand-primary-background-hover);
+      color: var(--brand-primary-foreground-hover);
+    }
+
+    &:active {
+      background: var(--brand-primary-background-active);
+      color: var(--brand-primary-foreground-active);
+    }
+  }
 }

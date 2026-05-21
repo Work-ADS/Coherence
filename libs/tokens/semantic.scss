@@ -239,6 +239,21 @@
   --focus-ring-width: var(--border-width-thick);   // 2px
   --focus-ring: 0 0 0 var(--focus-ring-width) var(--border-focus);
 
+  // Elevation / shadows
+  // Composite tokens for raised surfaces. Higher numbers = higher elevation.
+  // Use semantic aliases when possible (overlay-popover, overlay-modal, etc.)
+  // instead of referencing --shadow-* directly in components.
+  --shadow-xs:  0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-sm:  0 2px 8px rgb(0 0 0 / 0.18);
+  --shadow-md:  0 4px 12px rgb(0 0 0 / 0.18);
+  --shadow-lg:  0 12px 32px rgb(0 0 0 / 0.18);
+  --shadow-xl:  0 16px 40px rgb(0 0 0 / 0.18);
+  // Lifted floating widgets (FABs, drop-shadow on filter)
+  --shadow-fab: 0 4px 12px rgb(0 0 0 / 0.15);
+  // Side panel docked-edge shadows — direction matters
+  --shadow-dock-right: -8px 0 24px rgb(0 0 0 / 0.08);
+  --shadow-dock-left:   8px 0 24px rgb(0 0 0 / 0.08);
+
 
   // ===========================================================================
   // CONTROL (17) — generic interactive control surfaces (buttons, switches, etc.)

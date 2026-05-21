@@ -1,0 +1,16 @@
+<button
+  type="button"
+  class="pin"
+  [class.pin--active]="active()"
+  [style.top.px]="y()"
+  [style.left.px]="x()"
+  [attr.aria-label]="title()"
+  [attr.title]="title()"
+  (click)="onClick($event)"
+>
+  @if (count() > 1) {
+    <span class="pin__count">{{ count() }}</span>
+  } @else {
+    <span class="pin__dot" aria-hidden="true"></span>
+  }
+</button>

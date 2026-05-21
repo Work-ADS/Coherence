@@ -55,6 +55,10 @@
     </main>
   </div>
 </div>
+
+@if (!isFullScreenRoute()) {
+  <site-feedback-overlay />
+}
 } @else {
 <site-password-gate (unlocked)="onUnlocked()" />
 }

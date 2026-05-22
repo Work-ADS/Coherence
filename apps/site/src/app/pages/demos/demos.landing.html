@@ -1,0 +1,39 @@
+<section class="demos-landing">
+  <header class="demos-landing__header">
+    <p class="demos-landing__eyebrow">DEMOS</p>
+    <h1 class="demos-landing__title">Demos por equipo</h1>
+    <p class="demos-landing__intro">
+      Flujos completos aplicando Coherence DS. Cada demo enlaza al caso de
+      estudio y a la versión interactiva.
+    </p>
+  </header>
+
+  <div class="demos-landing__filter">
+    <afi-segmented-control
+      [options]="teamOptions"
+      [value]="activeTeam()"
+      (valueChange)="setTeam($event)"
+      ariaLabel="Filtrar demos por equipo"
+    />
+  </div>
+
+  @if (visibleDemos().length > 0) {
+    <ul class="demos-landing__grid">
+      @for (demo of visibleDemos(); track demo.slug) {
+        <li class="demos-landing__card-wrap">
+          <a class="demos-landing__card" [routerLink]="demo.overviewRoute">
+            <span class="demos-landing__card-title-row">
+              <span class="demos-landing__card-title">{{ demo.title }}</span>
+              @if (demo.status) {
+                <span class="demos-landing__card-status">{{ demo.status }}</span>
+              }
+            </span>
+            <span class="demos-landing__card-intro">{{ demo.intro }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="demos-landing__empty">{{ emptyStateCopy() }}</p>
+  }
+</section>

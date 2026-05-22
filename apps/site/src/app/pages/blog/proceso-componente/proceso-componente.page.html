@@ -1,0 +1,146 @@
+<div class="proceso">
+  <!-- Breadcrumb top bar -->
+  <div class="proceso__breadcrumb">
+    <a
+      routerLink="/blog"
+      class="proceso__breadcrumb-back"
+      aria-label="Volver al blog"
+    >
+      <svg class="proceso__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+    <span class="proceso__breadcrumb-parent">Novedades</span>
+    <span class="proceso__breadcrumb-separator" aria-hidden="true">/</span>
+    <span class="proceso__breadcrumb-current">Proceso de componentes</span>
+  </div>
+
+  <main class="proceso__main">
+    <article class="proceso__article">
+      <afi-page-header
+        title="Proceso de componentes"
+        subtitle="La mitad de arriba del ciclo: de “veo una necesidad de UI” a “spec listo para handoff”. Cinco etapas, una compuerta de dependencias, sin tocar las reglas de implementación."
+        [sticky]="false"
+        [scrollFade]="false"
+      >
+        <span slot="breadcrumb" class="proceso__eyebrow">PROCESO · V1</span>
+      </afi-page-header>
+
+      <!-- One-sentence lead -->
+      <blockquote class="proceso__lead">
+        <em>
+          Coherence estrena una skill de proceso para crear componentes — la mitad de arriba del ciclo, antes de que Builder escriba la primera línea.
+        </em>
+      </blockquote>
+
+      <!-- La propuesta -->
+      <section class="proceso__section" aria-labelledby="la-propuesta">
+        <h2 id="la-propuesta" class="proceso__h2">La propuesta</h2>
+
+        <h3 class="proceso__h3">¿Cuál es el objetivo?</h3>
+        <p class="proceso__p">
+          Que cada componente nuevo del DS reciba un proceso de diseño documentado antes de tocar código. La pieza de implementación ya existe — <a class="proceso__link" href="https://github.com/Work-ADS/Coherence/blob/main/docs/rules/component-skill.md" target="_blank" rel="noopener"><code>component-skill.md</code></a> cubre file shape, signal inputs, tokens, motion y a11y. Lo que faltaba era la mitad de arriba: cómo se pasa de <em>veo una necesidad de UI</em> a <em>el spec está listo para handoff</em>.
+        </p>
+
+        <h3 class="proceso__h3">¿Cómo cambia la vida del usuario?</h3>
+        <p class="proceso__p">
+          Un diseñador (humano o IA) deja de armar pantallas completas que pasan por encima de los primitivos que ya existen. Hoy, en el código del wealth planner, conviven <code>&lt;afi-sidebar&gt;</code>, <code>&lt;coherence-logo&gt;</code> y <code>&lt;afi-button&gt;</code> con doscientas líneas de markup inline dentro del planner-sidebar. El proceso fuerza la conversación al nivel del componente antes de subir al nivel de la pantalla.
+        </p>
+
+        <h3 class="proceso__h3">¿En qué momento lo abren?</h3>
+        <p class="proceso__p">
+          El momento de <em>veo una necesidad de UI</em> — antes de abrir Figma, antes de pedir a la IA que vibe-codee la pantalla, antes de invocar a Builder. Cinco etapas cortas con una compuerta de dependencias entre la 4 y la 5. Si una etapa toma más de una sesión, probablemente el componente esté mal enmarcado.
+        </p>
+      </section>
+
+      <!-- Qué se envió -->
+      <section class="proceso__section" aria-labelledby="que-se-envio">
+        <h2 id="que-se-envio" class="proceso__h2">Qué se envió</h2>
+
+        <p class="proceso__p">
+          La skill vive en <code>docs/rules/component-design-skill.md</code> y es par —no continuación— de <code>component-skill.md</code>. La de implementación está LOCKED y no se mueve; esta empieza upstream y termina en la línea de handoff.
+        </p>
+        <p class="proceso__p">
+          Junto a ella aterriza <code>docs/rules/motion-skill.md</code>: un catálogo de patrones de movimiento reutilizables (<code>hover-tint</code>, <code>opacity-fade</code>, <code>focus-ring</code>, <code>slide-fade-enter</code>, <code>panel-slide</code>, <code>reduced-motion-collapse</code>) con sus tokens y los primitivos que ya los usan. La etapa 3 del proceso apunta a este catálogo antes de ir a buscar animaciones a librerías de React — primero el catálogo, después la importación.
+        </p>
+
+        <figure class="proceso__figure">
+          <div class="proceso__figure-frame">
+            <img
+              class="proceso__figure-img"
+              src="assets/blog/proceso-componente/figjam-v1.png"
+              alt="Tablero FigJam V1 con cinco notas adhesivas: elegir componente, inspiración visual, casos de animación, crear componente en Figma, llevarlo a código."
+              loading="lazy"
+            />
+          </div>
+          <figcaption class="proceso__figcaption">
+            FigJam V1 — cinco etapas locked como espina dorsal.
+            <a class="proceso__link" [href]="figjamUrl" target="_blank" rel="noopener">Ver tablero en vivo.</a>
+          </figcaption>
+        </figure>
+
+        <h3 class="proceso__h3">1 · Elegir el componente</h3>
+        <p class="proceso__p">
+          Frame del sustantivo en una frase: <em>“This is a [noun] that [one job].”</em> Si no entra en doce palabras, el componente está mal enmarcado. Luego se mapea la forma: variantes (intent), tamaños (densidad), slots (contenido). Cierra con un table de estados — default, hover, focus-visible, pressed, disabled, loading, error, empty — donde cada estado que se omite lleva nota del por qué.
+        </p>
+
+        <h3 class="proceso__h3">2 · Inspiración visual</h3>
+        <p class="proceso__p">
+          Una carpeta <code>docs/inspiration/[noun]/</code> con tres a seis capturas, nombradas por fuente (<code>linear-button-primary.png</code>, <code>vercel-toast-success.png</code>). La IA no rastrea Dribbble — lee <em>tus</em> ejemplos curados. Aquí también ancla la referencia a Memorisely: construir la pieza de Figma como ellos enseñan, con propiedades nombradas y todos los valores enganchados a tokens.
+        </p>
+
+        <h3 class="proceso__h3">3 · Casos de uso para animaciones</h3>
+        <p class="proceso__p">
+          Una frase por estado animado: <em>“cuando [trigger], [qué se mueve] [cómo] en [duración].”</em> Las librerías de React son el atlas de animaciones más grande disponible — Radix, Headless UI, Aceternity. Se identifica el keyframe / curva, se traduce al tier correcto del Angular per <code>component-skill.md §11</code>. Tier 1 (CSS puro) por defecto; sólo escalar cuando la coreografía lo pida de verdad.
+        </p>
+
+        <h3 class="proceso__h3">4 · Construir el componente en Figma</h3>
+        <p class="proceso__p">
+          Componente de Figma con tokens, no con hex. Cada estado de la etapa 1.3 vive como una variante. El nombre de la variante coincide con el tipo TypeScript: <code>primary</code> en Figma es <code>primary</code> en el <code>*.variants.ts</code>.
+        </p>
+
+        <aside class="proceso__callout" role="note">
+          <h4 class="proceso__callout-title">Compuerta — chequeo de dependencias</h4>
+          <p class="proceso__callout-p">
+            Entre la etapa 4 y la 5, antes de redactar el build prompt: ¿existen todos los tokens? ¿todos los primitivos compuestos? ¿todos los íconos? ¿todos los estados con frame en Figma? ¿copy aprobado? ¿a11y intent nombrado? Si algo falta, se abre un brief y se resuelve. No hay opción de <em>“lo arreglamos en código”</em>.
+          </p>
+        </aside>
+
+        <h3 class="proceso__h3">5 · Handoff a código</h3>
+        <p class="proceso__p">
+          Build prompt para Builder. Desde aquí, <code>component-skill.md</code> toma el relevo y esta skill se calla.
+        </p>
+      </section>
+
+      <!-- Cómo lo decidimos -->
+      <section class="proceso__section" aria-labelledby="como-lo-decidimos">
+        <h2 id="como-lo-decidimos" class="proceso__h2">Cómo lo decidimos</h2>
+        <p class="proceso__p">
+          El problema venía de los últimos demos: la IA puede generar una pantalla entera en diez segundos, pero el ahorro de tiempo se paga después cuando hay que extraer componentes a posteriori. Atomic design no se salta para mejorar — se salta porque la IA <em>puede</em> hacerlo todo de una pasada y nadie está obligado a parar.
+        </p>
+        <p class="proceso__p">
+          La alternativa considerada fue extender <code>component-skill.md</code> con una sección upstream en vez de crear una skill aparte. Ganó la separación: las reglas LOCKED de implementación no deben moverse cada vez que se itera el proceso de diseño. La mitad de abajo está cerrada y estable; la mitad de arriba va a evolucionar mientras descubrimos qué del proceso aguanta en uso real. Archivos separados preservan esa asimetría.
+        </p>
+      </section>
+
+      <!-- Qué sigue -->
+      <section class="proceso__section" aria-labelledby="que-sigue">
+        <h2 id="que-sigue" class="proceso__h2">Qué sigue</h2>
+        <p class="proceso__p">
+          El primer terreno de prueba son los componentes del side panel de Wealth Planner. Va a su propia rama; si el proceso de aquí se rompe al aplicarlo a un componente real, los ajustes vuelven a esta skill. La meta no es un documento perfecto — es un par de rieles que sostienen la conversación cuando la IA está empujando hacia <em>hagamos todo a la vez</em>.
+        </p>
+      </section>
+
+      <!-- Closing note -->
+      <p class="proceso__closing">
+        <em>
+          Este artículo se escribió al momento del envío. No es una descripción retrospectiva — es la propuesta que se estaba articulando cuando se construyó.
+        </em>
+      </p>
+    </article>
+  </main>
+</div>

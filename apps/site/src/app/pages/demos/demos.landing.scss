@@ -1,0 +1,121 @@
+// =============================================================================
+// Demos landing — index page for /demos with team-taxonomy segmented control.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.demos-landing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  max-width: var(--dimension-240);
+  margin-inline: auto;
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-md);
+}
+
+.demos-landing__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.demos-landing__eyebrow {
+  margin: 0;
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
+}
+
+.demos-landing__title {
+  margin: 0;
+  font: var(--type-display-md, var(--type-body-lg-600));
+  color: var(--foreground-primary-default);
+}
+
+.demos-landing__intro {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-width: var(--dimension-180);
+}
+
+.demos-landing__filter {
+  display: flex;
+  align-items: center;
+}
+
+.demos-landing__grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--dimension-80), 1fr));
+  gap: var(--space-md);
+}
+
+.demos-landing__card-wrap {
+  display: flex;
+}
+
+.demos-landing__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius-card);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  transition:
+    background var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle);
+    border-color: var(--border-default);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+}
+
+.demos-landing__card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.demos-landing__card-title {
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}
+
+.demos-landing__card-status {
+  font: var(--type-body-sm-500);
+  padding: var(--space-2xs) var(--space-xs);
+  background: var(--brand-secondary-neutral-background-default);
+  color: var(--brand-secondary-neutral-foreground-default);
+  border-radius: var(--radius-pill);
+}
+
+.demos-landing__card-intro {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+.demos-landing__empty {
+  margin: 0;
+  padding: var(--space-xl) 0;
+  text-align: center;
+  font: var(--type-body-md-400);
+  color: var(--foreground-tertiary-default);
+}

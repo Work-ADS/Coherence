@@ -1,0 +1,21 @@
+<section class="blog-landing">
+  <header class="blog-landing__header">
+    <p class="blog-landing__eyebrow">BLOG</p>
+    <h1 class="blog-landing__title">Blog</h1>
+    <p class="blog-landing__intro">
+      Notas de producto escritas al momento del envío.
+    </p>
+  </header>
+
+  <ul class="blog-landing__list">
+    @for (post of posts; track post.slug) {
+      <li class="blog-landing__item">
+        <a class="blog-landing__card" [routerLink]="'/blog/' + post.slug">
+          <span class="blog-landing__card-eyebrow">{{ post.eyebrow }}</span>
+          <span class="blog-landing__card-title">{{ post.title }}</span>
+          <span class="blog-landing__card-intro">{{ post.intro }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</section>

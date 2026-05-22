@@ -1,27 +1,38 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+interface BlogPost {
+  slug: string;
+  title: string;
+  eyebrow: string;
+  intro: string;
+}
+
+const POSTS: BlogPost[] = [
+  {
+    slug: 'wealth-planner-2026',
+    title: 'Wealth Planner 2026 — caso de estudio',
+    eyebrow: 'CASO DE ESTUDIO',
+    intro:
+      'Decisiones de diseño y bitácora de iteraciones del rediseño completo. Patrimonio, Evolución, Bitácora — todo en una sola entrada con tabs.',
+  },
+  {
+    slug: 'proceso-componente',
+    title: 'Proceso de componentes',
+    eyebrow: 'PROCESO',
+    intro:
+      'Cómo pasamos de "veo una necesidad de UI" a "spec listo para handoff". Primera entrada del blog.',
+  },
+];
 
 @Component({
   selector: 'site-blog-landing',
   standalone: true,
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div class="max-w-[920px] mx-auto px-space-10 py-space-10">
-      <p class="text-body-sm uppercase tracking-wider text-action-700 mb-space-2">
-        BLOG
-      </p>
-      <h1 class="text-subtitle text-canvas-fg mb-space-3">
-        Blog
-      </h1>
-      <p class="max-w-[640px] text-body-md text-neutral-600 mb-space-8">
-        Notas de producto escritas al momento del envío.
-      </p>
-
-      <div class="border border-border-hairline rounded-md p-space-8 text-center">
-        <p class="text-body-md text-neutral-500">
-          La primera entrada se publicará con el lanzamiento de v1.
-        </p>
-      </div>
-    </div>
-  `,
+  templateUrl: './blog.landing.html',
+  styleUrl: './blog.landing.scss',
 })
-export class BlogLandingPage {}
+export class BlogLandingPage {
+  readonly posts = POSTS;
+}

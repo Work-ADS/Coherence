@@ -34,10 +34,26 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/blog/blog.routes').then((m) => m.blog_routes),
   },
   {
-    path: 'novedades',
+    path: 'demos',
     loadChildren: () =>
-      import('./pages/novedades/novedades.routes').then((m) => m.novedades_routes),
+      import('./pages/demos/demos.routes').then((m) => m.demos_routes),
   },
+  // ─── Legacy /novedades redirects (kept until external links retire) ───
+  { path: 'novedades', pathMatch: 'full', redirectTo: '/demos' },
+  { path: 'novedades/wealth-planner', redirectTo: '/demos/wealth-planner-2026' },
+  { path: 'novedades/wealth-planner-demo', redirectTo: '/demos/wealth-planner-2026/demo' },
+  { path: 'novedades/patrimonial', redirectTo: '/demos/wealth-planner-2026/patrimonial' },
+  { path: 'novedades/evolucion-patrimonial', redirectTo: '/demos/wealth-planner-2026/evolucion-patrimonial' },
+  { path: 'novedades/proceso-componente', redirectTo: '/blog/proceso-componente' },
+  { path: 'novedades/patrimonial-decisiones', redirectTo: '/blog/patrimonial-decisiones' },
+  { path: 'novedades/evolucion-patrimonial-decisiones', redirectTo: '/blog/evolucion-patrimonial-decisiones' },
+  { path: 'novedades/bitacora', redirectTo: '/blog/bitacora' },
+  { path: 'novedades/iteracion-2', redirectTo: '/blog/iteracion-2' },
+  { path: 'novedades/iteracion-3', redirectTo: '/blog/iteracion-3' },
+  { path: 'novedades/sidebar-decisiones', redirectTo: '/patrones/sidebar-decisiones' },
+  { path: 'novedades/nav-bar-decisiones', redirectTo: '/patrones/top-bar-decisiones' },
+  { path: 'novedades/dialog-decisiones', redirectTo: '/patrones/dialog-decisiones' },
+  { path: 'novedades', redirectTo: '/demos' }, // catchall for any nested /novedades/*
   {
     path: 'afi-insights',
     loadChildren: () =>

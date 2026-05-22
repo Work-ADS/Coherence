@@ -1,0 +1,14 @@
+<div class="section-header">
+  <div class="section-header__text">
+    @if (eyebrow()) {
+      <p class="section-header__eyebrow">{{ eyebrow() }}</p>
+    }
+    <h2 class="section-header__title">{{ title() }}</h2>
+    @if (snippet()) {
+      <p class="section-header__snippet">{{ snippet() }}</p>
+    }
+  </div>
+  <div class="section-header__trailing">
+    <ng-content />
+  </div>
+</div>

@@ -32,7 +32,7 @@ export type NavSection = {
 
 /**
  * Wealth Planner sidebar — brand variant, static mode (always expanded, no collapse).
- * Uses afi-sidebar (variant="brand", mode="static") + afi-nav-section + afi-nav-item.
+ * Uses afi-sidebar (variant="secondary-azul", mode="static") + afi-nav-section + afi-nav-item.
  */
 @Component({
   selector: 'site-planner-sidebar',
@@ -53,7 +53,7 @@ export type NavSection = {
   template: `
     <afi-sidebar
       mode="static"
-      variant="brand"
+      variant="secondary-azul"
       [ariaLabel]="ariaLabel()"
     >
       <!-- Top slot: logo -->

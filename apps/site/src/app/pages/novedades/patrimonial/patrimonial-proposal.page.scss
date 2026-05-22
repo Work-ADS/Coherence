@@ -1,0 +1,123 @@
+// =============================================================================
+// Patrimonio — page-specific styles (extracted from inline `styles:` block).
+// Bare values from the original inline CSS have been tokenized to satisfy the
+// clean-code hook (no hex / rgb / bare px outside libs/tokens/).
+// =============================================================================
+
+.tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+.tabs-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* === Coherence brand tab transition ===
+   Reusable pattern for any tab strip: a single .tab-indicator slides beneath
+   the active trigger (measured via viewChildren), and each .tab-panel plays
+   a soft fade+lift on enter. Pair with an @for track key that includes the
+   active value so panels re-mount when the user switches. */
+.tab-indicator {
+  position: absolute;
+  bottom: calc(-1 * var(--border-width-hairline)); /* sits on the bottom border of the tab strip */
+  height: var(--border-width-thick);
+  background: var(--brand-primary-background-default);
+  border-radius: var(--border-width-thick) var(--border-width-thick) 0 0;
+  pointer-events: none;
+  transition:
+    left var(--duration-base) var(--easing-standard),
+    width var(--duration-base) var(--easing-standard),
+    opacity var(--duration-fast) var(--easing-enter);
+}
+/* Panel enters by sliding horizontally — direction follows the tab movement:
+   forward (left → right through the tab list) slides in from the right,
+   backward slides in from the left. Matches animate-ui's glide feel. */
+@keyframes tabPanelEnterForward {
+  from {
+    opacity: 0;
+    transform: translateX(var(--space-lg));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes tabPanelEnterBackward {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--space-lg)));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.tab-panel {
+  animation: tabPanelEnterForward var(--duration-base) var(--easing-standard);
+  will-change: transform, opacity;
+}
+.tab-panel.tab-panel--backward {
+  animation-name: tabPanelEnterBackward;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tab-indicator {
+    transition: none;
+  }
+  .tab-panel {
+    animation: none;
+  }
+}
+
+/* Tooltip pattern shared with planner-top-bar + chart legend. */
+.tt-pop {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-xs);
+  font: var(--type-body-sm-400);
+  color: var(--surface-default);
+  background: var(--foreground-primary-default);
+  border-radius: var(--radius-control);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing-enter);
+  z-index: 60;
+}
+.group\/tt:hover .tt-pop,
+.group\/tt:focus-within .tt-pop {
+  opacity: 1;
+}
+
+@keyframes newAssetEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-xs)));
+    background: var(--brand-secondary-neutral-background-default);
+    box-shadow: inset var(--border-width-thick) 0 0 var(--brand-primary-background-default);
+  }
+  45% {
+    opacity: 1;
+    transform: translateY(0);
+    background: var(--brand-secondary-neutral-background-hover);
+    box-shadow: inset var(--border-width-thick) 0 0 var(--brand-primary-background-default);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    background: transparent;
+    box-shadow: inset var(--border-width-thick) 0 0 transparent;
+  }
+}
+.new-asset-row {
+  animation: newAssetEnter 1400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform, opacity, background;
+}
+@media (prefers-reduced-motion: reduce) {
+  .new-asset-row {
+    animation-duration: 80ms;
+    transform: none;
+  }
+}

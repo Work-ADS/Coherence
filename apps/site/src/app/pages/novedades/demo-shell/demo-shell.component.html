@@ -439,14 +439,14 @@
                 </div>
 
                 @if (editingId() === c.id) {
-                  <textarea
+                  <afi-input
+                    type="textarea"
                     class="comment-item__edit-input"
                     [value]="editingText()"
-                    (input)="onEditInput($event)"
+                    (valueChange)="onEditInput($event)"
                     (keydown)="onEditKey($event)"
-                    aria-label="Editar texto del comentario"
-                    rows="3"
-                  ></textarea>
+                    ariaLabel="Editar texto del comentario"
+                  />
                   <div class="comment-item__edit-actions">
                     <afi-button variant="ghost" size="sm" (clicked)="cancelEdit()">Cancelar</afi-button>
                     <afi-button

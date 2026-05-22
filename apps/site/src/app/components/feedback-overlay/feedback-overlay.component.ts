@@ -5,6 +5,7 @@ import {
   ButtonComponent,
   DrawerComponent,
   IconButtonComponent,
+  InputComponent,
 } from '@coherence/ui';
 
 import { ConfirmActionComponent } from '../confirm-action';
@@ -31,7 +32,7 @@ const DEMO_LABELS: Record<string, string> = {
 @Component({
   selector: 'site-feedback-overlay',
   standalone: true,
-  imports: [ButtonComponent, DrawerComponent, IconButtonComponent, ConfirmActionComponent],
+  imports: [ButtonComponent, DrawerComponent, IconButtonComponent, InputComponent, ConfirmActionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './feedback-overlay.component.html',
   styleUrl: './feedback-overlay.component.scss',
@@ -130,8 +131,8 @@ export class FeedbackOverlayComponent {
     this.editingText.set(c.text);
   }
 
-  onEditInput(event: Event): void {
-    this.editingText.set((event.target as HTMLTextAreaElement).value);
+  onEditInput(value: string | number | null): void {
+    this.editingText.set(value == null ? '' : String(value));
   }
 
   onEditKey(event: KeyboardEvent): void {

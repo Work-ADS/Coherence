@@ -63,10 +63,9 @@ html {
 }
 
 body {
-  font-family: var(--font-family-serif);
+  font: var(--type-body);
   color: var(--color-neutral-900);
   background: var(--canvas-primary);
-  line-height: 1.5;
 }
 
 // ---------------------------------------------------------------------------

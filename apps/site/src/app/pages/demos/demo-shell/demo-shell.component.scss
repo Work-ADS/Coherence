@@ -307,8 +307,11 @@
   margin: 0 var(--space-2xs);
 }
 
-// ─── States section ──────────────────────────────────────────────────────────
-.states-section {
+// ─── Inspect card (shared container for every panel section) ──────────────────
+// Single container style used by Estados + every token category (Color,
+// Spacing, Sizing, …). Mirrors the "fresh" estados look the user asked us
+// to standardize on.
+.inspect-card {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
@@ -318,13 +321,14 @@
   border-radius: var(--radius-md);
 }
 
-.states-section__header {
+.inspect-card__header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  gap: var(--space-sm);
 }
 
-.states-section__title {
+.inspect-card__title {
   font: var(--type-body-sm-500);
   color: var(--canvas-fg);
   text-transform: uppercase;
@@ -332,11 +336,20 @@
   margin: 0;
 }
 
-.states-section__hint {
+.inspect-card__hint {
   font: var(--type-body-sm-400);
   color: var(--foreground-tertiary-default);
 }
 
+.inspect-card__count {
+  font: var(--type-body-sm-500);
+  color: var(--feedback-error-foreground);
+  background: var(--feedback-error-background);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2xs) var(--space-xs);
+}
+
+// ─── States ───────────────────────────────────────────────────────────────────
 .states-list {
   display: flex;
   flex-direction: column;
@@ -400,74 +413,23 @@
   border-top: var(--border-width-hairline) solid var(--border-hairline);
 }
 
-.state-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2xs) var(--space-xs);
-  padding: var(--space-2xs) 0;
-}
-
-.state-row__prop {
-  font: var(--type-body-sm-500);
-  color: var(--foreground-secondary-default);
-  min-width: 100%;
-}
-
-.state-row__value {
-  font: var(--type-body-sm-400);
-  font-family: monospace;
-  color: var(--foreground-tertiary-default);
-}
-
 // ─── Token groups ─────────────────────────────────────────────────────────────
 .panel__groups {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
-}
-
-.token-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2xs);
-}
-
-.token-group__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: var(--space-2xs);
-  border-bottom: var(--border-width-hairline) solid var(--border-hairline);
-}
-
-.token-group__label {
-  font: var(--type-body-sm-500);
-  color: var(--canvas-fg);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
-  margin: 0;
-}
-
-.token-group__count {
-  font: var(--type-body-sm-500);
-  color: var(--feedback-error-foreground);
-  background: var(--feedback-error-background);
-  border-radius: var(--radius-pill);
-  padding: var(--space-2xs) var(--space-xs);
+  gap: var(--space-sm);
 }
 
 .token-rows {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xs);
+  gap: var(--space-xs);
 }
 
 .token-row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2xs) var(--space-xs);
+  flex-direction: column;
+  gap: var(--space-2xs);
   padding: var(--space-2xs) var(--space-xs);
   border-radius: var(--radius-sm);
   border-left: var(--border-width-thick) solid transparent;
@@ -481,34 +443,6 @@
 .token-row__prop {
   font: var(--type-body-sm-500);
   color: var(--foreground-secondary-default);
-  min-width: 100%;
-}
-
-.token-chip {
-  font: var(--type-body-sm-500);
-  font-family: monospace;
-  color: var(--brand-primary-background-default);
-  background: var(--surface-quiet);
-  border: var(--border-width-hairline) solid transparent;
-  border-radius: var(--radius-sm);
-  padding: 0 var(--space-2xs);
-  cursor: pointer;
-  transition: background var(--duration-fast), border-color var(--duration-fast);
-
-  &:hover {
-    background: var(--surface-muted);
-    border-color: var(--border-hairline);
-  }
-
-  &:focus-visible {
-    outline: var(--border-width-thick) solid var(--border-focus);
-    outline-offset: var(--border-width-hairline);
-  }
-
-  &--copied {
-    background: var(--feedback-success-background);
-    color: var(--feedback-success-foreground);
-  }
 }
 
 .token-row__value {
@@ -520,6 +454,82 @@
 .token-row__flag {
   margin-left: auto;
   color: var(--feedback-error-foreground);
+}
+
+// ─── Token chain (component → semantic → primitive) ───────────────────────────
+.token-chain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.token-step {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-xs);
+  padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-xs);
+  background: var(--surface-quiet);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+
+  &--component {
+    border-left: var(--border-width-thick) solid var(--brand-primary-background-default);
+  }
+
+  &--semantic {
+    border-left: var(--border-width-thick) solid var(--foreground-secondary-default);
+  }
+
+  &--primitive {
+    border-left: var(--border-width-thick) solid var(--foreground-tertiary-default);
+  }
+}
+
+.token-step__tier {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-tertiary-default);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  white-space: nowrap;
+}
+
+.token-step__name {
+  font: var(--type-body-sm-500);
+  font-family: monospace;
+  color: var(--brand-primary-background-default);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-hairline);
+    border-radius: var(--radius-sm);
+  }
+
+  &--copied {
+    color: var(--feedback-success-foreground);
+  }
+}
+
+.token-step__value {
+  font: var(--type-body-sm-400);
+  font-family: monospace;
+  color: var(--foreground-secondary-default);
+  white-space: nowrap;
 }
 
 // ─── Comment list ─────────────────────────────────────────────────────────────

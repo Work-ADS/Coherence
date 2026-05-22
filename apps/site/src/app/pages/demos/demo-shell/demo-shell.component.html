@@ -235,10 +235,10 @@
             </div>
 
             @if (result.states.length > 0) {
-              <section class="states-section">
-                <header class="states-section__header">
-                  <h4 class="states-section__title">Estados</h4>
-                  <span class="states-section__hint">{{ result.states.length }} detectados</span>
+              <section class="inspect-card">
+                <header class="inspect-card__header">
+                  <h4 class="inspect-card__title">Estados</h4>
+                  <span class="inspect-card__hint">{{ result.states.length }} detectados</span>
                 </header>
 
                 <div class="states-list">
@@ -251,18 +251,43 @@
                       </summary>
                       <div class="state__rows">
                         @for (t of s.tokens; track t.property) {
-                          <div class="state-row">
-                            <span class="state-row__prop">{{ t.property }}</span>
-                            @if (t.token) {
-                              <button
-                                type="button"
-                                class="token-chip"
-                                [class.token-chip--copied]="copiedToken() === t.token"
-                                title="Copiar token al portapapeles"
-                                (click)="copyToken(t.token!)"
-                              >{{ copiedToken() === t.token ? '✓ Copiado' : t.token }}</button>
+                          <div class="token-row">
+                            <span class="token-row__prop">{{ t.property }}</span>
+                            @if (t.chain.length > 0) {
+                              <ol class="token-chain">
+                                @for (step of t.chain; track step.token) {
+                                  <li
+                                    class="token-step"
+                                    [class.token-step--component]="step.tier === 'component'"
+                                    [class.token-step--semantic]="step.tier === 'semantic'"
+                                    [class.token-step--primitive]="step.tier === 'primitive'"
+                                  >
+                                    <span class="token-step__tier">{{ step.tierLabel }}</span>
+                                    <button
+                                      type="button"
+                                      class="token-step__name"
+                                      [class.token-step__name--copied]="copiedToken() === step.token"
+                                      title="Copiar token al portapapeles"
+                                      (click)="copyToken(step.token)"
+                                    >{{ copiedToken() === step.token ? '✓ Copiado' : step.token }}</button>
+                                    <span class="token-step__value">{{ step.hex ?? step.resolvedValue }}</span>
+                                    <afi-icon-button
+                                      variant="ghost"
+                                      size="sm"
+                                      [ariaLabel]="'Copiar ' + step.token"
+                                      (clicked)="copyToken(step.token)"
+                                    >
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                      </svg>
+                                    </afi-icon-button>
+                                  </li>
+                                }
+                              </ol>
+                            } @else {
+                              <span class="token-row__value">{{ t.computedHex ?? t.authoredValue }}</span>
                             }
-                            <span class="state-row__value">{{ t.value }}</span>
                           </div>
                         }
                       </div>
@@ -274,11 +299,11 @@
 
             <div class="panel__groups">
               @for (group of result.groups; track group.category) {
-                <section class="token-group">
-                  <header class="token-group__header">
-                    <h4 class="token-group__label">{{ group.label }}</h4>
+                <section class="inspect-card">
+                  <header class="inspect-card__header">
+                    <h4 class="inspect-card__title">{{ group.label }}</h4>
                     @if (group.violationCount > 0) {
-                      <span class="token-group__count" title="Violaciones">
+                      <span class="inspect-card__count" title="Violaciones">
                         {{ group.violationCount }} ⚠
                       </span>
                     }
@@ -288,16 +313,41 @@
                     @for (t of group.tokens; track t.property) {
                       <div class="token-row" [class.token-row--violation]="t.isViolation">
                         <span class="token-row__prop">{{ t.property }}</span>
-                        @if (t.token) {
-                          <button
-                            type="button"
-                            class="token-chip"
-                            [class.token-chip--copied]="copiedToken() === t.token"
-                            title="Copiar token al portapapeles"
-                            (click)="copyToken(t.token!)"
-                          >{{ copiedToken() === t.token ? '✓ Copiado' : t.token }}</button>
+                        @if (t.chain.length > 0) {
+                          <ol class="token-chain">
+                            @for (step of t.chain; track step.token) {
+                              <li
+                                class="token-step"
+                                [class.token-step--component]="step.tier === 'component'"
+                                [class.token-step--semantic]="step.tier === 'semantic'"
+                                [class.token-step--primitive]="step.tier === 'primitive'"
+                              >
+                                <span class="token-step__tier">{{ step.tierLabel }}</span>
+                                <button
+                                  type="button"
+                                  class="token-step__name"
+                                  [class.token-step__name--copied]="copiedToken() === step.token"
+                                  title="Copiar token al portapapeles"
+                                  (click)="copyToken(step.token)"
+                                >{{ copiedToken() === step.token ? '✓ Copiado' : step.token }}</button>
+                                <span class="token-step__value">{{ step.hex ?? step.resolvedValue }}</span>
+                                <afi-icon-button
+                                  variant="ghost"
+                                  size="sm"
+                                  [ariaLabel]="'Copiar ' + step.token"
+                                  (clicked)="copyToken(step.token)"
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                  </svg>
+                                </afi-icon-button>
+                              </li>
+                            }
+                          </ol>
+                        } @else {
+                          <span class="token-row__value">{{ t.computedHex ?? t.authoredValue }}</span>
                         }
-                        <span class="token-row__value">{{ t.value }}</span>
                         @if (t.isViolation) {
                           <span class="token-row__flag" title="Valor sin token">⚠</span>
                         }

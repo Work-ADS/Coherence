@@ -112,7 +112,13 @@
 .sidebar--secondary-azul {
   color: var(--brand-secondary-foreground-default);
   --nav-sidebar: var(--brand-secondary-background-default);
-  --border-subtle: var(--brand-secondary-background-hover);
+  /* Tree lines + active trail accent need to contrast against the dark
+     azul background. The defaults for --border-subtle and
+     --brand-primary-border-default land on the same azul ramp as the
+     sidebar background, so the lines vanish — fall back to the inverse
+     foreground ramp instead. */
+  --border-subtle: var(--foreground-inverse-tertiary);
+  --brand-primary-border-default: var(--foreground-inverse-default);
   --nav-item-background-default: transparent;
   --nav-item-background-hover: var(--brand-secondary-background-hover);
   --nav-item-background-active: var(--brand-secondary-background-active);

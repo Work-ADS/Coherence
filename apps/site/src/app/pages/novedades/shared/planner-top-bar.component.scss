@@ -99,27 +99,6 @@
   color: var(--foreground-tertiary-default);
 }
 
-.ptb__plans-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
-  width: 100%;
-  text-align: left;
-  padding: var(--space-xs);
-  border: none;
-  border-radius: var(--radius-control);
-  background: transparent;
-  font: var(--type-body-sm-400);
-  color: var(--foreground-primary-default);
-  cursor: pointer;
-  transition: background var(--duration-fast) var(--easing-enter);
-
-  &:hover {
-    background: var(--surface-subtle);
-  }
-}
-
 .ptb__plans-check {
   width: var(--icon-sm);
   height: var(--icon-sm);

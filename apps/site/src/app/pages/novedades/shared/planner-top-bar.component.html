@@ -86,18 +86,17 @@
         <p slot="header" class="ptb__plans-heading">Estado</p>
         <div slot="body" class="ptb__states">
           @for (s of estados; track s.value) {
-            <button
-              type="button"
-              class="ptb__plans-item"
-              (click)="onEstadoChange(s.value)"
+            <afi-menu-item
+              [ariaLabel]="s.label"
+              (clicked)="onEstadoChange(s.value)"
             >
-              <afi-status-chip [estado]="s.value" size="sm" />
+              <afi-status-chip slot="label" [estado]="s.value" size="sm" />
               @if (s.value === estado()) {
-                <svg class="ptb__plans-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg slot="trailing" class="ptb__plans-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               }
-            </button>
+            </afi-menu-item>
           }
         </div>
       </afi-dropdown-panel>

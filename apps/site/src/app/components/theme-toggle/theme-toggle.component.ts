@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, PLATFORM_ID, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
+import { IconButtonComponent } from '@coherence/ui';
+
 type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'coherence-theme';
@@ -15,12 +17,13 @@ const STORAGE_KEY = 'coherence-theme';
  * Persists the user's choice to localStorage so the theme survives reloads.
  * SSR-safe via `isPlatformBrowser` guards.
  *
- * Pattern is identical to Figma's variable-mode toggle: one attribute on the
- * root element, cascade does the rest. The component itself is just chrome.
+ * Composes afi-icon-button (variant="ghost"). [pressed] mirrors theme()==='dark'
+ * so the button reads as a stateful toggle to assistive tech.
  */
 @Component({
   selector: 'site-theme-toggle',
   standalone: true,
+  imports: [IconButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './theme-toggle.component.html',
   styleUrl: './theme-toggle.component.scss',

@@ -1,21 +1,14 @@
-<button
-  type="button"
-  (click)="toggle()"
-  class="inline-flex items-center justify-center w-9 h-9 rounded-md
-         bg-surface-base hover:bg-surface-muted
-         border border-border-hairline
-         text-canvas-fg
-         transition-colors duration-fast
-         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus
-         focus-visible:ring-offset-2"
-  [attr.aria-label]="ariaLabel()"
-  [attr.aria-pressed]="theme() === 'dark'"
-  [title]="ariaLabel()"
+<afi-icon-button
+  variant="ghost"
+  size="md"
+  [ariaLabel]="ariaLabel()"
+  [pressed]="theme() === 'dark'"
+  (clicked)="toggle()"
 >
   @if (theme() === 'light') {
     <!-- Moon icon — click to switch to dark -->
     <svg
-      class="w-5 h-5"
+      class="theme-toggle__icon"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -29,7 +22,7 @@
   } @else {
     <!-- Sun icon — click to switch to light -->
     <svg
-      class="w-5 h-5"
+      class="theme-toggle__icon"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -49,4 +42,4 @@
       <path d="m19.07 4.93-1.41 1.41" />
     </svg>
   }
-</button>
+</afi-icon-button>

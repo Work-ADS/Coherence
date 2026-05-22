@@ -1,3 +1,12 @@
 :host {
   display: inline-block;
 }
+
+// Inherit color from parent (so the icon reads correctly against whatever
+// surface the toggle sits on). afi-icon-button's variant="ghost" handles
+// background + hover; we only override the icon stroke color via inherit.
+.theme-toggle__icon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  color: inherit;
+}

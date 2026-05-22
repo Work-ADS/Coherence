@@ -56,6 +56,16 @@
   }
 
   // ---------------------------------------------------------------------------
+  // Wide — opts out of the fixed-square footprint. Height comes from --sm/md/lg;
+  // width becomes content-based with horizontal padding. Use for dual-icon
+  // triggers or any projected content that needs more room than a square.
+  // ---------------------------------------------------------------------------
+  &--wide {
+    width: auto;
+    padding-inline: var(--space-xs);
+  }
+
+  // ---------------------------------------------------------------------------
   // Variants
   // ---------------------------------------------------------------------------
   &--ghost {

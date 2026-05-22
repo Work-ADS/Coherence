@@ -5,6 +5,10 @@ import { IconButtonVariant, IconButtonVariantLegacy, IconButtonSize } from './ic
  * Icon Button — a square interactive button containing only an icon.
  *
  * Accessibility: `ariaLabel` is REQUIRED.
+ *
+ * `wide` opts out of the fixed-square footprint when the projected content
+ * needs more room (e.g. a dual-icon trigger). Width becomes auto with
+ * horizontal padding. Orthogonal to `size` — works with sm/md/lg.
  */
 @Component({
   selector: 'afi-icon-button',
@@ -22,12 +26,14 @@ export class IconButtonComponent {
   readonly pressed = input<boolean | null>(null);
   readonly expanded = input<boolean | null>(null);
   readonly badge = input<number | null>(null);
+  readonly wide = input<boolean>(false);
 
   readonly clicked = output<{ event: MouseEvent }>();
 
-  readonly hostClasses = computed(() =>
-    `icon-button icon-button--${this.variant()} icon-button--${this.size()}`,
-  );
+  readonly hostClasses = computed(() => {
+    const base = `icon-button icon-button--${this.variant()} icon-button--${this.size()}`;
+    return this.wide() ? `${base} icon-button--wide` : base;
+  });
 
   onClick(event: MouseEvent): void {
     if (!this.disabled()) {

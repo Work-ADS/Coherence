@@ -1,0 +1,59 @@
+<article class="demo-overview">
+  <!-- Hero -->
+  <header class="demo-overview__hero">
+    @if (overline()) {
+      <p class="demo-overview__overline">{{ overline() }}</p>
+    }
+    <h1 class="demo-overview__title">{{ title() }}</h1>
+    @if (intro()) {
+      <p class="demo-overview__intro">{{ intro() }}</p>
+    }
+  </header>
+
+  <!-- Primary CTA -->
+  <div class="demo-overview__cta">
+    <afi-button
+      variant="primary"
+      size="lg"
+      [routerLink]="demoRoute()"
+    >{{ demoLabel() }}</afi-button>
+  </div>
+
+  <!-- Screenshot grid -->
+  @if (hasScreenshots()) {
+    <section class="demo-overview__screenshots" aria-label="Vistas del demo">
+      @for (shot of screenshots(); track shot.src) {
+        <figure class="demo-overview__shot">
+          <img [src]="shot.src" [alt]="shot.alt" loading="lazy" />
+          @if (shot.caption) {
+            <figcaption class="demo-overview__shot-caption">{{ shot.caption }}</figcaption>
+          }
+        </figure>
+      }
+    </section>
+  }
+
+  <!-- Related blog posts -->
+  @if (hasRelatedPosts()) {
+    <section class="demo-overview__related" aria-labelledby="demo-overview-related-heading">
+      <h2 id="demo-overview-related-heading" class="demo-overview__related-heading">
+        Lectura relacionada
+      </h2>
+      <ul class="demo-overview__related-list">
+        @for (post of relatedPosts(); track post.slug) {
+          <li class="demo-overview__related-item">
+            <a class="demo-overview__related-card" [routerLink]="'/blog/' + post.slug">
+              @if (post.eyebrow) {
+                <span class="demo-overview__related-eyebrow">{{ post.eyebrow }}</span>
+              }
+              <span class="demo-overview__related-title">{{ post.title }}</span>
+              @if (post.description) {
+                <span class="demo-overview__related-description">{{ post.description }}</span>
+              }
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</article>

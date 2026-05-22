@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { ChartHeatmapComponent } from '@coherence/ui';
+import { ChartHeatmapComponent, CheckboxComponent } from '@coherence/ui';
 import type { HeatmapCell, HeatmapScale } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../../components/doc-page-layout';
@@ -56,6 +56,7 @@ const DIVERGENT_DATA: HeatmapCell[] = (() => {
     CodeBlockComponent,
     TokensTableComponent,
     ChartHeatmapComponent,
+    CheckboxComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -81,14 +82,8 @@ const DIVERGENT_DATA: HeatmapCell[] = (() => {
             </fieldset>
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Opciones</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="showCellLabels()" (change)="showCellLabels.set(!showCellLabels())" class="accent-action" />
-                Etiquetas en celda
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="loading()" (change)="loading.set(!loading())" class="accent-action" />
-                Loading
-              </label>
+              <afi-checkbox [checked]="showCellLabels()" (checkedChange)="showCellLabels.set($event)" label="Etiquetas en celda" [compact]="true" />
+              <afi-checkbox [checked]="loading()" (checkedChange)="loading.set($event)" label="Loading" [compact]="true" />
             </fieldset>
           </div>
           <div slot="preview" class="w-full">

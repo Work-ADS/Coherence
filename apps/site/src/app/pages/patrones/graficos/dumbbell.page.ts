@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { ChartDumbbellComponent } from '@coherence/ui';
+import { ChartDumbbellComponent, CheckboxComponent } from '@coherence/ui';
 import type { DumbbellDatum } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../../components/doc-page-layout';
@@ -38,6 +38,7 @@ const SAMPLE_DATA: DumbbellDatum[] = [
     CodeBlockComponent,
     TokensTableComponent,
     ChartDumbbellComponent,
+    CheckboxComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -53,10 +54,7 @@ const SAMPLE_DATA: DumbbellDatum[] = [
           <div slot="controls" class="space-y-space-4">
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Opciones</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="loading()" (change)="loading.set(!loading())" class="accent-action" />
-                Loading
-              </label>
+              <afi-checkbox [checked]="loading()" (checkedChange)="loading.set($event)" label="Loading" [compact]="true" />
             </fieldset>
           </div>
           <div slot="preview" class="w-full">

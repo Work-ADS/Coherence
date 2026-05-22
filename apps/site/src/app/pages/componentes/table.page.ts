@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { TableComponent } from '@coherence/ui';
+import { CheckboxComponent, TableComponent } from '@coherence/ui';
 import type { TableColumn, TableSortState, TableDensity } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../components/doc-page-layout';
@@ -52,6 +52,7 @@ const TABLE_TOKENS: TokenRow[] = [
     CodeBlockComponent,
     TokensTableComponent,
     TableComponent,
+    CheckboxComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -89,18 +90,9 @@ const TABLE_TOKENS: TokenRow[] = [
             <!-- State toggles -->
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Estado</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="selectable()" (change)="selectable.set(!selectable())" class="accent-action" />
-                selectable
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="loading()" (change)="loading.set(!loading())" class="accent-action" />
-                loading
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="empty()" (change)="empty.set(!empty())" class="accent-action" />
-                empty (sin datos)
-              </label>
+              <afi-checkbox [checked]="selectable()" (checkedChange)="selectable.set($event)" label="selectable" [compact]="true" />
+              <afi-checkbox [checked]="loading()" (checkedChange)="loading.set($event)" label="loading" [compact]="true" />
+              <afi-checkbox [checked]="empty()" (checkedChange)="empty.set($event)" label="empty (sin datos)" [compact]="true" />
             </fieldset>
           </div>
 

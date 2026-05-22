@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { ChartLineComponent } from '@coherence/ui';
+import { ChartLineComponent, CheckboxComponent } from '@coherence/ui';
 import type { LineSeries } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../../components/doc-page-layout';
@@ -54,6 +54,7 @@ const SAMPLE_DATA: LineSeries[] = [
     CodeBlockComponent,
     TokensTableComponent,
     ChartLineComponent,
+    CheckboxComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -71,18 +72,9 @@ const SAMPLE_DATA: LineSeries[] = [
           <div slot="controls" class="space-y-space-4">
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Opciones</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="showMarkers()" (change)="showMarkers.set(!showMarkers())" class="accent-action" />
-                Markers
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="baselineZero()" (change)="baselineZero.set(!baselineZero())" class="accent-action" />
-                Baseline zero
-              </label>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="loading()" (change)="loading.set(!loading())" class="accent-action" />
-                Loading
-              </label>
+              <afi-checkbox [checked]="showMarkers()" (checkedChange)="showMarkers.set($event)" label="Markers" [compact]="true" />
+              <afi-checkbox [checked]="baselineZero()" (checkedChange)="baselineZero.set($event)" label="Baseline zero" [compact]="true" />
+              <afi-checkbox [checked]="loading()" (checkedChange)="loading.set($event)" label="Loading" [compact]="true" />
             </fieldset>
           </div>
 

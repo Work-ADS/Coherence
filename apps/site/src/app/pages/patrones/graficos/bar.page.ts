@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { ChartBarComponent } from '@coherence/ui';
+import { ChartBarComponent, CheckboxComponent } from '@coherence/ui';
 import type { BarDatum, BarOrientation, BarSort } from '@coherence/ui';
 
 import { DocPageLayoutComponent } from '../../../components/doc-page-layout';
@@ -43,6 +43,7 @@ const SORTS: (BarSort | 'none')[] = ['none', 'asc', 'desc'];
     CodeBlockComponent,
     TokensTableComponent,
     ChartBarComponent,
+    CheckboxComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -81,10 +82,7 @@ const SORTS: (BarSort | 'none')[] = ['none', 'asc', 'desc'];
             </fieldset>
             <fieldset>
               <legend class="font-medium text-canvas-fg mb-space-1 text-body-sm">Loading</legend>
-              <label class="flex items-center gap-2 py-0.5 cursor-pointer text-body-sm">
-                <input type="checkbox" [checked]="loading()" (change)="loading.set(!loading())" class="accent-action" />
-                Mostrar loading
-              </label>
+              <afi-checkbox [checked]="loading()" (checkedChange)="loading.set($event)" label="Mostrar loading" [compact]="true" />
             </fieldset>
           </div>
 

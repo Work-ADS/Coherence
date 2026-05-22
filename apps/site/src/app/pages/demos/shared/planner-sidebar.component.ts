@@ -65,7 +65,7 @@ export class PlannerSidebarComponent {
       items: [
         { key: 'familia', label: 'Familia', state: 'complete' },
         { key: 'sociedades', label: 'Sociedades', state: 'complete' },
-        { key: 'patrimonio', label: 'Patrimonio', state: 'complete', route: '/novedades/patrimonial' },
+        { key: 'patrimonio', label: 'Patrimonio', state: 'complete', route: '/demos/wealth-planner-2026/patrimonial' },
         { key: 'ingresos', label: 'Ingresos', state: 'in-progress' },
         { key: 'gastos', label: 'Gastos', state: 'empty' },
       ],
@@ -97,7 +97,7 @@ export class PlannerSidebarComponent {
     {
       label: 'Conclusiones',
       items: [
-        { key: 'evolucion-comparada', label: 'Evolución comparada', state: 'empty', route: '/novedades/evolucion-patrimonial' },
+        { key: 'evolucion-comparada', label: 'Evolución comparada', state: 'empty', route: '/demos/wealth-planner-2026/evolucion-patrimonial' },
         { key: 'consecucion-objetivos', label: 'Consecución de objetivos', state: 'empty' },
       ],
     },

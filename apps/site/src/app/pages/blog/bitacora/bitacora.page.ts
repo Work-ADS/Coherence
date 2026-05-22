@@ -55,9 +55,9 @@ type LogEntry = {
         class="flex items-center gap-space-3 border-b border-border-hairline px-space-4 h-10 bg-surface-quiet shrink-0 text-body-sm"
       >
         <a
-          routerLink="/novedades"
+          routerLink="/blog"
           class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-surface-100 text-neutral-500"
-          aria-label="Volver a Novedades"
+          aria-label="Volver al blog"
         >
           <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path
@@ -67,7 +67,7 @@ type LogEntry = {
             />
           </svg>
         </a>
-        <span class="text-neutral-500">Novedades</span>
+        <span class="text-neutral-500">Blog</span>
         <span class="text-neutral-400" aria-hidden="true">/</span>
         <span class="text-canvas-fg font-medium">Bitácora</span>
       </div>
@@ -134,7 +134,7 @@ type LogEntry = {
               <p class="text-caption text-neutral-500 pt-space-4 border-t border-border-hairline">
                 Para añadir una entrada nueva: edita
                 <code class="font-mono"
-                  >apps/site/src/app/pages/novedades/bitacora/bitacora.page.ts</code
+                  >apps/site/src/app/pages/blog/bitacora/bitacora.page.ts</code
                 >
                 y prepende un objeto al array <code class="font-mono">entries</code>.
               </p>
@@ -175,13 +175,13 @@ export class BitacoraPage {
           status: 'Hecho',
           area: 'Top bar',
           text: 'Botón de notas eliminado del top bar — saturaba la barra y la información cabe mejor en el blog del caso. Solo queda el engranaje de Configuración.',
-          href: '/novedades/patrimonial',
+          href: '/demos/wealth-planner-2026/patrimonial',
         },
         {
           status: 'Hecho',
           area: 'Docs',
           text: 'Plantilla nueva para case-study en Top bar · Decisiones — identidad del componente arriba, ejemplo en vivo con callouts numerados, accordion explicando cada número, y decisiones agrupadas en Navegación · Estado · Acciones · Layout.',
-          href: '/novedades/nav-bar-decisiones',
+          href: '/patrones/top-bar-decisiones',
         },
         {
           status: 'Hecho',
@@ -192,13 +192,13 @@ export class BitacoraPage {
           status: 'Hecho',
           area: 'Docs',
           text: 'Bitácora — tags Hecho/En curso/Pendiente y área (Diálogo, Docs, Gráfico…) ahora son afi-badge a tamaño body-sm, alineados con el texto del cambio.',
-          href: '/novedades/bitacora',
+          href: '/blog/bitacora',
         },
         {
           status: 'Hecho',
           area: 'Diálogo',
           text: 'Decisión de "Cabecera tipo Stripe" actualizada al nuevo patrón footer-con-acciones (Cancelar + Guardar abajo, sin acciones en la cabecera).',
-          href: '/novedades/dialog-decisiones',
+          href: '/patrones/dialog-decisiones',
         },
         {
           status: 'En curso',
@@ -217,7 +217,7 @@ export class BitacoraPage {
           status: 'Hecho',
           area: 'Diálogo',
           text: 'Footer del diálogo demo (Añadir activo) reordenado a Cancelar + Guardar alineados a la derecha; el atajo ⎋ Esc va dentro del botón Cancelar como hint, ya no compite tipográficamente con la primaria.',
-          href: '/novedades/dialog-decisiones',
+          href: '/patrones/dialog-decisiones',
         },
         {
           status: 'Hecho',
@@ -228,19 +228,19 @@ export class BitacoraPage {
           status: 'Hecho',
           area: 'Docs',
           text: 'Bitácora — alineación de container y typography arreglados: page header al borde, area labels a tamaño normal, layout con TOC al lado.',
-          href: '/novedades/bitacora',
+          href: '/blog/bitacora',
         },
         {
           status: 'Hecho',
           area: 'Docs',
           text: 'Top bar (nav-bar-decisiones) — layout ampliado a 1200 px con TOC al lado de las 5 pestañas PRD.',
-          href: '/novedades/nav-bar-decisiones',
+          href: '/patrones/top-bar-decisiones',
         },
         {
           status: 'Hecho',
           area: 'Docs',
           text: 'Barra lateral (sidebar-decisiones) — replicada estructura PRD: Decisiones / Historias de usuario (4 HU) / Requisitos técnicos / Requisitos no técnicos / Especificaciones Figma. TOC también visible.',
-          href: '/novedades/sidebar-decisiones',
+          href: '/patrones/sidebar-decisiones',
         },
         {
           status: 'En curso',
@@ -259,25 +259,25 @@ export class BitacoraPage {
           status: 'Hecho',
           area: 'Gráfico',
           text: 'Cualquier valor negativo (deuda) renderiza en rojo (#C81E1E), incluido en modo apilado por tipo de activo — un total negativo colapsa a un único segmento rojo "Deuda" porque la deuda es deuda independiente del tipo.',
-          href: '/novedades/evolucion-patrimonial',
+          href: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
         {
           status: 'Hecho',
           area: 'Gráfico',
           text: 'Paletas por versión — V1 mantiene el navy original; V2 amplía el rango azul para distinguir mejor cada tipo de activo; V3 mezcla acentos de marca (afi-azul, afi-verde, ámbar, púrpura) para máxima diferenciación.',
-          href: '/novedades/evolucion-patrimonial',
+          href: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
         {
           status: 'Hecho',
           area: 'Novedades',
           text: 'Bitácora de iteraciones — esta página. Registro vivo del trail de decisiones, accesible desde la cabecera de "Decisiones en handoff".',
-          href: '/novedades/bitacora',
+          href: '/blog/bitacora',
         },
         {
           status: 'Hecho',
           area: 'Pendientes',
           text: 'PRD-tabs en la barra superior — primer caso de estudio con Decisiones / Historias de usuario / Requisitos técnicos / Requisitos no técnicos / Especificaciones Figma. Plantilla para replicar en sidebar, dialog, patrimonial y evolución.',
-          href: '/novedades/nav-bar-decisiones',
+          href: '/patrones/top-bar-decisiones',
         },
       ],
     },
@@ -291,31 +291,31 @@ export class BitacoraPage {
           status: 'Hecho',
           area: 'Gráfico',
           text: 'V1 / V2 / V3 ahora comparten la misma control bar (selectores + Ajustes popup + Accesibilidad). Cambia la posición de la barra, no su contenido.',
-          href: '/novedades/evolucion-patrimonial',
+          href: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
         {
           status: 'Hecho',
           area: 'Gráfico',
           text: 'V2 usa botones icon-only (filtros + accesibilidad) para caber en línea con la cabecera de sección.',
-          href: '/novedades/evolucion-patrimonial',
+          href: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
         {
           status: 'Hecho',
           area: 'Tabla',
           text: 'Títulos de sección — "Liquidez · 2 activos" ahora a tamaño body-sm + neutral-700, jerarquía más legible.',
-          href: '/novedades/patrimonial',
+          href: '/demos/wealth-planner-2026/patrimonial',
         },
         {
           status: 'Hecho',
           area: 'Gráfico',
           text: 'Cabecera del gráfico — label y comparison también a neutral-700; label en font-medium.',
-          href: '/novedades/evolucion-patrimonial',
+          href: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
         {
           status: 'Hecho',
           area: 'Novedades',
           text: 'Landing reorganizada en dos secciones: Ejemplos (pantallas reales) y Decisiones en handoff (casos de estudio).',
-          href: '/novedades',
+          href: '/demos',
         },
         {
           status: 'Hecho',
@@ -326,7 +326,7 @@ export class BitacoraPage {
           status: 'En curso',
           area: 'Pendientes',
           text: 'Tabs PRD en cada caso de estudio: Decisiones · Historias de usuario · Requisitos técnicos · Requisitos no técnicos · Figma. Empezando por nav-bar.',
-          href: '/novedades/nav-bar-decisiones',
+          href: '/patrones/top-bar-decisiones',
         },
         {
           status: 'Pendiente',
@@ -375,25 +375,25 @@ export class BitacoraPage {
           status: 'Hecho',
           area: 'Sidebar',
           text: 'Indicadores de estado (vacío / en progreso / completo) sólo en la sección obligatoria "Situación actual".',
-          href: '/novedades/sidebar-decisiones',
+          href: '/patrones/sidebar-decisiones',
         },
         {
           status: 'Hecho',
           area: 'Sidebar',
           text: 'Cortado del label "Wealth planner" — eliminado tracking-wide.',
-          href: '/novedades/sidebar-decisiones',
+          href: '/patrones/sidebar-decisiones',
         },
         {
           status: 'Hecho',
           area: 'Sidebar',
           text: 'Iconos sólo en cabeceras de grupo (no por item) en estado expandido. En colapsado siguen porque el icono es el label.',
-          href: '/novedades/sidebar-decisiones',
+          href: '/patrones/sidebar-decisiones',
         },
         {
           status: 'Hecho',
           area: 'Top bar',
           text: 'Lápiz de renombrar pegado al ID de simulación (sub-flex con gap-1).',
-          href: '/novedades/nav-bar-decisiones',
+          href: '/patrones/top-bar-decisiones',
         },
         {
           status: 'Hecho',
@@ -404,13 +404,13 @@ export class BitacoraPage {
           status: 'Hecho',
           area: 'Top bar',
           text: 'Drawer de configuración (Ajustes globales) cableado al icono del engranaje.',
-          href: '/novedades/patrimonial',
+          href: '/demos/wealth-planner-2026/patrimonial',
         },
         {
           status: 'Hecho',
           area: 'Top bar',
           text: 'Drawer de notas cableado al icono del cuaderno con textarea + Guardar/Cancelar.',
-          href: '/novedades/patrimonial',
+          href: '/demos/wealth-planner-2026/patrimonial',
         },
         {
           status: 'Hecho',

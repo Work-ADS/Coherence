@@ -1,0 +1,21 @@
+<button
+  [type]="type()"
+  [class]="classes()"
+  [disabled]="disabled() || loading()"
+  [attr.aria-busy]="loading() ? 'true' : null"
+  [attr.aria-label]="ariaLabel()"
+  (click)="onClick($event)"
+>
+  @if (iconStart()) {
+    <ng-content select="[slot=iconStart]" />
+  }
+  @if (!loading()) {
+    <ng-content />
+  } @else {
+    <span class="btn__spinner" aria-hidden="true">⟳</span>
+    <span class="btn__sr-only">Cargando…</span>
+  }
+  @if (iconEnd()) {
+    <ng-content select="[slot=iconEnd]" />
+  }
+</button>

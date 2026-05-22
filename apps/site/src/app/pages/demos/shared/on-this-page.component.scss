@@ -1,0 +1,70 @@
+// =============================================================================
+// On This Page — sticky right-rail TOC. Visible at xl+ widths.
+// =============================================================================
+@use '../../../../../../../libs/tokens/mixins' as t;
+
+:host {
+  display: contents;
+}
+
+.on-this-page {
+  position: sticky;
+  top: var(--space-2xl);
+  align-self: flex-start;
+  display: none;
+  width: var(--dimension-55);
+  flex-shrink: 0;
+
+  @include t.breakpoint-up(xl) {
+    display: block;
+  }
+}
+
+.on-this-page__heading {
+  margin: 0 0 var(--space-sm) 0;
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
+}
+
+.on-this-page__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  border-inline-start: var(--border-width-hairline) solid var(--border-hairline);
+}
+
+.on-this-page__link {
+  display: block;
+  margin-inline-start: calc(var(--border-width-hairline) * -1);
+  padding-block: var(--space-2xs);
+  padding-inline-start: var(--space-sm);
+  border-inline-start: var(--border-width-thick) solid transparent;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    color: var(--foreground-primary-default);
+  }
+
+  &--nested {
+    padding-inline-start: var(--space-lg);
+  }
+
+  &--active {
+    color: var(--action-primary-default);
+    border-inline-start-color: var(--action-primary-default);
+    font: var(--type-body-sm-500);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+}

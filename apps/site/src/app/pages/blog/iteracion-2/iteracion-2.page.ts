@@ -40,9 +40,9 @@ type Surface = {
         class="flex items-center gap-space-3 border-b border-border-hairline px-space-4 h-10 bg-surface-quiet shrink-0 text-body-sm"
       >
         <a
-          routerLink="/novedades"
+          routerLink="/blog"
           class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-surface-100 text-neutral-500"
-          aria-label="Volver a Novedades"
+          aria-label="Volver al blog"
         >
           <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path
@@ -52,7 +52,7 @@ type Surface = {
             />
           </svg>
         </a>
-        <span class="text-neutral-500">Novedades</span>
+        <span class="text-neutral-500">Blog</span>
         <span class="text-neutral-400" aria-hidden="true">/</span>
         <span class="text-canvas-fg font-medium">Iteración 2</span>
       </div>
@@ -74,7 +74,7 @@ type Surface = {
             <!-- ========== Primary CTA ========== -->
             <div class="mt-space-8 px-space-8">
               <a
-                routerLink="/novedades/patrimonial"
+                routerLink="/demos/wealth-planner-2026/patrimonial"
                 [queryParams]="{ version: 'v2' }"
                 class="group flex items-center justify-between gap-space-4 px-space-5 py-space-4 rounded-md border border-action/40 bg-action/5 hover:bg-action/10 transition-colors"
               >
@@ -83,7 +83,7 @@ type Surface = {
                     Propuesta visual
                   </p>
                   <p class="text-body-md font-medium text-canvas-fg">
-                    Ver el nuevo diseño en /novedades/patrimonial
+                    Ver el nuevo diseño en /demos/wealth-planner-2026/patrimonial
                   </p>
                   <p class="text-body-sm text-neutral-600 mt-space-1">
                     Abre la pantalla del Wealth Planner con la versión 2 seleccionada.
@@ -170,7 +170,7 @@ type Surface = {
               <p class="text-caption text-neutral-500 pt-space-4 border-t border-border-hairline">
                 Para añadir una tarea nueva: edita
                 <code class="font-mono"
-                  >apps/site/src/app/pages/novedades/iteracion-2/iteracion-2.page.ts</code
+                  >apps/site/src/app/pages/blog/iteracion-2/iteracion-2.page.ts</code
                 >
                 y prepende un objeto al array
                 <code class="font-mono">tasks</code> de la sección correspondiente.
@@ -215,13 +215,13 @@ export class Iteracion2Page {
           status: 'Pendiente',
           source: 'Reunión 4-may',
           text: 'Adoptar la paleta monocromática (oscuro→claro) de Versión 2 para las barras apiladas. Versión 3 queda descartada.',
-          href: '/novedades/evolucion-patrimonial',
+          href: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
         {
           status: 'Pendiente',
           source: 'Reunión 4-may',
           text: 'Iterar la paleta v2 para mejorar contraste en los tonos claros — los seniors detectaron que se diluyen en la parte alta.',
-          href: '/novedades/evolucion-patrimonial',
+          href: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
         {
           status: 'Pendiente',
@@ -232,7 +232,7 @@ export class Iteracion2Page {
           status: 'Pendiente',
           source: 'Reunión 4-may',
           text: 'Leyenda interactiva: hover sobre un item destaca su elemento en el gráfico y atenúa el resto, además del show/hide ya existente.',
-          href: '/novedades/evolucion-patrimonial',
+          href: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
         {
           status: 'Pendiente',
@@ -242,8 +242,8 @@ export class Iteracion2Page {
         {
           status: 'Pendiente',
           source: 'Comentario v1',
-          text: 'Fix scenarios — comentario anclado en /novedades/evolucion-patrimonial pendiente de resolución concreta.',
-          href: '/novedades/evolucion-patrimonial',
+          text: 'Fix scenarios — comentario anclado en /demos/wealth-planner-2026/evolucion-patrimonial pendiente de resolución concreta.',
+          href: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
       ],
     },
@@ -258,25 +258,25 @@ export class Iteracion2Page {
           status: 'Pendiente',
           source: 'Comentario v1',
           text: 'Mostrar nombres de columna explícitos en la tabla — "no columns name".',
-          href: '/novedades/patrimonial',
+          href: '/demos/wealth-planner-2026/patrimonial',
         },
         {
           status: 'Pendiente',
           source: 'Comentario v1',
           text: 'Simplificar el wording de las celdas y etiquetas — "make sentences simple".',
-          href: '/novedades/patrimonial',
+          href: '/demos/wealth-planner-2026/patrimonial',
         },
         {
           status: 'Pendiente',
           source: 'Comentario v1',
           text: 'Mover el chevron a la derecha del texto — "move chevron to right of text".',
-          href: '/novedades/patrimonial',
+          href: '/demos/wealth-planner-2026/patrimonial',
         },
         {
           status: 'Pendiente',
           source: 'Comentario v1',
           text: 'Ampliar el menú de tres puntos por fila con más opciones — "more options".',
-          href: '/novedades/patrimonial',
+          href: '/demos/wealth-planner-2026/patrimonial',
         },
       ],
     },
@@ -291,7 +291,7 @@ export class Iteracion2Page {
           status: 'Pendiente',
           source: 'Reunión 4-may',
           text: 'Crear un ejemplo real con el número máximo de campos en el diálogo de añadir activo — evaluar si el preview lateral aporta antes de implementarlo en producción.',
-          href: '/novedades/dialog-decisiones',
+          href: '/patrones/dialog-decisiones',
         },
         {
           status: 'Pendiente',

@@ -1,0 +1,54 @@
+<!-- Demo-only exit bar — would NOT appear in the production AFI Insights site -->
+<div class="ai-exit-bar">
+  <div class="ai-exit-bar__inner">
+    <a routerLink="/demos" class="ai-exit-bar__back">
+      <svg
+        class="ai-exit-bar__back-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+      Volver a Coherence — Demos
+    </a>
+    <span class="ai-exit-bar__note">Demo · No formaría parte del sitio en producción</span>
+  </div>
+</div>
+
+<header class="ai-header backdrop-blur-md">
+  <div class="ai-header__inner">
+    <a routerLink="/afi-insights" class="ai-header__brand">
+      <span class="ai-header__brand-primary">AFI</span>
+      <span class="ai-header__brand-secondary">Insights</span>
+    </a>
+
+    <nav class="ai-header__nav">
+      <a
+        routerLink="/afi-insights/home"
+        routerLinkActive="ai-header__nav-link--active"
+        class="ai-header__nav-link"
+      >Inicio</a>
+      <a
+        routerLink="/afi-insights/articulos"
+        routerLinkActive="ai-header__nav-link--active"
+        class="ai-header__nav-link"
+      >Artículos</a>
+      <a
+        routerLink="/afi-insights/caso-de-estudio"
+        routerLinkActive="ai-header__nav-link--active"
+        class="ai-header__nav-link"
+      >Caso de estudio</a>
+    </nav>
+
+    <afi-button
+      variant="primary"
+      size="sm"
+      (clicked)="subscribeClicked.emit()"
+    >Suscribirse</afi-button>
+  </div>
+</header>

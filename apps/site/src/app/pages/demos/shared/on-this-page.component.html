@@ -1,0 +1,18 @@
+<nav class="on-this-page" aria-label="En esta página">
+  <p class="on-this-page__heading">En esta página</p>
+  <ul class="on-this-page__list">
+    @for (s of sections(); track s.id) {
+      <li>
+        <a
+          [href]="'#' + s.id"
+          (click)="onClick($event, s.id)"
+          class="on-this-page__link"
+          [class.on-this-page__link--nested]="(s.level ?? 0) === 1"
+          [class.on-this-page__link--active]="activeId() === s.id"
+        >
+          {{ s.label }}
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

@@ -32,9 +32,9 @@ import { OnThisPageComponent, type TocItem } from '../../demos/shared/on-this-pa
         class="flex items-center gap-space-3 border-b border-border-hairline px-space-4 h-10 bg-surface-quiet shrink-0 text-body-sm"
       >
         <a
-          routerLink="/novedades"
+          routerLink="/patrones"
           class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-surface-100 text-neutral-500"
-          aria-label="Volver a Novedades"
+          aria-label="Volver a Patrones"
         >
           <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path
@@ -44,7 +44,7 @@ import { OnThisPageComponent, type TocItem } from '../../demos/shared/on-this-pa
             />
           </svg>
         </a>
-        <span class="text-neutral-500">Novedades</span>
+        <span class="text-neutral-500">Patrones</span>
         <span class="text-neutral-400" aria-hidden="true">/</span>
         <span class="text-canvas-fg font-medium">Barra lateral</span>
       </div>

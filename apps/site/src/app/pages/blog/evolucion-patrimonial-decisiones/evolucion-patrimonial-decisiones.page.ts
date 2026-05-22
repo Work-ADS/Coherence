@@ -35,9 +35,9 @@ import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patr
         class="flex items-center gap-space-3 border-b border-border-hairline px-space-4 h-10 bg-surface-quiet shrink-0 text-body-sm"
       >
         <a
-          routerLink="/novedades"
+          routerLink="/blog"
           class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-surface-100 text-neutral-500"
-          aria-label="Volver a Novedades"
+          aria-label="Volver al blog"
         >
           <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path
@@ -47,10 +47,10 @@ import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patr
             />
           </svg>
         </a>
-        <span class="text-neutral-500">Novedades</span>
+        <span class="text-neutral-500">Blog</span>
         <span class="text-neutral-400" aria-hidden="true">/</span>
         <a
-          routerLink="/novedades/evolucion-patrimonial"
+          routerLink="/demos/wealth-planner-2026/evolucion-patrimonial"
           class="text-neutral-600 hover:text-canvas-fg"
           >Evolución patrimonial</a
         >
@@ -770,7 +770,7 @@ import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patr
                 <p class="text-body-sm">
                   Ver en vivo en
                   <a
-                    routerLink="/novedades/evolucion-patrimonial"
+                    routerLink="/demos/wealth-planner-2026/evolucion-patrimonial"
                     class="text-action-700 hover:underline"
                     >la propuesta</a
                   >.

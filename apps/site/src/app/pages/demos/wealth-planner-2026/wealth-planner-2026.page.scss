@@ -1,7 +1,119 @@
-// Wealth Planner 2026 overview — thin consumer of site-demo-overview-shell.
-// Page-level chrome is delegated entirely to the shell; this file exists to
-// satisfy the 3-file rule.
+// =============================================================================
+// Wealth Planner 2026 overview — tab content styling.
+// Page chrome is delegated to <site-demo-overview-shell>; this file styles the
+// projected tab content (Visión general · Caso de estudio · Bitácora).
+// =============================================================================
 
 :host {
   display: block;
+}
+
+.wp-tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-block-start: var(--space-md);
+}
+
+.wp-tab__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.wp-tab__block-title {
+  margin: 0;
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}
+
+.wp-tab__paragraph {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-width: var(--dimension-180);
+
+  &--lead {
+    color: var(--foreground-primary-default);
+    border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+    padding-block-end: var(--space-md);
+  }
+}
+
+.wp-tab__list {
+  margin: 0;
+  padding-inline-start: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-width: var(--dimension-180);
+
+  li {
+    margin: 0;
+  }
+
+  strong {
+    color: var(--foreground-primary-default);
+    font-weight: 600;
+  }
+
+  code {
+    font: var(--type-body-sm-500);
+    font-family: var(--font-mono, monospace);
+    color: var(--foreground-primary-default);
+    background: var(--surface-subtle);
+    padding-inline: var(--space-2xs);
+    border-radius: var(--radius-control-sm);
+  }
+}
+
+.wp-tab__link {
+  color: var(--action-primary-default);
+  text-decoration: underline;
+  text-underline-offset: var(--space-2xs);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--action-primary-hover);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+    border-radius: var(--radius-control-sm);
+  }
+}
+
+// ─── Bitácora log entries ──────────────────────────────────────────────────
+.wp-tab__log-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-block: var(--space-md);
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+
+  &:last-of-type {
+    border-block-end: none;
+  }
+}
+
+.wp-tab__log-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.wp-tab__log-date {
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
+}
+
+.wp-tab__log-title {
+  margin: 0;
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
 }

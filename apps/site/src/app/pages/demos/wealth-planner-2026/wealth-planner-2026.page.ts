@@ -1,49 +1,59 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+import { TabItemComponent, TabsComponent } from '@coherence/ui';
 
 import {
   DemoOverviewShellComponent,
   type DemoOverviewRelatedPost,
-  type DemoOverviewScreenshot,
 } from '../../../components/demo-overview-shell';
 
 /**
- * Wealth Planner 2026 — overview surface.
+ * Wealth Planner 2026 — demo overview surface.
  *
- * Lives at /demos/wealth-planner-2026 and renders the standard demo-overview
- * shell with title + intro + "Abrir demo" CTA + screenshots + related posts.
+ * Lives at /demos/wealth-planner-2026. Uses `<site-demo-overview-shell>`
+ * for the hero + CTA + related-posts chrome, and projects three tabs into
+ * the shell body:
+ *
+ *   1. **Visión general** — what the product is, who it's for, when it
+ *      shipped, who built it.
+ *   2. **Caso de estudio** — problems, solutions, processes. The narrative
+ *      thread is "start with the hardest screens first".
+ *   3. **Bitácora** — condensed change-log per iteration with links into
+ *      the full per-iteration records preserved in /blog.
  */
 @Component({
   selector: 'site-wealth-planner-2026-overview',
   standalone: true,
-  imports: [DemoOverviewShellComponent],
+  imports: [RouterLink, DemoOverviewShellComponent, TabsComponent, TabItemComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './wealth-planner-2026.page.html',
   styleUrl: './wealth-planner-2026.page.scss',
 })
 export class WealthPlannerOverviewPage {
-  readonly screenshots: DemoOverviewScreenshot[] = [
-    // Placeholders — real screenshots ship in a separate asset PR.
-    // {
-    //   src: 'assets/demos/wealth-planner-2026/patrimonio.png',
-    //   alt: 'Pantalla Patrimonio del Wealth Planner 2026',
-    //   caption: 'Patrimonio — listado completo con filtros activos.',
-    // },
-  ];
+  readonly activeTab = signal(0);
 
   readonly relatedPosts: DemoOverviewRelatedPost[] = [
     {
-      title: 'Caso de estudio — Wealth Planner 2026',
-      slug: 'wealth-planner-2026',
+      title: 'Patrimonio — decisiones de diseño',
+      slug: 'patrimonial-decisiones',
       eyebrow: 'BLOG',
       description:
-        'Decisiones de diseño y bitácora de iteraciones del rediseño.',
+        'Registro detallado de cada decisión de chrome y contenido en la pantalla Patrimonio.',
+    },
+    {
+      title: 'Evolución Patrimonial — decisiones de diseño',
+      slug: 'evolucion-patrimonial-decisiones',
+      eyebrow: 'BLOG',
+      description:
+        'Mismo registro para Evolución, cada decisión acompañada de un snippet "Ejemplo".',
     },
     {
       title: 'Proceso de componentes',
       slug: 'proceso-componente',
       eyebrow: 'BLOG',
       description:
-        'Cómo pasamos de "veo una necesidad" a un spec listo para handoff.',
+        'Cómo pasamos de "veo una necesidad" a un spec de primitivo listo para handoff.',
     },
   ];
 }

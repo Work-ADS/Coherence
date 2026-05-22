@@ -1,9 +1,303 @@
 <site-demo-overview-shell
-  overline="WEALTH PLANNER · 2026"
+  overline="DIGITAL SOLUTIONS · WEALTH PLANNER 2026"
   title="Wealth Planner 2026"
-  intro="Rediseño completo del planificador financiero — patrimonio, evolución y simulación. El demo interactivo abajo recorre las pantallas clave; el caso de estudio detalla las decisiones que las sostienen."
+  intro="Rediseño completo del planificador financiero — patrimonio, evolución y simulación — sobre Coherence DS. Cinco iteraciones con seniors entre 21 abr y 28 abr 2026."
   demoRoute="/demos/wealth-planner-2026/demo"
   demoLabel="Abrir demo"
-  [screenshots]="screenshots"
   [relatedPosts]="relatedPosts"
-/>
+>
+  <afi-tabs
+    [activeIndex]="activeTab()"
+    (activeChange)="activeTab.set($event)"
+    ariaLabel="Secciones de la demo"
+  >
+    <!-- ─── Tab 1 · Visión general ────────────────────────────────────── -->
+    <afi-tab-item label="Visión general">
+      <div class="wp-tab">
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">¿Qué es?</h2>
+          <p class="wp-tab__paragraph">
+            Wealth Planner es la herramienta interna de los financieros de AFI
+            para simular el patrimonio de un cliente — activos hoy, evolución
+            proyectada a 10–30 años, escenarios optimista y conservador, y la
+            edad de retiro que cada plan habilita. Una sola pantalla de
+            entrada, tres ejes de salida: patrimonio actual, evolución y
+            objetivos.
+          </p>
+        </section>
+
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">¿Para qué?</h2>
+          <p class="wp-tab__paragraph">
+            El producto sustituye al Excel + hoja-blanca-en-reunión que el
+            equipo usaba. El financiero entra al planner durante la propia
+            sesión con el cliente, mete datos en vivo, ajusta inflación o
+            esperanza de vida en el drawer de Ajustes globales, y comparte la
+            pantalla. La decisión se toma viendo el gráfico, no leyendo un PDF
+            de la semana siguiente.
+          </p>
+        </section>
+
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">Cuándo</h2>
+          <ul class="wp-tab__list">
+            <li>
+              <strong>21 abr 2026</strong> — Iteración 1: primera revisión con
+              seniors sobre la propuesta inicial.
+            </li>
+            <li>
+              <strong>28 abr 2026</strong> — Iteraciones 2 a 5: cuatro pases
+              consecutivos cerrando refinamientos de sidebar, gráfico, tabla,
+              diálogo y documentación.
+            </li>
+            <li>
+              <strong>19 may 2026</strong> — Sesión modo oscuro: tokens
+              semánticos completos y toggle en la sidebar (Iteración 3 de DS).
+            </li>
+          </ul>
+        </section>
+
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">Equipo</h2>
+          <p class="wp-tab__paragraph">
+            Demo del equipo de <strong>Digital Solutions</strong>. Diseño y
+            handoff trabajan sobre Coherence DS — cada decisión de chrome
+            usa el primitivo correspondiente; los detalles del producto viven
+            dentro.
+          </p>
+        </section>
+
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">Estado</h2>
+          <p class="wp-tab__paragraph">
+            Las cinco iteraciones están cerradas. Pendiente: replicar la
+            plantilla de case-study al resto de pantallas (Sidebar, Diálogo,
+            Patrimonio, Evolución) y resolver los comentarios anclados sobre
+            tabla y gráfico que quedaron como "pendiente" en Iteración 2.
+            Ver la <a class="wp-tab__link" (click)="activeTab.set(2)" role="button" tabindex="0" (keydown.enter)="activeTab.set(2)">bitácora</a>.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 2 · Caso de estudio ──────────────────────────────────── -->
+    <afi-tab-item label="Caso de estudio">
+      <div class="wp-tab">
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">Punto de partida</h2>
+          <p class="wp-tab__paragraph">
+            Empezamos por las dos pantallas más complicadas: <strong>Patrimonio</strong>
+            (tabla densa con grupos y menú por fila) y <strong>Evolución
+            Patrimonial</strong> (gráfico de barras apiladas con escenarios y
+            objetivos). El razonamiento: si Coherence DS resuelve la chrome
+            de las pantallas más densas, resuelve cualquier otra. Lo
+            complicado primero, lo sencillo cae solo.
+          </p>
+        </section>
+
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">Problemas</h2>
+          <ul class="wp-tab__list">
+            <li>
+              <strong>Chrome duplicada entre pantallas.</strong> Sidebar y
+              top bar se reimplementaban en cada vista — cualquier cambio
+              tenía dos sitios donde aplicarlo.
+            </li>
+            <li>
+              <strong>Decisiones sin lugar donde vivir.</strong> El "por qué"
+              de cada elección (alturas, espaciados, estados) se perdía en
+              comentarios de Figma o Slack.
+            </li>
+            <li>
+              <strong>Gráfico denso sin lenguaje compartido.</strong> Paletas
+              ad-hoc, sin separación visual de escenarios, sin manera de
+              comparar V1 vs V2 sin perder la versión anterior.
+            </li>
+            <li>
+              <strong>Tabla con UI conflictiva.</strong> Toggle de "editar"
+              global compitiendo con el menú de tres puntos por fila;
+              esquinas redondeadas chocando con el border-bottom de grupo.
+            </li>
+          </ul>
+        </section>
+
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">Soluciones</h2>
+          <ul class="wp-tab__list">
+            <li>
+              <strong>Triada de chrome compartida:</strong>
+              <code>&lt;site-planner-sidebar&gt;</code> +
+              <code>&lt;site-planner-top-bar&gt;</code> +
+              <code>&lt;afi-page-header&gt;</code>. Cada pantalla del demo
+              consume los tres; el cambio se hace una vez y propaga.
+            </li>
+            <li>
+              <strong>Decisiones documentadas en línea</strong> —
+              <a class="wp-tab__link" routerLink="/blog/patrimonial-decisiones">Patrimonio</a> y
+              <a class="wp-tab__link" routerLink="/blog/evolucion-patrimonial-decisiones">Evolución</a>
+              tienen su propia entrada con cada decisión + ejemplo en vivo.
+            </li>
+            <li>
+              <strong>Paletas por versión con toggle V1/V2/V3.</strong>
+              Mismo gráfico, tres exploraciones de color sin perder ninguna.
+              V1 = azul navy original; V2 = monocromática para máximo
+              contraste; V3 = mezcla de acentos de marca.
+            </li>
+            <li>
+              <strong>Menú de tres puntos por fila</strong> sustituyendo al
+              toggle "editar" global; <code>gap-space-12</code> entre grupos;
+              esquinas planas. Tabla "Patrimonio" promovida a patrón
+              reutilizable en
+              <a class="wp-tab__link" routerLink="/patrones/tablas/patrimonio">/patrones/tablas/patrimonio</a>.
+            </li>
+          </ul>
+        </section>
+
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">Proceso</h2>
+          <ul class="wp-tab__list">
+            <li>
+              <strong>Cinco iteraciones,</strong> una por reunión de revisión
+              con seniors. Cada sesión cierra un alcance acotado y deja el
+              siguiente listo.
+            </li>
+            <li>
+              <strong>Bitácora en directo.</strong> El log de decisiones se
+              escribe durante el sprint, no después. Un futuro contributor
+              entra al demo y lee el "por qué" antes de tocar nada — ver
+              <a class="wp-tab__link" (click)="activeTab.set(2)" role="button" tabindex="0" (keydown.enter)="activeTab.set(2)">Bitácora</a>.
+            </li>
+            <li>
+              <strong>DS come su propia comida.</strong> El sitio de
+              documentación usa los mismos primitivos que el producto —
+              sidebar, top bar, icon-button, menu, status-chip, toast. Si un
+              primitivo no funciona en el sitio de documentación, no
+              funciona en producción.
+            </li>
+            <li>
+              <strong>3-file por componente.</strong> Cada primitivo y cada
+              página se separan en .ts + .html + .scss con BEM y tokens
+              semánticos — sin Tailwind para estilo visual, sin hex/px en
+              componentes, sin <code>::ng-deep</code>.
+            </li>
+          </ul>
+        </section>
+
+        <section class="wp-tab__block">
+          <h2 class="wp-tab__block-title">Lecciones</h2>
+          <p class="wp-tab__paragraph">
+            La principal: <em>documentar mientras se diseña</em>. La segunda:
+            <em>lo difícil primero</em> — la temptación es validar con la
+            pantalla más fácil y dejarse las complicadas para "ya veré"; el
+            resultado es un DS que no aguanta el caso real cuando aparece.
+            La tercera: <em>chrome compartida es la diferencia entre un
+            rediseño y un mantenimiento</em>.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 3 · Bitácora ──────────────────────────────────────────── -->
+    <afi-tab-item label="Bitácora">
+      <div class="wp-tab">
+        <p class="wp-tab__paragraph wp-tab__paragraph--lead">
+          Registro cronológico de las cinco iteraciones del rediseño. Cada
+          entrada resume qué se acordó en la reunión y qué se cambió en el
+          producto a continuación. La bitácora completa con la lista plana
+          de cambios + estado por item vive en
+          <a class="wp-tab__link" routerLink="/blog/bitacora">/blog/bitacora</a>.
+        </p>
+
+        <section class="wp-tab__log-entry">
+          <header class="wp-tab__log-header">
+            <span class="wp-tab__log-date">21 abr 2026</span>
+            <h3 class="wp-tab__log-title">Iteración 1 — primera revisión con seniors</h3>
+          </header>
+          <p class="wp-tab__paragraph">
+            La propuesta inicial fue aprobada en general; los seniors dejaron
+            una lista de refinamientos transversales sobre sidebar, top bar,
+            gráfico, tabla y cabeceras de sección. Resultado: indicadores de
+            estado solo en la sección obligatoria, drawer de Ajustes globales
+            cableado al engranaje, toggle V1/V2/V3 top-right en gráfico y
+            tabla.
+          </p>
+        </section>
+
+        <section class="wp-tab__log-entry">
+          <header class="wp-tab__log-header">
+            <span class="wp-tab__log-date">28 abr 2026</span>
+            <h3 class="wp-tab__log-title">Iteración 2 — refinamiento sobre la propuesta</h3>
+          </header>
+          <p class="wp-tab__paragraph">
+            Segunda pasada tras una semana usando V1. Foco en separación
+            visual de secciones, layouts del gráfico y reorganización de
+            /demos. V1/V2/V3 ahora comparten la misma control bar (selectores
+            + Ajustes popup + Accesibilidad); tabla con "Liquidez · 2
+            activos" a body-sm + neutral-700; bitácora puesta en marcha como
+            página viva. Pendientes registrados:
+            <a class="wp-tab__link" routerLink="/blog/iteracion-2">tareas de Iteración 2</a>.
+          </p>
+        </section>
+
+        <section class="wp-tab__log-entry">
+          <header class="wp-tab__log-header">
+            <span class="wp-tab__log-date">28 abr 2026</span>
+            <h3 class="wp-tab__log-title">Iteración 3 — color y deuda en el gráfico</h3>
+          </header>
+          <p class="wp-tab__paragraph">
+            Pase rápido sobre la versión final del gráfico: cualquier valor
+            negativo renderiza en rojo (deuda), incluso en modo apilado por
+            tipo — un total negativo colapsa a un único segmento rojo "Deuda".
+            V1 mantiene navy; V2 amplía el rango azul para distinguir tipos;
+            V3 mezcla acentos de marca (azul, verde, ámbar, púrpura) para
+            diferenciación máxima.
+          </p>
+        </section>
+
+        <section class="wp-tab__log-entry">
+          <header class="wp-tab__log-header">
+            <span class="wp-tab__log-date">28 abr 2026</span>
+            <h3 class="wp-tab__log-title">Iteración 4 — handoff y navegación de la documentación</h3>
+          </header>
+          <p class="wp-tab__paragraph">
+            Cuarta pasada centrada en el handoff: las case-study no eran
+            navegables, el diálogo demo tenía typography rota, y la bitácora
+            no se sentía alineada. Componente "En esta página" añadido como
+            TOC sticky a partir de xl; layouts de bitácora y case-study
+            ampliados a 1200 px con TOC al lado; footer del diálogo demo
+            reordenado a Cancelar + Guardar.
+          </p>
+        </section>
+
+        <section class="wp-tab__log-entry">
+          <header class="wp-tab__log-header">
+            <span class="wp-tab__log-date">28 abr 2026</span>
+            <h3 class="wp-tab__log-title">Iteración 5 — template de case-study + arreglos finos</h3>
+          </header>
+          <p class="wp-tab__paragraph">
+            Las case-study no eran navegables por dentro y los tags del
+            changelog no se sentían parte del texto. La página de Top bar se
+            convirtió en plantilla — identidad arriba, ejemplo anotado con
+            números, accordion con anatomía, secciones temáticas (Navegación
+            · Estado · Acciones · Layout) — para replicar al resto.
+            Pendiente:
+            <a class="wp-tab__link" routerLink="/blog/iteracion-3">replicar a sidebar / dialog / patrimonial / evolución</a>.
+          </p>
+        </section>
+
+        <section class="wp-tab__log-entry">
+          <header class="wp-tab__log-header">
+            <span class="wp-tab__log-date">19 may 2026</span>
+            <h3 class="wp-tab__log-title">Sesión modo oscuro — tokens semánticos completos</h3>
+          </header>
+          <p class="wp-tab__paragraph">
+            Toggle en la sidebar, persistencia en localStorage, 98 overrides
+            en <code>[data-theme="dark"]</code>. Tipografía hardcoded en
+            sidebar y page-template migrada a tokens. Elevation pendiente de
+            export desde Figma.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+  </afi-tabs>
+</site-demo-overview-shell>

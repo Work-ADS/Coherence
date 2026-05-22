@@ -1,0 +1,53 @@
+@if (label()) {
+  <label [for]="inputId" class="afi-input__label">
+    {{ label() }}
+    @if (required()) {
+      <span class="afi-input__required" aria-hidden="true"> *</span>
+    }
+  </label>
+}
+
+@if (type() === 'textarea') {
+  <textarea
+    [id]="inputId"
+    [class]="fieldClasses()"
+    [placeholder]="placeholder() ?? ''"
+    [disabled]="disabled()"
+    [readOnly]="readonly()"
+    [attr.aria-required]="required() ? 'true' : null"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-label]="ariaLabel()"
+    [value]="value() ?? ''"
+    rows="4"
+    (input)="onInput($event)"
+    (focus)="focused.emit($event)"
+    (blur)="blurred.emit($event)"
+  ></textarea>
+} @else {
+  <input
+    [id]="inputId"
+    [type]="type()"
+    [class]="fieldClasses()"
+    [placeholder]="placeholder() ?? ''"
+    [disabled]="disabled()"
+    [readOnly]="readonly()"
+    [attr.aria-required]="required() ? 'true' : null"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-label]="ariaLabel()"
+    [attr.autocomplete]="autocomplete()"
+    [value]="value() ?? ''"
+    (input)="onInput($event)"
+    (focus)="focused.emit($event)"
+    (blur)="blurred.emit($event)"
+  />
+}
+
+@if (hint() && !error()) {
+  <p [id]="hintId" class="afi-input__hint">{{ hint() }}</p>
+}
+
+@if (error()) {
+  <p [id]="errorId" class="afi-input__error" role="alert">{{ error() }}</p>
+}

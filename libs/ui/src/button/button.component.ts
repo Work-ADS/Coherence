@@ -1,41 +1,30 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, isDevMode } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  isDevMode,
+  output,
+} from '@angular/core';
 
-import { baseClasses, variantClasses, sizeClasses, ButtonVariant, ButtonSize } from './button.variants';
+import type { ButtonSize, ButtonVariant } from './button.variants';
 
 /**
  * Primary action button primitive.
  *
- * Variants and sizes are driven by signal inputs; all styling uses
- * token-backed Tailwind classes (no hex/rgba/px). `size="sm"` (32 px) is a
- * desktop-dense opt-out — see `docs/accessibility.md` for touch-target guidance.
+ * Variants and sizes are driven by signal inputs; all visual styling lives
+ * in `button.component.scss` using BEM classes + DS tokens. The template
+ * binds a single BEM class string computed from the inputs.
+ *
+ * `size="sm"` (32 px) is a desktop-dense opt-out — see `docs/accessibility.md`
+ * for touch-target guidance.
  */
 @Component({
   selector: 'afi-button',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <button
-      [type]="type()"
-      [class]="classes()"
-      [disabled]="disabled() || loading()"
-      [attr.aria-busy]="loading() ? 'true' : null"
-      [attr.aria-label]="ariaLabel()"
-      (click)="onClick($event)"
-    >
-      @if (iconStart()) {
-        <ng-content select="[slot=iconStart]" />
-      }
-      @if (!loading()) {
-        <ng-content />
-      } @else {
-        <span class="inline-block animate-spin" aria-hidden="true">⟳</span>
-        <span class="sr-only">Cargando…</span>
-      }
-      @if (iconEnd()) {
-        <ng-content select="[slot=iconEnd]" />
-      }
-    </button>
-  `,
+  templateUrl: './button.component.html',
+  styleUrls: ['./button.component.scss'],
 })
 export class ButtonComponent {
   readonly variant = input<ButtonVariant>('primary');
@@ -50,16 +39,16 @@ export class ButtonComponent {
 
   readonly clicked = output<{ event: MouseEvent }>();
 
-  readonly classes = computed(() =>
-    [
-      baseClasses,
-      variantClasses[this.variant()],
-      sizeClasses[this.size()],
-      this.fullWidth() ? 'w-full' : '',
-    ]
-      .filter(Boolean)
-      .join(' '),
-  );
+  readonly classes = computed(() => {
+    const parts = [
+      'btn',
+      `btn--${this.variant()}`,
+      `btn--${this.size()}`,
+    ];
+    if (this.fullWidth()) parts.push('btn--full');
+    if (this.loading()) parts.push('btn--loading');
+    return parts.join(' ');
+  });
 
   onClick(event: MouseEvent): void {
     if (this.disabled() || this.loading()) {

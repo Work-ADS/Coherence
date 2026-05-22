@@ -1,0 +1,210 @@
+// =============================================================================
+// afi-select — custom dropdown listbox primitive.
+// BEM classes, DS tokens via CSS custom properties only.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.afi-select__label {
+  display: block;
+  margin-block-end: var(--space-2xs);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+}
+
+.afi-select__required {
+  color: var(--feedback-error-foreground);
+}
+
+.afi-select__wrapper {
+  position: relative;
+}
+
+// ─── Trigger button ────────────────────────────────────────────────────────
+.afi-select__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100%;
+  appearance: none;
+  border-radius: var(--radius-md);
+  background: var(--surface-default);
+  color: var(--foreground-primary-default);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  font: var(--type-body-md-400);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--easing-enter),
+    background-color var(--duration-fast) var(--easing-enter);
+
+  &:hover:not(:disabled) {
+    border-color: var(--border-default);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--error {
+    border-color: var(--feedback-error-foreground);
+
+    &:hover {
+      border-color: var(--feedback-error-foreground);
+    }
+  }
+
+  // ─── Sizes ────────────────────────────────────────────────────────────
+  &--sm {
+    height: var(--control-h-sm, var(--dimension-8));
+    padding-inline: var(--space-sm);
+    font: var(--type-body-sm-400);
+  }
+
+  &--md {
+    height: var(--control-h-md, var(--dimension-10));
+    padding-inline: var(--space-md);
+  }
+
+  &--lg {
+    height: var(--control-h-lg, var(--dimension-12));
+    padding-inline: var(--space-lg);
+  }
+}
+
+.afi-select__value {
+  flex: 1;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &--placeholder {
+    color: var(--foreground-tertiary-default);
+  }
+}
+
+.afi-select__chevron {
+  width: var(--dimension-4);
+  height: var(--dimension-4);
+  color: var(--foreground-tertiary-default);
+  flex-shrink: 0;
+  transition: transform var(--duration-fast) var(--easing-enter);
+
+  &--open {
+    transform: rotate(180deg);
+  }
+}
+
+// ─── Dropdown panel ───────────────────────────────────────────────────────
+.afi-select__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.afi-select__panel {
+  position: absolute;
+  z-index: 50;
+  top: 100%;
+  left: 0;
+  margin-block-start: var(--space-2xs);
+  width: 100%;
+  min-width: var(--dimension-48);
+  max-height: var(--dimension-60);
+  overflow-y: auto;
+  padding-block: var(--space-2xs);
+  list-style: none;
+  margin-inline: 0;
+  background: var(--surface-elevated);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-lg);
+  animation: afi-select-enter var(--duration-base) var(--easing-enter);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes afi-select-enter {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-2xs) * -1));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.afi-select__group-label {
+  padding: var(--space-2xs) var(--space-sm);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-tertiary-default);
+  user-select: none;
+}
+
+.afi-select__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-inline: var(--space-2xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-enter);
+
+  &--focused:not(.afi-select__option--disabled) {
+    background: var(--surface-muted);
+  }
+
+  &--selected {
+    font: var(--type-body-sm-500);
+  }
+
+  &--disabled {
+    color: var(--foreground-tertiary-default);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.afi-select__option-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.afi-select__check {
+  width: var(--dimension-4);
+  height: var(--dimension-4);
+  color: var(--brand-primary-background-default);
+  flex-shrink: 0;
+}
+
+// ─── Hint + error messages ────────────────────────────────────────────────
+.afi-select__hint {
+  margin: 0;
+  margin-block-start: var(--space-2xs);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.afi-select__error {
+  margin: 0;
+  margin-block-start: var(--space-2xs);
+  font: var(--type-body-sm-400);
+  color: var(--feedback-error-foreground);
+}

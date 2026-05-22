@@ -2,18 +2,17 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
+  HostListener,
+  inject,
   input,
-  output,
   isDevMode,
   OnInit,
+  output,
   signal,
-  ElementRef,
-  inject,
-  HostListener,
   viewChild,
 } from '@angular/core';
 
-import { baseClasses, stateClasses, sizeClasses } from './select.variants';
 import type { SelectOption, SelectSize } from './select.types';
 
 let nextId = 0;
@@ -21,143 +20,20 @@ let nextId = 0;
 /**
  * Select primitive — custom dropdown listbox.
  *
- * Renders a trigger button styled like an input + a dropdown panel
- * matching the afi-menu visual pattern (surface-elevated, rounded-lg,
- * shadow-lg, fade-in animation). Full keyboard nav, type-ahead,
- * click-outside dismiss, and reduced-motion support.
+ * Renders a trigger button styled like an input + a dropdown panel matching
+ * the afi-menu visual pattern (elevated surface, rounded, soft shadow,
+ * fade-in animation). Full keyboard nav, type-ahead, click-outside dismiss,
+ * and reduced-motion support.
  *
- * Uses native ARIA listbox pattern for screen readers.
+ * Uses native ARIA listbox pattern for screen readers. BEM + DS tokens —
+ * no Tailwind for visual styling, no inline `styles:` block.
  */
 @Component({
   selector: 'afi-select',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    .afi-select-panel-enter {
-      animation: afi-select-enter 150ms ease-out;
-    }
-
-    @keyframes afi-select-enter {
-      from {
-        opacity: 0;
-        transform: translateY(-4px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .afi-select-panel-enter {
-        animation: none;
-      }
-    }
-  `,
-  template: `
-    @if (label()) {
-      <label [id]="labelId" class="block text-body-sm font-medium text-canvas-fg mb-space-1">
-        {{ label() }}
-        @if (required()) {
-          <span class="text-system-error" aria-hidden="true"> *</span>
-        }
-      </label>
-    }
-
-    <div class="relative">
-      <!-- Trigger button -->
-      <button
-        #triggerEl
-        type="button"
-        [id]="selectId"
-        [class]="triggerClasses()"
-        [disabled]="disabled()"
-        [attr.aria-expanded]="open()"
-        [attr.aria-haspopup]="'listbox'"
-        [attr.aria-labelledby]="label() ? labelId : null"
-        [attr.aria-label]="!label() ? ariaLabel() : null"
-        [attr.aria-required]="required() ? 'true' : null"
-        [attr.aria-invalid]="error() ? 'true' : null"
-        [attr.aria-describedby]="describedBy()"
-        [attr.aria-activedescendant]="open() && focusedIndex() >= 0 ? optionId(focusedIndex()) : null"
-        (click)="toggle()"
-        (keydown)="onTriggerKeydown($event)"
-      >
-        <span class="flex-1 text-left truncate" [class.text-neutral-400]="!selectedOption()">
-          {{ selectedOption()?.label ?? placeholder() ?? '' }}
-        </span>
-        <!-- Chevron -->
-        <svg
-          class="h-4 w-4 text-neutral-400 shrink-0 transition-transform duration-fast"
-          [class.rotate-180]="open()"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-        </svg>
-      </button>
-
-      <!-- Dropdown panel -->
-      @if (open()) {
-        <!-- Click-outside backdrop -->
-        <div
-          class="fixed inset-0 z-40"
-          (click)="close()"
-          aria-hidden="true">
-        </div>
-
-        <ul
-          #panelEl
-          role="listbox"
-          [attr.aria-labelledby]="label() ? labelId : null"
-          [attr.aria-label]="!label() ? ariaLabel() : null"
-          class="afi-select-panel-enter absolute z-50 top-full left-0 mt-space-1 w-full min-w-[12rem]
-                 max-h-[240px] overflow-y-auto py-1
-                 bg-surface-elevated border border-border-hairline rounded-lg shadow-lg"
-          (keydown)="onPanelKeydown($event)"
-        >
-          @for (opt of flatOptions(); track opt.value; let i = $index) {
-            @if (opt._groupLabel) {
-              <li class="px-space-3 py-space-1 text-body-sm font-medium text-neutral-400 select-none" aria-hidden="true">
-                {{ opt._groupLabel }}
-              </li>
-            }
-            <li
-              [id]="optionId(i)"
-              role="option"
-              [attr.aria-selected]="opt.value === value()"
-              [attr.aria-disabled]="opt.disabled || null"
-              class="flex items-center gap-space-2 px-space-3 py-space-2 text-body-sm cursor-pointer
-                     transition-colors duration-fast rounded-md mx-1"
-              [class.bg-surface-muted]="i === focusedIndex()"
-              [class.text-canvas-fg]="!opt.disabled"
-              [class.text-neutral-300]="opt.disabled"
-              [class.pointer-events-none]="opt.disabled"
-              [class.font-medium]="opt.value === value()"
-              (click)="selectOption(opt, $event)"
-              (mouseenter)="focusedIndex.set(i)"
-            >
-              <span class="flex-1 truncate">{{ opt.label }}</span>
-              @if (opt.value === value()) {
-                <svg class="h-4 w-4 text-action shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              }
-            </li>
-          }
-        </ul>
-      }
-    </div>
-
-    @if (hint() && !error()) {
-      <p [id]="hintId" class="mt-space-1 text-body-sm text-neutral-500">{{ hint() }}</p>
-    }
-
-    @if (error()) {
-      <p [id]="errorId" class="mt-space-1 text-body-sm text-system-error" role="alert">{{ error() }}</p>
-    }
-  `,
+  templateUrl: './select.component.html',
+  styleUrls: ['./select.component.scss'],
 })
 export class SelectComponent implements OnInit {
   readonly size = input<SelectSize>('md');
@@ -186,11 +62,9 @@ export class SelectComponent implements OnInit {
   private readonly el = inject(ElementRef);
   readonly triggerEl = viewChild<ElementRef<HTMLButtonElement>>('triggerEl');
 
-  /** Type-ahead buffer */
   private typeAheadBuffer = '';
   private typeAheadTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  /** Flat list of options with group labels injected */
   readonly flatOptions = computed(() => {
     const opts = this.options();
     const result: (SelectOption & { _groupLabel?: string })[] = [];
@@ -209,17 +83,17 @@ export class SelectComponent implements OnInit {
 
   readonly selectedOption = computed(() => {
     const v = this.value();
-    return this.flatOptions().find(o => o.value === v) ?? null;
+    return this.flatOptions().find((o) => o.value === v) ?? null;
   });
 
   readonly triggerClasses = computed(() => {
-    const state = this.error() ? 'error' : 'idle';
-    return [
-      baseClasses,
-      stateClasses[state],
-      sizeClasses[this.size()],
-      'flex items-center gap-2 cursor-pointer',
-    ].filter(Boolean).join(' ');
+    const parts = [
+      'afi-select__trigger',
+      `afi-select__trigger--${this.size()}`,
+    ];
+    if (this.error()) parts.push('afi-select__trigger--error');
+    if (this.open()) parts.push('afi-select__trigger--open');
+    return parts.join(' ');
   });
 
   readonly describedBy = computed(() => {
@@ -234,13 +108,11 @@ export class SelectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (isDevMode()) {
-      if (!this.label() && !this.ariaLabel()) {
-        console.warn(
-          `[afi-select] Select "${this.selectId}" has neither label nor ariaLabel. ` +
-            'Provide at least one for accessibility.',
-        );
-      }
+    if (isDevMode() && !this.label() && !this.ariaLabel()) {
+      console.warn(
+        `[afi-select] Select "${this.selectId}" has neither label nor ariaLabel. ` +
+          'Provide at least one for accessibility.',
+      );
     }
   }
 
@@ -255,9 +127,8 @@ export class SelectComponent implements OnInit {
   openPanel(): void {
     if (this.disabled()) return;
     this.open.set(true);
-    // Set initial focus to selected option or first
     const opts = this.flatOptions();
-    const selectedIdx = opts.findIndex(o => o.value === this.value());
+    const selectedIdx = opts.findIndex((o) => o.value === this.value());
     this.focusedIndex.set(selectedIdx >= 0 ? selectedIdx : 0);
     this.opened.emit();
   }
@@ -266,7 +137,6 @@ export class SelectComponent implements OnInit {
     this.open.set(false);
     this.focusedIndex.set(-1);
     this.closed.emit();
-    // Return focus to trigger
     this.triggerEl()?.nativeElement?.focus();
   }
 
@@ -299,17 +169,22 @@ export class SelectComponent implements OnInit {
 
   onPanelKeydown(event: KeyboardEvent): void {
     const opts = this.flatOptions();
-    const enabledIndices = opts.map((o, i) => o.disabled ? -1 : i).filter(i => i >= 0);
+    const enabledIndices = opts
+      .map((o, i) => (o.disabled ? -1 : i))
+      .filter((i) => i >= 0);
     if (!enabledIndices.length) return;
 
-    let idx = this.focusedIndex();
+    const idx = this.focusedIndex();
 
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
         {
           const pos = enabledIndices.indexOf(idx);
-          const next = pos < enabledIndices.length - 1 ? enabledIndices[pos + 1]! : enabledIndices[0]!;
+          const next =
+            pos < enabledIndices.length - 1
+              ? enabledIndices[pos + 1]!
+              : enabledIndices[0]!;
           this.focusedIndex.set(next);
         }
         break;
@@ -317,7 +192,10 @@ export class SelectComponent implements OnInit {
         event.preventDefault();
         {
           const pos = enabledIndices.indexOf(idx);
-          const prev = pos > 0 ? enabledIndices[pos - 1]! : enabledIndices[enabledIndices.length - 1]!;
+          const prev =
+            pos > 0
+              ? enabledIndices[pos - 1]!
+              : enabledIndices[enabledIndices.length - 1]!;
           this.focusedIndex.set(prev);
         }
         break;
@@ -344,7 +222,6 @@ export class SelectComponent implements OnInit {
         this.close();
         break;
       default:
-        // Type-ahead: find option starting with typed chars
         if (event.key.length === 1) {
           this.handleTypeAhead(event.key, opts, enabledIndices);
         }
@@ -361,7 +238,11 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  private handleTypeAhead(char: string, opts: SelectOption[], enabledIndices: number[]): void {
+  private handleTypeAhead(
+    char: string,
+    opts: SelectOption[],
+    enabledIndices: number[],
+  ): void {
     if (this.typeAheadTimeout) {
       clearTimeout(this.typeAheadTimeout);
     }
@@ -370,8 +251,8 @@ export class SelectComponent implements OnInit {
       this.typeAheadBuffer = '';
     }, 500);
 
-    const match = enabledIndices.find(i =>
-      opts[i]!.label.toLowerCase().startsWith(this.typeAheadBuffer)
+    const match = enabledIndices.find((i) =>
+      opts[i]!.label.toLowerCase().startsWith(this.typeAheadBuffer),
     );
     if (match !== undefined) {
       this.focusedIndex.set(match);
@@ -381,7 +262,6 @@ export class SelectComponent implements OnInit {
   private scrollFocusedIntoView(): void {
     const idx = this.focusedIndex();
     if (idx < 0) return;
-    // Use setTimeout to let Angular render the class change first
     setTimeout(() => {
       const panel = this.el.nativeElement.querySelector('ul[role="listbox"]');
       const item = panel?.querySelector(`#${this.optionId(idx)}`);

@@ -37,36 +37,8 @@ export type TocItem = {
   host: {
     '[class]': '"contents"',
   },
-  template: `
-    <nav
-      class="sticky top-space-8 self-start hidden xl:block w-[var(--dimension-55)] shrink-0"
-      aria-label="En esta página"
-    >
-      <p class="text-caption uppercase tracking-wider text-neutral-500 mb-space-3">
-        En esta página
-      </p>
-      <ul class="flex flex-col gap-space-1 border-l border-border-hairline">
-        @for (s of sections(); track s.id) {
-          <li>
-            <a
-              [href]="'#' + s.id"
-              (click)="onClick($event, s.id)"
-              class="block py-space-1 text-body-sm transition-colors -ml-px border-l-2 hover:text-canvas-fg"
-              [class.pl-space-3]="(s.level ?? 0) === 0"
-              [class.pl-space-6]="(s.level ?? 0) === 1"
-              [class.text-action-700]="activeId() === s.id"
-              [class.font-medium]="activeId() === s.id"
-              [class.border-action-700]="activeId() === s.id"
-              [class.text-neutral-500]="activeId() !== s.id"
-              [class.border-transparent]="activeId() !== s.id"
-            >
-              {{ s.label }}
-            </a>
-          </li>
-        }
-      </ul>
-    </nav>
-  `,
+  templateUrl: './on-this-page.component.html',
+  styleUrl: './on-this-page.component.scss',
 })
 export class OnThisPageComponent implements AfterViewInit {
   readonly sections = input.required<TocItem[]>();

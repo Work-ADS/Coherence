@@ -1,0 +1,95 @@
+<div class="afi-table__scroll">
+  <table class="afi-table">
+    <thead>
+      <tr class="afi-table__head-row">
+        @if (selectable()) {
+          <th scope="col" class="afi-table__th-select">
+            <afi-checkbox
+              size="sm"
+              ariaLabel="Seleccionar todas las filas"
+              [checked]="allSelected()"
+              [indeterminate]="someSelected()"
+              (checkedChange)="toggleAll($event)"
+            />
+          </th>
+        }
+        @for (col of visibleColumns(); track col.key) {
+          <th
+            scope="col"
+            [class]="headerCellClasses(col)"
+            [attr.aria-sort]="col.sortable ? ariaSort(col.key) : null"
+            [style.width]="col.width ?? 'auto'"
+            (click)="col.sortable ? onSort(col.key) : null"
+          >
+            <span class="afi-table__th-label">
+              {{ col.label }}
+              @if (col.sortable) {
+                <svg
+                  class="afi-table__sort-icon"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              }
+            </span>
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody [attr.aria-busy]="loading() ? 'true' : null">
+      @if (loading()) {
+        @for (i of skeletonRows; track i) {
+          <tr [class]="rowClasses(false)">
+            @if (selectable()) {
+              <td class="afi-table__td-select">
+                <div class="afi-table__skel afi-table__skel--check"></div>
+              </td>
+            }
+            @for (col of visibleColumns(); track col.key) {
+              <td [class]="cellClasses(col)">
+                <div class="afi-table__skel"></div>
+              </td>
+            }
+          </tr>
+        }
+      } @else if (rows().length === 0) {
+        <tr>
+          <td
+            [attr.colspan]="totalColumns()"
+            class="afi-table__empty"
+            aria-live="polite"
+          >
+            {{ emptyText() }}
+          </td>
+        </tr>
+      } @else {
+        @for (row of rows(); track trackKey(row)) {
+          <tr
+            [class]="rowClasses(isSelected(row))"
+            (click)="onRowClick(row, $event)"
+          >
+            @if (selectable()) {
+              <td class="afi-table__td-select" (click)="$event.stopPropagation()">
+                <afi-checkbox
+                  size="sm"
+                  ariaLabel="Seleccionar fila"
+                  [checked]="isSelected(row)"
+                  (checkedChange)="toggleRow(row, $event)"
+                />
+              </td>
+            }
+            @for (col of visibleColumns(); track col.key) {
+              <td [class]="cellClasses(col)">{{ row[col.key] }}</td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

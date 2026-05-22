@@ -1,0 +1,115 @@
+// =============================================================================
+// afi-filter-chip — pill-shaped toggle chip for filter UIs.
+// BEM classes, DS tokens via CSS custom properties only.
+// =============================================================================
+
+:host {
+  display: inline-block;
+}
+
+.afi-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--filter-chip-radius, var(--radius-pill));
+  background: var(--surface-default);
+  color: var(--foreground-secondary-default);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter),
+    color var(--duration-fast) var(--easing-enter);
+
+  &:hover:not(.afi-chip--disabled) {
+    background: var(--surface-subtle);
+    border-color: var(--border-default);
+    color: var(--foreground-primary-default);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  &--selected {
+    background: var(--brand-primary-background-default);
+    border-color: var(--brand-primary-background-default);
+    color: var(--brand-primary-foreground-default);
+
+    &:hover:not(.afi-chip--disabled) {
+      background: var(--brand-primary-background-hover);
+      border-color: var(--brand-primary-background-hover);
+      color: var(--brand-primary-foreground-hover);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--sm {
+    height: var(--dimension-6);
+    padding-inline: var(--space-sm);
+    font: var(--type-body-sm-400);
+  }
+
+  &--md {
+    height: var(--dimension-8);
+    padding-inline: var(--space-md);
+    font: var(--type-body-md-400);
+  }
+}
+
+.afi-chip__label {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.afi-chip__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--dimension-5);
+  height: var(--dimension-5);
+  padding-inline: var(--space-2xs);
+  border-radius: var(--radius-pill);
+  background: var(--surface-muted);
+  color: var(--foreground-primary-default);
+  font: var(--type-body-sm-500);
+
+  .afi-chip--selected & {
+    background: var(--brand-primary-foreground-default);
+    color: var(--brand-primary-background-default);
+  }
+}
+
+.afi-chip__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-4);
+  height: var(--dimension-4);
+  margin-inline-start: var(--space-2xs);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: none;
+    opacity: 1;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+
+  svg {
+    width: var(--dimension-3);
+    height: var(--dimension-3);
+  }
+}

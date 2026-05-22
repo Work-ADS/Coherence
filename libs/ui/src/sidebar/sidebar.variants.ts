@@ -1,5 +1,5 @@
 export type SidebarMode = 'static' | 'collapsible' | 'hover-expand';
-export type SidebarVariant = 'neutral' | 'brand';
+export type SidebarVariant = 'neutral' | 'secondary-azul';
 
 export const sidebarWidths = {
   collapsed: '64px',

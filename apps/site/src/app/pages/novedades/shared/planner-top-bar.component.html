@@ -29,6 +29,7 @@
         [width]="280"
         (closed)="plansOpen.set(false)"
       >
+        <p slot="header" class="ptb__plans-heading">Planificaciones</p>
         <div slot="body" class="ptb__plans">
           <a
             [routerLink]="listadoRoute()"
@@ -40,8 +41,7 @@
             </svg>
             <span>Ir al listado</span>
           </a>
-          <div class="ptb__plans-divider" role="separator"></div>
-          <p class="ptb__plans-heading">Planificaciones</p>
+          <afi-menu-divider />
           @for (p of plans; track p.id) {
             <button
               type="button"

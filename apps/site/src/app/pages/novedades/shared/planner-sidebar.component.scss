@@ -1,0 +1,67 @@
+// =============================================================================
+// Planner Sidebar — Wealth Planner consumer of afi-sidebar (secondary-azul).
+// Tokens only. No Tailwind utility classes. No inline styles.
+// =============================================================================
+
+:host {
+  display: contents;
+}
+
+// ─── Top slot: logo + product label ───────────────────────────────────────
+.planner-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100%;
+}
+
+.planner-sidebar__brand-label {
+  font: var(--type-body-sm-400);
+  color: var(--brand-secondary-foreground-default);
+  white-space: nowrap;
+}
+
+// ─── Bottom slot: gestor (advisor) ────────────────────────────────────────
+.planner-sidebar__gestor {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100%;
+}
+
+.planner-sidebar__gestor-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--dimension-7);
+  height: var(--dimension-7);
+  border-radius: var(--radius-pill);
+  background: var(--brand-secondary-background-hover);
+  color: var(--brand-secondary-foreground-default);
+  font: var(--type-body-sm-600);
+}
+
+.planner-sidebar__gestor-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.planner-sidebar__gestor-name {
+  font: var(--type-body-sm-500);
+  color: var(--brand-secondary-foreground-default);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.planner-sidebar__gestor-role {
+  font: var(--type-body-sm-400);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--brand-secondary-foreground-hover);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

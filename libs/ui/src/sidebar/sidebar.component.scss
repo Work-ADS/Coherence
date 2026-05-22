@@ -15,11 +15,10 @@
 }
 
 .sidebar__logo-row {
-  height: var(--dimension-12);
+  height: var(--shell-header-height);
   display: flex;
   align-items: center;
   padding-inline: var(--space-md);
-  border-bottom: var(--separator-thickness) solid var(--border-subtle);
   flex-shrink: 0;
 }
 

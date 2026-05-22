@@ -419,7 +419,16 @@ export class InspectService {
       property === 'background' ||
       property === 'background-color'
     ) {
-      if (value === 'transparent' || value === 'inherit' || value === 'currentcolor') return false;
+      // getComputedStyle normalizes `transparent` to `rgba(0, 0, 0, 0)`, so the
+      // literal-keyword check alone never matches computed values. The `background`
+      // shorthand serializes as `rgba(0, 0, 0, 0) none repeat scroll …` — accept
+      // anything that starts with the transparent rgba sentinel.
+      if (
+        value === 'transparent' ||
+        value === 'inherit' ||
+        value === 'currentcolor' ||
+        value.startsWith('rgba(0, 0, 0, 0)')
+      ) return false;
       if (value.startsWith('rgb') || value.startsWith('#')) return true;
     }
 

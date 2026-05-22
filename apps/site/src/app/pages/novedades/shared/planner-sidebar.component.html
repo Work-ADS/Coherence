@@ -1,0 +1,41 @@
+<afi-sidebar
+  mode="static"
+  variant="secondary-azul"
+  [ariaLabel]="ariaLabel()"
+>
+  <!-- Top slot: logo -->
+  <div slot="top" class="planner-sidebar__brand">
+    <coherence-logo variant="monochrome" size="sm" />
+    <span class="planner-sidebar__brand-label">Wealth Planner</span>
+  </div>
+
+  <!-- Nav sections -->
+  @for (section of sections(); track section.label) {
+    <afi-nav-section
+      [label]="section.label"
+      [defaultExpanded]="true"
+      [hideHeader]="false"
+      chevronPosition="right"
+      [showTreeLines]="true"
+    >
+      @for (item of section.items; track item.key) {
+        <afi-nav-item
+          [label]="item.label"
+          [active]="item.key === activeKey()"
+          [showIcon]="false"
+          [sidebarExpanded]="true"
+          [routerLink]="item.route ?? null"
+        />
+      }
+    </afi-nav-section>
+  }
+
+  <!-- Bottom slot: gestor -->
+  <div slot="bottom" class="planner-sidebar__gestor">
+    <div class="planner-sidebar__gestor-avatar">{{ gestorInitials() }}</div>
+    <div class="planner-sidebar__gestor-text">
+      <span class="planner-sidebar__gestor-name">{{ gestorName() }}</span>
+      <span class="planner-sidebar__gestor-role">{{ gestorRole() }}</span>
+    </div>
+  </div>
+</afi-sidebar>

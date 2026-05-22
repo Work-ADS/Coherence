@@ -38,6 +38,8 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./pages/demos/demos.routes').then((m) => m.demos_routes),
   },
+  // ─── Case-study consolidation — old /blog/wealth-planner-2026 lives on /demos now ───
+  { path: 'blog/wealth-planner-2026', redirectTo: '/demos/wealth-planner-2026' },
   // ─── Legacy /novedades redirects (kept until external links retire) ───
   { path: 'novedades', pathMatch: 'full', redirectTo: '/demos' },
   { path: 'novedades/wealth-planner', redirectTo: '/demos/wealth-planner-2026' },

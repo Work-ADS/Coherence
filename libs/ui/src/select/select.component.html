@@ -1,0 +1,102 @@
+@if (label()) {
+  <label [id]="labelId" class="afi-select__label">
+    {{ label() }}
+    @if (required()) {
+      <span class="afi-select__required" aria-hidden="true"> *</span>
+    }
+  </label>
+}
+
+<div class="afi-select__wrapper">
+  <button
+    #triggerEl
+    type="button"
+    [id]="selectId"
+    [class]="triggerClasses()"
+    [disabled]="disabled()"
+    [attr.aria-expanded]="open()"
+    [attr.aria-haspopup]="'listbox'"
+    [attr.aria-labelledby]="label() ? labelId : null"
+    [attr.aria-label]="!label() ? ariaLabel() : null"
+    [attr.aria-required]="required() ? 'true' : null"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-activedescendant]="open() && focusedIndex() >= 0 ? optionId(focusedIndex()) : null"
+    (click)="toggle()"
+    (keydown)="onTriggerKeydown($event)"
+  >
+    <span
+      class="afi-select__value"
+      [class.afi-select__value--placeholder]="!selectedOption()"
+    >
+      {{ selectedOption()?.label ?? placeholder() ?? '' }}
+    </span>
+    <svg
+      class="afi-select__chevron"
+      [class.afi-select__chevron--open]="open()"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+        clip-rule="evenodd"
+      />
+    </svg>
+  </button>
+
+  @if (open()) {
+    <div class="afi-select__backdrop" (click)="close()" aria-hidden="true"></div>
+
+    <ul
+      #panelEl
+      role="listbox"
+      [attr.aria-labelledby]="label() ? labelId : null"
+      [attr.aria-label]="!label() ? ariaLabel() : null"
+      class="afi-select__panel"
+      (keydown)="onPanelKeydown($event)"
+    >
+      @for (opt of flatOptions(); track opt.value; let i = $index) {
+        @if (opt._groupLabel) {
+          <li class="afi-select__group-label" aria-hidden="true">
+            {{ opt._groupLabel }}
+          </li>
+        }
+        <li
+          [id]="optionId(i)"
+          role="option"
+          [attr.aria-selected]="opt.value === value()"
+          [attr.aria-disabled]="opt.disabled || null"
+          class="afi-select__option"
+          [class.afi-select__option--focused]="i === focusedIndex()"
+          [class.afi-select__option--selected]="opt.value === value()"
+          [class.afi-select__option--disabled]="opt.disabled"
+          (click)="selectOption(opt, $event)"
+          (mouseenter)="focusedIndex.set(i)"
+        >
+          <span class="afi-select__option-label">{{ opt.label }}</span>
+          @if (opt.value === value()) {
+            <svg class="afi-select__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M3.5 8.5L6.5 11.5L12.5 4.5"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>
+
+@if (hint() && !error()) {
+  <p [id]="hintId" class="afi-select__hint">{{ hint() }}</p>
+}
+
+@if (error()) {
+  <p [id]="errorId" class="afi-select__error" role="alert">{{ error() }}</p>
+}

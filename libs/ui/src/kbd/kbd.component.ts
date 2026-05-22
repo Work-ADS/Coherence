@@ -1,17 +1,8 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  computed,
-  input,
-} from '@angular/core';
-import {
-  rootBaseClasses,
-  keyBaseClasses,
-  sizeClasses,
-  separatorChars,
-} from './kbd.variants';
-import type { KbdSize, KbdSeparator } from './kbd.variants';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+
 import { keyToSpokenName } from './kbd.labels';
+import { separatorChars } from './kbd.variants';
+import type { KbdSeparator, KbdSize } from './kbd.variants';
 
 /**
  * Keyboard shortcut keycap primitive.
@@ -23,19 +14,8 @@ import { keyToSpokenName } from './kbd.labels';
   selector: 'afi-kbd',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <span
-      [class]="rootClasses()"
-      [attr.aria-label]="computedAriaLabel()"
-      role="group">
-      @for (key of keys(); let last = $last; let i = $index; track i) {
-        <kbd [class]="keyClasses()">{{ key }}</kbd>
-        @if (!last && separator() !== 'none') {
-          <span [class]="sepClasses()" aria-hidden="true">{{ separatorChar() }}</span>
-        }
-      }
-    </span>
-  `,
+  templateUrl: './kbd.component.html',
+  styleUrls: ['./kbd.component.scss'],
 })
 export class KbdComponent {
   readonly keys = input.required<string[]>();
@@ -43,25 +23,23 @@ export class KbdComponent {
   readonly separator = input<KbdSeparator>('none');
   readonly ariaLabel = input<string | null>(null);
 
-  protected readonly rootClasses = computed(() =>
-    `${rootBaseClasses} ${sizeClasses[this.size()].root}`,
+  protected readonly rootClasses = computed(
+    () => `kbd kbd--${this.size()}`,
   );
 
-  protected readonly keyClasses = computed(() =>
-    `${keyBaseClasses} ${sizeClasses[this.size()].key}`,
+  protected readonly keyClasses = computed(
+    () => `kbd__key kbd__key--${this.size()}`,
   );
 
-  protected readonly sepClasses = computed(() =>
-    `text-neutral-400 ${sizeClasses[this.size()].root}`,
-  );
-
-  protected readonly separatorChar = computed(() =>
-    separatorChars[this.separator()],
+  protected readonly separatorChar = computed(
+    () => separatorChars[this.separator()],
   );
 
   protected readonly computedAriaLabel = computed(() => {
     if (this.ariaLabel()) return this.ariaLabel();
-    const spoken = this.keys().map(k => keyToSpokenName(k)).join(' más ');
+    const spoken = this.keys()
+      .map((k) => keyToSpokenName(k))
+      .join(' más ');
     return `Atajo de teclado: ${spoken}`;
   });
 }

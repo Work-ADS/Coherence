@@ -3,6 +3,8 @@ import { PrimitiveCardComponent } from './primitive-card.component';
 import {
   ButtonComponent,
   InputComponent,
+  SearchComponent,
+  FilterChipComponent,
   SelectComponent,
   CheckboxComponent,
   SwitchComponent,
@@ -40,6 +42,8 @@ import type {
     PrimitiveCardComponent,
     ButtonComponent,
     InputComponent,
+    SearchComponent,
+    FilterChipComponent,
     SelectComponent,
     CheckboxComponent,
     SwitchComponent,
@@ -204,6 +208,60 @@ import type {
               type="password"
               error="La contraseña debe tener al menos 8 caracteres."
             />
+          </div>
+        </afi-primitive-card>
+
+        <!-- Search -->
+        <afi-primitive-card
+          name="Search"
+          description="Caja de búsqueda con lupa, botón de limpiar y submit con Enter. Tres tamaños (sm/md/lg)."
+        >
+          <div class="flex flex-col gap-space-3 w-full max-w-[400px]">
+            <afi-search
+              label="Buscar clientes"
+              placeholder="Nombre, NIF, email…"
+              [value]="searchValue()"
+              (valueChange)="searchValue.set($event)"
+              (cleared)="onSearchCleared()"
+            />
+            <afi-search
+              ariaLabel="Búsqueda compacta"
+              size="sm"
+              placeholder="Filtro rápido"
+            />
+            <afi-search
+              ariaLabel="Búsqueda grande"
+              size="lg"
+              placeholder="Búsqueda global"
+            />
+          </div>
+        </afi-primitive-card>
+
+        <!-- Filter chip -->
+        <afi-primitive-card
+          name="FilterChip"
+          description="Píldora seleccionable para filtros. Estado seleccionado, contador opcional y botón × para descartar."
+        >
+          <div class="flex flex-wrap items-center gap-space-2">
+            <afi-filter-chip
+              label="Activos"
+              [selected]="chipActivos()"
+              [count]="12"
+              (selectedChange)="chipActivos.set($event)"
+            />
+            <afi-filter-chip
+              label="Pasivos"
+              [selected]="chipPasivos()"
+              [count]="3"
+              (selectedChange)="chipPasivos.set($event)"
+            />
+            <afi-filter-chip
+              label="Inmuebles"
+              [selected]="false"
+              [dismissable]="true"
+            />
+            <afi-filter-chip label="Compacto" size="sm" [selected]="true" />
+            <afi-filter-chip label="Deshabilitado" [disabled]="true" />
           </div>
         </afi-primitive-card>
 
@@ -686,6 +744,13 @@ export class PreviewPage {
   readonly drawerOpen = signal(false);
   readonly overlayDemo = signal(false);
   readonly tableSelected = signal<Record<string, unknown>[]>([]);
+  readonly searchValue = signal('');
+  readonly chipActivos = signal(true);
+  readonly chipPasivos = signal(false);
+
+  protected onSearchCleared(): void {
+    this.searchValue.set('');
+  }
 
   /** Tracks the interactive sidebar demo's expanded state so NavItems can bind to it. */
   readonly sidebarExpanded = signal(true);

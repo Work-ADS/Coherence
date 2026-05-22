@@ -1,0 +1,121 @@
+// =============================================================================
+// afi-search — styled search input primitive.
+// BEM classes, DS tokens via CSS custom properties only.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.afi-search__label {
+  display: block;
+  margin-block-end: var(--space-2xs);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+}
+
+.afi-search {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100%;
+  border-radius: var(--radius-md);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  color: var(--foreground-primary-default);
+  transition: border-color var(--duration-fast) var(--easing-enter);
+
+  &:hover:not(:focus-within) {
+    border-color: var(--border-default);
+  }
+
+  &:focus-within {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  &--sm {
+    height: var(--control-h-sm, var(--dimension-8));
+    padding-inline: var(--space-sm);
+    font: var(--type-body-sm-400);
+  }
+
+  &--md {
+    height: var(--control-h-md, var(--dimension-10));
+    padding-inline: var(--space-md);
+    font: var(--type-body-md-400);
+  }
+
+  &--lg {
+    height: var(--control-h-lg, var(--dimension-12));
+    padding-inline: var(--space-md);
+    font: var(--type-body-md-400);
+  }
+}
+
+.afi-search__icon {
+  width: var(--dimension-4);
+  height: var(--dimension-4);
+  color: var(--foreground-tertiary-default);
+  flex-shrink: 0;
+}
+
+.afi-search__field {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  outline: none;
+
+  &::placeholder {
+    color: var(--foreground-tertiary-default);
+  }
+
+  // Hide native clear button — we render our own.
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.afi-search__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-5);
+  height: var(--dimension-5);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--foreground-tertiary-default);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color var(--duration-fast) var(--easing-enter),
+    color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-muted);
+    color: var(--foreground-primary-default);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  svg {
+    width: var(--dimension-3);
+    height: var(--dimension-3);
+  }
+}

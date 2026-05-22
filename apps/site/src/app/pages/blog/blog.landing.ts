@@ -10,18 +10,32 @@ interface BlogPost {
 
 const POSTS: BlogPost[] = [
   {
-    slug: 'wealth-planner-2026',
-    title: 'Wealth Planner 2026 — caso de estudio',
-    eyebrow: 'CASO DE ESTUDIO',
-    intro:
-      'Decisiones de diseño y bitácora de iteraciones del rediseño completo. Patrimonio, Evolución, Bitácora — todo en una sola entrada con tabs.',
-  },
-  {
     slug: 'proceso-componente',
     title: 'Proceso de componentes',
     eyebrow: 'PROCESO',
     intro:
       'Cómo pasamos de "veo una necesidad de UI" a "spec listo para handoff". Primera entrada del blog.',
+  },
+  {
+    slug: 'patrimonial-decisiones',
+    title: 'Patrimonio — decisiones de diseño',
+    eyebrow: 'CASO DE ESTUDIO',
+    intro:
+      'Registro detallado de las decisiones de chrome y contenido en la pantalla Patrimonio del Wealth Planner 2026.',
+  },
+  {
+    slug: 'evolucion-patrimonial-decisiones',
+    title: 'Evolución Patrimonial — decisiones de diseño',
+    eyebrow: 'CASO DE ESTUDIO',
+    intro:
+      'Mismo registro para Evolución, cada decisión acompañada de un snippet "Ejemplo" en vivo.',
+  },
+  {
+    slug: 'bitacora',
+    title: 'Bitácora de iteraciones',
+    eyebrow: 'REGISTRO',
+    intro:
+      'Lista plana de todos los cambios por iteración, con área afectada y estado.',
   },
 ];
 

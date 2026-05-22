@@ -3,18 +3,12 @@ import {
   Component,
   computed,
   input,
-  output,
   isDevMode,
   OnInit,
+  output,
 } from '@angular/core';
 
-import {
-  baseClasses,
-  stateClasses,
-  sizeClasses,
-  InputSize,
-  InputType,
-} from './input.variants';
+import type { InputSize, InputType } from './input.variants';
 
 let nextId = 0;
 
@@ -23,67 +17,14 @@ let nextId = 0;
  *
  * Covers text / textarea / number / email / password via the `type` input.
  * Label, hint, and error are bundled in — the Input owns its a11y wiring.
- * All styling uses token-backed Tailwind classes (no hex/rgba/px).
+ * BEM + DS tokens via CSS custom properties; no Tailwind for visual styling.
  */
 @Component({
   selector: 'afi-input',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    @if (label()) {
-      <label [for]="inputId" class="block text-body-sm font-medium text-canvas-fg mb-space-1">
-        {{ label() }}
-        @if (required()) {
-          <span class="text-system-error" aria-hidden="true"> *</span>
-        }
-      </label>
-    }
-
-    @if (type() === 'textarea') {
-      <textarea
-        [id]="inputId"
-        [class]="classes()"
-        [placeholder]="placeholder() ?? ''"
-        [disabled]="disabled()"
-        [readOnly]="readonly()"
-        [attr.aria-required]="required() ? 'true' : null"
-        [attr.aria-invalid]="error() ? 'true' : null"
-        [attr.aria-describedby]="describedBy()"
-        [attr.aria-label]="ariaLabel()"
-        [value]="value() ?? ''"
-        rows="4"
-        (input)="onInput($event)"
-        (focus)="focused.emit($event)"
-        (blur)="blurred.emit($event)"
-      ></textarea>
-    } @else {
-      <input
-        [id]="inputId"
-        [type]="type()"
-        [class]="classes()"
-        [placeholder]="placeholder() ?? ''"
-        [disabled]="disabled()"
-        [readOnly]="readonly()"
-        [attr.aria-required]="required() ? 'true' : null"
-        [attr.aria-invalid]="error() ? 'true' : null"
-        [attr.aria-describedby]="describedBy()"
-        [attr.aria-label]="ariaLabel()"
-        [attr.autocomplete]="autocomplete()"
-        [value]="value() ?? ''"
-        (input)="onInput($event)"
-        (focus)="focused.emit($event)"
-        (blur)="blurred.emit($event)"
-      />
-    }
-
-    @if (hint() && !error()) {
-      <p [id]="hintId" class="mt-space-1 text-body-sm text-neutral-500">{{ hint() }}</p>
-    }
-
-    @if (error()) {
-      <p [id]="errorId" class="mt-space-1 text-body-sm text-system-error" role="alert">{{ error() }}</p>
-    }
-  `,
+  templateUrl: './input.component.html',
+  styleUrls: ['./input.component.scss'],
 })
 export class InputComponent implements OnInit {
   readonly type = input<InputType>('text');
@@ -108,15 +49,14 @@ export class InputComponent implements OnInit {
   readonly hintId = `${this.inputId}-hint`;
   readonly errorId = `${this.inputId}-error`;
 
-  readonly classes = computed(() => {
-    const state = this.error() ? 'error' : 'idle';
-    return [
-      baseClasses,
-      stateClasses[state],
-      this.type() !== 'textarea' ? sizeClasses[this.size()] : 'px-4 py-space-2 text-body-md',
-    ]
-      .filter(Boolean)
-      .join(' ');
+  readonly fieldClasses = computed(() => {
+    const parts = [
+      'afi-input__field',
+      `afi-input__field--${this.size()}`,
+    ];
+    if (this.type() === 'textarea') parts.push('afi-input__field--textarea');
+    if (this.error()) parts.push('afi-input__field--error');
+    return parts.join(' ');
   });
 
   readonly describedBy = computed(() => {
@@ -138,6 +78,8 @@ export class InputComponent implements OnInit {
   onInput(event: Event): void {
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
     const raw = target.value;
-    this.valueChange.emit(this.type() === 'number' && raw !== '' ? Number(raw) : raw);
+    this.valueChange.emit(
+      this.type() === 'number' && raw !== '' ? Number(raw) : raw,
+    );
   }
 }

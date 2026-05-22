@@ -9,7 +9,7 @@ import { SectionHeaderComponent } from '../../../../components/section-header';
  *
  * Two tabs: Ejemplo (a thin demo) and Decisiones (the choices that make
  * the table readable). The full live example lives in
- * `/novedades/patrimonial` — this page documents *why* it looks the way
+ * `/demos/wealth-planner-2026/patrimonial` — this page documents *why* it looks the way
  * it does, so future contributors don't undo earlier decisions.
  */
 @Component({
@@ -92,8 +92,8 @@ import { SectionHeaderComponent } from '../../../../components/section-header';
 
               <p class="text-body-sm text-neutral-500">
                 Versión completa con filtros, tabs por sección y diálogo de añadir activo:
-                <a href="/novedades/patrimonial" class="text-action-700 hover:underline"
-                  >/novedades/patrimonial</a
+                <a href="/demos/wealth-planner-2026/patrimonial" class="text-action-700 hover:underline"
+                  >/demos/wealth-planner-2026/patrimonial</a
                 >.
               </p>
             </div>

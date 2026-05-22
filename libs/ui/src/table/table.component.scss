@@ -1,0 +1,136 @@
+// =============================================================================
+// afi-table — data table primitive.
+// BEM classes, DS tokens via CSS custom properties only.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.afi-table__scroll {
+  overflow-x: auto;
+}
+
+.afi-table {
+  width: 100%;
+  font: var(--type-body-sm-400);
+  border-collapse: collapse;
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────
+.afi-table__head-row {
+  background: var(--surface-muted);
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+}
+
+.afi-table__th {
+  padding: var(--space-xs) var(--space-sm);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-tertiary-default);
+
+  &--start {
+    text-align: start;
+  }
+  &--center {
+    text-align: center;
+  }
+  &--end {
+    text-align: end;
+  }
+  &--sortable {
+    cursor: pointer;
+    user-select: none;
+  }
+}
+
+.afi-table__th-select {
+  width: var(--dimension-12);
+  padding-inline: var(--space-xs);
+}
+
+.afi-table__th-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.afi-table__sort-icon {
+  width: var(--dimension-3);
+  height: var(--dimension-3);
+  color: var(--foreground-tertiary-default);
+}
+
+// ─── Body rows ────────────────────────────────────────────────────────────
+.afi-table__row {
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+  transition: background-color var(--duration-fast) var(--easing-enter);
+
+  &--hoverable:hover {
+    background: var(--surface-subtle);
+  }
+
+  &--selected {
+    background: var(--surface-muted);
+    border-inline-start: var(--border-width-thick) solid
+      var(--brand-primary-background-default);
+  }
+
+  &--compact {
+    height: var(--dimension-9);
+  }
+
+  &--comfortable {
+    height: var(--dimension-12);
+  }
+}
+
+.afi-table__td {
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--foreground-primary-default);
+
+  &--start {
+    text-align: start;
+  }
+  &--center {
+    text-align: center;
+  }
+  &--end {
+    text-align: end;
+  }
+}
+
+.afi-table__td-select {
+  padding-inline: var(--space-xs);
+}
+
+// ─── Empty + skeleton states ──────────────────────────────────────────────
+.afi-table__empty {
+  text-align: center;
+  padding-block: var(--space-2xl);
+  color: var(--foreground-tertiary-default);
+}
+
+.afi-table__skel {
+  height: var(--dimension-4);
+  background: var(--surface-muted);
+  border-radius: var(--radius-sm);
+  animation: afi-table-pulse 1.4s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
+  &--check {
+    width: var(--dimension-4);
+  }
+}
+
+@keyframes afi-table-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}

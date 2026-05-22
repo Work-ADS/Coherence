@@ -1,0 +1,20 @@
+<div
+  role="radiogroup"
+  [attr.aria-label]="ariaLabel()"
+  class="version-toggle"
+>
+  @for (v of versions(); track v.key) {
+    <button
+      type="button"
+      role="radio"
+      [attr.aria-checked]="v.key === value()"
+      (click)="valueChange.emit(v.key)"
+      class="version-toggle__option"
+      [class.version-toggle__option--active]="v.key === value()"
+      [class.bg-action-700]="v.key === value()"
+      [class.text-white]="v.key === value()"
+    >
+      {{ v.label }}
+    </button>
+  }
+</div>

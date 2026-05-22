@@ -1,0 +1,105 @@
+// =============================================================================
+// afi-input — text / textarea / number / email / password form input.
+// BEM classes, DS tokens via CSS custom properties only.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.afi-input__label {
+  display: block;
+  margin-block-end: var(--space-2xs);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+}
+
+.afi-input__required {
+  color: var(--feedback-error-foreground);
+}
+
+.afi-input__field {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius-md);
+  background: var(--surface-default);
+  color: var(--foreground-primary-default);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  font: var(--type-body-md-400);
+  transition:
+    border-color var(--duration-fast) var(--easing-enter),
+    background-color var(--duration-fast) var(--easing-enter);
+
+  &::placeholder {
+    color: var(--foreground-tertiary-default);
+  }
+
+  &:hover:not(:disabled):not([readonly]) {
+    border-color: var(--border-default);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &[readonly] {
+    background: var(--surface-subtle);
+    cursor: default;
+  }
+
+  // ─── Error state ────────────────────────────────────────────────────────
+  &--error {
+    border-color: var(--feedback-error-foreground);
+
+    &:hover:not(:disabled) {
+      border-color: var(--feedback-error-foreground);
+    }
+  }
+
+  // ─── Sizes (input only — textarea uses --textarea below) ────────────────
+  &--sm {
+    height: var(--control-h-sm, var(--dimension-8));
+    padding-inline: var(--space-sm);
+    font: var(--type-body-sm-400);
+  }
+
+  &--md {
+    height: var(--control-h-md, var(--dimension-10));
+    padding-inline: var(--space-md);
+  }
+
+  &--lg {
+    height: var(--control-h-lg, var(--dimension-12));
+    padding-inline: var(--space-lg);
+  }
+
+  // ─── Textarea variant ───────────────────────────────────────────────────
+  &--textarea {
+    height: auto;
+    min-height: var(--dimension-24);
+    padding-block: var(--space-xs);
+    padding-inline: var(--space-md);
+    resize: vertical;
+  }
+}
+
+.afi-input__hint {
+  margin: 0;
+  margin-block-start: var(--space-2xs);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.afi-input__error {
+  margin: 0;
+  margin-block-start: var(--space-2xs);
+  font: var(--type-body-sm-400);
+  color: var(--feedback-error-foreground);
+}

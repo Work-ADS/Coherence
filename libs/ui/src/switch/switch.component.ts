@@ -3,17 +3,12 @@ import {
   Component,
   computed,
   input,
-  output,
   isDevMode,
   OnInit,
+  output,
 } from '@angular/core';
 
-import {
-  trackSizeClasses,
-  thumbSizeClasses,
-  thumbTranslateClasses,
-  SwitchSize,
-} from './switch.variants';
+import type { SwitchSize } from './switch.variants';
 
 let nextId = 0;
 
@@ -21,39 +16,14 @@ let nextId = 0;
  * Switch primitive.
  *
  * Uses `<button role="switch">` for correct SR announcement.
- * Thumb slides with 150ms transition; respects `prefers-reduced-motion`.
+ * Thumb slides with a transition that respects `prefers-reduced-motion`.
  */
 @Component({
   selector: 'afi-switch',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <label class="inline-flex items-center gap-space-2 min-h-[44px] cursor-pointer"
-           [class.opacity-50]="disabled()" [class.cursor-not-allowed]="disabled()">
-      <button
-        type="button"
-        role="switch"
-        [id]="switchId"
-        [attr.aria-checked]="checked()"
-        [attr.aria-label]="!label() ? ariaLabel() : null"
-        [attr.aria-describedby]="describedBy()"
-        [disabled]="disabled()"
-        [class]="trackClasses()"
-        (click)="onToggle()"
-        (keydown.space)="onToggle(); $event.preventDefault()"
-      >
-        <span [class]="thumbClasses()" aria-hidden="true"></span>
-      </button>
-      @if (label()) {
-        <span class="flex flex-col">
-          <span class="text-body-md text-canvas-fg">{{ label() }}</span>
-          @if (hint()) {
-            <span [id]="hintId" class="text-body-sm text-neutral-500">{{ hint() }}</span>
-          }
-        </span>
-      }
-    </label>
-  `,
+  templateUrl: './switch.component.html',
+  styleUrls: ['./switch.component.scss'],
 })
 export class SwitchComponent implements OnInit {
   readonly checked = input<boolean>(false);
@@ -68,31 +38,24 @@ export class SwitchComponent implements OnInit {
   readonly switchId = `afi-switch-${nextId++}`;
   readonly hintId = `${this.switchId}-hint`;
 
-  readonly describedBy = computed(() => {
-    return this.hint() ? this.hintId : null;
+  readonly describedBy = computed(() => (this.hint() ? this.hintId : null));
+
+  readonly rootClasses = computed(() => {
+    const parts = ['afi-switch', `afi-switch--${this.size()}`];
+    if (this.disabled()) parts.push('afi-switch--disabled');
+    return parts.join(' ');
   });
 
   readonly trackClasses = computed(() => {
-    const on = this.checked();
-    return [
-      'relative inline-flex items-center rounded-full',
-      'transition-colors duration-150 ease-out motion-reduce:duration-[0ms]',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
-      'disabled:cursor-not-allowed',
-      trackSizeClasses[this.size()],
-      on ? 'bg-action' : 'bg-neutral-300',
-    ].join(' ');
+    const parts = ['afi-switch__track', `afi-switch__track--${this.size()}`];
+    if (this.checked()) parts.push('afi-switch__track--on');
+    return parts.join(' ');
   });
 
   readonly thumbClasses = computed(() => {
-    const on = this.checked();
-    const sz = this.size();
-    return [
-      'inline-block rounded-full bg-white shadow-sm',
-      'transform transition-transform duration-150 ease-out motion-reduce:duration-[0ms]',
-      thumbSizeClasses[sz],
-      on ? thumbTranslateClasses[sz] : 'translate-x-0.5',
-    ].join(' ');
+    const parts = ['afi-switch__thumb', `afi-switch__thumb--${this.size()}`];
+    if (this.checked()) parts.push('afi-switch__thumb--on');
+    return parts.join(' ');
   });
 
   ngOnInit(): void {

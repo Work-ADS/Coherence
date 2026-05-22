@@ -1,0 +1,24 @@
+<label [class]="rootClasses()">
+  <button
+    type="button"
+    role="switch"
+    [id]="switchId"
+    [attr.aria-checked]="checked()"
+    [attr.aria-label]="!label() ? ariaLabel() : null"
+    [attr.aria-describedby]="describedBy()"
+    [disabled]="disabled()"
+    [class]="trackClasses()"
+    (click)="onToggle()"
+    (keydown.space)="onToggle(); $event.preventDefault()"
+  >
+    <span [class]="thumbClasses()" aria-hidden="true"></span>
+  </button>
+  @if (label()) {
+    <span class="afi-switch__label-group">
+      <span class="afi-switch__label">{{ label() }}</span>
+      @if (hint()) {
+        <span [id]="hintId" class="afi-switch__hint">{{ hint() }}</span>
+      }
+    </span>
+  }
+</label>

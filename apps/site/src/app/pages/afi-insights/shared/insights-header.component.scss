@@ -1,0 +1,121 @@
+// =============================================================================
+// AFI Insights header — demo-only exit bar + sticky brand/nav header.
+// BEM + DS tokens.
+// =============================================================================
+@use '../../../../../../../libs/tokens/mixins' as t;
+
+:host {
+  display: block;
+}
+
+// ─── Demo-only exit bar (top stripe) ────────────────────────────────────────
+.ai-exit-bar {
+  background: var(--surface-subtle);
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+}
+
+.ai-exit-bar__inner {
+  max-width: var(--dimension-300);
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+  height: var(--dimension-8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.ai-exit-bar__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    color: var(--foreground-primary-default);
+  }
+}
+
+.ai-exit-bar__back-icon {
+  width: var(--dimension-3);
+  height: var(--dimension-3);
+}
+
+.ai-exit-bar__note {
+  display: none;
+
+  @include t.breakpoint-up(sm) {
+    display: inline;
+  }
+}
+
+// ─── Sticky brand + nav header ──────────────────────────────────────────────
+.ai-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--canvas-base);
+  // backdrop-filter handled via Tailwind `backdrop-blur-md` utility in the
+  // template — no token exists for blur radius today.
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+}
+
+.ai-header__inner {
+  max-width: var(--dimension-300);
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+  height: var(--dimension-14);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+.ai-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.ai-header__brand-primary {
+  font: var(--type-body-lg-600);
+  font-family: var(--font-brand-display, serif);
+  color: var(--foreground-primary-default);
+  letter-spacing: var(--tracking-tight);
+}
+
+.ai-header__brand-secondary {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.ai-header__nav {
+  display: none;
+  align-items: center;
+  gap: var(--space-md);
+
+  @include t.breakpoint-up(md) {
+    display: flex;
+  }
+}
+
+.ai-header__nav-link {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    color: var(--foreground-primary-default);
+  }
+
+  &--active {
+    color: var(--action-primary-default);
+    font: var(--type-body-sm-500);
+  }
+}

@@ -1,0 +1,110 @@
+// =============================================================================
+// afi-switch — toggle switch primitive.
+// =============================================================================
+
+:host {
+  display: inline-block;
+}
+
+.afi-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: var(--dimension-11); // 44 px touch target
+  cursor: pointer;
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Track ────────────────────────────────────────────────────────────────
+.afi-switch__track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--control-background-default);
+  cursor: inherit;
+  padding: 0;
+  transition: background-color var(--duration-fast) var(--easing-enter);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &--on {
+    background: var(--brand-primary-background-default);
+  }
+
+  &--sm {
+    width: var(--dimension-8);
+    height: var(--dimension-5);
+  }
+
+  &--md {
+    width: var(--dimension-10);
+    height: var(--dimension-6);
+  }
+}
+
+// ─── Thumb ────────────────────────────────────────────────────────────────
+.afi-switch__thumb {
+  display: inline-block;
+  border-radius: var(--radius-pill);
+  background: var(--surface-default);
+  box-shadow: var(--elevation-sm);
+  transform: translateX(var(--border-width-thick));
+  transition: transform var(--duration-fast) var(--easing-enter);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &--sm {
+    width: var(--dimension-4);
+    height: var(--dimension-4);
+
+    &.afi-switch__thumb--on {
+      transform: translateX(var(--dimension-4));
+    }
+  }
+
+  &--md {
+    width: var(--dimension-5);
+    height: var(--dimension-5);
+
+    &.afi-switch__thumb--on {
+      transform: translateX(var(--dimension-5));
+    }
+  }
+}
+
+// ─── Label + hint ────────────────────────────────────────────────────────
+.afi-switch__label-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.afi-switch__label {
+  font: var(--type-body-md-400);
+  color: var(--foreground-primary-default);
+}
+
+.afi-switch__hint {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}

@@ -90,7 +90,7 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
 
   readonly activeMode = signal<'inspect' | 'comment' | null>(null);
   readonly demoSlug = signal('wealth-planner');
-  readonly demoRoute = signal('/novedades/wealth-planner-demo');
+  readonly demoRoute = signal('/demos/wealth-planner-2026/demo');
 
   readonly activeView = signal(0);
   readonly views = signal<string[]>(['Patrimonio', 'Evolución']);

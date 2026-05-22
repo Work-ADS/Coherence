@@ -5,13 +5,8 @@ export const blog_routes: Routes = [
     path: '',
     loadComponent: () => import('./blog.landing').then((m) => m.BlogLandingPage),
   },
-  {
-    path: 'wealth-planner-2026',
-    loadComponent: () =>
-      import('./wealth-planner-2026/wealth-planner-2026.page').then(
-        (m) => m.WealthPlannerCaseStudyPage,
-      ),
-  },
+  // wealth-planner-2026 case study lives on /demos/wealth-planner-2026 now
+  // (3-tab demo overview). The /blog/wealth-planner-2026 URL is redirected in app.routes.ts.
   {
     path: 'proceso-componente',
     loadComponent: () =>

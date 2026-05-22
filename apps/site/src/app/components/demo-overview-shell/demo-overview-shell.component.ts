@@ -1,50 +1,55 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ButtonComponent, CardComponent } from '@coherence/ui';
-
-export interface DemoOverviewScreenshot {
-  src: string;
-  alt: string;
-  caption?: string;
-}
+import { ButtonComponent } from '@coherence/ui';
 
 export interface DemoOverviewRelatedPost {
+  /** Card title. */
   title: string;
-  /** Route slug — concatenated to /blog/ on the rendered link. */
+  /** Route slug — concatenated to /blog/ for the rendered link. */
   slug: string;
+  /** Optional small label above the title (e.g. "BLOG", "GUÍA"). */
   eyebrow?: string;
+  /** Optional 1-2 sentence summary rendered under the title. */
   description?: string;
 }
 
 /**
- * Reusable shell for the overview page of any demo under /demos.
+ * Demo overview template — shared by every page under /demos/<slug>.
  *
- * Renders four blocks in editorial register:
- *   1. Hero — overline + title + intro
- *   2. Primary CTA — "Abrir demo" routerLink button
- *   3. Screenshot grid — preview imagery
- *   4. Related posts — cards linking into /blog
+ * The shell renders:
+ *   1. **Hero** — overline + title + intro + primary CTA ("Abrir demo").
+ *   2. **Body** — a single `<ng-content />` slot where the consumer drops
+ *      the per-demo narrative. The convention is a 3-tab `<afi-tabs>`
+ *      with "Visión general", "Caso de estudio" and "Bitácora" tabs,
+ *      but the slot is freeform so future demos can adapt as needed.
+ *   3. **Lectura relacionada** — optional list of related-post cards
+ *      rendered at the bottom (driven by the `relatedPosts` input).
  *
- * Inputs (not slots) so the structure is uniform across every demo page.
- * Add a demo? Build its overview page by binding inputs to this shell.
+ * All visual styling lives in `.scss` using BEM classes + DS tokens —
+ * no Tailwind utilities, no inline styles.
  *
  * @example
  * ```html
  * <site-demo-overview-shell
  *   overline="WEALTH PLANNER · 2026"
  *   title="Wealth Planner 2026"
- *   intro="Rediseño completo — patrimonio, evolución, simulación."
+ *   intro="Rediseño completo — patrimonio, evolución y simulación."
  *   demoRoute="/demos/wealth-planner-2026/demo"
- *   [screenshots]="[{ src: 'assets/demos/wealth-planner-2026/patrimonio.png', alt: 'Patrimonio' }]"
- *   [relatedPosts]="[{ title: 'Caso de estudio', slug: 'wealth-planner-2026' }]"
- * />
+ *   [relatedPosts]="related"
+ * >
+ *   <afi-tabs [activeIndex]="activeTab()" (activeChange)="activeTab.set($event)">
+ *     <afi-tab-item label="Visión general">…</afi-tab-item>
+ *     <afi-tab-item label="Caso de estudio">…</afi-tab-item>
+ *     <afi-tab-item label="Bitácora">…</afi-tab-item>
+ *   </afi-tabs>
+ * </site-demo-overview-shell>
  * ```
  */
 @Component({
   selector: 'site-demo-overview-shell',
   standalone: true,
-  imports: [RouterLink, ButtonComponent, CardComponent],
+  imports: [RouterLink, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './demo-overview-shell.component.html',
   styleUrls: ['./demo-overview-shell.component.scss'],
@@ -65,14 +70,8 @@ export class DemoOverviewShellComponent {
   /** CTA label. Defaults to "Abrir demo". */
   readonly demoLabel = input<string>('Abrir demo');
 
-  /** Screenshot cards rendered below the CTA. Empty by default. */
-  readonly screenshots = input<DemoOverviewScreenshot[]>([]);
-
-  /** Related-post cards rendered at the bottom. Empty by default. */
+  /** Related-post cards rendered below the projected content. Empty by default. */
   readonly relatedPosts = input<DemoOverviewRelatedPost[]>([]);
-
-  /** Convenience: hide the screenshots section when no images provided. */
-  readonly hasScreenshots = computed(() => this.screenshots().length > 0);
 
   /** Convenience: hide the related-posts section when none provided. */
   readonly hasRelatedPosts = computed(() => this.relatedPosts().length > 0);

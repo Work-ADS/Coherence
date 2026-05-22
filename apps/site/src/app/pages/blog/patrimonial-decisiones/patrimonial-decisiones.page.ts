@@ -21,9 +21,9 @@ import { PageHeaderComponent } from '@coherence/ui';
         class="flex items-center gap-space-3 border-b border-border-hairline px-space-4 h-10 bg-surface-quiet shrink-0 text-body-sm"
       >
         <a
-          routerLink="/novedades"
+          routerLink="/blog"
           class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-surface-100 text-neutral-500"
-          aria-label="Volver a Novedades"
+          aria-label="Volver al blog"
         >
           <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path
@@ -33,9 +33,9 @@ import { PageHeaderComponent } from '@coherence/ui';
             />
           </svg>
         </a>
-        <span class="text-neutral-500">Novedades</span>
+        <span class="text-neutral-500">Blog</span>
         <span class="text-neutral-400" aria-hidden="true">/</span>
-        <a routerLink="/novedades/patrimonial" class="text-neutral-600 hover:text-canvas-fg"
+        <a routerLink="/demos/wealth-planner-2026/patrimonial" class="text-neutral-600 hover:text-canvas-fg"
           >Patrimonio</a
         >
         <span class="text-neutral-400" aria-hidden="true">/</span>

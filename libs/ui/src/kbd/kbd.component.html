@@ -1,0 +1,12 @@
+<span
+  [class]="rootClasses()"
+  [attr.aria-label]="computedAriaLabel()"
+  role="group"
+>
+  @for (key of keys(); let last = $last; let i = $index; track i) {
+    <kbd [class]="keyClasses()">{{ key }}</kbd>
+    @if (!last && separator() !== 'none') {
+      <span class="kbd__sep" aria-hidden="true">{{ separatorChar() }}</span>
+    }
+  }
+</span>

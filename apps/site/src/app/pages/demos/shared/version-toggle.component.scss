@@ -1,0 +1,52 @@
+// =============================================================================
+// Version toggle — page-level radiogroup for switching layout variants
+// (V1 / V2 / V3) in demo pages. BEM + DS tokens (active visuals via Tailwind
+// utility classes that already map to tokens through tailwind config).
+// =============================================================================
+
+:host {
+  display: inline-block;
+}
+
+.version-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--border-width-thick);
+  padding: var(--border-width-thick);
+  border-radius: var(--radius-pill);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  background: var(--canvas-base);
+}
+
+.version-toggle__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--dimension-6);
+  padding-inline: var(--space-sm);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  border: 0;
+  color: var(--foreground-secondary-default);
+  font: var(--type-body-sm-400);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-enter),
+    color var(--duration-fast) var(--easing-enter);
+
+  &:hover:not(.version-toggle__option--active) {
+    background: var(--surface-muted);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  // Active state: background + text color come from Tailwind utility classes
+  // (`bg-action-700`, `text-white`) bound conditionally in the template —
+  // these map to DS tokens through the tailwind config and follow the same
+  // pattern as <afi-button variant="primary">.
+  &--active {
+    font: var(--type-body-sm-500);
+  }
+}

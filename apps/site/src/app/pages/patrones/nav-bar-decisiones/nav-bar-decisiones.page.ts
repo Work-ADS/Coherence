@@ -74,9 +74,9 @@ import { OnThisPageComponent, type TocItem } from '../../demos/shared/on-this-pa
         class="flex items-center gap-space-3 border-b border-border-hairline px-space-4 h-10 bg-surface-quiet shrink-0 text-body-sm"
       >
         <a
-          routerLink="/novedades"
+          routerLink="/patrones"
           class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-surface-100 text-neutral-500"
-          aria-label="Volver a Novedades"
+          aria-label="Volver a Patrones"
         >
           <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path
@@ -86,7 +86,7 @@ import { OnThisPageComponent, type TocItem } from '../../demos/shared/on-this-pa
             />
           </svg>
         </a>
-        <span class="text-neutral-500">Novedades</span>
+        <span class="text-neutral-500">Patrones</span>
         <span class="text-neutral-400" aria-hidden="true">/</span>
         <span class="text-canvas-fg font-medium">Top bar</span>
       </div>
@@ -131,7 +131,7 @@ import { OnThisPageComponent, type TocItem } from '../../demos/shared/on-this-pa
                       <div
                         class="relative border border-border-hairline rounded-md overflow-hidden"
                       >
-                        <site-planner-top-bar decisionesRoute="/novedades/nav-bar-decisiones" />
+                        <site-planner-top-bar decisionesRoute="/patrones/top-bar-decisiones" />
                         <!-- Numbered callouts overlay — positioned over each functional area.
                      Numbers correspond to accordion items below for cross-reference. -->
                         <span class="callout-marker" style="left: 16px;">1</span>
@@ -1007,7 +1007,7 @@ export class NavBarDecisionesPage {
     {
       title: 'Documentación',
       items: [
-        'Cada cambio del top bar se registra en <a href="/novedades/bitacora" class="text-action-700 hover:underline">la bitácora</a> con fecha y motivo.',
+        'Cada cambio del top bar se registra en <a href="/blog/bitacora" class="text-action-700 hover:underline">la bitácora</a> con fecha y motivo.',
         'Las decisiones de diseño viven en la pestaña <em>Decisiones</em> de esta misma página.',
       ],
     },

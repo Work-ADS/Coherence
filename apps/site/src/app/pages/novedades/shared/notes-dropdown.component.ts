@@ -7,8 +7,9 @@ import {
   input,
   output,
   signal,
-  ViewChild,
 } from '@angular/core';
+
+import { InputComponent } from '@coherence/ui';
 
 export interface PlanNote {
   id: string;
@@ -25,6 +26,7 @@ export interface PlanNote {
 @Component({
   selector: 'site-notes-dropdown',
   standalone: true,
+  imports: [InputComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './notes-dropdown.component.html',
   styleUrls: ['./notes-dropdown.component.scss'],
@@ -40,8 +42,6 @@ export class NotesDropdownComponent {
   readonly noteDeleted = output<string>();
 
   readonly draft = signal('');
-
-  @ViewChild('textareaEl') textareaEl?: ElementRef<HTMLTextAreaElement>;
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {

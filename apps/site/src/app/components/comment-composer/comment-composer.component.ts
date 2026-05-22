@@ -11,7 +11,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { ButtonComponent } from '@coherence/ui';
+import { ButtonComponent, InputComponent } from '@coherence/ui';
 
 export interface ComposerSubmit {
   text: string;
@@ -29,7 +29,7 @@ const GAP = 8;
 @Component({
   selector: 'site-comment-composer',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, InputComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './comment-composer.component.html',
   styleUrl: './comment-composer.component.scss',
@@ -47,14 +47,15 @@ export class CommentComposerComponent implements AfterViewInit, OnDestroy {
 
   readonly canSubmit = computed(() => this.text().trim().length > 0);
 
-  @ViewChild('textarea') textarea!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('inputRef', { read: ElementRef }) inputHost?: ElementRef<HTMLElement>;
 
   private resizeListener: (() => void) | null = null;
   private scrollListener: (() => void) | null = null;
 
   ngAfterViewInit(): void {
     this.recompute();
-    this.textarea?.nativeElement.focus();
+    // Focus the inner native <textarea> rendered by afi-input via type="textarea".
+    this.inputHost?.nativeElement.querySelector('textarea')?.focus();
 
     this.resizeListener = () => this.recompute();
     this.scrollListener = () => this.recompute();
@@ -67,9 +68,8 @@ export class CommentComposerComponent implements AfterViewInit, OnDestroy {
     if (this.scrollListener) window.removeEventListener('scroll', this.scrollListener, true);
   }
 
-  onInput(event: Event): void {
-    const value = (event.target as HTMLTextAreaElement).value;
-    this.text.set(value);
+  onInput(value: string | number | null): void {
+    this.text.set(value == null ? '' : String(value));
   }
 
   onKeyDown(event: KeyboardEvent): void {

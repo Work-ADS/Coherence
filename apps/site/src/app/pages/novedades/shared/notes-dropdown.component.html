@@ -47,15 +47,15 @@
 
     <!-- Input area -->
     <div class="notes-dd__footer">
-      <textarea
-        #textareaEl
+      <afi-input
+        type="textarea"
         class="notes-dd__input"
         placeholder="Añadir nota..."
         [value]="draft()"
-        (input)="draft.set($any($event.target).value)"
+        (valueChange)="draft.set($any($event))"
         (keydown)="onKeydown($event)"
-        rows="2"
-      ></textarea>
+        ariaLabel="Añadir nota"
+      />
       <button
         type="button"
         class="notes-dd__submit"

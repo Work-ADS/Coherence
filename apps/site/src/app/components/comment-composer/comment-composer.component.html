@@ -8,15 +8,16 @@
 >
   <code class="composer__selector">{{ selector() }}</code>
 
-  <textarea
-    #textarea
+  <afi-input
+    #inputRef
+    type="textarea"
     class="composer__input"
     placeholder="Deja un comentario… (Enter para publicar, Shift+Enter para salto de línea)"
     [value]="text()"
-    (input)="onInput($event)"
+    (valueChange)="onInput($event)"
     (keydown)="onKeyDown($event)"
-    rows="3"
-  ></textarea>
+    ariaLabel="Texto del comentario"
+  />
 
   <div class="composer__actions">
     <afi-button variant="ghost" size="sm" (clicked)="cancel()">Cancelar</afi-button>

@@ -16,6 +16,7 @@ import { Router, RouterLink } from '@angular/router';
 import {
   ButtonComponent,
   IconButtonComponent,
+  InputComponent,
   SegmentedControlComponent,
   TooltipComponent,
 } from '@coherence/ui';
@@ -70,6 +71,7 @@ interface PinPos {
     RouterLink,
     ButtonComponent,
     IconButtonComponent,
+    InputComponent,
     SegmentedControlComponent,
     TooltipComponent,
     CommentComposerComponent,
@@ -336,9 +338,8 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
     this.editingText.set(c.text);
   }
 
-  onEditInput(event: Event): void {
-    const value = (event.target as HTMLTextAreaElement).value;
-    this.editingText.set(value);
+  onEditInput(value: string | number | null): void {
+    this.editingText.set(value == null ? '' : String(value));
   }
 
   onEditKey(event: KeyboardEvent): void {

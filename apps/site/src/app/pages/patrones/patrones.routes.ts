@@ -36,21 +36,21 @@ export const patrones_routes: Routes = [
   {
     path: 'sidebar-decisiones',
     loadComponent: () =>
-      import('../novedades/sidebar-decisiones/sidebar-decisiones.page').then(
+      import('./sidebar-decisiones/sidebar-decisiones.page').then(
         (m) => m.SidebarDecisionesPage,
       ),
   },
   {
     path: 'top-bar-decisiones',
     loadComponent: () =>
-      import('../novedades/nav-bar-decisiones/nav-bar-decisiones.page').then(
+      import('./nav-bar-decisiones/nav-bar-decisiones.page').then(
         (m) => m.NavBarDecisionesPage,
       ),
   },
   {
     path: 'dialog-decisiones',
     loadComponent: () =>
-      import('../novedades/dialog-decisiones/dialog-decisiones.page').then(
+      import('./dialog-decisiones/dialog-decisiones.page').then(
         (m) => m.DialogDecisionesPage,
       ),
   },

@@ -50,7 +50,7 @@ export type { IconButtonVariant, IconButtonSize } from './src/icon-button';
 export { AvatarComponent } from './src/avatar';
 export type { AvatarSize } from './src/avatar';
 export { SegmentedControlComponent } from './src/segmented-control';
-export type { SegmentedControlSize } from './src/segmented-control';
+export type { SegmentedControlSize, SegmentedOption } from './src/segmented-control';
 export { DropdownPanelComponent } from './src/dropdown-panel';
 export { InlineEditComponent } from './src/inline-edit';
 /** @deprecated Use InlineEditComponent instead */

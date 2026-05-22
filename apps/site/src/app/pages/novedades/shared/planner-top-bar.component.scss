@@ -120,21 +120,6 @@
   }
 }
 
-.ptb__plans-info {
-  display: inline-flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.ptb__plans-name {
-  font: var(--type-body-sm-500);
-}
-
-.ptb__plans-id {
-  font: var(--type-body-sm-400);
-  color: var(--foreground-tertiary-default);
-}
-
 .ptb__plans-check {
   width: var(--icon-sm);
   height: var(--icon-sm);

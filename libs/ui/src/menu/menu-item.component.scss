@@ -23,8 +23,8 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--border-focus);
-    outline-offset: 2px;
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
   }
 
   &.is-danger {
@@ -52,25 +52,49 @@
 
   .menu-item:hover &,
   .menu-item:focus-visible & {
-    transform: translateX(2px);
+    transform: translateX(var(--space-2xs));
   }
 }
 
-.menu-item__label {
+// Label group — stacks primary label + optional secondary line vertically.
+.menu-item__label-group {
+  display: flex;
+  flex-direction: column;
   flex: 1;
-  text-align: left;
+  min-width: 0;
+}
+
+.menu-item__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-item__secondary-label {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .menu-item__shortcut {
-  margin-left: auto;
   padding-left: var(--space-md);
   color: var(--foreground-tertiary-default);
   font: var(--type-body-sm-400);
   flex-shrink: 0;
   font-family: monospace;
+}
+
+// Trailing slot — pushed to far right via flex layout (label-group has flex: 1).
+.menu-item__trailing {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  &:empty {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -10,6 +10,9 @@
   align-items: center;
   justify-content: center;
   border: none;
+  border-color: transparent; // explicit baseline so UA computed border-color doesn't leak
+  outline: none;
+  outline-color: transparent; // focus uses box-shadow; zero UA outline-color
   border-radius: var(--radius-control);
   cursor: pointer;
   position: relative;
@@ -22,9 +25,8 @@
     box-shadow: var(--focus-ring);
   }
 
-  // Disabled
+  // Disabled — per-variant blocks below override UA defaults with disabled tokens.
   &:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
   }
 
@@ -68,6 +70,11 @@
     &:active:not(:disabled) {
       background: var(--control-background-active);
     }
+
+    &:disabled {
+      background: transparent;
+      color: var(--foreground-tertiary-disabled);
+    }
   }
 
   // @deprecated — use &--secondary instead
@@ -84,6 +91,11 @@
       background: var(--brand-secondary-neutral-background-active);
       color: var(--brand-secondary-neutral-foreground-active);
     }
+
+    &:disabled {
+      background: var(--brand-secondary-neutral-background-disabled);
+      color: var(--brand-secondary-neutral-foreground-disabled);
+    }
   }
 
   &--outline {
@@ -98,6 +110,12 @@
 
     &:active:not(:disabled) {
       background: var(--control-background-hover);
+    }
+
+    &:disabled {
+      background: transparent;
+      color: var(--foreground-tertiary-disabled);
+      border-color: var(--border-disabled);
     }
   }
 
@@ -114,6 +132,12 @@
       background: var(--brand-primary-background-active);
       color: var(--brand-primary-foreground-active);
     }
+
+    &:disabled {
+      background: var(--brand-primary-background-disabled);
+      color: var(--brand-primary-foreground-disabled);
+      border-color: var(--brand-primary-border-disabled);
+    }
   }
 
   &--secondary {
@@ -129,6 +153,12 @@
       background: var(--brand-secondary-neutral-background-active);
       color: var(--brand-secondary-neutral-foreground-active);
     }
+
+    &:disabled {
+      background: var(--brand-secondary-neutral-background-disabled);
+      color: var(--brand-secondary-neutral-foreground-disabled);
+      border-color: var(--brand-secondary-neutral-border-disabled);
+    }
   }
 
   &--destruction {
@@ -143,6 +173,11 @@
     &:active:not(:disabled) {
       background: var(--feedback-error-border);
       color: var(--feedback-error-foreground);
+    }
+
+    &:disabled {
+      background: transparent;
+      color: var(--foreground-tertiary-disabled);
     }
   }
 

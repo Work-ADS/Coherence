@@ -457,8 +457,9 @@
   // -----------------------------------------------------------------------
   // NAV chrome — fixed dimensions for app shell navigation.
   // -----------------------------------------------------------------------
-  --top-bar-height:   var(--dimension-14);   // 56 px
-  --sidebar-width:    var(--dimension-16);   // 64 px
+  --top-bar-height:      var(--dimension-14);   // 56 px — Coherence DS site top bar
+  --shell-header-height: var(--dimension-12);   // 48 px — product shell header (planner top bar + sidebar logo row align here)
+  --sidebar-width:       var(--dimension-16);   // 64 px
 
   // -----------------------------------------------------------------------
   // CANVAS chrome (page-level padding) — grows with viewport.

@@ -1,31 +1,30 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  HostListener,
-  input,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ActionToastComponent } from './action-toast.component';
+import {
+  DropdownPanelComponent,
+  IconButtonComponent,
+  InlineEditComponent,
+  StatusChipComponent,
+  ToastComponent,
+  TooltipComponent,
+} from '@coherence/ui';
+import type { Estado } from '@coherence/ui';
+
 import { NotesDropdownComponent, PlanNote } from './notes-dropdown.component';
 import { SettingsDropdownComponent, SimulationSettings } from './settings-dropdown.component';
 
-type PlanState = 'borrador' | 'cumplimentada' | 'descargada' | 'entregada';
-
-/**
- * Top bar for the Wealth Planner proposal pages.
- *
- * 3-file shape (LOCKED 2026-05-18). See docs/rules/component-skill.md § 2.
- */
 @Component({
   selector: 'site-planner-top-bar',
   standalone: true,
   imports: [
     RouterLink,
-    ActionToastComponent,
+    DropdownPanelComponent,
+    IconButtonComponent,
+    InlineEditComponent,
+    StatusChipComponent,
+    ToastComponent,
+    TooltipComponent,
     NotesDropdownComponent,
     SettingsDropdownComponent,
   ],
@@ -40,9 +39,9 @@ export class PlannerTopBarComponent {
 
   readonly plansOpen = signal(false);
   readonly stateOpen = signal(false);
-  readonly renaming = signal(false);
   readonly notesOpen = signal(false);
   readonly configOpen = signal(false);
+
   readonly notes = signal<PlanNote[]>([
     { id: '1', text: 'Cliente prefiere enfoque conservador para los próximos 3 años.', timestamp: new Date('2025-05-15T10:30:00') },
     { id: '2', text: 'Revisar aportaciones al plan de pensiones en septiembre.', timestamp: new Date('2025-05-18T14:15:00') },
@@ -56,16 +55,12 @@ export class PlannerTopBarComponent {
   });
 
   readonly simId = signal('SIM-2025-0011');
-  readonly simIdDraft = signal('SIM-2025-0011');
-  readonly currentState = signal<PlanState>('borrador');
+  readonly estado = signal<Estado>('borrador');
 
-  // Toast state
   readonly toastVisible = signal(false);
   readonly toastMessage = signal<string>('');
   private undoAction: (() => void) | null = null;
   private toastTimer?: ReturnType<typeof setTimeout>;
-
-  readonly renameInput = viewChild<ElementRef<HTMLInputElement>>('renameInput');
 
   readonly plans = [
     { id: 'SIM-2025-0011', name: 'Plan 1 — Familia Torres' },
@@ -74,22 +69,12 @@ export class PlannerTopBarComponent {
     { id: 'SIM-2025-0008', name: 'Plan 4 — Legado familiar' },
   ];
 
-  readonly states: { value: PlanState; label: string; bg: string; fg: string }[] = [
-    { value: 'borrador', label: 'Borrador', bg: '#EEEEEE', fg: '#525252' },
-    { value: 'cumplimentada', label: 'Cumplimentada', bg: '#DFF0FF', fg: '#0066AE' },
-    { value: 'descargada', label: 'Descargada', bg: '#EFE6FE', fg: '#6B3BD6' },
-    { value: 'entregada', label: 'Entregada al cliente', bg: '#DDF4E6', fg: '#187A47' },
+  readonly estados: { value: Estado; label: string }[] = [
+    { value: 'borrador', label: 'Borrador' },
+    { value: 'pendiente', label: 'Pendiente' },
+    { value: 'aprobada', label: 'Aprobada' },
+    { value: 'ejecutada', label: 'Ejecutada' },
   ];
-
-  stateLabelFor(v: PlanState): string {
-    return this.states.find((s) => s.value === v)?.label ?? '';
-  }
-
-  stateStyleFor(v: PlanState): string {
-    const s = this.states.find((x) => x.value === v);
-    if (!s) return '';
-    return `background:${s.bg}; color:${s.fg};`;
-  }
 
   selectPlan(id: string): void {
     const previous = this.simId();
@@ -105,48 +90,24 @@ export class PlannerTopBarComponent {
     );
   }
 
-  setState(v: PlanState): void {
-    const previous = this.currentState();
-    if (v === previous) {
+  onEstadoChange(next: Estado): void {
+    const previous = this.estado();
+    if (next === previous) {
       this.stateOpen.set(false);
       return;
     }
-    this.currentState.set(v);
+    this.estado.set(next);
     this.stateOpen.set(false);
-    this.showToast(`Estado cambiado a ${this.stateLabelFor(v)}`, () =>
-      this.currentState.set(previous),
-    );
+    const label = this.estados.find((s) => s.value === next)?.label ?? next;
+    this.showToast(`Estado cambiado a ${label}`, () => this.estado.set(previous));
   }
 
-  startRename(): void {
-    this.simIdDraft.set(this.simId());
-    this.renaming.set(true);
-    queueMicrotask(() => this.renameInput()?.nativeElement?.focus());
-  }
-
-  commitRename(): void {
-    const v = this.simIdDraft().trim();
+  onRename(next: string): void {
+    const value = next.trim();
     const previous = this.simId();
-    if (v && v !== previous) {
-      this.simId.set(v);
-      this.showToast(`Nombre actualizado a "${v}"`, () => this.simId.set(previous));
-    }
-    this.renaming.set(false);
-  }
-
-  cancelRename(): void {
-    this.renaming.set(false);
-  }
-
-  inputValue(e: Event): string {
-    return (e.target as HTMLInputElement).value;
-  }
-
-  @HostListener('document:keydown.escape')
-  onEsc(): void {
-    if (this.plansOpen()) this.plansOpen.set(false);
-    if (this.stateOpen()) this.stateOpen.set(false);
-    if (this.renaming()) this.cancelRename();
+    if (!value || value === previous) return;
+    this.simId.set(value);
+    this.showToast(`Nombre actualizado a "${value}"`, () => this.simId.set(previous));
   }
 
   private showToast(message: string, undo: () => void): void {
@@ -178,7 +139,7 @@ export class PlannerTopBarComponent {
   }
 
   deleteNote(id: string): void {
-    this.notes.set(this.notes().filter(n => n.id !== id));
+    this.notes.set(this.notes().filter((n) => n.id !== id));
   }
 
   onSettingsChanged(s: SimulationSettings): void {

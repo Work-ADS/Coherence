@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TeaserTileComponent } from '../../components/teaser-tile/teaser-tile.component';
-import { SectionHeaderComponent } from '../novedades/shared/section-header.component';
+import { SectionHeaderComponent } from '../../components/section-header';
 
 @Component({
   selector: 'ai-insights-landing',

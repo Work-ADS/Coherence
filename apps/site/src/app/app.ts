@@ -44,9 +44,11 @@ export class App {
   private readonly currentUrl = signal(this.router.url);
 
   /**
-   * True when the user is viewing a proposal page inside /novedades/* or any
+   * True when the user is viewing a proposal page inside /demos/* or any
    * /afi-insights/* page. Hides the top nav so the page renders
    * full-viewport with its own product chrome.
+   *
+   * Note: pure /demos (the landing) does NOT match — only deeper paths.
    */
   readonly isFullScreenRoute = signal(this.matchFullScreen(this.router.url));
 
@@ -105,6 +107,6 @@ export class App {
   }
 
   private matchFullScreen(url: string): boolean {
-    return /^\/novedades\/.+/.test(url) || /^\/afi-insights(\/|$)/.test(url);
+    return /^\/demos\/.+/.test(url) || /^\/afi-insights(\/|$)/.test(url);
   }
 }

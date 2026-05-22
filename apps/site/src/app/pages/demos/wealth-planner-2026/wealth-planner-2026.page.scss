@@ -1,0 +1,7 @@
+// Wealth Planner 2026 overview — thin consumer of site-demo-overview-shell.
+// Page-level chrome is delegated entirely to the shell; this file exists to
+// satisfy the 3-file rule.
+
+:host {
+  display: block;
+}

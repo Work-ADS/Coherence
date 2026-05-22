@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { PageHeaderComponent, TabsComponent, TabItemComponent } from '@coherence/ui';
 
-import { SectionHeaderComponent } from '../../../novedades/shared/section-header.component';
+import { SectionHeaderComponent } from '../../../../components/section-header';
 
 /**
  * Cabecera de sección — pattern showcase.

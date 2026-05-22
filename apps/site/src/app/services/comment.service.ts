@@ -225,7 +225,7 @@ export class CommentService {
       return parsed.map((c) => ({
         id: c.id ?? crypto.randomUUID(),
         demoSlug: c.demoSlug ?? 'unknown',
-        demoRoute: c.demoRoute ?? `/novedades/${c.demoSlug ?? ''}`,
+        demoRoute: c.demoRoute ?? `/demos/${c.demoSlug ?? ''}`,
         viewIndex: c.viewIndex ?? 0,
         viewLabel: c.viewLabel ?? 'default',
         elementSelector: c.elementSelector ?? '',

@@ -1,0 +1,99 @@
+// =============================================================================
+// Blog landing — index of blog entries.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.blog-landing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  max-width: var(--dimension-240);
+  margin-inline: auto;
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-md);
+}
+
+.blog-landing__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.blog-landing__eyebrow {
+  margin: 0;
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
+}
+
+.blog-landing__title {
+  margin: 0;
+  font: var(--type-display-md, var(--type-body-lg-600));
+  color: var(--foreground-primary-default);
+}
+
+.blog-landing__intro {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+.blog-landing__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--dimension-80), 1fr));
+  gap: var(--space-md);
+}
+
+.blog-landing__item {
+  display: flex;
+}
+
+.blog-landing__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius-card);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  transition:
+    background var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle);
+    border-color: var(--border-default);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+}
+
+.blog-landing__card-eyebrow {
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
+}
+
+.blog-landing__card-title {
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}
+
+.blog-landing__card-intro {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}

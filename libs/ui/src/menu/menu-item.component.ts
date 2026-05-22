@@ -13,10 +13,13 @@ import type { MenuItemVariant } from './menu.variants';
  *
  * Slots:
  * - `[slot=icon]` — leading icon (shown only when `iconStart` is truthy)
+ * - `[slot=label]` — projected label content (use when the row's label is a
+ *   non-text primitive — e.g. a status chip). When this slot has content, the
+ *   `label` input is ignored.
  * - `[slot=trailing]` — trailing content (e.g. check mark for selected state, badge)
  *
  * Inputs:
- * - `label` — primary text (required)
+ * - `label` — primary text (used when no slot=label content is projected)
  * - `secondaryLabel` — optional second line shown below `label` in a muted style
  * - `shortcut` — optional keyboard shortcut hint, right-aligned
  * - `variant` — `'default' | 'danger'`
@@ -51,7 +54,13 @@ import type { MenuItemVariant } from './menu.variants';
 
       <!-- Label group (primary + optional secondary line) -->
       <span class="menu-item__label-group">
-        <span class="menu-item__label">{{ label() }}</span>
+        @if (label()) {
+          <span class="menu-item__label">{{ label() }}</span>
+        } @else {
+          <span class="menu-item__label menu-item__label--slot">
+            <ng-content select="[slot=label]" />
+          </span>
+        }
         @if (secondaryLabel()) {
           <span class="menu-item__secondary-label">{{ secondaryLabel() }}</span>
         }
@@ -71,7 +80,7 @@ import type { MenuItemVariant } from './menu.variants';
 })
 export class MenuItemComponent {
   readonly iconStart = input<string | null>(null);
-  readonly label = input.required<string>();
+  readonly label = input<string | null>(null);
   readonly secondaryLabel = input<string | null>(null);
   readonly shortcut = input<string | null>(null);
   readonly variant = input<MenuItemVariant>('default');

@@ -1,0 +1,95 @@
+:host {
+  display: inline-flex;
+  color: var(--foreground-primary-default);
+}
+
+.evo {
+  width: var(--dimension-24);
+  height: auto;
+  overflow: visible;
+}
+
+.evo__baseline {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.22;
+}
+
+// Projection curve — at rest, drawn statically.
+// On hover, scrubs left→right continuously (a live wealth simulation
+// running). The dashoffset wipes out then redraws, looping.
+.evo__curve {
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 0;
+  opacity: 0.85;
+}
+
+// Iteration dots — light up in sequence as the curve scrubs past.
+.evo__dot {
+  fill: currentColor;
+  opacity: 0.55;
+  transform-origin: center;
+  transform-box: fill-box;
+
+  &--5 { opacity: 0.95; }
+}
+
+// The endpoint dot pulses softly even at rest — "live data ticking".
+.evo__dot--5 {
+  animation: evo-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes evo-pulse {
+  0%, 100% { transform: scale(1);    opacity: 0.95; }
+  50%      { transform: scale(1.35); opacity: 1; }
+}
+
+// On hover: the curve runs a continuous "simulation pass" — wipes from
+// right→left, redraws left→right, dots ignite one by one in sync.
+:host-context(.card:hover) {
+  .evo__curve {
+    animation: evo-scrub 2.6s var(--easing-enter) infinite;
+  }
+
+  .evo__dot--1 { animation: evo-ignite 2.6s ease-in-out infinite 0.20s; }
+  .evo__dot--2 { animation: evo-ignite 2.6s ease-in-out infinite 0.55s; }
+  .evo__dot--3 { animation: evo-ignite 2.6s ease-in-out infinite 0.90s; }
+  .evo__dot--4 { animation: evo-ignite 2.6s ease-in-out infinite 1.25s; }
+  .evo__dot--5 { animation: evo-ignite 2.6s ease-in-out infinite 1.60s, evo-glow 2.6s ease-in-out infinite 1.60s; }
+}
+
+// Curve wipes out (right→left), then redraws (left→right).
+@keyframes evo-scrub {
+  0%   { stroke-dashoffset: 0;   opacity: 0.85; }
+  35%  { stroke-dashoffset: 60;  opacity: 0.85; }
+  36%  { stroke-dashoffset: -60; opacity: 0;    }
+  37%  { stroke-dashoffset: -60; opacity: 0.85; }
+  100% { stroke-dashoffset: 0;   opacity: 0.85; }
+}
+
+// Dot "ignites" as the curve passes through it.
+@keyframes evo-ignite {
+  0%, 40%   { transform: scale(1);    opacity: 0.4; }
+  50%       { transform: scale(1.5);  opacity: 1;   }
+  70%, 100% { transform: scale(1);    opacity: 0.85; }
+}
+
+// Endpoint glow: a brighter pulse when the curve completes its pass.
+@keyframes evo-glow {
+  0%, 60%   { filter: none; }
+  70%       { filter: drop-shadow(0 0 var(--dimension-1) currentColor); }
+  90%, 100% { filter: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .evo__curve,
+  .evo__dot,
+  .evo__dot--5 {
+    animation: none;
+  }
+}

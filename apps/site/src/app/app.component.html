@@ -32,18 +32,30 @@
   <!-- Right column: top bar + content -->
   <div class="main-column">
 
-    <!-- Top bar (nav tabs left, theme toggle right) — hidden on homepage/fullscreen -->
-    @if (!isFullScreenRoute() && !isHomepage()) {
+    <!-- Top bar — hidden on demo / insights routes (they bring their own chrome).
+         On the homepage we render the bar with only the right-side controls
+         (no nav links) so language/brand/theme stay reachable from the hero. -->
+    @if (!isFullScreenRoute()) {
       <afi-top-bar>
-        <nav slot="start" class="top-nav" aria-label="Main navigation">
-          <a routerLink="/fundamentos" routerLinkActive="active" class="top-nav__link">Foundations</a>
-          <a routerLink="/componentes" routerLinkActive="active" class="top-nav__link">Components</a>
-          <!-- <a routerLink="/patrones" routerLinkActive="active" class="top-nav__link">Patterns</a> -->
-          <a routerLink="/demos" routerLinkActive="active" class="top-nav__link">Demos</a>
-          <a routerLink="/blog" routerLinkActive="active" class="top-nav__link">Blog</a>
-        </nav>
+        @if (!isHomepage()) {
+          <nav slot="start" class="top-nav" aria-label="Main navigation">
+            <a routerLink="/fundamentos" routerLinkActive="active" class="top-nav__link">
+              {{ lang() === 'es' ? 'Fundamentos' : 'Foundations' }}
+            </a>
+            <a routerLink="/componentes" routerLinkActive="active" class="top-nav__link">
+              {{ lang() === 'es' ? 'Componentes' : 'Components' }}
+            </a>
+            <a routerLink="/demos" routerLinkActive="active" class="top-nav__link">
+              {{ lang() === 'es' ? 'Demos' : 'Demos' }}
+            </a>
+            <a routerLink="/blog" routerLinkActive="active" class="top-nav__link">
+              {{ lang() === 'es' ? 'Blog' : 'Blog' }}
+            </a>
+          </nav>
+        }
 
         <div slot="end" class="top-bar__end">
+          <site-language-toggle />
           <site-brand-picker />
           <site-theme-toggle />
         </div>

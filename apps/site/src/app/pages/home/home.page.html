@@ -8,17 +8,27 @@
       <span class="hero__wordmark">Coherence</span>
     </div>
 
-    <h1 class="hero__title">Design system</h1>
+    <h1 class="hero__title">
+      {{ lang() === 'es' ? 'Sistema de diseño' : 'Design system' }}
+    </h1>
     <p class="hero__subtitle">
-      Here you can find current design projects and updates, resources, processes, etc. Basically this is the design head quarters.
+      @if (lang() === 'es') {
+        Aquí encontrarás los proyectos de diseño activos, novedades, recursos y procesos. En resumen, este es el cuartel general del diseño.
+      } @else {
+        Here you’ll find current design projects and updates, resources, processes, and more. Basically, this is the design HQ.
+      }
     </p>
 
     <div class="hero__ctas">
       <a routerLink="/demos">
-        <afi-button variant="primary">View demos</afi-button>
+        <afi-button variant="primary">
+          {{ lang() === 'es' ? 'Ver demos' : 'View demos' }}
+        </afi-button>
       </a>
       <a routerLink="/componentes">
-        <afi-button variant="secondary">View components</afi-button>
+        <afi-button variant="secondary">
+          {{ lang() === 'es' ? 'Ver componentes' : 'View components' }}
+        </afi-button>
       </a>
     </div>
   </section>
@@ -27,41 +37,20 @@
   <section class="recent">
     <div class="recent__header">
       <div class="recent__line"></div>
-      <h2 class="recent__title">Recent work</h2>
+      <h2 class="recent__title">
+        {{ lang() === 'es' ? 'Trabajos recientes' : 'Recent work' }}
+      </h2>
       <div class="recent__line"></div>
     </div>
 
     <div class="card-grid">
-      @for (card of recentWork; track card.routerLink) {
+      @for (card of recentWork(); track card.routerLink) {
         <a [routerLink]="card.routerLink" class="card">
-          <div class="card__thumb card__thumb--{{ card.thumb }}" aria-hidden="true">
-            <!-- Wealth Planner: stacked bar-chart strokes -->
-            @if (card.thumb === 'wealth-planner') {
-              <div class="thumb-wp">
-                <span class="thumb-wp__bar thumb-wp__bar--1"></span>
-                <span class="thumb-wp__bar thumb-wp__bar--2"></span>
-                <span class="thumb-wp__bar thumb-wp__bar--3"></span>
-                <span class="thumb-wp__bar thumb-wp__bar--4"></span>
-                <span class="thumb-wp__bar thumb-wp__bar--5"></span>
-                <span class="thumb-wp__line"></span>
-              </div>
-            }
-            <!-- Sarevi: layered magenta + verde leaf forms -->
-            @if (card.thumb === 'sarevi') {
-              <div class="thumb-sarevi">
-                <span class="thumb-sarevi__halo"></span>
-                <span class="thumb-sarevi__leaf"></span>
-                <span class="thumb-sarevi__dot"></span>
-              </div>
-            }
-            <!-- Whitelabel: three brand stripes rearranging on hover -->
-            @if (card.thumb === 'whitelabel') {
-              <div class="thumb-wl">
-                <span class="thumb-wl__stripe thumb-wl__stripe--1"></span>
-                <span class="thumb-wl__stripe thumb-wl__stripe--2"></span>
-                <span class="thumb-wl__stripe thumb-wl__stripe--3"></span>
-                <span class="thumb-wl__stripe thumb-wl__stripe--4"></span>
-              </div>
+          <div class="card__thumb" aria-hidden="true">
+            @switch (card.thumb) {
+              @case ('wealth-planner') { <site-evolution-glyph /> }
+              @case ('sarevi')         { <site-whitelabel-frame-glyph /> }
+              @case ('whitelabel')     { <site-collapse-glyph /> }
             }
           </div>
           <div class="card__body">

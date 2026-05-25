@@ -1,0 +1,66 @@
+:host {
+  display: inline-flex;
+  color: var(--foreground-primary-default);
+}
+
+.col {
+  width: var(--dimension-24);
+  height: var(--dimension-24);
+}
+
+// 7 rows = the 90-line per-brand mapping, at rest.
+.col__row {
+  fill: currentColor;
+  opacity: 0.55;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+// The single line = the 8-line @include — invisible at rest.
+.col__one {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+// On hover loop forever: rows collapse → one line pulses → rows return.
+// Tells the round-trip: messy mapping ⟷ clean mixin, breathing.
+:host-context(.card:hover) {
+  .col__row { animation: col-collapse 3s ease-in-out infinite; }
+  .col__one { animation: col-emerge   3s ease-in-out infinite; }
+
+  // Stagger so the rows don't all collapse in unison — wave inward.
+  .col__row--1 { animation-delay: 0ms;   }
+  .col__row--2 { animation-delay: 60ms;  }
+  .col__row--3 { animation-delay: 120ms; }
+  .col__row--4 { animation-delay: 180ms; }
+  .col__row--5 { animation-delay: 120ms; }
+  .col__row--6 { animation-delay: 60ms;  }
+  .col__row--7 { animation-delay: 0ms;   }
+}
+
+// Rows scale to nothing toward the left edge, then return.
+@keyframes col-collapse {
+  0%, 5%    { transform: scaleX(1);    opacity: 0.55; }
+  35%       { transform: scaleX(0.05); opacity: 0;    }
+  45%, 65%  { transform: scaleX(0.05); opacity: 0;    }
+  90%, 100% { transform: scaleX(1);    opacity: 0.55; }
+}
+
+// The single @include line emerges, breathes proudly, then collapses back.
+@keyframes col-emerge {
+  0%, 30%   { transform: scaleX(0); opacity: 0; }
+  45%       { transform: scaleX(1); opacity: 1; }
+  50%, 60%  { transform: scaleX(1.05); opacity: 1; }
+  75%       { transform: scaleX(1); opacity: 1; }
+  90%, 100% { transform: scaleX(0); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .col__row,
+  .col__one {
+    animation: none;
+  }
+}

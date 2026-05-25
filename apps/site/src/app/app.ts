@@ -3,7 +3,9 @@ import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } fro
 import { PasswordGateComponent } from './components/password-gate/password-gate.component';
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 import { BrandPickerComponent } from './components/brand-picker/brand-picker.component';
+import { LanguageToggleComponent } from './components/language-toggle/language-toggle.component';
 import { FeedbackOverlayComponent } from './components/feedback-overlay/feedback-overlay.component';
+import { LanguageService } from './services/language.service';
 import {
   LogoComponent,
   TopBarComponent,
@@ -27,6 +29,7 @@ import {
     PasswordGateComponent,
     ThemeToggleComponent,
     BrandPickerComponent,
+    LanguageToggleComponent,
     FeedbackOverlayComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +40,10 @@ export class App {
   private static readonly STORAGE_KEY = 'coherence-unlocked';
 
   private readonly router = inject(Router);
+  private readonly language = inject(LanguageService);
+
+  /** Current locale for the DS chrome (nav, home, landings). Demos ignore it. */
+  readonly lang = this.language.lang;
 
   readonly unlocked = signal(
     typeof localStorage !== 'undefined' &&

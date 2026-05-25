@@ -26,16 +26,16 @@
   // MAGENTA. The `--bere` alias is kept for back-compat with prior CSS
   // and now points at the magenta ramp — every `var(--bere)` usage flips
   // to true brand-center colors automatically.
-  --bere:        var(--color-laboral-kutxa-magenta-500, #A50050);
-  --bere-700:    var(--color-laboral-kutxa-magenta-700, #7B0B56);
-  --bere-500:    var(--color-laboral-kutxa-magenta-500, #A50050);
-  --bere-300:    var(--color-laboral-kutxa-magenta-300, #D5618E);
-  --green:       var(--color-laboral-kutxa-verde-500,    #94C11F);
-  --green-700:   var(--color-laboral-kutxa-verde-700,    #6F9510);
-  --green-100:   var(--color-laboral-kutxa-verde-100,    #E8F2D1);
-  --green-50:    var(--color-laboral-kutxa-verde-50,     #F1F7E0);
-  --mag:         var(--color-laboral-kutxa-magenta-500,  #A50050);
-  --mag-100:     var(--color-laboral-kutxa-magenta-100,  #F2C0D7);
+  --bere:        var(--color-laboral-kutxa-magenta-500);
+  --bere-700:    var(--color-laboral-kutxa-magenta-700);
+  --bere-500:    var(--color-laboral-kutxa-magenta-500);
+  --bere-300:    var(--color-laboral-kutxa-magenta-300);
+  --green:       var(--color-laboral-kutxa-verde-500);
+  --green-700:   var(--color-laboral-kutxa-verde-700);
+  --green-100:   var(--color-laboral-kutxa-verde-100);
+  --green-50:    var(--color-laboral-kutxa-verde-50);
+  --mag:         var(--color-laboral-kutxa-magenta-500);
+  --mag-100:     var(--color-laboral-kutxa-magenta-100);
   // ────────────────────────────────────────────────────────────────────────
   // Sarevi surface mapping (page-level — overrides the brand-wide canvas/
   // surface tokens for this demo only). Reads like LK's own web sections:
@@ -55,37 +55,37 @@
   // pink. Step the percentages up only if a reviewer specifically asks
   // for more brand color in the fills.
   // ────────────────────────────────────────────────────────────────────────
-  --beige:       #FFFFFF;
+  --beige:       var(--color-laboral-kutxa-beige-0);
   --beige-deep:  transparent;
-  --cream:       var(--color-laboral-kutxa-beige-25,    #FDFBF6);
-  --card-soft:   var(--color-laboral-kutxa-beige-25,    #FDFBF6);
-  --card:        color-mix(in srgb, var(--color-laboral-kutxa-magenta-25) 30%, #FFFFFF);
-  --line:        var(--color-laboral-kutxa-magenta-100, #F2C0D7);
-  --line-soft:   color-mix(in srgb, var(--color-laboral-kutxa-magenta-25) 50%, #FFFFFF);
-  --text:        var(--color-laboral-kutxa-ink-default,  #1F1320);
-  --text-soft:   var(--color-laboral-kutxa-ink-soft,     #574A58);
-  --text-muted:  var(--color-laboral-kutxa-ink-muted,    #8A7E8A);
+  --cream:       var(--color-laboral-kutxa-beige-25);
+  --card-soft:   var(--color-laboral-kutxa-beige-25);
+  --card:        color-mix(in srgb, var(--color-laboral-kutxa-magenta-25) 30%, var(--color-laboral-kutxa-beige-0));
+  --line:        var(--color-laboral-kutxa-magenta-100);
+  --line-soft:   color-mix(in srgb, var(--color-laboral-kutxa-magenta-25) 50%, var(--color-laboral-kutxa-beige-0));
+  --text:        var(--color-laboral-kutxa-ink-default);
+  --text-soft:   var(--color-laboral-kutxa-ink-soft);
+  --text-muted:  var(--color-laboral-kutxa-ink-muted);
 
-  --warn-bg: #FFF3DF;
-  --warn-fg: #8A5A0B;
-  --low-bg:  #FCE3DE;
-  --low-fg:  #A03522;
-  --mid-bg:  #FFE6CC;
-  --mid-fg:  #A04F00;
-  --high-bg: #E1F0CB;
-  --high-fg: #44680A;
-  --none-bg: #ECE6D6;
-  --none-fg: #6B5E3D;
+  --warn-bg: var(--color-lk-impact-warn-bg);
+  --warn-fg: var(--color-lk-impact-warn-fg);
+  --low-bg:  var(--color-lk-impact-low-bg);
+  --low-fg:  var(--color-lk-impact-low-fg);
+  --mid-bg:  var(--color-lk-impact-mid-bg);
+  --mid-fg:  var(--color-lk-impact-mid-fg);
+  --high-bg: var(--color-lk-impact-high-bg);
+  --high-fg: var(--color-lk-impact-high-fg);
+  --none-bg: var(--color-lk-impact-none-bg);
+  --none-fg: var(--color-lk-impact-none-fg);
 
-  --energy-A: #3FA64A;
-  --energy-B: #71B73D;
-  --energy-C: #B6CF35;
-  --energy-D: #F2C40A;
-  --energy-E: #E8901E;
-  --energy-F: #DC5E26;
-  --energy-G: #C8261F;
+  --energy-A: var(--color-lk-energy-A);
+  --energy-B: var(--color-lk-energy-B);
+  --energy-C: var(--color-lk-energy-C);
+  --energy-D: var(--color-lk-energy-D);
+  --energy-E: var(--color-lk-energy-E);
+  --energy-F: var(--color-lk-energy-F);
+  --energy-G: var(--color-lk-energy-G);
 
-  --shadow-card: 0 1px 0 rgba(46,26,46,0.04), 0 8px 24px -12px rgba(46,26,46,0.10);
+  --shadow-card: var(--elevation-sarevi-card);
 
   --font-display: var(--font-brand-display, "Source Serif 4", Georgia, serif);
   --font-text:    var(--font-brand-text,    "Inter", system-ui, sans-serif);
@@ -106,7 +106,7 @@
   font-family: var(--font-text);
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
-  font-size: 15px;
+  font-size: var(--dimension-3-75);
   line-height: 1.45;
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -120,7 +120,7 @@
   }
 
   a { color: var(--mag); text-decoration: none; }
-  a:hover { text-decoration: underline; text-underline-offset: 2px; }
+  a:hover { text-decoration: underline; text-underline-offset: var(--dimension-0-5); }
 
   .mono { font-family: var(--font-mono); }
   .spacer { flex: 1; }
@@ -134,34 +134,34 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 56px 18px;
-  gap: 24px;
+  padding: var(--dimension-5-5) var(--dimension-14) var(--dimension-4-5);
+  gap: var(--dimension-6);
   background: linear-gradient(
     135deg,
     var(--color-laboral-kutxa-magenta-700) 0%,
     var(--color-laboral-kutxa-magenta-500) 55%,
     var(--color-laboral-kutxa-magenta-400) 100%
   );
-  color: #fff;
+  color: var(--color-laboral-kutxa-beige-0);
 
   &__brand {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: var(--dimension-3-5);
     flex: 0 0 auto;
   }
 
   &__sep {
-    width: 1px;
-    height: 24px;
-    background: #fff;
+    width: var(--dimension-0-25);
+    height: var(--dimension-6);
+    background: var(--color-laboral-kutxa-beige-0);
     opacity: .45;
   }
 
   &__sub {
     font-family: var(--font-display);
-    font-size: 17px;
-    color: #fff;
+    font-size: var(--dimension-4-25);
+    color: var(--color-laboral-kutxa-beige-0);
     font-weight: 500;
     letter-spacing: -0.01em;
   }
@@ -170,37 +170,37 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 16px;
-    color: #fff;
-    font-size: 14px;
+    gap: var(--dimension-4);
+    color: var(--color-laboral-kutxa-beige-0);
+    font-size: var(--dimension-3-5);
     flex: 0 0 auto;
-    min-width: 240px;
+    min-width: var(--dimension-60);
   }
 
   &__ref {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 3px;
+    gap: var(--dimension-0-75);
   }
 
-  &__ref-label { color: rgba(255, 255, 255, 0.75); font-size: 11.5px; }
+  &__ref-label { color: var(--color-white-a75); font-size: 11.5px; }
 
   &__ref-code {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--dimension-2);
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: var(--dimension-3-25);
     letter-spacing: 0.02em;
-    color: #fff;
+    color: var(--color-laboral-kutxa-beige-0);
   }
 
   .topbar-download {
-    --foreground-secondary-default: #fff;
-    --surface-subtle: rgba(255, 255, 255, 0.14);
-    --brand-tertiary-background-hover: rgba(255, 255, 255, 0.14);
-    --brand-tertiary-foreground-hover: #fff;
+    --foreground-secondary-default: var(--color-laboral-kutxa-beige-0);
+    --surface-subtle: var(--color-white-a14);
+    --brand-tertiary-background-hover: var(--color-white-a14);
+    --brand-tertiary-foreground-hover: var(--color-laboral-kutxa-beige-0);
   }
 }
 
@@ -208,23 +208,23 @@
 // Asset stays original: white wordmark + colored geometric mark on
 // transparent bg. Sits naturally on the magenta-gradient top bar.
 .lk-logo-img {
-  height: 32px;
+  height: var(--dimension-8);
   width: auto;
   display: block;
 }
 
 .lk-mark-img {
-  width: 36px;
-  height: 36px;
+  width: var(--dimension-9);
+  height: var(--dimension-9);
   display: block;
 }
 
 // ─── Main shell ───────────────────────────────────────────────────────────
 .lk-shell {
-  max-width: 1080px;
+  max-width: var(--dimension-270);
   width: 100%;
   margin: 0 auto;
-  padding: 0 24px 64px;
+  padding: 0 var(--dimension-6) var(--dimension-16);
 }
 
 // ─── Step pills ───────────────────────────────────────────────────────────
@@ -232,8 +232,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 0 12px;
+  gap: var(--dimension-2);
+  padding: 0 var(--dimension-3);
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -241,14 +241,14 @@
 .step {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--dimension-2);
   font-family: var(--font-display);
   font-size: 13.5px;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  padding: 6px 10px;
+  color: var(--color-laboral-kutxa-beige-0);
+  background: var(--color-white-a10);
+  border: var(--dimension-0-25) solid var(--color-white-a18);
+  border-radius: var(--radius-full);
+  padding: var(--dimension-1-5) var(--dimension-2-5);
   cursor: pointer;
   transition:
     background-color 150ms ease,
@@ -256,18 +256,18 @@
     transform 150ms ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.16);
-    border-color: rgba(255, 255, 255, 0.35);
+    background: var(--color-white-a16);
+    border-color: var(--color-white-a35);
   }
 
   &:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 2px;
+    outline: var(--dimension-0-5) solid var(--color-laboral-kutxa-beige-0);
+    outline-offset: var(--dimension-0-5);
   }
 
   &__badge {
-    width: 24px; height: 24px;
-    border-radius: 999px;
+    width: var(--dimension-6); height: var(--dimension-6);
+    border-radius: var(--radius-full);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -280,25 +280,25 @@
   &__sub {
     font-family: var(--font-text);
     font-size: 10.5px;
-    color: rgba(255, 255, 255, 0.72);
-    margin-top: 2px;
+    color: var(--color-white-a72);
+    margin-top: var(--dimension-0-5);
   }
 
   &--done .step__badge {
-    background: var(--green); color: #fff;
+    background: var(--green); color: var(--color-laboral-kutxa-beige-0);
   }
   &--current .step__badge {
-    background: #fff; color: var(--bere);
+    background: var(--color-laboral-kutxa-beige-0); color: var(--bere);
   }
   &--todo .step__badge {
     background: transparent;
-    color: rgba(255, 255, 255, 0.74);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    color: var(--color-white-a74);
+    box-shadow: inset 0 0 0 var(--dimension-0-25) var(--color-white-a35);
   }
-  &--todo .step__label { color: rgba(255, 255, 255, 0.74); }
+  &--todo .step__label { color: var(--color-white-a74); }
   &--current {
-    background: rgba(255, 255, 255, 0.20);
-    border-color: rgba(255, 255, 255, 0.42);
+    background: var(--color-white-a20);
+    border-color: var(--color-white-a42);
   }
 }
 
@@ -307,13 +307,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 64px 24px 48px;
+  padding: var(--dimension-16) var(--dimension-6) var(--dimension-12);
   text-align: center;
-  gap: 14px;
+  gap: var(--dimension-3-5);
 
   &__h1 {
     font-family: var(--font-display);
-    font-size: 54px;
+    font-size: var(--dimension-13-5);
     line-height: 1.05;
     color: var(--bere);
     font-weight: 600;
@@ -321,17 +321,17 @@
     max-width: 18ch;
   }
 
-  &__lead { color: var(--text-soft); font-size: 17px; margin: 0; }
-  &__cards { width: 100%; max-width: 760px; margin-top: 24px; }
+  &__lead { color: var(--text-soft); font-size: var(--dimension-4-25); margin: 0; }
+  &__cards { width: 100%; max-width: var(--dimension-190); margin-top: var(--dimension-6); }
 
   &__recover {
-    margin-top: 28px;
+    margin-top: var(--dimension-7);
     background: none; border: 0;
-    padding: 6px;
+    padding: var(--dimension-1-5);
     color: var(--bere);
     font-size: 14.5px;
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-underline-offset: var(--dimension-0-75);
     cursor: pointer;
     font-family: inherit;
 
@@ -341,33 +341,33 @@
 
 .welcome-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: 24px;
-  margin-top: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-70)), 1fr));
+  gap: var(--dimension-6);
+  margin-top: var(--dimension-2);
 }
 
 .choice-card {
   background: var(--card-soft);
-  border-radius: 16px;
-  padding: 36px 28px 32px;
+  border-radius: var(--radius-xl);
+  padding: var(--dimension-9) var(--dimension-7) var(--dimension-8);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  border: 1px solid transparent;
+  gap: var(--dimension-3-5);
+  border: var(--dimension-0-25) solid transparent;
   cursor: pointer;
   transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
   font: inherit;
 
   &:hover {
     border-color: var(--bere);
-    transform: translateY(-2px);
+    transform: translateY(calc(-1 * var(--dimension-0-5)));
     box-shadow: var(--shadow-card);
   }
 
   &__ico {
-    width: 80px; height: 80px; border-radius: 18px;
-    background: var(--bere); color: #fff;
+    width: var(--dimension-20); height: var(--dimension-20); border-radius: var(--dimension-4-5);
+    background: var(--bere); color: var(--color-laboral-kutxa-beige-0);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -376,13 +376,13 @@
   &__name {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 22px;
+    font-size: var(--dimension-5-5);
     color: var(--bere);
   }
 
   &__desc {
     color: var(--text-soft);
-    font-size: 14px;
+    font-size: var(--dimension-3-5);
     text-align: center;
     max-width: 22ch;
   }
@@ -391,26 +391,26 @@
 // ─── Surface (recessed beige card) ───────────────────────────────────────
 .surface {
   background: var(--beige-deep);
-  border-radius: 24px;
-  padding: 36px;
+  border-radius: var(--dimension-6);
+  padding: var(--dimension-9);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--dimension-6);
 }
 
 .surface-header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 0 4px 4px;
+  gap: var(--dimension-1-5);
+  padding: 0 var(--dimension-1) var(--dimension-1);
 
   &__title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--dimension-2-5);
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 24px;
+    font-size: var(--dimension-6);
     color: var(--bere);
   }
 
@@ -420,19 +420,19 @@
 // ─── Card (white panel inside the surface) ───────────────────────────────
 .card {
   background: var(--card);
-  border-radius: 16px;
-  padding: 28px;
+  border-radius: var(--radius-xl);
+  padding: var(--dimension-7);
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--dimension-4-5);
 
   &__title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--dimension-2-5);
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 18px;
+    font-size: var(--dimension-4-5);
     color: var(--bere);
   }
 }
@@ -447,10 +447,10 @@
 // ─── Medida row (checklist) ───────────────────────────────────────────────
 .medida-row {
   display: grid;
-  grid-template-columns: 32px 1fr auto auto auto;
+  grid-template-columns: var(--dimension-8) 1fr auto auto auto;
   align-items: center;
-  gap: 14px;
-  padding: 8px 0;
+  gap: var(--dimension-3-5);
+  padding: var(--dimension-2) 0;
 
   &__name {
     font-size: 14.5px;
@@ -461,15 +461,15 @@
 
   &__tags {
     display: flex;
-    gap: 8px;
+    gap: var(--dimension-2);
     align-items: center;
   }
 
   &__price {
-    font-size: 14px;
+    font-size: var(--dimension-3-5);
     color: var(--bere);
     font-variant-numeric: tabular-nums;
-    min-width: 84px;
+    min-width: var(--dimension-21);
     text-align: right;
   }
 
@@ -477,7 +477,7 @@
     font-size: 13.5px;
     color: var(--mag);
     display: inline-flex;
-    gap: 4px;
+    gap: var(--dimension-1);
     align-items: center;
     background: none;
     border: 0;
@@ -485,24 +485,24 @@
     cursor: pointer;
     font-family: inherit;
 
-    &:hover { text-decoration: underline; text-underline-offset: 2px; }
+    &:hover { text-decoration: underline; text-underline-offset: var(--dimension-0-5); }
   }
 
   &__expand-toggle {
-    margin-left: 42px;
-    margin-top: -8px;
-    margin-bottom: 8px;
+    margin-left: var(--dimension-10-5);
+    margin-top: calc(-1 * var(--dimension-2));
+    margin-bottom: var(--dimension-2);
   }
 }
 
 .medida-detail {
   background: var(--cream);
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin: 4px 0 12px 42px;
+  border-radius: var(--dimension-2-5);
+  padding: var(--dimension-4) var(--dimension-4-5);
+  margin: var(--dimension-1) 0 var(--dimension-3) var(--dimension-10-5);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--dimension-2-5);
 
   &__switch-row {
     display: flex;
@@ -517,19 +517,19 @@
   &__auto {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
+    gap: var(--dimension-2-5);
+    font-size: var(--dimension-3-25);
   }
 
   &__hint {
     color: var(--text-soft);
-    font-size: 13px;
+    font-size: var(--dimension-3-25);
   }
 
   &__foot {
     display: flex;
     justify-content: space-between;
-    margin-top: 4px;
+    margin-top: var(--dimension-1);
   }
 }
 
@@ -537,7 +537,7 @@
   background: none;
   border: 0;
   color: var(--bere);
-  font-size: 13px;
+  font-size: var(--dimension-3-25);
   cursor: pointer;
   padding: 0;
   font-family: inherit;
@@ -550,13 +550,13 @@
 .add-custom {
   display: flex;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: var(--dimension-2);
 }
 
 .energy-range {
   display: flex;
-  gap: 6px;
-  padding-top: 8px;
+  gap: var(--dimension-1-5);
+  padding-top: var(--dimension-2);
   align-items: center;
   flex-wrap: wrap;
 
@@ -570,20 +570,20 @@
     &--active::before {
       content: "";
       position: absolute;
-      inset: -4px -2px;
-      border-radius: 6px;
-      box-shadow: 0 0 0 2px var(--bere);
+      inset: calc(-1 * var(--dimension-1)) calc(-1 * var(--dimension-0-5));
+      border-radius: var(--dimension-1-5);
+      box-shadow: 0 0 0 var(--dimension-0-5) var(--bere);
     }
   }
 
   &__labels {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+    font-size: var(--dimension-3);
     color: var(--text-soft);
-    margin-top: 2px;
-    padding-top: 4px;
-    max-width: 268px;
+    margin-top: var(--dimension-0-5);
+    padding-top: var(--dimension-1);
+    max-width: var(--dimension-67);
   }
 }
 
@@ -593,12 +593,12 @@
 .medidas-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 18px;
+  gap: var(--dimension-4-5);
   min-width: 0;
   width: 100%;
 
   @media (min-width: 1040px) {
-    grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+    grid-template-columns: minmax(0, 1.25fr) minmax(var(--dimension-80), 0.75fr);
     align-items: start;
   }
 }
@@ -606,19 +606,19 @@
 .bento-medidas {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
+  gap: var(--dimension-3-5);
   position: sticky;
-  top: 16px;
+  top: var(--dimension-4);
   min-width: 0;
   width: 100%;
 
   &__cell {
     background: var(--card);
-    border-radius: 16px;
-    padding: 24px;
+    border-radius: var(--radius-xl);
+    padding: var(--dimension-6);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--dimension-4);
     min-width: 0;
     width: 100%;
     max-width: 100%;
@@ -627,25 +627,25 @@
       background: linear-gradient(
         160deg,
         var(--color-laboral-kutxa-verde-50) 0%,
-        #FFFFFF 75%
+        var(--color-laboral-kutxa-beige-0) 75%
       );
     }
 
     &--costs {
       // Plain white, tighter padding to give the table room.
-      padding: 24px 22px;
+      padding: var(--dimension-6) var(--dimension-5-5);
     }
   }
 
   &__head {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--dimension-2);
   }
 
   &__copy {
     margin: 0;
-    font-size: 13px;
+    font-size: var(--dimension-3-25);
     line-height: 1.45;
     color: var(--text-soft);
   }
@@ -653,18 +653,18 @@
   &__title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--dimension-2-5);
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 18px;
+    font-size: var(--dimension-4-5);
     color: var(--bere);
   }
 
   &__grade-row {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: var(--dimension-2);
+    font-size: var(--dimension-3-25);
     color: var(--text-soft);
   }
 
@@ -674,7 +674,7 @@
     font-size: 11.5px;
     font-weight: 500;
     color: var(--text-soft);
-    margin-right: 2px;
+    margin-right: var(--dimension-0-5);
   }
 
   &__alert {
@@ -689,7 +689,7 @@
 .bento {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: var(--dimension-3-5);
 
   @media (min-width: 768px) {
     grid-template-columns: 1fr;
@@ -700,29 +700,29 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 22px 24px;
-  border-radius: 14px;
+  gap: var(--dimension-2);
+  padding: var(--dimension-5-5) var(--dimension-6);
+  border-radius: var(--dimension-3-5);
   background: var(--card-soft);
-  border: 1px solid var(--line-soft);
+  border: var(--dimension-0-25) solid var(--line-soft);
   min-height: 0;
 
   &__ico {
-    width: 40px; height: 40px;
-    border-radius: 10px;
+    width: var(--dimension-10); height: var(--dimension-10);
+    border-radius: var(--dimension-2-5);
     background: linear-gradient(135deg, var(--mag) 0%, var(--color-laboral-kutxa-magenta-700) 100%);
-    color: #FFF;
+    color: var(--color-laboral-kutxa-beige-0);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 4px;
+    margin-bottom: var(--dimension-1);
   }
 
   &__topline {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--dimension-4);
   }
 
   &__label {
@@ -736,11 +736,11 @@
     font-family: var(--font-display);
     font-weight: 700;
     color: var(--mag);
-    font-size: 44px;
+    font-size: var(--dimension-11);
     line-height: 1;
     letter-spacing: -0.015em;
     font-variant-numeric: tabular-nums;
-    margin-top: 4px;
+    margin-top: var(--dimension-1);
   }
 
   &__hint {
@@ -751,7 +751,7 @@
   &__grade-row {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--dimension-2);
     margin-top: 0;
   }
 
@@ -778,8 +778,8 @@
 
   // Chart spans the full bottom row on wide, full width on narrow.
   &--chart {
-    background: #FFFFFF;
-    padding: 26px 28px;
+    background: var(--color-laboral-kutxa-beige-0);
+    padding: var(--dimension-6-5) var(--dimension-7);
 
     @media (min-width: 768px) {
       grid-column: 1 / -1;
@@ -795,17 +795,17 @@
   border-collapse: collapse;
 
   th, td {
-    padding: 11px 12px;
-    font-size: 14px;
+    padding: 11.5px var(--dimension-3);
+    font-size: var(--dimension-3-5);
     text-align: left;
   }
 
-  th { color: var(--mag); font-weight: 500; font-size: 13px; }
+  th { color: var(--mag); font-weight: 500; font-size: var(--dimension-3-25); }
   td { color: var(--bere); }
-  tr + tr td { border-top: 1px solid var(--line-soft); }
+  tr + tr td { border-top: var(--dimension-0-25) solid var(--line-soft); }
 
   &__num { text-align: right; font-variant-numeric: tabular-nums; }
-  &__neg { color: #2F8B3E; }
+  &__neg { color: var(--color-lk-table-neg); }
 
   &__total td { font-weight: 600; color: var(--bere); }
   &__total td:first-child { color: var(--mag); }
@@ -815,15 +815,15 @@
 .slider-block {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--dimension-2-5);
   min-width: 0;
 }
 
 .slider-bar {
   position: relative;
-  height: 6px;
+  height: var(--dimension-1-5);
   background: var(--beige-deep);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
 
   &__fill {
     position: absolute;
@@ -831,18 +831,18 @@
     top: 0;
     bottom: 0;
     background: var(--bere);
-    border-radius: 999px;
+    border-radius: var(--radius-full);
   }
 
   &__thumb {
     position: absolute;
     top: 50%;
-    width: 18px;
-    height: 18px;
+    width: var(--dimension-4-5);
+    height: var(--dimension-4-5);
     border-radius: 50%;
     background: var(--bere);
     transform: translate(-50%, -50%);
-    box-shadow: 0 2px 4px rgba(46,26,46,0.25);
+    box-shadow: var(--elevation-sarevi-thumb);
   }
 
   &__input {
@@ -867,145 +867,145 @@
 .cuota-section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--dimension-2);
 
-  &__title { font-size: 14px; color: var(--bere); font-weight: 500; }
+  &__title { font-size: var(--dimension-3-5); color: var(--bere); font-weight: 500; }
 }
 
 .cuota-main {
-  background: #fff;
-  border-radius: 12px;
-  padding: 22px 26px;
+  background: var(--color-laboral-kutxa-beige-0);
+  border-radius: var(--radius-lg);
+  padding: var(--dimension-5-5) var(--dimension-6-5);
   display: flex;
   flex-wrap: wrap;
-  gap: 16px 32px;
+  gap: var(--dimension-4) var(--dimension-8);
   justify-content: center;
   align-items: center;
   min-width: 0;
 
-  &--green { background: rgba(255, 255, 255, 0.72); }
+  &--green { background: var(--color-white-a72); }
 
   &__col {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--dimension-1);
     align-items: center;
-    min-width: min(100%, 180px);
-    flex: 1 1 180px;
+    min-width: min(100%, var(--dimension-45));
+    flex: 1 1 var(--dimension-45);
   }
 
-  &__lbl { font-size: 13px; color: var(--text-soft); }
+  &__lbl { font-size: var(--dimension-3-25); color: var(--text-soft); }
   &__num {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 30px;
+    font-size: var(--dimension-7-5);
     color: var(--bere);
     font-variant-numeric: tabular-nums;
     overflow-wrap: anywhere;
   }
   &__unit {
-    font-size: 14px;
+    font-size: var(--dimension-3-5);
     font-weight: 500;
     color: var(--text-soft);
-    margin-left: 1px;
+    margin-left: var(--dimension-0-25);
   }
 }
 
 .cuota-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-30)), 1fr));
   background: var(--card-soft);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   min-width: 0;
 
   &__cell {
-    padding: 16px 20px;
+    padding: var(--dimension-4) var(--dimension-5);
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--dimension-1);
     align-items: center;
-    border-right: 1px solid var(--line-soft);
+    border-right: var(--dimension-0-25) solid var(--line-soft);
 
     &:last-child { border-right: 0; }
   }
 
-  &__lbl { font-size: 13px; color: var(--text-soft); }
+  &__lbl { font-size: var(--dimension-3-25); color: var(--text-soft); }
   &__num {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 26px;
+    font-size: var(--dimension-6-5);
     color: var(--bere);
   }
   &__pct {
-    font-size: 13px;
+    font-size: var(--dimension-3-25);
     font-weight: 500;
     color: var(--text-soft);
-    margin-left: 1px;
+    margin-left: var(--dimension-0-25);
   }
 }
 
 // ─── Layout helpers ───────────────────────────────────────────────────────
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-70)), 1fr));
+  gap: var(--dimension-4-5);
 }
 .grid-3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-55)), 1fr));
+  gap: var(--dimension-3-5);
 }
 .action-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 8px;
+  gap: var(--dimension-3);
+  margin-top: var(--dimension-2);
   align-items: center;
 }
 
 .footnotes {
-  font-size: 12px;
+  font-size: var(--dimension-3);
   color: var(--text-soft);
   line-height: 1.5;
-  margin-top: 4px;
+  margin-top: var(--dimension-1);
 
-  p { margin: 0 0 8px; }
+  p { margin: 0 0 var(--dimension-2); }
   p:last-child { margin-bottom: 0; }
 }
 
 .cuota-cta {
   display: flex;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: var(--dimension-2);
 }
 
 // ─── Help band ────────────────────────────────────────────────────────────
 .help-band {
   background: var(--card);
-  border-radius: 14px;
-  padding: 22px 24px;
+  border-radius: var(--dimension-3-5);
+  padding: var(--dimension-5-5) var(--dimension-6);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--dimension-2);
   text-align: center;
 
   &__h {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 17px;
+    font-size: var(--dimension-4-25);
     color: var(--bere);
   }
 
   &__p {
     color: var(--text-soft);
-    font-size: 14px;
+    font-size: var(--dimension-3-5);
     max-width: 60ch;
   }
 
-  afi-button { margin-top: 6px; }
+  afi-button { margin-top: var(--dimension-1-5); }
 }
 
 // ─── Info modal header (chip + impact) ───────────────────────────────────
@@ -1013,14 +1013,14 @@
   &__head {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 14px;
+    gap: var(--dimension-3);
+    margin-bottom: var(--dimension-3-5);
   }
 
   &__name {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 17px;
+    font-size: var(--dimension-4-25);
     color: var(--bere);
   }
 
@@ -1028,7 +1028,7 @@
     color: var(--bere-700);
     white-space: pre-wrap;
     line-height: 1.55;
-    font-size: 14px;
-    padding-top: 12px;
+    font-size: var(--dimension-3-5);
+    padding-top: var(--dimension-3);
   }
 }

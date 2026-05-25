@@ -498,6 +498,7 @@
   // -----------------------------------------------------------------------
   // SPACING utility scale — Tailwind-compatible. NOT responsive.
   // -----------------------------------------------------------------------
+  --space-3xs: var(--dimension-0-5);  // 2 px
   --space-2xs: var(--dimension-1);   // 4 px
   --space-xs:  var(--dimension-2);   // 8 px
   --space-sm:  var(--dimension-3);   // 12 px
@@ -533,6 +534,7 @@
   // 16px body text). Used by blog articles, case studies, decision logs.
   --content-prose: 44rem;                // ~700px
   --content-prose-wide: 56rem;           // ~896px (for posts with code samples)
+  --content-home-max: var(--dimension-300);  // 1200 px — home/landing card grid
 }
 
 

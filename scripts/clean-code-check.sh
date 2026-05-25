@@ -19,13 +19,6 @@ if [ "$#" -eq 0 ]; then
   exit 0
 fi
 
-# Regex for banned literals in component code:
-#   #aabbcc / #aabbccdd      hex colors (3, 4, 6, or 8 digits)
-#   rgba(...) or rgb(...)    rgb function
-#   12px / 200px / etc.       bare px dimensions
-#   ::ng-deep                 banned cross-scope selector
-BAD_REGEX='#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\b[0-9]+px\b|::ng-deep'
-
 FAILED=0
 
 for file in "$@"; do
@@ -43,8 +36,29 @@ for file in "$@"; do
     *) continue ;;
   esac
 
-  # Find matches with line numbers.
-  matches=$(grep -nE "$BAD_REGEX" "$file" || true)
+  # Find matches with line numbers using perl so we can:
+  #   1. Skip @media/@container lines for the px check (CSS media queries
+  #      cannot reference CSS custom properties — literal breakpoint values
+  #      are unavoidable until a generated Sass partial lands; see
+  #      docs/rules/component-skill.md § 4).
+  #   2. Exclude px values that are the decimal part of a fraction like
+  #      11.5px (the `5px` sub-string is not a standalone raw dimension).
+  #
+  # Banned everywhere:
+  #   #aabbcc / #aabbccdd   hex colors (3, 4, 6, or 8 digits)
+  #   rgba(...) / rgb(...)  rgb function
+  #   ::ng-deep             banned cross-scope selector
+  #
+  # Banned on non-@media/@container lines only:
+  #   12px / 200px / etc.   bare INTEGER px — decimal px (11.5px) is excluded
+  matches=$(perl -ne '
+    my $is_bp = /^\s*\@(?:media|container)\s*\(/;
+    my $matched = 0;
+    $matched = 1 if /#[0-9a-fA-F]{3,8}(?![0-9a-fA-F])/ || /\brgba?\s*\(/ || /::ng-deep/;
+    $matched = 1 if !$is_bp && /(?<![.\d])[0-9]+px\b/;
+    print "$.:$_" if $matched;
+  ' "$file" || true)
+
   if [ -n "$matches" ]; then
     if [ "$FAILED" -eq 0 ]; then
       echo ""
@@ -63,8 +77,10 @@ if [ "$FAILED" -eq 1 ]; then
 Banned in component code (outside libs/tokens/):
   - hex colors (#aabbcc / #aabbccdd)
   - rgb()/rgba() functions
-  - bare px values (12px, 200px, …)
+  - bare INTEGER px values (12px, 200px, …) — decimal px (11.5px) is allowed
   - ::ng-deep
+
+Note: @media and @container breakpoint lines are exempt from the px check.
 
 Replace with CSS custom properties from libs/tokens/ (e.g. var(--surface-quiet),
 var(--space-md)). If a token doesn't exist, add it under libs/tokens/ first.

@@ -206,4 +206,35 @@
   --color-data-viz-neutral-tooltip-border:     #E4E7EC;
   --color-data-viz-neutral-tooltip-text:       #0C111D;
 
+
+  // ---------------------------------------------------------------------------
+  // White alpha — semi-transparent white for overlays on dark surfaces.
+  // Used by dark header bars, thumbnails, and brand demos. Defined at :root
+  // so they resolve outside of any brand-scoped selector.
+  // ---------------------------------------------------------------------------
+  --color-white-a10: rgba(255, 255, 255, 0.10);
+  --color-white-a14: rgba(255, 255, 255, 0.14);
+  --color-white-a15: rgba(255, 255, 255, 0.15);
+  --color-white-a16: rgba(255, 255, 255, 0.16);
+  --color-white-a18: rgba(255, 255, 255, 0.18);
+  --color-white-a20: rgba(255, 255, 255, 0.20);
+  --color-white-a25: rgba(255, 255, 255, 0.25);
+  --color-white-a35: rgba(255, 255, 255, 0.35);
+  --color-white-a40: rgba(255, 255, 255, 0.40);
+  --color-white-a42: rgba(255, 255, 255, 0.42);
+  --color-white-a55: rgba(255, 255, 255, 0.55);
+  --color-white-a72: rgba(255, 255, 255, 0.72);
+  --color-white-a74: rgba(255, 255, 255, 0.74);
+  --color-white-a75: rgba(255, 255, 255, 0.75);
+  --color-white-a78: rgba(255, 255, 255, 0.78);
+
+
+  // ---------------------------------------------------------------------------
+  // Site illustration primitives — used in card thumbnails and decorative
+  // backgrounds on the home/blog pages. Not part of the brand palette.
+  // ---------------------------------------------------------------------------
+  --color-thumb-dark-deep:   #0E1117;  // whitelabel card bg (deep dark)
+  --color-thumb-dark-medium: #1F2530;  // whitelabel card bg (medium dark)
+  --color-thumb-wp-dark-navy:#0F2A44;  // wealth-planner card gradient from
+
 }

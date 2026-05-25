@@ -72,7 +72,7 @@
 
     &:focus-visible {
       outline: none;
-      box-shadow: 0 0 0 2px var(--border-focus);
+      box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
     }
   }
 

@@ -151,13 +151,55 @@
 
 
   // ===========================================================================
+  // Energy efficiency rating scale (EU color coding: A=best, G=worst).
+  // Used by the Sarevi energy certificate widget.
+  // ===========================================================================
+  --color-lk-energy-A: #3FA64A;
+  --color-lk-energy-B: #71B73D;
+  --color-lk-energy-C: #B6CF35;
+  --color-lk-energy-D: #F2C40A;
+  --color-lk-energy-E: #E8901E;
+  --color-lk-energy-F: #DC5E26;
+  --color-lk-energy-G: #C8261F;
+
+
+  // ===========================================================================
+  // Sarevi feature status colors — impact levels for renovation measures
+  // (alto/medio/bajo impact tags). Feature-specific; not general system status.
+  // ===========================================================================
+  --color-lk-impact-warn-bg: #FFF3DF;
+  --color-lk-impact-warn-fg: #8A5A0B;
+  --color-lk-impact-low-bg:  #FCE3DE;
+  --color-lk-impact-low-fg:  #A03522;
+  --color-lk-impact-mid-bg:  #FFE6CC;
+  --color-lk-impact-mid-fg:  #A04F00;
+  --color-lk-impact-high-bg: #E1F0CB;
+  --color-lk-impact-high-fg: #44680A;
+  --color-lk-impact-none-bg: #ECE6D6;
+  --color-lk-impact-none-fg: #6B5E3D;
+
+
+  // ===========================================================================
+  // Alert/info token for the Sarevi detail panel.
+  // ===========================================================================
+  --color-lk-alert-info-bg: #E1EEF7;
+  --color-lk-alert-info-fg: #1E4663;
+
+  // ===========================================================================
+  // Sarevi cost table — negative values (savings/cost reduction).
+  // ===========================================================================
+  --color-lk-table-neg: #2F8B3E;
+
+  // ===========================================================================
+  // Sarevi finance card — green tile gradient stops.
+  // ===========================================================================
+  --color-lk-finance-green-top:    #EFF7DD;
+  --color-lk-finance-green-bottom: #F8FBF0;
+
+
+  // ===========================================================================
   // Signal ramps (info/success/warning/error) and data-viz tokens are
   // inherited from `:root` — universal across brands. Override individual
   // values here only if LK ships its own signal colors.
-  //
-  // Note: the Sarevi prototype's `--lk-warn-*`, `--lk-low-*`, `--lk-mid-*`
-  // and `--lk-high-*` are feature-specific impact-tag colors (alto/medio/
-  // bajo for renovation measures), not general system status. They live in
-  // the Sarevi page's scoped SCSS, not the brand layer.
   // ===========================================================================
 }

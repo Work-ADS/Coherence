@@ -21,9 +21,9 @@
   gap: var(--space-md);
   min-width: 0;
 
-  &--sm { --chart-height: 120px; }
-  &--md { --chart-height: 180px; }
-  &--lg { --chart-height: 240px; }
+  &--sm { --chart-height: var(--dimension-30); }
+  &--md { --chart-height: var(--dimension-45); }
+  &--lg { --chart-height: var(--dimension-60); }
 
   // ─── Header (optional title + subtitle) ─────────────────────────────────
   &__head {
@@ -67,7 +67,7 @@
   &__col-head {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3xs, 2px);
+    gap: var(--space-3xs);
     margin-bottom: var(--space-xs);
     min-height: 2.2em;
   }
@@ -104,7 +104,7 @@
   // ─── The bar itself ─────────────────────────────────────────────────────
   &__bar {
     width: 100%;
-    border-top: 3px solid;
+    border-top: var(--dimension-0-75) solid;
     border-radius: var(--radius-xs) var(--radius-xs) 0 0;
     transform: scaleY(0);
     transform-origin: bottom center;
@@ -138,7 +138,7 @@
   &__col-unit {
     font: var(--type-body-sm-400);
     color: var(--foreground-tertiary-default);
-    margin-left: 1px;
+    margin-left: var(--dimension-0-25);
   }
 
   // Size-variant text overrides

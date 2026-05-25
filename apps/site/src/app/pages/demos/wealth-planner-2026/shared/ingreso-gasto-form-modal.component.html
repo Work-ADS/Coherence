@@ -1,0 +1,121 @@
+<afi-modal
+  [open]="open()"
+  [title]="title()"
+  size="md"
+  [closeOnEsc]="true"
+  [closeOnBackdrop]="false"
+  (openChange)="$event ? null : onCancel()"
+>
+  <div class="ig-form">
+    <!-- Concepto -->
+    <afi-input
+      label="Concepto"
+      placeholder="Ej. Salario, Alquiler, Herencia Manuel"
+      [value]="concepto()"
+      (valueChange)="setConcepto($event)"
+    />
+
+    <!-- Es futuro? -->
+    <afi-switch
+      [label]="futuroLabel()"
+      hint="Activa si comienza en el futuro (jubilación, etc.)."
+      [checked]="isFuturo()"
+      (checkedChange)="setIsFuturo($event)"
+    />
+
+    <!-- Inicio (only when futuro) -->
+    @if (isFuturo()) {
+      <div class="ig-form__group">
+        <afi-select
+          label="Inicio"
+          [options]="inicioOptions"
+          [value]="inicioKind()"
+          (valueChange)="setInicioKind($event)"
+        />
+        @if (showsInicioValueInput()) {
+          <afi-input
+            [label]="inicioValueLabel()"
+            type="number"
+            [value]="inicioValue() ?? ''"
+            (valueChange)="setInicioValue($event)"
+          />
+        }
+      </div>
+    }
+
+    <!-- Finalización (always visible) -->
+    <div class="ig-form__group">
+      <afi-select
+        label="Finalización"
+        [options]="finalizacionOptions"
+        [value]="finalizacionKind()"
+        (valueChange)="setFinalizacionKind($event)"
+      />
+      @if (showsFinalizacionHijo()) {
+        <afi-select
+          label="Hijo"
+          placeholder="Selecciona"
+          [options]="hijoOptions()"
+          [value]="finalizacionHijoId()"
+          (valueChange)="setFinalizacionHijo($event)"
+        />
+      }
+      @if (showsFinalizacionValue()) {
+        <afi-input
+          [label]="finalizacionValueLabel()"
+          type="number"
+          [value]="finalizacionValue() ?? ''"
+          (valueChange)="setFinalizacionValue($event)"
+        />
+      }
+    </div>
+
+    <!-- Frecuencia + Incremento + Valor -->
+    <div class="ig-form__row">
+      <afi-select
+        label="Frecuencia"
+        [options]="frecuenciaOptions"
+        [value]="frecuencia()"
+        (valueChange)="setFrecuencia($event)"
+      />
+      <div class="ig-form__input-with-unit">
+        <afi-input
+          label="Incremento manual"
+          type="number"
+          hint="0 si no aplica. IPC retirado — manual siempre."
+          [value]="incrementoManualPct()"
+          (valueChange)="setIncremento($event)"
+        />
+        <span class="ig-form__unit">%</span>
+      </div>
+      <div class="ig-form__input-with-unit">
+        <afi-input
+          label="Valor"
+          type="number"
+          [value]="valor()"
+          (valueChange)="setValor($event)"
+        />
+        <span class="ig-form__unit">€</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-container slot="footer">
+    <afi-button
+      variant="ghost"
+      size="md"
+      (clicked)="onCancel()"
+      ariaLabel="Cancelar"
+    >
+      Cancelar
+    </afi-button>
+    <afi-button
+      variant="primary"
+      size="md"
+      (clicked)="onSubmit()"
+      ariaLabel="Guardar"
+    >
+      Guardar
+    </afi-button>
+  </ng-container>
+</afi-modal>

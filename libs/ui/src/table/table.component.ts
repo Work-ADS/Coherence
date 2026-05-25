@@ -1,13 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
+import { BadgeComponent } from '../badge';
 import { CheckboxComponent } from '../checkbox';
-import type { TableColumn, TableSortState } from './table.types';
+import type { TableColumn, TableRowAction, TableSortState } from './table.types';
 import type { TableDensity } from './table.variants';
 
 /**
@@ -21,7 +16,7 @@ import type { TableDensity } from './table.variants';
 @Component({
   selector: 'afi-table',
   standalone: true,
-  imports: [CheckboxComponent],
+  imports: [BadgeComponent, CheckboxComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
@@ -37,6 +32,7 @@ export class TableComponent {
   readonly emptyText = input<string>('Sin datos');
   readonly rowHoverable = input<boolean>(true);
   readonly density = input<TableDensity>('compact');
+  readonly rowActions = input<TableRowAction[]>([]);
 
   readonly selectedChange = output<Record<string, unknown>[]>();
   readonly sortChange = output<TableSortState | null>();
@@ -44,15 +40,21 @@ export class TableComponent {
     row: Record<string, unknown>;
     event: MouseEvent;
   }>();
+  readonly rowActionClicked = output<{
+    action: TableRowAction;
+    row: Record<string, unknown>;
+    event: MouseEvent;
+  }>();
 
   readonly skeletonRows = [0, 1, 2, 3, 4];
 
-  readonly visibleColumns = computed(() =>
-    this.columns().filter((c) => !c.hidden),
-  );
+  readonly visibleColumns = computed(() => this.columns().filter((c) => !c.hidden));
+
+  readonly hasRowActions = computed(() => this.rowActions().length > 0);
 
   readonly totalColumns = computed(
-    () => this.visibleColumns().length + (this.selectable() ? 1 : 0),
+    () =>
+      this.visibleColumns().length + (this.selectable() ? 1 : 0) + (this.hasRowActions() ? 1 : 0),
   );
 
   readonly allSelected = computed(() => {
@@ -82,11 +84,7 @@ export class TableComponent {
         : col.align === 'center'
           ? 'afi-table__th--center'
           : 'afi-table__th--start';
-    return [
-      'afi-table__th',
-      align,
-      col.sortable ? 'afi-table__th--sortable' : '',
-    ]
+    return ['afi-table__th', align, col.sortable ? 'afi-table__th--sortable' : '']
       .filter(Boolean)
       .join(' ');
   }
@@ -98,7 +96,15 @@ export class TableComponent {
         : col.align === 'center'
           ? 'afi-table__td--center'
           : 'afi-table__td--start';
-    return ['afi-table__td', align].join(' ');
+    return ['afi-table__td', align, col.emphasis ? 'afi-table__td--emphasis' : '']
+      .filter(Boolean)
+      .join(' ');
+  }
+
+  actionClasses(action: TableRowAction): string {
+    return ['afi-table__action', action.variant === 'danger' ? 'afi-table__action--danger' : '']
+      .filter(Boolean)
+      .join(' ');
   }
 
   rowClasses(selected: boolean): string {
@@ -116,6 +122,11 @@ export class TableComponent {
     const sort = this.sortBy();
     if (!sort || sort.column !== columnKey) return 'none';
     return sort.direction === 'asc' ? 'ascending' : 'descending';
+  }
+
+  cellText(row: Record<string, unknown>, col: TableColumn): string {
+    const value = row[col.key];
+    return value === null || value === undefined ? '' : String(value);
   }
 
   onSort(columnKey: string): void {
@@ -138,20 +149,18 @@ export class TableComponent {
     if (checked) {
       this.selectedChange.emit([...this.selected(), row]);
     } else {
-      this.selectedChange.emit(
-        this.selected().filter((s) => s[key] !== row[key]),
-      );
+      this.selectedChange.emit(this.selected().filter((s) => s[key] !== row[key]));
     }
   }
 
   onRowClick(row: Record<string, unknown>, event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    if (
-      target.closest('afi-checkbox') ||
-      target.closest('button') ||
-      target.closest('a')
-    )
-      return;
+    if (target.closest('afi-checkbox') || target.closest('button') || target.closest('a')) return;
     this.rowClicked.emit({ row, event });
+  }
+
+  onRowAction(action: TableRowAction, row: Record<string, unknown>, event: MouseEvent): void {
+    event.stopPropagation();
+    this.rowActionClicked.emit({ action, row, event });
   }
 }

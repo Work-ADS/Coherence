@@ -1,0 +1,30 @@
+<section class="objetivos-banner" aria-label="Resumen de objetivos">
+  <div class="objetivos-banner__summary">
+    <span class="objetivos-banner__eyebrow">Objetivos</span>
+    <p class="objetivos-banner__line">
+      <span class="objetivos-banner__label">Edad de retiro:</span>
+      <strong>{{ edadRetiroLabel() }}</strong>
+    </p>
+    <p class="objetivos-banner__line">
+      <span class="objetivos-banner__label">Legado:</span>
+      <strong>{{ legadoLabel() }}</strong>
+    </p>
+  </div>
+
+  <div class="objetivos-banner__projection">
+    <span class="objetivos-banner__eyebrow">Legado estimado</span>
+    <ul class="objetivos-banner__scenarios">
+      @for (scenario of scenarios(); track scenario.label) {
+        <li class="objetivos-banner__scenario">
+          <afi-badge [intent]="scenario.intent" size="sm">
+            {{ scenario.label }}
+          </afi-badge>
+          <strong class="objetivos-banner__value">{{ scenario.value }}</strong>
+          @if (scenario.note) {
+            <span class="objetivos-banner__note">{{ scenario.note }}</span>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+</section>

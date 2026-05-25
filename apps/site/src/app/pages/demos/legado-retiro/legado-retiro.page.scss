@@ -1,0 +1,85 @@
+// =============================================================================
+// LegadoRetiro — Objetivos page.
+// Uses existing Coherence primitives; page-specific structure stays BEM + tokens.
+// =============================================================================
+
+.lr-gate {
+  margin-block-start: var(--space-xl);
+  padding-block: var(--space-lg);
+  border-block-start: var(--border-width-hairline) solid var(--border-subtle);
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+.lr-section {
+  margin-block-start: var(--space-2xl);
+}
+
+.lr-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-block-end: var(--space-md);
+  padding-block-end: var(--space-sm);
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+.lr-section__title,
+.lr-manual__title {
+  margin: 0;
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.lr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-72)), 1fr));
+  gap: var(--space-md) var(--space-lg);
+}
+
+.lr-manual {
+  margin-block-start: var(--space-xl);
+}
+
+.lr-manual__title {
+  margin-block-end: var(--space-sm);
+}
+
+.lr-asset-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+.lr-asset-list__row {
+  padding-block: var(--space-sm);
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+.lr-total {
+  margin-block: var(--space-md) var(--space-lg);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+.lr-total strong {
+  color: var(--foreground-primary-default);
+  font: var(--type-body-sm-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.lr-empty {
+  margin: 0;
+  padding-block: var(--space-lg);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.lr-follow-up {
+  margin-block-start: var(--space-lg);
+}

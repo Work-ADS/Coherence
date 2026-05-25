@@ -24,7 +24,14 @@ export type { ModalSize } from './src/modal';
 export { TabsComponent, TabItemComponent } from './src/tabs';
 export type { TabsSize } from './src/tabs';
 export { TableComponent } from './src/table';
-export type { TableColumn, TableSortState, TableDensity } from './src/table';
+export type {
+  TableCellKind,
+  TableColumn,
+  TableRowAction,
+  TableRowActionVariant,
+  TableSortState,
+  TableDensity,
+} from './src/table';
 export { DrawerComponent } from './src/drawer';
 export type { DrawerSize } from './src/drawer';
 export { SidebarComponent } from './src/sidebar';

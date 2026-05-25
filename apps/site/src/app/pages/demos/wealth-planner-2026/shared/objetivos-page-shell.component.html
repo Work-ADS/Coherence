@@ -1,0 +1,45 @@
+<site-demo-shell [views]="views()" [demoSlug]="demoSlug()" [demoRoute]="demoRoute()">
+  <div class="ops">
+    <site-planner-sidebar [activeKey]="activeKey()" />
+
+    <div class="ops__main">
+      <site-planner-top-bar
+        decisionesRoute="/demos/wealth-planner-2026"
+        [clientName]="clientName()"
+      />
+
+      @if (showBanner()) {
+        <site-objetivos-banner />
+      }
+
+      <main class="ops__scroll">
+        <div class="ops__page">
+          <div class="ops__header">
+            <afi-page-header
+              [title]="title()"
+              [subtitle]="subtitle()"
+              [sticky]="false"
+              [scrollFade]="false"
+            >
+              <span slot="breadcrumb" class="ops__breadcrumb">
+                {{ breadcrumb() }}
+              </span>
+            </afi-page-header>
+            <div class="ops__version-toggle">
+              <site-version-toggle
+                [versions]="versions"
+                [value]="version()"
+                [ariaLabel]="versionAriaLabel()"
+                (valueChange)="setVersion($event)"
+              />
+            </div>
+          </div>
+
+          <div class="ops__body">
+            <ng-content />
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</site-demo-shell>

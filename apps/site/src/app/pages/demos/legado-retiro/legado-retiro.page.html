@@ -1,0 +1,113 @@
+<site-objetivos-page-shell
+  [views]="['Legado y retiro']"
+  demoSlug="legado-retiro"
+  demoRoute="/demos/wealth-planner-2026/legado-retiro"
+  activeKey="legado-retiro"
+  title="Legado y retiro"
+  subtitle="Define qué quieres preservar y cuándo quieres retirarte. Este apartado es obligatorio."
+  versionAriaLabel="Versión del layout de Legado y retiro"
+  [showBanner]="store.legadoRetiroEstablished()"
+>
+  <section class="lr-gate">
+    <afi-switch
+      label="¿Has establecido legado y retiro?"
+      hint="Activa para definir los objetivos del cliente."
+      [checked]="store.legadoRetiroEstablished()"
+      (checkedChange)="setLegadoRetiroEstablished($event)"
+    />
+  </section>
+
+  @if (store.legadoRetiroEstablished()) {
+    <section class="lr-section">
+      <header class="lr-section__head">
+        <h2 class="lr-section__title">Edad de seguridad</h2>
+      </header>
+      <div class="lr-grid">
+        <afi-input
+          label="Edad de seguridad"
+          type="number"
+          hint="Edad hasta la que debe durar el patrimonio. Por defecto, 100 años."
+          [value]="store.legadoRetiro().edadSeguridad"
+          (valueChange)="setEdadSeguridad($event)"
+        />
+      </div>
+    </section>
+
+    <section class="lr-section">
+      <header class="lr-section__head">
+        <h2 class="lr-section__title">Legado objetivo</h2>
+      </header>
+      <div class="lr-grid">
+        <afi-select
+          label="¿Qué quieres preservar?"
+          placeholder="Selecciona"
+          [options]="legadoObjetivoOptions"
+          [value]="store.legadoRetiro().legadoObjetivo"
+          (valueChange)="setLegadoObjetivo($event)"
+        />
+      </div>
+
+      @if (showsManualLegado()) {
+        <div class="lr-manual">
+          <h3 class="lr-manual__title">Activos a conservar</h3>
+
+          @if (store.patrimonio().length === 0) {
+            <p class="lr-empty">Aún no hay activos registrados.</p>
+          } @else {
+            <ul class="lr-asset-list">
+              @for (asset of store.patrimonio(); track asset.id) {
+                <li class="lr-asset-list__row">
+                  <afi-checkbox
+                    [label]="asset.nombre + ' - ' + formatEuro(asset.valor)"
+                    [checked]="isAssetSelected(asset.id)"
+                    (checkedChange)="toggleAsset(asset.id, $event)"
+                  />
+                </li>
+              }
+            </ul>
+          }
+
+          <p class="lr-total">
+            Total seleccionado:
+            <strong>{{ totalSelected() }}</strong>
+          </p>
+
+          <div class="lr-grid">
+            <afi-input
+              label="Patrimonio financiero adicional"
+              type="number"
+              hint="Importe adicional que debe preservarse junto con los activos seleccionados."
+              [value]="store.legadoRetiro().patrimonioFinancieroAdicional"
+              (valueChange)="setPatrimonioFinancieroAdicional($event)"
+            />
+          </div>
+        </div>
+      }
+    </section>
+
+    <section class="lr-section">
+      <header class="lr-section__head">
+        <h2 class="lr-section__title">Retiro objetivo</h2>
+      </header>
+      <div class="lr-grid">
+        <afi-select
+          label="Edad de jubilación o retiro"
+          placeholder="Selecciona"
+          [options]="edadJubilacionOptions"
+          [value]="store.legadoRetiro().edadRetiro"
+          (valueChange)="setEdadRetiro($event)"
+        />
+      </div>
+
+      @if (isRetiroKind()) {
+        <div class="lr-follow-up">
+          <afi-checkbox
+            label="Continuar cotizaciones hasta jubilación (recomendado)"
+            [checked]="store.legadoRetiro().continuarCotizaciones"
+            (checkedChange)="setContinuarCotizaciones($event)"
+          />
+        </div>
+      }
+    </section>
+  }
+</site-objetivos-page-shell>

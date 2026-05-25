@@ -1,27 +1,23 @@
 /**
- * Modal variant class maps.
- * All colors reference Tailwind tokens (no hex/rgba).
+ * afi-modal — type exports only.
+ *
+ * Per `docs/rules/component-skill.md §6`, variant logic lives in
+ * `modal.component.scss` via BEM modifiers (`&--sm`, `&--md`, etc.).
+ * This file exports the union types consumed by the component's signal inputs.
  */
 
-export const sizeClasses = {
-  sm: 'max-w-[400px]',
-  md: 'max-w-[560px]',
-  lg: 'max-w-[720px]',
-  xl: 'max-w-[960px]',
-} as const;
-
-export type ModalSize = keyof typeof sizeClasses;
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
 
 export const tokenUsage = [
-  { property: 'Fondo panel', token: 'var(--surface-elevated)' },
-  { property: 'Backdrop', token: 'black/40' },
-  { property: 'Borde footer', token: 'var(--border-hairline)' },
-  { property: 'Título', token: 'var(--canvas-fg)' },
-  { property: 'Descripción', token: 'var(--neutral-600)' },
-  { property: 'Botón cerrar (idle)', token: 'var(--neutral-400)' },
-  { property: 'Botón cerrar (hover)', token: 'var(--canvas-fg)' },
+  { property: 'Fondo panel', token: 'var(--surface-raised)' },
+  { property: 'Backdrop', token: 'var(--surface-overlay)' },
+  { property: 'Borde footer', token: 'var(--border-subtle)' },
+  { property: 'Título', token: 'var(--foreground-primary-default)' },
+  { property: 'Descripción', token: 'var(--foreground-secondary-default)' },
+  { property: 'Botón cerrar (idle)', token: 'var(--foreground-tertiary-default)' },
+  { property: 'Botón cerrar (hover)', token: 'var(--foreground-primary-default)' },
   { property: 'Foco', token: 'var(--border-focus)' },
-  { property: 'Radio', token: 'rounded-md (6px)' },
-  { property: 'Sombra', token: 'shadow-lg' },
-  { property: 'Tamaño (sm/md/lg)', token: '400px / 560px / 720px' },
+  { property: 'Radio', token: 'var(--radius-md)' },
+  { property: 'Sombra', token: 'var(--elevation-lg)' },
+  { property: 'Tamaño', token: 'var(--dimension-modal-{sm|md|lg|xl})' },
 ];

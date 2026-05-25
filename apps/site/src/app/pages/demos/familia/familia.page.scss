@@ -1,0 +1,125 @@
+// =============================================================================
+// Familia — Situación Actual page-specific styles.
+// Form pattern reference: Origin Settings (uppercase mini-headers, clean
+// hairline spacing, no boxed sub-sections, 2–3 col grid).
+// All visual values route through semantic tokens.
+// =============================================================================
+
+// ─── Section dividers + headers ───────────────────────────────────────────────
+.familia-section {
+  margin-block-start: var(--space-2xl);
+
+  &:first-of-type {
+    margin-block-start: var(--space-xl);
+  }
+}
+
+.familia-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-block-end: var(--space-md);
+  padding-block-end: var(--space-sm);
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+.familia-section__title {
+  margin: 0;
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.familia-section__hint {
+  margin: 0;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  max-inline-size: 56ch;
+}
+
+// ─── Toggle row (¿Tiene pareja?) — flush with the section, no inset card ────
+.familia-toggle {
+  margin-block-end: var(--space-lg);
+}
+
+// ─── Grid for stacking labelled fields side-by-side ──────────────────────────
+.familia-grid {
+  display: grid;
+  gap: var(--space-md) var(--space-lg);
+}
+
+.familia-grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.familia-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+// ─── Responsive breakpoints ─────────────────────────────────────────────────
+@media (max-width: 1023px) {
+  .familia-grid--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .familia-grid--2,
+  .familia-grid--3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 479px) {
+  .familia-section__head--with-action {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+// ─── Repeater rows (Hijos, Ascendientes) — flat, hairline-divided, no boxes ──
+.familia-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.familia-row {
+  padding-block: var(--space-md);
+  border-block-start: var(--border-width-hairline) solid var(--border-subtle);
+
+  &:first-child {
+    border-block-start: 0;
+  }
+}
+
+.familia-row__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-block-end: var(--space-sm);
+}
+
+.familia-row__index {
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.familia-row__footer {
+  margin-block-start: var(--space-sm);
+}
+
+// ─── Empty-state copy under each repeater ────────────────────────────────────
+.familia-empty {
+  margin: 0;
+  padding-block: var(--space-lg);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}

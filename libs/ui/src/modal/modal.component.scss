@@ -1,0 +1,115 @@
+// =============================================================================
+// afi-modal — dialog primitive (3-file split LOCKED 2026-04-16).
+// BEM + semantic tokens. Native <dialog> for focus trap + scroll lock.
+// =============================================================================
+
+:host {
+  display: contents;
+}
+
+.afi-modal__dialog {
+  // Reset native <dialog> chrome
+  padding: 0;
+  border: 0;
+  background: transparent;
+  width: 100%;
+  margin-inline: auto;
+
+  &::backdrop {
+    background: var(--surface-overlay);
+  }
+
+  // ─── Size variants ──────────────────────────────────────────────────────
+  &--sm {
+    max-width: var(--dimension-modal-sm, 28rem);
+  }
+
+  &--md {
+    max-width: var(--dimension-modal-md, 32rem);
+  }
+
+  &--lg {
+    max-width: var(--dimension-modal-lg, 42rem);
+  }
+
+  &--xl {
+    max-width: var(--dimension-modal-xl, 56rem);
+  }
+}
+
+.afi-modal__panel {
+  position: relative;
+  width: 100%;
+  background: var(--surface-raised);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-lg);
+}
+
+// ─── Close button ─────────────────────────────────────────────────────────
+.afi-modal__close {
+  position: absolute;
+  inset-block-start: var(--space-sm);
+  inset-inline-end: var(--space-sm);
+  padding: var(--space-2xs);
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--foreground-tertiary-default);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    color: var(--foreground-primary-default);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+}
+
+.afi-modal__close-icon {
+  display: block;
+  width: var(--dimension-5);
+  height: var(--dimension-5);
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────
+.afi-modal__header {
+  padding-block-start: var(--space-lg);
+  padding-block-end: var(--space-md);
+  padding-inline: var(--space-lg);
+}
+
+.afi-modal__title {
+  margin: 0;
+  padding-inline-end: var(--space-2xl);
+  font: var(--type-section);
+  color: var(--foreground-primary-default);
+}
+
+.afi-modal__description {
+  margin: var(--space-2xs) 0 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+// ─── Body ─────────────────────────────────────────────────────────────────
+.afi-modal__body {
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+}
+
+// ─── Footer ───────────────────────────────────────────────────────────────
+.afi-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+  border-block-start: var(--border-width-hairline) solid var(--border-subtle);
+
+  &:empty {
+    display: none;
+  }
+}

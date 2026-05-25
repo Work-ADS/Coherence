@@ -3,8 +3,7 @@ import { Routes } from '@angular/router';
 export const demos_routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./demos.landing').then((m) => m.DemosLandingPage),
+    loadComponent: () => import('./demos.landing').then((m) => m.DemosLandingPage),
   },
   // Wealth Planner 2026 — overview surface (shell consumer)
   {
@@ -18,17 +17,34 @@ export const demos_routes: Routes = [
   {
     path: 'wealth-planner-2026/demo',
     loadComponent: () =>
-      import('./wealth-planner-demo/wealth-planner-demo.page').then(
-        (m) => m.WealthPlannerDemoPage,
-      ),
+      import('./wealth-planner-demo/wealth-planner-demo.page').then((m) => m.WealthPlannerDemoPage),
   },
   // Direct deep links into individual proposal views (used by planner sidebar links)
   {
+    path: 'wealth-planner-2026/familia',
+    loadComponent: () => import('./familia/familia.page').then((m) => m.FamiliaPage),
+  },
+  {
+    path: 'wealth-planner-2026/sociedades',
+    loadComponent: () => import('./sociedades/sociedades.page').then((m) => m.SociedadesPage),
+  },
+  {
+    path: 'wealth-planner-2026/ingresos',
+    loadComponent: () => import('./ingresos/ingresos.page').then((m) => m.IngresosPage),
+  },
+  {
+    path: 'wealth-planner-2026/gastos',
+    loadComponent: () => import('./gastos/gastos.page').then((m) => m.GastosPage),
+  },
+  {
+    path: 'wealth-planner-2026/legado-retiro',
+    loadComponent: () =>
+      import('./legado-retiro/legado-retiro.page').then((m) => m.LegadoRetiroPage),
+  },
+  {
     path: 'wealth-planner-2026/patrimonial',
     loadComponent: () =>
-      import('./patrimonial/patrimonial-proposal.page').then(
-        (m) => m.PatrimonialProposalPage,
-      ),
+      import('./patrimonial/patrimonial-proposal.page').then((m) => m.PatrimonialProposalPage),
   },
   {
     path: 'wealth-planner-2026/evolucion-patrimonial',

@@ -1,0 +1,47 @@
+// =============================================================================
+// IngresoGastoFormModal — shared between Ingresos + Gastos pages.
+// BEM + semantic tokens.
+// =============================================================================
+
+:host {
+  display: contents;
+}
+
+.ig-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.ig-form__group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ig-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-md);
+
+  @media (max-width: 768px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ig-form__input-with-unit {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--space-2xs);
+}
+
+.ig-form__unit {
+  padding-block-end: var(--space-sm);
+  font: var(--type-body-md-400);
+  color: var(--foreground-tertiary-default);
+}

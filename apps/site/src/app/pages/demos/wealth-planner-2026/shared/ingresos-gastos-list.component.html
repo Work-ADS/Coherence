@@ -1,0 +1,88 @@
+<site-demo-shell [views]="views()" [demoSlug]="demoSlug()" [demoRoute]="demoRoute()">
+  <div class="h-screen flex bg-canvas-base overflow-hidden">
+    <site-planner-sidebar [activeKey]="activeKey()" />
+
+    <div class="flex-1 flex flex-col min-w-0">
+      <site-planner-top-bar
+        decisionesRoute="/demos/wealth-planner-2026"
+        clientName="Ricard Vazquez Fajardo"
+      />
+
+      <main class="flex-1 min-w-0 overflow-y-auto">
+        <div class="ig-page">
+          <!-- Page header -->
+          <div class="relative">
+            <afi-page-header
+              [title]="title()"
+              [subtitle]="subtitle()"
+              [sticky]="false"
+              [scrollFade]="false"
+            >
+              <span slot="breadcrumb" class="uppercase tracking-wider text-action-700"
+                >SITUACIÓN ACTUAL</span
+              >
+              <afi-button
+                slot="actions"
+                variant="primary"
+                size="sm"
+                (clicked)="openAdd()"
+                [ariaLabel]="addLabel()"
+              >
+                {{ addLabel() }}
+              </afi-button>
+            </afi-page-header>
+            <div class="absolute top-0 right-space-8">
+              <site-version-toggle
+                [versions]="versions"
+                [value]="version()"
+                ariaLabel="Versión del layout"
+                (valueChange)="setVersion($event)"
+              />
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="mt-space-6">
+            @if (rows().length === 0) {
+              <div class="ig-empty">
+                <h2 class="ig-empty__title">{{ emptyLabel() }}</h2>
+                <div class="ig-empty__action">
+                  <afi-button
+                    variant="primary"
+                    size="md"
+                    (clicked)="openAdd()"
+                    [ariaLabel]="addLabel()"
+                  >
+                    {{ addLabel() }}
+                  </afi-button>
+                </div>
+              </div>
+            } @else {
+              <afi-table
+                [columns]="tableColumns"
+                [rows]="tableRows()"
+                [rowActions]="tableActions"
+                trackByKey="id"
+                density="comfortable"
+                [emptyText]="emptyLabel()"
+                (rowClicked)="onTableRowClicked($event)"
+                (rowActionClicked)="onTableActionClicked($event)"
+              />
+            }
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add / edit modal -->
+  <site-ingreso-gasto-form-modal
+    [open]="dialogOpen()"
+    [mode]="mode()"
+    [initialValue]="editingRow()"
+    [familyHijos]="store.hijos()"
+    [retiroAge]="null"
+    (submitted)="onSubmitted($event)"
+    (cancelled)="closeDialog()"
+  />
+</site-demo-shell>

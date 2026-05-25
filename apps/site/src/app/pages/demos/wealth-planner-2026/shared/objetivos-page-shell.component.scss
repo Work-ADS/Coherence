@@ -1,0 +1,54 @@
+// =============================================================================
+// ObjetivosPageShell — shared chrome + content column for AWP Objetivos pages.
+// Keeps form sections aligned with the PageHeader title across Briefs E-H.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.ops {
+  display: flex;
+  block-size: 100vh;
+  overflow: hidden;
+  background: var(--canvas-base);
+}
+
+.ops__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.ops__scroll {
+  flex: 1;
+  min-inline-size: 0;
+  overflow-y: auto;
+}
+
+.ops__page {
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-xl);
+}
+
+.ops__header {
+  position: relative;
+}
+
+.ops__breadcrumb {
+  color: var(--action-700);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ops__version-toggle {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: var(--space-xl);
+}
+
+.ops__body {
+  display: block;
+}

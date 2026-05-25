@@ -1,0 +1,232 @@
+<site-demo-shell
+  [views]="['Sociedades']"
+  demoSlug="sociedades"
+  demoRoute="/demos/wealth-planner-2026/sociedades"
+>
+<div class="h-screen flex bg-canvas-base overflow-hidden">
+  <site-planner-sidebar activeKey="sociedades" />
+
+  <!-- Main column: top bar + content -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <site-planner-top-bar
+      decisionesRoute="/demos/wealth-planner-2026"
+      clientName="Ricard Vazquez Fajardo"
+    />
+
+    <main class="flex-1 min-w-0 overflow-y-auto">
+      <div class="max-w-[1180px] mx-auto py-space-8">
+        <!-- Page header — Sociedades. -->
+        <div class="relative">
+          <afi-page-header
+            title="Sociedades"
+            subtitle="Empresas a través de las que invierte la familia. Suele haber entre 0 y 2."
+            [sticky]="false"
+            [scrollFade]="false"
+          >
+            <span
+              slot="breadcrumb"
+              class="uppercase tracking-wider text-action-700"
+              >SITUACIÓN ACTUAL</span
+            >
+            <afi-button
+              slot="actions"
+              variant="primary"
+              size="sm"
+              (clicked)="openAdd()"
+              ariaLabel="Añadir sociedad"
+            >
+              + Añadir sociedad
+            </afi-button>
+          </afi-page-header>
+          <div class="absolute top-0 right-space-8">
+            <site-version-toggle
+              [versions]="versions"
+              [value]="version()"
+              ariaLabel="Versión del layout de Sociedades"
+              (valueChange)="setVersion($event)"
+            />
+          </div>
+        </div>
+
+        <!-- ─── Body: empty state or table ───────────────────────────── -->
+        <div class="mt-space-6">
+          @if (store.sociedades().length === 0) {
+            <div class="sociedades-empty">
+              <h2 class="sociedades-empty__title">
+                Aún no hay sociedades registradas.
+              </h2>
+              <p class="sociedades-empty__hint">
+                Si la familia invierte a través de una sociedad patrimonial,
+                holding o SOCIMI, regístrala aquí. Es opcional — déjalo en
+                blanco si no aplica.
+              </p>
+              <div class="sociedades-empty__action">
+                <afi-button
+                  variant="primary"
+                  size="md"
+                  (clicked)="openAdd()"
+                  ariaLabel="Añadir primera sociedad"
+                >
+                  + Añadir sociedad
+                </afi-button>
+              </div>
+            </div>
+          } @else {
+            <table class="sociedades-table">
+              <thead>
+                <tr class="sociedades-table__head-row">
+                  <th class="sociedades-table__th">Nombre</th>
+                  <th class="sociedades-table__th">Tributación</th>
+                  <th class="sociedades-table__th sociedades-table__th--actions">
+                    <span class="sr-only">Acciones</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (s of store.sociedades(); track s.id) {
+                  <tr
+                    class="sociedades-table__row"
+                    (click)="openEdit(s.id)"
+                  >
+                    <td class="sociedades-table__td sociedades-table__td--name">
+                      {{ s.nombre || 'Sin nombre' }}
+                    </td>
+                    <td class="sociedades-table__td">
+                      {{ tributacionLabel(s.tributacion) }}
+                    </td>
+                    <td class="sociedades-table__td sociedades-table__td--actions">
+                      <afi-icon-button
+                        variant="ghost"
+                        size="sm"
+                        ariaLabel="Editar sociedad"
+                        (clicked)="openEdit(s.id); $event.event?.stopPropagation?.()"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </afi-icon-button>
+                      <afi-icon-button
+                        variant="destruction"
+                        size="sm"
+                        ariaLabel="Borrar sociedad"
+                        (clicked)="removeSociedad(s.id, $event.event)"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 6h18" />
+                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                          <path d="M10 11v6" />
+                          <path d="M14 11v6" />
+                        </svg>
+                      </afi-icon-button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ─── Add / Edit modal ─────────────────────────────────────────────── -->
+<afi-modal
+  [open]="dialogOpen()"
+  title="Sociedad"
+  size="md"
+  [closeOnEsc]="true"
+  [closeOnBackdrop]="false"
+  (openChange)="$event ? null : closeDialog()"
+>
+  @if (editing(); as s) {
+    <div class="sociedad-form">
+      <afi-input
+        label="Nombre"
+        placeholder="Inversiones Siglo XXI, SL"
+        [value]="s.nombre"
+        (valueChange)="setNombre($event)"
+      />
+      <afi-select
+        label="Tributación"
+        placeholder="Selecciona"
+        [options]="tributacionOptions"
+        [value]="s.tributacion"
+        (valueChange)="setTributacion($event)"
+      />
+
+      <section class="sociedad-form__participacion">
+        <header class="sociedad-form__participacion-head">
+          <h3 class="sociedad-form__participacion-title">
+            Participación accionarial
+          </h3>
+          <p class="sociedad-form__participacion-hint">
+            Reparto entre miembros de la familia. No tiene por qué sumar 100%.
+            <span class="sociedad-form__total">
+              Total actual: {{ editingTotalParticipacion() }}%
+            </span>
+          </p>
+        </header>
+
+        <ul class="sociedad-participantes">
+          @for (p of s.participantes; track p.id) {
+            <li class="sociedad-participantes__row">
+              <span class="sociedad-participantes__label">{{ p.label }}</span>
+              <div class="sociedad-participantes__input-cell">
+                <afi-input
+                  type="number"
+                  ariaLabel="Porcentaje de participación de {{ p.label }}"
+                  [value]="p.porcentaje"
+                  (valueChange)="setParticipacion(p.id, $event)"
+                />
+                <span class="sociedad-participantes__unit">%</span>
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    </div>
+  }
+
+  <ng-container slot="footer">
+    <afi-button
+      variant="ghost"
+      size="md"
+      (clicked)="closeDialog()"
+      ariaLabel="Cancelar"
+    >
+      Cancelar
+    </afi-button>
+    <afi-button
+      variant="primary"
+      size="md"
+      (clicked)="closeDialog()"
+      ariaLabel="Guardar sociedad"
+    >
+      Guardar
+    </afi-button>
+  </ng-container>
+</afi-modal>
+</site-demo-shell>

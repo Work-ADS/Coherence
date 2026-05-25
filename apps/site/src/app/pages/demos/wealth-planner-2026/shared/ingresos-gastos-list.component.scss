@@ -1,0 +1,31 @@
+// =============================================================================
+// IngresosGastosList — shared list body for Ingresos + Gastos pages.
+// BEM + semantic tokens only.
+// =============================================================================
+
+// ─── Empty state ────────────────────────────────────────────────────────────
+.ig-page {
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-xl);
+}
+
+.ig-empty {
+  margin-block-start: var(--space-xl);
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  background: var(--surface-subtle);
+  border: var(--border-width-hairline) dashed var(--border-subtle);
+  border-radius: var(--radius-card);
+  text-align: center;
+}
+
+.ig-empty__title {
+  margin: 0;
+  font: var(--type-subtitle);
+  color: var(--foreground-primary-default);
+}
+
+.ig-empty__action {
+  margin-block-start: var(--space-lg);
+}

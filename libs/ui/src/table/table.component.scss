@@ -19,14 +19,15 @@
 
 // ─── Header ───────────────────────────────────────────────────────────────
 .afi-table__head-row {
-  background: var(--surface-muted);
   border-block-end: var(--border-width-hairline) solid var(--border-hairline);
 }
 
 .afi-table__th {
-  padding: var(--space-xs) var(--space-sm);
-  font: var(--type-body-sm-500);
-  color: var(--foreground-tertiary-default);
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  font: var(--type-body-sm-600);
+  color: var(--foreground-primary-default);
+  vertical-align: middle;
 
   &--start {
     text-align: start;
@@ -48,6 +49,11 @@
   padding-inline: var(--space-xs);
 }
 
+.afi-table__th-actions {
+  width: var(--dimension-16);
+  padding-inline: var(--space-md);
+}
+
 .afi-table__th-label {
   display: inline-flex;
   align-items: center;
@@ -57,7 +63,7 @@
 .afi-table__sort-icon {
   width: var(--dimension-3);
   height: var(--dimension-3);
-  color: var(--foreground-tertiary-default);
+  color: var(--foreground-secondary-default);
 }
 
 // ─── Body rows ────────────────────────────────────────────────────────────
@@ -70,23 +76,16 @@
   }
 
   &--selected {
-    background: var(--surface-muted);
-    border-inline-start: var(--border-width-thick) solid
-      var(--brand-primary-background-default);
-  }
-
-  &--compact {
-    height: var(--dimension-9);
-  }
-
-  &--comfortable {
-    height: var(--dimension-12);
+    background: var(--surface-subtle);
+    border-inline-start: var(--border-width-thick) solid var(--brand-primary-background-default);
   }
 }
 
 .afi-table__td {
-  padding: var(--space-xs) var(--space-sm);
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
   color: var(--foreground-primary-default);
+  vertical-align: middle;
 
   &--start {
     text-align: start;
@@ -96,11 +95,77 @@
   }
   &--end {
     text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &--emphasis {
+    font: var(--type-body-sm-600);
+    color: var(--foreground-primary-default);
+  }
+}
+
+.afi-table__row--comfortable {
+  .afi-table__td,
+  .afi-table__td-actions,
+  .afi-table__td-select {
+    padding-block: var(--space-md);
   }
 }
 
 .afi-table__td-select {
   padding-inline: var(--space-xs);
+}
+
+.afi-table__td-actions {
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  vertical-align: middle;
+}
+
+.afi-table__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2xs);
+  white-space: nowrap;
+}
+
+.afi-table__action {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--dimension-7);
+  padding-block: var(--space-2xs);
+  padding-inline: var(--space-sm);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--foreground-secondary-default);
+  font: var(--type-body-sm-500);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-enter),
+    color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-muted);
+    color: var(--foreground-primary-default);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  &--danger {
+    color: var(--feedback-error-foreground);
+
+    &:hover {
+      background: var(--feedback-error-background);
+      color: var(--feedback-error-foreground);
+    }
+  }
 }
 
 // ─── Empty + skeleton states ──────────────────────────────────────────────
@@ -123,6 +188,18 @@
   &--check {
     width: var(--dimension-4);
   }
+}
+
+.afi-table__sr-only {
+  position: absolute;
+  width: var(--dimension-0-25);
+  height: var(--dimension-0-25);
+  padding: 0;
+  margin: calc(var(--dimension-0-25) * -1);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @keyframes afi-table-pulse {

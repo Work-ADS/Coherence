@@ -40,6 +40,11 @@
             </span>
           </th>
         }
+        @if (hasRowActions()) {
+          <th scope="col" class="afi-table__th-actions">
+            <span class="afi-table__sr-only">Acciones</span>
+          </th>
+        }
       </tr>
     </thead>
     <tbody [attr.aria-busy]="loading() ? 'true' : null">
@@ -56,24 +61,22 @@
                 <div class="afi-table__skel"></div>
               </td>
             }
+            @if (hasRowActions()) {
+              <td class="afi-table__td-actions">
+                <div class="afi-table__skel"></div>
+              </td>
+            }
           </tr>
         }
       } @else if (rows().length === 0) {
         <tr>
-          <td
-            [attr.colspan]="totalColumns()"
-            class="afi-table__empty"
-            aria-live="polite"
-          >
+          <td [attr.colspan]="totalColumns()" class="afi-table__empty" aria-live="polite">
             {{ emptyText() }}
           </td>
         </tr>
       } @else {
         @for (row of rows(); track trackKey(row)) {
-          <tr
-            [class]="rowClasses(isSelected(row))"
-            (click)="onRowClick(row, $event)"
-          >
+          <tr [class]="rowClasses(isSelected(row))" (click)="onRowClick(row, $event)">
             @if (selectable()) {
               <td class="afi-table__td-select" (click)="$event.stopPropagation()">
                 <afi-checkbox
@@ -85,7 +88,33 @@
               </td>
             }
             @for (col of visibleColumns(); track col.key) {
-              <td [class]="cellClasses(col)">{{ row[col.key] }}</td>
+              <td [class]="cellClasses(col)">
+                @if (col.kind === 'badge') {
+                  @if (cellText(row, col)) {
+                    <afi-badge [intent]="col.badgeIntent ?? 'neutral'" size="sm">
+                      {{ cellText(row, col) }}
+                    </afi-badge>
+                  }
+                } @else {
+                  {{ cellText(row, col) }}
+                }
+              </td>
+            }
+            @if (hasRowActions()) {
+              <td class="afi-table__td-actions">
+                <div class="afi-table__actions">
+                  @for (action of rowActions(); track action.key) {
+                    <button
+                      type="button"
+                      [class]="actionClasses(action)"
+                      [attr.aria-label]="action.ariaLabel ?? action.label"
+                      (click)="onRowAction(action, row, $event)"
+                    >
+                      {{ action.label }}
+                    </button>
+                  }
+                </div>
+              </td>
             }
           </tr>
         }

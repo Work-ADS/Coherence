@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
   signal,
@@ -14,6 +15,8 @@ import {
   NavItemComponent,
   NavSectionComponent,
 } from '@coherence/ui';
+
+import { WealthPlannerStore } from '../wealth-planner-2026/store';
 
 export type NavItemState = 'empty' | 'in-progress' | 'complete';
 
@@ -37,18 +40,14 @@ export type NavSection = {
 @Component({
   selector: 'site-planner-sidebar',
   standalone: true,
-  imports: [
-    RouterLink,
-    LogoComponent,
-    SidebarComponent,
-    NavItemComponent,
-    NavSectionComponent,
-  ],
+  imports: [RouterLink, LogoComponent, SidebarComponent, NavItemComponent, NavSectionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './planner-sidebar.component.html',
   styleUrls: ['./planner-sidebar.component.scss'],
 })
 export class PlannerSidebarComponent {
+  private readonly store = inject(WealthPlannerStore);
+
   readonly activeKey = input<string>('');
   readonly ariaLabel = input<string>('Navegación del planificador financiero');
   readonly gestorName = input<string>('Elena Torres');
@@ -63,18 +62,48 @@ export class PlannerSidebarComponent {
       label: 'Situación actual',
       required: true,
       items: [
-        { key: 'familia', label: 'Familia', state: 'complete' },
-        { key: 'sociedades', label: 'Sociedades', state: 'complete' },
-        { key: 'patrimonio', label: 'Patrimonio', state: 'complete', route: '/demos/wealth-planner-2026/patrimonial' },
-        { key: 'ingresos', label: 'Ingresos', state: 'in-progress' },
-        { key: 'gastos', label: 'Gastos', state: 'empty' },
+        {
+          key: 'familia',
+          label: 'Familia',
+          state: this.store.familiaState(),
+          route: '/demos/wealth-planner-2026/familia',
+        },
+        {
+          key: 'sociedades',
+          label: 'Sociedades',
+          state: this.store.sociedadesState(),
+          route: '/demos/wealth-planner-2026/sociedades',
+        },
+        {
+          key: 'patrimonio',
+          label: 'Patrimonio',
+          state: 'complete',
+          route: '/demos/wealth-planner-2026/patrimonial',
+        },
+        {
+          key: 'ingresos',
+          label: 'Ingresos',
+          state: this.store.ingresosState(),
+          route: '/demos/wealth-planner-2026/ingresos',
+        },
+        {
+          key: 'gastos',
+          label: 'Gastos',
+          state: this.store.gastosState(),
+          route: '/demos/wealth-planner-2026/gastos',
+        },
       ],
     },
     {
       label: 'Objetivos',
       required: true,
       items: [
-        { key: 'legado-retiro', label: 'Legado y retiro', state: 'in-progress' },
+        {
+          key: 'legado-retiro',
+          label: 'Legado y retiro',
+          state: this.store.legadoRetiroState(),
+          route: '/demos/wealth-planner-2026/legado-retiro',
+        },
         { key: 'inversiones-futuras', label: 'Inversiones futuras', state: 'empty' },
         { key: 'desinversiones-futuras', label: 'Desinversiones futuras', state: 'empty' },
         { key: 'proteccion-familiar', label: 'Protección familiar', state: 'empty' },
@@ -97,15 +126,18 @@ export class PlannerSidebarComponent {
     {
       label: 'Conclusiones',
       items: [
-        { key: 'evolucion-comparada', label: 'Evolución comparada', state: 'empty', route: '/demos/wealth-planner-2026/evolucion-patrimonial' },
+        {
+          key: 'evolucion-comparada',
+          label: 'Evolución comparada',
+          state: 'empty',
+          route: '/demos/wealth-planner-2026/evolucion-patrimonial',
+        },
         { key: 'consecucion-objetivos', label: 'Consecución de objetivos', state: 'empty' },
       ],
     },
     {
       label: 'Informe',
-      items: [
-        { key: 'generador-informes', label: 'Generador de informes', state: 'empty' },
-      ],
+      items: [{ key: 'generador-informes', label: 'Generador de informes', state: 'empty' }],
     },
   ]);
 }

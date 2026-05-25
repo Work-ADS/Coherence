@@ -1,0 +1,352 @@
+<site-demo-shell
+  [views]="['Familia']"
+  demoSlug="familia"
+  demoRoute="/demos/wealth-planner-2026/familia"
+>
+<div class="h-screen flex bg-canvas-base overflow-hidden">
+  <site-planner-sidebar activeKey="familia" />
+
+  <!-- Main column: top bar + content -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <site-planner-top-bar
+      decisionesRoute="/demos/wealth-planner-2026"
+      clientName="Ricard Vazquez Fajardo"
+    />
+
+    <main class="flex-1 min-w-0 overflow-y-auto">
+      <div class="max-w-[1180px] mx-auto py-space-8">
+        <!-- Page header — Familia. Version toggle pinned top-right so seniors
+             can compare layout variants across reviews (v1 = current; v2/v3
+             reserved). -->
+        <div class="relative">
+          <afi-page-header
+            title="Familia"
+            subtitle="Compone el núcleo familiar del cliente. Esta información es la base del cálculo de objetivos, herencia y simulaciones."
+            [sticky]="false"
+            [scrollFade]="false"
+          >
+            <span
+              slot="breadcrumb"
+              class="uppercase tracking-wider text-action-700"
+              >SITUACIÓN ACTUAL</span
+            >
+          </afi-page-header>
+          <div class="absolute top-0 right-space-8">
+            <site-version-toggle
+              [versions]="versions"
+              [value]="version()"
+              ariaLabel="Versión del layout de Familia"
+              (valueChange)="setVersion($event)"
+            />
+          </div>
+        </div>
+
+        <!-- ─── Tabs: Información básica · Miembros de la familia ─────────
+             Tabs + content sit at the same column-left as the page-header
+             title (no extra mx-* on this wrapper). Page-header carries its
+             own internal padding; matching that to extra wrapper margin is
+             how the prior layout drifted out of alignment. -->
+        <div class="mt-space-6">
+          <afi-tabs
+            [activeIndex]="activeTab()"
+            (activeChange)="activeTab.set($event)"
+            ariaLabel="Secciones de Familia"
+          >
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!--  Tab 1 · Información básica                                 -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <afi-tab-item label="Información básica">
+              <!-- ─── Información personal ─────────────────────────────── -->
+              <section class="familia-section">
+                <header class="familia-section__head">
+                  <h2 class="familia-section__title">Información personal</h2>
+                </header>
+
+                <div class="familia-grid familia-grid--2">
+                  <afi-input
+                    label="Nombre"
+                    placeholder="Ricard"
+                    [value]="store.cliente().nombre"
+                    (valueChange)="setClienteNombre($event)"
+                    autocomplete="given-name"
+                  />
+                  <afi-input
+                    label="Apellidos"
+                    placeholder="Vazquez Fajardo"
+                    [value]="store.cliente().apellidos"
+                    (valueChange)="setClienteApellidos($event)"
+                    autocomplete="family-name"
+                  />
+                  <afi-input
+                    label="Fecha de nacimiento"
+                    type="date"
+                    [value]="store.cliente().fechaNacimiento"
+                    (valueChange)="setClienteFechaNacimiento($event)"
+                    autocomplete="bday"
+                  />
+                  <afi-select
+                    label="Sexo"
+                    placeholder="Selecciona"
+                    [options]="sexoOptions"
+                    [value]="store.cliente().sexo"
+                    (valueChange)="setClienteSexo($event)"
+                  />
+                </div>
+              </section>
+
+              <!-- ─── Estado civil ─────────────────────────────────────── -->
+              <section class="familia-section">
+                <header class="familia-section__head">
+                  <h2 class="familia-section__title">Estado civil</h2>
+                </header>
+
+                <div class="familia-grid familia-grid--2">
+                  <afi-select
+                    label="Estado civil"
+                    placeholder="Selecciona"
+                    [options]="estadoCivilOptions"
+                    [value]="store.cliente().estadoCivil"
+                    (valueChange)="setClienteEstadoCivil($event)"
+                  />
+                  @if (showsRegimen()) {
+                    <afi-select
+                      label="Régimen económico matrimonial"
+                      placeholder="Selecciona"
+                      [options]="regimenOptions"
+                      [value]="store.cliente().regimenEconomico"
+                      (valueChange)="setClienteRegimen($event)"
+                    />
+                  }
+                </div>
+              </section>
+
+              <!-- ─── Nacionalidad y fiscalidad ────────────────────────── -->
+              <section class="familia-section">
+                <header class="familia-section__head">
+                  <h2 class="familia-section__title">
+                    Nacionalidad y fiscalidad
+                  </h2>
+                </header>
+
+                <div class="familia-grid familia-grid--3">
+                  <afi-input
+                    label="Nacionalidad"
+                    placeholder="Española"
+                    [value]="store.cliente().nacionalidad"
+                    (valueChange)="setClienteNacionalidad($event)"
+                  />
+                  <afi-input
+                    label="País de residencia fiscal"
+                    placeholder="España"
+                    [value]="store.cliente().residenciaFiscal"
+                    (valueChange)="setClienteResidenciaFiscal($event)"
+                  />
+                  <afi-input
+                    label="NIF / NIE"
+                    placeholder="00000000A"
+                    [value]="store.cliente().nif"
+                    (valueChange)="setClienteNif($event)"
+                  />
+                </div>
+              </section>
+            </afi-tab-item>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!--  Tab 2 · Miembros de la familia                             -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <afi-tab-item label="Miembros de la familia">
+              <!-- ─── Pareja ───────────────────────────────────────────── -->
+              <section class="familia-section">
+                <header class="familia-section__head">
+                  <h2 class="familia-section__title">Pareja</h2>
+                </header>
+
+                <div class="familia-toggle">
+                  <afi-switch
+                    label="¿Tiene pareja?"
+                    hint="Activa si vas a registrar al cónyuge o pareja de hecho."
+                    [checked]="store.tienePareja()"
+                    (checkedChange)="setTienePareja($event)"
+                  />
+                </div>
+
+                @if (store.tienePareja() && store.conyuge() !== null) {
+                  <div class="familia-grid familia-grid--2">
+                    <afi-input
+                      label="Nombre"
+                      [value]="store.conyuge()?.nombre ?? ''"
+                      (valueChange)="setConyugeNombre($event)"
+                    />
+                    <afi-input
+                      label="Apellidos"
+                      [value]="store.conyuge()?.apellidos ?? ''"
+                      (valueChange)="setConyugeApellidos($event)"
+                    />
+                    <afi-input
+                      label="Fecha de nacimiento"
+                      type="date"
+                      [value]="store.conyuge()?.fechaNacimiento ?? ''"
+                      (valueChange)="setConyugeFechaNacimiento($event)"
+                    />
+                    <afi-select
+                      label="Sexo"
+                      placeholder="Selecciona"
+                      [options]="sexoOptions"
+                      [value]="store.conyuge()?.sexo ?? null"
+                      (valueChange)="setConyugeSexo($event)"
+                    />
+                    <afi-input
+                      label="Nacionalidad"
+                      [value]="store.conyuge()?.nacionalidad ?? ''"
+                      (valueChange)="setConyugeNacionalidad($event)"
+                    />
+                  </div>
+                }
+              </section>
+
+              <!-- ─── Hijos ────────────────────────────────────────────── -->
+              <section class="familia-section">
+                <header class="familia-section__head">
+                  <h2 class="familia-section__title">Hijos</h2>
+                  <afi-button
+                    variant="secondary"
+                    size="sm"
+                    (clicked)="addHijo()"
+                    ariaLabel="Añadir hijo"
+                  >
+                    + Añadir hijo
+                  </afi-button>
+                </header>
+
+                @if (store.hijos().length === 0) {
+                  <p class="familia-empty">
+                    Aún no hay hijos registrados.
+                  </p>
+                } @else {
+                  <ul class="familia-rows">
+                    @for (hijo of store.hijos(); track hijo.id) {
+                      <li class="familia-row">
+                        <div class="familia-row__head">
+                          <span class="familia-row__index">
+                            Hijo {{ $index + 1 }}
+                          </span>
+                          <afi-button
+                            variant="danger"
+                            size="sm"
+                            (clicked)="removeHijo(hijo.id)"
+                            ariaLabel="Borrar hijo"
+                          >
+                            Borrar
+                          </afi-button>
+                        </div>
+                        <div class="familia-grid familia-grid--2">
+                          <afi-input
+                            label="Nombre"
+                            [value]="hijo.nombre"
+                            (valueChange)="setHijoNombre(hijo.id, $event)"
+                          />
+                          <afi-input
+                            label="Fecha de nacimiento"
+                            type="date"
+                            [value]="hijo.fechaNacimiento"
+                            (valueChange)="
+                              setHijoFechaNacimiento(hijo.id, $event)
+                            "
+                          />
+                        </div>
+                        <div class="familia-row__footer">
+                          <afi-checkbox
+                            label="A cargo del cliente"
+                            [checked]="hijo.aCargo"
+                            (checkedChange)="setHijoACargo(hijo.id, $event)"
+                          />
+                        </div>
+                      </li>
+                    }
+                  </ul>
+                }
+              </section>
+
+              <!-- ─── Ascendientes ─────────────────────────────────────── -->
+              <section class="familia-section">
+                <header class="familia-section__head">
+                  <h2 class="familia-section__title">Ascendientes</h2>
+                  <afi-button
+                    variant="secondary"
+                    size="sm"
+                    (clicked)="addAscendiente()"
+                    ariaLabel="Añadir ascendiente"
+                  >
+                    + Añadir ascendiente
+                  </afi-button>
+                </header>
+
+                @if (store.ascendientes().length === 0) {
+                  <p class="familia-empty">
+                    Aún no hay ascendientes registrados.
+                  </p>
+                } @else {
+                  <ul class="familia-rows">
+                    @for (asc of store.ascendientes(); track asc.id) {
+                      <li class="familia-row">
+                        <div class="familia-row__head">
+                          <span class="familia-row__index">
+                            Ascendiente {{ $index + 1 }}
+                          </span>
+                          <afi-button
+                            variant="danger"
+                            size="sm"
+                            (clicked)="removeAscendiente(asc.id)"
+                            ariaLabel="Borrar ascendiente"
+                          >
+                            Borrar
+                          </afi-button>
+                        </div>
+                        <div class="familia-grid familia-grid--3">
+                          <afi-input
+                            label="Nombre"
+                            [value]="asc.nombre"
+                            (valueChange)="
+                              setAscendienteNombre(asc.id, $event)
+                            "
+                          />
+                          <afi-select
+                            label="Parentesco"
+                            placeholder="Selecciona"
+                            [options]="parentescoOptions"
+                            [value]="asc.parentesco"
+                            (valueChange)="
+                              setAscendienteParentesco(asc.id, $event)
+                            "
+                          />
+                          <afi-input
+                            label="Fecha de nacimiento"
+                            type="date"
+                            [value]="asc.fechaNacimiento"
+                            (valueChange)="
+                              setAscendienteFechaNacimiento(asc.id, $event)
+                            "
+                          />
+                        </div>
+                        <div class="familia-row__footer">
+                          <afi-checkbox
+                            label="A cargo del cliente"
+                            [checked]="asc.aCargo"
+                            (checkedChange)="
+                              setAscendienteACargo(asc.id, $event)
+                            "
+                          />
+                        </div>
+                      </li>
+                    }
+                  </ul>
+                }
+              </section>
+            </afi-tab-item>
+          </afi-tabs>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+</site-demo-shell>

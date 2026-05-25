@@ -6,4 +6,10 @@
  */
 
 export type InputSize = 'sm' | 'md' | 'lg';
-export type InputType = 'text' | 'textarea' | 'number' | 'email' | 'password';
+export type InputType =
+  | 'text'
+  | 'textarea'
+  | 'number'
+  | 'email'
+  | 'password'
+  | 'date';

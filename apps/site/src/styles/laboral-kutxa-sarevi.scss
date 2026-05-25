@@ -1,0 +1,647 @@
+// Global Sarevi demo helpers.
+// These classes are scoped under `.lk-sarevi` so they only apply inside the
+// Laboral Kutxa simulator, but they live outside the component stylesheet to
+// keep Angular's per-component style budget green.
+
+.lk-sarevi {
+  container-type: inline-size;
+
+  afi-input,
+  afi-select {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  afi-input,
+  afi-select {
+    display: block;
+    width: 100%;
+  }
+
+  .impact {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+
+    &--alto  { background: var(--high-bg); color: var(--high-fg); }
+    &--medio { background: var(--mid-bg);  color: var(--mid-fg); }
+    &--bajo  { background: var(--low-bg);  color: var(--low-fg); }
+    &--none  { background: var(--none-bg); color: var(--none-fg); }
+  }
+
+  .cae-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bere);
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .pill-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-100);
+    color: var(--green-700);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .energy-label {
+    position: relative;
+    display: inline-block;
+    height: 30px;
+    padding: 0 22px 0 12px;
+    line-height: 30px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 15px 0 15px 14px;
+      border-color: transparent transparent transparent currentColor;
+    }
+
+    &--A { background: var(--energy-A); &::after { color: var(--energy-A); } }
+    &--B { background: var(--energy-B); &::after { color: var(--energy-B); } }
+    &--C { background: var(--energy-C); &::after { color: var(--energy-C); } }
+    &--D { background: var(--energy-D); &::after { color: var(--energy-D); } }
+    &--E { background: var(--energy-E); &::after { color: var(--energy-E); } }
+    &--F { background: var(--energy-F); &::after { color: var(--energy-F); } }
+    &--G { background: var(--energy-G); &::after { color: var(--energy-G); } }
+
+    &--sm {
+      height: 24px;
+      line-height: 24px;
+      font-size: 13px;
+      padding: 0 18px 0 10px;
+
+      &::after { border-width: 12px 0 12px 11px; }
+    }
+  }
+
+  .stat {
+    background: var(--card-soft);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    &__label { font-size: 13px; color: var(--text-soft); }
+
+    &__value {
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--bere);
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &__unit {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-soft);
+      margin-left: 4px;
+    }
+
+    &__hint {
+      font-size: 12px;
+      line-height: 1.35;
+      color: var(--text-soft);
+    }
+  }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 14px;
+  }
+
+  .metric-card {
+    background: linear-gradient(180deg, #fff 0%, var(--card-soft) 100%);
+    border: 1px solid var(--line-soft);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-height: 128px;
+    min-width: 0;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      border-color: var(--line);
+      box-shadow: var(--shadow-card);
+    }
+
+    &--grade {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .finance-bento {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .finance-card {
+    background: var(--card-soft);
+    border: 1px solid var(--line-soft);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+
+    &__title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--bere);
+    }
+
+    &--controls {
+      background: #fff;
+    }
+
+    &--green {
+      background: linear-gradient(180deg, #EFF7DD 0%, #F8FBF0 100%);
+      border-color: var(--color-laboral-kutxa-verde-100);
+    }
+  }
+
+  .alert {
+    background: var(--warn-bg);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13.5px;
+    color: var(--bere-700);
+    line-height: 1.55;
+
+    &__icon {
+      color: var(--warn-fg);
+      flex: none;
+      margin-top: 2px;
+    }
+
+    strong { color: var(--bere); }
+
+    &--info {
+      background: #E1EEF7;
+      color: #1E4663;
+
+      .alert__icon { color: #1E4663; }
+    }
+  }
+
+  // Responsive contract for the simulator:
+  // - product navigation wraps first, then stacks when labels and reference
+  //   code can no longer sit comfortably in one row;
+  // - content grids keep related controls inline on tablet/desktop and stack
+  //   at narrow widths so labels, values, and actions never overlap;
+  // - data tables scroll horizontally only as a last resort.
+  @media (max-width: 1160px) {
+    .lk-topbar {
+      flex-wrap: wrap;
+      align-items: flex-start;
+      padding-inline: 32px;
+
+      &__brand { order: 1; }
+      .steps {
+        order: 3;
+        flex-basis: 100%;
+        justify-content: flex-start;
+        padding: 4px 0 0;
+        overflow-x: auto;
+        scrollbar-width: thin;
+      }
+      &__right {
+        order: 2;
+        margin-left: auto;
+      }
+    }
+
+    .bento-medidas {
+      position: static;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .lk-topbar {
+      padding: 18px 20px;
+      gap: 16px;
+
+      &__brand,
+      &__right {
+        width: 100%;
+      }
+
+      &__brand {
+        justify-content: space-between;
+      }
+
+      &__sep {
+        display: none;
+      }
+
+      &__right {
+        justify-content: space-between;
+        min-width: 0;
+        flex-wrap: wrap;
+      }
+
+      &__ref {
+        align-items: flex-start;
+        min-width: 0;
+      }
+    }
+
+    .lk-shell {
+      padding-inline: 24px;
+      padding-bottom: 40px;
+    }
+
+    .surface {
+      padding: 24px 0;
+      gap: 18px;
+    }
+
+    .surface-header {
+      padding-inline: 4px;
+    }
+
+    .surface-header__title {
+      font-size: 22px;
+      align-items: flex-start;
+    }
+
+    .card,
+    .bento-medidas__cell,
+    .finance-card {
+      border-radius: 14px;
+      padding: 22px;
+    }
+
+    .grid-2,
+    .grid-3 {
+      grid-template-columns: 1fr;
+    }
+
+    .welcome-wrap {
+      padding-inline: 0;
+
+      &__h1 {
+        font-size: 40px;
+      }
+    }
+
+    .welcome-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .medida-row {
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      gap: 8px 12px;
+      align-items: start;
+      padding-block: 12px;
+
+      &__tags {
+        grid-column: 2 / -1;
+        flex-wrap: wrap;
+      }
+
+      &__price {
+        grid-column: 3;
+        grid-row: 1;
+        min-width: 0;
+        white-space: nowrap;
+      }
+
+      &__details {
+        grid-column: 2 / -1;
+        justify-self: start;
+      }
+
+      &__expand-toggle {
+        margin-left: 44px;
+      }
+    }
+
+    .medida-detail {
+      margin-left: 0;
+
+      &__switch-row,
+      &__foot {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    .bento-medidas__grade-row,
+    .bento-cell__topline {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .bento-cell__hero {
+      font-size: 36px;
+    }
+
+    .lk-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .cuota-main {
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .action-row {
+      gap: 12px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .lk-logo-img {
+      max-width: 180px;
+      height: auto;
+    }
+
+    .steps {
+      gap: 6px;
+    }
+
+    .step {
+      padding: 6px 8px;
+
+      &__sub {
+        display: none;
+      }
+    }
+
+    .card,
+    .bento-medidas__cell,
+    .finance-card {
+      padding: 18px;
+    }
+
+    .metric-grid,
+    .finance-bento,
+    .cuota-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cuota-grid__cell {
+      border-right: 0;
+      border-bottom: 1px solid var(--line-soft);
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    .info-modal__head {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+// Container queries are the important bit for this demo. The simulator can sit
+// inside a narrow preview canvas while the browser viewport is still desktop
+// width, so the responsive behavior must react to the product surface, not the
+// window. Keep these aligned with the media rules above.
+@container (max-width: 820px) {
+  .lk-topbar {
+    padding: 18px 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+
+    &__brand,
+    &__right {
+      width: 100%;
+    }
+
+    &__brand {
+      justify-content: space-between;
+    }
+
+    &__sep {
+      display: none;
+    }
+
+    &__right {
+      justify-content: space-between;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    &__ref {
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .steps {
+      order: 3;
+      flex-basis: 100%;
+      justify-content: flex-start;
+      padding: 4px 0 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+  }
+
+  .lk-shell {
+    padding-inline: 24px;
+    padding-bottom: 40px;
+  }
+
+  .surface {
+    padding: 24px 0;
+    gap: 18px;
+  }
+
+  .surface-header {
+    padding-inline: 4px;
+  }
+
+  .surface-header__title {
+    font-size: 22px;
+    align-items: flex-start;
+  }
+
+  .card,
+  .bento-medidas__cell,
+  .finance-card {
+    border-radius: 14px;
+    padding: 22px;
+  }
+
+  .welcome-wrap {
+    padding-inline: 0;
+
+    &__h1 {
+      font-size: 40px;
+    }
+  }
+
+  .welcome-grid,
+  .grid-2,
+  .grid-3,
+  .metric-grid,
+  .finance-bento {
+    grid-template-columns: 1fr;
+  }
+
+  .medida-row {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 8px 12px;
+    align-items: start;
+    padding-block: 12px;
+
+    &__tags {
+      grid-column: 2 / -1;
+      flex-wrap: wrap;
+    }
+
+    &__price {
+      grid-column: 3;
+      grid-row: 1;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    &__details {
+      grid-column: 2 / -1;
+      justify-self: start;
+    }
+
+    &__expand-toggle {
+      margin-left: 44px;
+    }
+  }
+
+  .medida-detail {
+    margin-left: 0;
+
+    &__switch-row,
+    &__foot {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+
+  .bento-medidas {
+    position: static;
+  }
+
+  .bento-medidas__grade-row,
+  .bento-cell__topline {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .bento-cell__hero {
+    font-size: 36px;
+  }
+
+  .lk-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .cuota-main {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .action-row {
+    gap: 12px;
+  }
+}
+
+@container (max-width: 560px) {
+  .lk-logo-img {
+    max-width: 180px;
+    height: auto;
+  }
+
+  .steps {
+    gap: 6px;
+  }
+
+  .step {
+    padding: 6px 8px;
+
+    &__sub {
+      display: none;
+    }
+  }
+
+  .card,
+  .bento-medidas__cell,
+  .finance-card {
+    padding: 18px;
+  }
+
+  .cuota-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cuota-grid__cell {
+    border-right: 0;
+    border-bottom: 1px solid var(--line-soft);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .info-modal__head {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}

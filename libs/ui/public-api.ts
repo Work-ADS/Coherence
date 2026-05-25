@@ -63,3 +63,5 @@ export { TopBarComponent } from './src/top-bar';
 export { TooltipComponent } from './src/tooltip';
 export type { TooltipPosition } from './src/tooltip';
 export { ToastComponent } from './src/toast';
+export { AnimatedChartComponent } from './src/animated-chart';
+export type { AnimatedChartSize, AnimatedChartSeries, ChartColumn } from './src/animated-chart';

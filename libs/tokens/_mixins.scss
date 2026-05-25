@@ -108,3 +108,195 @@ $coherence-breakpoints: (
     @content;
   }
 }
+
+
+// -----------------------------------------------------------------------------
+// @mixin coherence-brand-bind — generate the full semantic brand block
+// -----------------------------------------------------------------------------
+// Maps a brand's primitive ramps (defined in `colors-{brand}.scss` as
+// `--color-{brand}-{ramp}-{shade}` per the AFI 12-shade convention) into
+// the ~60 semantic CSS custom properties that components consume.
+//
+// One @include replaces ~60 lines of hand-written semantic mappings per
+// brand. Override individual slots after the call for brand-specific
+// edges (e.g. dark-mode inversions, signal color overrides).
+//
+// Usage:
+//   @use './mixins' as t;
+//
+//   [data-brand="laboral-kutxa"] {
+//     @include t.coherence-brand-bind(
+//       $brand: 'laboral-kutxa',
+//       $accent: 'magenta',
+//       $neutral: 'beige',
+//       $ink-default: var(--color-laboral-kutxa-ink-default),
+//       $ink-soft:    var(--color-laboral-kutxa-ink-soft),
+//       $ink-muted:   var(--color-laboral-kutxa-ink-muted),
+//     );
+//   }
+//
+// Params:
+//   $brand    — brand slug as it appears in primitive var names
+//               (e.g. 'laboral-kutxa', 'afi', 'mutualidad')
+//   $accent   — ramp name used for primary/secondary/foreground-brand
+//               (e.g. 'magenta', 'azul-profundo', 'verde')
+//   $neutral  — ramp name used for canvas/surface/tertiary/borders
+//               (e.g. 'beige', 'gris', 'white')
+//   $ink-*    — workhorse text colors (var() refs or hex)
+//
+// Assumes the accent ramp has 50/100/200/500/600/700/800 and the neutral
+// ramp has 50/100/200/300/400/500/600/700. Anchors match colors.scss.
+// -----------------------------------------------------------------------------
+
+@mixin coherence-brand-bind(
+  $brand,
+  $accent,
+  $neutral,
+  $ink-default,
+  $ink-soft,
+  $ink-muted,
+) {
+  // ===== CANVAS — warm tinted-paper page background =====
+  --canvas-primary:   var(--color-#{$brand}-#{$neutral}-300);
+  --canvas-secondary: var(--color-#{$brand}-#{$neutral}-400);
+
+  // ===== SURFACE — white card on the canvas =====
+  --surface-default: var(--color-base-white);
+  --surface-subtle:  var(--color-#{$brand}-#{$neutral}-50);
+  --surface-raised:  var(--color-base-white);
+
+  // ===== BRAND - PRIMARY — accent CTA =====
+  --brand-primary-background-default:  var(--color-#{$brand}-#{$accent}-500);
+  --brand-primary-background-hover:    var(--color-#{$brand}-#{$accent}-600);
+  --brand-primary-background-active:   var(--color-#{$brand}-#{$accent}-700);
+  --brand-primary-background-disabled: var(--color-#{$brand}-#{$neutral}-400);
+  --brand-primary-foreground-default:  var(--color-base-white);
+  --brand-primary-foreground-hover:    var(--color-base-white);
+  --brand-primary-foreground-active:   var(--color-base-white);
+  --brand-primary-foreground-disabled: #{$ink-muted};
+  --brand-primary-border-default:      var(--color-#{$brand}-#{$accent}-500);
+  --brand-primary-border-hover:        var(--color-#{$brand}-#{$accent}-600);
+  --brand-primary-border-active:       var(--color-#{$brand}-#{$accent}-700);
+  --brand-primary-border-disabled:     var(--color-#{$brand}-#{$neutral}-400);
+
+  // ===== BRAND - SECONDARY — mirrors primary (afi-button[variant=primary]
+  // currently reads from these slots) =====
+  --brand-secondary-background-default:  var(--color-#{$brand}-#{$accent}-500);
+  --brand-secondary-background-hover:    var(--color-#{$brand}-#{$accent}-600);
+  --brand-secondary-background-active:   var(--color-#{$brand}-#{$accent}-700);
+  --brand-secondary-background-disabled: var(--color-#{$brand}-#{$neutral}-400);
+  --brand-secondary-foreground-default:  var(--color-base-white);
+  --brand-secondary-foreground-hover:    var(--color-base-white);
+  --brand-secondary-foreground-active:   var(--color-base-white);
+  --brand-secondary-foreground-disabled: #{$ink-muted};
+  --brand-secondary-border-default:      var(--color-#{$brand}-#{$accent}-500);
+  --brand-secondary-border-hover:        var(--color-#{$brand}-#{$accent}-600);
+  --brand-secondary-border-active:       var(--color-#{$brand}-#{$accent}-700);
+  --brand-secondary-border-disabled:     var(--color-#{$brand}-#{$neutral}-400);
+
+  // ===== BRAND - SECONDARY NEUTRAL — light accent tint (icon-button bg, pills) =====
+  --brand-secondary-neutral-background-default:  var(--color-#{$brand}-#{$accent}-50);
+  --brand-secondary-neutral-background-hover:    var(--color-#{$brand}-#{$accent}-100);
+  --brand-secondary-neutral-background-active:   var(--color-#{$brand}-#{$accent}-200);
+  --brand-secondary-neutral-background-disabled: var(--color-#{$brand}-#{$neutral}-100);
+  --brand-secondary-neutral-foreground-default:  var(--color-#{$brand}-#{$accent}-800);
+  --brand-secondary-neutral-foreground-hover:    var(--color-#{$brand}-#{$accent}-700);
+  --brand-secondary-neutral-foreground-active:   var(--color-#{$brand}-#{$accent}-900);
+  --brand-secondary-neutral-foreground-disabled: #{$ink-muted};
+  --brand-secondary-neutral-border-default:      var(--color-#{$brand}-#{$accent}-200);
+  --brand-secondary-neutral-border-hover:        var(--color-#{$brand}-#{$accent}-300);
+  --brand-secondary-neutral-border-active:       var(--color-#{$brand}-#{$accent}-400);
+  --brand-secondary-neutral-border-disabled:     var(--color-#{$brand}-#{$neutral}-200);
+
+  // ===== BRAND - TERTIARY — warm neutral surface family =====
+  --brand-tertiary-background-default:  var(--color-#{$brand}-#{$neutral}-50);
+  --brand-tertiary-background-hover:    var(--color-#{$brand}-#{$neutral}-100);
+  --brand-tertiary-background-active:   var(--color-#{$brand}-#{$neutral}-200);
+  --brand-tertiary-background-disabled: var(--color-#{$brand}-#{$neutral}-100);
+  --brand-tertiary-foreground-default:  #{$ink-default};
+  --brand-tertiary-foreground-hover:    #{$ink-default};
+  --brand-tertiary-foreground-active:   #{$ink-default};
+  --brand-tertiary-foreground-disabled: #{$ink-muted};
+  --brand-tertiary-border-default:      var(--color-#{$brand}-#{$neutral}-500);
+  --brand-tertiary-border-hover:        var(--color-#{$brand}-#{$neutral}-600);
+  --brand-tertiary-border-active:       var(--color-#{$brand}-#{$neutral}-700);
+  --brand-tertiary-border-disabled:     var(--color-#{$brand}-#{$neutral}-200);
+
+  // ===== FOREGROUND — workhorse ink + accent for branded text/links =====
+  --foreground-primary-default:   #{$ink-default};
+  --foreground-secondary-default: #{$ink-soft};
+  --foreground-tertiary-default:  #{$ink-muted};
+  --foreground-placeholder:       #{$ink-muted};
+
+  --foreground-brand-default: var(--color-#{$brand}-#{$accent}-500);
+  --foreground-brand-hover:   var(--color-#{$brand}-#{$accent}-600);
+  --foreground-brand-active:  var(--color-#{$brand}-#{$accent}-700);
+
+  // ===== LEGACY ACTION ALIASES — older primitives still consume these =====
+  --action-50:  var(--color-#{$brand}-#{$accent}-50);
+  --action-100: var(--color-#{$brand}-#{$accent}-100);
+  --action-200: var(--color-#{$brand}-#{$accent}-200);
+  --action-300: var(--color-#{$brand}-#{$accent}-300);
+  --action-400: var(--color-#{$brand}-#{$accent}-400);
+  --action-500: var(--color-#{$brand}-#{$accent}-500);
+  --action-600: var(--color-#{$brand}-#{$accent}-600);
+  --action-700: var(--color-#{$brand}-#{$accent}-700);
+  --action-800: var(--color-#{$brand}-#{$accent}-800);
+  --action-900: var(--color-#{$brand}-#{$accent}-900);
+
+  // ===== BORDER — neutral line system, accent for strong/focus =====
+  --border-subtle:  var(--color-#{$brand}-#{$neutral}-200);
+  --border-default: var(--color-#{$brand}-#{$neutral}-500);
+  --border-strong:  var(--color-#{$brand}-#{$accent}-500);
+  --border-focus:   var(--color-#{$brand}-#{$accent}-500);
+
+  // ===== TYPOGRAPHY — wire the type-* tokens to the brand's font stack =====
+  // typography.scss composes every --type-* token with `var(--font-family-serif)`
+  // at :root. CSS substitutes those nested var()s at *declaration time*, which
+  // means the --type-* tokens bake AFI's Roboto Serif into themselves and DON'T
+  // re-resolve when a brand later overrides --font-family-serif. So we have to
+  // **re-declare** each --type-* token here with `var(--font-brand-text)` so the
+  // brand's font reaches every component (button, input, select, modal, chart,
+  // tabs, segmented-control, etc.) without per-component edits.
+  //
+  // Responsive heading tokens go through `responsive-token` so they keep their
+  // per-breakpoint scale. Body + utility tokens are re-declared as plain values.
+  //
+  // Brands declare --font-brand-text and --font-brand-display in their
+  // colors-{brand}.scss primitives file; this mixin pipes those into every
+  // --type-* and into the legacy --font-family-serif slot.
+  --font-family-serif: var(--font-brand-text, 'Roboto Serif', serif);
+
+  @include responsive-token(--type-display, (
+    base: 400 48px/56px var(--font-brand-text),
+    lg:   400 96px/112px var(--font-brand-text),
+  ));
+  @include responsive-token(--type-title, (
+    base: 500 24px/32px var(--font-brand-text),
+    lg:   500 32px/40px var(--font-brand-text),
+  ));
+  @include responsive-token(--type-subtitle, (
+    base: 500 20px/28px var(--font-brand-text),
+    lg:   500 24px/32px var(--font-brand-text),
+  ));
+  @include responsive-token(--type-section, (
+    base: 500 18px/24px var(--font-brand-text),
+    lg:   500 20px/24px var(--font-brand-text),
+  ));
+  @include responsive-token(--type-subtitle-body, (
+    base: 400 18px/20px var(--font-brand-text),
+    lg:   400 20px/20px var(--font-brand-text),
+  ));
+
+  --type-body:          400 16px/24px var(--font-brand-text);
+  --type-body-lg-600:   600 16px/24px var(--font-brand-text);
+  --type-body-lg-500:   500 16px/24px var(--font-brand-text);
+  --type-body-md-600:   600 14px/20px var(--font-brand-text);
+  --type-body-md-500:   500 14px/20px var(--font-brand-text);
+  --type-body-md-400:   400 14px/20px var(--font-brand-text);
+  --type-body-sm-600:   600 12px/16px var(--font-brand-text);
+  --type-body-sm-500:   500 12px/16px var(--font-brand-text);
+  --type-body-sm-400:   400 12px/16px var(--font-brand-text);
+  --type-button:        500 14px/14px var(--font-brand-text);
+  --type-informe:       400 12px/14px var(--font-brand-text);
+}

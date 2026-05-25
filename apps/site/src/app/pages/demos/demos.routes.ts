@@ -37,4 +37,20 @@ export const demos_routes: Routes = [
         (m) => m.EvolucionPatrimonialProposalPage,
       ),
   },
+  // Laboral Kutxa — Sarevi 360 overview (3-tab demo shell)
+  {
+    path: 'laboral-kutxa-sarevi',
+    loadComponent: () =>
+      import('./laboral-kutxa-sarevi-overview/laboral-kutxa-sarevi-overview.page').then(
+        (m) => m.LaboralKutxaSareviOverviewPage,
+      ),
+  },
+  // Laboral Kutxa — Sarevi 360 interactive simulator (wrapped in demo-shell)
+  {
+    path: 'laboral-kutxa-sarevi/demo',
+    loadComponent: () =>
+      import('./laboral-kutxa-sarevi/laboral-kutxa-sarevi.page').then(
+        (m) => m.LaboralKutxaSareviPage,
+      ),
+  },
 ];

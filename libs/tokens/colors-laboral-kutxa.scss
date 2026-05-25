@@ -1,0 +1,163 @@
+// =============================================================================
+// colors-laboral-kutxa.scss — Laboral Kutxa brand primitives
+// =============================================================================
+//
+// Mirrors the AFI 12-shade ramp structure (0 / 25 / 50 / 100 / 200 / 300 /
+// 400 / 500 / 600 / 700 / 800 / 900) so semantic.scss can swap brand roles
+// across brands without restructuring.
+//
+// Master values pulled from Laboral Kutxa's brand center (Stitch export +
+// Figma `figma-colors.json`):
+//
+//   Primary    — magenta    #A50050  → primary CTA, brand-tinted text
+//   Secondary  — berenjena  #51284F  → dark surfaces, inverted buttons
+//   Tertiary   — verde      #84BD00  → sustainability accents, success
+//   Neutral    — cool gray  #F8F9FA  → surfaces / text on light bg
+//
+// Plus two LK-specific functional families (kept as named values, not a
+// numeric ramp, because they describe specific surface roles rather than
+// a continuous lightness scale):
+//
+//   Beige  — warm-tone surfaces (page bg, recessed cards, lines)
+//   Ink    — text colors (default / soft / muted)
+//
+// In-ramp values surrounding the master are interpolated by tinting toward
+// white (lighter shades) and darkening toward near-black while preserving
+// hue (darker shades). Anchor positions match the AFI ramps in `colors.scss`
+// so components remain interchangeable across brands.
+//
+// Activation: `<html data-brand="laboral-kutxa">`. Selector specificity
+// beats `:root` defaults, the same way Figma variable modes work.
+//
+// Semantic role re-bindings live in `semantic.scss` under the same selector.
+// Components NEVER reference these primitives directly.
+// =============================================================================
+
+[data-brand="laboral-kutxa"] {
+
+  // ===========================================================================
+  // laboral-kutxa-magenta — PRIMARY (master #A50050, Stitch primary)
+  // Role: brand-primary CTA, brand-tinted text, inline-link accent.
+  // ===========================================================================
+  --color-laboral-kutxa-magenta-0:   #FFFFFF;
+  --color-laboral-kutxa-magenta-25:  #FDF3F7;
+  --color-laboral-kutxa-magenta-50:  #FBE3F1;
+  --color-laboral-kutxa-magenta-100: #F2C0D7;
+  --color-laboral-kutxa-magenta-200: #E68FB5;
+  --color-laboral-kutxa-magenta-300: #D5618E;
+  --color-laboral-kutxa-magenta-400: #C8087F;  // prototype's brighter magenta
+  --color-laboral-kutxa-magenta-500: #A50050;  // Stitch + Figma master
+  --color-laboral-kutxa-magenta-600: #8B0044;
+  --color-laboral-kutxa-magenta-700: #7B0B56;  // Figma alt darker (cooler)
+  --color-laboral-kutxa-magenta-800: #570535;
+  --color-laboral-kutxa-magenta-900: #3D0227;
+
+
+  // ===========================================================================
+  // laboral-kutxa-berenjena — SECONDARY (master #51284F, Stitch secondary)
+  // Role: dark/inverted surfaces, secondary headings, brand contrast.
+  // ===========================================================================
+  --color-laboral-kutxa-berenjena-0:   #FFFFFF;
+  --color-laboral-kutxa-berenjena-25:  #F7F4F7;
+  --color-laboral-kutxa-berenjena-50:  #EFE6EF;
+  --color-laboral-kutxa-berenjena-100: #DCC8DC;
+  --color-laboral-kutxa-berenjena-200: #C0A3C0;
+  --color-laboral-kutxa-berenjena-300: #8C748E;  // prototype value
+  --color-laboral-kutxa-berenjena-400: #5B3C5E;  // prototype value
+  --color-laboral-kutxa-berenjena-500: #51284F;  // Stitch master
+  --color-laboral-kutxa-berenjena-600: #43213F;
+  --color-laboral-kutxa-berenjena-700: #3D2640;  // prototype darker
+  --color-laboral-kutxa-berenjena-800: #2E1A2E;  // prototype darkest (used in current button CTA)
+  --color-laboral-kutxa-berenjena-900: #1F121F;
+
+
+  // ===========================================================================
+  // laboral-kutxa-verde — TERTIARY (master #84BD00, Stitch tertiary)
+  // Role: sustainability accents, success states, eco "después" cues.
+  // ===========================================================================
+  --color-laboral-kutxa-verde-0:   #FFFFFF;
+  --color-laboral-kutxa-verde-25:  #F8FBE8;
+  --color-laboral-kutxa-verde-50:  #F1F7E0;
+  --color-laboral-kutxa-verde-100: #E8F2D1;
+  --color-laboral-kutxa-verde-200: #D4E8A6;
+  --color-laboral-kutxa-verde-300: #BCD972;
+  --color-laboral-kutxa-verde-400: #94C11F;  // prototype's brighter verde
+  --color-laboral-kutxa-verde-500: #84BD00;  // Stitch master
+  --color-laboral-kutxa-verde-600: #6F9510;  // prototype darker
+  --color-laboral-kutxa-verde-700: #669200;  // Figma alt darker (less yellow)
+  --color-laboral-kutxa-verde-800: #4D7000;
+  --color-laboral-kutxa-verde-900: #344D00;
+
+
+  // ===========================================================================
+  // laboral-kutxa-neutral — NEUTRAL (cool gray ramp, anchored on Stitch #F8F9FA at 50)
+  // Role: form surfaces on white, secondary borders, body text on light bg.
+  // ===========================================================================
+  --color-laboral-kutxa-neutral-0:   #FFFFFF;
+  --color-laboral-kutxa-neutral-25:  #FCFCFD;
+  --color-laboral-kutxa-neutral-50:  #F8F9FA;  // Stitch master (light end)
+  --color-laboral-kutxa-neutral-100: #F1F3F5;
+  --color-laboral-kutxa-neutral-200: #E4E7EB;
+  --color-laboral-kutxa-neutral-300: #CFD4DA;
+  --color-laboral-kutxa-neutral-400: #ADB5BD;
+  --color-laboral-kutxa-neutral-500: #6C757D;
+  --color-laboral-kutxa-neutral-600: #495057;
+  --color-laboral-kutxa-neutral-700: #343A40;
+  --color-laboral-kutxa-neutral-800: #212529;
+  --color-laboral-kutxa-neutral-900: #131618;
+
+
+  // ===========================================================================
+  // laboral-kutxa-beige — WARM SURFACE FAMILY (LK-specific, not in Stitch grid)
+  // The LK identity ships a tinted-paper aesthetic rather than a true white
+  // system: pages sit on beige, recessed cards on deeper beige, white panels
+  // float on top. Treated as a ramp so semantic.scss can pick positions.
+  // ===========================================================================
+  --color-laboral-kutxa-beige-0:    #FFFFFF;
+  --color-laboral-kutxa-beige-25:   #FDFBF6;
+  --color-laboral-kutxa-beige-50:   #FAF7F0;  // recessed white card
+  --color-laboral-kutxa-beige-100:  #F7F2E8;  // cream (inputs, hover surfaces)
+  --color-laboral-kutxa-beige-200:  #EFEADD;  // softest border
+  --color-laboral-kutxa-beige-300:  #EFE8DB;  // page background
+  --color-laboral-kutxa-beige-400:  #E5DCC8;  // recessed surface (Sarevi "surface")
+  --color-laboral-kutxa-beige-500:  #E2D9C7;  // default border
+  --color-laboral-kutxa-beige-600:  #C1AF86;
+  --color-laboral-kutxa-beige-700:  #9E895E;
+  --color-laboral-kutxa-beige-800:  #6B5E3D;
+  --color-laboral-kutxa-beige-900:  #463A1F;
+
+
+  // ===========================================================================
+  // laboral-kutxa-ink — TEXT COLORS (functional, not a numeric ramp)
+  // Mild berenjena tint in the darkest text — keeps body type feeling
+  // brand-warm rather than cold black on beige.
+  // ===========================================================================
+  --color-laboral-kutxa-ink-default: #1F1320;
+  --color-laboral-kutxa-ink-soft:    #574A58;
+  --color-laboral-kutxa-ink-muted:   #8A7E8A;
+
+
+  // ===========================================================================
+  // Font slots — first-class brand swap (per docs/rules/token-skill.md).
+  // Webfont @font-face loading is the consuming app's responsibility;
+  // these tokens only declare the family stack.
+  // ===========================================================================
+  // Avenir Next (LK brand font, per the brand center). Not on Google Fonts —
+  // expect Adobe Fonts kit or self-host. Falls back to system Avenir → Inter →
+  // system-ui so the page still reads on machines without the licensed face.
+  --font-brand-display: "Avenir Next", "Avenir", "Inter", system-ui, sans-serif;
+  --font-brand-text:    "Avenir Next", "Avenir", "Inter", "Helvetica Neue", system-ui, sans-serif;
+  --font-brand-mono:    "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+
+  // ===========================================================================
+  // Signal ramps (info/success/warning/error) and data-viz tokens are
+  // inherited from `:root` — universal across brands. Override individual
+  // values here only if LK ships its own signal colors.
+  //
+  // Note: the Sarevi prototype's `--lk-warn-*`, `--lk-low-*`, `--lk-mid-*`
+  // and `--lk-high-*` are feature-specific impact-tag colors (alto/medio/
+  // bajo for renovation measures), not general system status. They live in
+  // the Sarevi page's scoped SCSS, not the brand layer.
+  // ===========================================================================
+}

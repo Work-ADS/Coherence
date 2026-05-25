@@ -18,9 +18,10 @@
 // selector specificity.
 //
 // Brand-switching pattern (Figma-style modes):
-//   <html data-brand="afi">           → default, AFI palette
-//   <html data-brand="mutualidad">    → Mutualidad palette + Mutualidad semantic mappings
-//   <html data-brand="unicaja">       → Unicaja
+//   <html data-brand="afi">             → default, AFI palette
+//   <html data-brand="mutualidad">      → Mutualidad palette + Mutualidad semantic mappings
+//   <html data-brand="unicaja">         → Unicaja
+//   <html data-brand="laboral-kutxa">   → Laboral Kutxa (beige + berenjena + verde + magenta)
 //
 // Theme-switching pattern (independent of brand):
 //   <html data-theme="dark">          → dark-mode semantic overrides
@@ -44,6 +45,7 @@
 // Layer 2 — Other brands (live under [data-brand="<name>"])
 @import './colors-mutualidad.scss';
 @import './colors-unicaja.scss';
+@import './colors-laboral-kutxa.scss';
 
 // Layer 3 — Semantic tokens (roles, responsive @media, brand overrides, dark mode)
 @import './semantic.scss';

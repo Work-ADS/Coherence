@@ -41,4 +41,12 @@ export const blog_routes: Routes = [
     path: 'iteracion-3',
     loadComponent: () => import('./iteracion-3/iteracion-3.page').then((m) => m.Iteracion3Page),
   },
+  // White-label tokens — the brand-bind Sass mixin
+  {
+    path: 'mixin-brand-bind',
+    loadComponent: () =>
+      import('./mixin-brand-bind/mixin-brand-bind.page').then(
+        (m) => m.MixinBrandBindPage,
+      ),
+  },
 ];

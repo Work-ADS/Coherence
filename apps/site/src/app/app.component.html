@@ -2,7 +2,7 @@
 <div class="shell">
 
   <!-- Sidebar: logo + section nav (hidden on fullscreen/homepage) -->
-  @if (!isFullScreenRoute() && !isHomepage()) {
+  @if (showSidebar()) {
     <afi-sidebar mode="static" ariaLabel="Section navigation">
       <div slot="top">
         <coherence-logo variant="color" size="sm" href="/" />
@@ -44,6 +44,7 @@
         </nav>
 
         <div slot="end" class="top-bar__end">
+          <site-brand-picker />
           <site-theme-toggle />
         </div>
       </afi-top-bar>

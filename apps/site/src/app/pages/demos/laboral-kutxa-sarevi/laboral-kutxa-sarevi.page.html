@@ -1,0 +1,731 @@
+<site-demo-shell
+  demoSlug="laboral-kutxa-sarevi"
+  demoRoute="/demos/laboral-kutxa-sarevi/demo"
+  [views]="['Simulador']"
+>
+<div class="lk-sarevi" data-brand="laboral-kutxa">
+
+  <!-- ─── Top bar ─────────────────────────────────────────────────── -->
+  <div class="lk-topbar">
+    <div class="lk-topbar__brand">
+      <img
+        class="lk-logo-img"
+        src="assets/logos/laboral-kutxa/logo.png"
+        alt="Laboral Kutxa"
+      />
+      <span class="lk-topbar__sep" aria-hidden="true"></span>
+      <span class="lk-topbar__sub">Sarevi 360</span>
+    </div>
+
+    @if (route() !== 'welcome') {
+      <nav class="steps" aria-label="Progreso de la simulación">
+        @for (s of steps; track s.key) {
+          @let state = stepState(s);
+          <button
+            type="button"
+            class="step step--{{ state }}"
+            [attr.aria-current]="state === 'current' ? 'step' : null"
+            [attr.aria-label]="stepAriaLabel(s, state)"
+            (click)="goTo(s.key)"
+          >
+            <span class="step__badge">
+              @if (state === 'done') {
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>
+              } @else {
+                {{ s.number }}
+              }
+            </span>
+            <span class="step__stack">
+              <span class="step__label">{{ s.label }}</span>
+              @if (state === 'current') {
+                <span class="step__sub">En curso</span>
+              }
+            </span>
+          </button>
+        }
+      </nav>
+    }
+
+    <div class="lk-topbar__right">
+      @if (route() !== 'welcome') {
+        <div class="lk-topbar__ref">
+          <span class="lk-topbar__ref-label">Código para recuperar esta simulación</span>
+          <span class="lk-topbar__ref-code">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+            <span class="mono">{{ refCode() }}</span>
+          </span>
+        </div>
+      }
+      @if (route() === 'resumen') {
+        <afi-button class="topbar-download" variant="ghost" size="sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6"/><path d="M5 20h14"/></svg>
+          Descargar PDF
+        </afi-button>
+      }
+    </div>
+  </div>
+
+  <!-- ─── Main shell ─────────────────────────────────────────────── -->
+  <div class="lk-shell" role="main" aria-label="Simulador Sarevi 360">
+
+    <!-- ─── Welcome ───────────────────────────────────────────── -->
+    @if (route() === 'welcome') {
+      <section class="welcome-wrap" aria-labelledby="sarevi-welcome-title">
+        <span class="pill-tag">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 18c4 0 8-1 11-4 3-3 4-7 4-11-4 0-8 1-11 4-3 3-4 7-4 11Z"/><path d="M5 18c1-4 3-7 6-9"/></svg>
+          Sostenibilidad
+        </span>
+        <h1 id="sarevi-welcome-title" class="welcome-wrap__h1">Simulador de eficiencia energética</h1>
+        <p class="welcome-wrap__lead">Selecciona el tipo de simulación que deseas realizar</p>
+
+        <div class="welcome-wrap__cards">
+          <div class="welcome-grid">
+            <button type="button" class="choice-card" (click)="choose()">
+              <span class="choice-card__ico">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M15 9h2a2 2 0 0 1 2 2v10"/><path d="M3 21h18"/><path d="M8 8h2M8 12h2M8 16h2"/></svg>
+              </span>
+              <span class="choice-card__name">Edificio</span>
+              <span class="choice-card__desc">Para comunidades de propietarios y edificios completos</span>
+            </button>
+            <button type="button" class="choice-card" (click)="choose()">
+              <span class="choice-card__ico">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>
+              </span>
+              <span class="choice-card__name">Vivienda</span>
+              <span class="choice-card__desc">Para casas, apartamentos y pisos individuales</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="welcome-wrap__recover" (click)="openRecuperar()">
+          ¿Ya tienes un código de simulación? Recuperar simulación anterior
+        </button>
+      </section>
+    }
+
+    <!-- ─── Datos ─────────────────────────────────────────────── -->
+    @if (route() === 'datos') {
+      <section class="surface" aria-labelledby="datos-title">
+        <div class="surface-header">
+          <h1 id="datos-title" class="surface-header__title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h5"/></svg>
+            Datos de la vivienda
+          </h1>
+          <div class="surface-header__subtitle">Calcula la eficiencia energética que podrías alcanzar en los proyectos de tu vivienda.</div>
+        </div>
+
+        <!-- Caso de reformas -->
+        <section class="card" aria-labelledby="datos-caso-title">
+          <h2 id="datos-caso-title" class="card__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6 7-12a7 7 0 1 0-14 0c0 6 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Caso de reformas para mi vivienda
+          </h2>
+
+          <div>
+            <label class="field-label">¿De qué tipo es tu vivienda?</label>
+            <afi-segmented-control
+              [options]="tipoOptions"
+              [value]="data().tipoVivienda"
+              (valueChange)="setTipoVivienda($event)"
+              ariaLabel="Tipo de vivienda"
+              size="md"
+            />
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label class="field-label">¿Buscar dirección automáticamente?</label>
+              <afi-segmented-control
+                [options]="siNoOptions"
+                [value]="data().buscarDir"
+                (valueChange)="setBuscarDir($event)"
+                ariaLabel="Buscar dirección"
+                size="md"
+              />
+            </div>
+            <div>
+              <afi-select
+                label="¿En qué municipio se encuentra?"
+                placeholder="Selecciona una opción"
+                [options]="municipioOptions"
+                [value]="data().municipio"
+                (valueChange)="setMunicipio($event)"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Certificado -->
+        <section class="card" aria-labelledby="datos-certificado-title">
+          <h2 id="datos-certificado-title" class="card__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 18c4 0 8-1 11-4 3-3 4-7 4-11-4 0-8 1-11 4-3 3-4 7-4 11Z"/><path d="M5 18c1-4 3-7 6-9"/></svg>
+            Certificado de eficiencia energética
+          </h2>
+          <div>
+            <label class="field-label">¿Tienes certificado de eficiencia energética?</label>
+            <afi-segmented-control
+              [options]="siNoOptions"
+              [value]="data().certificado"
+              (valueChange)="setCertificado($event)"
+              ariaLabel="Certificado de eficiencia"
+              size="md"
+            />
+            @if (data().certificado === 'Sí') {
+              <div class="energy-range">
+                @for (g of energyGrades; track g) {
+                  <button type="button"
+                    class="energy-range__pick"
+                    [class.energy-range__pick--active]="data().etiqueta === g"
+                    (click)="setEtiqueta(g)">
+                    <span class="energy-label energy-label--sm energy-label--{{ g }}">{{ g }}</span>
+                  </button>
+                }
+              </div>
+              <div class="energy-range__labels">
+                <span>Más eficiente</span>
+                <span>Menos eficiente</span>
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- Características físicas -->
+        <section class="card" aria-labelledby="datos-fisicas-title">
+          <h2 id="datos-fisicas-title" class="card__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 4 6 6-4 4-6-6 4-4Z"/><path d="m11 7-7 7v4h4l7-7"/></svg>
+            Características físicas
+          </h2>
+          <div class="grid-2">
+            <afi-input
+              label="Tamaño medio de las viviendas"
+              [value]="data().tamano + ' m²'"
+              (valueChange)="setTamano($event)"
+            />
+            <afi-input
+              label="Número de habitantes"
+              [value]="data().habitantes + ' habitantes'"
+              (valueChange)="setHabitantes($event)"
+            />
+          </div>
+        </section>
+
+        <!-- Sistemas de climatización -->
+        <section class="card" aria-labelledby="datos-clima-title">
+          <h2 id="datos-clima-title" class="card__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M5.5 5.5l13 13M5.5 18.5l13-13"/></svg>
+            Sistemas de climatización
+          </h2>
+          <div class="grid-2">
+            <afi-select
+              label="Sistema de calefacción central actual"
+              placeholder="Selecciona una opción"
+              [options]="calefaccionOptions"
+              [value]="data().calefaccion"
+              (valueChange)="setCalefaccion($event)"
+            />
+            <afi-select
+              label="Sistema de refrigeración actual"
+              placeholder="Selecciona una opción"
+              [options]="refrigeracionOptions"
+              [value]="data().refrigeracion"
+              (valueChange)="setRefrigeracion($event)"
+            />
+          </div>
+        </section>
+
+        <!-- Datos actuales estimados -->
+        <section class="card" aria-labelledby="datos-estimados-title">
+          <h2 id="datos-estimados-title" class="card__title">Datos actuales estimados</h2>
+          <div class="metric-grid">
+            <div class="metric-card metric-card--grade">
+              <span class="stat__label">Etiqueta estimada</span>
+              <span class="energy-label energy-label--{{ data().etiqueta || 'E' }}">{{ data().etiqueta || 'E' }}</span>
+              <span class="stat__hint">situación actual</span>
+            </div>
+            <div class="metric-card">
+              <span class="stat__label">Gasto anual</span>
+              <span class="stat__value">1.567<span class="stat__unit">€</span></span>
+              <span class="stat__hint">coste estimado por vivienda</span>
+            </div>
+            <div class="metric-card">
+              <span class="stat__label">Consumo anual</span>
+              <span class="stat__value">612.423<span class="stat__unit">KWH</span></span>
+              <span class="stat__hint">energía usada al año</span>
+            </div>
+            <div class="metric-card">
+              <span class="stat__label">Emisiones anuales</span>
+              <span class="stat__value">44<span class="stat__unit">KG CO<sub>2</sub></span></span>
+              <span class="stat__hint">huella de CO₂ estimada</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Alerta -->
+        <div class="alert">
+          <span class="alert__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v5M12 18v.5"/></svg>
+          </span>
+          <div>
+            <strong>Alerta</strong><br/>
+            La herramienta realiza cálculos automáticos basados en hipótesis y proyectos de referencia. Costes, materiales y dificultades técnicas pueden variar considerablemente. La reducción del consumo energético depende de múltiples factores. Por ello, es esencial consultar un profesional cualificado para determinar costes y mejoras de eficiencia precisos.
+          </div>
+        </div>
+
+        <div class="action-row">
+          <afi-button variant="secondary" (clicked)="goTo('welcome')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6 5 12l6 6"/></svg>
+            Volver
+          </afi-button>
+          <afi-button variant="primary" [disabled]="!datosValid()" (clicked)="goTo('medidas')">
+            Siguiente
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </afi-button>
+        </div>
+      </section>
+    }
+
+    <!-- ─── Medidas ───────────────────────────────────────────── -->
+    @if (route() === 'medidas') {
+      <section class="surface" aria-labelledby="medidas-title">
+        <div class="surface-header">
+          <h1 id="medidas-title" class="surface-header__title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h5"/></svg>
+            Medidas para mejorar tu vivienda
+          </h1>
+          <div class="surface-header__subtitle">Marca todas las que desees incluir en el cálculo</div>
+        </div>
+
+        <div class="medidas-layout">
+          <section class="card medidas-layout__list" aria-labelledby="medidas-list-title">
+            <h2 id="medidas-list-title" class="card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 4 6 6-4 4-6-6 4-4Z"/><path d="m11 7-7 7v4h4l7-7"/></svg>
+              Tipos de medidas
+            </h2>
+
+            <afi-segmented-control
+              [options]="variantOptions"
+              [value]="variant()"
+              (valueChange)="setVariant($event)"
+              ariaLabel="Tipo de reforma"
+              size="md"
+            />
+
+            <div>
+              @for (m of visibleMedidas(); track m.id) {
+              @let p = price(m);
+              @let checked = isSelected(m.id);
+              @let locked = p == null;
+              <div class="medida-row"
+                [class.medida-row--checked]="checked"
+                [class.medida-row--locked]="locked">
+                <afi-checkbox [compact]="true" size="md"
+                  [checked]="checked"
+                  [disabled]="locked"
+                  ariaLabel="Incluir {{ m.name }}"
+                  (checkedChange)="!locked && toggleSelected(m.id)"
+                />
+                <div class="medida-row__name">{{ m.name }}</div>
+                <div class="medida-row__tags">
+                  @if (m.impact) {
+                    <span class="impact impact--{{ m.impact }}">{{ impactLabel[m.impact] }}</span>
+                  }
+                  @if (m.cae) {
+                    <span class="cae-badge">CAE</span>
+                  }
+                </div>
+                <div class="medida-row__price">{{ formatEuro(p) }}</div>
+                <button type="button" class="medida-row__details" (click)="openInfo(m)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 1 1 4.37 16.96l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 4.37l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06A2 2 0 1 1 19.63 7.04l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.16.4.5.7.91.83H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+                  Detalles
+                </button>
+              </div>
+
+              @if (checked && variant() === 'basica' && m.id === expandedId()) {
+                <div class="medida-detail">
+                  <div class="medida-detail__switch-row">
+                    <strong>Modificar parámetros</strong>
+                    <div class="medida-detail__auto">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><rect x="8" y="6" width="8" height="3"/><path d="M9 13h.01M12 13h.01M15 13h.01M9 17h.01M12 17h.01M15 17h.01"/></svg>
+                      <afi-switch
+                        label="Cálculo automático"
+                        [checked]="autoCalc()"
+                        (checkedChange)="setAutoCalc($event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="medida-detail__hint">
+                    Puedes modificar los parámetros para calcular tu cálculo automático para que se ajusten mejor a tu situación.
+                  </div>
+                  <afi-input
+                    label="Importe"
+                    [value]="formatEuro(customImporte())"
+                    (valueChange)="setCustomImporte($event)"
+                  />
+                  <div class="medida-detail__foot">
+                    <afi-button variant="secondary" size="sm">Más información</afi-button>
+                    <afi-button variant="ghost" size="sm" (clicked)="collapseExpanded()">^ Ocultar</afi-button>
+                  </div>
+                </div>
+              }
+              @if (checked && variant() === 'basica' && m.id !== expandedId()) {
+                <div class="medida-row__expand-toggle">
+                  <button type="button" class="ocultar-link ocultar-link--mag" (click)="toggleExpanded(m.id)">
+                    Modificar parámetros ▾
+                  </button>
+                </div>
+              }
+              }
+
+              <!-- Certificado energético — locked on -->
+              <div class="medida-row medida-row--locked">
+                <afi-checkbox [compact]="true" size="md" [checked]="true" [disabled]="true" ariaLabel="Certificado energético (obligatorio)" />
+                <div class="medida-row__name">Certificado energético</div>
+                <div class="medida-row__tags"></div>
+                <div class="medida-row__price">900 €</div>
+                <button type="button" class="medida-row__details" (click)="openInfoByName('Certificado energético')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/></svg>
+                  Detalles
+                </button>
+              </div>
+            </div>
+
+            <div class="add-custom">
+              <afi-button variant="ghost" size="sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                Añadir actuación personalizada
+              </afi-button>
+            </div>
+          </section>
+
+          <!-- Bento: live impact preview + cost breakdown stacked on right -->
+          <div class="bento-medidas">
+            <section class="bento-medidas__cell bento-medidas__cell--chart" aria-labelledby="medidas-impact-title">
+              <div class="bento-medidas__head">
+                <h2 id="medidas-impact-title" class="bento-medidas__title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 18 5-6 4 3 7-8"/><path d="M14 7h6v6"/></svg>
+                  Realizando la reforma
+                </h2>
+                <p class="bento-medidas__copy">
+                  Estos porcentajes comparan la vivienda actual con la simulación: cuánto baja el coste anual, cuánta energía se consume y cuánto CO₂ se evita.
+                </p>
+                <div class="bento-medidas__grade-row">
+                  <span class="bento-medidas__grade-label">Calificación</span>
+                  <span class="energy-label energy-label--sm energy-label--E">E</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--mag)"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  <span class="energy-label energy-label--sm energy-label--{{ afterGrade() }}">{{ afterGrade() }}</span>
+                </div>
+              </div>
+              <afi-animated-chart
+                subtitle="Reducciones estimadas con las medidas seleccionadas"
+                [columns]="medidasReductionColumns"
+                [maxValue]="100"
+                size="md"
+                ariaLabel="Reducciones estimadas: ahorro económico 99 por ciento, consumo energético 99 por ciento, emisiones de CO2 14 por ciento."
+              />
+            </section>
+
+            <section class="bento-medidas__cell bento-medidas__cell--costs" aria-labelledby="medidas-costs-title">
+              <h2 id="medidas-costs-title" class="bento-medidas__title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
+                Costes aproximados
+              </h2>
+              <table class="lk-table">
+              <thead><tr><th>Concepto</th><th class="lk-table__num">Cantidad</th></tr></thead>
+              <tbody>
+                <tr><td>Coste estimado de las actuaciones</td><td class="lk-table__num">{{ formatEuro(costeObras) }}</td></tr>
+                <tr><td>Coste estimado de tramitación</td><td class="lk-table__num">{{ formatEuro(costeTram) }}</td></tr>
+                <tr><td>Importe del <span class="cae-badge">CAE</span></td><td class="lk-table__num lk-table__neg">{{ formatEuro(importeCAE) }}</td></tr>
+                <tr class="lk-table__total"><td>Importe total</td><td class="lk-table__num">{{ formatEuro(importeTotal()) }}</td></tr>
+                <tr class="lk-table__total"><td>Total con CAE</td><td class="lk-table__num">{{ formatEuro(importeConCAE()) }}</td></tr>
+              </tbody>
+              </table>
+              <div class="alert alert--info bento-medidas__alert">
+                <span class="alert__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/></svg>
+                </span>
+                <div>El CAE reduce el importe final cuando la reforma acredita ahorro energético. <a href="#" (click)="$event.preventDefault()">Leer más</a>.</div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <afi-button variant="secondary" (clicked)="goTo('datos')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6 5 12l6 6"/></svg>
+            Volver
+          </afi-button>
+          <afi-button variant="primary" (clicked)="goTo('resumen')">
+            Siguiente
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </afi-button>
+        </div>
+      </section>
+    }
+
+    <!-- ─── Resumen ───────────────────────────────────────────── -->
+    @if (route() === 'resumen') {
+      <section class="surface" aria-labelledby="resumen-title">
+        <div class="surface-header">
+          <h1 id="resumen-title" class="surface-header__title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
+            Evaluación de la eficiencia energética
+          </h1>
+        </div>
+
+        <!-- Ahorro anual estimado — bento grid: hero + grade + chart -->
+        <section class="card" aria-labelledby="resumen-ahorro-title">
+          <h2 id="resumen-ahorro-title" class="card__title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 18c4 0 8-1 11-4 3-3 4-7 4-11-4 0-8 1-11 4-3 3-4 7-4 11Z"/><path d="M5 18c1-4 3-7 6-9"/></svg>
+            Ahorro anual estimado
+          </h2>
+
+          <div class="bento">
+            <!-- Cell 1: hero savings number (spans 2 cols on wide) -->
+            <div class="bento-cell bento-cell--feature">
+              <div class="bento-cell__topline">
+                <span class="bento-cell__ico" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18c4 0 8-1 11-4 3-3 4-7 4-11-4 0-8 1-11 4-3 3-4 7-4 11Z"/><path d="M5 18c1-4 3-7 6-9"/></svg>
+                </span>
+                <span class="bento-cell__grade-row">
+                  <span class="energy-label energy-label--sm energy-label--E">E</span>
+                  <span class="bento-cell__grade-arrow" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </span>
+                  <span class="energy-label energy-label--sm energy-label--B">B</span>
+                </span>
+              </div>
+              <span class="bento-cell__label">Ahorro total anual</span>
+              <span class="bento-cell__hero">54.282 €</span>
+              <span class="bento-cell__hint">por vivienda · mejora de E a B</span>
+            </div>
+
+            <!-- Cell 3: animated bar chart (spans full row) -->
+            <div class="bento-cell bento-cell--chart">
+              <afi-animated-chart
+                title="Reducciones tras la reforma"
+                subtitle="Comparado con tu situación actual"
+                [columns]="ahorroChartColumns"
+                [maxValue]="100"
+                size="md"
+                ariaLabel="Reducciones estimadas tras la reforma: consumo 64 por ciento, emisiones 64 por ciento, gasto 71 por ciento."
+              />
+            </div>
+          </div>
+
+          <div class="alert">
+            <span class="alert__icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v5M12 18v.5"/></svg>
+            </span>
+            <div>
+              <strong>Alerta</strong><br/>
+              Se estima que cada vivienda tendrá el mismo ahorro energético anual. La distribución final puede variar según el consumo y las características de cada hogar.
+            </div>
+          </div>
+        </section>
+
+        <!-- Costes aproximados -->
+        <section class="card" aria-labelledby="resumen-costs-title">
+          <h2 id="resumen-costs-title" class="card__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6.5A7 7 0 0 0 7 12a7 7 0 0 0 11 5.5"/><path d="M4 10h9M4 14h9"/></svg>
+            Costes aproximados
+          </h2>
+          <table class="lk-table">
+            <tbody>
+              <tr><td>Coste estimado de las obras</td><td class="lk-table__num">{{ formatEuro(costeObrasResumen) }}</td></tr>
+              <tr><td>Deducciones en el IRPF <a href="#" (click)="$event.preventDefault()">Ver detalles</a></td><td class="lk-table__num">{{ formatEuro(deduccionesIRPF) }}</td></tr>
+              <tr><td>CAES obtenidos <a href="#" (click)="$event.preventDefault()">Ver detalles</a></td><td class="lk-table__num">{{ formatEuro(obtenidosCAE) }}</td></tr>
+              <tr class="lk-table__total"><td>Total</td><td class="lk-table__num">{{ formatEuro(totalResumen()) }}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Financiación -->
+        <section class="card" aria-labelledby="resumen-finance-title">
+          <h2 id="resumen-finance-title" class="card__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 4l9 6"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8"/><path d="M3 20h18"/></svg>
+            Personaliza los parámetros de tu financiación
+          </h2>
+
+          <div class="finance-bento">
+            <div class="finance-card finance-card--controls">
+              <div class="finance-card__title">Importe y plazo</div>
+              <div class="slider-block">
+              <afi-input
+                label="Importe a financiar"
+                [value]="formatEuro(importeFinanciar())"
+                (valueChange)="setImporte($event)"
+              />
+              <div class="slider-bar">
+                <div class="slider-bar__fill" [style.width.%]="importeFinanciarPct()"></div>
+                <div class="slider-bar__thumb" [style.left.%]="importeFinanciarPct()"></div>
+                <input class="slider-bar__input" type="range" min="0" [max]="maxImporte" step="100"
+                  [value]="importeFinanciar()" (input)="onImporteRange($event)"
+                  aria-label="Importe a financiar" />
+              </div>
+              <div class="slider-row"><span>0 €</span><span>{{ formatEuro(maxImporte) }}</span></div>
+              </div>
+
+              <div class="slider-block">
+              <afi-input
+                label="Plazo"
+                [value]="plazo() + ' años'"
+                [readonly]="true"
+              />
+              <div class="slider-bar">
+                <div class="slider-bar__fill" [style.width.%]="plazoPct()"></div>
+                <div class="slider-bar__thumb" [style.left.%]="plazoPct()"></div>
+                <input class="slider-bar__input" type="range" min="1" max="7" step="1"
+                  [value]="plazo()" (input)="onPlazoRange($event)"
+                  aria-label="Plazo en años" />
+              </div>
+              <div class="slider-row"><span>1 año</span><span>7 años</span></div>
+              </div>
+            </div>
+
+          <!-- Cuota sin CAE -->
+          <div class="cuota-section finance-card">
+            <div class="cuota-section__title">Cuota sin CAE</div>
+            <div class="cuota-main">
+              <div class="cuota-main__col">
+                <span class="cuota-main__lbl">Cuota los primeros 12 meses</span>
+                <span class="cuota-main__num">{{ formatMoneda(c1Carencia()) }}<span class="cuota-main__unit">€</span></span>
+              </div>
+              <div class="cuota-main__col">
+                <span class="cuota-main__lbl">Cuota el resto del plazo</span>
+                <span class="cuota-main__num">{{ formatMoneda(c1Resto()) }}<span class="cuota-main__unit">€</span></span>
+              </div>
+            </div>
+            <div class="cuota-grid">
+              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">Comisión de apertura</span><span class="cuota-grid__num">1<span class="cuota-grid__pct">,00 %</span></span></div>
+              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TIN</span><span class="cuota-grid__num">4<span class="cuota-grid__pct">,00 %</span></span></div>
+              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TAE¹</span><span class="cuota-grid__num">6<span class="cuota-grid__pct">,10 %</span></span></div>
+            </div>
+          </div>
+
+          <!-- Cuota con CAE -->
+          <div class="cuota-section finance-card finance-card--green">
+            <div class="cuota-section__title">Cuota con CAE</div>
+            <div class="cuota-main cuota-main--green">
+              <div class="cuota-main__col">
+                <span class="cuota-main__lbl">Cuota los primeros 12 meses</span>
+                <span class="cuota-main__num">{{ formatMoneda(c2Carencia()) }}<span class="cuota-main__unit">€</span></span>
+              </div>
+              <div class="cuota-main__col">
+                <span class="cuota-main__lbl">Cuota el resto del plazo</span>
+                <span class="cuota-main__num">{{ formatMoneda(c2Resto()) }}<span class="cuota-main__unit">€</span></span>
+              </div>
+            </div>
+            <div class="cuota-grid">
+              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">Comisión de apertura</span><span class="cuota-grid__num">1<span class="cuota-grid__pct">,00 %</span></span></div>
+              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TIN</span><span class="cuota-grid__num">3<span class="cuota-grid__pct">,00 %</span></span></div>
+              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TAE²</span><span class="cuota-grid__num">5<span class="cuota-grid__pct">,06 %</span></span></div>
+            </div>
+          </div>
+          </div>
+
+          <div class="footnotes">
+            <p>
+              <sup>1</sup> Cálculo realizado bajo el supuesto de una financiación de {{ formatEuro(importeFinanciar()) }} a {{ meses() }} meses, con 12 meses de carencia de capital, formalizada el último día del mes, con un tipo de interés nominal anual fijo de 4,00 % y comisión de apertura 1,00 % financiada, calculado mediante sistema de amortización francés. Cuota 1er periodo de carencia de {{ formatMoneda(c1Carencia()) }} euros y el resto de cuotas de {{ formatMoneda(c1Resto()) }} euros. <strong>TAE: 6,10 %.</strong>
+            </p>
+            <p>
+              <sup>2</sup> Cálculo realizado bajo el supuesto de una financiación de {{ formatEuro(importeFinanciar()) }} a {{ meses() }} meses, con 12 meses de carencia de capital, formalizada el último día del mes, con un tipo de interés nominal anual fijo de 3,00 % y comisión de apertura 1,00 % financiada, calculado mediante sistema de amortización francés. Cuota 1er periodo de carencia de {{ formatMoneda(c2Carencia()) }} euros y el resto de cuotas de {{ formatMoneda(c2Resto()) }} euros. <strong>TAE: 5,06 %.</strong>
+            </p>
+          </div>
+
+          <div class="cuota-cta">
+            <afi-button variant="primary" (clicked)="contactAdvisor()">Pulsa aquí para que estudiemos tu caso</afi-button>
+          </div>
+        </section>
+
+        <!-- Help band -->
+        <div class="help-band">
+          <img class="lk-mark-img" src="assets/logos/laboral-kutxa/mark.png" alt="" aria-hidden="true" />
+          <div class="help-band__h">¿Necesitas ayuda con tu proyecto?</div>
+          <div class="help-band__p">Nuestros asesores energéticos están listos para ayudarte a optimizar tu inversión y guiarte en el proceso de rehabilitación</div>
+          <afi-button variant="secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-12.5 6.6L4 20l1.4-4.5A8 8 0 1 1 21 12Z"/></svg>
+            Contactar con un asesor
+          </afi-button>
+        </div>
+
+        <div class="action-row">
+          <afi-button variant="secondary" (clicked)="goTo('medidas')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6 5 12l6 6"/></svg>
+            Volver
+          </afi-button>
+          <afi-button variant="ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6"/><path d="M5 20h14"/></svg>
+            Descargar PDF
+          </afi-button>
+        </div>
+      </section>
+    }
+
+  </div>
+
+  <!-- ─── Modals (afi-modal — uses native <dialog>, focus trap, ESC) ── -->
+  <afi-modal
+    [open]="recuperarOpen()"
+    (openChange)="recuperarOpen.set($event)"
+    size="md"
+    title="Recuperar simulación anterior"
+  >
+    <p>Introduce tu código de simulación para continuar donde lo dejaste. Encontrarás este código en el email que te enviamos o en la página de resultados de tu simulación anterior.</p>
+    <afi-input
+      label="Código de simulación"
+      placeholder="Ej: V7B8TPBX3 o E9KFHW7M2"
+      [value]="recuperarCode()"
+      (valueChange)="setRecuperarCode($event)"
+    />
+
+    <ng-container slot="footer">
+      <afi-button variant="ghost" (clicked)="recuperarOpen.set(false)">Cancelar</afi-button>
+      <afi-button
+        variant="primary"
+        [disabled]="!recuperarCode().trim()"
+        (clicked)="recuperar()"
+      >
+        Recuperar simulación
+      </afi-button>
+    </ng-container>
+  </afi-modal>
+
+  <afi-modal
+    [open]="infoOpen()"
+    (openChange)="infoOpen.set($event)"
+    size="lg"
+    title="Más información de la medida"
+  >
+    @if (infoMedida(); as m) {
+      <div class="info-modal__head">
+        <div class="info-modal__name">{{ m.name }}</div>
+        <div class="spacer"></div>
+        @if (m.impact && m.impact !== 'none') {
+          <span class="impact impact--{{ m.impact }}">{{ impactLabel[m.impact] }}</span>
+        }
+        @if (m.cae) {
+          <span class="cae-badge">CAE</span>
+        }
+      </div>
+    }
+
+    <afi-tabs
+      [activeIndex]="infoTabIndex()"
+      (activeChange)="infoTabIndex.set($event)"
+      ariaLabel="Información de la medida"
+    >
+      <afi-tab-item label="¿Qué es?">
+        <div class="info-modal__body">{{ infoQue }}</div>
+      </afi-tab-item>
+      <afi-tab-item label="¿Cómo lo calculamos?">
+        <div class="info-modal__body">{{ infoComo }}</div>
+      </afi-tab-item>
+    </afi-tabs>
+
+    <ng-container slot="footer">
+      <afi-button variant="primary" (clicked)="infoOpen.set(false)">Cerrar</afi-button>
+    </ng-container>
+  </afi-modal>
+
+</div>
+</site-demo-shell>

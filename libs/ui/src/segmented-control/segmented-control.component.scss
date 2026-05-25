@@ -4,13 +4,16 @@
 
 :host {
   display: inline-block;
+  max-width: 100%;
 }
 
 .seg-control {
   position: relative;
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2xs);
+  max-width: 100%;
   padding: var(--space-2xs);
   border-radius: var(--radius-lg);
   background: var(--control-background-default);
@@ -18,16 +21,16 @@
   // ─── Sliding indicator ───
   &__indicator {
     position: absolute;
-    top: var(--space-2xs);
-    bottom: var(--space-2xs);
+    top: 0;
     left: 0;
     border-radius: var(--radius-md);
     background: var(--surface-default);
     box-shadow: var(--elevation-sm);
     transition:
       transform var(--duration-base) var(--easing-standard),
-      width var(--duration-fast) var(--easing-standard);
-    will-change: transform, width;
+      width var(--duration-fast) var(--easing-standard),
+      height var(--duration-fast) var(--easing-standard);
+    will-change: transform, width, height;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -47,7 +50,9 @@
     color: var(--foreground-tertiary-default);
     cursor: pointer;
     user-select: none;
-    white-space: nowrap;
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
     font: var(--type-body-md-400);
     transition: color var(--duration-fast) ease-out;
 

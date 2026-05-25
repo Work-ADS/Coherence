@@ -1,0 +1,129 @@
+// =============================================================================
+// Laboral Kutxa · Sarevi overview — tab content styling.
+// Page chrome delegated to <site-demo-overview-shell>; this file styles the
+// projected tab content (Visión general · Caso de estudio · Bitácora).
+// Mirrors the wealth-planner-2026 `.wp-tab` block so all demo overviews
+// share visual consistency.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.lk-tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-block-start: var(--space-md);
+}
+
+.lk-tab__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.lk-tab__block-title {
+  margin: 0;
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}
+
+.lk-tab__paragraph {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-width: var(--content-prose);
+
+  em {
+    color: var(--foreground-primary-default);
+    font-style: italic;
+  }
+
+  code {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.9em;
+    color: var(--foreground-primary-default);
+    background: var(--surface-subtle);
+    padding-inline: var(--space-2xs);
+    border-radius: var(--radius-control-sm);
+  }
+
+  &--lead {
+    color: var(--foreground-primary-default);
+    border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+    padding-block-end: var(--space-md);
+  }
+}
+
+.lk-tab__list {
+  margin: 0;
+  padding-inline-start: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-width: var(--content-prose);
+
+  li { margin: 0; }
+
+  strong {
+    color: var(--foreground-primary-default);
+    font-weight: 600;
+  }
+
+  code {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.9em;
+    color: var(--foreground-primary-default);
+    background: var(--surface-subtle);
+    padding-inline: var(--space-2xs);
+    border-radius: var(--radius-control-sm);
+  }
+}
+
+.lk-tab__link {
+  color: var(--action-primary-default);
+  text-decoration: underline;
+  text-underline-offset: var(--space-2xs);
+  cursor: pointer;
+
+  &:hover { color: var(--action-primary-hover); }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+    border-radius: var(--radius-control-sm);
+  }
+}
+
+// ─── Bitácora log entries ──────────────────────────────────────────────────
+.lk-tab__log-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-block: var(--space-md);
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+
+  &:last-of-type { border-block-end: none; }
+}
+
+.lk-tab__log-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.lk-tab__log-date {
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
+}
+
+.lk-tab__log-title {
+  margin: 0;
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}

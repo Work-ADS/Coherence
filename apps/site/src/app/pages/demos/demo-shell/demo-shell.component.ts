@@ -9,6 +9,7 @@ import {
   computed,
   effect,
   inject,
+  input,
   signal,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
@@ -89,12 +90,20 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   readonly comments = inject(CommentService);
 
   readonly activeMode = signal<'inspect' | 'comment' | null>(null);
-  readonly demoSlug = signal('wealth-planner');
-  readonly demoRoute = signal('/demos/wealth-planner-2026/demo');
+
+  // ─── Configurable per-demo inputs ────────────────────────────────────────
+  // Defaults preserve the original wealth-planner wiring so existing
+  // consumers don't need to pass anything. New demos pass their own slug,
+  // demo-route, and view labels. When `views` has 0 or 1 entry the
+  // segmented view-switcher in the toolbar is hidden — for flows that
+  // navigate internally (e.g. Sarevi welcome → datos → medidas → resumen).
+  readonly demoSlug = input<string>('wealth-planner');
+  readonly demoRoute = input<string>('/demos/wealth-planner-2026/demo');
+  readonly views = input<string[]>(['Patrimonio', 'Evolución']);
 
   readonly activeView = signal(0);
-  readonly views = signal<string[]>(['Patrimonio', 'Evolución']);
 
+  readonly hasViewSwitcher = computed(() => this.views().length > 1);
   readonly viewOptions = computed(() =>
     this.views().map((label, i) => ({ value: String(i), label })),
   );

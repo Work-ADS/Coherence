@@ -1,0 +1,1034 @@
+// =============================================================================
+// Laboral Kutxa · Sarevi 360 — Simulador de eficiencia energética
+// =============================================================================
+//
+// The page sets `data-brand="laboral-kutxa"` on its root wrapper so the
+// LK brand tokens (defined in libs/tokens/colors-laboral-kutxa.scss +
+// semantic.scss) resolve here regardless of the global brand-picker state.
+//
+// DS primitives (afi-button, afi-input, afi-select, afi-modal, afi-tabs,
+// afi-segmented-control, afi-switch, afi-checkbox) handle interactive chrome
+// — they inherit the LK look via the brand-scoped tokens. The remaining
+// scoped blocks below cover surfaces with no primitive equivalent: brand
+// identity (logo, top-bar layout), the energy-label pentagons, the savings
+// callout, the finance cuota cards, the LK-specific impact/CAE chips, the
+// step-progress pills, and the bespoke range slider thumb.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.lk-sarevi {
+  // ----- LK primitive aliases scoped to this surface --------------------
+  // Per the LK visual style folder, brand-prominent surfaces (step pills,
+  // hero headlines, callout numbers, logo wordmark, focus rings) use
+  // MAGENTA. The `--bere` alias is kept for back-compat with prior CSS
+  // and now points at the magenta ramp — every `var(--bere)` usage flips
+  // to true brand-center colors automatically.
+  --bere:        var(--color-laboral-kutxa-magenta-500);
+  --bere-700:    var(--color-laboral-kutxa-magenta-700);
+  --bere-500:    var(--color-laboral-kutxa-magenta-500);
+  --bere-300:    var(--color-laboral-kutxa-magenta-300);
+  --green:       var(--color-laboral-kutxa-verde-500);
+  --green-700:   var(--color-laboral-kutxa-verde-700);
+  --green-100:   var(--color-laboral-kutxa-verde-100);
+  --green-50:    var(--color-laboral-kutxa-verde-50);
+  --mag:         var(--color-laboral-kutxa-magenta-500);
+  --mag-100:     var(--color-laboral-kutxa-magenta-100);
+  // ────────────────────────────────────────────────────────────────────────
+  // Sarevi surface mapping (page-level — overrides the brand-wide canvas/
+  // surface tokens for this demo only). Reads like LK's own web sections:
+  //   - Page canvas = white
+  //   - Section wrapper (.surface) = transparent — sections float on white
+  //   - Cards (.card) = soft magenta tint, so the form groups stand out
+  //   - Inputs/recessed surfaces = barely-there magenta wash
+  // To go back to the original tinted-paper look, point these at the beige
+  // ramp instead (--beige-300 for page bg, --beige-400 for surface wrap).
+  // ────────────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
+  // Surface tinting — barely-pink so the brand reads as a *whisper*, not a
+  // pink page. Cards are halfway between white and magenta-25 (mixed via
+  // color-mix). The pink lives in the BORDER, not the fill — that keeps
+  // the brand touch without flooding the layout. Recessed surfaces use the
+  // warm beige-25 so inputs feel different from cards without piling more
+  // pink. Step the percentages up only if a reviewer specifically asks
+  // for more brand color in the fills.
+  // ────────────────────────────────────────────────────────────────────────
+  --beige:       var(--color-laboral-kutxa-beige-0);
+  --beige-deep:  transparent;
+  --cream:       var(--color-laboral-kutxa-beige-25);
+  --card-soft:   var(--color-laboral-kutxa-beige-25);
+  --card:        color-mix(in srgb, var(--color-laboral-kutxa-magenta-25) 30%, var(--color-laboral-kutxa-beige-0));
+  --line:        var(--color-laboral-kutxa-magenta-100);
+  --line-soft:   color-mix(in srgb, var(--color-laboral-kutxa-magenta-25) 50%, var(--color-laboral-kutxa-beige-0));
+  --text:        var(--color-laboral-kutxa-ink-default);
+  --text-soft:   var(--color-laboral-kutxa-ink-soft);
+  --text-muted:  var(--color-laboral-kutxa-ink-muted);
+
+  --warn-bg: var(--color-lk-impact-warn-bg);
+  --warn-fg: var(--color-lk-impact-warn-fg);
+  --low-bg:  var(--color-lk-impact-low-bg);
+  --low-fg:  var(--color-lk-impact-low-fg);
+  --mid-bg:  var(--color-lk-impact-mid-bg);
+  --mid-fg:  var(--color-lk-impact-mid-fg);
+  --high-bg: var(--color-lk-impact-high-bg);
+  --high-fg: var(--color-lk-impact-high-fg);
+  --none-bg: var(--color-lk-impact-none-bg);
+  --none-fg: var(--color-lk-impact-none-fg);
+
+  --energy-A: var(--color-lk-energy-A);
+  --energy-B: var(--color-lk-energy-B);
+  --energy-C: var(--color-lk-energy-C);
+  --energy-D: var(--color-lk-energy-D);
+  --energy-E: var(--color-lk-energy-E);
+  --energy-F: var(--color-lk-energy-F);
+  --energy-G: var(--color-lk-energy-G);
+
+  --shadow-card: var(--elevation-sarevi-card);
+
+  --font-display: var(--font-brand-display, "Source Serif 4", Georgia, serif);
+  --font-text:    var(--font-brand-text,    "Inter", system-ui, sans-serif);
+  --font-mono:    var(--font-brand-mono,    "JetBrains Mono", ui-monospace, monospace);
+
+  // Keep inactive CTAs quiet. The active primary state is magenta; disabled
+  // should read as unavailable, not as a yellow/green brand variant.
+  --brand-secondary-background-disabled: var(--color-laboral-kutxa-beige-200);
+  --brand-secondary-foreground-disabled: var(--color-laboral-kutxa-ink-muted);
+  --brand-secondary-border-disabled: var(--color-laboral-kutxa-beige-300);
+
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--beige);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  font-size: var(--dimension-3-75);
+  line-height: 1.45;
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--bere);
+    letter-spacing: -0.005em;
+    margin: 0;
+  }
+
+  a { color: var(--mag); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: var(--dimension-0-5); }
+
+  .mono { font-family: var(--font-mono); }
+  .spacer { flex: 1; }
+}
+
+// ─── Top bar ──────────────────────────────────────────────────────────────
+// LK signature magenta gradient (header strip used across laboralkutxa.com).
+// White text + the official logo's white wordmark sit on top of this without
+// any channel-flip filters — the asset stays original.
+.lk-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--dimension-5-5) var(--dimension-14) var(--dimension-4-5);
+  gap: var(--dimension-6);
+  background: linear-gradient(
+    135deg,
+    var(--color-laboral-kutxa-magenta-700) 0%,
+    var(--color-laboral-kutxa-magenta-500) 55%,
+    var(--color-laboral-kutxa-magenta-400) 100%
+  );
+  color: var(--color-laboral-kutxa-beige-0);
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--dimension-3-5);
+    flex: 0 0 auto;
+  }
+
+  &__sep {
+    width: var(--dimension-0-25);
+    height: var(--dimension-6);
+    background: var(--color-laboral-kutxa-beige-0);
+    opacity: .45;
+  }
+
+  &__sub {
+    font-family: var(--font-display);
+    font-size: var(--dimension-4-25);
+    color: var(--color-laboral-kutxa-beige-0);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--dimension-4);
+    color: var(--color-laboral-kutxa-beige-0);
+    font-size: var(--dimension-3-5);
+    flex: 0 0 auto;
+    min-width: var(--dimension-60);
+  }
+
+  &__ref {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--dimension-0-75);
+  }
+
+  &__ref-label { color: var(--color-white-a75); font-size: 11.5px; }
+
+  &__ref-code {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--dimension-2);
+    font-family: var(--font-mono);
+    font-size: var(--dimension-3-25);
+    letter-spacing: 0.02em;
+    color: var(--color-laboral-kutxa-beige-0);
+  }
+
+  .topbar-download {
+    --foreground-secondary-default: var(--color-laboral-kutxa-beige-0);
+    --surface-subtle: var(--color-white-a14);
+    --brand-tertiary-background-hover: var(--color-white-a14);
+    --brand-tertiary-foreground-hover: var(--color-laboral-kutxa-beige-0);
+  }
+}
+
+// ─── LK Logo (asset images from Afi brand/Client brands/Laboral kutxa) ───
+// Asset stays original: white wordmark + colored geometric mark on
+// transparent bg. Sits naturally on the magenta-gradient top bar.
+.lk-logo-img {
+  height: var(--dimension-8);
+  width: auto;
+  display: block;
+}
+
+.lk-mark-img {
+  width: var(--dimension-9);
+  height: var(--dimension-9);
+  display: block;
+}
+
+// ─── Main shell ───────────────────────────────────────────────────────────
+.lk-shell {
+  max-width: var(--dimension-270);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--dimension-6) var(--dimension-16);
+}
+
+// ─── Step pills ───────────────────────────────────────────────────────────
+.steps {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--dimension-2);
+  padding: 0 var(--dimension-3);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: var(--dimension-2);
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  color: var(--color-laboral-kutxa-beige-0);
+  background: var(--color-white-a10);
+  border: var(--dimension-0-25) solid var(--color-white-a18);
+  border-radius: var(--radius-full);
+  padding: var(--dimension-1-5) var(--dimension-2-5);
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+
+  &:hover {
+    background: var(--color-white-a16);
+    border-color: var(--color-white-a35);
+  }
+
+  &:focus-visible {
+    outline: var(--dimension-0-5) solid var(--color-laboral-kutxa-beige-0);
+    outline-offset: var(--dimension-0-5);
+  }
+
+  &__badge {
+    width: var(--dimension-6); height: var(--dimension-6);
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 10.5px;
+  }
+
+  &__stack { display: flex; flex-direction: column; line-height: 1.15; }
+  &__sub {
+    font-family: var(--font-text);
+    font-size: 10.5px;
+    color: var(--color-white-a72);
+    margin-top: var(--dimension-0-5);
+  }
+
+  &--done .step__badge {
+    background: var(--green); color: var(--color-laboral-kutxa-beige-0);
+  }
+  &--current .step__badge {
+    background: var(--color-laboral-kutxa-beige-0); color: var(--bere);
+  }
+  &--todo .step__badge {
+    background: transparent;
+    color: var(--color-white-a74);
+    box-shadow: inset 0 0 0 var(--dimension-0-25) var(--color-white-a35);
+  }
+  &--todo .step__label { color: var(--color-white-a74); }
+  &--current {
+    background: var(--color-white-a20);
+    border-color: var(--color-white-a42);
+  }
+}
+
+// ─── Welcome ──────────────────────────────────────────────────────────────
+.welcome-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--dimension-16) var(--dimension-6) var(--dimension-12);
+  text-align: center;
+  gap: var(--dimension-3-5);
+
+  &__h1 {
+    font-family: var(--font-display);
+    font-size: var(--dimension-13-5);
+    line-height: 1.05;
+    color: var(--bere);
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    max-width: 18ch;
+  }
+
+  &__lead { color: var(--text-soft); font-size: var(--dimension-4-25); margin: 0; }
+  &__cards { width: 100%; max-width: var(--dimension-190); margin-top: var(--dimension-6); }
+
+  &__recover {
+    margin-top: var(--dimension-7);
+    background: none; border: 0;
+    padding: var(--dimension-1-5);
+    color: var(--bere);
+    font-size: 14.5px;
+    text-decoration: underline;
+    text-underline-offset: var(--dimension-0-75);
+    cursor: pointer;
+    font-family: inherit;
+
+    &:hover { color: var(--mag); }
+  }
+}
+
+.welcome-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-70)), 1fr));
+  gap: var(--dimension-6);
+  margin-top: var(--dimension-2);
+}
+
+.choice-card {
+  background: var(--card-soft);
+  border-radius: var(--radius-xl);
+  padding: var(--dimension-9) var(--dimension-7) var(--dimension-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dimension-3-5);
+  border: var(--dimension-0-25) solid transparent;
+  cursor: pointer;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  font: inherit;
+
+  &:hover {
+    border-color: var(--bere);
+    transform: translateY(calc(-1 * var(--dimension-0-5)));
+    box-shadow: var(--shadow-card);
+  }
+
+  &__ico {
+    width: var(--dimension-20); height: var(--dimension-20); border-radius: var(--dimension-4-5);
+    background: var(--bere); color: var(--color-laboral-kutxa-beige-0);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--dimension-5-5);
+    color: var(--bere);
+  }
+
+  &__desc {
+    color: var(--text-soft);
+    font-size: var(--dimension-3-5);
+    text-align: center;
+    max-width: 22ch;
+  }
+}
+
+// ─── Surface (recessed beige card) ───────────────────────────────────────
+.surface {
+  background: var(--beige-deep);
+  border-radius: var(--dimension-6);
+  padding: var(--dimension-9);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dimension-6);
+}
+
+.surface-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dimension-1-5);
+  padding: 0 var(--dimension-1) var(--dimension-1);
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--dimension-2-5);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--dimension-6);
+    color: var(--bere);
+  }
+
+  &__subtitle { color: var(--text-soft); font-size: 14.5px; }
+}
+
+// ─── Card (white panel inside the surface) ───────────────────────────────
+.card {
+  background: var(--card);
+  border-radius: var(--radius-xl);
+  padding: var(--dimension-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dimension-4-5);
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--dimension-2-5);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--dimension-4-5);
+    color: var(--bere);
+  }
+}
+
+.field-label {
+  display: block;
+  margin-block-end: var(--space-2xs);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+}
+
+// ─── Medida row (checklist) ───────────────────────────────────────────────
+.medida-row {
+  display: grid;
+  grid-template-columns: var(--dimension-8) 1fr auto auto auto;
+  align-items: center;
+  gap: var(--dimension-3-5);
+  padding: var(--dimension-2) 0;
+
+  &__name {
+    font-size: 14.5px;
+    color: var(--bere);
+  }
+
+  &--locked .medida-row__name { color: var(--text-soft); }
+
+  &__tags {
+    display: flex;
+    gap: var(--dimension-2);
+    align-items: center;
+  }
+
+  &__price {
+    font-size: var(--dimension-3-5);
+    color: var(--bere);
+    font-variant-numeric: tabular-nums;
+    min-width: var(--dimension-21);
+    text-align: right;
+  }
+
+  &__details {
+    font-size: 13.5px;
+    color: var(--mag);
+    display: inline-flex;
+    gap: var(--dimension-1);
+    align-items: center;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+
+    &:hover { text-decoration: underline; text-underline-offset: var(--dimension-0-5); }
+  }
+
+  &__expand-toggle {
+    margin-left: var(--dimension-10-5);
+    margin-top: calc(-1 * var(--dimension-2));
+    margin-bottom: var(--dimension-2);
+  }
+}
+
+.medida-detail {
+  background: var(--cream);
+  border-radius: var(--dimension-2-5);
+  padding: var(--dimension-4) var(--dimension-4-5);
+  margin: var(--dimension-1) 0 var(--dimension-3) var(--dimension-10-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dimension-2-5);
+
+  &__switch-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13.5px;
+    color: var(--bere);
+
+    strong { color: var(--bere); }
+  }
+
+  &__auto {
+    display: flex;
+    align-items: center;
+    gap: var(--dimension-2-5);
+    font-size: var(--dimension-3-25);
+  }
+
+  &__hint {
+    color: var(--text-soft);
+    font-size: var(--dimension-3-25);
+  }
+
+  &__foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--dimension-1);
+  }
+}
+
+.ocultar-link {
+  background: none;
+  border: 0;
+  color: var(--bere);
+  font-size: var(--dimension-3-25);
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+
+  &:hover { text-decoration: underline; }
+
+  &--mag { color: var(--mag); }
+}
+
+.add-custom {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--dimension-2);
+}
+
+.energy-range {
+  display: flex;
+  gap: var(--dimension-1-5);
+  padding-top: var(--dimension-2);
+  align-items: center;
+  flex-wrap: wrap;
+
+  &__pick {
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+
+    &--active::before {
+      content: "";
+      position: absolute;
+      inset: calc(-1 * var(--dimension-1)) calc(-1 * var(--dimension-0-5));
+      border-radius: var(--dimension-1-5);
+      box-shadow: 0 0 0 var(--dimension-0-5) var(--bere);
+    }
+  }
+
+  &__labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--dimension-3);
+    color: var(--text-soft);
+    margin-top: var(--dimension-0-5);
+    padding-top: var(--dimension-1);
+    max-width: var(--dimension-67);
+  }
+}
+
+// ─── Bento grid (medidas screen — chart + costes side by side) ───────────
+// 2-col layout: live impact-preview chart on the left (wider), cost
+// breakdown table on the right. Stacks on narrow viewports.
+.medidas-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dimension-4-5);
+  min-width: 0;
+  width: 100%;
+
+  @media (min-width: 1040px) {
+    grid-template-columns: minmax(0, 1.25fr) minmax(var(--dimension-80), 0.75fr);
+    align-items: start;
+  }
+}
+
+.bento-medidas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dimension-3-5);
+  position: sticky;
+  top: var(--dimension-4);
+  min-width: 0;
+  width: 100%;
+
+  &__cell {
+    background: var(--card);
+    border-radius: var(--radius-xl);
+    padding: var(--dimension-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--dimension-4);
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+
+    &--chart {
+      background: linear-gradient(
+        160deg,
+        var(--color-laboral-kutxa-verde-50) 0%,
+        var(--color-laboral-kutxa-beige-0) 75%
+      );
+    }
+
+    &--costs {
+      // Plain white, tighter padding to give the table room.
+      padding: var(--dimension-6) var(--dimension-5-5);
+    }
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dimension-2);
+  }
+
+  &__copy {
+    margin: 0;
+    font-size: var(--dimension-3-25);
+    line-height: 1.45;
+    color: var(--text-soft);
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--dimension-2-5);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--dimension-4-5);
+    color: var(--bere);
+  }
+
+  &__grade-row {
+    display: flex;
+    align-items: center;
+    gap: var(--dimension-2);
+    font-size: var(--dimension-3-25);
+    color: var(--text-soft);
+  }
+
+  &__grade-label {
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-soft);
+    margin-right: var(--dimension-0-5);
+  }
+
+  &__alert {
+    margin-top: auto;
+  }
+}
+
+// ─── Bento grid (ahorro anual estimado) ───────────────────────────────────
+// 2-column grid on wide, stacks on narrow. Tiles share a soft branded surface
+// and rounded corners so they read as a single composition. The chart cell
+// always spans the full row, anchoring the bento at the bottom.
+.bento {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--dimension-3-5);
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bento-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dimension-2);
+  padding: var(--dimension-5-5) var(--dimension-6);
+  border-radius: var(--dimension-3-5);
+  background: var(--card-soft);
+  border: var(--dimension-0-25) solid var(--line-soft);
+  min-height: 0;
+
+  &__ico {
+    width: var(--dimension-10); height: var(--dimension-10);
+    border-radius: var(--dimension-2-5);
+    background: linear-gradient(135deg, var(--mag) 0%, var(--color-laboral-kutxa-magenta-700) 100%);
+    color: var(--color-laboral-kutxa-beige-0);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--dimension-1);
+  }
+
+  &__topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--dimension-4);
+  }
+
+  &__label {
+    font: var(--type-body-sm-500);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--text-soft);
+  }
+
+  &__hero {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--mag);
+    font-size: var(--dimension-11);
+    line-height: 1;
+    letter-spacing: -0.015em;
+    font-variant-numeric: tabular-nums;
+    margin-top: var(--dimension-1);
+  }
+
+  &__hint {
+    font-size: 12.5px;
+    color: var(--text-soft);
+  }
+
+  &__grade-row {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--dimension-2);
+    margin-top: 0;
+  }
+
+  &__grade-arrow {
+    color: var(--mag);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  // Feature tile (hero): stretches into 2 row positions on wide layouts
+  // so the savings number gets visual weight relative to the grade tile.
+  &--feature {
+    background: linear-gradient(
+      150deg,
+      var(--color-laboral-kutxa-magenta-25) 0%,
+      var(--color-laboral-kutxa-magenta-50) 100%
+    );
+    border-color: var(--color-laboral-kutxa-magenta-100);
+
+    @media (min-width: 768px) {
+      grid-row: span 1;
+    }
+  }
+
+  // Chart spans the full bottom row on wide, full width on narrow.
+  &--chart {
+    background: var(--color-laboral-kutxa-beige-0);
+    padding: var(--dimension-6-5) var(--dimension-7);
+
+    @media (min-width: 768px) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// ─── Table ────────────────────────────────────────────────────────────────
+// afi-table doesn't support custom cell templates (badges/links inside cells)
+// so the cost tables stay scoped here. Visual matches the LK look.
+.lk-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 11.5px var(--dimension-3);
+    font-size: var(--dimension-3-5);
+    text-align: left;
+  }
+
+  th { color: var(--mag); font-weight: 500; font-size: var(--dimension-3-25); }
+  td { color: var(--bere); }
+  tr + tr td { border-top: var(--dimension-0-25) solid var(--line-soft); }
+
+  &__num { text-align: right; font-variant-numeric: tabular-nums; }
+  &__neg { color: var(--color-lk-table-neg); }
+
+  &__total td { font-weight: 600; color: var(--bere); }
+  &__total td:first-child { color: var(--mag); }
+}
+
+// ─── Slider (custom thumb/fill rendering — DS has no slider primitive) ───
+.slider-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dimension-2-5);
+  min-width: 0;
+}
+
+.slider-bar {
+  position: relative;
+  height: var(--dimension-1-5);
+  background: var(--beige-deep);
+  border-radius: var(--radius-full);
+
+  &__fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: var(--bere);
+    border-radius: var(--radius-full);
+  }
+
+  &__thumb {
+    position: absolute;
+    top: 50%;
+    width: var(--dimension-4-5);
+    height: var(--dimension-4-5);
+    border-radius: 50%;
+    background: var(--bere);
+    transform: translate(-50%, -50%);
+    box-shadow: var(--elevation-sarevi-thumb);
+  }
+
+  &__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+  }
+}
+
+.slider-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--text-soft);
+}
+
+// ─── Cuota tile ───────────────────────────────────────────────────────────
+.cuota-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dimension-2);
+
+  &__title { font-size: var(--dimension-3-5); color: var(--bere); font-weight: 500; }
+}
+
+.cuota-main {
+  background: var(--color-laboral-kutxa-beige-0);
+  border-radius: var(--radius-lg);
+  padding: var(--dimension-5-5) var(--dimension-6-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dimension-4) var(--dimension-8);
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+
+  &--green { background: var(--color-white-a72); }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dimension-1);
+    align-items: center;
+    min-width: min(100%, var(--dimension-45));
+    flex: 1 1 var(--dimension-45);
+  }
+
+  &__lbl { font-size: var(--dimension-3-25); color: var(--text-soft); }
+  &__num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--dimension-7-5);
+    color: var(--bere);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+  &__unit {
+    font-size: var(--dimension-3-5);
+    font-weight: 500;
+    color: var(--text-soft);
+    margin-left: var(--dimension-0-25);
+  }
+}
+
+.cuota-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-30)), 1fr));
+  background: var(--card-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-width: 0;
+
+  &__cell {
+    padding: var(--dimension-4) var(--dimension-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--dimension-1);
+    align-items: center;
+    border-right: var(--dimension-0-25) solid var(--line-soft);
+
+    &:last-child { border-right: 0; }
+  }
+
+  &__lbl { font-size: var(--dimension-3-25); color: var(--text-soft); }
+  &__num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--dimension-6-5);
+    color: var(--bere);
+  }
+  &__pct {
+    font-size: var(--dimension-3-25);
+    font-weight: 500;
+    color: var(--text-soft);
+    margin-left: var(--dimension-0-25);
+  }
+}
+
+// ─── Layout helpers ───────────────────────────────────────────────────────
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-70)), 1fr));
+  gap: var(--dimension-4-5);
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-55)), 1fr));
+  gap: var(--dimension-3-5);
+}
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--dimension-3);
+  margin-top: var(--dimension-2);
+  align-items: center;
+}
+
+.footnotes {
+  font-size: var(--dimension-3);
+  color: var(--text-soft);
+  line-height: 1.5;
+  margin-top: var(--dimension-1);
+
+  p { margin: 0 0 var(--dimension-2); }
+  p:last-child { margin-bottom: 0; }
+}
+
+.cuota-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--dimension-2);
+}
+
+// ─── Help band ────────────────────────────────────────────────────────────
+.help-band {
+  background: var(--card);
+  border-radius: var(--dimension-3-5);
+  padding: var(--dimension-5-5) var(--dimension-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dimension-2);
+  text-align: center;
+
+  &__h {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--dimension-4-25);
+    color: var(--bere);
+  }
+
+  &__p {
+    color: var(--text-soft);
+    font-size: var(--dimension-3-5);
+    max-width: 60ch;
+  }
+
+  afi-button { margin-top: var(--dimension-1-5); }
+}
+
+// ─── Info modal header (chip + impact) ───────────────────────────────────
+.info-modal {
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: var(--dimension-3);
+    margin-bottom: var(--dimension-3-5);
+  }
+
+  &__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--dimension-4-25);
+    color: var(--bere);
+  }
+
+  &__body {
+    color: var(--bere-700);
+    white-space: pre-wrap;
+    line-height: 1.55;
+    font-size: var(--dimension-3-5);
+    padding-top: var(--dimension-3);
+  }
+}

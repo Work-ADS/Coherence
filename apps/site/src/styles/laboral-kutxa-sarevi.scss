@@ -1,0 +1,647 @@
+// Global Sarevi demo helpers.
+// These classes are scoped under `.lk-sarevi` so they only apply inside the
+// Laboral Kutxa simulator, but they live outside the component stylesheet to
+// keep Angular's per-component style budget green.
+
+.lk-sarevi {
+  container-type: inline-size;
+
+  afi-input,
+  afi-select {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  afi-input,
+  afi-select {
+    display: block;
+    width: 100%;
+  }
+
+  .impact {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--dimension-0-75) var(--dimension-2-5);
+    border-radius: var(--dimension-1-5);
+    font-size: var(--dimension-3);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+
+    &--alto  { background: var(--high-bg); color: var(--high-fg); }
+    &--medio { background: var(--mid-bg);  color: var(--mid-fg); }
+    &--bajo  { background: var(--low-bg);  color: var(--low-fg); }
+    &--none  { background: var(--none-bg); color: var(--none-fg); }
+  }
+
+  .cae-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bere);
+    color: var(--color-laboral-kutxa-beige-0);
+    padding: var(--dimension-0-75) var(--dimension-2-25);
+    border-radius: var(--dimension-1-5);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .pill-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--dimension-1-5);
+    background: var(--green-100);
+    color: var(--green-700);
+    padding: var(--dimension-1) var(--dimension-3);
+    border-radius: var(--radius-full);
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .energy-label {
+    position: relative;
+    display: inline-block;
+    height: var(--dimension-7-5);
+    padding: 0 var(--dimension-5-5) 0 var(--dimension-3);
+    line-height: var(--dimension-7-5);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--dimension-4);
+    color: var(--color-laboral-kutxa-beige-0);
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: var(--dimension-3-75) 0 var(--dimension-3-75) var(--dimension-3-5);
+      border-color: transparent transparent transparent currentColor;
+    }
+
+    &--A { background: var(--energy-A); &::after { color: var(--energy-A); } }
+    &--B { background: var(--energy-B); &::after { color: var(--energy-B); } }
+    &--C { background: var(--energy-C); &::after { color: var(--energy-C); } }
+    &--D { background: var(--energy-D); &::after { color: var(--energy-D); } }
+    &--E { background: var(--energy-E); &::after { color: var(--energy-E); } }
+    &--F { background: var(--energy-F); &::after { color: var(--energy-F); } }
+    &--G { background: var(--energy-G); &::after { color: var(--energy-G); } }
+
+    &--sm {
+      height: var(--dimension-6);
+      line-height: var(--dimension-6);
+      font-size: var(--dimension-3-25);
+      padding: 0 var(--dimension-4-5) 0 var(--dimension-2-5);
+
+      &::after { border-width: var(--dimension-3) 0 var(--dimension-3) var(--dimension-2-75); }
+    }
+  }
+
+  .stat {
+    background: var(--card-soft);
+    border-radius: var(--radius-lg);
+    padding: var(--dimension-4-5) var(--dimension-5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--dimension-2);
+
+    &__label { font-size: var(--dimension-3-25); color: var(--text-soft); }
+
+    &__value {
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--bere);
+      font-size: var(--dimension-7);
+      letter-spacing: -0.01em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &__unit {
+      font-size: var(--dimension-3-25);
+      font-weight: 500;
+      color: var(--text-soft);
+      margin-left: var(--dimension-1);
+    }
+
+    &__hint {
+      font-size: var(--dimension-3);
+      line-height: 1.35;
+      color: var(--text-soft);
+    }
+  }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-45)), 1fr));
+    gap: var(--dimension-3-5);
+  }
+
+  .metric-card {
+    background: linear-gradient(180deg, var(--color-laboral-kutxa-beige-0) 0%, var(--card-soft) 100%);
+    border: var(--dimension-0-25) solid var(--line-soft);
+    border-radius: var(--dimension-3-5);
+    padding: var(--dimension-4-5) var(--dimension-5);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--dimension-2);
+    min-height: var(--dimension-32);
+    min-width: 0;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+
+    &:hover {
+      transform: translateY(calc(-1 * var(--dimension-0-5)));
+      border-color: var(--line);
+      box-shadow: var(--shadow-card);
+    }
+
+    &--grade {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .finance-bento {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-70)), 1fr));
+    gap: var(--dimension-3-5);
+    min-width: 0;
+  }
+
+  .finance-card {
+    background: var(--card-soft);
+    border: var(--dimension-0-25) solid var(--line-soft);
+    border-radius: var(--dimension-3-5);
+    padding: var(--dimension-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--dimension-3-5);
+    min-width: 0;
+
+    &__title {
+      font-family: var(--font-display);
+      font-size: var(--dimension-3-75);
+      font-weight: 600;
+      color: var(--bere);
+    }
+
+    &--controls {
+      background: var(--color-laboral-kutxa-beige-0);
+    }
+
+    &--green {
+      background: linear-gradient(180deg, var(--color-lk-finance-green-top) 0%, var(--color-lk-finance-green-bottom) 100%);
+      border-color: var(--color-laboral-kutxa-verde-100);
+    }
+  }
+
+  .alert {
+    background: var(--warn-bg);
+    border-radius: var(--radius-lg);
+    padding: var(--dimension-4) var(--dimension-4-5);
+    display: flex;
+    gap: var(--dimension-3);
+    align-items: flex-start;
+    font-size: 13.5px;
+    color: var(--bere-700);
+    line-height: 1.55;
+
+    &__icon {
+      color: var(--warn-fg);
+      flex: none;
+      margin-top: var(--dimension-0-5);
+    }
+
+    strong { color: var(--bere); }
+
+    &--info {
+      background: var(--color-lk-alert-info-bg);
+      color: var(--color-lk-alert-info-fg);
+
+      .alert__icon { color: var(--color-lk-alert-info-fg); }
+    }
+  }
+
+  // Responsive contract for the simulator:
+  // - product navigation wraps first, then stacks when labels and reference
+  //   code can no longer sit comfortably in one row;
+  // - content grids keep related controls inline on tablet/desktop and stack
+  //   at narrow widths so labels, values, and actions never overlap;
+  // - data tables scroll horizontally only as a last resort.
+  @media (max-width: 1160px) {
+    .lk-topbar {
+      flex-wrap: wrap;
+      align-items: flex-start;
+      padding-inline: var(--dimension-8);
+
+      &__brand { order: 1; }
+      .steps {
+        order: 3;
+        flex-basis: 100%;
+        justify-content: flex-start;
+        padding: var(--dimension-1) 0 0;
+        overflow-x: auto;
+        scrollbar-width: thin;
+      }
+      &__right {
+        order: 2;
+        margin-left: auto;
+      }
+    }
+
+    .bento-medidas {
+      position: static;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .lk-topbar {
+      padding: var(--dimension-4-5) var(--dimension-5);
+      gap: var(--dimension-4);
+
+      &__brand,
+      &__right {
+        width: 100%;
+      }
+
+      &__brand {
+        justify-content: space-between;
+      }
+
+      &__sep {
+        display: none;
+      }
+
+      &__right {
+        justify-content: space-between;
+        min-width: 0;
+        flex-wrap: wrap;
+      }
+
+      &__ref {
+        align-items: flex-start;
+        min-width: 0;
+      }
+    }
+
+    .lk-shell {
+      padding-inline: var(--dimension-6);
+      padding-bottom: var(--dimension-10);
+    }
+
+    .surface {
+      padding: var(--dimension-6) 0;
+      gap: var(--dimension-4-5);
+    }
+
+    .surface-header {
+      padding-inline: var(--dimension-1);
+    }
+
+    .surface-header__title {
+      font-size: var(--dimension-5-5);
+      align-items: flex-start;
+    }
+
+    .card,
+    .bento-medidas__cell,
+    .finance-card {
+      border-radius: var(--dimension-3-5);
+      padding: var(--dimension-5-5);
+    }
+
+    .grid-2,
+    .grid-3 {
+      grid-template-columns: 1fr;
+    }
+
+    .welcome-wrap {
+      padding-inline: 0;
+
+      &__h1 {
+        font-size: var(--dimension-10);
+      }
+    }
+
+    .welcome-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .medida-row {
+      grid-template-columns: var(--dimension-8) minmax(0, 1fr) auto;
+      gap: var(--dimension-2) var(--dimension-3);
+      align-items: start;
+      padding-block: var(--dimension-3);
+
+      &__tags {
+        grid-column: 2 / -1;
+        flex-wrap: wrap;
+      }
+
+      &__price {
+        grid-column: 3;
+        grid-row: 1;
+        min-width: 0;
+        white-space: nowrap;
+      }
+
+      &__details {
+        grid-column: 2 / -1;
+        justify-self: start;
+      }
+
+      &__expand-toggle {
+        margin-left: var(--dimension-11);
+      }
+    }
+
+    .medida-detail {
+      margin-left: 0;
+
+      &__switch-row,
+      &__foot {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--dimension-2-5);
+      }
+    }
+
+    .bento-medidas__grade-row,
+    .bento-cell__topline {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .bento-cell__hero {
+      font-size: var(--dimension-9);
+    }
+
+    .lk-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .cuota-main {
+      flex-direction: column;
+      gap: var(--dimension-4);
+      padding: var(--dimension-5);
+    }
+
+    .action-row {
+      gap: var(--dimension-3);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .lk-logo-img {
+      max-width: var(--dimension-45);
+      height: auto;
+    }
+
+    .steps {
+      gap: var(--dimension-1-5);
+    }
+
+    .step {
+      padding: var(--dimension-1-5) var(--dimension-2);
+
+      &__sub {
+        display: none;
+      }
+    }
+
+    .card,
+    .bento-medidas__cell,
+    .finance-card {
+      padding: var(--dimension-4-5);
+    }
+
+    .metric-grid,
+    .finance-bento,
+    .cuota-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cuota-grid__cell {
+      border-right: 0;
+      border-bottom: var(--dimension-0-25) solid var(--line-soft);
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    .info-modal__head {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+// Container queries are the important bit for this demo. The simulator can sit
+// inside a narrow preview canvas while the browser viewport is still desktop
+// width, so the responsive behavior must react to the product surface, not the
+// window. Keep these aligned with the media rules above.
+@container (max-width: 820px) {
+  .lk-topbar {
+    padding: var(--dimension-4-5) var(--dimension-5);
+    gap: var(--dimension-4);
+    flex-wrap: wrap;
+    align-items: flex-start;
+
+    &__brand,
+    &__right {
+      width: 100%;
+    }
+
+    &__brand {
+      justify-content: space-between;
+    }
+
+    &__sep {
+      display: none;
+    }
+
+    &__right {
+      justify-content: space-between;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    &__ref {
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .steps {
+      order: 3;
+      flex-basis: 100%;
+      justify-content: flex-start;
+      padding: var(--dimension-1) 0 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+  }
+
+  .lk-shell {
+    padding-inline: var(--dimension-6);
+    padding-bottom: var(--dimension-10);
+  }
+
+  .surface {
+    padding: var(--dimension-6) 0;
+    gap: var(--dimension-4-5);
+  }
+
+  .surface-header {
+    padding-inline: var(--dimension-1);
+  }
+
+  .surface-header__title {
+    font-size: var(--dimension-5-5);
+    align-items: flex-start;
+  }
+
+  .card,
+  .bento-medidas__cell,
+  .finance-card {
+    border-radius: var(--dimension-3-5);
+    padding: var(--dimension-5-5);
+  }
+
+  .welcome-wrap {
+    padding-inline: 0;
+
+    &__h1 {
+      font-size: var(--dimension-10);
+    }
+  }
+
+  .welcome-grid,
+  .grid-2,
+  .grid-3,
+  .metric-grid,
+  .finance-bento {
+    grid-template-columns: 1fr;
+  }
+
+  .medida-row {
+    grid-template-columns: var(--dimension-8) minmax(0, 1fr) auto;
+    gap: var(--dimension-2) var(--dimension-3);
+    align-items: start;
+    padding-block: var(--dimension-3);
+
+    &__tags {
+      grid-column: 2 / -1;
+      flex-wrap: wrap;
+    }
+
+    &__price {
+      grid-column: 3;
+      grid-row: 1;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    &__details {
+      grid-column: 2 / -1;
+      justify-self: start;
+    }
+
+    &__expand-toggle {
+      margin-left: var(--dimension-11);
+    }
+  }
+
+  .medida-detail {
+    margin-left: 0;
+
+    &__switch-row,
+    &__foot {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: var(--dimension-2-5);
+    }
+  }
+
+  .bento-medidas {
+    position: static;
+  }
+
+  .bento-medidas__grade-row,
+  .bento-cell__topline {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .bento-cell__hero {
+    font-size: var(--dimension-9);
+  }
+
+  .lk-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .cuota-main {
+    flex-direction: column;
+    gap: var(--dimension-4);
+    padding: var(--dimension-5);
+  }
+
+  .action-row {
+    gap: var(--dimension-3);
+  }
+}
+
+@container (max-width: 560px) {
+  .lk-logo-img {
+    max-width: var(--dimension-45);
+    height: auto;
+  }
+
+  .steps {
+    gap: var(--dimension-1-5);
+  }
+
+  .step {
+    padding: var(--dimension-1-5) var(--dimension-2);
+
+    &__sub {
+      display: none;
+    }
+  }
+
+  .card,
+  .bento-medidas__cell,
+  .finance-card {
+    padding: var(--dimension-4-5);
+  }
+
+  .cuota-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cuota-grid__cell {
+    border-right: 0;
+    border-bottom: var(--dimension-0-25) solid var(--line-soft);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .info-modal__head {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}

@@ -35,20 +35,20 @@
 
   // ─── Variants ────────────────────────────────────────────────────────────
   &--primary {
-    background: var(--brand-primary-background-default);
-    color: var(--brand-primary-foreground-default);
+    background: var(--brand-secondary-background-default);
+    color: var(--brand-secondary-foreground-default);
 
     &:hover:not(:disabled) {
-      background: var(--brand-primary-background-hover);
-      color: var(--brand-primary-foreground-hover);
+      background: var(--brand-secondary-background-hover);
+      color: var(--brand-secondary-foreground-hover);
     }
     &:active:not(:disabled) {
-      background: var(--brand-primary-background-active);
-      color: var(--brand-primary-foreground-active);
+      background: var(--brand-secondary-background-active);
+      color: var(--brand-secondary-foreground-active);
     }
     &:disabled {
-      background: var(--brand-primary-background-disabled);
-      color: var(--brand-primary-foreground-disabled);
+      background: var(--brand-secondary-background-disabled);
+      color: var(--brand-secondary-foreground-disabled);
       opacity: 1; // colors already encode disabled
     }
   }
@@ -68,7 +68,7 @@
 
   &--ghost {
     background: transparent;
-    color: var(--foreground-primary-default);
+    color: var(--foreground-secondary-default);
 
     &:hover:not(:disabled) {
       background: var(--surface-subtle);

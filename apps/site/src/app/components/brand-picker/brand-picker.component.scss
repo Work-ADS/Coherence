@@ -1,0 +1,6 @@
+:host {
+  display: inline-block;
+  // Keep the trigger compact so it sits comfortably in toolbar rows
+  // (demo-shell toolbar__right, site top-bar slot="end").
+  min-width: var(--dimension-42);
+}

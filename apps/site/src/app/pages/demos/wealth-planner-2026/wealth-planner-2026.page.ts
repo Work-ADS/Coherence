@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { TabItemComponent, TabsComponent } from '@coherence/ui';
+import {
+  AnimatedChartComponent,
+  TabItemComponent,
+  TabsComponent,
+  type ChartColumn,
+} from '@coherence/ui';
 
 import {
   DemoOverviewShellComponent,
@@ -25,13 +30,31 @@ import {
 @Component({
   selector: 'site-wealth-planner-2026-overview',
   standalone: true,
-  imports: [RouterLink, DemoOverviewShellComponent, TabsComponent, TabItemComponent],
+  imports: [
+    RouterLink,
+    DemoOverviewShellComponent,
+    TabsComponent,
+    TabItemComponent,
+    AnimatedChartComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './wealth-planner-2026.page.html',
   styleUrl: './wealth-planner-2026.page.scss',
 })
 export class WealthPlannerOverviewPage {
   readonly activeTab = signal(0);
+
+  // Same AnimatedChart primitive that the LK Sarevi demo uses — here it
+  // runs under the AFI default brand, so the data-viz series palette
+  // resolves to AFI's azul-tinted series colors instead of LK's magenta/
+  // verde. Proof that the chart component is brand-agnostic: one source,
+  // two visual identities.
+  readonly portfolioColumns: ChartColumn[] = [
+    { title: 'Liquidez',     value: 18, appendString: '%', caption: 'cash + bonos', series: 2 },
+    { title: 'Renta fija',   value: 32, appendString: '%', caption: 'bonos + IF',   series: 1 },
+    { title: 'Renta variable', value: 35, appendString: '%', caption: 'acciones',   series: 5 },
+    { title: 'Inmuebles',    value: 15, appendString: '%', caption: 'vivienda',     series: 6 },
+  ];
 
   readonly relatedPosts: DemoOverviewRelatedPost[] = [
     {

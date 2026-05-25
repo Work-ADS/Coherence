@@ -14,6 +14,20 @@
     <!-- ─── Tab 1 · Visión general ────────────────────────────────────── -->
     <afi-tab-item label="Visión general">
       <div class="wp-tab">
+        <!-- Portfolio snapshot — same AnimatedChart primitive as the LK
+             Sarevi demo, here under AFI's default brand so the data-viz
+             series palette resolves to AFI's azul-tinted colors. -->
+        <section class="wp-tab__block wp-tab__block--chart">
+          <afi-animated-chart
+            title="Composición de cartera modelo"
+            subtitle="Distribución típica de un cliente AFI patrimonial"
+            [columns]="portfolioColumns"
+            [maxValue]="50"
+            size="md"
+            ariaLabel="Composición de cartera: liquidez 18%, renta fija 32%, renta variable 35%, inmuebles 15%."
+          />
+        </section>
+
         <section class="wp-tab__block">
           <h2 class="wp-tab__block-title">¿Qué es?</h2>
           <p class="wp-tab__paragraph">

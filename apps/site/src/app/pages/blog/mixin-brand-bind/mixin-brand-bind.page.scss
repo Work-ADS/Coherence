@@ -1,12 +1,13 @@
 // =============================================================================
-// proceso-componente.page.scss — first /blog post
+// mixin-brand-bind.page.scss — blog post on the coherence-brand-bind mixin
 // =============================================================================
 //
-// BEM under `.proceso`. Token-only — the clean-code hook blocks raw values
-// outside libs/tokens/.
+// Same .post BEM block as other long-form blog entries. Adds a `__code`
+// element for fenced code samples (the post has several Sass snippets).
+// Token-only — no raw values.
 // =============================================================================
 
-.proceso {
+.post {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -34,25 +35,16 @@
     color: var(--color-neutral-500);
     transition: background-color var(--duration-fast) var(--easing-enter);
 
-    &:hover {
-      background-color: var(--color-neutral-100);
-    }
-
+    &:hover { background-color: var(--color-neutral-100); }
     &:focus-visible {
       outline: none;
       box-shadow: 0 0 0 0.125rem var(--border-focus);
     }
   }
 
-  &__breadcrumb-parent {
-    color: var(--color-neutral-500);
-  }
-
-  &__breadcrumb-separator {
-    color: var(--color-neutral-400);
-  }
-
-  &__breadcrumb-current {
+  &__breadcrumb-parent    { color: var(--color-neutral-500); }
+  &__breadcrumb-separator { color: var(--color-neutral-400); }
+  &__breadcrumb-current   {
     color: var(--canvas-fg);
     font: var(--type-body-sm-500);
   }
@@ -68,7 +60,9 @@
   }
 
   &__article {
-    max-width: var(--content-prose);
+    // Posts with code samples need slightly more room than pure prose;
+    // tokens semantic.scss caps both at sensible reading widths.
+    max-width: var(--content-prose-wide);
     margin: 0 auto;
     padding: var(--space-2xl) var(--space-xl) var(--space-3xl);
     display: flex;
@@ -85,7 +79,7 @@
 
   &__lead {
     margin: 0;
-    padding: var(--space-lg) var(--space-lg);
+    padding: var(--space-lg);
     border-left: 0.1875rem solid var(--border-focus);
     background: var(--surface-quiet);
     border-radius: var(--radius-sm);
@@ -103,6 +97,14 @@
     margin: 0;
     color: var(--canvas-fg);
     font: var(--type-display-sm);
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      padding: 0 var(--space-2xs);
+      border-radius: var(--radius-xs);
+      background: var(--surface-muted);
+    }
   }
 
   &__h3 {
@@ -126,15 +128,35 @@
     }
   }
 
+  &__list {
+    margin: 0;
+    padding-left: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    color: var(--canvas-fg);
+    font: var(--type-body);
+
+    li {
+      line-height: 1.55;
+    }
+
+    code {
+      padding: 0 var(--space-2xs);
+      border-radius: var(--radius-xs);
+      background: var(--surface-muted);
+      color: var(--canvas-fg);
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+    }
+  }
+
   &__link {
     color: var(--action-primary-default);
     text-decoration: underline;
     text-underline-offset: 0.1875rem;
 
-    &:hover {
-      color: var(--action-primary-hover);
-    }
-
+    &:hover  { color: var(--action-primary-hover); }
     &:focus-visible {
       outline: none;
       box-shadow: 0 0 0 0.125rem var(--border-focus);
@@ -142,36 +164,34 @@
     }
   }
 
-  &__figure {
-    margin: var(--space-md) 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-  }
-
-  &__figure-frame {
+  // ─── Fenced code samples (Sass snippets) ─────────────────────────────────
+  &__code {
+    margin: 0;
+    padding: var(--space-md) var(--space-lg);
     background: var(--surface-muted);
     border: thin solid var(--border-hairline);
     border-radius: var(--radius-md);
-    padding: var(--space-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 12rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    line-height: 1.55;
+    color: var(--canvas-fg);
+
+    code {
+      background: transparent;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+      white-space: pre;
+    }
+
+    &--inset {
+      margin-top: var(--space-sm);
+      font-size: 0.8em;
+    }
   }
 
-  &__figure-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    border-radius: var(--radius-sm);
-  }
-
-  &__figcaption {
-    color: var(--color-neutral-500);
-    font: var(--type-body-sm-400);
-  }
-
+  // ─── Sidebar callout (the "no-color cases" box) ──────────────────────────
   &__callout {
     margin: var(--space-md) 0;
     padding: var(--space-lg);
@@ -193,6 +213,17 @@
     margin: 0;
     color: var(--canvas-fg);
     font: var(--type-body);
+
+    strong { font-weight: 600; }
+
+    code {
+      padding: 0 var(--space-2xs);
+      border-radius: var(--radius-xs);
+      background: var(--surface-muted);
+      color: var(--canvas-fg);
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+    }
   }
 
   &__closing {
@@ -201,5 +232,14 @@
     border-top: thin solid var(--border-hairline);
     color: var(--color-neutral-500);
     font: var(--type-body-sm-400);
+
+    code {
+      padding: 0 var(--space-2xs);
+      border-radius: var(--radius-xs);
+      background: var(--surface-muted);
+      color: var(--canvas-fg);
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+    }
   }
 }

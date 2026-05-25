@@ -24,6 +24,15 @@ const DEMOS: DemoCard[] = [
     status: 'En curso',
     overviewRoute: '/demos/wealth-planner-2026',
   },
+  {
+    slug: 'laboral-kutxa-sarevi',
+    title: 'Laboral kutxa sarevi',
+    intro:
+      'Simulador de eficiencia energética Sarevi 360 — rebrand del flujo sobre Coherence DS aplicando la paleta beige + berenjena + verde de Laboral Kutxa.',
+    team: 'digital-solutions',
+    status: 'Nuevo',
+    overviewRoute: '/demos/laboral-kutxa-sarevi',
+  },
 ];
 
 const TEAM_OPTIONS: SegmentedOption[] = [

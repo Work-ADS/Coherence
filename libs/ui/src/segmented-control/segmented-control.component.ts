@@ -3,8 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   ElementRef,
+  inject,
   input,
   model,
   signal,
@@ -48,6 +50,10 @@ export interface SegmentedOption {
   styleUrl: './segmented-control.component.scss',
 })
 export class SegmentedControlComponent implements AfterViewInit {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private resizeObserver?: ResizeObserver;
+
   /** The available options to render. */
   readonly options = input.required<SegmentedOption[]>();
 
@@ -65,9 +71,11 @@ export class SegmentedControlComponent implements AfterViewInit {
 
   // ─── Indicator state ───
   readonly indicatorWidth = signal(0);
+  readonly indicatorHeight = signal(0);
   readonly indicatorOffset = signal(0);
+  readonly indicatorTop = signal(0);
   readonly indicatorTransform = computed(
-    () => `translateX(${this.indicatorOffset()}px)`,
+    () => `translate(${this.indicatorOffset()}px, ${this.indicatorTop()}px)`,
   );
 
   constructor() {
@@ -86,6 +94,7 @@ export class SegmentedControlComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.updateIndicator();
+    this.observeSizeChanges();
   }
 
   select(option: SegmentedOption): void {
@@ -109,6 +118,24 @@ export class SegmentedControlComponent implements AfterViewInit {
     const parentRect = parent.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
     this.indicatorOffset.set(elRect.left - parentRect.left);
+    this.indicatorTop.set(elRect.top - parentRect.top);
     this.indicatorWidth.set(elRect.width);
+    this.indicatorHeight.set(elRect.height);
+  }
+
+  private observeSizeChanges(): void {
+    if (typeof ResizeObserver === 'undefined') return;
+
+    this.resizeObserver = new ResizeObserver(() => {
+      requestAnimationFrame(() => this.updateIndicator());
+    });
+    this.resizeObserver.observe(this.host.nativeElement);
+
+    const parent = this.host.nativeElement.parentElement;
+    if (parent) {
+      this.resizeObserver.observe(parent);
+    }
+
+    this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
   }
 }

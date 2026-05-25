@@ -498,6 +498,7 @@
   // -----------------------------------------------------------------------
   // SPACING utility scale — Tailwind-compatible. NOT responsive.
   // -----------------------------------------------------------------------
+  --space-3xs: var(--dimension-0-5);  // 2 px
   --space-2xs: var(--dimension-1);   // 4 px
   --space-xs:  var(--dimension-2);   // 8 px
   --space-sm:  var(--dimension-3);   // 12 px
@@ -528,6 +529,12 @@
   --content-lg:  var(--dimension-240);   // 960 px
   --content-xl:  var(--dimension-285);   // 1140 px
   --content-xxl: var(--dimension-330);   // 1320 px
+
+  // Optimised for long-form prose readability (~66-72 chars per line at
+  // 16px body text). Used by blog articles, case studies, decision logs.
+  --content-prose: 44rem;                // ~700px
+  --content-prose-wide: 56rem;           // ~896px (for posts with code samples)
+  --content-home-max: var(--dimension-300);  // 1200 px — home/landing card grid
 }
 
 
@@ -570,6 +577,38 @@
 // ----- Unicaja -----
 [data-brand="unicaja"] {
   // ⚠️  STUB. Fill in once colors-unicaja.scss has real primitive values.
+}
+
+// ----- Laboral Kutxa -----
+//
+// Re-binds AFI's blue/white-control roles to LK's production palette.
+//
+// Source of truth — Laboral Kutxa visual style folder + Stitch brand
+// center (`Afi brand/Client brands/Laboral kutxa/Laboral kutxa visual
+// style/`):
+//
+//   - Top bars / footers / hero CTAs      → magenta (#A50050 family)
+//   - Eyebrows + headlines on light bg    → magenta
+//   - Body text                           → near-black ink
+//   - Body / section backgrounds          → beige tinted-paper
+//   - Inline links + branded accents      → magenta
+//   - Sustainability / success cues       → verde (#84BD00)
+//   - Berenjena (#51284F)                 → contrast accent only;
+//     not the primary CTA color in production
+//
+// All 60+ semantic mappings come from `coherence-brand-bind` in
+// libs/tokens/_mixins.scss — one recipe replaces the verbose block.
+// Override individual slots AFTER the @include for brand-specific edges
+// (e.g. signal color overrides, dark-mode inversions).
+[data-brand="laboral-kutxa"] {
+  @include coherence-brand-bind(
+    $brand: 'laboral-kutxa',
+    $accent: 'magenta',
+    $neutral: 'beige',
+    $ink-default: var(--color-laboral-kutxa-ink-default),
+    $ink-soft:    var(--color-laboral-kutxa-ink-soft),
+    $ink-muted:   var(--color-laboral-kutxa-ink-muted),
+  );
 }
 
 

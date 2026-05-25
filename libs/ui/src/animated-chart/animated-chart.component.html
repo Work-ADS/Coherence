@@ -1,0 +1,47 @@
+<div
+  class="chart chart--{{ size() }}"
+  role="img"
+  [attr.aria-label]="chartAriaLabel()"
+>
+  @if (title() || subtitle()) {
+    <div class="chart__head">
+      @if (title()) {
+        <h3 class="chart__title">{{ title() }}</h3>
+      }
+      @if (subtitle()) {
+        <p class="chart__subtitle">{{ subtitle() }}</p>
+      }
+    </div>
+  }
+
+  <div class="chart__cols" [attr.data-anim-key]="animationKey()" aria-hidden="true">
+    @for (col of resolvedColumns(); track col.id) {
+      <div class="chart__col">
+        <div class="chart__col-head">
+          <span class="chart__col-title" [style.color]="col.resolvedColor">
+            {{ col.title }}
+          </span>
+          @if (col.caption) {
+            <span class="chart__col-caption">{{ col.caption }}</span>
+          }
+        </div>
+
+        <div class="chart__bar-track">
+          <div
+            class="chart__bar"
+            [class.chart__bar--grown]="grown()"
+            [style.height.%]="col.heightPct"
+            [style.background-color]="col.resolvedColor"
+            [style.border-top-color]="col.resolvedColor"
+          ></div>
+        </div>
+
+        <div class="chart__col-foot">
+          <span class="chart__col-value" [style.color]="col.resolvedColor">
+            {{ col.value }}<span class="chart__col-unit">{{ col.appendString }}</span>
+          </span>
+        </div>
+      </div>
+    }
+  </div>
+</div>

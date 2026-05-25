@@ -21,16 +21,21 @@
     </div>
 
     <div class="toolbar__center">
-      <afi-segmented-control
-        [options]="viewOptions()"
-        [value]="activeViewValue()"
-        (valueChange)="setView($event)"
-        size="sm"
-        ariaLabel="Cambiar vista del demo"
-      />
+      @if (hasViewSwitcher()) {
+        <afi-segmented-control
+          [options]="viewOptions()"
+          [value]="activeViewValue()"
+          (valueChange)="setView($event)"
+          size="sm"
+          ariaLabel="Cambiar vista del demo"
+        />
+      }
     </div>
 
     <div class="toolbar__right">
+      <!-- Brand picker removed: demos scope their own data-brand wrapper, so
+           changing the global brand here has no visible effect. -->
+
       <afi-segmented-control
         [options]="viewportPresets"
         [value]="viewportValue()"

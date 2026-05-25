@@ -1,0 +1,292 @@
+<div class="post">
+  <!-- Breadcrumb -->
+  <div class="post__breadcrumb">
+    <a routerLink="/blog" class="post__breadcrumb-back" aria-label="Volver al blog">
+      <svg class="post__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+      </svg>
+    </a>
+    <span class="post__breadcrumb-parent">Blog</span>
+    <span class="post__breadcrumb-separator" aria-hidden="true">/</span>
+    <span class="post__breadcrumb-current">White-label en una línea</span>
+  </div>
+
+  <main class="post__main">
+    <article class="post__article">
+      <afi-page-header
+        title="White-label en una línea: el mixin coherence-brand-bind"
+        subtitle="Cómo pasamos de 90 líneas de mapeos por marca a un @include de 8 líneas — sin romper el contrato de tokens que el equipo de programación validó el 22 de mayo."
+        [sticky]="false"
+        [scrollFade]="false"
+      >
+        <span slot="breadcrumb" class="post__eyebrow">TOKENS · WHITE-LABEL</span>
+      </afi-page-header>
+
+      <blockquote class="post__lead">
+        <em>
+          Un nuevo cliente del DS pasa de "tengo que tocar 60+ líneas de semantic.scss" a "tengo que pasar 6 argumentos a un mixin". El contrato de tokens que acordamos con los programadores se mantiene; lo que cambia es la cantidad de código a mantener por marca.
+        </em>
+      </blockquote>
+
+      <!-- ─── Contexto ──────────────────────────────────────────── -->
+      <section class="post__section" aria-labelledby="contexto">
+        <h2 id="contexto" class="post__h2">Contexto</h2>
+
+        <p class="post__p">
+          El viernes <strong>22 de mayo</strong> nos sentamos con el equipo de programación a discutir cómo estructurar los tokens del DS para que sea fácil añadir marcas nuevas (Santander, Sabadell, Unicaja, Mutualidad, Laboral Kutxa...). La conversación se ordenó alrededor de tres niveles ya familiares:
+        </p>
+
+        <ul class="post__list">
+          <li><strong>Primitivas</strong> — colores base con escala 0–900, nombres <em>universales</em> sin referencia al cliente (nada de <code>afi-azul</code> en los primitivos).</li>
+          <li><strong>Semánticos</strong> — roles funcionales como <code>surface-default</code>, <code>brand-primary-background</code>.</li>
+          <li><strong>De componente</strong> — granularidad fina por componente: <code>nav-item-background-default</code>, <code>button-primary-background</code>.</li>
+        </ul>
+
+        <p class="post__p">
+          El equipo de programación cerró tres acuerdos importantes:
+        </p>
+        <ul class="post__list">
+          <li>Naming funcional, no jerárquico — preferimos <code>color-surface-secondary</code> a <code>color-brand-light</code>.</li>
+          <li><strong>Un archivo por cliente</strong>, con los <em>mismos nombres de variable</em> y <em>valores específicos del cliente</em>. Mejor que partir primitivos y semánticos en dos archivos por marca.</li>
+          <li>No sobre-especificar: no crear una variable única por cada elemento; los casos borde se resuelven a mano.</li>
+        </ul>
+
+        <p class="post__p">
+          Quedé encargado de preparar un <em>ejemplo práctico</em> para la siguiente sesión. Este post es ese ejemplo, ya en producción.
+        </p>
+      </section>
+
+      <!-- ─── Problema ──────────────────────────────────────────── -->
+      <section class="post__section" aria-labelledby="problema">
+        <h2 id="problema" class="post__h2">El problema</h2>
+
+        <p class="post__p">
+          Para que afi-button, afi-select, afi-modal — los componentes ya construidos — se vean "on-brand" en Laboral Kutxa, hay que rellenar <strong>~60 propiedades CSS</strong> en <code>libs/tokens/semantic.scss</code> bajo un bloque <code>[data-brand="laboral-kutxa"]</code>. Mapear cada slot del DS (<code>brand-primary-background-default</code>, <code>brand-secondary-neutral-background-hover</code>, etc.) al valor correcto de la rampa LK.
+        </p>
+
+        <p class="post__p">
+          La mecánica es repetitiva — siempre las mismas 60 propiedades, en el mismo orden, apuntando a la misma posición de rampa, sólo cambia el nombre de la rampa. Hicimos el ejercicio para LK y ocupaba <strong>~110 líneas</strong> en semantic.scss. Multiplicar eso por Santander + Sabadell + Mutualidad + Unicaja + el cliente que llegue mañana = código repetido que es fácil de cagar.
+        </p>
+
+        <p class="post__p">
+          Tres riesgos concretos que vimos en el meeting:
+        </p>
+
+        <ul class="post__list">
+          <li><strong>Olvidos.</strong> Olvidar mapear un slot deja el componente cayendo en el default AFI, que es azul. Un botón azul en una página magenta canta.</li>
+          <li><strong>Deriva.</strong> Cada copy-paste invita a "tunear" un poco — y la marca termina divergiendo del centro.</li>
+          <li><strong>Coste por marca.</strong> Cada cliente nuevo es un día de trabajo de tokens antes de poder enseñar una pantalla.</li>
+        </ul>
+      </section>
+
+      <!-- ─── Experimento ───────────────────────────────────────── -->
+      <section class="post__section" aria-labelledby="experimento">
+        <h2 id="experimento" class="post__h2">El experimento</h2>
+
+        <p class="post__p">
+          Usamos Laboral Kutxa como conejillo de indias. El brief: implementar el <a class="post__link" routerLink="/demos/laboral-kutxa-sarevi">simulador de eficiencia energética Sarevi 360</a> sobre el DS, con la marca aplicada vía tokens.
+        </p>
+
+        <p class="post__p">
+          Primer intento — el patrón <em>"explícito"</em>: <code>colors-laboral-kutxa.scss</code> con las rampas de LK (magenta, berenjena, verde, beige, neutral) + un bloque semántico hecho a mano. Funcionó. La página renderiza correctamente. Pero el bloque semántico era el copy-paste verboso que preveíamos.
+        </p>
+
+        <p class="post__p">
+          Al revisar el archivo nos dimos cuenta de que el bloque LK era estructuralmente <em>idéntico</em> al de AFI — sólo cambiaba qué rampa se interpolaba en cada slot. Si los nombres de rampa se pasaran como parámetros, el cuerpo del bloque se podía generar mecánicamente.
+        </p>
+
+        <p class="post__p">
+          Eso es exactamente lo que hace un mixin de Sass.
+        </p>
+      </section>
+
+      <!-- ─── La solución ───────────────────────────────────────── -->
+      <section class="post__section" aria-labelledby="solucion">
+        <h2 id="solucion" class="post__h2">La solución: <code>coherence-brand-bind</code></h2>
+
+        <p class="post__p">
+          Un mixin en <code>libs/tokens/_mixins.scss</code> que toma <strong>6 parámetros</strong> y emite los ~60 tokens semánticos correspondientes:
+        </p>
+
+        <pre class="post__code"><code>{{ '@mixin coherence-brand-bind(' }}
+  $brand,        {{ '// "laboral-kutxa"' }}
+  $accent,       {{ '// "magenta"  — rampa de CTAs / brand-primary' }}
+  $neutral,      {{ '// "beige"    — rampa de superficies / canvas' }}
+  $ink-default,  {{ '// var(--color-laboral-kutxa-ink-default)' }}
+  $ink-soft,
+  $ink-muted,
+) {{ '{' }}
+  --canvas-primary:   var(--color-#{{ '{$brand}-#{$neutral}' }}-300);
+  --canvas-secondary: var(--color-#{{ '{$brand}-#{$neutral}' }}-400);
+  --brand-primary-background-default: var(--color-#{{ '{$brand}-#{$accent}' }}-500);
+  --brand-primary-background-hover:   var(--color-#{{ '{$brand}-#{$accent}' }}-600);
+  {{ '// ...y otras 56 propiedades por el estilo' }}
+{{ '}' }}</code></pre>
+
+        <p class="post__p">
+          Y el bloque LK en <code>semantic.scss</code> pasa de 110 líneas a:
+        </p>
+
+        <pre class="post__code"><code>[data-brand="laboral-kutxa"] {{ '{' }}
+  {{ '@include' }} coherence-brand-bind(
+    $brand: 'laboral-kutxa',
+    $accent: 'magenta',
+    $neutral: 'beige',
+    $ink-default: var(--color-laboral-kutxa-ink-default),
+    $ink-soft:    var(--color-laboral-kutxa-ink-soft),
+    $ink-muted:   var(--color-laboral-kutxa-ink-muted),
+  );
+{{ '}' }}</code></pre>
+
+        <p class="post__p">
+          El "contrato" que el equipo de programación pidió en la reunión <strong>se mantiene intacto</strong>: los componentes siguen consumiendo los mismos tokens semánticos (<code>--brand-primary-background-default</code>, etc.). Lo único que cambia es <em>cómo</em> esos tokens se materializan para cada marca — antes a mano, ahora vía recipe.
+        </p>
+
+        <div class="post__callout">
+          <p class="post__callout-title">¿Y los casos no-color?</p>
+          <p class="post__callout-p">
+            Sabadell tiene inputs con underline en vez de border. Laboral Kutxa tiene botones tipo píldora (border-radius muy alto). Esto NO se resuelve en el mixin — esos overrides van <em>después</em> del <code>{{ '@include' }}</code>, en la misma marca:
+          </p>
+          <pre class="post__code post__code--inset"><code>[data-brand="laboral-kutxa"] {{ '{' }}
+  {{ '@include' }} coherence-brand-bind(...);
+  --radius-md: 9999px;  {{ '// botones píldora en todo el DS' }}
+{{ '}' }}</code></pre>
+          <p class="post__callout-p">
+            Funciona porque es <strong>la cascada normal de CSS</strong>: el mixin escribe primero, el override gana después. No hay magia.
+          </p>
+        </div>
+      </section>
+
+      <!-- ─── Falling action ────────────────────────────────────── -->
+      <section class="post__section" aria-labelledby="resultado">
+        <h2 id="resultado" class="post__h2">Lo que se aprendió aplicándolo</h2>
+
+        <p class="post__p">
+          Lo metimos en Laboral Kutxa para validar:
+        </p>
+
+        <ul class="post__list">
+          <li><strong>Bloque LK pasó de ~110 → 8 líneas.</strong> El recipe es el código nuevo; el resto desapareció.</li>
+          <li><strong>La página Sarevi adoptó la marca sola.</strong> <code>afi-button[variant="primary"]</code> pasó de berenjena a magenta sin tocar ningún componente.</li>
+          <li><strong>El brand picker funciona en runtime.</strong> Cambias de AFI a Laboral Kutxa en el dropdown del top bar y todas las pantallas se re-pintan. El mismo mecanismo seguirá funcionando cuando añadamos Santander.</li>
+          <li><strong>El gradient magenta del topbar</strong> usa los mismos tokens primitivos directamente (<code>var(--color-laboral-kutxa-magenta-700)</code> → <code>magenta-400</code>). Cosas brand-específicas pueden saltar el sistema semántico cuando hace falta — no hay penalización por hacerlo.</li>
+        </ul>
+      </section>
+
+      <!-- ─── Cómo se usa (programadores) ──────────────────────── -->
+      <section class="post__section" aria-labelledby="how-to">
+        <h2 id="how-to" class="post__h2">Cómo añadir una marca nueva (paso a paso)</h2>
+
+        <p class="post__p">
+          Imaginemos que llega <strong>Santander</strong> mañana. Esto es lo que hay que hacer:
+        </p>
+
+        <h3 class="post__h3">1. Crear el archivo de primitivos</h3>
+        <p class="post__p">
+          <code>libs/tokens/colors-santander.scss</code>, con rampas de 12 escalones por color, scopeadas a <code>[data-brand="santander"]</code>. Mismo formato que <code>colors-laboral-kutxa.scss</code>. Si Santander es rojo + gris, los nombres de rampa son <code>rojo</code> y <code>gris</code>:
+        </p>
+
+        <pre class="post__code"><code>[data-brand="santander"] {{ '{' }}
+  --color-santander-rojo-0:   #FFFFFF;
+  --color-santander-rojo-25:  #FDF3F4;
+  --color-santander-rojo-500: #EC0000;  {{ '// master Santander red' }}
+  {{ '// ...12 escalones por rampa' }}
+
+  --color-santander-gris-50:  #F8F9FA;
+  {{ '// ...' }}
+
+  --color-santander-ink-default: #1A1A1A;
+  --color-santander-ink-soft:    #4A4A4A;
+  --color-santander-ink-muted:   #8A8A8A;
+{{ '}' }}</code></pre>
+
+        <h3 class="post__h3">2. Registrar el archivo</h3>
+        <p class="post__p">
+          Añadir <code>{{ '@import' }} './colors-santander.scss';</code> en <code>libs/tokens/variables.scss</code> bajo "Layer 2 — Other brands".
+        </p>
+
+        <h3 class="post__h3">3. Conectar al sistema semántico (8 líneas)</h3>
+        <p class="post__p">
+          Al final del bloque de mappings de marca en <code>libs/tokens/semantic.scss</code>:
+        </p>
+
+        <pre class="post__code"><code>{{ '// ----- Santander -----' }}
+[data-brand="santander"] {{ '{' }}
+  {{ '@include' }} coherence-brand-bind(
+    $brand: 'santander',
+    $accent: 'rojo',
+    $neutral: 'gris',
+    $ink-default: var(--color-santander-ink-default),
+    $ink-soft:    var(--color-santander-ink-soft),
+    $ink-muted:   var(--color-santander-ink-muted),
+  );
+{{ '}' }}</code></pre>
+
+        <h3 class="post__h3">4. (Opcional) Overrides brand-específicos</h3>
+        <p class="post__p">
+          Si Santander tiene radio más cuadrado, fuente diferente, o cualquier diferencia no-color:
+        </p>
+
+        <pre class="post__code"><code>[data-brand="santander"] {{ '{' }}
+  {{ '@include' }} coherence-brand-bind(...);
+
+  {{ '// Cuadrar las esquinas de los controles' }}
+  --radius-md: 4px;
+
+  {{ '// Cambiar la fuente de display' }}
+  --font-brand-display: "SantanderText", system-ui, sans-serif;
+{{ '}' }}</code></pre>
+
+        <h3 class="post__h3">5. Añadir Santander al brand picker</h3>
+        <p class="post__p">
+          Editar <code>apps/site/src/app/components/brand-picker/brand-picker.component.ts</code> — el tipo <code>Brand</code> y la lista <code>BRAND_OPTIONS</code>. Dos líneas.
+        </p>
+
+        <h3 class="post__h3">6. Probar en runtime</h3>
+        <p class="post__p">
+          Arrancar el dev server, abrir cualquier demo, seleccionar Santander en el picker. Todos los <code>afi-button</code>, <code>afi-input</code>, etc. se re-pintan con los tokens nuevos. No hace falta tocar ningún componente.
+        </p>
+      </section>
+
+      <!-- ─── Para diseño ───────────────────────────────────────── -->
+      <section class="post__section" aria-labelledby="diseno">
+        <h2 id="diseno" class="post__h2">Para el equipo de diseño</h2>
+
+        <p class="post__p">
+          La parte que afecta a diseño es el <strong>recipe</strong>, no el código. Lo que el equipo de programación necesita de diseño para añadir un cliente:
+        </p>
+
+        <ul class="post__list">
+          <li><strong>4 rampas de 12 escalones</strong> (acento, neutral y, si la marca diverge, una secundaria/terciaria). Mejor exportadas desde Figma como JSON — los hex valores se copian al archivo de primitivos.</li>
+          <li><strong>3 valores de ink</strong> (default, soft, muted) — los grises de texto.</li>
+          <li><strong>La lista de diferencias no-color</strong>: ¿la marca tiene botones píldora? ¿inputs con underline? ¿una fuente específica? Cada item es un override de una línea.</li>
+        </ul>
+
+        <p class="post__p">
+          El diseñador no necesita escribir Sass — pero conviene entender que el recipe está ahí, porque cuando una marca pide un cambio puntual ("queremos que los selects tengan border más oscuro"), la conversación con programación es: <em>"¿es un cambio de la marca para todos sus componentes, o sólo para este?"</em>. La primera respuesta vive en el bloque <code>{{ '@include' }}</code> + override; la segunda es un caso borde a resolver a mano (como el meeting acordó).
+        </p>
+      </section>
+
+      <!-- ─── Conclusión ────────────────────────────────────────── -->
+      <section class="post__section" aria-labelledby="conclusion">
+        <h2 id="conclusion" class="post__h2">Conclusión</h2>
+
+        <p class="post__p">
+          El mixin no reemplaza nada de lo que acordamos en la reunión del 22 — los tres niveles siguen ahí, los nombres siguen siendo funcionales (no jerárquicos), los componentes siguen consumiendo tokens semánticos sin saber qué marca está activa.
+        </p>
+
+        <p class="post__p">
+          Lo que añade es <strong>un atajo para la parte mecánica</strong>: ese 80 % del bloque por-marca que era copy-paste predecible. Para una marca nueva, el coste de tokens pasa de ~día → ~30 minutos. El tiempo recuperado se invierte donde de verdad importa: las diferencias no-color (border radius, underline en inputs, gradients del header) que sí necesitan decisiones de diseño.
+        </p>
+
+        <p class="post__p">
+          Próxima sesión con programación, lo demostramos en vivo: Santander vs Unicaja, brand picker corriendo, mismas pantallas, dos identidades distintas.
+        </p>
+      </section>
+
+      <p class="post__closing">
+        Código: <code><a class="post__link" href="https://github.com/Work-ADS/Coherence/blob/main/libs/tokens/_mixins.scss" target="_blank" rel="noopener">libs/tokens/_mixins.scss</a></code> · Ejemplo aplicado: <a class="post__link" routerLink="/demos/laboral-kutxa-sarevi">/demos/laboral-kutxa-sarevi</a>.
+      </p>
+    </article>
+  </main>
+</div>

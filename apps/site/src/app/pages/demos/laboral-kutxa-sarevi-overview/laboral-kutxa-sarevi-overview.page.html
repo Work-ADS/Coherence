@@ -1,0 +1,239 @@
+<site-demo-overview-shell
+  overline="DEMO · WHITE-LABEL · LABORAL KUTXA"
+  title="Laboral Kutxa · Sarevi 360"
+  intro="Simulador de eficiencia energética rebrandeado sobre Coherence DS. Primer demo white-label de la línea — la marca se aplica entera vía tokens, sin escribir CSS por componente."
+  demoRoute="/demos/laboral-kutxa-sarevi/demo"
+  demoLabel="Abrir simulador"
+  [relatedPosts]="relatedPosts"
+>
+  <afi-tabs
+    [activeIndex]="activeTab()"
+    (activeChange)="activeTab.set($event)"
+    ariaLabel="Secciones del demo Laboral Kutxa Sarevi"
+  >
+    <!-- ─── Tab 1 · Visión general ──────────────────────────────────── -->
+    <afi-tab-item label="Visión general">
+      <div class="lk-tab">
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">¿Qué es?</h2>
+          <p class="lk-tab__paragraph">
+            Sarevi 360 es la herramienta de Laboral Kutxa para estimar
+            el ahorro energético de una reforma — desde la calificación
+            actual de la vivienda hasta el coste financiado con CAE.
+            La versión que aplicamos sobre Coherence DS rebrandea el flujo
+            completo: welcome → datos → medidas → resumen, más dos modales.
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">¿Para qué?</h2>
+          <p class="lk-tab__paragraph">
+            Es el demo conductor de la conversación <em>white-label</em>:
+            demuestra que un cliente con identidad visual fuerte (LK tiene
+            paleta beige + magenta + verde, fuente Avenir Next, gradiente
+            magenta en el header) puede levantar una pantalla compleja
+            usando los <code>afi-button</code>, <code>afi-input</code>,
+            <code>afi-select</code>, <code>afi-modal</code>... que ya
+            tenemos construidos.
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Cuándo</h2>
+          <ul class="lk-tab__list">
+            <li>
+              <strong>25 may 2026</strong> — Implementación inicial sobre
+              el handoff de Claude Design. Cuatro pantallas + dos modales.
+            </li>
+            <li>
+              <strong>25 may 2026</strong> — Refactor para consumir DS
+              primitives (afi-button, afi-input, afi-select, afi-modal,
+              afi-tabs, afi-segmented-control, afi-switch, afi-checkbox).
+            </li>
+            <li>
+              <strong>25 may 2026</strong> — Alineación con el brand center
+              LK: magenta como brand-primary, gradient en el top bar,
+              logo PNG oficial, Avenir Next.
+            </li>
+          </ul>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Equipo</h2>
+          <p class="lk-tab__paragraph">
+            Demo de Digital Solutions. El handoff visual viene de Claude
+            Design; el rebrand y la integración con Coherence DS se hicieron
+            en este repo. La pieza clave es el mixin
+            <a class="lk-tab__link" routerLink="/blog/mixin-brand-bind">coherence-brand-bind</a>
+            — sin él cada marca nueva era un día de trabajo de tokens.
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Estado</h2>
+          <p class="lk-tab__paragraph">
+            Flujo completo navegable en el simulador. Pendientes acordados:
+            mover la simulación a localStorage para que sobreviva al
+            reload, añadir el flujo "Edificio" cuando haya brief, y
+            documentar el patrón "página con su propia chrome dentro del
+            demo-shell" para futuros white-labels.
+            Ver la <a class="lk-tab__link" (click)="activeTab.set(2)" role="button" tabindex="0" (keydown.enter)="activeTab.set(2)">bitácora</a>.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 2 · Caso de estudio ─────────────────────────────────── -->
+    <afi-tab-item label="Caso de estudio">
+      <div class="lk-tab">
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Punto de partida</h2>
+          <p class="lk-tab__paragraph">
+            El brief llegó como un handoff de Claude Design — HTML/CSS/JS
+            estático, con los cuatro pantallas y dos modales mocks. La
+            paleta venía del prototipo (berenjena dark para CTAs) pero
+            el brand center oficial de LK (Stitch + visual style folder)
+            usa magenta. Primera decisión: alinearse con el brand center,
+            no con el prototipo.
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Problemas</h2>
+          <ul class="lk-tab__list">
+            <li>
+              <strong>Tokens semánticos sin LK.</strong> No había
+              <code>[data-brand="laboral-kutxa"]</code> en
+              <code>semantic.scss</code> — los componentes default-eaban
+              al azul AFI.
+            </li>
+            <li>
+              <strong>Identidad muy específica.</strong> LK tiene gradiente
+              magenta en el top bar, fuente Avenir Next, logo blanco sobre
+              gradient, cards con tinte rosa. Cosas que el sistema
+              semántico no cubre por sí solo.
+            </li>
+            <li>
+              <strong>Coste por nueva marca.</strong> ~110 líneas de
+              copy-paste en semantic.scss por marca. Si llega Santander
+              mañana es otra vez el mismo trabajo.
+            </li>
+          </ul>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Soluciones</h2>
+          <ul class="lk-tab__list">
+            <li>
+              <strong>Rampas de 12 escalones</strong> para magenta,
+              berenjena, verde, beige y neutral en
+              <code>colors-laboral-kutxa.scss</code>. Naming funcional
+              (no jerárquico) per el acuerdo del 22 de mayo.
+            </li>
+            <li>
+              <strong>Mixin <code>coherence-brand-bind</code></strong> que
+              colapsa los ~60 mappings semánticos en una llamada de 6
+              argumentos. El bloque LK pasó de 110 → 8 líneas.
+              Documentado en
+              <a class="lk-tab__link" routerLink="/blog/mixin-brand-bind">la entrada del blog</a>.
+            </li>
+            <li>
+              <strong>Demo-shell configurable.</strong>
+              <code>site-demo-shell</code> ahora acepta
+              <code>demoSlug</code>, <code>demoRoute</code> y
+              <code>views</code> como inputs — esconde el view-switcher
+              cuando hay 0-1 vista, así Sarevi entra al mismo shell que
+              Wealth Planner sin pelear con su navegación interna.
+            </li>
+            <li>
+              <strong>Tope-bar gradient + asset original.</strong> En vez
+              de invertir el logo PNG para que se vea sobre beige, se
+              aplica el gradient magenta característico de la web de LK
+              y el asset queda en sus colores originales.
+            </li>
+          </ul>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Lecciones</h2>
+          <p class="lk-tab__paragraph">
+            La principal: <em>cuando un patrón se repite, abstraerlo</em>.
+            El bloque semántico por-marca era código mecánico — perfecto
+            candidato para un mixin. La segunda:
+            <em>diferenciar lo que va a tokens de lo que va a la página</em>.
+            Cosas brand-wide (canvas blanco, magenta primary) suben al
+            bloque del brand en semantic.scss; cosas page-specific
+            (gradient del top bar, layout de stat tiles) se quedan en el
+            SCSS de la página y usan los primitivos directamente.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 3 · Bitácora ────────────────────────────────────────── -->
+    <afi-tab-item label="Bitácora">
+      <div class="lk-tab">
+        <p class="lk-tab__paragraph lk-tab__paragraph--lead">
+          Registro de los hitos de implementación del demo Sarevi.
+          Al ser un demo nuevo la lista es corta; crecerá a medida que
+          iteremos.
+        </p>
+
+        <section class="lk-tab__log-entry">
+          <header class="lk-tab__log-header">
+            <span class="lk-tab__log-date">25 may 2026</span>
+            <h3 class="lk-tab__log-title">v1 — Handoff implementado</h3>
+          </header>
+          <p class="lk-tab__paragraph">
+            Las cuatro pantallas + ambos modales del handoff de Claude
+            Design migradas a Angular. Estado y navegación con signals.
+            Tokens LK iniciales (paleta del prototipo, berenjena CTA).
+          </p>
+        </section>
+
+        <section class="lk-tab__log-entry">
+          <header class="lk-tab__log-header">
+            <span class="lk-tab__log-date">25 may 2026</span>
+            <h3 class="lk-tab__log-title">v2 — Refactor a DS primitives</h3>
+          </header>
+          <p class="lk-tab__paragraph">
+            Botones, inputs, selects, modal, tabs, segmented-control,
+            switch, checkbox cambiados de marcado bespoke a
+            <code>afi-*</code>. Conservadas las superficies LK-específicas
+            (logo, energy labels, callout, sliders, cuota cards) en SCSS
+            scopeado.
+          </p>
+        </section>
+
+        <section class="lk-tab__log-entry">
+          <header class="lk-tab__log-header">
+            <span class="lk-tab__log-date">25 may 2026</span>
+            <h3 class="lk-tab__log-title">v3 — Brand center alignment</h3>
+          </header>
+          <p class="lk-tab__paragraph">
+            Magenta como brand-primary (no berenjena). Mapping LK en
+            <code>semantic.scss</code> reescrito siguiendo la
+            visual style folder. Mixin <code>coherence-brand-bind</code>
+            extraído y aplicado — el bloque LK pasa a 8 líneas. Avenir
+            Next como fuente de display. Gradient magenta en el top bar
+            con el logo original sin filtro.
+          </p>
+        </section>
+
+        <section class="lk-tab__log-entry">
+          <header class="lk-tab__log-header">
+            <span class="lk-tab__log-date">25 may 2026</span>
+            <h3 class="lk-tab__log-title">v4 — Página en demo-shell</h3>
+          </header>
+          <p class="lk-tab__paragraph">
+            <code>site-demo-shell</code> hecho configurable
+            (<code>demoSlug</code>, <code>demoRoute</code>,
+            <code>views</code>). Sarevi envuelto en él — ahora hereda
+            viewport switcher (Full / 1280 / 768 / 375), brand picker,
+            comment-pin e inspect mode para feedback en línea.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+  </afi-tabs>
+</site-demo-overview-shell>

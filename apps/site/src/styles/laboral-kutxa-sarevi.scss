@@ -44,6 +44,21 @@
     }
   }
 
+  // Compact segmented controls across the Unicaja Sarevi surface. The
+  // component's default Unicaja sizing is tuned for primary-CTA-scale
+  // controls but feels oversized inside this simulator — every radio
+  // question (Tipo de vivienda, Certificado) now uses the same compact
+  // height. `!important` is unavoidable: the segmented control's
+  // :host[data-brand="unicaja"] block inside the component beats any
+  // external selector on specificity thanks to Angular encapsulation
+  // attributes.
+  &[data-brand="unicaja"] .seg-control__option {
+    min-height: var(--dimension-10) !important;
+    padding: var(--space-sm) var(--space-md) !important;
+    font: var(--type-body-sm-500) !important;
+  }
+
+
   .impact {
     display: inline-flex;
     align-items: center;
@@ -528,6 +543,7 @@
 
   .lk-logo-img {
     height: var(--dimension-7);
+    display: block;
   }
 
   .lk-topbar__brand {
@@ -596,9 +612,527 @@
     height: var(--dimension-7);
   }
 
+  // Address search input rendered when "Buscar dirección = No". Wraps an
+  // afi-input and overlays a magnifier glyph in the input's leading slot so
+  // the field reads as an "autocomplete-from-typing" search box (matches the
+  // Sarevi 360 reference frame the user signed off on).
+  .unicaja-address-input {
+    position: relative;
+
+    &__ico {
+      position: absolute;
+      left: var(--dimension-3);
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      color: var(--color-unicaja-ink-muted);
+      pointer-events: none;
+      display: inline-flex;
+    }
+
+    afi-input .afi-input__field,
+    afi-input input {
+      padding-left: var(--dimension-9);
+    }
+  }
+
+  // Pin-me card rendered when "Buscar dirección automáticamente? = Sí".
+  // Communicates the geolocate-and-autofill flow before any browser prompt.
+  .pin-me-card {
+    display: flex;
+    align-items: center;
+    gap: var(--dimension-3-5);
+    background: var(--color-unicaja-primary-50);
+    border: var(--dimension-0-25) solid var(--color-unicaja-primary-100);
+    border-radius: var(--dimension-2-5);
+    padding: var(--dimension-3-5) var(--dimension-4);
+
+    &__ico {
+      width: var(--dimension-10);
+      height: var(--dimension-10);
+      flex: 0 0 auto;
+      border-radius: var(--dimension-2);
+      background: var(--color-base-white);
+      color: var(--color-unicaja-primary-500);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &__body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &__title {
+      font-weight: 600;
+      font-size: var(--dimension-3-75);
+      color: var(--color-unicaja-ink-default);
+      margin-bottom: var(--dimension-0-75);
+    }
+
+    &__hint {
+      font-size: var(--dimension-3-25);
+      color: var(--color-unicaja-ink-soft);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    @container (max-width: 560px) {
+      flex-wrap: wrap;
+    }
+  }
+
+  // Sarevi 360 nests the 4 form sections (Caso, Certificado, Características,
+  // Sistemas) inside a single outer card with a unified header — the inner
+  // sections read as sub-cards. The HTML keeps each section as its own
+  // .card; here we re-skin them.
+  .datos-form-wrap {
+    background: var(--color-base-white);
+    border: var(--dimension-0-25) solid var(--color-unicaja-neutral-variant-100);
+    border-radius: var(--dimension-3);
+    padding: var(--dimension-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--dimension-3);
+
+    > .card {
+      background: var(--color-unicaja-neutral-50);
+      border-color: var(--color-unicaja-neutral-variant-100);
+      border-radius: var(--dimension-2);
+      box-shadow: none;
+      padding: var(--dimension-3-5) var(--dimension-4);
+    }
+  }
+
+  // Datos actuales estimados: horizontal 3-stat banner instead of the LK
+  // 4-card metric grid with delta badges. Keep the same HTML; flatten the
+  // grid and hide the comparative deltas so the figures sit clean.
+  .metric-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--dimension-3);
+  }
+
+  .stat__delta { display: none; }
+
+  .metric-card {
+    padding: var(--dimension-3-5) var(--dimension-4);
+
+    &__head { justify-content: flex-start; }
+  }
+
+  // Medida row tightening: kill the gap between the checkbox and the
+  // medida name, then truncate the name to one line. Hovering the row
+  // exposes the full name via the native [title] tooltip.
+  .medida-row {
+    gap: var(--dimension-1-5);
+
+    &__name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  // Costes aproximados — keep every currency cell on a single line so the
+  // "€" sign never wraps under the digits.
+  .lk-table__num {
+    white-space: nowrap;
+  }
+
+  // Tipos de medidas tab strip: sized to content + flush left, instead of
+  // stretching across the card. The parent .card is `display: flex;
+  // flex-direction: column; align-items: stretch`, so the seg-control was
+  // being stretched to full width regardless of its own display. `align-self:
+  // flex-start` lets it shrink to fit content. The :host-context([data-brand
+  // ="unicaja"]) block inside the component forces display:flex on
+  // .seg-control with stretching, so we also pin it to inline-flex / auto
+  // with !important.
+  .medidas-layout__list afi-segmented-control {
+    align-self: flex-start;
+  }
+  .medidas-layout__list afi-segmented-control .seg-control {
+    display: inline-flex !important;
+    width: auto !important;
+  }
+  .medidas-layout__list afi-segmented-control .seg-control__option {
+    min-width: var(--dimension-32) !important;
+  }
+
+  // Single-column medidas layout. The default 2-col grid (list + bento)
+  // doesn't apply for Unicaja because we stack Realizando-la-reforma +
+  // Costes below the list instead of beside it. Forcing 1fr means the row
+  // text gets the full width before the ellipsis kicks in.
+  .medidas-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  // Sarevi 360 design ships CAE as a black-on-white chip — high contrast
+  // against the green Unicaja palette so the bonificación cue reads first.
   .cae-badge {
-    background: var(--color-unicaja-secondary-100);
-    color: var(--color-unicaja-secondary-700);
+    background: var(--color-unicaja-ink-default);
+    color: var(--color-base-white);
+    letter-spacing: 0.04em;
+    padding: var(--dimension-0-75) var(--dimension-2);
+    border-radius: var(--dimension-1);
+  }
+
+  // Stacked Realizando-la-reforma + Costes (replaces the LK bento). The two
+  // comparison cards (before / after) sit on top, and the Costes table card
+  // sits below, both full-width across the .medidas-layout grid.
+  .unicaja-medidas-stack {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--dimension-3-5);
+  }
+
+  // Before / after comparison cards inside Realizando la reforma.
+  .unicaja-compare {
+    &__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--dimension-3-5);
+    }
+
+    &__card {
+      background: var(--color-unicaja-neutral-50);
+      border: var(--dimension-0-25) solid var(--color-unicaja-neutral-variant-100);
+      border-radius: var(--dimension-2-5);
+      padding: var(--dimension-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--dimension-2-5);
+
+      &--after {
+        background: var(--color-unicaja-secondary-50);
+        border-color: var(--color-unicaja-secondary-100);
+      }
+    }
+
+    &__lbl {
+      font-size: var(--dimension-3-25);
+      font-weight: 600;
+      color: var(--color-unicaja-ink-muted);
+      letter-spacing: 0.01em;
+
+      .unicaja-compare__card--after & {
+        color: var(--color-unicaja-secondary-700);
+      }
+    }
+
+    &__row {
+      display: flex;
+      align-items: center;
+      gap: var(--dimension-2);
+
+      &-lbl {
+        font-size: var(--dimension-3);
+        color: var(--color-unicaja-ink-soft);
+      }
+    }
+
+    &__metric {
+      &-lbl {
+        font-size: var(--dimension-2-75);
+        color: var(--color-unicaja-ink-soft);
+        margin-bottom: var(--dimension-0-5);
+      }
+
+      &-val {
+        font-family: var(--font-display);
+        font-size: var(--dimension-5-5);
+        font-weight: 700;
+        color: var(--color-unicaja-ink-default);
+        line-height: 1.1;
+
+        &--accent {
+          color: var(--color-unicaja-secondary-700);
+        }
+      }
+
+      &-unit {
+        font-size: var(--dimension-3);
+        font-weight: 400;
+        margin-left: var(--dimension-0-75);
+        color: var(--color-unicaja-ink-muted);
+      }
+    }
+
+    @container (max-width: 720px) {
+      &__grid { grid-template-columns: 1fr; }
+    }
+  }
+
+  // Improvement grid — replaces the LK "Reducciones tras la reforma" bar
+  // chart on the Unicaja resumen. Percentages were abstract; concrete
+  // savings (€, kWh, kg CO₂) communicate the value directly.
+  .bento-cell--improvements {
+    background: var(--color-base-white);
+    border: var(--dimension-0-25) solid var(--color-unicaja-neutral-variant-100);
+    border-radius: var(--dimension-3);
+    padding: var(--dimension-5);
+  }
+
+  .unicaja-improvement-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--dimension-3-5);
+
+    @container (max-width: 720px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .unicaja-improvement {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dimension-1-5);
+
+    &__lbl {
+      font-size: var(--dimension-3);
+      color: var(--color-unicaja-ink-soft);
+      letter-spacing: 0.01em;
+    }
+
+    &__val {
+      font-family: var(--font-display);
+      font-size: var(--dimension-8);
+      font-weight: 700;
+      color: var(--color-unicaja-secondary-700);
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    &__unit {
+      font-size: var(--dimension-3-75);
+      font-weight: 500;
+      color: var(--color-unicaja-ink-soft);
+      margin-left: var(--dimension-1);
+    }
+
+    &__hint {
+      font-size: var(--dimension-2-75);
+      color: var(--color-unicaja-ink-muted);
+    }
+  }
+
+  // Finance section vertical layout. The default LK bento sits the sliders
+  // alongside the cuota card; for Unicaja, the sliders sit on a horizontal
+  // row across the top and the loan card spans the full width below so
+  // there's room for the 3-column 203,58 / 1.237,25 / stats layout to
+  // breathe.
+  .finance-bento { grid-template-columns: 1fr; }
+
+  .finance-card--controls {
+    background: transparent;
+    border: none;
+    padding: 0 0 var(--dimension-4);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--dimension-5);
+    align-items: start;
+
+    .finance-card__title {
+      grid-column: 1 / -1;
+    }
+  }
+
+  // Bonificación-CAE loan card. Full-width: tag + 3-column body (cuota 12
+  // meses | divider | cuota resto del plazo | 3-stat sidebar).
+  .unicaja-loan {
+    background: var(--color-base-white);
+    border: var(--dimension-0-5) solid var(--color-unicaja-secondary-500);
+    border-radius: var(--dimension-3);
+    padding: var(--dimension-5) var(--dimension-6);
+
+    &__head { margin-bottom: var(--dimension-4); }
+
+    &__tag {
+      display: inline-block;
+      background: var(--color-unicaja-secondary-500);
+      color: var(--color-base-white);
+      font-size: var(--dimension-3);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: var(--dimension-0-75) var(--dimension-2-5);
+      border-radius: var(--dimension-1-25);
+    }
+
+    &__body {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto;
+      gap: var(--dimension-6);
+      align-items: flex-start;
+    }
+
+    &__divider {
+      width: var(--dimension-0-25);
+      align-self: stretch;
+      background: var(--color-unicaja-neutral-variant-100);
+    }
+
+    &__col { min-width: 0; }
+
+    &__num {
+      font-family: var(--font-display);
+      font-size: var(--dimension-9);
+      font-weight: 700;
+      color: var(--color-unicaja-ink-default);
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    &__unit {
+      font-size: var(--dimension-4-25);
+      font-weight: 400;
+      color: var(--color-unicaja-ink-soft);
+    }
+
+    &__sub {
+      font-size: var(--dimension-3-25);
+      color: var(--color-unicaja-ink-soft);
+      margin-top: var(--dimension-2);
+
+      &--top { margin-top: 0; margin-bottom: var(--dimension-2); }
+    }
+
+    &__list {
+      list-style: disc;
+      padding-left: var(--dimension-4);
+      margin-top: var(--dimension-2-5);
+      font-size: var(--dimension-3-25);
+      color: var(--color-unicaja-ink-soft);
+      line-height: 1.8;
+    }
+
+    &__link {
+      display: inline-block;
+      margin-top: var(--dimension-3);
+      font-size: var(--dimension-3-5);
+      color: var(--color-unicaja-secondary-700);
+      text-decoration: underline;
+    }
+
+    &__stats {
+      display: flex;
+      flex-direction: column;
+      gap: var(--dimension-2);
+      min-width: var(--dimension-28);
+    }
+
+    &__stat {
+      background: var(--color-unicaja-secondary-50);
+      border-radius: var(--dimension-2);
+      padding: var(--dimension-2) var(--dimension-3-5);
+      text-align: center;
+    }
+
+    &__stat-lbl {
+      display: block;
+      font-size: var(--dimension-2-75);
+      color: var(--color-unicaja-ink-muted);
+    }
+
+    &__stat-val {
+      display: block;
+      font-family: var(--font-display);
+      font-size: var(--dimension-4);
+      font-weight: 700;
+      color: var(--color-unicaja-secondary-700);
+    }
+
+    @container (max-width: 720px) {
+      &__body {
+        grid-template-columns: 1fr;
+        gap: var(--dimension-4);
+      }
+      &__divider { display: none; }
+      &__stats { flex-direction: row; flex-wrap: wrap; }
+      &__stat { flex: 1 1 var(--dimension-24); }
+    }
+  }
+
+  // CTA wrapper. The earlier full-bleed green panel competed with the loan
+  // card for the eye — keep the wrapper as a layout band but drop the
+  // background so the green primary button sits on the page canvas.
+  .unicaja-cta {
+    background: transparent;
+    padding: var(--dimension-2) 0;
+    text-align: center;
+
+    .unicaja-cta__btn {
+      --brand-primary-background-default: var(--color-unicaja-secondary-500);
+      --brand-primary-background-hover: var(--color-unicaja-secondary-600);
+      --brand-primary-foreground-default: var(--color-base-white);
+      --brand-primary-foreground-hover: var(--color-base-white);
+      --brand-primary-border-default: var(--color-unicaja-secondary-500);
+    }
+  }
+
+  // Providers grid replaces the help-band. Three equal-width cards with an
+  // icon block, name, copy, and secondary CTA — mirrors the Sarevi 360
+  // bottom-of-resumen pattern.
+  .unicaja-providers {
+    &__lead {
+      color: var(--color-unicaja-ink-soft);
+      font-size: var(--dimension-3-5);
+      margin-bottom: var(--dimension-4);
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--dimension-3-5);
+    }
+
+    @container (max-width: 820px) {
+      &__grid { grid-template-columns: 1fr; }
+    }
+  }
+
+  .unicaja-provider {
+    background: var(--color-base-white);
+    border: var(--dimension-0-25) solid var(--color-unicaja-neutral-variant-100);
+    border-radius: var(--dimension-2-5);
+    padding: var(--dimension-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--dimension-2-5);
+
+    &__ico {
+      width: var(--dimension-10);
+      height: var(--dimension-10);
+      border-radius: var(--dimension-2);
+      background: var(--color-unicaja-secondary-50);
+      color: var(--color-unicaja-secondary-700);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &__name {
+      font-family: var(--font-display);
+      font-size: var(--dimension-4);
+      font-weight: 700;
+      color: var(--color-unicaja-ink-default);
+    }
+
+    &__desc {
+      font-size: var(--dimension-3-25);
+      color: var(--color-unicaja-ink-soft);
+      line-height: 1.6;
+      flex: 1;
+      margin: 0;
+    }
+
+    &__btn {
+      align-self: stretch;
+      --foreground-secondary-default: var(--color-unicaja-secondary-700);
+      --border-secondary-default: var(--color-unicaja-secondary-500);
+      --brand-tertiary-background-hover: var(--color-unicaja-secondary-50);
+    }
   }
 
   .pill-tag {

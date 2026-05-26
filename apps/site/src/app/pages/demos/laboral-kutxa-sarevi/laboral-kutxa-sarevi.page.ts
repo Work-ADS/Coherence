@@ -48,6 +48,7 @@ export interface Medida {
 interface DatosState {
   tipoVivienda: string;
   buscarDir: string;
+  direccion: string;
   municipio: string;
   certificado: string;
   etiqueta: string;
@@ -174,6 +175,7 @@ export class LaboralKutxaSareviPage {
   readonly data = signal<DatosState>({
     tipoVivienda: 'Piso',
     buscarDir: 'No',
+    direccion: '',
     municipio: '',
     certificado: '',
     etiqueta: 'E',
@@ -291,10 +293,36 @@ export class LaboralKutxaSareviPage {
     'Ninguno',
   ].map((v) => ({ value: v, label: v }));
 
-  readonly variantOptions: SegmentedOption[] = [
-    { value: 'basica', label: 'Reforma básica' },
-    { value: 'completa', label: 'Reforma completa' },
-    { value: 'personalizada', label: 'Reforma personalizada' },
+  readonly variantOptions = computed<SegmentedOption[]>(() => {
+    // Unicaja's Sarevi 360 design only ships Básica + Personalizada — drop the
+    // middle "completa" tier so the tab strip lines up with the simulator
+    // surface the brand team approved.
+    const base: SegmentedOption[] = [
+      { value: 'basica', label: 'Reforma básica' },
+      { value: 'completa', label: 'Reforma completa' },
+      { value: 'personalizada', label: 'Reforma personalizada' },
+    ];
+    return this.brand() === 'unicaja'
+      ? base.filter((o) => o.value !== 'completa')
+      : base;
+  });
+
+  readonly providers: { name: string; desc: string; icon: 'home' | 'check' | 'sun' }[] = [
+    {
+      name: 'EcoRehab Solutions',
+      desc: 'Rehabilitación energética integral. Instalación certificada de SATE, ventanas de alta eficiencia y cubiertas aislantes.',
+      icon: 'home',
+    },
+    {
+      name: 'CertiEnergy España',
+      desc: 'Auditoría energética y certificación técnica de viviendas. Más de 5.000 proyectos completados con profesionales acreditados.',
+      icon: 'check',
+    },
+    {
+      name: 'SolarPlus Instalaciones',
+      desc: 'Instalación de aerotermia, paneles solares fotovoltaicos y sistemas de climatización de bajo consumo energético.',
+      icon: 'sun',
+    },
   ];
 
   readonly stepN = computed(() => {
@@ -368,6 +396,10 @@ export class LaboralKutxaSareviPage {
 
   setBuscarDir(value: string): void {
     this.data.update((d) => ({ ...d, buscarDir: value }));
+  }
+
+  setDireccion(value: string | number | null): void {
+    this.data.update((d) => ({ ...d, direccion: value == null ? '' : String(value) }));
   }
 
   setMunicipio(value: string | number | null): void {

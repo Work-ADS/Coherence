@@ -243,6 +243,31 @@
   }
 }
 
+// ─── Unicaja brand overrides for the topbar row ─────────────────────────
+// The LK topbar above sets `gap` and other defaults on the brand row using
+// the component's own emulated-encapsulation attribute, which beats the
+// global Unicaja override file by specificity. The Unicaja tweaks therefore
+// live here too — tight gap so "Sarevi 360" sits next to the wordmark, no
+// vertical separator (not part of the Unicaja pattern), and a smaller / less
+// dramatic sub-label.
+.lk-sarevi--unicaja {
+  .lk-topbar__brand {
+    gap: var(--dimension-2-5);
+    align-items: center;
+  }
+
+  .lk-topbar__sep { display: none; }
+
+  .lk-topbar__sub {
+    font-family: var(--font-text);
+    font-size: var(--dimension-3-75);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--color-unicaja-ink-soft);
+  }
+
+}
+
 // ─── LK Logo (asset images from Afi brand/Client brands/Laboral kutxa) ───
 // Asset stays original: white wordmark + colored geometric mark on
 // transparent bg. Sits naturally on the magenta-gradient top bar.

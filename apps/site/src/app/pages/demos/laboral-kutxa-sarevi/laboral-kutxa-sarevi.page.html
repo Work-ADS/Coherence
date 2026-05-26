@@ -45,10 +45,17 @@
       @if (route() !== 'welcome') {
         <div class="lk-topbar__ref">
           @if (route() !== 'resumen') {
-            <span class="lk-topbar__ref-label">Código para recuperar esta simulación</span>
+            <span class="lk-topbar__ref-label">
+              @if (brand() === 'unicaja') { Código de referencia }
+              @else { Código para recuperar esta simulación }
+            </span>
           }
           <span class="lk-topbar__ref-code">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+            @if (brand() === 'unicaja') {
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            } @else {
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+            }
             <span class="mono">{{ refCode() }}</span>
           </span>
         </div>
@@ -111,6 +118,7 @@
           <div class="surface-header__subtitle">Calcula la eficiencia energética que podrías alcanzar en los proyectos de tu vivienda.</div>
         </div>
 
+        <div class="datos-form-wrap">
         <!-- Caso de reformas -->
         <section class="card" aria-labelledby="datos-caso-title">
           <h2 id="datos-caso-title" class="card__title">
@@ -129,29 +137,57 @@
             />
           </div>
 
-          <div class="form-stack">
-            <afi-select
-              label="¿En qué municipio se encuentra?"
-              placeholder="Selecciona una opción"
-              [options]="municipioOptions"
-              [value]="data().municipio"
-              [searchable]="true"
-              searchPlaceholder="Buscar municipio…"
-              emptyText="Sin municipios coincidentes"
-              (valueChange)="setMunicipio($event)"
-            />
-            <div>
-              <label class="field-label">¿Buscar dirección automáticamente?</label>
-              <afi-segmented-control
-                class="sarevi-radio-inline"
-                [options]="siNoOptions"
-                [value]="data().buscarDir"
-                (valueChange)="setBuscarDir($event)"
-                ariaLabel="Buscar dirección"
-                size="md"
+          @if (brand() === 'unicaja') {
+            <div class="form-stack">
+              <div>
+                <label class="field-label">Dirección de la vivienda</label>
+                <div class="unicaja-address-input">
+                  <span class="unicaja-address-input__ico" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                  </span>
+                  <afi-input
+                    placeholder="Escribe tu calle, número y localidad…"
+                    [value]="data().direccion"
+                    (valueChange)="setDireccion($event)"
+                  />
+                </div>
+              </div>
+              <afi-select
+                label="¿En qué municipio se encuentra?"
+                placeholder="Selecciona una opción"
+                [options]="municipioOptions"
+                [value]="data().municipio"
+                [searchable]="true"
+                searchPlaceholder="Buscar municipio…"
+                emptyText="Sin municipios coincidentes"
+                (valueChange)="setMunicipio($event)"
               />
             </div>
-          </div>
+          } @else {
+            <div class="form-stack">
+              <afi-select
+                label="¿En qué municipio se encuentra?"
+                placeholder="Selecciona una opción"
+                [options]="municipioOptions"
+                [value]="data().municipio"
+                [searchable]="true"
+                searchPlaceholder="Buscar municipio…"
+                emptyText="Sin municipios coincidentes"
+                (valueChange)="setMunicipio($event)"
+              />
+              <div>
+                <label class="field-label">¿Buscar dirección automáticamente?</label>
+                <afi-segmented-control
+                  class="sarevi-radio-inline"
+                  [options]="siNoOptions"
+                  [value]="data().buscarDir"
+                  (valueChange)="setBuscarDir($event)"
+                  ariaLabel="Buscar dirección"
+                  size="md"
+                />
+              </div>
+            </div>
+          }
         </section>
 
         <!-- Certificado -->
@@ -163,6 +199,7 @@
           <div>
             <label class="field-label">¿Tienes certificado de eficiencia energética?</label>
             <afi-segmented-control
+              class="seg-control--sm-bool"
               [options]="siNoOptions"
               [value]="data().certificado"
               (valueChange)="setCertificado($event)"
@@ -231,6 +268,7 @@
             />
           </div>
         </section>
+        </div>
 
         <!-- Datos actuales estimados -->
         <section class="card" aria-labelledby="datos-estimados-title">
@@ -320,7 +358,7 @@
             </h2>
 
             <afi-segmented-control
-              [options]="variantOptions"
+              [options]="variantOptions()"
               [value]="variant()"
               (valueChange)="setVariant($event)"
               ariaLabel="Tipo de reforma"
@@ -341,7 +379,7 @@
                   ariaLabel="Incluir {{ m.name }}"
                   (checkedChange)="!locked && toggleSelected(m.id)"
                 />
-                <div class="medida-row__name">{{ m.name }}</div>
+                <div class="medida-row__name" [title]="m.name">{{ m.name }}</div>
                 <div class="medida-row__tags">
                   @if (m.impact) {
                     <span class="impact impact--{{ m.impact }}">{{ impactLabel[m.impact] }}</span>
@@ -396,7 +434,7 @@
               <!-- Certificado energético — locked on -->
               <div class="medida-row medida-row--locked">
                 <afi-checkbox [compact]="true" size="md" [checked]="true" [disabled]="true" ariaLabel="Certificado energético (obligatorio)" />
-                <div class="medida-row__name">Certificado energético</div>
+                <div class="medida-row__name" title="Certificado energético">Certificado energético</div>
                 <div class="medida-row__tags"></div>
                 <div class="medida-row__price">900 €</div>
                 <button type="button" class="medida-row__details" (click)="openInfoByName('Certificado energético')">
@@ -414,6 +452,100 @@
             </div>
           </section>
 
+          @if (brand() === 'unicaja') {
+            <!-- Sarevi 360 layout: side-by-side comparison cards + costes table -->
+            <div class="unicaja-medidas-stack">
+              <section class="card unicaja-compare" aria-labelledby="medidas-impact-title">
+                <h2 id="medidas-impact-title" class="card__title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 18 5-6 4 3 7-8"/><path d="M14 7h6v6"/></svg>
+                  Realizando la reforma
+                </h2>
+                <div class="unicaja-compare__grid">
+                  <div class="unicaja-compare__card unicaja-compare__card--before">
+                    <div class="unicaja-compare__lbl">Datos actuales estimados</div>
+                    <div class="unicaja-compare__row">
+                      <span class="unicaja-compare__row-lbl">Etiqueta estimada</span>
+                      <span class="energy-label energy-label--sm energy-label--E">E</span>
+                    </div>
+                    <div class="unicaja-compare__metric">
+                      <div class="unicaja-compare__metric-lbl">Gasto anual</div>
+                      <div class="unicaja-compare__metric-val">77.890<span class="unicaja-compare__metric-unit">€</span></div>
+                    </div>
+                    <div class="unicaja-compare__metric">
+                      <div class="unicaja-compare__metric-lbl">Consumo anual</div>
+                      <div class="unicaja-compare__metric-val">612.423<span class="unicaja-compare__metric-unit">KWH</span></div>
+                    </div>
+                    <div class="unicaja-compare__metric">
+                      <div class="unicaja-compare__metric-lbl">Emisiones anuales</div>
+                      <div class="unicaja-compare__metric-val">44<span class="unicaja-compare__metric-unit">KgCO₂</span></div>
+                    </div>
+                  </div>
+                  <div class="unicaja-compare__card unicaja-compare__card--after">
+                    <div class="unicaja-compare__lbl">Datos tras la reforma</div>
+                    <div class="unicaja-compare__row">
+                      <span class="unicaja-compare__row-lbl">Etiqueta estimada</span>
+                      <span class="energy-label energy-label--sm energy-label--{{ afterGrade() }}">{{ afterGrade() }}</span>
+                    </div>
+                    <div class="unicaja-compare__metric">
+                      <div class="unicaja-compare__metric-lbl">Gasto anual</div>
+                      <div class="unicaja-compare__metric-val unicaja-compare__metric-val--accent">450<span class="unicaja-compare__metric-unit">€</span></div>
+                    </div>
+                    <div class="unicaja-compare__metric">
+                      <div class="unicaja-compare__metric-lbl">Consumo anual</div>
+                      <div class="unicaja-compare__metric-val unicaja-compare__metric-val--accent">2.402<span class="unicaja-compare__metric-unit">KWH</span></div>
+                    </div>
+                    <div class="unicaja-compare__metric">
+                      <div class="unicaja-compare__metric-lbl">Emisiones anuales</div>
+                      <div class="unicaja-compare__metric-val unicaja-compare__metric-val--accent">38<span class="unicaja-compare__metric-unit">KgCO₂</span></div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card" aria-labelledby="medidas-costs-title-uc">
+                <h2 id="medidas-costs-title-uc" class="card__title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
+                  Costes aproximados
+                </h2>
+                <table class="lk-table">
+                  <thead>
+                    <tr>
+                      <th>Concepto</th>
+                      <th class="lk-table__num">Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Coste estimado de las actuaciones</td>
+                      <td class="lk-table__num">79.200 €</td>
+                    </tr>
+                    <tr>
+                      <td>Coste estimado de tramitación administrativa</td>
+                      <td class="lk-table__num">1.323 €</td>
+                    </tr>
+                    <tr>
+                      <td><a href="#" (click)="$event.preventDefault()">Importe utilizado del IVA (IVA)</a></td>
+                      <td class="lk-table__num lk-table__neg">−9.001 €</td>
+                    </tr>
+                    <tr class="lk-table__total">
+                      <td>Importe total</td>
+                      <td class="lk-table__num">16.461 €</td>
+                    </tr>
+                    <tr>
+                      <td>Importe total aplicado CAE</td>
+                      <td class="lk-table__num unicaja-compare__metric-val--accent">71.961 €</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="alert alert--info">
+                  <span class="alert__icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/></svg>
+                  </span>
+                  <div>El CAE es un beneficio que puedes recibir por reformas sostenibles. <a href="#" (click)="$event.preventDefault()">Leer más aquí.</a></div>
+                </div>
+              </section>
+            </div>
+          } @else {
           <!-- Bento: live impact preview + cost breakdown stacked on right -->
           <div class="bento-medidas">
             <section class="bento-medidas__cell bento-medidas__cell--chart" aria-labelledby="medidas-impact-title">
@@ -464,6 +596,7 @@
               </div>
             </section>
           </div>
+          }
         </div>
 
         <div class="action-row">
@@ -516,17 +649,40 @@
               <span class="bento-cell__hint">por vivienda · mejora de E a B</span>
             </div>
 
-            <!-- Cell 3: animated bar chart (spans full row) -->
-            <div class="bento-cell bento-cell--chart">
-              <afi-animated-chart
-                title="Reducciones tras la reforma"
-                subtitle="Comparado con tu situación actual"
-                [columns]="ahorroChartColumns()"
-                [maxValue]="100"
-                size="md"
-                ariaLabel="Reducciones estimadas tras la reforma: consumo 64 por ciento, emisiones 64 por ciento, gasto 71 por ciento."
-              />
-            </div>
+            <!-- Cell 3: improvement cards (absolute values) for Unicaja,
+                 bar chart for LK -->
+            @if (brand() === 'unicaja') {
+              <div class="bento-cell bento-cell--improvements">
+                <div class="unicaja-improvement-grid">
+                  <div class="unicaja-improvement">
+                    <div class="unicaja-improvement__lbl">Ahorras al año en gasto</div>
+                    <div class="unicaja-improvement__val">77.440<span class="unicaja-improvement__unit">€</span></div>
+                    <div class="unicaja-improvement__hint">de 77.890 € a 450 €</div>
+                  </div>
+                  <div class="unicaja-improvement">
+                    <div class="unicaja-improvement__lbl">Reduces tu consumo</div>
+                    <div class="unicaja-improvement__val">610.021<span class="unicaja-improvement__unit">kWh</span></div>
+                    <div class="unicaja-improvement__hint">de 612.423 kWh a 2.402 kWh</div>
+                  </div>
+                  <div class="unicaja-improvement">
+                    <div class="unicaja-improvement__lbl">Menos emisiones</div>
+                    <div class="unicaja-improvement__val">6<span class="unicaja-improvement__unit">kg CO₂</span></div>
+                    <div class="unicaja-improvement__hint">de 44 kg a 38 kg al año</div>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="bento-cell bento-cell--chart">
+                <afi-animated-chart
+                  title="Reducciones tras la reforma"
+                  subtitle="Comparado con tu situación actual"
+                  [columns]="ahorroChartColumns()"
+                  [maxValue]="100"
+                  size="md"
+                  ariaLabel="Reducciones estimadas tras la reforma: consumo 64 por ciento, emisiones 64 por ciento, gasto 71 por ciento."
+                />
+              </div>
+            }
           </div>
 
           <div class="alert">
@@ -599,45 +755,89 @@
               </div>
             </div>
 
-          <!-- Cuota sin CAE -->
-          <div class="cuota-section finance-card">
-            <div class="cuota-section__title">Cuota sin CAE</div>
-            <div class="cuota-main">
-              <div class="cuota-main__col">
-                <span class="cuota-main__lbl">Cuota los primeros 12 meses</span>
-                <span class="cuota-main__num">{{ formatMoneda(c1Carencia()) }}<span class="cuota-main__unit">€</span></span>
+          @if (brand() !== 'unicaja') {
+            <!-- Cuota sin CAE -->
+            <div class="cuota-section finance-card">
+              <div class="cuota-section__title">Cuota sin CAE</div>
+              <div class="cuota-main">
+                <div class="cuota-main__col">
+                  <span class="cuota-main__lbl">Cuota los primeros 12 meses</span>
+                  <span class="cuota-main__num">{{ formatMoneda(c1Carencia()) }}<span class="cuota-main__unit">€</span></span>
+                </div>
+                <div class="cuota-main__col">
+                  <span class="cuota-main__lbl">Cuota el resto del plazo</span>
+                  <span class="cuota-main__num">{{ formatMoneda(c1Resto()) }}<span class="cuota-main__unit">€</span></span>
+                </div>
               </div>
-              <div class="cuota-main__col">
-                <span class="cuota-main__lbl">Cuota el resto del plazo</span>
-                <span class="cuota-main__num">{{ formatMoneda(c1Resto()) }}<span class="cuota-main__unit">€</span></span>
+              <div class="cuota-grid">
+                <div class="cuota-grid__cell"><span class="cuota-grid__lbl">Comisión de apertura</span><span class="cuota-grid__num">1<span class="cuota-grid__pct">,00 %</span></span></div>
+                <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TIN</span><span class="cuota-grid__num">4<span class="cuota-grid__pct">,00 %</span></span></div>
+                <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TAE¹</span><span class="cuota-grid__num">6<span class="cuota-grid__pct">,10 %</span></span></div>
               </div>
             </div>
-            <div class="cuota-grid">
-              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">Comisión de apertura</span><span class="cuota-grid__num">1<span class="cuota-grid__pct">,00 %</span></span></div>
-              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TIN</span><span class="cuota-grid__num">4<span class="cuota-grid__pct">,00 %</span></span></div>
-              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TAE¹</span><span class="cuota-grid__num">6<span class="cuota-grid__pct">,10 %</span></span></div>
-            </div>
-          </div>
 
-          <!-- Cuota con CAE -->
-          <div class="cuota-section finance-card finance-card--green">
-            <div class="cuota-section__title">Cuota con CAE</div>
-            <div class="cuota-main cuota-main--green">
-              <div class="cuota-main__col">
-                <span class="cuota-main__lbl">Cuota los primeros 12 meses</span>
-                <span class="cuota-main__num">{{ formatMoneda(c2Carencia()) }}<span class="cuota-main__unit">€</span></span>
+            <!-- Cuota con CAE -->
+            <div class="cuota-section finance-card finance-card--green">
+              <div class="cuota-section__title">Cuota con CAE</div>
+              <div class="cuota-main cuota-main--green">
+                <div class="cuota-main__col">
+                  <span class="cuota-main__lbl">Cuota los primeros 12 meses</span>
+                  <span class="cuota-main__num">{{ formatMoneda(c2Carencia()) }}<span class="cuota-main__unit">€</span></span>
+                </div>
+                <div class="cuota-main__col">
+                  <span class="cuota-main__lbl">Cuota el resto del plazo</span>
+                  <span class="cuota-main__num">{{ formatMoneda(c2Resto()) }}<span class="cuota-main__unit">€</span></span>
+                </div>
               </div>
-              <div class="cuota-main__col">
-                <span class="cuota-main__lbl">Cuota el resto del plazo</span>
-                <span class="cuota-main__num">{{ formatMoneda(c2Resto()) }}<span class="cuota-main__unit">€</span></span>
+              <div class="cuota-grid">
+                <div class="cuota-grid__cell"><span class="cuota-grid__lbl">Comisión de apertura</span><span class="cuota-grid__num">1<span class="cuota-grid__pct">,00 %</span></span></div>
+                <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TIN</span><span class="cuota-grid__num">3<span class="cuota-grid__pct">,00 %</span></span></div>
+                <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TAE²</span><span class="cuota-grid__num">5<span class="cuota-grid__pct">,06 %</span></span></div>
               </div>
             </div>
-            <div class="cuota-grid">
-              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">Comisión de apertura</span><span class="cuota-grid__num">1<span class="cuota-grid__pct">,00 %</span></span></div>
-              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TIN</span><span class="cuota-grid__num">3<span class="cuota-grid__pct">,00 %</span></span></div>
-              <div class="cuota-grid__cell"><span class="cuota-grid__lbl">TAE²</span><span class="cuota-grid__num">5<span class="cuota-grid__pct">,06 %</span></span></div>
+          }
+
+          @if (brand() === 'unicaja') {
+            <!-- Single bonificación-CAE loan card (Sarevi 360 layout) -->
+            <div class="unicaja-loan">
+              <div class="unicaja-loan__head">
+                <span class="unicaja-loan__tag">Con bonificación CAE</span>
+              </div>
+              <div class="unicaja-loan__body">
+                <div class="unicaja-loan__col">
+                  <div class="unicaja-loan__num">{{ formatMoneda(c2Carencia()) }} <span class="unicaja-loan__unit">€ / mes</span></div>
+                  <div class="unicaja-loan__sub">Cuota primeros 12 meses</div>
+                  <ul class="unicaja-loan__list">
+                    <li>TIN primeros 12 meses: 3,00 %</li>
+                  </ul>
+                </div>
+                <div class="unicaja-loan__divider" aria-hidden="true"></div>
+                <div class="unicaja-loan__col">
+                  <div class="unicaja-loan__sub unicaja-loan__sub--top">Cuota resto del plazo</div>
+                  <div class="unicaja-loan__num">{{ formatMoneda(c2Resto()) }} <span class="unicaja-loan__unit">€ / mes</span></div>
+                  <ul class="unicaja-loan__list">
+                    <li>TIN resto del plazo: 3,00 %</li>
+                    <li>TAE²: 5,06 %</li>
+                  </ul>
+                  <a href="#" class="unicaja-loan__link" (click)="$event.preventDefault()">Ver ejemplo representativo</a>
+                </div>
+                <div class="unicaja-loan__stats">
+                  <div class="unicaja-loan__stat">
+                    <span class="unicaja-loan__stat-lbl">Comisión apertura</span>
+                    <span class="unicaja-loan__stat-val">1,00 %</span>
+                  </div>
+                  <div class="unicaja-loan__stat">
+                    <span class="unicaja-loan__stat-lbl">TIN</span>
+                    <span class="unicaja-loan__stat-val">3,00 %</span>
+                  </div>
+                  <div class="unicaja-loan__stat">
+                    <span class="unicaja-loan__stat-lbl">TAE²</span>
+                    <span class="unicaja-loan__stat-val">5,06 %</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          }
           </div>
 
           <div class="footnotes">
@@ -649,21 +849,65 @@
             </p>
           </div>
 
-          <div class="cuota-cta">
-            <afi-button variant="primary" (clicked)="contactAdvisor()">Pulsa aquí para que estudiemos tu caso</afi-button>
-          </div>
+          @if (brand() !== 'unicaja') {
+            <div class="cuota-cta">
+              <afi-button variant="primary" (clicked)="contactAdvisor()">Pulsa aquí para que estudiemos tu caso</afi-button>
+            </div>
+          }
         </section>
 
-        <!-- Help band -->
-        <div class="help-band">
-          <img class="lk-mark-img" [src]="brandConfig().logoSrc" alt="" aria-hidden="true" />
-          <div class="help-band__h">¿Necesitas ayuda con tu proyecto?</div>
-          <div class="help-band__p">Nuestros asesores energéticos están listos para ayudarte a optimizar tu inversión y guiarte en el proceso de rehabilitación</div>
-          <afi-button variant="secondary">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-12.5 6.6L4 20l1.4-4.5A8 8 0 1 1 21 12Z"/></svg>
-            Contactar con un asesor
-          </afi-button>
-        </div>
+        @if (brand() !== 'unicaja') {
+          <!-- Help band -->
+          <div class="help-band">
+            <img class="lk-mark-img" [src]="brandConfig().logoSrc" alt="" aria-hidden="true" />
+            <div class="help-band__h">¿Necesitas ayuda con tu proyecto?</div>
+            <div class="help-band__p">Nuestros asesores energéticos están listos para ayudarte a optimizar tu inversión y guiarte en el proceso de rehabilitación</div>
+            <afi-button variant="secondary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-12.5 6.6L4 20l1.4-4.5A8 8 0 1 1 21 12Z"/></svg>
+              Contactar con un asesor
+            </afi-button>
+          </div>
+        }
+
+        @if (brand() === 'unicaja') {
+          <!-- Full-width green CTA banner (Sarevi 360 layout) -->
+          <div class="unicaja-cta">
+            <afi-button variant="primary" class="unicaja-cta__btn" (clicked)="contactAdvisor()">
+              Pulsa aquí para más información
+            </afi-button>
+          </div>
+
+          <!-- Proveedores grid (Sarevi 360 layout) -->
+          <section class="card unicaja-providers" aria-labelledby="resumen-providers-title">
+            <h2 id="resumen-providers-title" class="card__title">¿Necesitas ayuda con tu proyecto?</h2>
+            <p class="unicaja-providers__lead">Empresas especializadas en reformas de eficiencia energética que pueden ayudarte a ejecutar tu plan.</p>
+            <div class="unicaja-providers__grid">
+              @for (p of providers; track p.name) {
+                <article class="unicaja-provider">
+                  <span class="unicaja-provider__ico" aria-hidden="true">
+                    @switch (p.icon) {
+                      @case ('home') {
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>
+                      }
+                      @case ('check') {
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5L16 9"/></svg>
+                      }
+                      @case ('sun') {
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.2 4.2l1.5 1.5M18.3 18.3l1.5 1.5M2 12h2M20 12h2M4.2 19.8l1.5-1.5M18.3 5.7l1.5-1.5"/></svg>
+                      }
+                    }
+                  </span>
+                  <div class="unicaja-provider__name">{{ p.name }}</div>
+                  <p class="unicaja-provider__desc">{{ p.desc }}</p>
+                  <afi-button variant="secondary" size="sm" class="unicaja-provider__btn">
+                    Más información
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </afi-button>
+                </article>
+              }
+            </div>
+          </section>
+        }
 
         <div class="action-row">
           <afi-button variant="secondary" (clicked)="goTo('medidas')">

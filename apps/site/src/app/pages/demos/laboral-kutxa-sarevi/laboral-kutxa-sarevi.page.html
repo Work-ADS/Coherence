@@ -1,17 +1,17 @@
 <site-demo-shell
-  demoSlug="laboral-kutxa-sarevi"
-  demoRoute="/demos/laboral-kutxa-sarevi/demo"
+  [demoSlug]="brandConfig().demoSlug"
+  [demoRoute]="brandConfig().demoRoute"
   [views]="['Simulador']"
 >
-<div class="lk-sarevi" data-brand="laboral-kutxa">
+<div class="lk-sarevi" [class.lk-sarevi--unicaja]="brand() === 'unicaja'" [attr.data-brand]="brand()">
 
   <!-- ─── Top bar ─────────────────────────────────────────────────── -->
   <div class="lk-topbar">
     <div class="lk-topbar__brand">
       <img
         class="lk-logo-img"
-        src="assets/logos/laboral-kutxa/logo.png"
-        alt="Laboral Kutxa"
+        [src]="brandConfig().logoSrc"
+        [alt]="brandConfig().logoAlt"
       />
       <span class="lk-topbar__sep" aria-hidden="true"></span>
       <span class="lk-topbar__sub">Sarevi 360</span>
@@ -44,7 +44,9 @@
     <div class="lk-topbar__right">
       @if (route() !== 'welcome') {
         <div class="lk-topbar__ref">
-          <span class="lk-topbar__ref-label">Código para recuperar esta simulación</span>
+          @if (route() !== 'resumen') {
+            <span class="lk-topbar__ref-label">Código para recuperar esta simulación</span>
+          }
           <span class="lk-topbar__ref-code">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
             <span class="mono">{{ refCode() }}</span>
@@ -433,7 +435,7 @@
               </div>
               <afi-animated-chart
                 subtitle="Reducciones estimadas con las medidas seleccionadas"
-                [columns]="medidasReductionColumns"
+                [columns]="medidasReductionColumns()"
                 [maxValue]="100"
                 size="md"
                 ariaLabel="Reducciones estimadas: ahorro económico 99 por ciento, consumo energético 99 por ciento, emisiones de CO2 14 por ciento."
@@ -520,7 +522,7 @@
               <afi-animated-chart
                 title="Reducciones tras la reforma"
                 subtitle="Comparado con tu situación actual"
-                [columns]="ahorroChartColumns"
+                [columns]="ahorroChartColumns()"
                 [maxValue]="100"
                 size="md"
                 ariaLabel="Reducciones estimadas tras la reforma: consumo 64 por ciento, emisiones 64 por ciento, gasto 71 por ciento."
@@ -655,7 +657,7 @@
 
         <!-- Help band -->
         <div class="help-band">
-          <img class="lk-mark-img" src="assets/logos/laboral-kutxa/mark.png" alt="" aria-hidden="true" />
+          <img class="lk-mark-img" [src]="brandConfig().logoSrc" alt="" aria-hidden="true" />
           <div class="help-band__h">¿Necesitas ayuda con tu proyecto?</div>
           <div class="help-band__p">Nuestros asesores energéticos están listos para ayudarte a optimizar tu inversión y guiarte en el proceso de rehabilitación</div>
           <afi-button variant="secondary">

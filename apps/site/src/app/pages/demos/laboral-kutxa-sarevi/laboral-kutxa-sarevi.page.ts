@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   signal,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import {
   AnimatedChartComponent,
@@ -26,6 +28,7 @@ import { MUNICIPIOS_ES } from './municipios-es';
 
 type Route = 'welcome' | 'datos' | 'medidas' | 'resumen';
 type Variant = 'basica' | 'completa' | 'personalizada';
+type SareviBrand = 'laboral-kutxa' | 'unicaja';
 
 interface StepNavItem {
   key: Exclude<Route, 'welcome'>;
@@ -94,6 +97,44 @@ Coste acondicionamiento previo de la fachada variable en función del año de co
 
 const ENERGY_GRADES = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
+const BRAND_CONFIG: Record<SareviBrand, {
+  demoSlug: string;
+  demoRoute: string;
+  brandName: string;
+  logoSrc: string;
+  logoAlt: string;
+  refCode: string;
+  chartPrimary: string;
+  chartSecondary: string;
+  chartAccent: string;
+  advisorCopy: string;
+}> = {
+  'laboral-kutxa': {
+    demoSlug: 'laboral-kutxa-sarevi',
+    demoRoute: '/demos/laboral-kutxa-sarevi/demo',
+    brandName: 'Laboral Kutxa',
+    logoSrc: 'assets/logos/laboral-kutxa/logo.png',
+    logoAlt: 'Laboral Kutxa',
+    refCode: 'b8TpBXx3',
+    chartPrimary: 'var(--color-laboral-kutxa-verde-500)',
+    chartSecondary: 'var(--color-laboral-kutxa-verde-700)',
+    chartAccent: 'var(--color-laboral-kutxa-magenta-500)',
+    advisorCopy: 'Un asesor de Laboral Kutxa se pondrá en contacto contigo.',
+  },
+  unicaja: {
+    demoSlug: 'sarevi-unicaja',
+    demoRoute: '/demos/sarevi-unicaja',
+    brandName: 'Unicaja',
+    logoSrc: 'assets/logos/unicaja/logo-dark.svg',
+    logoAlt: 'Unicaja',
+    refCode: 'uC9kQ4w2',
+    chartPrimary: 'var(--color-unicaja-secondary-500)',
+    chartSecondary: 'var(--color-unicaja-secondary-700)',
+    chartAccent: 'var(--color-unicaja-primary-500)',
+    advisorCopy: 'Un asesor de Unicaja se pondrá en contacto contigo.',
+  },
+};
+
 @Component({
   selector: 'site-laboral-kutxa-sarevi',
   standalone: true,
@@ -115,8 +156,15 @@ const ENERGY_GRADES = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
   styleUrl: './laboral-kutxa-sarevi.page.scss',
 })
 export class LaboralKutxaSareviPage {
+  private readonly activatedRoute = inject(ActivatedRoute);
+
+  readonly brand = signal<SareviBrand>(
+    this.activatedRoute.snapshot.data['sareviBrand'] === 'unicaja' ? 'unicaja' : 'laboral-kutxa',
+  );
+  readonly brandConfig = computed(() => BRAND_CONFIG[this.brand()]);
+
   readonly route = signal<Route>('welcome');
-  readonly refCode = signal('b8TpBXx3');
+  readonly refCode = computed(() => this.brandConfig().refCode);
 
   // Two-way modal opens (afi-modal uses [open]/(openChange))
   readonly recuperarOpen = signal(false);
@@ -160,57 +208,57 @@ export class LaboralKutxaSareviPage {
   // Bar-chart shown on the medidas screen — live preview of the reduction
   // percentages that the currently-selected measures would produce. Same
   // visual language as the resumen chart so both screens read as one story.
-  readonly medidasReductionColumns: ChartColumn[] = [
+  readonly medidasReductionColumns = computed<ChartColumn[]>(() => [
     {
       title: 'Ahorro económico',
       value: 99,
       appendString: '%',
       caption: 'menos gasto anual',
-      color: 'var(--color-laboral-kutxa-verde-500)',
+      color: this.brandConfig().chartPrimary,
     },
     {
       title: 'Consumo energético',
       value: 99,
       appendString: '%',
       caption: 'menos kWh/año',
-      color: 'var(--color-laboral-kutxa-verde-700)',
+      color: this.brandConfig().chartSecondary,
     },
     {
       title: 'Emisiones CO₂',
       value: 14,
       appendString: '%',
       caption: 'menos kg/año',
-      color: 'var(--color-laboral-kutxa-magenta-500)',
+      color: this.brandConfig().chartAccent,
     },
-  ];
+  ]);
 
   // Bar-chart breakdown of the post-reforma reductions (max = 100% scale).
   // Colors mix the data-viz series palette with LK-specific magenta so the
   // financial bar (€) reads as a brand-tinted accent vs the verde sustainability
   // bars. Visible on the resumen screen inside the bento layout.
-  readonly ahorroChartColumns: ChartColumn[] = [
+  readonly ahorroChartColumns = computed<ChartColumn[]>(() => [
     {
       title: 'Consumo',
       value: 64,
       appendString: '%',
       caption: 'reducción',
-      color: 'var(--color-laboral-kutxa-verde-500)',
+      color: this.brandConfig().chartPrimary,
     },
     {
       title: 'Emisiones',
       value: 64,
       appendString: '%',
       caption: 'reducción',
-      color: 'var(--color-laboral-kutxa-verde-700)',
+      color: this.brandConfig().chartSecondary,
     },
     {
       title: 'Gasto',
       value: 71,
       appendString: '%',
       caption: 'menos €/año',
-      color: 'var(--color-laboral-kutxa-magenta-500)',
+      color: this.brandConfig().chartAccent,
     },
-  ];
+  ]);
 
   readonly tipoOptions: SegmentedOption[] = [
     { value: 'Piso', label: 'Piso' },
@@ -451,7 +499,7 @@ export class LaboralKutxaSareviPage {
   }
 
   contactAdvisor(): void {
-    alert('Un asesor de Laboral Kutxa se pondrá en contacto contigo.');
+    alert(this.brandConfig().advisorCopy);
   }
 
   private monthly(p: number, rA: number, n: number): number {

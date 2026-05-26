@@ -97,4 +97,13 @@ export const demos_routes: Routes = [
         (m) => m.LaboralKutxaSareviPage,
       ),
   },
+  // Sarevi Unicaja — same simulator surface, Unicaja brand mode.
+  {
+    path: 'sarevi-unicaja',
+    data: { sareviBrand: 'unicaja' },
+    loadComponent: () =>
+      import('./laboral-kutxa-sarevi/laboral-kutxa-sarevi.page').then(
+        (m) => m.LaboralKutxaSareviPage,
+      ),
+  },
 ];

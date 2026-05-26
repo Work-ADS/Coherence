@@ -105,3 +105,23 @@
   font: var(--type-body-sm-400);
   color: var(--feedback-error-foreground);
 }
+
+:host-context([data-brand="unicaja"]) .afi-input__label {
+  font: var(--type-body-lg-500);
+}
+
+:host-context([data-brand="unicaja"]) .afi-input__field {
+  border-color: var(--color-unicaja-primary-500);
+  border-radius: var(--dimension-1);
+  background: var(--color-base-white);
+  font: var(--type-body-lg-500);
+
+  &:hover:not(:disabled):not([readonly]) {
+    border-color: var(--color-unicaja-primary-600);
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-unicaja-primary-500);
+    border-color: var(--color-unicaja-primary-500);
+  }
+}

@@ -2,23 +2,135 @@
 // colors-unicaja.scss — Unicaja brand primitives
 // =============================================================================
 //
-// ⚠️  STUB. Values not yet sourced from Unicaja's Figma.
+// Values sourced from the local Figma token screenshots in
+// `Afi brand/Unicaja tokens/` (2026-05-26). The source palette used Material
+// naming (Primary / Secondary / Tertiary / Neutral / Neutral Variant), but this
+// file translates those ramps into Coherence primitive variables so semantic
+// brand binding can stay consistent with the rest of the DS.
 //
-// When the brand palette is ready, replace the placeholders below with
-// Unicaja's actual primitives. Activation: <html data-brand="unicaja">.
-//
-// Semantic re-bindings live in semantic.scss under the same selector.
+// Activation: <html data-brand="unicaja"> or any scoped wrapper with
+// data-brand="unicaja".
 // =============================================================================
 
 [data-brand="unicaja"] {
-  // ---------------------------------------------------------------------------
-  // TODO: Unicaja brand ramps (provide values from Figma)
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
+  // unicaja-primary — Material Primary, deep teal
+  // Role: primary product chrome, CTA, branded text, focus ring.
+  // ===========================================================================
+  --color-unicaja-primary-0:   #FFFFFF;
+  --color-unicaja-primary-25:  #F6FBFD;
+  --color-unicaja-primary-50:  #E3F2F6;
+  --color-unicaja-primary-100: #C6E4EA;
+  --color-unicaja-primary-200: #8CC7D2;
+  --color-unicaja-primary-300: #5AA3B2;
+  --color-unicaja-primary-400: #2E7A8C;
+  --color-unicaja-primary-500: #005265;
+  --color-unicaja-primary-600: #004354;
+  --color-unicaja-primary-700: #00313D;
+  --color-unicaja-primary-800: #001E26;
+  --color-unicaja-primary-900: #001217;
 
-  // --color-unicaja-primary-0:   #FFFFFF;
-  // --color-unicaja-primary-25:  #__;
-  // --color-unicaja-primary-50:  #__;
-  // ...
+  // ===========================================================================
+  // unicaja-secondary — Material Secondary + Unicaja mark green
+  // Role: positive/action accent, sustainability cues, brand highlight.
+  // ===========================================================================
+  --color-unicaja-secondary-0:   #FFFFFF;
+  --color-unicaja-secondary-25:  #FBFFFB;
+  --color-unicaja-secondary-50:  #F0FDF0;
+  --color-unicaja-secondary-100: #E2FBE2;
+  --color-unicaja-secondary-200: #B8F2B8;
+  --color-unicaja-secondary-300: #8AE88A;
+  --color-unicaja-secondary-400: #5DDD5A;
+  --color-unicaja-secondary-500: #2BD124;
+  --color-unicaja-secondary-600: #25B523;
+  --color-unicaja-secondary-700: #1F8E1D;
+  --color-unicaja-secondary-800: #176515;
+  --color-unicaja-secondary-900: #0F3D0C;
 
-  // Other Unicaja ramps go here.
+  // ===========================================================================
+  // unicaja-tertiary — Material Tertiary, blue-gray
+  // Role: neutral brand depth, headings on pale surfaces, secondary chrome.
+  // ===========================================================================
+  --color-unicaja-tertiary-0:   #FFFFFF;
+  --color-unicaja-tertiary-25:  #FCFDFE;
+  --color-unicaja-tertiary-50:  #F8FAFC;
+  --color-unicaja-tertiary-100: #F1F5F9;
+  --color-unicaja-tertiary-200: #E2E8F0;
+  --color-unicaja-tertiary-300: #CBD5E1;
+  --color-unicaja-tertiary-400: #94A3B8;
+  --color-unicaja-tertiary-500: #64748B;
+  --color-unicaja-tertiary-600: #475569;
+  --color-unicaja-tertiary-700: #334155;
+  --color-unicaja-tertiary-800: #1E293B;
+  --color-unicaja-tertiary-900: #0F172A;
+
+  // ===========================================================================
+  // unicaja-neutral — Material Neutral
+  // Role: page canvas, card surfaces, borders, supporting text.
+  // ===========================================================================
+  --color-unicaja-neutral-0:   #FFFFFF;
+  --color-unicaja-neutral-25:  #FCFDFE;
+  --color-unicaja-neutral-50:  #F8FAFC;
+  --color-unicaja-neutral-100: #F4F7FB;
+  --color-unicaja-neutral-200: #E8EDF4;
+  --color-unicaja-neutral-300: #D7DEE8;
+  --color-unicaja-neutral-400: #AFBACB;
+  --color-unicaja-neutral-500: #94A3B8;
+  --color-unicaja-neutral-600: #64748B;
+  --color-unicaja-neutral-700: #475569;
+  --color-unicaja-neutral-800: #334155;
+  --color-unicaja-neutral-900: #0F172A;
+
+  // ===========================================================================
+  // unicaja-neutral-variant — Material Neutral Variant
+  // Role: control borders, soft panels, table lines.
+  // ===========================================================================
+  --color-unicaja-neutral-variant-0:   #FFFFFF;
+  --color-unicaja-neutral-variant-25:  #FBFDFF;
+  --color-unicaja-neutral-variant-50:  #F1F3F4;
+  --color-unicaja-neutral-variant-100: #E3E7E9;
+  --color-unicaja-neutral-variant-200: #C5CBCF;
+  --color-unicaja-neutral-variant-300: #A9B0B4;
+  --color-unicaja-neutral-variant-400: #8F9599;
+  --color-unicaja-neutral-variant-500: #747A7E;
+  --color-unicaja-neutral-variant-600: #5D6266;
+  --color-unicaja-neutral-variant-700: #454B4F;
+  --color-unicaja-neutral-variant-800: #2F3437;
+  --color-unicaja-neutral-variant-900: #1A1F22;
+
+  // ===========================================================================
+  // Functional ink + simulator-specific colors.
+  // ===========================================================================
+  --color-unicaja-ink-default: #08121A;
+  --color-unicaja-ink-soft:    #334155;
+  --color-unicaja-ink-muted:   #64748B;
+
+  --font-brand-display: "Manrope", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-brand-text:    "Manrope", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-brand-mono:    "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-unicaja-energy-A: #2BD124;
+  --color-unicaja-energy-B: #5DDD5A;
+  --color-unicaja-energy-C: #B8F2B8;
+  --color-unicaja-energy-D: #F2C40A;
+  --color-unicaja-energy-E: #E8901E;
+  --color-unicaja-energy-F: #DC5E26;
+  --color-unicaja-energy-G: #C8261F;
+
+  --color-unicaja-impact-warn-bg: #E3F2F6;
+  --color-unicaja-impact-warn-fg: #00313D;
+  --color-unicaja-impact-low-bg:  #F1F5F9;
+  --color-unicaja-impact-low-fg:  #334155;
+  --color-unicaja-impact-mid-bg:  #E3F2F6;
+  --color-unicaja-impact-mid-fg:  #005265;
+  --color-unicaja-impact-high-bg: #E2FBE2;
+  --color-unicaja-impact-high-fg: #176515;
+  --color-unicaja-impact-none-bg: #E3E7E9;
+  --color-unicaja-impact-none-fg: #454B4F;
+
+  --color-unicaja-alert-info-bg: #E3F2F6;
+  --color-unicaja-alert-info-fg: #00313D;
+  --color-unicaja-table-neg: #176515;
+  --color-unicaja-finance-green-top: #F0FDF0;
+  --color-unicaja-finance-green-bottom: #FBFFFB;
 }

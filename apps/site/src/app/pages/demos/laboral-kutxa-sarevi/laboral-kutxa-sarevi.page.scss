@@ -36,25 +36,6 @@
   --green-50:    var(--color-laboral-kutxa-verde-50);
   --mag:         var(--color-laboral-kutxa-magenta-500);
   --mag-100:     var(--color-laboral-kutxa-magenta-100);
-  // ────────────────────────────────────────────────────────────────────────
-  // Sarevi surface mapping (page-level — overrides the brand-wide canvas/
-  // surface tokens for this demo only). Reads like LK's own web sections:
-  //   - Page canvas = white
-  //   - Section wrapper (.surface) = transparent — sections float on white
-  //   - Cards (.card) = soft magenta tint, so the form groups stand out
-  //   - Inputs/recessed surfaces = barely-there magenta wash
-  // To go back to the original tinted-paper look, point these at the beige
-  // ramp instead (--beige-300 for page bg, --beige-400 for surface wrap).
-  // ────────────────────────────────────────────────────────────────────────
-  // ────────────────────────────────────────────────────────────────────────
-  // Surface tinting — barely-pink so the brand reads as a *whisper*, not a
-  // pink page. Cards are halfway between white and magenta-25 (mixed via
-  // color-mix). The pink lives in the BORDER, not the fill — that keeps
-  // the brand touch without flooding the layout. Recessed surfaces use the
-  // warm beige-25 so inputs feel different from cards without piling more
-  // pink. Step the percentages up only if a reviewer specifically asks
-  // for more brand color in the fills.
-  // ────────────────────────────────────────────────────────────────────────
   --beige:       var(--color-laboral-kutxa-beige-0);
   --beige-deep:  transparent;
   --cream:       var(--color-laboral-kutxa-beige-25);
@@ -125,6 +106,53 @@
   .spacer { flex: 1; }
 }
 
+.lk-sarevi--unicaja {
+  --bere:        var(--color-unicaja-primary-500);
+  --bere-700:    var(--color-unicaja-primary-700);
+  --bere-500:    var(--color-unicaja-primary-500);
+  --bere-300:    var(--color-unicaja-primary-300);
+  --green:       var(--color-unicaja-secondary-500);
+  --green-700:   var(--color-unicaja-secondary-700);
+  --green-100:   var(--color-unicaja-secondary-100);
+  --green-50:    var(--color-unicaja-secondary-50);
+  --mag:         var(--color-unicaja-primary-500);
+  --mag-100:     var(--color-unicaja-primary-100);
+
+  --beige:       var(--color-base-white);
+  --beige-deep:  transparent;
+  --cream:       var(--color-unicaja-neutral-50);
+  --card-soft:   var(--color-unicaja-neutral-50);
+  --card:        var(--color-base-white);
+  --line:        var(--color-unicaja-primary-200);
+  --line-soft:   var(--color-unicaja-neutral-variant-100);
+  --text:        var(--color-unicaja-ink-default);
+  --text-soft:   var(--color-unicaja-ink-soft);
+  --text-muted:  var(--color-unicaja-ink-muted);
+
+  --warn-bg: var(--color-unicaja-impact-warn-bg);
+  --warn-fg: var(--color-unicaja-impact-warn-fg);
+  --low-bg:  var(--color-unicaja-impact-low-bg);
+  --low-fg:  var(--color-unicaja-impact-low-fg);
+  --mid-bg:  var(--color-unicaja-impact-mid-bg);
+  --mid-fg:  var(--color-unicaja-impact-mid-fg);
+  --high-bg: var(--color-unicaja-impact-high-bg);
+  --high-fg: var(--color-unicaja-impact-high-fg);
+  --none-bg: var(--color-unicaja-impact-none-bg);
+  --none-fg: var(--color-unicaja-impact-none-fg);
+
+  --energy-A: var(--color-unicaja-energy-A);
+  --energy-B: var(--color-unicaja-energy-B);
+  --energy-C: var(--color-unicaja-energy-C);
+  --energy-D: var(--color-unicaja-energy-D);
+  --energy-E: var(--color-unicaja-energy-E);
+  --energy-F: var(--color-unicaja-energy-F);
+  --energy-G: var(--color-unicaja-energy-G);
+
+  --brand-secondary-background-disabled: var(--color-unicaja-neutral-variant-100);
+  --brand-secondary-foreground-disabled: var(--color-unicaja-ink-muted);
+  --brand-secondary-border-disabled: var(--color-unicaja-neutral-variant-200);
+}
+
 // ─── Top bar ──────────────────────────────────────────────────────────────
 // LK signature magenta gradient (header strip used across laboralkutxa.com).
 // White text + the official logo's white wordmark sit on top of this without
@@ -148,6 +176,7 @@
     align-items: center;
     gap: var(--dimension-3-5);
     flex: 0 0 auto;
+    min-height: var(--dimension-8);
   }
 
   &__sep {
@@ -158,8 +187,11 @@
   }
 
   &__sub {
+    display: inline-flex;
+    align-items: center;
     font-family: var(--font-display);
     font-size: var(--dimension-4-25);
+    line-height: 1;
     color: var(--color-laboral-kutxa-beige-0);
     font-weight: 500;
     letter-spacing: -0.01em;
@@ -167,7 +199,7 @@
 
   &__right {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: flex-end;
     gap: var(--dimension-4);
     color: var(--color-laboral-kutxa-beige-0);
@@ -181,6 +213,7 @@
     flex-direction: column;
     align-items: flex-end;
     gap: var(--dimension-0-75);
+    justify-content: center;
   }
 
   &__ref-label { color: var(--color-white-a75); font-size: 11.5px; }
@@ -191,11 +224,18 @@
     gap: var(--dimension-2);
     font-family: var(--font-mono);
     font-size: var(--dimension-3-25);
+    line-height: 1;
     letter-spacing: 0.02em;
     color: var(--color-laboral-kutxa-beige-0);
+
+    svg {
+      flex: 0 0 auto;
+      display: block;
+    }
   }
 
   .topbar-download {
+    align-self: center;
     --foreground-secondary-default: var(--color-laboral-kutxa-beige-0);
     --surface-subtle: var(--color-white-a14);
     --brand-tertiary-background-hover: var(--color-white-a14);
@@ -293,6 +333,47 @@
   }
 }
 
+.lk-sarevi--unicaja .step {
+  color: var(--color-unicaja-primary-500);
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
+  border-bottom-color: var(--color-unicaja-neutral-variant-100);
+
+  &:hover {
+    background: transparent;
+    border-color: transparent transparent var(--color-unicaja-primary-300);
+  }
+
+  &:focus-visible {
+    outline-color: var(--color-unicaja-primary-500);
+  }
+
+  &--done .step__badge {
+    background: var(--color-unicaja-secondary-500);
+    color: var(--color-base-white);
+  }
+
+  &--current {
+    background: transparent;
+    border-color: transparent transparent var(--color-unicaja-primary-500);
+  }
+
+  &--current .step__badge {
+    background: var(--color-unicaja-primary-500);
+    color: var(--color-base-white);
+  }
+
+  &--todo .step__badge {
+    color: var(--color-unicaja-ink-muted);
+    box-shadow: inset 0 0 0 var(--dimension-0-25) var(--color-unicaja-neutral-variant-200);
+  }
+
+  &--todo .step__label {
+    color: var(--color-unicaja-ink-muted);
+  }
+}
+
 // ─── Welcome ──────────────────────────────────────────────────────────────
 .welcome-wrap {
   display: flex;
@@ -327,6 +408,21 @@
     font-family: inherit;
 
     &:hover { color: var(--mag); }
+  }
+}
+
+.lk-sarevi--unicaja .welcome-wrap {
+  padding-top: var(--dimension-18);
+
+  &__h1 {
+    max-width: 22ch;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  &__lead {
+    max-width: 60ch;
+    color: var(--color-base-black);
   }
 }
 
@@ -376,6 +472,23 @@
     font-size: var(--dimension-3-5);
     text-align: center;
     max-width: 22ch;
+  }
+}
+
+.lk-sarevi--unicaja .choice-card {
+  background: var(--color-base-white);
+  border-color: var(--color-unicaja-neutral-variant-100);
+  border-radius: var(--dimension-2);
+  box-shadow: none;
+
+  &:hover {
+    border-color: var(--color-unicaja-primary-500);
+    box-shadow: none;
+  }
+
+  &__ico {
+    background: var(--color-unicaja-primary-500);
+    color: var(--color-base-white);
   }
 }
 

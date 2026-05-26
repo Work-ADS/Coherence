@@ -576,7 +576,31 @@
 
 // ----- Unicaja -----
 [data-brand="unicaja"] {
-  // ⚠️  STUB. Fill in once colors-unicaja.scss has real primitive values.
+  @include coherence-brand-bind(
+    $brand: 'unicaja',
+    $accent: 'primary',
+    $neutral: 'neutral',
+    $ink-default: var(--color-unicaja-ink-default),
+    $ink-soft:    var(--color-unicaja-ink-soft),
+    $ink-muted:   var(--color-unicaja-ink-muted),
+  );
+
+  --surface-selected: var(--color-unicaja-primary-50);
+  --brand-mark-symbol: var(--color-unicaja-secondary-500);
+  --control-background-default: var(--color-base-white);
+  --control-background-hover: var(--color-base-white);
+  --control-background-selected: var(--color-base-white);
+  --control-foreground-default: var(--color-unicaja-primary-500);
+  --control-foreground-hover: var(--color-unicaja-primary-600);
+  --control-foreground-selected: var(--color-unicaja-primary-500);
+  --control-border-default: var(--color-unicaja-neutral-variant-200);
+  --control-border-hover: var(--color-unicaja-primary-300);
+  --border-subtle: var(--color-unicaja-neutral-variant-100);
+  --border-default: var(--color-unicaja-primary-500);
+  --border-focus: var(--color-unicaja-primary-500);
+  --input-background-default: var(--color-base-white);
+  --input-border-default: var(--color-unicaja-neutral-variant-200);
+  --input-border-hover: var(--color-unicaja-primary-300);
 }
 
 // ----- Laboral Kutxa -----

@@ -462,6 +462,155 @@
   }
 }
 
+.lk-sarevi--unicaja {
+  .lk-topbar {
+    background: var(--color-base-white);
+    color: var(--color-unicaja-ink-default);
+    border-bottom: var(--dimension-0-25) solid var(--color-unicaja-neutral-variant-100);
+
+    &__sep {
+      background: var(--color-unicaja-neutral-variant-200);
+      opacity: 1;
+    }
+
+    &__sub,
+    &__right,
+    &__ref-code {
+      color: var(--color-unicaja-ink-default);
+    }
+
+    &__ref-label {
+      color: var(--color-unicaja-ink-muted);
+    }
+
+    .topbar-download {
+      --foreground-secondary-default: var(--color-unicaja-primary-500);
+      --surface-subtle: var(--color-base-white);
+      --brand-tertiary-background-hover: var(--color-unicaja-primary-50);
+      --brand-tertiary-foreground-hover: var(--color-unicaja-primary-600);
+    }
+  }
+
+  .lk-logo-img {
+    height: var(--dimension-7);
+  }
+
+  .lk-topbar__brand {
+    min-height: var(--dimension-7);
+  }
+
+  .surface {
+    padding-top: var(--dimension-12);
+  }
+
+  .surface-header__title {
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+
+  .field-label {
+    font: var(--type-body-lg-500);
+  }
+
+  .bento-medidas__cell--chart {
+    background: linear-gradient(
+      160deg,
+      var(--color-unicaja-primary-50) 0%,
+      var(--color-base-white) 75%
+    );
+  }
+
+  .bento-cell__ico {
+    background: var(--color-unicaja-primary-500);
+    color: var(--color-base-white);
+  }
+
+  .bento-cell--feature {
+    background: var(--color-base-white);
+    border-color: var(--color-unicaja-neutral-variant-100);
+  }
+
+  .bento-cell--chart,
+  .card,
+  .cuota-main {
+    background: var(--color-base-white);
+  }
+
+  .card {
+    border-color: var(--color-unicaja-neutral-variant-100);
+    border-radius: var(--dimension-2);
+  }
+
+  .lk-table__neg {
+    color: var(--color-unicaja-table-neg);
+  }
+
+  .slider-bar__fill,
+  .slider-bar__thumb {
+    background: var(--color-unicaja-primary-500);
+  }
+
+  .help-band {
+    background: var(--color-unicaja-primary-50);
+    border: var(--dimension-0-25) solid var(--color-unicaja-primary-100);
+    border-radius: var(--dimension-2);
+  }
+
+  .lk-mark-img {
+    width: auto;
+    height: var(--dimension-7);
+  }
+
+  .cae-badge {
+    background: var(--color-unicaja-secondary-100);
+    color: var(--color-unicaja-secondary-700);
+  }
+
+  .pill-tag {
+    background: var(--color-unicaja-primary-50);
+    color: var(--color-unicaja-primary-500);
+  }
+
+  .energy-label {
+    color: var(--color-base-white);
+  }
+
+  .metric-card {
+    background: var(--color-base-white);
+    border-color: var(--color-unicaja-neutral-variant-100);
+    border-radius: var(--dimension-2);
+    box-shadow: none;
+
+    &:hover {
+      border-color: var(--color-unicaja-primary-300);
+      box-shadow: none;
+    }
+  }
+
+  .stat__delta--down {
+    background: var(--color-unicaja-secondary-100);
+    color: var(--color-unicaja-secondary-700);
+  }
+
+  .finance-card {
+    background: var(--color-base-white);
+    border-color: var(--color-unicaja-neutral-variant-100);
+    border-radius: var(--dimension-2);
+
+    &--green {
+      background: linear-gradient(180deg, var(--color-unicaja-finance-green-top) 0%, var(--color-unicaja-finance-green-bottom) 100%);
+      border-color: var(--color-unicaja-secondary-100);
+    }
+  }
+
+  .alert--info {
+    background: var(--color-unicaja-alert-info-bg);
+    color: var(--color-unicaja-alert-info-fg);
+
+    .alert__icon { color: var(--color-unicaja-alert-info-fg); }
+  }
+}
+
 // Container queries are the important bit for this demo. The simulator can sit
 // inside a narrow preview canvas while the browser viewport is still desktop
 // width, so the responsive behavior must react to the product surface, not the

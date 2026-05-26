@@ -33,6 +33,15 @@ const DEMOS: DemoCard[] = [
     status: 'Nuevo',
     overviewRoute: '/demos/laboral-kutxa-sarevi',
   },
+  {
+    slug: 'sarevi-unicaja',
+    title: 'Sarevi Unicaja',
+    intro:
+      'Nueva versión del simulador Sarevi con marca Unicaja: Manrope, canvas blanco, controles tipo radio-card y acentos teal.',
+    team: 'digital-solutions',
+    status: 'Nuevo',
+    overviewRoute: '/demos/sarevi-unicaja',
+  },
 ];
 
 const TEAM_OPTIONS: SegmentedOption[] = [

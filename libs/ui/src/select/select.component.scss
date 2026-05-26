@@ -199,6 +199,35 @@
   }
 }
 
+:host-context([data-brand="unicaja"]) .afi-select__label {
+  font: var(--type-body-lg-500);
+}
+
+:host-context([data-brand="unicaja"]) .afi-select__trigger {
+  border-color: var(--color-unicaja-primary-500);
+  border-radius: var(--dimension-1);
+  background: var(--color-base-white);
+  font: var(--type-body-lg-500);
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-unicaja-primary-600);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--border-width-hairline) var(--color-unicaja-primary-500);
+    outline-offset: 0;
+  }
+}
+
+:host-context([data-brand="unicaja"]) .afi-select__chevron {
+  color: var(--color-unicaja-primary-500);
+}
+
+:host-context([data-brand="unicaja"]) .afi-select__panel {
+  border-color: var(--color-unicaja-primary-200);
+  border-radius: var(--dimension-1);
+}
+
 .afi-select__group-label {
   padding: var(--space-2xs) var(--space-sm);
   font: var(--type-body-sm-500);

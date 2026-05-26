@@ -108,6 +108,19 @@ export interface LegadoRetiroData {
   continuarCotizaciones: boolean;
 }
 
+// ── Objetivos · Inversiones futuras (Brief F) ──────────────────────────────
+export type InversionFuturaTipo = 'vivienda' | 'otros';
+
+export interface InversionFuturaRow {
+  id: string;
+  nombre: string;
+  tipo: InversionFuturaTipo | null;
+  anio: number | null;
+  importe: number;
+  /** Family-member id ('cliente' | 'conyuge' | hijo.id | ascendiente.id) or null. */
+  titular: string | null;
+}
+
 // ── Sociedades (Brief B) ─────────────────────────────────────────────────
 export type Tributacion = 'patrimonial' | 'holding' | 'socimi';
 
@@ -153,6 +166,7 @@ let nextAscendienteId = 1;
 let nextSociedadId = 1;
 let nextIngresoId = 1;
 let nextGastoId = 1;
+let nextInversionFuturaId = 1;
 
 @Injectable({ providedIn: 'root' })
 export class WealthPlannerStore {
@@ -507,5 +521,42 @@ export class WealthPlannerStore {
     const currentSelected = this.legadoRetiro().activosConservar.includes(id);
     if (currentSelected === selected) return;
     this.toggleAssetToConservar(id);
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Objetivos · Inversiones futuras (Brief F)
+  // ──────────────────────────────────────────────────────────────────────
+
+  readonly inversionesFuturas = signal<InversionFuturaRow[]>([]);
+
+  /**
+   * Optional section — there are no required fields, so the chip never reaches
+   * `complete`. Empty list = `empty`; any row exists = `in-progress`.
+   */
+  readonly inversionesFuturasState = computed<SectionState>(() =>
+    this.inversionesFuturas().length === 0 ? 'empty' : 'in-progress',
+  );
+
+  addInversionFutura(): InversionFuturaRow {
+    const next: InversionFuturaRow = {
+      id: `inv-fut-${nextInversionFuturaId++}`,
+      nombre: '',
+      tipo: null,
+      anio: null,
+      importe: 0,
+      titular: null,
+    };
+    this.inversionesFuturas.update((rows) => [...rows, next]);
+    return next;
+  }
+
+  updateInversionFutura(id: string, partial: Partial<InversionFuturaRow>): void {
+    this.inversionesFuturas.update((rows) =>
+      rows.map((row) => (row.id === id ? { ...row, ...partial } : row)),
+    );
+  }
+
+  removeInversionFutura(id: string): void {
+    this.inversionesFuturas.update((rows) => rows.filter((row) => row.id !== id));
   }
 }

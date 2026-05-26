@@ -104,7 +104,12 @@ export class PlannerSidebarComponent {
           state: this.store.legadoRetiroState(),
           route: '/demos/wealth-planner-2026/legado-retiro',
         },
-        { key: 'inversiones-futuras', label: 'Inversiones futuras', state: 'empty' },
+        {
+          key: 'inversiones-futuras',
+          label: 'Inversiones futuras',
+          state: this.store.inversionesFuturasState(),
+          route: '/demos/wealth-planner-2026/inversiones-futuras',
+        },
         { key: 'desinversiones-futuras', label: 'Desinversiones futuras', state: 'empty' },
         { key: 'proteccion-familiar', label: 'Protección familiar', state: 'empty' },
       ],

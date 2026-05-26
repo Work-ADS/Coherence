@@ -1,0 +1,136 @@
+// =============================================================================
+// Inversiones futuras — Objetivos page (Brief F).
+// Mirrors the Sociedades table + modal shape; semantic tokens only.
+// =============================================================================
+
+// ─── Empty state ────────────────────────────────────────────────────────────
+.if-empty {
+  margin-block-start: var(--space-xl);
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  background: var(--surface-subtle);
+  border: var(--border-width-hairline) dashed var(--border-subtle);
+  border-radius: var(--radius-card);
+  text-align: center;
+}
+
+.if-empty__title {
+  margin: 0;
+  font: var(--type-subtitle);
+  color: var(--foreground-primary-default);
+}
+
+.if-empty__hint {
+  margin: var(--space-sm) auto 0;
+  max-inline-size: 56ch;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+.if-empty__action {
+  margin-block-start: var(--space-lg);
+}
+
+// ─── Toolbar (above the table when rows exist) ──────────────────────────────
+.if-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-start: var(--space-md);
+}
+
+// ─── Table ──────────────────────────────────────────────────────────────────
+.if-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block-start: var(--space-md);
+  font: var(--type-body-md-400);
+}
+
+.if-table__head-row {
+  border-block-end: var(--border-width-hairline) solid var(--border-default);
+}
+
+.if-table__th {
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  text-align: start;
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.if-table__th--num {
+  text-align: end;
+}
+
+.if-table__th--actions {
+  inline-size: 1%;
+  white-space: nowrap;
+}
+
+.if-table__row {
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle);
+  }
+}
+
+.if-table__td {
+  padding-block: var(--space-md);
+  padding-inline: var(--space-md);
+  color: var(--foreground-primary-default);
+}
+
+.if-table__td--name {
+  font: var(--type-body-md-500);
+}
+
+.if-table__td--num {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.if-table__td--actions {
+  display: flex;
+  gap: var(--space-2xs);
+  justify-content: flex-end;
+  align-items: center;
+  white-space: nowrap;
+}
+
+// ─── Modal form ─────────────────────────────────────────────────────────────
+.if-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.if-form__importe {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--space-2xs);
+}
+
+.if-form__importe-unit {
+  font: var(--type-body-md-400);
+  color: var(--foreground-tertiary-default);
+  padding-block-end: calc(var(--control-h-md, var(--dimension-10)) / 2 - var(--space-2xs));
+}
+
+// ─── Visually-hidden helper ─────────────────────────────────────────────────
+.sr-only {
+  position: absolute;
+  width: var(--dimension-0-25);
+  height: var(--dimension-0-25);
+  padding: 0;
+  margin: calc(var(--dimension-0-25) * -1);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

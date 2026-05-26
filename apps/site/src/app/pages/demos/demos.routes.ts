@@ -42,6 +42,13 @@ export const demos_routes: Routes = [
       import('./legado-retiro/legado-retiro.page').then((m) => m.LegadoRetiroPage),
   },
   {
+    path: 'wealth-planner-2026/inversiones-futuras',
+    loadComponent: () =>
+      import('./inversiones-futuras/inversiones-futuras.page').then(
+        (m) => m.InversionesFuturasPage,
+      ),
+  },
+  {
     path: 'wealth-planner-2026/patrimonial',
     loadComponent: () =>
       import('./patrimonial/patrimonial-proposal.page').then((m) => m.PatrimonialProposalPage),

@@ -1,0 +1,189 @@
+<site-objetivos-page-shell
+  [views]="['Inversiones futuras']"
+  demoSlug="inversiones-futuras"
+  demoRoute="/demos/wealth-planner-2026/inversiones-futuras"
+  activeKey="inversiones-futuras"
+  title="Inversiones futuras"
+  subtitle="Adquisiciones de activos previstas en el futuro. Es opcional."
+  versionAriaLabel="Versión del layout de Inversiones futuras"
+  [showBanner]="store.legadoRetiroEstablished()"
+>
+  @if (store.inversionesFuturas().length === 0) {
+    <div class="if-empty">
+      <h2 class="if-empty__title">Aún no hay inversiones futuras registradas.</h2>
+      <p class="if-empty__hint">
+        Es opcional. Añade una si la familia planea comprar una vivienda u otro
+        activo en el futuro.
+      </p>
+      <div class="if-empty__action">
+        <afi-button
+          variant="primary"
+          size="md"
+          (clicked)="openAdd()"
+          ariaLabel="Añadir primera inversión futura"
+        >
+          + Añadir inversión futura
+        </afi-button>
+      </div>
+    </div>
+  } @else {
+    <div class="if-toolbar">
+      <afi-button
+        variant="primary"
+        size="sm"
+        (clicked)="openAdd()"
+        ariaLabel="Añadir inversión futura"
+      >
+        + Añadir inversión futura
+      </afi-button>
+    </div>
+    <table class="if-table">
+      <thead>
+        <tr class="if-table__head-row">
+          <th class="if-table__th">Nombre</th>
+          <th class="if-table__th">Tipo</th>
+          <th class="if-table__th">Año</th>
+          <th class="if-table__th">Titular</th>
+          <th class="if-table__th if-table__th--num">Importe</th>
+          <th class="if-table__th if-table__th--actions">
+            <span class="sr-only">Acciones</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of store.inversionesFuturas(); track row.id) {
+          <tr class="if-table__row" (click)="openEdit(row.id)">
+            <td class="if-table__td if-table__td--name">
+              {{ row.nombre || 'Sin nombre' }}
+            </td>
+            <td class="if-table__td">{{ tipoLabel(row.tipo) }}</td>
+            <td class="if-table__td">{{ formatAnio(row.anio) }}</td>
+            <td class="if-table__td">{{ titularLabel(row.titular) }}</td>
+            <td class="if-table__td if-table__td--num">
+              {{ formatEuro(row.importe) }}
+            </td>
+            <td class="if-table__td if-table__td--actions">
+              <afi-icon-button
+                variant="ghost"
+                size="sm"
+                ariaLabel="Editar inversión futura"
+                (clicked)="openEdit(row.id)"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                  />
+                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+              </afi-icon-button>
+              <afi-icon-button
+                variant="ghost"
+                size="sm"
+                ariaLabel="Borrar inversión futura"
+                (clicked)="removeInversionFutura(row.id, $event.event)"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                  <path d="M10 11v6" />
+                  <path d="M14 11v6" />
+                </svg>
+              </afi-icon-button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</site-objetivos-page-shell>
+
+<!-- ─── Add / Edit modal ─────────────────────────────────────────────── -->
+<afi-modal
+  [open]="dialogOpen()"
+  title="Inversión futura"
+  size="md"
+  [closeOnEsc]="true"
+  [closeOnBackdrop]="false"
+  (openChange)="$event ? null : closeDialog()"
+>
+  @if (editing(); as row) {
+    <div class="if-form">
+      <afi-input
+        label="Nombre"
+        placeholder="Vivienda principal"
+        [value]="row.nombre"
+        (valueChange)="setNombre($event)"
+      />
+      <afi-select
+        label="Tipo"
+        placeholder="Selecciona"
+        [options]="tipoOptions"
+        [value]="row.tipo"
+        (valueChange)="setTipo($event)"
+      />
+      <afi-input
+        label="Año en que se realizará"
+        type="number"
+        placeholder="2030"
+        [value]="row.anio === null ? '' : row.anio"
+        (valueChange)="setAnio($event)"
+      />
+      <div class="if-form__importe">
+        <afi-input
+          label="Importe"
+          type="number"
+          [value]="row.importe"
+          (valueChange)="setImporte($event)"
+        />
+        <span class="if-form__importe-unit">€</span>
+      </div>
+      <afi-select
+        label="Titular"
+        placeholder="Selecciona"
+        [options]="titularOptions()"
+        [value]="row.titular"
+        (valueChange)="setTitular($event)"
+      />
+    </div>
+  }
+
+  <ng-container slot="footer">
+    <afi-button
+      variant="ghost"
+      size="md"
+      (clicked)="closeDialog()"
+      ariaLabel="Cancelar"
+    >
+      Cancelar
+    </afi-button>
+    <afi-button
+      variant="primary"
+      size="md"
+      (clicked)="closeDialog()"
+      ariaLabel="Guardar inversión futura"
+    >
+      Guardar
+    </afi-button>
+  </ng-container>
+</afi-modal>

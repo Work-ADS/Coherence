@@ -1,0 +1,155 @@
+<site-objetivos-page-shell
+  [views]="['Protección familiar']"
+  demoSlug="proteccion-familiar"
+  demoRoute="/demos/wealth-planner-2026/proteccion-familiar"
+  activeKey="proteccion-familiar"
+  title="Protección familiar"
+  subtitle="Seguros y planes de protección para el cliente y, en su caso, el cónyuge. Es opcional."
+  versionAriaLabel="Versión del layout de Protección familiar"
+  [showBanner]="store.legadoRetiroEstablished()"
+>
+  <section class="pf-gate">
+    <afi-switch
+      label="¿Has establecido protección familiar?"
+      hint="Activa para registrar la protección del cliente y, si aplica, del cónyuge."
+      [checked]="store.proteccionFamiliarEstablished()"
+      (checkedChange)="setEstablished($event)"
+    />
+  </section>
+
+  @if (store.proteccionFamiliarEstablished()) {
+    <!-- ─── Cliente row ────────────────────────────────────────────── -->
+    <section class="pf-section">
+      <header class="pf-section__head">
+        <h2 class="pf-section__title">Protección para el cliente</h2>
+      </header>
+
+      <div class="pf-row">
+        <span class="pf-row__label">Estado</span>
+        @if (store.proteccionFamiliar().cliente.activa) {
+          <afi-badge intent="success">Activada</afi-badge>
+          <div class="pf-row__actions">
+            <afi-button
+              variant="secondary"
+              size="sm"
+              (clicked)="openFlowPlaceholder('cliente')"
+              ariaLabel="Consultar protección del cliente"
+            >
+              Consultar
+            </afi-button>
+            <afi-button
+              variant="ghost"
+              size="sm"
+              (clicked)="deactivateCliente()"
+              ariaLabel="Desactivar protección del cliente"
+            >
+              Desactivar
+            </afi-button>
+          </div>
+        } @else {
+          <afi-badge intent="neutral">No activada</afi-badge>
+          <div class="pf-row__actions">
+            <afi-button
+              variant="primary"
+              size="sm"
+              (clicked)="openFlowPlaceholder('cliente')"
+              ariaLabel="Activar protección del cliente"
+            >
+              Activar
+            </afi-button>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- ─── Cónyuge row — only when Familia.tienePareja ──────────── -->
+    @if (store.tienePareja()) {
+      <section class="pf-section">
+        <header class="pf-section__head">
+          <h2 class="pf-section__title">Protección para el cónyuge</h2>
+        </header>
+
+        <div class="pf-row">
+          <span class="pf-row__label">Estado</span>
+          @if (store.proteccionFamiliar().conyuge.activa) {
+            <afi-badge intent="success">Activada</afi-badge>
+            <div class="pf-row__actions">
+              <afi-button
+                variant="secondary"
+                size="sm"
+                (clicked)="openFlowPlaceholder('conyuge')"
+                ariaLabel="Consultar protección del cónyuge"
+              >
+                Consultar
+              </afi-button>
+              <afi-button
+                variant="ghost"
+                size="sm"
+                (clicked)="deactivateConyuge()"
+                ariaLabel="Desactivar protección del cónyuge"
+              >
+                Desactivar
+              </afi-button>
+            </div>
+          } @else {
+            <afi-badge intent="neutral">No activada</afi-badge>
+            <div class="pf-row__actions">
+              <afi-button
+                variant="primary"
+                size="sm"
+                (clicked)="openFlowPlaceholder('conyuge')"
+                ariaLabel="Activar protección del cónyuge"
+              >
+                Activar
+              </afi-button>
+            </div>
+          }
+        </div>
+      </section>
+    } @else {
+      <p class="pf-pareja-hint">
+        No hay cónyuge registrado en Familia. Cuando se añada uno, aparecerá
+        una segunda sección para gestionar su protección.
+      </p>
+    }
+  }
+</site-objetivos-page-shell>
+
+<!-- ─── Placeholder modal: real wizard pending a future iteration ──── -->
+<afi-modal
+  [open]="flowPlaceholderOpen()"
+  title="Flujo de protección familiar"
+  size="sm"
+  [closeOnEsc]="true"
+  [closeOnBackdrop]="true"
+  (openChange)="$event ? null : closeFlowPlaceholder()"
+>
+  <div class="pf-modal">
+    <p class="pf-modal__body">
+      El flujo de protección familiar está pendiente de definir.
+    </p>
+    <p class="pf-modal__body">
+      Se abrirá un wizard dedicado en una iteración futura. Por ahora, marca
+      el estado manualmente para continuar.
+    </p>
+  </div>
+
+  <ng-container slot="footer">
+    <afi-button
+      variant="ghost"
+      size="md"
+      (clicked)="closeFlowPlaceholder()"
+      ariaLabel="Cerrar diálogo"
+    >
+      Cerrar
+    </afi-button>
+    <afi-button
+      variant="primary"
+      size="md"
+      (clicked)="markActiveAndClose()"
+      ariaLabel="Marcar como activada"
+    >
+      Marcar como activada
+    </afi-button>
+  </ng-container>
+</afi-modal>

@@ -116,7 +116,12 @@ export class PlannerSidebarComponent {
           state: this.store.desinversionesState(),
           route: '/demos/wealth-planner-2026/desinversiones-futuras',
         },
-        { key: 'proteccion-familiar', label: 'Protección familiar', state: 'empty' },
+        {
+          key: 'proteccion-familiar',
+          label: 'Protección familiar',
+          state: this.store.proteccionFamiliarState(),
+          route: '/demos/wealth-planner-2026/proteccion-familiar',
+        },
       ],
     },
     {

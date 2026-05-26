@@ -108,6 +108,12 @@ export interface LegadoRetiroData {
   continuarCotizaciones: boolean;
 }
 
+// ── Objetivos · Protección familiar (Brief H) ───────────────────────────────
+export interface ProteccionFamiliarData {
+  cliente: { activa: boolean };
+  conyuge: { activa: boolean };
+}
+
 // ── Objetivos · Desinversiones futuras (Brief G) ────────────────────────────
 export type DesinversionObjetivo = 'liquidez' | 'rentas';
 
@@ -660,5 +666,46 @@ export class WealthPlannerStore {
         };
       }),
     );
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Objetivos · Protección familiar (Brief H)
+  // ──────────────────────────────────────────────────────────────────────
+
+  readonly proteccionFamiliarEstablished = signal<boolean>(false);
+  readonly proteccionFamiliar = signal<ProteccionFamiliarData>({
+    cliente: { activa: false },
+    conyuge: { activa: false },
+  });
+
+  /**
+   * `empty` when the gate is off. Once the gate flips on we're at least
+   * `in-progress`; reaching `complete` requires cliente.activa, plus
+   * conyuge.activa when `tienePareja()` is true.
+   */
+  readonly proteccionFamiliarState = computed<SectionState>(() => {
+    if (!this.proteccionFamiliarEstablished()) return 'empty';
+    const pf = this.proteccionFamiliar();
+    if (!pf.cliente.activa) return 'in-progress';
+    if (this.tienePareja() && !pf.conyuge.activa) return 'in-progress';
+    return 'complete';
+  });
+
+  setProteccionFamiliarEstablished(value: boolean): void {
+    this.proteccionFamiliarEstablished.set(value);
+  }
+
+  setClienteActiva(value: boolean): void {
+    this.proteccionFamiliar.update((current) => ({
+      ...current,
+      cliente: { activa: value },
+    }));
+  }
+
+  setConyugeActiva(value: boolean): void {
+    this.proteccionFamiliar.update((current) => ({
+      ...current,
+      conyuge: { activa: value },
+    }));
   }
 }

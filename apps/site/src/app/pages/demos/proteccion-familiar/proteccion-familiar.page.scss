@@ -1,0 +1,97 @@
+// =============================================================================
+// Protección familiar — Objetivos page (Brief H).
+// Gate + two rows (cliente, conyuge) with badge + per-row actions. Tokens only.
+// =============================================================================
+
+.pf-gate {
+  margin-block-start: var(--space-md);
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-card);
+}
+
+.pf-section {
+  margin-block-start: var(--space-lg);
+  padding-block: var(--space-lg);
+  padding-inline: var(--space-lg);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-card);
+}
+
+.pf-section__head {
+  margin-block-end: var(--space-md);
+}
+
+.pf-section__title {
+  margin: 0;
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+// ─── Row layout: label | badge | actions ─────────────────────────────────
+.pf-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.pf-row__label {
+  font: var(--type-body-md-500);
+  color: var(--foreground-primary-default);
+}
+
+.pf-row__actions {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .pf-row {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: var(--space-xs);
+  }
+
+  .pf-row__actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+// ─── Hint shown when the gate is on but no conyuge exists in Familia ──
+.pf-pareja-hint {
+  margin-block-start: var(--space-lg);
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+  background: var(--surface-subtle);
+  border: var(--border-width-hairline) dashed var(--border-subtle);
+  border-radius: var(--radius-md);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+  text-align: center;
+}
+
+// ─── Placeholder modal body ──────────────────────────────────────────────
+.pf-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.pf-modal__body {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-primary-default);
+
+  & + & {
+    color: var(--foreground-secondary-default);
+  }
+}

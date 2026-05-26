@@ -544,7 +544,7 @@
 .field-label {
   display: block;
   margin-block-end: var(--space-2xs);
-  font: var(--type-body-sm-500);
+  font: var(--sarevi-field-label-font, var(--type-body-sm-500));
   color: var(--foreground-primary-default);
 }
 
@@ -1060,6 +1060,10 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-55)), 1fr));
   gap: var(--dimension-3-5);
+}
+.form-stack {
+  display: grid;
+  gap: var(--dimension-4-5);
 }
 .action-row {
   display: flex;

@@ -107,7 +107,7 @@
 }
 
 :host-context([data-brand="unicaja"]) .afi-input__label {
-  font: var(--type-body-lg-500);
+  font: var(--unicaja-field-label-font, var(--type-body-md-500));
 }
 
 :host-context([data-brand="unicaja"]) .afi-input__field {

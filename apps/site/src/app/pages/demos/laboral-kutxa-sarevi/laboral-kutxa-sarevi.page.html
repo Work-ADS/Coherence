@@ -129,27 +129,26 @@
             />
           </div>
 
-          <div class="grid-2">
+          <div class="form-stack">
+            <afi-select
+              label="¿En qué municipio se encuentra?"
+              placeholder="Selecciona una opción"
+              [options]="municipioOptions"
+              [value]="data().municipio"
+              [searchable]="true"
+              searchPlaceholder="Buscar municipio…"
+              emptyText="Sin municipios coincidentes"
+              (valueChange)="setMunicipio($event)"
+            />
             <div>
               <label class="field-label">¿Buscar dirección automáticamente?</label>
               <afi-segmented-control
+                class="sarevi-radio-inline"
                 [options]="siNoOptions"
                 [value]="data().buscarDir"
                 (valueChange)="setBuscarDir($event)"
                 ariaLabel="Buscar dirección"
                 size="md"
-              />
-            </div>
-            <div>
-              <afi-select
-                label="¿En qué municipio se encuentra?"
-                placeholder="Selecciona una opción"
-                [options]="municipioOptions"
-                [value]="data().municipio"
-                [searchable]="true"
-                searchPlaceholder="Buscar municipio…"
-                emptyText="Sin municipios coincidentes"
-                (valueChange)="setMunicipio($event)"
               />
             </div>
           </div>

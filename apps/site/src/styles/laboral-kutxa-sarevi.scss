@@ -18,6 +18,32 @@
     width: 100%;
   }
 
+  &[data-brand="unicaja"] {
+    --sarevi-field-label-font: var(--type-body-md-500);
+  }
+
+  &[data-brand="unicaja"] afi-input,
+  &[data-brand="unicaja"] afi-select {
+    --unicaja-field-label-font: var(--sarevi-field-label-font);
+  }
+
+  &[data-brand="unicaja"] .sarevi-radio-inline {
+    .seg-control {
+      display: inline-flex;
+      width: auto;
+      max-width: 100%;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .seg-control__option {
+      min-width: var(--dimension-40);
+      min-height: var(--dimension-14);
+      padding: var(--space-md) var(--space-lg);
+      font: var(--type-body-md-600);
+    }
+  }
+
   .impact {
     display: inline-flex;
     align-items: center;

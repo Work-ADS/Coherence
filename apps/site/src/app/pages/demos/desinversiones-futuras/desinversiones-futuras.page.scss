@@ -1,0 +1,116 @@
+// =============================================================================
+// Desinversiones futuras — list page (Brief G).
+// Same shape as Inversiones futuras list; rows route to detail via routerLink.
+// =============================================================================
+
+// ─── Empty state ────────────────────────────────────────────────────────────
+.df-empty {
+  margin-block-start: var(--space-xl);
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  background: var(--surface-subtle);
+  border: var(--border-width-hairline) dashed var(--border-subtle);
+  border-radius: var(--radius-card);
+  text-align: center;
+}
+
+.df-empty__title {
+  margin: 0;
+  font: var(--type-subtitle);
+  color: var(--foreground-primary-default);
+}
+
+.df-empty__hint {
+  margin: var(--space-sm) auto 0;
+  max-inline-size: 56ch;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+.df-empty__action {
+  margin-block-start: var(--space-lg);
+}
+
+// ─── Toolbar ────────────────────────────────────────────────────────────────
+.df-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-start: var(--space-md);
+}
+
+// ─── Table ──────────────────────────────────────────────────────────────────
+.df-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block-start: var(--space-md);
+  font: var(--type-body-md-400);
+}
+
+.df-table__head-row {
+  border-block-end: var(--border-width-hairline) solid var(--border-default);
+}
+
+.df-table__th {
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  text-align: start;
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.df-table__th--num {
+  text-align: end;
+}
+
+.df-table__th--actions {
+  inline-size: 1%;
+  white-space: nowrap;
+}
+
+.df-table__row {
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle);
+  }
+}
+
+.df-table__td {
+  padding-block: var(--space-md);
+  padding-inline: var(--space-md);
+  color: var(--foreground-primary-default);
+}
+
+.df-table__td--name {
+  font: var(--type-body-md-500);
+}
+
+.df-table__td--num {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.df-table__td--actions {
+  display: flex;
+  gap: var(--space-2xs);
+  justify-content: flex-end;
+  align-items: center;
+  white-space: nowrap;
+}
+
+// ─── Visually-hidden helper ─────────────────────────────────────────────────
+.sr-only {
+  position: absolute;
+  width: var(--dimension-0-25);
+  height: var(--dimension-0-25);
+  padding: 0;
+  margin: calc(var(--dimension-0-25) * -1);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

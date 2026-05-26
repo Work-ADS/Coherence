@@ -49,6 +49,20 @@ export const demos_routes: Routes = [
       ),
   },
   {
+    path: 'wealth-planner-2026/desinversiones-futuras',
+    loadComponent: () =>
+      import('./desinversiones-futuras/desinversiones-futuras.page').then(
+        (m) => m.DesinversionesFuturasPage,
+      ),
+  },
+  {
+    path: 'wealth-planner-2026/desinversiones-futuras/:id',
+    loadComponent: () =>
+      import('./desinversiones-futuras/desinversion-detail.page').then(
+        (m) => m.DesinversionDetailPage,
+      ),
+  },
+  {
     path: 'wealth-planner-2026/patrimonial',
     loadComponent: () =>
       import('./patrimonial/patrimonial-proposal.page').then((m) => m.PatrimonialProposalPage),

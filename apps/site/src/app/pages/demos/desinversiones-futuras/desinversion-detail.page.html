@@ -1,0 +1,128 @@
+<site-objetivos-page-shell
+  [views]="['Detalle de desinversión']"
+  demoSlug="desinversion-detail"
+  demoRoute="/demos/wealth-planner-2026/desinversiones-futuras"
+  activeKey="desinversiones-futuras"
+  [title]="currentDesinversion()?.nombre || 'Nueva desinversión'"
+  subtitle="Define qué se vende, con qué objetivo y qué activos se asignan."
+  versionAriaLabel="Versión del layout del detalle de desinversión"
+  [showBanner]="store.legadoRetiroEstablished()"
+>
+  <div class="dd-toolbar">
+    <afi-button
+      variant="ghost"
+      size="sm"
+      routerLink="/demos/wealth-planner-2026/desinversiones-futuras"
+      ariaLabel="Volver al listado"
+    >
+      ← Volver al listado
+    </afi-button>
+  </div>
+
+  @if (currentDesinversion(); as desinversion) {
+    <!-- ─── Section 1: Objetivo y patrimonio asignado ─────────────────── -->
+    <section class="dd-section">
+      <header class="dd-section__head">
+        <h2 class="dd-section__title">Objetivo y patrimonio asignado</h2>
+      </header>
+
+      <div class="dd-form-grid">
+        <afi-input
+          label="Nombre de la desinversión"
+          placeholder="Venta vivienda Cádiz"
+          [value]="desinversion.nombre"
+          (valueChange)="setNombre($event)"
+        />
+        <afi-select
+          label="Objetivo"
+          placeholder="Selecciona"
+          [options]="objetivoOptions"
+          [value]="desinversion.objetivo"
+          (valueChange)="setObjetivo($event)"
+        />
+      </div>
+
+      @if (isRentasObjetivo()) {
+        <div class="dd-form-grid">
+          <afi-select
+            label="Frecuencia de las rentas"
+            placeholder="Selecciona"
+            [options]="frecuenciaOptions"
+            [value]="desinversion.frecuencia"
+            (valueChange)="setFrecuencia($event)"
+          />
+          <afi-input
+            label="Plazo de las rentas (años)"
+            type="number"
+            placeholder="5"
+            [value]="desinversion.plazoAnios === null ? '' : desinversion.plazoAnios"
+            (valueChange)="setPlazoAnios($event)"
+          />
+        </div>
+      }
+
+      <div class="dd-assets">
+        <h3 class="dd-assets__title">Activos asignados</h3>
+        @if (desinversion.objetivo === null) {
+          <p class="dd-assets__hint">
+            Selecciona un objetivo arriba para ver los activos disponibles.
+          </p>
+        } @else {
+          @if (store.patrimonio().length === 0) {
+            <p class="dd-assets__hint">
+              Aún no hay activos registrados en Patrimonio. Añade activos antes
+              de planificar la desinversión.
+            </p>
+          } @else {
+            <p class="dd-assets__hint">
+              Selecciona los activos a desinvertir. Pulsa los encabezados para
+              ordenar la tabla.
+            </p>
+            <afi-table
+              [columns]="assetColumns()"
+              [rows]="sortedAssetRows()"
+              [selectable]="true"
+              [selected]="selectedAssetRows()"
+              [sortBy]="sortBy()"
+              (selectedChange)="onAssetSelectionChange($event)"
+              (sortChange)="sortBy.set($event)"
+              density="compact"
+              emptyText="Sin activos coincidentes"
+            />
+          }
+        }
+      </div>
+    </section>
+
+    <!-- ─── Section 2: Detalles (Simulación) — TODO pending Jaime ──── -->
+    <section class="dd-section">
+      <header class="dd-section__head">
+        <h2 class="dd-section__title">Detalles de la simulación</h2>
+      </header>
+      <div class="dd-placeholder">
+        <p class="dd-placeholder__title">Pendiente de definir</p>
+        <p class="dd-placeholder__body">
+          La simulación reutilizará el patrón de
+          <em>Evolución patrimonial</em>, quitando la parte de la izquierda y
+          el cuadro de renta alcanzada/esperada, y mostrando los detalles del
+          plan de desinversión. Estructura final pendiente de revisión con
+          Jaime (ver PDF p.6).
+        </p>
+      </div>
+    </section>
+  } @else {
+    <div class="dd-not-found">
+      <h2 class="dd-not-found__title">Desinversión no encontrada</h2>
+      <p class="dd-not-found__body">
+        Es posible que la hayas borrado o que la URL no sea válida.
+      </p>
+      <afi-button
+        variant="primary"
+        size="md"
+        routerLink="/demos/wealth-planner-2026/desinversiones-futuras"
+      >
+        Volver al listado
+      </afi-button>
+    </div>
+  }
+</site-objetivos-page-shell>

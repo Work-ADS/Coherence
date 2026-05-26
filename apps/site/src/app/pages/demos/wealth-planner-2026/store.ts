@@ -108,6 +108,25 @@ export interface LegadoRetiroData {
   continuarCotizaciones: boolean;
 }
 
+// ── Objetivos · Desinversiones futuras (Brief G) ────────────────────────────
+export type DesinversionObjetivo = 'liquidez' | 'rentas';
+
+export interface DesinversionFutura {
+  id: string;
+  nombre: string;
+  objetivo: DesinversionObjetivo | null;
+  /** Reuses the Brief D Frecuencia type — only used when objetivo === 'rentas'. */
+  frecuencia: Frecuencia | null;
+  /** Years over which the rentas are paid out (only when objetivo === 'rentas'). */
+  plazoAnios: number | null;
+  /** Patrimonio asset ids selected for this desinversión. */
+  activosAsignados: string[];
+  /** Gross amount (computed inline from selected assets in v1; see page). */
+  importeBruto: number;
+  /** Net amount (gross minus mocked fiscal cost; see page). */
+  importeNeto: number;
+}
+
 // ── Objetivos · Inversiones futuras (Brief F) ──────────────────────────────
 export type InversionFuturaTipo = 'vivienda' | 'otros';
 
@@ -167,6 +186,7 @@ let nextSociedadId = 1;
 let nextIngresoId = 1;
 let nextGastoId = 1;
 let nextInversionFuturaId = 1;
+let nextDesinversionId = 1;
 
 @Injectable({ providedIn: 'root' })
 export class WealthPlannerStore {
@@ -558,5 +578,87 @@ export class WealthPlannerStore {
 
   removeInversionFutura(id: string): void {
     this.inversionesFuturas.update((rows) => rows.filter((row) => row.id !== id));
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Objetivos · Desinversiones futuras (Brief G)
+  // ──────────────────────────────────────────────────────────────────────
+
+  /**
+   * Seeded with the two PDF p.5 examples so the list page is not empty on
+   * first load (a stakeholder demo expectation). The asset ids reference the
+   * patrimonio seed; if a senior cleans up patrimonio later, keep these in
+   * sync or refactor the seed to derive from `patrimonio()`.
+   */
+  readonly desinversiones = signal<DesinversionFutura[]>([
+    {
+      id: 'desinv-seed-1',
+      nombre: 'Venta vivienda Cádiz',
+      objetivo: 'liquidez',
+      frecuencia: null,
+      plazoAnios: null,
+      activosAsignados: ['patrimonio-apartamento-cadiz'],
+      importeBruto: 280000,
+      importeNeto: 247800,
+    },
+    {
+      id: 'desinv-seed-2',
+      nombre: 'Venta cartera Renta 4',
+      objetivo: 'rentas',
+      frecuencia: 'mensual',
+      plazoAnios: 5,
+      activosAsignados: ['patrimonio-cartera-renta-4'],
+      importeBruto: 62300,
+      importeNeto: 51800,
+    },
+  ]);
+
+  /**
+   * Optional section — same shape as Inversiones futuras: empty when no rows,
+   * in-progress when at least one row exists. Never reaches complete because
+   * there are no required fields the gestor must fill.
+   */
+  readonly desinversionesState = computed<SectionState>(() =>
+    this.desinversiones().length === 0 ? 'empty' : 'in-progress',
+  );
+
+  addDesinversion(): DesinversionFutura {
+    const next: DesinversionFutura = {
+      id: `desinv-${nextDesinversionId++}`,
+      nombre: '',
+      objetivo: null,
+      frecuencia: null,
+      plazoAnios: null,
+      activosAsignados: [],
+      importeBruto: 0,
+      importeNeto: 0,
+    };
+    this.desinversiones.update((rows) => [...rows, next]);
+    return next;
+  }
+
+  updateDesinversion(id: string, partial: Partial<DesinversionFutura>): void {
+    this.desinversiones.update((rows) =>
+      rows.map((row) => (row.id === id ? { ...row, ...partial } : row)),
+    );
+  }
+
+  removeDesinversion(id: string): void {
+    this.desinversiones.update((rows) => rows.filter((row) => row.id !== id));
+  }
+
+  toggleActivoAsignado(desinversionId: string, activoId: string): void {
+    this.desinversiones.update((rows) =>
+      rows.map((row) => {
+        if (row.id !== desinversionId) return row;
+        const selected = row.activosAsignados.includes(activoId);
+        return {
+          ...row,
+          activosAsignados: selected
+            ? row.activosAsignados.filter((id) => id !== activoId)
+            : [...row.activosAsignados, activoId],
+        };
+      }),
+    );
   }
 }

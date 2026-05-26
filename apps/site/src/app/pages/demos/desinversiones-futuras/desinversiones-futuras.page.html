@@ -1,0 +1,122 @@
+<site-objetivos-page-shell
+  [views]="['Desinversiones futuras']"
+  demoSlug="desinversiones-futuras"
+  demoRoute="/demos/wealth-planner-2026/desinversiones-futuras"
+  activeKey="desinversiones-futuras"
+  title="Desinversiones futuras"
+  subtitle="Plan de venta o retirada de activos en el futuro. Es opcional."
+  versionAriaLabel="Versión del layout de Desinversiones futuras"
+  [showBanner]="store.legadoRetiroEstablished()"
+>
+  @if (store.desinversiones().length === 0) {
+    <div class="df-empty">
+      <h2 class="df-empty__title">Aún no hay desinversiones planificadas.</h2>
+      <p class="df-empty__hint">
+        Es opcional. Añade una si la familia tiene previsto vender activos
+        para generar liquidez o rentas en el futuro.
+      </p>
+      <div class="df-empty__action">
+        <afi-button
+          variant="primary"
+          size="md"
+          (clicked)="openAdd()"
+          ariaLabel="Añadir primera desinversión"
+        >
+          + Añadir desinversión
+        </afi-button>
+      </div>
+    </div>
+  } @else {
+    <div class="df-toolbar">
+      <afi-button
+        variant="primary"
+        size="sm"
+        (clicked)="openAdd()"
+        ariaLabel="Añadir desinversión"
+      >
+        + Añadir desinversión
+      </afi-button>
+    </div>
+    <table class="df-table">
+      <thead>
+        <tr class="df-table__head-row">
+          <th class="df-table__th">Nombre</th>
+          <th class="df-table__th">Objetivo</th>
+          <th class="df-table__th df-table__th--num">Importe bruto</th>
+          <th class="df-table__th df-table__th--num">Importe neto</th>
+          <th class="df-table__th df-table__th--actions">
+            <span class="sr-only">Acciones</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of store.desinversiones(); track row.id) {
+          <tr
+            class="df-table__row"
+            [routerLink]="['/demos/wealth-planner-2026/desinversiones-futuras', row.id]"
+          >
+            <td class="df-table__td df-table__td--name">
+              {{ row.nombre || 'Sin nombre' }}
+            </td>
+            <td class="df-table__td">{{ objetivoLabel(row.objetivo) }}</td>
+            <td class="df-table__td df-table__td--num">
+              {{ formatEuro(row.importeBruto) }}
+            </td>
+            <td class="df-table__td df-table__td--num">
+              {{ formatEuro(row.importeNeto) }}
+            </td>
+            <td class="df-table__td df-table__td--actions">
+              <afi-icon-button
+                variant="ghost"
+                size="sm"
+                ariaLabel="Editar desinversión"
+                [routerLink]="['/demos/wealth-planner-2026/desinversiones-futuras', row.id]"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                  />
+                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+              </afi-icon-button>
+              <afi-icon-button
+                variant="ghost"
+                size="sm"
+                ariaLabel="Borrar desinversión"
+                (clicked)="removeRow(row.id, $event.event)"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                  <path d="M10 11v6" />
+                  <path d="M14 11v6" />
+                </svg>
+              </afi-icon-button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</site-objetivos-page-shell>

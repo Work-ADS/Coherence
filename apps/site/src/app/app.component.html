@@ -56,7 +56,16 @@
 
         <div slot="end" class="top-bar__end">
           <site-language-toggle />
-          <site-brand-picker />
+          <!--
+            <site-brand-picker /> hidden 2026-05-26 — exposing brand swapping
+            at the top of every page feels off for client-facing demos. Each
+            branded demo (e.g. Laboral Kutxa Sarevi) already scopes its
+            brand locally via `data-brand="…"` on the demo root, so the
+            user enters a brand experience by navigating to the demo URL
+            rather than picking a brand globally.
+            Restore by uncommenting this line + the matching import +
+            `imports` entry in app.ts.
+          -->
           <site-theme-toggle />
         </div>
       </afi-top-bar>

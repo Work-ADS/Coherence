@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@a
 import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { PasswordGateComponent } from './components/password-gate/password-gate.component';
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
-import { BrandPickerComponent } from './components/brand-picker/brand-picker.component';
+// import { BrandPickerComponent } from './components/brand-picker/brand-picker.component'; // hidden 2026-05-26 — see app.component.html
 import { LanguageToggleComponent } from './components/language-toggle/language-toggle.component';
 import { FeedbackOverlayComponent } from './components/feedback-overlay/feedback-overlay.component';
 import { LanguageService } from './services/language.service';
@@ -28,7 +28,7 @@ import {
     NavSectionComponent,
     PasswordGateComponent,
     ThemeToggleComponent,
-    BrandPickerComponent,
+    // BrandPickerComponent, // hidden 2026-05-26 — see app.component.html
     LanguageToggleComponent,
     FeedbackOverlayComponent,
   ],

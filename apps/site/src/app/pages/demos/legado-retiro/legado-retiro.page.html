@@ -3,11 +3,20 @@
   demoSlug="legado-retiro"
   demoRoute="/demos/wealth-planner-2026/legado-retiro"
   activeKey="legado-retiro"
-  title="Legado y retiro"
-  subtitle="Define qué quieres preservar y cuándo quieres retirarte. Este apartado es obligatorio."
   versionAriaLabel="Versión del layout de Legado y retiro"
   [showBanner]="store.legadoRetiroEstablished()"
 >
+  <afi-page-header
+    title="Legado y retiro"
+    subtitle="Define qué quieres preservar y cuándo quieres retirarte. Este apartado es obligatorio."
+    [sticky]="false"
+    [scrollFade]="false"
+  >
+    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
+      OBJETIVOS
+    </span>
+  </afi-page-header>
+
   <section class="lr-gate">
     <afi-switch
       label="¿Has establecido legado y retiro?"

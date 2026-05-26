@@ -3,11 +3,20 @@
   demoSlug="proteccion-familiar"
   demoRoute="/demos/wealth-planner-2026/proteccion-familiar"
   activeKey="proteccion-familiar"
-  title="Protección familiar"
-  subtitle="Seguros y planes de protección para el cliente y, en su caso, el cónyuge. Es opcional."
   versionAriaLabel="Versión del layout de Protección familiar"
   [showBanner]="store.legadoRetiroEstablished()"
 >
+  <afi-page-header
+    title="Protección familiar"
+    subtitle="Seguros y planes de protección para el cliente y, en su caso, el cónyuge. Es opcional."
+    [sticky]="false"
+    [scrollFade]="false"
+  >
+    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
+      OBJETIVOS
+    </span>
+  </afi-page-header>
+
   <section class="pf-gate">
     <afi-switch
       label="¿Has establecido protección familiar?"

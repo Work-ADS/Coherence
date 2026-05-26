@@ -11,6 +11,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   ButtonComponent,
   InputComponent,
+  PageHeaderComponent,
   SelectComponent,
   TableComponent,
 } from '@coherence/ui';
@@ -75,6 +76,7 @@ const CUENTA_LABEL: Record<PatrimonioAsset['tipo'], string> = {
   imports: [
     ButtonComponent,
     InputComponent,
+    PageHeaderComponent,
     SelectComponent,
     TableComponent,
     RouterLink,

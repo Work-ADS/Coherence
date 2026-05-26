@@ -3,11 +3,31 @@
   demoSlug="desinversiones-futuras"
   demoRoute="/demos/wealth-planner-2026/desinversiones-futuras"
   activeKey="desinversiones-futuras"
-  title="Desinversiones futuras"
-  subtitle="Plan de venta o retirada de activos en el futuro. Es opcional."
   versionAriaLabel="Versión del layout de Desinversiones futuras"
   [showBanner]="store.legadoRetiroEstablished()"
 >
+  <afi-page-header
+    title="Desinversiones futuras"
+    subtitle="Plan de venta o retirada de activos en el futuro. Es opcional."
+    [sticky]="false"
+    [scrollFade]="false"
+  >
+    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
+      OBJETIVOS
+    </span>
+    @if (store.desinversiones().length > 0) {
+      <afi-button
+        slot="actions"
+        variant="primary"
+        size="sm"
+        (clicked)="openAdd()"
+        ariaLabel="Añadir desinversión"
+      >
+        + Añadir desinversión
+      </afi-button>
+    }
+  </afi-page-header>
+
   @if (store.desinversiones().length === 0) {
     <div class="df-empty">
       <h2 class="df-empty__title">Aún no hay desinversiones planificadas.</h2>
@@ -27,16 +47,6 @@
       </div>
     </div>
   } @else {
-    <div class="df-toolbar">
-      <afi-button
-        variant="primary"
-        size="sm"
-        (clicked)="openAdd()"
-        ariaLabel="Añadir desinversión"
-      >
-        + Añadir desinversión
-      </afi-button>
-    </div>
     <table class="df-table">
       <thead>
         <tr class="df-table__head-row">

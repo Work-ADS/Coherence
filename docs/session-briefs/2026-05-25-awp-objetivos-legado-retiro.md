@@ -15,6 +15,7 @@
 - Route registered in [`demos.routes.ts`](../../apps/site/src/app/pages/demos/demos.routes.ts) and sidebar wired in [`planner-sidebar.component.ts`](../../apps/site/src/app/pages/demos/shared/planner-sidebar.component.ts) (key `legado-retiro` reading `store.legadoRetiroState()`).
 - Verified end-to-end in live preview: gate switch → faldón appears → banner mounts → `Manual` reveals asset checklist with running total (450.000 € selected) → age 56 shows cotizaciones checkbox, age 65 hides it → sidebar chip flips `empty` → `in-progress` → `complete`. Round-trip off→on preserves selections.
 - **Note on the version toggle:** `<site-version-toggle>` is intentionally hidden globally via `display: none !important` in [`apps/site/src/styles.scss:17-22`](../../apps/site/src/styles.scss) — it was superseded by the floating design-review widget. The component still mounts in the DOM for future swapability; safe to remove the slot if v2/v3 layout forks aren't being added.
+- **2026-05-26 addendum (Brief 0 — shell refactor)**: the shared shell no longer wraps `<afi-page-header>`. The Legado y retiro page now renders its own header inline as the first child of the shell's `<ng-content />` (with `slot="breadcrumb"` carrying "OBJETIVOS"). Behavior unchanged; cleaner composition. See [`docs/session-briefs/2026-05-26-awp-chore-shell-refactor-header-slot.md`](2026-05-26-awp-chore-shell-refactor-header-slot.md).
 - **`isRetiroKind()`** set landed as 56–60 + 63/64 (the default proposal). Confirm with Borja if needed.
 
 ---

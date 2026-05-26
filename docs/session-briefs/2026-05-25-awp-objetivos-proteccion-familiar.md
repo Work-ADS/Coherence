@@ -28,7 +28,7 @@ All four Objetivos pages are now live and share the `<site-objetivos-page-shell>
 | G | `/desinversiones-futuras` + `/:id` | ✅ complete |
 | H | `/proteccion-familiar` | ✅ complete |
 
-Known shared deviation across F/G: `+ Añadir` / `← Volver` CTAs live in body-level toolbars because multi-level `<ng-content>` projection through the shell drops the slot attribute before it reaches `<afi-page-header>`. Refactor candidate: shell accepts a `TemplateRef` for actions via `ngTemplateOutlet`. Would lift the constraint for all three pages at once.
+Known shared deviation across F/G (**RESOLVED 2026-05-26 via [Brief 0](2026-05-26-awp-chore-shell-refactor-header-slot.md)**): the `+ Añadir` / `← Volver` CTAs briefly lived in body-level toolbars because multi-level `<ng-content>` projection through the shell dropped the slot attribute. The shell refactor stops wrapping `<afi-page-header>` entirely — each page renders its own header inline, so `slot="actions"` now works natively. Protección familiar's page picked up its own inline header in the same refactor (no action button needed, just title + subtitle + breadcrumb).
 
 ---
 

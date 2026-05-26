@@ -11,6 +11,7 @@ import {
   IconButtonComponent,
   InputComponent,
   ModalComponent,
+  PageHeaderComponent,
   SelectComponent,
 } from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
@@ -41,6 +42,7 @@ import type {
     IconButtonComponent,
     InputComponent,
     ModalComponent,
+    PageHeaderComponent,
     SelectComponent,
     ObjetivosPageShellComponent,
   ],

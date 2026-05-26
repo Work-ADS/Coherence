@@ -3,11 +3,31 @@
   demoSlug="inversiones-futuras"
   demoRoute="/demos/wealth-planner-2026/inversiones-futuras"
   activeKey="inversiones-futuras"
-  title="Inversiones futuras"
-  subtitle="Adquisiciones de activos previstas en el futuro. Es opcional."
   versionAriaLabel="Versión del layout de Inversiones futuras"
   [showBanner]="store.legadoRetiroEstablished()"
 >
+  <afi-page-header
+    title="Inversiones futuras"
+    subtitle="Adquisiciones de activos previstas en el futuro. Es opcional."
+    [sticky]="false"
+    [scrollFade]="false"
+  >
+    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
+      OBJETIVOS
+    </span>
+    @if (store.inversionesFuturas().length > 0) {
+      <afi-button
+        slot="actions"
+        variant="primary"
+        size="sm"
+        (clicked)="openAdd()"
+        ariaLabel="Añadir inversión futura"
+      >
+        + Añadir inversión futura
+      </afi-button>
+    }
+  </afi-page-header>
+
   @if (store.inversionesFuturas().length === 0) {
     <div class="if-empty">
       <h2 class="if-empty__title">Aún no hay inversiones futuras registradas.</h2>
@@ -27,16 +47,6 @@
       </div>
     </div>
   } @else {
-    <div class="if-toolbar">
-      <afi-button
-        variant="primary"
-        size="sm"
-        (clicked)="openAdd()"
-        ariaLabel="Añadir inversión futura"
-      >
-        + Añadir inversión futura
-      </afi-button>
-    </div>
     <table class="if-table">
       <thead>
         <tr class="if-table__head-row">

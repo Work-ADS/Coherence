@@ -14,29 +14,20 @@
 
       <main class="ops__scroll">
         <div class="ops__page">
-          <div class="ops__header">
-            <afi-page-header
-              [title]="title()"
-              [subtitle]="subtitle()"
-              [sticky]="false"
-              [scrollFade]="false"
-            >
-              <span slot="breadcrumb" class="ops__breadcrumb">
-                {{ breadcrumb() }}
-              </span>
-            </afi-page-header>
-            <div class="ops__version-toggle">
-              <site-version-toggle
-                [versions]="versions"
-                [value]="version()"
-                [ariaLabel]="versionAriaLabel()"
-                (valueChange)="setVersion($event)"
-              />
-            </div>
-          </div>
+          <!--
+            The consuming page renders its own <afi-page-header> as the first
+            child of this slot (with `slot="breadcrumb"` / `slot="actions"` /
+            etc as needed), followed by the page body.
+          -->
+          <ng-content />
 
-          <div class="ops__body">
-            <ng-content />
+          <div class="ops__version-toggle">
+            <site-version-toggle
+              [versions]="versions"
+              [value]="version()"
+              [ariaLabel]="versionAriaLabel()"
+              (valueChange)="setVersion($event)"
+            />
           </div>
         </div>
       </main>

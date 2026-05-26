@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-import { ButtonComponent, IconButtonComponent } from '@coherence/ui';
+import { ButtonComponent, IconButtonComponent, PageHeaderComponent } from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
 
 import { ObjetivosPageShellComponent } from '../wealth-planner-2026/shared/objetivos-page-shell.component';
@@ -24,6 +24,7 @@ import type { DesinversionObjetivo } from '../wealth-planner-2026/store';
   imports: [
     ButtonComponent,
     IconButtonComponent,
+    PageHeaderComponent,
     RouterLink,
     ObjetivosPageShellComponent,
   ],

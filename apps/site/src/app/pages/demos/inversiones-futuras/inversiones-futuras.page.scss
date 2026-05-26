@@ -31,13 +31,6 @@
   margin-block-start: var(--space-lg);
 }
 
-// ─── Toolbar (above the table when rows exist) ──────────────────────────────
-.if-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  margin-block-start: var(--space-md);
-}
-
 // ─── Table ──────────────────────────────────────────────────────────────────
 .if-table {
   width: 100%;

@@ -10,6 +10,7 @@ import {
   BadgeComponent,
   ButtonComponent,
   ModalComponent,
+  PageHeaderComponent,
   SwitchComponent,
 } from '@coherence/ui';
 
@@ -37,6 +38,7 @@ type ProteccionRow = 'cliente' | 'conyuge';
     BadgeComponent,
     ButtonComponent,
     ModalComponent,
+    PageHeaderComponent,
     SwitchComponent,
     ObjetivosPageShellComponent,
   ],

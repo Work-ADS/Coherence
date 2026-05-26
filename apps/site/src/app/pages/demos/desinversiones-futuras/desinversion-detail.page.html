@@ -3,13 +3,20 @@
   demoSlug="desinversion-detail"
   demoRoute="/demos/wealth-planner-2026/desinversiones-futuras"
   activeKey="desinversiones-futuras"
-  [title]="currentDesinversion()?.nombre || 'Nueva desinversión'"
-  subtitle="Define qué se vende, con qué objetivo y qué activos se asignan."
   versionAriaLabel="Versión del layout del detalle de desinversión"
   [showBanner]="store.legadoRetiroEstablished()"
 >
-  <div class="dd-toolbar">
+  <afi-page-header
+    [title]="currentDesinversion()?.nombre || 'Nueva desinversión'"
+    subtitle="Define qué se vende, con qué objetivo y qué activos se asignan."
+    [sticky]="false"
+    [scrollFade]="false"
+  >
+    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
+      OBJETIVOS · Desinversiones futuras
+    </span>
     <afi-button
+      slot="actions"
       variant="ghost"
       size="sm"
       routerLink="/demos/wealth-planner-2026/desinversiones-futuras"
@@ -17,7 +24,7 @@
     >
       ← Volver al listado
     </afi-button>
-  </div>
+  </afi-page-header>
 
   @if (currentDesinversion(); as desinversion) {
     <!-- ─── Section 1: Objetivo y patrimonio asignado ─────────────────── -->

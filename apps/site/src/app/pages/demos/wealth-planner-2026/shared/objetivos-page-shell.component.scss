@@ -1,6 +1,12 @@
 // =============================================================================
-// ObjetivosPageShell — shared chrome + content column for AWP Objetivos pages.
-// Keeps form sections aligned with the PageHeader title across Briefs E-H.
+// ObjetivosPageShell — shared chrome + scroll container for AWP planner
+// pages (Objetivos / Diagnóstico / Plan de acción).
+//
+// As of the 2026-05-26 shell refactor (Brief 0), this component no longer
+// owns the page-header — each consuming page renders its own
+// <afi-page-header> inside the projected <ng-content />. Styles here only
+// cover the demo-shell + sidebar + top-bar chrome, the scroll container,
+// and the (globally hidden) version-toggle anchor.
 // =============================================================================
 
 :host {
@@ -28,27 +34,17 @@
 }
 
 .ops__page {
+  position: relative;
   max-inline-size: var(--content-xl);
   margin-inline: auto;
   padding-block: var(--space-xl);
 }
 
-.ops__header {
-  position: relative;
-}
-
-.ops__breadcrumb {
-  color: var(--action-700);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
+// Version toggle is `display: none !important` globally (see
+// apps/site/src/styles.scss). The anchor remains in case the global rule
+// is lifted for review sessions.
 .ops__version-toggle {
   position: absolute;
-  inset-block-start: 0;
+  inset-block-start: var(--space-lg);
   inset-inline-end: var(--space-xl);
-}
-
-.ops__body {
-  display: block;
 }

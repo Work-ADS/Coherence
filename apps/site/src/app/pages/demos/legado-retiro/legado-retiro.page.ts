@@ -1,6 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
-import { CheckboxComponent, InputComponent, SelectComponent, SwitchComponent } from '@coherence/ui';
+import {
+  CheckboxComponent,
+  InputComponent,
+  PageHeaderComponent,
+  SelectComponent,
+  SwitchComponent,
+} from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
 
 import { ObjetivosPageShellComponent } from '../wealth-planner-2026/shared/objetivos-page-shell.component';
@@ -19,6 +25,7 @@ function range(from: number, to: number): number[] {
   imports: [
     CheckboxComponent,
     InputComponent,
+    PageHeaderComponent,
     SelectComponent,
     SwitchComponent,
     ObjetivosPageShellComponent,

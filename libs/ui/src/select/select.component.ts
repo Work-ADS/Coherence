@@ -46,6 +46,9 @@ export class SelectComponent implements OnInit {
   readonly disabled = input<boolean>(false);
   readonly required = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
+  readonly searchable = input<boolean>(false);
+  readonly searchPlaceholder = input<string>('Buscar…');
+  readonly emptyText = input<string>('Sin resultados');
 
   readonly valueChange = output<string | number | null>();
   readonly opened = output<void>();
@@ -55,12 +58,15 @@ export class SelectComponent implements OnInit {
   readonly labelId = `${this.selectId}-label`;
   readonly hintId = `${this.selectId}-hint`;
   readonly errorId = `${this.selectId}-error`;
+  readonly listboxId = `${this.selectId}-listbox`;
 
   readonly open = signal(false);
   readonly focusedIndex = signal(-1);
+  readonly searchQuery = signal('');
 
   private readonly el = inject(ElementRef);
   readonly triggerEl = viewChild<ElementRef<HTMLButtonElement>>('triggerEl');
+  readonly searchInputEl = viewChild<ElementRef<HTMLInputElement>>('searchInputEl');
 
   private typeAheadBuffer = '';
   private typeAheadTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -79,6 +85,14 @@ export class SelectComponent implements OnInit {
       }
     }
     return result;
+  });
+
+  readonly displayOptions = computed(() => {
+    const opts = this.flatOptions();
+    if (!this.searchable()) return opts;
+    const q = this.searchQuery().trim().toLowerCase();
+    if (!q) return opts;
+    return opts.filter((o) => o.label.toLowerCase().includes(q));
   });
 
   readonly selectedOption = computed(() => {
@@ -127,17 +141,95 @@ export class SelectComponent implements OnInit {
   openPanel(): void {
     if (this.disabled()) return;
     this.open.set(true);
-    const opts = this.flatOptions();
+    const opts = this.displayOptions();
     const selectedIdx = opts.findIndex((o) => o.value === this.value());
     this.focusedIndex.set(selectedIdx >= 0 ? selectedIdx : 0);
     this.opened.emit();
+    if (this.searchable()) {
+      setTimeout(() => this.searchInputEl()?.nativeElement?.focus(), 0);
+    }
   }
 
   close(): void {
     this.open.set(false);
     this.focusedIndex.set(-1);
+    if (this.searchable()) {
+      this.searchQuery.set('');
+    }
     this.closed.emit();
     this.triggerEl()?.nativeElement?.focus();
+  }
+
+  onSearchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchQuery.set(value);
+    const opts = this.displayOptions();
+    const firstEnabled = opts.findIndex((o) => !o.disabled);
+    this.focusedIndex.set(firstEnabled);
+  }
+
+  onSearchKeydown(event: KeyboardEvent): void {
+    const opts = this.displayOptions();
+    const enabledIndices = opts
+      .map((o, i) => (o.disabled ? -1 : i))
+      .filter((i) => i >= 0);
+    const idx = this.focusedIndex();
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        if (enabledIndices.length) {
+          const pos = enabledIndices.indexOf(idx);
+          const next =
+            pos < 0 || pos >= enabledIndices.length - 1
+              ? enabledIndices[0]!
+              : enabledIndices[pos + 1]!;
+          this.focusedIndex.set(next);
+          this.scrollFocusedIntoView();
+        }
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        if (enabledIndices.length) {
+          const pos = enabledIndices.indexOf(idx);
+          const prev =
+            pos <= 0
+              ? enabledIndices[enabledIndices.length - 1]!
+              : enabledIndices[pos - 1]!;
+          this.focusedIndex.set(prev);
+          this.scrollFocusedIntoView();
+        }
+        break;
+      case 'Home':
+        event.preventDefault();
+        if (enabledIndices.length) {
+          this.focusedIndex.set(enabledIndices[0]!);
+          this.scrollFocusedIntoView();
+        }
+        break;
+      case 'End':
+        event.preventDefault();
+        if (enabledIndices.length) {
+          this.focusedIndex.set(enabledIndices[enabledIndices.length - 1]!);
+          this.scrollFocusedIntoView();
+        }
+        break;
+      case 'Enter':
+        event.preventDefault();
+        if (idx >= 0 && idx < opts.length && opts[idx] && !opts[idx]!.disabled) {
+          this.selectOption(opts[idx]!);
+        } else if (enabledIndices.length === 1) {
+          this.selectOption(opts[enabledIndices[0]!]!);
+        }
+        break;
+      case 'Escape':
+        event.preventDefault();
+        this.close();
+        break;
+      case 'Tab':
+        this.close();
+        break;
+    }
   }
 
   selectOption(opt: SelectOption, event?: Event): void {
@@ -263,8 +355,8 @@ export class SelectComponent implements OnInit {
     const idx = this.focusedIndex();
     if (idx < 0) return;
     setTimeout(() => {
-      const panel = this.el.nativeElement.querySelector('ul[role="listbox"]');
-      const item = panel?.querySelector(`#${this.optionId(idx)}`);
+      const listbox = this.el.nativeElement.querySelector('[role="listbox"]');
+      const item = listbox?.querySelector(`#${this.optionId(idx)}`);
       item?.scrollIntoView({ block: 'nearest' });
     });
   }

@@ -49,47 +49,85 @@
   @if (open()) {
     <div class="afi-select__backdrop" (click)="close()" aria-hidden="true"></div>
 
-    <ul
-      #panelEl
-      role="listbox"
-      [attr.aria-labelledby]="label() ? labelId : null"
-      [attr.aria-label]="!label() ? ariaLabel() : null"
-      class="afi-select__panel"
-      (keydown)="onPanelKeydown($event)"
-    >
-      @for (opt of flatOptions(); track opt.value; let i = $index) {
-        @if (opt._groupLabel) {
-          <li class="afi-select__group-label" aria-hidden="true">
-            {{ opt._groupLabel }}
+    <div class="afi-select__panel">
+      @if (searchable()) {
+        <div class="afi-select__search">
+          <svg
+            class="afi-select__search-icon"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="7" cy="7" r="4.5" />
+            <path d="m13 13-2.5-2.5" />
+          </svg>
+          <input
+            #searchInputEl
+            type="text"
+            class="afi-select__search-input"
+            [placeholder]="searchPlaceholder()"
+            [value]="searchQuery()"
+            (input)="onSearchInput($event)"
+            (keydown)="onSearchKeydown($event)"
+            autocomplete="off"
+            spellcheck="false"
+            aria-autocomplete="list"
+            [attr.aria-controls]="listboxId"
+            [attr.aria-activedescendant]="focusedIndex() >= 0 ? optionId(focusedIndex()) : null"
+          />
+        </div>
+      }
+      <ul
+        #panelEl
+        role="listbox"
+        [id]="listboxId"
+        [attr.aria-labelledby]="label() ? labelId : null"
+        [attr.aria-label]="!label() ? ariaLabel() : null"
+        class="afi-select__listbox"
+        [tabindex]="searchable() ? -1 : 0"
+        (keydown)="!searchable() && onPanelKeydown($event)"
+      >
+        @for (opt of displayOptions(); track opt.value; let i = $index) {
+          @if (opt._groupLabel) {
+            <li class="afi-select__group-label" aria-hidden="true">
+              {{ opt._groupLabel }}
+            </li>
+          }
+          <li
+            [id]="optionId(i)"
+            role="option"
+            [attr.aria-selected]="opt.value === value()"
+            [attr.aria-disabled]="opt.disabled || null"
+            class="afi-select__option"
+            [class.afi-select__option--focused]="i === focusedIndex()"
+            [class.afi-select__option--selected]="opt.value === value()"
+            [class.afi-select__option--disabled]="opt.disabled"
+            (click)="selectOption(opt, $event)"
+            (mouseenter)="focusedIndex.set(i)"
+          >
+            <span class="afi-select__option-label">{{ opt.label }}</span>
+            @if (opt.value === value()) {
+              <svg class="afi-select__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M3.5 8.5L6.5 11.5L12.5 4.5"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            }
           </li>
         }
-        <li
-          [id]="optionId(i)"
-          role="option"
-          [attr.aria-selected]="opt.value === value()"
-          [attr.aria-disabled]="opt.disabled || null"
-          class="afi-select__option"
-          [class.afi-select__option--focused]="i === focusedIndex()"
-          [class.afi-select__option--selected]="opt.value === value()"
-          [class.afi-select__option--disabled]="opt.disabled"
-          (click)="selectOption(opt, $event)"
-          (mouseenter)="focusedIndex.set(i)"
-        >
-          <span class="afi-select__option-label">{{ opt.label }}</span>
-          @if (opt.value === value()) {
-            <svg class="afi-select__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path
-                d="M3.5 8.5L6.5 11.5L12.5 4.5"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          }
-        </li>
-      }
-    </ul>
+        @if (displayOptions().length === 0) {
+          <li class="afi-select__empty" aria-live="polite">{{ emptyText() }}</li>
+        }
+      </ul>
+    </div>
   }
 </div>
 

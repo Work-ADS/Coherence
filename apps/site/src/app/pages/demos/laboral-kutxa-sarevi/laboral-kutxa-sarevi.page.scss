@@ -114,7 +114,6 @@
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    color: var(--bere);
     letter-spacing: -0.005em;
     margin: 0;
   }
@@ -168,7 +167,7 @@
 
   &__right {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: flex-end;
     gap: var(--dimension-4);
     color: var(--color-laboral-kutxa-beige-0);
@@ -276,14 +275,6 @@
     font-size: 10.5px;
   }
 
-  &__stack { display: flex; flex-direction: column; line-height: 1.15; }
-  &__sub {
-    font-family: var(--font-text);
-    font-size: 10.5px;
-    color: var(--color-white-a72);
-    margin-top: var(--dimension-0-5);
-  }
-
   &--done .step__badge {
     background: var(--green); color: var(--color-laboral-kutxa-beige-0);
   }
@@ -315,7 +306,7 @@
     font-family: var(--font-display);
     font-size: var(--dimension-13-5);
     line-height: 1.05;
-    color: var(--bere);
+    color: var(--text);
     font-weight: 600;
     letter-spacing: -0.012em;
     max-width: 18ch;
@@ -377,7 +368,7 @@
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--dimension-5-5);
-    color: var(--bere);
+    color: var(--text);
   }
 
   &__desc {
@@ -411,7 +402,7 @@
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--dimension-6);
-    color: var(--bere);
+    color: var(--text);
   }
 
   &__subtitle { color: var(--text-soft); font-size: 14.5px; }
@@ -433,7 +424,7 @@
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--dimension-4-5);
-    color: var(--bere);
+    color: var(--text);
   }
 }
 
@@ -454,7 +445,7 @@
 
   &__name {
     font-size: 14.5px;
-    color: var(--bere);
+    color: var(--text);
   }
 
   &--locked .medida-row__name { color: var(--text-soft); }
@@ -467,10 +458,11 @@
 
   &__price {
     font-size: var(--dimension-3-5);
-    color: var(--bere);
+    color: var(--text);
     font-variant-numeric: tabular-nums;
     min-width: var(--dimension-21);
     text-align: right;
+    font-weight: 500;
   }
 
   &__details {
@@ -509,9 +501,9 @@
     justify-content: space-between;
     align-items: center;
     font-size: 13.5px;
-    color: var(--bere);
+    color: var(--text);
 
-    strong { color: var(--bere); }
+    strong { color: var(--text); }
   }
 
   &__auto {
@@ -657,7 +649,7 @@
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--dimension-4-5);
-    color: var(--bere);
+    color: var(--text);
   }
 
   &__grade-row {
@@ -735,7 +727,7 @@
   &__hero {
     font-family: var(--font-display);
     font-weight: 700;
-    color: var(--mag);
+    color: var(--text);
     font-size: var(--dimension-11);
     line-height: 1;
     letter-spacing: -0.015em;
@@ -800,15 +792,15 @@
     text-align: left;
   }
 
-  th { color: var(--mag); font-weight: 500; font-size: var(--dimension-3-25); }
-  td { color: var(--bere); }
+  th { color: var(--text-soft); font-weight: 500; font-size: var(--dimension-3-25); }
+  td { color: var(--text); }
   tr + tr td { border-top: var(--dimension-0-25) solid var(--line-soft); }
 
   &__num { text-align: right; font-variant-numeric: tabular-nums; }
   &__neg { color: var(--color-lk-table-neg); }
 
-  &__total td { font-weight: 600; color: var(--bere); }
-  &__total td:first-child { color: var(--mag); }
+  &__total td { font-weight: 600; color: var(--text); }
+  &__total td:first-child { color: var(--text); }
 }
 
 // ─── Slider (custom thumb/fill rendering — DS has no slider primitive) ───
@@ -869,7 +861,7 @@
   flex-direction: column;
   gap: var(--dimension-2);
 
-  &__title { font-size: var(--dimension-3-5); color: var(--bere); font-weight: 500; }
+  &__title { font-size: var(--dimension-3-5); color: var(--text); font-weight: 500; }
 }
 
 .cuota-main {
@@ -899,7 +891,7 @@
     font-family: var(--font-display);
     font-weight: 700;
     font-size: var(--dimension-7-5);
-    color: var(--bere);
+    color: var(--text);
     font-variant-numeric: tabular-nums;
     overflow-wrap: anywhere;
   }
@@ -935,7 +927,7 @@
     font-family: var(--font-display);
     font-weight: 700;
     font-size: var(--dimension-6-5);
-    color: var(--bere);
+    color: var(--text);
   }
   &__pct {
     font-size: var(--dimension-3-25);
@@ -996,7 +988,7 @@
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--dimension-4-25);
-    color: var(--bere);
+    color: var(--text);
   }
 
   &__p {
@@ -1021,11 +1013,11 @@
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--dimension-4-25);
-    color: var(--bere);
+    color: var(--text);
   }
 
   &__body {
-    color: var(--bere-700);
+    color: var(--text);
     white-space: pre-wrap;
     line-height: 1.55;
     font-size: var(--dimension-3-5);

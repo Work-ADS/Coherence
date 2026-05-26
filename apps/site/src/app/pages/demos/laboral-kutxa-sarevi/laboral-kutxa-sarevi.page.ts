@@ -22,6 +22,7 @@ import {
 } from '@coherence/ui';
 
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
+import { MUNICIPIOS_ES } from './municipios-es';
 
 type Route = 'welcome' | 'datos' | 'medidas' | 'resumen';
 type Variant = 'basica' | 'completa' | 'personalizada';
@@ -222,14 +223,10 @@ export class LaboralKutxaSareviPage {
     { value: 'No', label: 'No' },
   ];
 
-  readonly municipioOptions: SelectOption[] = [
-    'Bilbao',
-    'Donostia / San Sebastián',
-    'Vitoria-Gasteiz',
-    'Arrasate / Mondragón',
-    'Eibar',
-    'Pamplona',
-  ].map((v) => ({ value: v, label: v }));
+  readonly municipioOptions: SelectOption[] = MUNICIPIOS_ES.map((v) => ({
+    value: v,
+    label: v,
+  }));
 
   readonly calefaccionOptions: SelectOption[] = [
     'Caldera de gas natural',

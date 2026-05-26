@@ -119,20 +119,73 @@
   margin-block-start: var(--space-2xs);
   width: 100%;
   min-width: var(--dimension-48);
-  max-height: var(--dimension-60);
-  overflow-y: auto;
-  padding-block: var(--space-2xs);
-  list-style: none;
-  margin-inline: 0;
   background: var(--surface-elevated);
   border: var(--border-width-hairline) solid var(--border-hairline);
   border-radius: var(--radius-lg);
   box-shadow: var(--elevation-lg);
   animation: afi-select-enter var(--duration-base) var(--easing-enter);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: var(--dimension-72);
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }
+}
+
+.afi-select__listbox {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-block: var(--space-2xs);
+  margin: 0;
+  list-style: none;
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+// ─── Search input (searchable mode) ───────────────────────────────────────
+.afi-select__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+  background: var(--surface-default);
+  flex: 0 0 auto;
+}
+
+.afi-select__search-icon {
+  width: var(--dimension-4);
+  height: var(--dimension-4);
+  color: var(--foreground-tertiary-default);
+  flex-shrink: 0;
+}
+
+.afi-select__search-input {
+  flex: 1;
+  appearance: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default);
+  padding: var(--space-2xs) 0;
+
+  &::placeholder {
+    color: var(--foreground-tertiary-default);
+  }
+}
+
+.afi-select__empty {
+  padding: var(--space-md) var(--space-sm);
+  text-align: center;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  list-style: none;
 }
 
 @keyframes afi-select-enter {

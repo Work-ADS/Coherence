@@ -35,12 +35,7 @@
                 {{ s.number }}
               }
             </span>
-            <span class="step__stack">
-              <span class="step__label">{{ s.label }}</span>
-              @if (state === 'current') {
-                <span class="step__sub">En curso</span>
-              }
-            </span>
+            <span class="step__label">{{ s.label }}</span>
           </button>
         }
       </nav>
@@ -149,6 +144,9 @@
                 placeholder="Selecciona una opción"
                 [options]="municipioOptions"
                 [value]="data().municipio"
+                [searchable]="true"
+                searchPlaceholder="Buscar municipio…"
+                emptyText="Sin municipios coincidentes"
                 (valueChange)="setMunicipio($event)"
               />
             </div>
@@ -243,19 +241,37 @@
               <span class="stat__hint">situación actual</span>
             </div>
             <div class="metric-card">
-              <span class="stat__label">Gasto anual</span>
+              <div class="metric-card__head">
+                <span class="stat__label">Gasto anual</span>
+                <span class="stat__delta stat__delta--up" title="por encima de la media de viviendas similares">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 12 8l7 7"/></svg>
+                  12 %
+                </span>
+              </div>
               <span class="stat__value">1.567<span class="stat__unit">€</span></span>
-              <span class="stat__hint">coste estimado por vivienda</span>
+              <span class="stat__hint">coste estimado por vivienda · vs media</span>
             </div>
             <div class="metric-card">
-              <span class="stat__label">Consumo anual</span>
-              <span class="stat__value">612.423<span class="stat__unit">KWH</span></span>
-              <span class="stat__hint">energía usada al año</span>
+              <div class="metric-card__head">
+                <span class="stat__label">Consumo anual</span>
+                <span class="stat__delta stat__delta--up" title="por encima de la media de viviendas similares">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 12 8l7 7"/></svg>
+                  18 %
+                </span>
+              </div>
+              <span class="stat__value">612.423<span class="stat__unit">kWh</span></span>
+              <span class="stat__hint">energía usada al año · vs media</span>
             </div>
             <div class="metric-card">
-              <span class="stat__label">Emisiones anuales</span>
-              <span class="stat__value">44<span class="stat__unit">KG CO<sub>2</sub></span></span>
-              <span class="stat__hint">huella de CO₂ estimada</span>
+              <div class="metric-card__head">
+                <span class="stat__label">Emisiones anuales</span>
+                <span class="stat__delta stat__delta--up" title="por encima de la media de viviendas similares">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 12 8l7 7"/></svg>
+                  9 %
+                </span>
+              </div>
+              <span class="stat__value">44<span class="stat__unit">kg CO<sub>2</sub></span></span>
+              <span class="stat__hint">huella de CO₂ estimada · vs media</span>
             </div>
           </div>
         </section>

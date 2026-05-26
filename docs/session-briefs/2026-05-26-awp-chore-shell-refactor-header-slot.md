@@ -1,10 +1,19 @@
 # AWP 2026 — Chore: Shell refactor (pages own their `afi-page-header`)
 
-**Status:** parked, awaits user "go" — **prerequisite for Briefs I / J / K / L**
-**Branch:** `chore/shell-refactor-header-slot` (to be created)
+**Status:** ✅ complete — landed on `main` in `<this commit>`. Unblocks Briefs I / J / K / L.
+**Branch:** `chore/shell-refactor-header-slot` → merged + deleted
 **Created:** 2026-05-26
-**Activates:** before Brief I (or alongside it)
+**Completed:** 2026-05-26
 **Plan reference:** [`/Users/richardgriner/.claude/plans/add-the-flow-to-robust-cherny.md`](../../.claude/plans/add-the-flow-to-robust-cherny.md) — Deliverable 0
+
+## Completion notes (2026-05-26)
+
+- Shell shrunk to: demo-shell + sidebar + top-bar + (banner if `showBanner`) + scroll container + `<ng-content />` + (globally hidden) version-toggle anchor. `[title]` / `[subtitle]` / `[breadcrumb]` inputs dropped; `PageHeaderComponent` no longer in the shell's imports.
+- All 5 consuming pages updated: legado-retiro, inversiones-futuras, desinversiones-futuras (list + detail), proteccion-familiar. Each now renders its own `<afi-page-header>` inline with native `slot="breadcrumb"` and (where applicable) `slot="actions"`. F's `.if-toolbar`, G-list's `.df-toolbar`, G-detail's `.dd-toolbar` divs + their SCSS rules all deleted.
+- Breadcrumbs standardized on the sociedades-pattern Tailwind utilities: `uppercase tracking-wider text-action-700`. Token-bound, no raw values.
+- Brief completion notes in E / F / G / H amended to record the resolution.
+- Verified live at 1440 wide across all 5 routes — page-header actions slot renders the right CTA in each case, sidebar chips unchanged, banner gating unchanged, console clean.
+- One commit on `chore/shell-refactor-header-slot`; merged via fast-forward and branch deleted.
 
 ---
 

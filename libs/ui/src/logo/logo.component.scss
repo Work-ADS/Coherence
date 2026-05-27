@@ -17,23 +17,49 @@
   &--xl { height: var(--dim-64); }
 
   // ---------------------------------------------------------------------------
-  // SVG fills the height, width follows aspect ratio
+  // SVG fills the height, width follows aspect ratio.
+  // Default visible group is AFI; per-brand groups are hidden until
+  // :host-context([data-brand="..."]) on an ancestor activates them.
+  // display:none also removes them from the accessibility tree so only the
+  // visible brand's <svg> exposes role="img".
   // ---------------------------------------------------------------------------
   &__svg {
-    display: block;
     height: 100%;
     width: auto;
+
+    &--afi {
+      display: block;
+    }
+
+    &--unicaja,
+    &--laboral-kutxa {
+      display: none;
+    }
+  }
+
+  // Brand swap via ancestor [data-brand] attribute. The scoped brand picker
+  // on doc/demo pages binds [attr.data-brand] on a wrapper around just the
+  // preview slot — outside that wrapper (the chrome) data-brand is unset and
+  // the AFI mark stays.
+  :host-context([data-brand='unicaja']) & {
+    &__svg--afi { display: none; }
+    &__svg--unicaja { display: block; }
+  }
+
+  :host-context([data-brand='laboral-kutxa']) & {
+    &__svg--afi { display: none; }
+    &__svg--laboral-kutxa { display: block; }
   }
 
   // ---------------------------------------------------------------------------
   // Interactive state when rendered as anchor
   // ---------------------------------------------------------------------------
   a#{&} {
-    border-radius: var(--radius-xs, 4px);
+    border-radius: var(--radius-xs);
     outline: none;
 
     &:focus-visible {
-      box-shadow: 0 0 0 2px var(--border-focus);
+      box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
     }
 
     &:hover {

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 
 import type { LogoSize, LogoVariant } from './logo.variants';
 
@@ -28,6 +29,7 @@ import type { LogoSize, LogoVariant } from './logo.variants';
 @Component({
   selector: 'coherence-logo',
   standalone: true,
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './logo.component.html',
   styleUrl: './logo.component.scss',

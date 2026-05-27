@@ -1,0 +1,105 @@
+<site-doc-page-shell
+  title="Button"
+  overline="COMPONENTS"
+  description="Acción primaria del sistema. Cuatro variantes (primary, secondary, ghost, danger) y tres tamaños (sm, md, lg). Soporta los estados disabled y loading. La variante primary usa el color de acción de la marca activa — el resto consume tokens neutrales que no varían por brand."
+  componentName="button"
+  [variant]="variant()"
+>
+  <!-- Breadcrumb -->
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Button</span>
+  </span>
+
+  <!-- Use cases -->
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Acción principal</span> — la acción más importante de una vista o formulario (Guardar, Confirmar, Activar).</li>
+    <li><span class="use-cases__label">Confirmación de diálogos</span> — botones primario + secundario en la barra de acciones de un Modal.</li>
+    <li><span class="use-cases__label">Navegación contextual</span> — cuando la semántica es de acción más que de enlace.</li>
+    <li><span class="use-cases__label">Acciones destructivas</span> — variante <code>danger</code> para eliminar, archivar o revertir.</li>
+    <li><span class="use-cases__label">Acciones secundarias</span> — ghost o secondary cuando hay una primaria visible en la misma vista.</li>
+  </ul>
+
+  <!-- Controls -->
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Variant</span>
+      <afi-segmented-control
+        [options]="variantOptions"
+        [(value)]="variant"
+        size="sm"
+        ariaLabel="Button variant"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Button size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">State</span>
+      <afi-segmented-control
+        [options]="stateOptions"
+        [(value)]="state"
+        size="sm"
+        ariaLabel="Button state"
+      />
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div slot="preview" class="preview">
+    <afi-button
+      [variant]="variant()"
+      [size]="size()"
+      [disabled]="disabled()"
+      [loading]="loading()"
+    >Guardar</afi-button>
+  </div>
+
+  <!-- Tokens -->
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories()" />
+
+  <!-- Accessibility -->
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Usa siempre <code>&lt;button&gt;</code> nativo — nunca <code>&lt;div&gt;</code> ni <code>&lt;a&gt;</code> para acciones.</li>
+      <li>Botones solo-icono requieren <code>ariaLabel</code> descriptivo (e.g. <code>"Eliminar"</code>, no <code>"X"</code>).</li>
+      <li>En estado <code>loading</code>: renderiza <code>aria-busy="true"</code> y texto <code>"Cargando…"</code> en <code>sr-only</code>.</li>
+      <li>Foco visible con anillo de 2px usando <code>var(--border-focus)</code> — cumple WCAG 2.2.</li>
+      <li>Disabled emite <code>aria-disabled="true"</code> y bloquea la emisión del evento click.</li>
+      <li>Soporta navegación de teclado nativa: <code>Tab</code> enfoca, <code>Enter</code> / <code>Space</code> activan.</li>
+    </ul>
+  </section>
+
+  <!-- Dos & Don'ts -->
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Una sola acción primaria por vista — el resto secondary o ghost.</li>
+          <li>Etiqueta describe la acción concreta (<code>"Guardar cambios"</code>, no <code>"Aceptar"</code>).</li>
+          <li>Usa <code>danger</code> solo para acciones destructivas que el usuario no puede revertir fácilmente.</li>
+          <li>Empareja danger con un Modal de confirmación cuando la acción es irreversible.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No uses <code>danger</code> para acciones constructivas como <code>"Guardar"</code> o <code>"Enviar"</code>.</li>
+          <li>No coloques dos primarios en la misma vista — compiten por la atención.</li>
+          <li>No uses una etiqueta genérica (<code>"Aceptar"</code>, <code>"OK"</code>) que no comunica qué ocurrirá.</li>
+          <li>No emplees un botón para navegación simple entre páginas — usa un enlace.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

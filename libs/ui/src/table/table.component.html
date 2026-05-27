@@ -50,7 +50,7 @@
     <tbody [attr.aria-busy]="loading() ? 'true' : null">
       @if (loading()) {
         @for (i of skeletonRows; track i) {
-          <tr [class]="rowClasses(false)">
+          <tr [class]="rowClasses(false, false)">
             @if (selectable()) {
               <td class="afi-table__td-select">
                 <div class="afi-table__skel afi-table__skel--check"></div>
@@ -76,7 +76,11 @@
         </tr>
       } @else {
         @for (row of rows(); track trackKey(row)) {
-          <tr [class]="rowClasses(isSelected(row))" (click)="onRowClick(row, $event)">
+          <tr
+            [class]="rowClasses(isSelected(row), isHighlighted(row))"
+            [attr.data-row-key]="row[trackByKey()]"
+            (click)="onRowClick(row, $event)"
+          >
             @if (selectable()) {
               <td class="afi-table__td-select" (click)="$event.stopPropagation()">
                 <afi-checkbox

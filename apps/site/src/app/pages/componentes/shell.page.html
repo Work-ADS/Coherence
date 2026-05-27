@@ -1,0 +1,79 @@
+<site-doc-page-shell
+  title="Shell"
+  overline="COMPONENTS"
+  description="Esqueleto de aplicación: top bar + sidebar + content + right rail opcional. Cinco tipos (workspace, docs, auth, focus, canvas) que cambian la composición."
+  componentName="shell"
+  [variant]="type()"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Shell</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Workspace</span> — top bar + sidebar + main content (apps de productividad).</li>
+    <li><span class="use-cases__label">Docs</span> — top bar + sidebar + content + TOC right rail (este sitio).</li>
+    <li><span class="use-cases__label">Auth</span> — sin chrome, contenido centrado (login, signup).</li>
+    <li><span class="use-cases__label">Focus</span> — solo top bar minimal (flows largos, checkout).</li>
+    <li><span class="use-cases__label">Canvas</span> — sin sidebar, viewport completo (editores, mapas).</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Type</span>
+      <afi-segmented-control
+        [options]="typeOptions"
+        [(value)]="type"
+        size="sm"
+        ariaLabel="Shell type"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="shell-demo" [attr.data-shell-type]="type()">
+      <div class="shell-demo__top">Top bar</div>
+      @if (type() === 'workspace' || type() === 'docs') {
+        <div class="shell-demo__sidebar">Sidebar</div>
+      }
+      <div class="shell-demo__content">Content</div>
+      @if (type() === 'docs') {
+        <div class="shell-demo__rail">Right rail</div>
+      }
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Renderiza landmarks semánticos: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;aside&gt;</code>.</li>
+      <li>Skip link al main content desde el top bar.</li>
+      <li>El sidebar cierra automáticamente en mobile cuando se selecciona un item.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Elige <code>workspace</code> para apps productivas con navegación lateral.</li>
+          <li>Usa <code>auth</code> para flujos en los que el chrome distrae.</li>
+          <li>Usa <code>canvas</code> cuando el contenido necesita todo el ancho.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No mezcles tipos de shell en una sesión — confunde al usuario.</li>
+          <li>No anides shells dentro de shells.</li>
+          <li>No personalices el layout dentro del shell — usa Page Header + Card.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

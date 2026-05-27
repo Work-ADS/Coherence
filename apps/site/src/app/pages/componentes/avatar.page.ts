@@ -1,66 +1,55 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-import { AvatarComponent } from '@coherence/ui';
+import { AvatarComponent, SegmentedControlComponent } from '@coherence/ui';
 import type { AvatarSize } from '@coherence/ui';
 
-import { DocPageLayoutComponent } from '../../components/doc-page-layout';
-import { ComponentPlaygroundComponent } from '../../components/component-playground';
-import { CodeBlockComponent } from '../../components/code-block';
-import { TokensTableComponent, type TokenRow } from '../../components/tokens-table';
+import { DocPageShellComponent } from '../../components/doc-page-shell';
+import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
 
-const AVATAR_TOKENS: TokenRow[] = [
-  { property: 'Tamaño (sm)', token: 'w-6 h-6' },
-  { property: 'Tamaño (md)', token: 'w-8 h-8' },
-  { property: 'Tamaño (lg)', token: 'w-10 h-10' },
-  { property: 'Radio', token: 'rounded-full' },
-  { property: 'Fondo fallback', token: 'var(--neutral-200)' },
+const VISUAL_CATEGORY: DocTokenCategory = {
+  value: 'visual',
+  label: 'Visual',
+  rows: [
+    { property: 'Background (fallback)', token: '--surface-quiet', semantic: '--surface-quiet', primitive: '--color-afi-control-100' },
+    { property: 'Foreground (initials)', token: '--foreground-secondary-default', semantic: '--foreground-secondary-default', primitive: '--color-afi-control-700' },
+    { property: 'Border radius', token: '--radius-full', semantic: '--radius-full', primitive: '999px' },
+  ],
+};
+
+const SIZING_CATEGORY: DocTokenCategory = {
+  value: 'sizing',
+  label: 'Sizing',
+  rows: [
+    { property: 'sm', token: '--dimension-6', semantic: '--dimension-6', primitive: '24px' },
+    { property: 'md', token: '--dimension-8', semantic: '--dimension-8', primitive: '32px' },
+    { property: 'lg', token: '--dimension-10', semantic: '--dimension-10', primitive: '40px' },
+    { property: 'Typography', token: '--type-body-sm-500', semantic: '--type-body-sm-500', primitive: '14px / 20px / 500' },
+  ],
+};
+
+const SIZE_OPTIONS = [
+  { value: 'sm', label: 'sm' },
+  { value: 'md', label: 'md' },
+  { value: 'lg', label: 'lg' },
 ];
 
 @Component({
-  selector: 'app-avatar-page',
+  selector: 'site-avatar-page',
   standalone: true,
   imports: [
-    DocPageLayoutComponent,
-    ComponentPlaygroundComponent,
-    CodeBlockComponent,
-    TokensTableComponent,
+    RouterLink,
     AvatarComponent,
+    SegmentedControlComponent,
+    DocPageShellComponent,
+    DocTokensComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <afi-doc-page-layout
-      kicker="COMPONENTS"
-      title="Avatar"
-      subtitle="Representación visual circular de un usuario o entidad."
-      docsSource="libs/ui/src/avatar/"
-      buildPromptSlug="coherence-avatar"
-    >
-      <div slot="code-tab">
-        <afi-component-playground [code]="codeSnippet()">
-          <div slot="preview" class="flex items-center gap-space-4">
-            @for (s of sizes; track s) {
-              <afi-avatar [size]="s" name="Ana López" />
-            }
-          </div>
-        </afi-component-playground>
-
-        <section>
-          <h2 id="tokens" class="text-section text-canvas-fg mb-space-6">Tokens consumidos</h2>
-          <afi-tokens-table [rows]="tokenRows" title="" />
-        </section>
-      </div>
-    </afi-doc-page-layout>
-  `,
+  templateUrl: './avatar.page.html',
+  styleUrl: './avatar.page.scss',
 })
 export class AvatarPage {
-  readonly sizes: AvatarSize[] = ['sm', 'md', 'lg'];
-  readonly tokenRows = AVATAR_TOKENS;
-
-  readonly codeSnippet = signal(`import { AvatarComponent } from '@coherence/ui';
-
-<afi-avatar
-  size="md"
-  name="Ana López"
-  src="https://i.pravatar.cc/40"
-/>`);
+  readonly size = signal<AvatarSize>('md');
+  readonly sizeOptions = SIZE_OPTIONS;
+  readonly tokenCategories: DocTokenCategory[] = [VISUAL_CATEGORY, SIZING_CATEGORY];
 }

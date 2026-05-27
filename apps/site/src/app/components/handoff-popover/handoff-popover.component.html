@@ -1,0 +1,25 @@
+@if (svc.active(); as a) {
+  <div
+    class="handoff-popover"
+    role="dialog"
+    aria-label="Token de handoff"
+    [style]="styleVars()"
+  >
+    <code class="handoff-popover__line">{{ line() }}</code>
+    <afi-button
+      variant="secondary"
+      size="sm"
+      (clicked)="onCopy()"
+    >{{ copied() ? 'Copiado' : 'Copiar' }}</afi-button>
+    <afi-icon-button
+      variant="ghost"
+      size="sm"
+      ariaLabel="Cerrar"
+      (clicked)="onDismiss()"
+    >
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </afi-icon-button>
+  </div>
+}

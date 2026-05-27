@@ -137,6 +137,18 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
 
   readonly copiedToken = signal<string | null>(null);
   readonly copiedList = signal(false);
+  readonly copiedSection = signal<string | null>(null);
+
+  /**
+   * Figma-style 3-section render of the active inspect result. Re-derives
+   * from the element each time inspect changes — cheap, and avoids
+   * leaking section state into the service.
+   */
+  readonly handoffSections = computed(() => {
+    const result = this.inspect.activeResult();
+    if (!result) return null;
+    return this.inspect.getHandoffSections(result.element);
+  });
 
   readonly demoCommentCount = computed(
     () => this.comments.getForDemo(this.demoSlug()).length,
@@ -421,6 +433,23 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
         setTimeout(() => {
           if (this.copiedToken() === token) this.copiedToken.set(null);
         }, 1200);
+      })
+      .catch(() => {});
+  }
+
+  copySection(section: 'layout' | 'style' | 'typography'): void {
+    const sections = this.handoffSections();
+    if (!sections || !navigator?.clipboard) return;
+    const lines = sections[section];
+    if (!lines.length) return;
+    const text = lines.map((l) => `${l.name}: ${l.value};`).join('\n');
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        this.copiedSection.set(section);
+        setTimeout(() => {
+          if (this.copiedSection() === section) this.copiedSection.set(null);
+        }, 1500);
       })
       .catch(() => {});
   }

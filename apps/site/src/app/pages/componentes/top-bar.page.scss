@@ -1,0 +1,38 @@
+// =============================================================================
+// top-bar.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--dimension-30);
+  width: 100%;
+  padding: var(--space-2xl);
+}
+
+.top-bar-demo {
+  width: 100%;
+  max-width: var(--dimension-180);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  &__link {
+    font: var(--type-body-md-500);
+    color: var(--foreground-secondary-default);
+    text-decoration: none;
+
+    &--active {
+      color: var(--foreground-primary-default);
+    }
+  }
+}

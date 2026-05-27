@@ -1,0 +1,91 @@
+// =============================================================================
+// shell.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-xl);
+}
+
+.shell-demo {
+  display: grid;
+  width: 100%;
+  max-width: var(--dimension-160);
+  height: var(--dimension-80);
+  background: var(--surface-quiet);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  grid-template-columns: var(--dimension-40) 1fr;
+  grid-template-rows: var(--dimension-12) 1fr;
+  grid-template-areas:
+    'top top'
+    'sidebar content';
+
+  &[data-shell-type='docs'] {
+    grid-template-columns: var(--dimension-40) 1fr var(--dimension-30);
+    grid-template-areas:
+      'top top top'
+      'sidebar content rail';
+  }
+
+  &[data-shell-type='auth'],
+  &[data-shell-type='focus'] {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'top'
+      'content';
+  }
+
+  &[data-shell-type='canvas'] {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--dimension-12) 1fr;
+    grid-template-areas:
+      'top'
+      'content';
+  }
+
+  &__top {
+    grid-area: top;
+    background: var(--surface-default);
+    border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+    display: flex;
+    align-items: center;
+    padding-inline: var(--space-md);
+    font: var(--type-body-sm-500);
+    color: var(--foreground-tertiary-default);
+  }
+
+  &__sidebar {
+    grid-area: sidebar;
+    background: var(--surface-default);
+    border-inline-end: var(--border-width-hairline) solid var(--border-hairline);
+    padding: var(--space-md);
+    font: var(--type-body-sm-500);
+    color: var(--foreground-tertiary-default);
+  }
+
+  &__rail {
+    grid-area: rail;
+    background: var(--surface-default);
+    border-inline-start: var(--border-width-hairline) solid var(--border-hairline);
+    padding: var(--space-md);
+    font: var(--type-body-sm-500);
+    color: var(--foreground-tertiary-default);
+  }
+
+  &__content {
+    grid-area: content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-default);
+    font: var(--type-body-md-500);
+    color: var(--foreground-secondary-default);
+  }
+}

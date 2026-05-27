@@ -1,0 +1,75 @@
+<site-doc-page-shell
+  title="Page Header"
+  overline="COMPONENTS"
+  description="Cabecera de página con título, subtítulo opcional y acciones contextuales. Dos densidades (default, compact)."
+  componentName="page-header"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Page Header</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Cabecera de listado</span> — título de la página + botón primario (<em>Nuevo cliente</em>).</li>
+    <li><span class="use-cases__label">Detalle de registro</span> — título dinámico + acciones contextuales (Editar, Archivar).</li>
+    <li><span class="use-cases__label">Dashboards</span> — título + subtítulo descriptivo del contexto.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Density</span>
+      <afi-segmented-control
+        [options]="densityOptions"
+        [(value)]="density"
+        size="sm"
+        ariaLabel="Page header density"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="page-header-demo">
+      <afi-page-header
+        title="Operaciones"
+        subtitle="Listado de todas las operaciones del mes"
+        [density]="density()"
+      >
+        <afi-button slot="actions" variant="primary" size="md">Nueva operación</afi-button>
+      </afi-page-header>
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Title se renderiza como <code>&lt;h1&gt;</code> — un solo Page Header por página.</li>
+      <li>Subtitle como párrafo asociado al heading via DOM order.</li>
+      <li>Acciones contextuales viven en el slot <code>actions</code> y mantienen su semántica de botón.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Una sola acción primaria en el slot <code>actions</code>.</li>
+          <li>Usa <code>compact</code> en dashboards densos.</li>
+          <li>Subtitle describe el contexto, no repite el title.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No metas dos h1 — solo uno por página.</li>
+          <li>No coloques más de 3 acciones en el slot actions — usa Menu para overflow.</li>
+          <li>No uses Page Header dentro de Drawer o Modal — usa su slot title nativo.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

@@ -1,0 +1,82 @@
+<site-doc-page-shell
+  title="Modal"
+  overline="COMPONENTS"
+  description="Diálogo modal sobre backdrop oscuro para confirmación, edición o vista enfocada. Bloquea interacción con el resto de la UI mientras está abierto."
+  componentName="modal"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Modal</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Confirmación de acciones destructivas</span> — eliminar, archivar, cancelar pago.</li>
+    <li><span class="use-cases__label">Formularios cortos</span> — crear/editar un registro sin abandonar el contexto.</li>
+    <li><span class="use-cases__label">Vista de detalle enfocada</span> — abrir un item de lista para inspección rápida.</li>
+    <li><span class="use-cases__label">Onboarding o tutoriales</span> — pasos cortos que el usuario completa secuencialmente.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Modal size"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-button variant="primary" size="md" (clicked)="openModal()">Abrir modal</afi-button>
+    <afi-modal
+      [open]="open()"
+      [size]="size()"
+      title="Eliminar registro"
+      (closed)="closeModal()"
+    >
+      <p>Esta acción es permanente. ¿Quieres continuar?</p>
+      <div slot="actions" style="display: flex; gap: var(--space-sm); justify-content: flex-end;">
+        <afi-button variant="ghost" size="md" (clicked)="closeModal()">Cancelar</afi-button>
+        <afi-button variant="danger" size="md" (clicked)="closeModal()">Eliminar</afi-button>
+      </div>
+    </afi-modal>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Renderiza con <code>role="dialog"</code> y <code>aria-modal="true"</code>.</li>
+      <li>Title se asocia vía <code>aria-labelledby</code>.</li>
+      <li>Focus trap: <code>Tab</code> circula solo dentro del modal mientras está abierto.</li>
+      <li><code>Escape</code> cierra el modal por defecto.</li>
+      <li>Al cerrar, el foco vuelve al elemento que lo abrió.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Acción primaria visible y enfocable de forma destacada.</li>
+          <li>Mantén el contenido conciso — si necesita scroll largo, usa Drawer.</li>
+          <li>Confirma acciones destructivas en un modal antes de ejecutar.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No anides modales — abre uno cierra el anterior, no los apila.</li>
+          <li>No uses modal para mensajes de éxito breves — usa Toast.</li>
+          <li>No bloquees cierre por Escape sin razón clara — daña accesibilidad.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

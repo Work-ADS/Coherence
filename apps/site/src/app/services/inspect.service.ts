@@ -71,6 +71,38 @@ export interface InspectResult {
   states: StateGroup[];
 }
 
+/**
+ * Flat, single-line handoff payload — the contract the AFI team agreed on
+ * 2026-05-22. One token name (whatever the component actually authored —
+ * component-tier if it exists, otherwise semantic) + the final paintable
+ * hex. No primitive → semantic → component chain visible to the consumer.
+ */
+export interface HandoffToken {
+  property: string;
+  token: string;
+  hex: string | null;
+}
+
+/**
+ * One rendered line for a Figma-style inspect panel section. `name` is the
+ * team-style token name (e.g. `button-primary-background`) when a DS
+ * component context can be derived from the DOM; otherwise it's the raw
+ * CSS property (e.g. `padding`). `value` is the painted value the team
+ * actually drops into their flat per-brand file.
+ */
+export interface HandoffLine {
+  name: string;
+  value: string;
+}
+
+export type HandoffSection = 'layout' | 'style' | 'typography';
+
+export interface HandoffSections {
+  layout: HandoffLine[];
+  style: HandoffLine[];
+  typography: HandoffLine[];
+}
+
 const PROPERTY_CATEGORIES: Record<string, TokenCategory> = {
   color: 'color',
   'background-color': 'color',
@@ -120,6 +152,60 @@ const PROPERTY_CATEGORIES: Record<string, TokenCategory> = {
 
   transition: 'motion',
 };
+
+/**
+ * 3-section grouping for the Figma-style inspect panel. Maps a curated
+ * subset of CSS properties into the broader buckets a designer actually
+ * scans. Per-side longhands (padding-top etc.) and font-* longhands are
+ * intentionally omitted — shorthands carry the same info more concisely
+ * and Figma's dev mode does the same.
+ */
+const SECTION_BY_PROPERTY: Record<string, HandoffSection> = {
+  // LAYOUT — structural rhythm + shape
+  display: 'layout',
+  width: 'layout', height: 'layout',
+  padding: 'layout',
+  margin: 'layout',
+  gap: 'layout',
+  'border-width': 'layout', 'border-radius': 'layout',
+  transition: 'layout',
+
+  // STYLE — color + finish
+  color: 'style',
+  'background-color': 'style',
+  'border-color': 'style',
+  'outline-color': 'style',
+  'box-shadow': 'style',
+  opacity: 'style',
+
+  // TYPOGRAPHY — `font` shorthand carries family + weight + size + line-height
+  font: 'typography',
+  'letter-spacing': 'typography',
+};
+
+/**
+ * CSS property → short slot suffix for team-style names.
+ * Example: `button-primary-` + `background` (slot) → `button-primary-background`.
+ * Properties not listed fall back to the raw CSS property name.
+ */
+const SLOT_BY_PROPERTY: Record<string, string> = {
+  'background-color': 'background',
+  color: 'foreground',
+  'border-color': 'border',
+  'border-top-color': 'border',
+  'border-right-color': 'border',
+  'border-bottom-color': 'border',
+  'border-left-color': 'border',
+  'outline-color': 'outline',
+  'box-shadow': 'shadow',
+};
+
+/**
+ * BEM modifiers that represent size, not visual variant. Filtered out
+ * when deriving the team-style variant from class names so the popover
+ * outputs `button-primary-…` not `button-md-…`.
+ */
+const BEM_SIZE_MODIFIERS = new Set(['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', 'compact', 'full', 'wide']);
 
 const CATEGORY_ORDER: TokenCategory[] = [
   'color',
@@ -391,6 +477,185 @@ export class InspectService {
     } finally {
       restoreInjected();
     }
+  }
+
+  /**
+   * Handoff-mode inspection — sibling of `inspect()`. Returns the single
+   * primary handoff token for an element: the highest-tier authored token
+   * (what the component literally writes) + the final paintable hex.
+   *
+   * Property priority: background-color → color → border-color → box-shadow.
+   * Returns null when no color property has an authored token chain (raw
+   * values, fully-transparent backgrounds, etc.).
+   *
+   * Does NOT mutate `activeResult` or `isActive` — pure read. Brand swap
+   * lives in the cascade, so this method automatically returns the
+   * brand-correct hex without any extra wiring.
+   */
+  getHandoffToken(element: HTMLElement): HandoffToken | null {
+    const restoreInjected = this.suspendInjectedClasses(element);
+    try {
+      const computed = getComputedStyle(element);
+      const applied = this.getAppliedDeclarations(element);
+
+      const PRIORITY = ['background-color', 'color', 'border-color', 'box-shadow'];
+
+      for (const prop of PRIORITY) {
+        const computedValue = computed.getPropertyValue(prop).trim();
+        if (
+          !computedValue ||
+          computedValue === 'rgba(0, 0, 0, 0)' ||
+          computedValue === 'transparent'
+        ) {
+          continue;
+        }
+
+        let authoredValue = applied.values.get(prop);
+        if (authoredValue == null && INHERITABLE_PROPERTIES.has(prop)) {
+          authoredValue = this.findInheritedAuthoredValue(element, prop);
+        }
+        if (!authoredValue) continue;
+
+        const chain = this.buildChain(authoredValue, prop);
+        if (chain.length === 0) continue;
+
+        return {
+          property: prop,
+          token: chain[0]!.token,
+          hex: this.toHex(computedValue),
+        };
+      }
+
+      return null;
+    } finally {
+      restoreInjected();
+    }
+  }
+
+  /**
+   * Build the three-section Figma-style handoff payload for an element.
+   * Sections: Layout (spacing + sizing + radius + motion), Style (color +
+   * border-color + effects), Typography. Each line carries the team-style
+   * name (`button-primary-background`) when a DS component context can be
+   * derived from the DOM, or the raw CSS property name as fallback.
+   *
+   * Used by the demo-shell inspect panel. Brand-correct hex values fall
+   * out automatically because `getComputedStyle` reads the cascade.
+   */
+  getHandoffSections(element: HTMLElement): HandoffSections {
+    const restoreInjected = this.suspendInjectedClasses(element);
+    try {
+      const computed = getComputedStyle(element);
+      const context = this.deriveComponentContext(element);
+
+      const sections: HandoffSections = { layout: [], style: [], typography: [] };
+
+      // Iterate the section map directly so we cover layout properties
+      // (display, padding, etc.) that aren't in TRACKED_PROPERTIES.
+      for (const prop of Object.keys(SECTION_BY_PROPERTY)) {
+        const computedValue = computed.getPropertyValue(prop).trim();
+        if (this.isUninteresting(prop, computedValue, computed)) continue;
+
+        const section = SECTION_BY_PROPERTY[prop];
+        if (!section) continue;
+
+        const value = this.isColorProperty(prop)
+          ? this.toHex(computedValue) ?? computedValue
+          : computedValue;
+
+        const name = this.composeName(prop, context);
+
+        // Dedupe identical name+value lines so border-*-color longhands don't
+        // emit four copies of the same row.
+        const list = sections[section];
+        if (list.some((l) => l.name === name && l.value === value)) continue;
+
+        list.push({ name, value });
+      }
+
+      return sections;
+    } finally {
+      restoreInjected();
+    }
+  }
+
+  /**
+   * Walk up the DOM looking for the nearest `<afi-*>` ancestor to identify
+   * which DS component the element belongs to, plus the active variant
+   * (read from BEM modifier classes on the first descendant, filtered to
+   * skip size modifiers).
+   */
+  private deriveComponentContext(element: HTMLElement): { name: string; variant?: string } | null {
+    let current: HTMLElement | null = element;
+    while (current) {
+      const tag = current.tagName.toLowerCase();
+      if (tag.startsWith('afi-')) {
+        const name = tag.slice(4);
+        const variant = this.extractBemVariant(current);
+        return variant ? { name, variant } : { name };
+      }
+      current = current.parentElement;
+    }
+    return null;
+  }
+
+  /**
+   * Read BEM modifier classes from `host` (or its first element child) and
+   * return the first one that isn't a size modifier. Examples:
+   *   `btn btn--md btn--primary`  → 'primary'
+   *   `chip chip--success`        → 'success'
+   *   `card card--lg`             → undefined (size-only, no variant)
+   */
+  private extractBemVariant(host: HTMLElement): string | undefined {
+    const candidates: HTMLElement[] = [host];
+    const firstChild = host.firstElementChild as HTMLElement | null;
+    if (firstChild) candidates.push(firstChild);
+
+    for (const el of candidates) {
+      for (const cls of Array.from(el.classList)) {
+        const match = cls.match(/^[a-z0-9]+(?:-[a-z0-9]+)*--([a-z0-9-]+)$/);
+        if (!match) continue;
+        const modifier = match[1]!;
+        if (BEM_SIZE_MODIFIERS.has(modifier)) continue;
+        return modifier;
+      }
+    }
+    return undefined;
+  }
+
+  /**
+   * Compose a team-style flat-output name from page or DOM-derived context
+   * + the clicked CSS property. Falls back to the raw property when no
+   * component context is derivable (raw page HTML, etc.) — Figma does the
+   * same.
+   */
+  private composeName(
+    property: string,
+    context: { name: string; variant?: string } | null,
+  ): string {
+    const slot = SLOT_BY_PROPERTY[property] ?? property;
+    if (!context) return slot;
+    return context.variant
+      ? `${context.name}-${context.variant}-${slot}`
+      : `${context.name}-${slot}`;
+  }
+
+  /**
+   * Skip properties whose value is uninteresting for handoff: zero/none/
+   * auto defaults, the inert UA values, or sizing properties that nobody
+   * actually authored. Mirrors the noise-cutting in `inspect()` so the
+   * inspect panel doesn't surface every UA default.
+   */
+  private isUninteresting(
+    prop: string,
+    value: string,
+    computed: CSSStyleDeclaration,
+  ): boolean {
+    if (!value) return true;
+    if (value === 'none' || value === 'normal' || value === '0px' || value === 'auto') return true;
+    if (this.isDefaultValue(prop, value)) return true;
+    if (this.isInert(prop, computed)) return true;
+    return false;
   }
 
   /**

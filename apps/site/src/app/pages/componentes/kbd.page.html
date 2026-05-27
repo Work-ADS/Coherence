@@ -1,0 +1,77 @@
+<site-doc-page-shell
+  title="Kbd"
+  overline="COMPONENTS"
+  description="Keycap visual para atajos de teclado. Solo presentación — sin interacción ni foco."
+  componentName="kbd"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Kbd</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Atajos en menús contextuales</span> — <code>⌘ K</code>, <code>Ctrl+S</code>.</li>
+    <li><span class="use-cases__label">Indicadores de búsqueda</span> — pista visual al lado del input.</li>
+    <li><span class="use-cases__label">Documentación de teclado</span> — sección "Mapa de teclado" en doc pages.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Kbd size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Separator</span>
+      <afi-segmented-control
+        [options]="separatorOptions"
+        [(value)]="separator"
+        size="sm"
+        ariaLabel="Kbd separator"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-kbd [keys]="keys" [size]="size()" [separator]="separator()" />
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Cada tecla usa <code>&lt;kbd&gt;</code> nativo (HTML5 semántico).</li>
+      <li>Wrapper con <code>role="group"</code> agrupa teclas como un acorde.</li>
+      <li><code>aria-label</code> auto-generado: "Atajo: ⌘ más K".</li>
+      <li>No es enfocable — display-only.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Usa símbolos Unicode (<code>⌘ ⇧ ⎋</code>) en lugar de texto plano.</li>
+          <li>Coloca Kbd dentro de MenuItem para indicar shortcut.</li>
+          <li>Empareja con un input de búsqueda como ⌘K indicator.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No uses Kbd para etiquetar botones — los botones no son teclas.</li>
+          <li>No mezcles ortografías ("Cmd" vs "⌘") en la misma vista.</li>
+          <li>No hagas Kbd interactivo — usa Button con icono de teclado.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

@@ -1,0 +1,89 @@
+<site-doc-page-shell
+  title="Menu"
+  overline="COMPONENTS"
+  description="Menú contextual de acciones, anclado a un trigger. Soporta atajos de teclado, items danger e iconos por item."
+  componentName="menu"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Menu</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Acciones secundarias en fila</span> — editar, duplicar, archivar, eliminar.</li>
+    <li><span class="use-cases__label">Top bar overflow</span> — más opciones que no caben en el espacio principal.</li>
+    <li><span class="use-cases__label">Cambio de cuenta</span> — switch entre workspaces o entidades.</li>
+    <li><span class="use-cases__label">Command palette inline</span> — selector contextual desde un campo de búsqueda.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Placement</span>
+      <afi-segmented-control
+        [options]="placementOptions"
+        [(value)]="placement"
+        size="sm"
+        ariaLabel="Menu placement"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">State</span>
+      <afi-button variant="secondary" size="sm" (clicked)="toggle()">
+        {{ open() ? 'Cerrar' : 'Abrir' }}
+      </afi-button>
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="menu-preview">
+      <afi-button variant="secondary" size="md" (clicked)="toggle()">Opciones ▾</afi-button>
+      <afi-menu
+        [open]="open()"
+        [placement]="placement()"
+        ariaLabel="Opciones"
+        (openChange)="open.set($event)"
+      >
+        <afi-menu-item (clicked)="close()">Editar</afi-menu-item>
+        <afi-menu-item (clicked)="close()">Duplicar</afi-menu-item>
+        <afi-menu-item (clicked)="close()">Archivar</afi-menu-item>
+        <afi-menu-item variant="danger" (clicked)="close()">Eliminar</afi-menu-item>
+      </afi-menu>
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Renderiza con <code>role="menu"</code> + items con <code>role="menuitem"</code>.</li>
+      <li>Trigger usa <code>aria-haspopup="menu"</code> y <code>aria-expanded</code> sincronizado con el estado.</li>
+      <li>Flechas navegan items, <code>Enter</code> activa, <code>Escape</code> cierra.</li>
+      <li>Foco vuelve al trigger al cerrar el menu.</li>
+      <li>Item danger se anuncia con su variante para distinguirlo.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Items con verbos de acción (<code>"Editar"</code>, <code>"Eliminar"</code>).</li>
+          <li>Coloca el item destructivo al final, con variant <code>danger</code>.</li>
+          <li>Usa <code>kbd</code> dentro de menu items para mostrar shortcuts.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No anides Menu dentro de Menu — la jerarquía se pierde.</li>
+          <li>No uses menu para flujos largos — usa Modal o Drawer.</li>
+          <li>No mezcles items de navegación con items de acción.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

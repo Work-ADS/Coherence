@@ -1,0 +1,21 @@
+<div class="control-group">
+  <span class="control-group__label">Marca</span>
+  <site-scoped-brand-picker />
+</div>
+<div class="control-group">
+  <span class="control-group__label">Inspeccionar</span>
+  <afi-button
+    variant="secondary"
+    size="sm"
+    [attr.aria-pressed]="handoff.isActive()"
+    (clicked)="onToggleInspect()"
+  >
+    {{ handoff.isActive() ? 'Activo' : 'Activar' }}
+  </afi-button>
+</div>
+@if (handoff.lastCopied(); as copied) {
+  <div class="control-group control-group--copied" role="status" aria-live="polite">
+    <span class="control-group__label">Copiado</span>
+    <code class="brand-context-row__copied">{{ copied.name }}: {{ copied.value }}</code>
+  </div>
+}

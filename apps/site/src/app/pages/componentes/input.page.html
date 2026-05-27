@@ -1,0 +1,101 @@
+<site-doc-page-shell
+  title="Input"
+  overline="COMPONENTS"
+  description="Campo de formulario para texto, número, email, contraseña y textarea. Incluye label, hint y error integrados — sin envoltorios externos."
+  componentName="input"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Input</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Entrada de texto libre</span> — nombre, correo electrónico, URL, descripción corta.</li>
+    <li><span class="use-cases__label">Texto multilínea</span> — comentarios, notas o instrucciones con <code>type="textarea"</code>.</li>
+    <li><span class="use-cases__label">Valores numéricos</span> — importes, cantidades, edades con step/min/max.</li>
+    <li><span class="use-cases__label">Contraseña enmascarada</span> — campos sensibles con <code>type="password"</code>.</li>
+    <li><span class="use-cases__label">Email con validación</span> — combina <code>type="email"</code> + <code>autocomplete</code>.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Type</span>
+      <afi-segmented-control
+        [options]="typeOptions"
+        [(value)]="type"
+        size="sm"
+        ariaLabel="Input type"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Input size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">State</span>
+      <afi-segmented-control
+        [options]="stateOptions"
+        [(value)]="state"
+        size="sm"
+        ariaLabel="Input state"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-input
+      [type]="type()"
+      [size]="size()"
+      label="Correo electrónico"
+      placeholder="usuario@ejemplo.com"
+      hint="Usaremos este correo para la verificación."
+      [error]="errorText()"
+      [disabled]="disabled()"
+      [readonly]="readonly()"
+    />
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Todo input requiere <code>label</code> visible o <code>ariaLabel</code> cuando el label vive fuera del componente.</li>
+      <li><code>required</code> añade un asterisco visible y emite <code>aria-required="true"</code>.</li>
+      <li><code>error</code> aplica borde rojo, mensaje y <code>aria-invalid="true"</code> — el lector lo anuncia al recibir foco.</li>
+      <li><code>hint</code> se asocia vía <code>aria-describedby</code> automáticamente.</li>
+      <li>Foco visible con anillo de 2px (<code>--border-focus</code>).</li>
+      <li><code>disabled</code> bloquea interacción y emite <code>aria-disabled="true"</code>; <code>readonly</code> permite foco y copia.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Etiqueta visible siempre que sea posible — placeholder no es etiqueta.</li>
+          <li>Mensajes de error específicos: describe el problema y cómo corregirlo.</li>
+          <li>Hint para guiar formato esperado (<code>"DD/MM/YYYY"</code>, <code>"mínimo 8 caracteres"</code>).</li>
+          <li>Empareja con <code>autocomplete</code> para campos comunes (email, name, address).</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No uses placeholder como única etiqueta — desaparece al escribir.</li>
+          <li>No muestres errores antes de que el usuario interactúe con el campo.</li>
+          <li>No deshabilites campos sin indicar por qué — añade hint explicativo.</li>
+          <li>No uses <code>type="text"</code> para emails o números — pierdes teclado nativo.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

@@ -1,0 +1,79 @@
+<site-doc-page-shell
+  title="Badge"
+  overline="COMPONENTS"
+  description="Indicador compacto para contadores, estados breves o etiquetas categóricas. Cinco intenciones (neutral, info, success, warning, error) y dos tamaños."
+  componentName="badge"
+  [variant]="intent()"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Badge</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Contadores de notificaciones</span> — número pequeño sobre un icono o nav item.</li>
+    <li><span class="use-cases__label">Etiquetas de estado breves</span> — Nuevo, Beta, En proceso, Archivado.</li>
+    <li><span class="use-cases__label">Categorías o tags</span> — clasificación visual ligera en listas.</li>
+    <li><span class="use-cases__label">Indicador de feedback</span> — éxito/error/warning en menús o cards.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Intent</span>
+      <afi-segmented-control
+        [options]="intentOptions"
+        [(value)]="intent"
+        size="sm"
+        ariaLabel="Badge intent"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Badge size"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-badge [intent]="intent()" [size]="size()">12</afi-badge>
+    <afi-badge [intent]="intent()" [size]="size()">Nuevo</afi-badge>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories()" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>El color por sí solo no comunica significado — empareja con texto o icono.</li>
+      <li>Para badges sobre iconos, añade <code>aria-label</code> al contenedor describiendo el conteo (<code>"3 notificaciones nuevas"</code>).</li>
+      <li>Contraste mínimo 4.5:1 entre texto y fondo en todas las intenciones.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Texto corto (1-2 palabras o números).</li>
+          <li>Empareja intent con el significado: success para "Completado", error para "Fallido".</li>
+          <li>Usa <code>99+</code> para contadores grandes en lugar de números reales.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No uses badge para acciones — usa Button o Filter Chip.</li>
+          <li>No mezcles intents arbitrariamente — sé consistente con la semántica.</li>
+          <li>No metas frases largas dentro de un badge.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

@@ -1,0 +1,77 @@
+<site-doc-page-shell
+  title="Drawer"
+  overline="COMPONENTS"
+  description="Panel deslizante desde el borde de la pantalla para tareas largas o contenido extenso que no entra en un Modal. Bloquea el resto de la UI con backdrop."
+  componentName="drawer"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Drawer</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Edición compleja</span> — formulario largo o multi-sección.</li>
+    <li><span class="use-cases__label">Detalle lateral</span> — abrir un item para ver toda su info sin perder la lista.</li>
+    <li><span class="use-cases__label">Filtros avanzados</span> — panel de filtros sobre una tabla o lista.</li>
+    <li><span class="use-cases__label">Configuración</span> — ajustes específicos de una sección.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Drawer size"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-button variant="primary" size="md" (clicked)="openDrawer()">Abrir drawer</afi-button>
+    <afi-drawer
+      [open]="open()"
+      [size]="size()"
+      title="Editar planificación"
+      (closed)="closeDrawer()"
+    >
+      <p>Aquí va el formulario o el contenido extenso del drawer.</p>
+    </afi-drawer>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Renderiza con <code>role="dialog"</code> + <code>aria-modal="true"</code>.</li>
+      <li>Title se asocia vía <code>aria-labelledby</code>.</li>
+      <li>Focus trap mientras está abierto, foco vuelve al trigger al cerrar.</li>
+      <li><code>Escape</code> cierra el drawer por defecto.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Usa drawer cuando el contenido necesita más espacio vertical que un modal.</li>
+          <li>Coloca el botón de acción primario al final del scroll, fijo si el contenido es largo.</li>
+          <li>Mantén el contexto visible — el usuario debe entender qué está editando.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No anides drawers — abre uno cierra el anterior.</li>
+          <li>No uses drawer para confirmaciones cortas — usa Modal.</li>
+          <li>No lo emplees como sidebar permanente — usa Sidebar.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

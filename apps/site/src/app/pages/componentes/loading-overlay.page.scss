@@ -1,0 +1,26 @@
+// =============================================================================
+// loading-overlay.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--dimension-48);
+  width: 100%;
+  padding: var(--space-2xl);
+
+  &__surface {
+    position: relative;
+    width: var(--dimension-90);
+    min-height: var(--dimension-40);
+    padding: var(--space-lg);
+    background: var(--surface-default);
+    border: var(--border-width-hairline) solid var(--border-hairline);
+    border-radius: var(--radius-md);
+    font: var(--type-body-md-400);
+    color: var(--foreground-secondary-default);
+  }
+}

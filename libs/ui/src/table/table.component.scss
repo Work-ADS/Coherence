@@ -79,6 +79,20 @@
     background: var(--surface-subtle);
     border-inline-start: var(--border-width-thick) solid var(--brand-primary-background-default);
   }
+
+  // Transient highlight — driven by [highlightedRowKey]. Used by doc-pages
+  // to surface the row that matches the most recent inspect-click on the
+  // live preview. Fades out on its own via the animation; the consumer
+  // clearing the key resets the matching state.
+  &--highlighted {
+    animation: afi-table-row-highlight 1.8s ease-out forwards;
+  }
+}
+
+@keyframes afi-table-row-highlight {
+  0%   { background: var(--feedback-success-background); }
+  20%  { background: var(--feedback-success-background); }
+  100% { background: transparent; }
 }
 
 .afi-table__td {

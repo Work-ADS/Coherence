@@ -1,0 +1,48 @@
+.handoff-popover {
+  position: fixed;
+  left: var(--handoff-popover-x);
+  top: var(--handoff-popover-y);
+  transform: translate(var(--space-sm), var(--space-sm));
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--surface-raised);
+  border: var(--border-width-hairline) solid var(--border-default);
+  border-radius: var(--radius-control);
+  box-shadow: var(--elevation-overlay);
+
+  &__line {
+    font: var(--type-body-sm-400);
+    font-family: var(--font-family-mono);
+    color: var(--foreground-primary-default);
+    user-select: text;
+  }
+
+  &__copy {
+    appearance: none;
+    border: var(--border-width-hairline) solid var(--border-subtle);
+    background: var(--surface-subtle);
+    color: var(--foreground-primary-default);
+    font: var(--type-body-sm-500);
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-control);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--easing-enter);
+
+    &:hover {
+      background: var(--surface-default);
+    }
+
+    &:focus-visible {
+      outline: var(--border-width-thick) solid var(--border-focus);
+      outline-offset: var(--border-width-thick);
+    }
+
+    &--copied {
+      background: var(--system-success-base, var(--surface-selected));
+      color: var(--foreground-primary-default);
+    }
+  }
+}

@@ -263,6 +263,51 @@
   padding: var(--space-xl) 0;
 }
 
+// ─── Handoff sections (Figma-style Layout / Style / Typography) ──────────────
+.handoff-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-2xs);
+  }
+
+  &__title {
+    margin: 0;
+    font: var(--type-body-sm-500);
+    color: var(--foreground-primary-default);
+  }
+
+  &__block {
+    margin: 0;
+    padding: var(--space-sm);
+    background: var(--surface-subtle);
+    border: var(--border-width-hairline) solid var(--border-subtle);
+    border-radius: var(--radius-control);
+    font: var(--type-body-xs-400);
+    font-family: var(--font-family-mono);
+    color: var(--foreground-primary-default);
+    white-space: pre;
+    overflow-x: auto;
+  }
+}
+
+.handoff-line {
+  display: block;
+
+  &__name {
+    color: var(--foreground-secondary-default);
+  }
+
+  &__value {
+    color: var(--foreground-primary-default);
+  }
+}
+
 // ─── Component + hierarchy ────────────────────────────────────────────────────
 .panel__component {
   display: flex;

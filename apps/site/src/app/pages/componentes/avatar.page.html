@@ -1,0 +1,70 @@
+<site-doc-page-shell
+  title="Avatar"
+  overline="COMPONENTS"
+  description="Representación visual circular de un usuario o entidad. Renderiza la imagen cuando hay src; cae a iniciales sobre fondo quieto cuando no."
+  componentName="avatar"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Avatar</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Listas de personas</span> — comentarios, asignados, miembros de equipo.</li>
+    <li><span class="use-cases__label">Top bar de perfil</span> — acceso al menú de cuenta del usuario activo.</li>
+    <li><span class="use-cases__label">Filas de tabla</span> — identificar al propietario o responsable de cada registro.</li>
+    <li><span class="use-cases__label">Atribución</span> — autor de un cambio, mensaje o nota.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Avatar size"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-avatar [size]="size()" name="Ana López" />
+    <afi-avatar [size]="size()" name="Carlos Ruiz" />
+    <afi-avatar [size]="size()" name="María García" />
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Imagen incluye <code>alt</code> con el nombre cuando hay <code>src</code>.</li>
+      <li>Fallback de iniciales se marca como <code>aria-hidden="true"</code> — el nombre acompaña vía label adyacente.</li>
+      <li>Avatares decorativos sin valor semántico deben envolverse en un contenedor con <code>aria-hidden="true"</code>.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Mostrar iniciales cuando la imagen falla o no existe.</li>
+          <li>Usar tamaño consistente en listas — no mezcles sm con md en la misma columna.</li>
+          <li>Empareja con el nombre visible cuando contexto no lo aporta.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No uses avatar como botón sin <code>ariaLabel</code> describiendo la acción.</li>
+          <li>No alteres la forma circular — la silueta es parte del reconocimiento de patrón.</li>
+          <li>No coloques avatares de tamaños mezclados en stack.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

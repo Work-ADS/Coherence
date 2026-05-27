@@ -33,6 +33,13 @@ export class TableComponent {
   readonly rowHoverable = input<boolean>(true);
   readonly density = input<TableDensity>('compact');
   readonly rowActions = input<TableRowAction[]>([]);
+  /**
+   * Row whose `trackByKey` matches this value gets a transient highlight
+   * (BEM modifier `afi-table__row--highlighted`). Consumers wire this to
+   * an external "current selection" signal — e.g. inspect-click on a doc
+   * page's preview area surfaces the matching token row.
+   */
+  readonly highlightedRowKey = input<unknown>(null);
 
   readonly selectedChange = output<Record<string, unknown>[]>();
   readonly sortChange = output<TableSortState | null>();
@@ -107,15 +114,22 @@ export class TableComponent {
       .join(' ');
   }
 
-  rowClasses(selected: boolean): string {
+  rowClasses(selected: boolean, highlighted: boolean): string {
     return [
       'afi-table__row',
       `afi-table__row--${this.density()}`,
       this.rowHoverable() ? 'afi-table__row--hoverable' : '',
       selected ? 'afi-table__row--selected' : '',
+      highlighted ? 'afi-table__row--highlighted' : '',
     ]
       .filter(Boolean)
       .join(' ');
+  }
+
+  isHighlighted(row: Record<string, unknown>): boolean {
+    const key = this.highlightedRowKey();
+    if (key === null || key === undefined) return false;
+    return row[this.trackByKey()] === key;
   }
 
   ariaSort(columnKey: string): string {

@@ -1,0 +1,74 @@
+<site-doc-page-shell
+  title="Table"
+  overline="COMPONENTS"
+  description="Tabla de datos con columnas ordenables, selección de filas y dos densidades. Renderiza HTML semántico — sin scroll virtual ni paginación interna."
+  componentName="table"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Table</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Listados con columnas múltiples</span> — operaciones, clientes, transacciones.</li>
+    <li><span class="use-cases__label">Datos ordenables</span> — montos, fechas, métricas comparables.</li>
+    <li><span class="use-cases__label">Selección múltiple</span> — operaciones en lote con checkbox por fila.</li>
+    <li><span class="use-cases__label">Comparativas tabulares</span> — Foundations / Tokens consumidos / parámetros vs valor.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Density</span>
+      <afi-segmented-control
+        [options]="densityOptions"
+        [(value)]="density"
+        size="sm"
+        ariaLabel="Table density"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-table
+      [columns]="columns"
+      [rows]="rows"
+      [density]="density()"
+      trackByKey="id"
+    />
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Render HTML semántico (<code>&lt;table&gt;</code>, <code>&lt;th&gt;</code>, <code>&lt;td&gt;</code>) con <code>scope="col"</code>.</li>
+      <li>Columnas ordenables emiten <code>aria-sort</code> + son enfocables con teclado.</li>
+      <li>Checkbox por fila tiene <code>ariaLabel="Seleccionar fila"</code> contextual.</li>
+      <li>Estado vacío anuncia el texto con <code>aria-live="polite"</code>.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Alinea números a la derecha (<code>align: 'end'</code>) para escaneo vertical.</li>
+          <li>Empleo <code>compact</code> en dashboards densos; <code>comfortable</code> en listas exploratorias.</li>
+          <li>Pre-ordena las filas antes de pasarlas — Table no ordena internamente.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No metas controles complejos dentro de celdas — abre Drawer para edición.</li>
+          <li>No mezcles densidades en la misma página.</li>
+          <li>No uses tabla para listas de un solo dato — usa una lista simple.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

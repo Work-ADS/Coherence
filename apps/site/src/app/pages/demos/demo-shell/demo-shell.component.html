@@ -219,152 +219,77 @@
           @if (inspect.activeResult(); as result) {
             @if (result.componentName) {
               <div class="panel__component">
-                <span class="panel__component-label">Componente</span>
                 <code class="panel__component-name">{{ result.componentName }}</code>
               </div>
             }
 
-            @if (result.hierarchy.length > 0) {
-              <div class="panel__hierarchy">
-                @for (item of result.hierarchy; track $index) {
-                  <span class="hierarchy-item" [class.hierarchy-item--component]="item.isComponent">
-                    @if ($index > 0) { <span class="hierarchy-sep">›</span> }
-                    {{ item.name }}
-                  </span>
-                }
-              </div>
-            }
-
-            <div class="panel__selector">
-              <code>{{ result.selector }}</code>
-            </div>
-
-            @if (result.states.length > 0) {
-              <section class="inspect-card">
-                <header class="inspect-card__header">
-                  <h4 class="inspect-card__title">Estados</h4>
-                  <span class="inspect-card__hint">{{ result.states.length }} detectados</span>
-                </header>
-
-                <div class="states-list">
-                  @for (s of result.states; track s.state) {
-                    <details class="state" open>
-                      <summary class="state__summary">
-                        <span class="state__label">{{ s.label }}</span>
-                        <code class="state__pseudo">{{ s.state }}</code>
-                        <span class="state__count">{{ s.tokens.length }}</span>
-                      </summary>
-                      <div class="state__rows">
-                        @for (t of s.tokens; track t.property) {
-                          <div class="token-row">
-                            <span class="token-row__prop">{{ t.property }}</span>
-                            @if (t.chain.length > 0) {
-                              <ol class="token-chain">
-                                @for (step of t.chain; track step.token) {
-                                  <li
-                                    class="token-step"
-                                    [class.token-step--component]="step.tier === 'component'"
-                                    [class.token-step--semantic]="step.tier === 'semantic'"
-                                    [class.token-step--primitive]="step.tier === 'primitive'"
-                                  >
-                                    <span class="token-step__tier">{{ step.tierLabel }}</span>
-                                    <button
-                                      type="button"
-                                      class="token-step__name"
-                                      [class.token-step__name--copied]="copiedToken() === step.token"
-                                      title="Copiar token al portapapeles"
-                                      (click)="copyToken(step.token)"
-                                    >{{ copiedToken() === step.token ? '✓ Copiado' : step.token }}</button>
-                                    <span class="token-step__value">{{ step.hex ?? step.resolvedValue }}</span>
-                                    <afi-icon-button
-                                      variant="ghost"
-                                      size="sm"
-                                      [ariaLabel]="'Copiar ' + step.token"
-                                      (clicked)="copyToken(step.token)"
-                                    >
-                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                                      </svg>
-                                    </afi-icon-button>
-                                  </li>
-                                }
-                              </ol>
-                            } @else {
-                              <span class="token-row__value">{{ t.computedHex ?? t.authoredValue }}</span>
-                            }
-                          </div>
-                        }
-                      </div>
-                    </details>
-                  }
-                </div>
-              </section>
-            }
-
-            <div class="panel__groups">
-              @for (group of result.groups; track group.category) {
-                <section class="inspect-card">
-                  <header class="inspect-card__header">
-                    <h4 class="inspect-card__title">{{ group.label }}</h4>
-                    @if (group.violationCount > 0) {
-                      <span class="inspect-card__count" title="Violaciones">
-                        {{ group.violationCount }} ⚠
-                      </span>
-                    }
+            @if (handoffSections(); as sections) {
+              @if (sections.layout.length > 0) {
+                <section class="handoff-card">
+                  <header class="handoff-card__header">
+                    <h4 class="handoff-card__title">Layout</h4>
+                    <afi-icon-button
+                      variant="ghost"
+                      size="sm"
+                      [ariaLabel]="copiedSection() === 'layout' ? 'Copiado' : 'Copiar bloque Layout'"
+                      (clicked)="copySection('layout')"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                    </afi-icon-button>
                   </header>
-
-                  <div class="token-rows">
-                    @for (t of group.tokens; track t.property) {
-                      <div class="token-row" [class.token-row--violation]="t.isViolation">
-                        <span class="token-row__prop">{{ t.property }}</span>
-                        @if (t.chain.length > 0) {
-                          <ol class="token-chain">
-                            @for (step of t.chain; track step.token) {
-                              <li
-                                class="token-step"
-                                [class.token-step--component]="step.tier === 'component'"
-                                [class.token-step--semantic]="step.tier === 'semantic'"
-                                [class.token-step--primitive]="step.tier === 'primitive'"
-                              >
-                                <span class="token-step__tier">{{ step.tierLabel }}</span>
-                                <button
-                                  type="button"
-                                  class="token-step__name"
-                                  [class.token-step__name--copied]="copiedToken() === step.token"
-                                  title="Copiar token al portapapeles"
-                                  (click)="copyToken(step.token)"
-                                >{{ copiedToken() === step.token ? '✓ Copiado' : step.token }}</button>
-                                <span class="token-step__value">{{ step.hex ?? step.resolvedValue }}</span>
-                                <afi-icon-button
-                                  variant="ghost"
-                                  size="sm"
-                                  [ariaLabel]="'Copiar ' + step.token"
-                                  (clicked)="copyToken(step.token)"
-                                >
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                                  </svg>
-                                </afi-icon-button>
-                              </li>
-                            }
-                          </ol>
-                        } @else {
-                          <span class="token-row__value">{{ t.computedHex ?? t.authoredValue }}</span>
-                        }
-                        @if (t.isViolation) {
-                          <span class="token-row__flag" title="Valor sin token">⚠</span>
-                        }
-                      </div>
-                    }
-                  </div>
+                  <pre class="handoff-card__block"><code>@for (l of sections.layout; track l.name) {<span class="handoff-line"><span class="handoff-line__name">{{ l.name }}</span>: <span class="handoff-line__value">{{ l.value }}</span>;
+</span>}</code></pre>
                 </section>
               }
-            </div>
 
-            @if (result.groups.length === 0) {
-              <p class="panel__empty">Sin propiedades rastreables.</p>
+              @if (sections.style.length > 0) {
+                <section class="handoff-card">
+                  <header class="handoff-card__header">
+                    <h4 class="handoff-card__title">Style</h4>
+                    <afi-icon-button
+                      variant="ghost"
+                      size="sm"
+                      [ariaLabel]="copiedSection() === 'style' ? 'Copiado' : 'Copiar bloque Style'"
+                      (clicked)="copySection('style')"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                    </afi-icon-button>
+                  </header>
+                  <pre class="handoff-card__block"><code>@for (l of sections.style; track l.name) {<span class="handoff-line"><span class="handoff-line__name">{{ l.name }}</span>: <span class="handoff-line__value">{{ l.value }}</span>;
+</span>}</code></pre>
+                </section>
+              }
+
+              @if (sections.typography.length > 0) {
+                <section class="handoff-card">
+                  <header class="handoff-card__header">
+                    <h4 class="handoff-card__title">Typography</h4>
+                    <afi-icon-button
+                      variant="ghost"
+                      size="sm"
+                      [ariaLabel]="copiedSection() === 'typography' ? 'Copiado' : 'Copiar bloque Typography'"
+                      (clicked)="copySection('typography')"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                    </afi-icon-button>
+                  </header>
+                  <pre class="handoff-card__block"><code>@for (l of sections.typography; track l.name) {<span class="handoff-line"><span class="handoff-line__name">{{ l.name }}</span>: <span class="handoff-line__value">{{ l.value }}</span>;
+</span>}</code></pre>
+                </section>
+              }
+
+              @if (sections.layout.length === 0 && sections.style.length === 0 && sections.typography.length === 0) {
+                <p class="panel__empty">Sin propiedades rastreables.</p>
+              }
             }
           } @else {
             <p class="panel__empty">Haz click sobre un elemento para ver sus tokens.</p>

@@ -1,0 +1,89 @@
+<site-doc-page-shell
+  title="Radio Group"
+  overline="COMPONENTS"
+  description="Selección de uno-de-N con opciones visibles. Ideal cuando todas las alternativas deben verse al mismo tiempo (2–5 opciones)."
+  componentName="radio"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Radio Group</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Método de pago</span> — tarjeta / transferencia / PayPal en checkout.</li>
+    <li><span class="use-cases__label">Tipo de envío</span> — estándar / express / pickup.</li>
+    <li><span class="use-cases__label">Preferencias de notificación</span> — email / push / SMS / ninguna.</li>
+    <li><span class="use-cases__label">Filtros con N opciones</span> — alternativa visible al select.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Radio size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">State</span>
+      <afi-segmented-control
+        [options]="stateOptions"
+        [(value)]="state"
+        size="sm"
+        ariaLabel="Radio state"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-radio-group legend="Método de pago">
+      @for (item of items; track item.value) {
+        <afi-radio-group-item
+          [value]="item.value"
+          [label]="item.label"
+          [selected]="selectedValue() === item.value"
+          (selectedChange)="selectedValue.set(item.value)"
+          [size]="size()"
+          [disabled]="disabled()"
+        />
+      }
+    </afi-radio-group>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Native <code>&lt;input type="radio"&gt;</code> — todo el comportamiento de teclado es nativo.</li>
+      <li><code>Tab</code> entra al grupo; flechas navegan entre opciones; <code>Space</code> selecciona.</li>
+      <li><code>legend</code> obligatorio: describe el conjunto del grupo (los lectores lo anuncian).</li>
+      <li>Selección única: marcar uno desmarca el resto automáticamente.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Usa radio-group para 2–5 opciones visibles al mismo tiempo.</li>
+          <li>Marca la opción por defecto cuando exista un valor razonable.</li>
+          <li><code>legend</code> describe la decisión (<code>"Método de pago"</code>).</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No uses radio-group para listas largas (6+) — usa select.</li>
+          <li>No uses radio-group para selección múltiple — usa checkbox.</li>
+          <li>No omitas <code>legend</code> — los grupos sin legend son inaccesibles.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

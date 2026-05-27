@@ -1,0 +1,64 @@
+<site-doc-page-shell
+  title="Top Bar"
+  overline="COMPONENTS"
+  description="Barra superior global con navegación primaria, controles de cuenta y atajos contextuales. Persistente en todas las páginas excepto demos."
+  componentName="top-bar"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Top Bar</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Navegación primaria</span> — secciones principales del producto (Fundamentos, Componentes, Demos).</li>
+    <li><span class="use-cases__label">Controles globales</span> — idioma, tema, brand picker en demos.</li>
+    <li><span class="use-cases__label">Acceso a la cuenta</span> — avatar + menú de perfil.</li>
+  </ul>
+
+  <div slot="preview" class="preview">
+    <div class="top-bar-demo">
+      <afi-top-bar>
+        <nav slot="start" class="top-bar-demo__nav">
+          <a class="top-bar-demo__link top-bar-demo__link--active">Inicio</a>
+          <a class="top-bar-demo__link">Operaciones</a>
+          <a class="top-bar-demo__link">Reportes</a>
+        </nav>
+      </afi-top-bar>
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Renderiza como <code>&lt;header&gt;</code> con <code>role="banner"</code>.</li>
+      <li>Navegación dentro de Top Bar usa <code>&lt;nav aria-label="…"&gt;</code>.</li>
+      <li>Link activo señaliza con <code>aria-current="page"</code>.</li>
+      <li>Foco visible al tabular por los enlaces.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Mantén un máximo de 5–6 enlaces en la navegación principal.</li>
+          <li>Coloca controles globales en el lado derecho.</li>
+          <li>Usa Top Bar como ancla — su contenido cambia poco entre páginas.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No metas acciones contextuales de página — esas viven en Page Header.</li>
+          <li>No expongas el brand picker globalmente — vive en el shell de doc / demos.</li>
+          <li>No anides niveles de navegación dentro del Top Bar — usa Sidebar.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

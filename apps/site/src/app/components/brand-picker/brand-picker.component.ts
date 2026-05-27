@@ -3,16 +3,17 @@ import { isPlatformBrowser } from '@angular/common';
 
 import { SelectComponent, type SelectOption } from '@coherence/ui';
 
-type Brand = 'afi' | 'mutualidad' | 'unicaja' | 'laboral-kutxa';
+type Brand = 'afi' | 'unicaja' | 'laboral-kutxa';
 
 const STORAGE_KEY = 'coherence-brand';
 
 const DEFAULT_BRAND: Brand = 'afi';
 
+// Mutualidad intentionally omitted — its [data-brand="mutualidad"] block in
+// libs/tokens/semantic.scss is a stub. Re-add here when those tokens land.
 const BRAND_OPTIONS: SelectOption[] = [
   { value: 'afi',           label: 'AFI' },
   { value: 'laboral-kutxa', label: 'Laboral Kutxa' },
-  { value: 'mutualidad',    label: 'Mutualidad' },
   { value: 'unicaja',       label: 'Unicaja' },
 ];
 
@@ -84,7 +85,7 @@ export class BrandPickerComponent {
   }
 
   private coerce(value: unknown): Brand {
-    return value === 'mutualidad' || value === 'unicaja' || value === 'laboral-kutxa'
+    return value === 'unicaja' || value === 'laboral-kutxa'
       ? value
       : DEFAULT_BRAND;
   }

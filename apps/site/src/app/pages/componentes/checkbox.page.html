@@ -1,0 +1,85 @@
+<site-doc-page-shell
+  title="Checkbox"
+  overline="COMPONENTS"
+  description="Control de selección binaria o múltiple. Soporta checked, indeterminate y disabled, con label, hint y error opcionales integrados."
+  componentName="checkbox"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Checkbox</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Términos y condiciones</span> — confirmación de aceptación antes de continuar.</li>
+    <li><span class="use-cases__label">Selección múltiple</span> — grupos de opciones independientes en formularios o filtros.</li>
+    <li><span class="use-cases__label">Selección de fila en tabla</span> — checkboxes por fila + master en la cabecera con estado indeterminate.</li>
+    <li><span class="use-cases__label">Preferencias on/off</span> — ajustes que el usuario activa o desactiva.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Checkbox size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">State</span>
+      <afi-segmented-control
+        [options]="stateOptions"
+        [(value)]="state"
+        size="sm"
+        ariaLabel="Checkbox state"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-checkbox
+      [size]="size()"
+      [checked]="checked()"
+      [indeterminate]="indeterminate()"
+      [disabled]="disabled()"
+      label="Acepto los términos y condiciones"
+    />
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Native <code>&lt;input type="checkbox"&gt;</code> — todo el comportamiento de teclado y screen reader es nativo.</li>
+      <li><code>Space</code> activa / desactiva, <code>Tab</code> enfoca.</li>
+      <li>Estado <code>indeterminate</code> se anuncia como "parcialmente marcado".</li>
+      <li>Label clickable — pulsar el texto activa el checkbox.</li>
+      <li>Foco visible con anillo de 2px sobre el box.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Etiqueta corta y específica (<code>"Recibir notificaciones por email"</code>).</li>
+          <li>Usar indeterminate en master checkbox cuando hay selección parcial.</li>
+          <li>Empareja con hint cuando la implicación no es obvia.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No uses checkbox para selección de uno-de-N — usa radio-group.</li>
+          <li>No requieras checkbox para confirmar acciones destructivas — usa modal.</li>
+          <li>No deshabilites sin explicar por qué.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

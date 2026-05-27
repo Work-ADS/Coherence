@@ -1,0 +1,77 @@
+<site-doc-page-shell
+  title="Nav Section"
+  overline="COMPONENTS"
+  description="Agrupador colapsable de items dentro de un Sidebar. Soporta tree lines opcionales y posición del chevron (izquierda / derecha)."
+  componentName="nav-section"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Nav Section</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Agrupar items relacionados</span> — <em>Components</em>, <em>Patterns</em>, <em>Settings</em>.</li>
+    <li><span class="use-cases__label">Reducir ruido visual</span> — colapsar secciones que el usuario consulta poco.</li>
+    <li><span class="use-cases__label">Jerarquía de sidebar</span> — mostrar dos niveles sin crear un menú anidado.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Chevron position</span>
+      <afi-segmented-control
+        [options]="chevronOptions"
+        [(value)]="chevronPosition"
+        size="sm"
+        ariaLabel="Chevron position"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="nav-section-demo">
+      <afi-nav-section
+        label="Components"
+        [defaultExpanded]="true"
+        [showTreeLines]="showTreeLines()"
+        [chevronPosition]="chevronPosition()"
+      >
+        <afi-nav-item label="Button" [showIcon]="false" />
+        <afi-nav-item label="Input" [showIcon]="false" />
+        <afi-nav-item label="Modal" [showIcon]="false" [active]="true" />
+        <afi-nav-item label="Table" [showIcon]="false" />
+      </afi-nav-section>
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Header de sección es un <code>&lt;button&gt;</code> con <code>aria-expanded</code> sincronizado.</li>
+      <li>Items hijos se ocultan del árbol de accesibilidad cuando la sección está colapsada.</li>
+      <li><code>Tab</code> enfoca el header; <code>Enter</code> / <code>Space</code> colapsa o expande.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Usa secciones para agrupar items relacionados (3+).</li>
+          <li>Expande por defecto las secciones más usadas.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No anides Nav Section dentro de Nav Section — usa un solo nivel.</li>
+          <li>No uses Nav Section para 1–2 items — coloca los items directamente.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

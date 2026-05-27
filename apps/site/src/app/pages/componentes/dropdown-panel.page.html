@@ -1,0 +1,59 @@
+<site-doc-page-shell
+  title="Dropdown Panel"
+  overline="COMPONENTS"
+  description="Superficie flotante reutilizable usada por Menu, Select y otros anchors contextuales. Layer base sin lógica de teclado — esa la añade el componente que lo compone."
+  componentName="dropdown-panel"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Dropdown Panel</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Base de Menu</span> — overflow / contextual menus anclados a un trigger.</li>
+    <li><span class="use-cases__label">Lista de opciones</span> — la superficie que renderiza Select.</li>
+    <li><span class="use-cases__label">Popover de detalle</span> — pequeña vista al hover sobre un elemento.</li>
+  </ul>
+
+  <div slot="preview" class="preview">
+    <div class="dropdown-panel-demo">
+      <afi-dropdown-panel [open]="true">
+        <div class="dropdown-panel-demo__content">
+          Contenido del panel
+        </div>
+      </afi-dropdown-panel>
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Dropdown Panel es un layer visual — la accesibilidad la proporciona el componente que lo usa (Menu, Select…).</li>
+      <li>El trigger debe gestionar <code>aria-expanded</code>, <code>aria-haspopup</code> y la lógica de foco.</li>
+      <li>Cerrar con <code>Escape</code> o clic fuera — comportamiento estándar.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Usa Dropdown Panel como base — compón Menu o Select encima.</li>
+          <li>Mantén el ancho consistente con el trigger en selectores.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No coloques contenido interactivo sin gestionar foco — usa Menu en su lugar.</li>
+          <li>No anides Dropdown Panels — la jerarquía se vuelve confusa.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

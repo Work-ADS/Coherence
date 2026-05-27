@@ -1,63 +1,45 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { DropdownPanelComponent } from '@coherence/ui';
 
-import { DocPageLayoutComponent } from '../../components/doc-page-layout';
-import { ComponentPlaygroundComponent } from '../../components/component-playground';
-import { CodeBlockComponent } from '../../components/code-block';
-import { TokensTableComponent, type TokenRow } from '../../components/tokens-table';
+import { DocPageShellComponent } from '../../components/doc-page-shell';
+import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
 
-const DROPDOWN_TOKENS: TokenRow[] = [
-  { property: 'Fondo', token: 'var(--canvas-bg)' },
-  { property: 'Borde', token: 'var(--border-hairline)' },
-  { property: 'Sombra', token: 'var(--shadow-lg)' },
-  { property: 'Radio', token: 'var(--radius-lg)' },
-  { property: 'Padding', token: 'var(--space-2)' },
+const TOKEN_CATEGORIES: DocTokenCategory[] = [
+  {
+    value: 'visual',
+    label: 'Visual',
+    rows: [
+      { property: 'Background', token: '--surface-default', semantic: '--surface-default', primitive: '--color-afi-control-0' },
+      { property: 'Border', token: '--border-hairline', semantic: '--border-hairline', primitive: '--color-afi-gris-200' },
+      { property: 'Shadow', token: '--shadow-lg', semantic: '--shadow-lg', primitive: '0 10px 15px rgba(0,0,0,0.10)' },
+      { property: 'Border radius', token: '--radius-lg', semantic: '--radius-lg', primitive: '12px' },
+    ],
+  },
+  {
+    value: 'sizing',
+    label: 'Sizing',
+    rows: [
+      { property: 'Padding', token: '--space-xs', semantic: '--space-xs', primitive: '8px' },
+      { property: 'Min width', token: '--dimension-44', semantic: '--dimension-44', primitive: '176px' },
+    ],
+  },
 ];
 
 @Component({
-  selector: 'app-dropdown-panel-page',
+  selector: 'site-dropdown-panel-page',
   standalone: true,
   imports: [
-    DocPageLayoutComponent,
-    ComponentPlaygroundComponent,
-    CodeBlockComponent,
-    TokensTableComponent,
+    RouterLink,
     DropdownPanelComponent,
+    DocPageShellComponent,
+    DocTokensComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <afi-doc-page-layout
-      kicker="COMPONENTS"
-      title="Dropdown Panel"
-      subtitle="Panel flotante para menús desplegables y contenido contextual."
-      docsSource="libs/ui/src/dropdown-panel/"
-      buildPromptSlug="coherence-dropdown-panel"
-    >
-      <div slot="code-tab">
-        <afi-component-playground [code]="codeSnippet()">
-          <div slot="preview" class="relative">
-            <afi-dropdown-panel [open]="true">
-              <div class="p-space-3 text-body-sm">Contenido del dropdown</div>
-            </afi-dropdown-panel>
-          </div>
-        </afi-component-playground>
-
-        <section>
-          <h2 id="tokens" class="text-section text-canvas-fg mb-space-6">Tokens consumidos</h2>
-          <afi-tokens-table [rows]="tokenRows" title="" />
-        </section>
-      </div>
-    </afi-doc-page-layout>
-  `,
+  templateUrl: './dropdown-panel.page.html',
+  styleUrl: './dropdown-panel.page.scss',
 })
 export class DropdownPanelPage {
-  readonly tokenRows = DROPDOWN_TOKENS;
-
-  readonly codeSnippet = signal(`import { DropdownPanelComponent } from '@coherence/ui';
-
-<afi-dropdown-panel [open]="isOpen()">
-  <button>Opción 1</button>
-  <button>Opción 2</button>
-</afi-dropdown-panel>`);
+  readonly tokenCategories = TOKEN_CATEGORIES;
 }

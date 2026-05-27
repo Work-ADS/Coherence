@@ -1,0 +1,82 @@
+<site-doc-page-shell
+  title="Loading Overlay"
+  overline="COMPONENTS"
+  description="Indicador de carga sobrepuesto a un contenedor para procesos que requieren feedback visual. Dos variantes: quiet-spinner (spinner clásico) y line-reveal (barra superior animada)."
+  componentName="loading-overlay"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Loading Overlay</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Cargando datos</span> — listas, tablas, dashboards mientras se traen datos del backend.</li>
+    <li><span class="use-cases__label">Guardando cambios</span> — formularios o paneles de edición durante el submit.</li>
+    <li><span class="use-cases__label">Refetch en background</span> — usa <code>line-reveal</code> para no bloquear la interacción.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Variant</span>
+      <afi-segmented-control
+        [options]="variantOptions"
+        [(value)]="variant"
+        size="sm"
+        ariaLabel="Loading overlay variant"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Toggle</span>
+      <afi-button variant="secondary" size="sm" (clicked)="toggle()">
+        {{ visible() ? 'Ocultar' : 'Mostrar' }}
+      </afi-button>
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="preview__surface">
+      <p>Contenido de la página.</p>
+      <p>El overlay cubre solo este contenedor.</p>
+      <afi-loading-overlay
+        [variant]="variant()"
+        [visible]="visible()"
+        message="Cargando datos…"
+      />
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Renderiza con <code>role="status"</code> + <code>aria-live="polite"</code> para anunciar el estado de carga.</li>
+      <li><code>message</code> se anuncia al usuario de lectores de pantalla.</li>
+      <li>El delay (300ms por defecto) evita parpadeos en cargas instantáneas.</li>
+      <li>Spinner respeta <code>prefers-reduced-motion</code>: se sustituye por texto estático.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Empleo el delay (300ms) para evitar flashes en cargas rápidas.</li>
+          <li>Usa <code>line-reveal</code> para refetches en background.</li>
+          <li>Cubre el contenedor relevante, no la página entera.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No abuses del overlay para cargas instantáneas (<100ms).</li>
+          <li>No bloquees toda la página si solo una sección está cargando.</li>
+          <li>No mezcles overlay con skeleton — elige un patrón por contexto.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

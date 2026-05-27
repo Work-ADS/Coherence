@@ -1,0 +1,86 @@
+<site-doc-page-shell
+  title="Select"
+  overline="COMPONENTS"
+  description="Selector estilizado para listas finitas de opciones. Soporta placeholder, validación y tres tamaños — consistente con Input."
+  componentName="select"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Select</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Listas finitas conocidas</span> — país, moneda, categoría, estado.</li>
+    <li><span class="use-cases__label">Selección de uno-de-N</span> — alternativa compacta a radio-group cuando hay 5+ opciones.</li>
+    <li><span class="use-cases__label">Filtros de tabla</span> — filtrar columnas por valor enumerable.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control
+        [options]="sizeOptions"
+        [(value)]="size"
+        size="sm"
+        ariaLabel="Select size"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">State</span>
+      <afi-segmented-control
+        [options]="stateOptions"
+        [(value)]="state"
+        size="sm"
+        ariaLabel="Select state"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-select
+      [size]="size()"
+      [options]="demoOptions"
+      placeholder="Seleccione un país"
+      label="País"
+      [value]="selectedValue()"
+      (valueChange)="selectedValue.set($event)"
+      [disabled]="disabled()"
+      [error]="errorText()"
+    />
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Native <code>&lt;select&gt;</code> bajo el estilizado — teclado y screen reader son nativos.</li>
+      <li><code>Space</code> abre el desplegable; flechas navegan; <code>Enter</code> confirma.</li>
+      <li>Label requerido (visible o <code>ariaLabel</code>).</li>
+      <li>Estado <code>error</code> añade <code>aria-invalid="true"</code> y mensaje asociado vía <code>aria-describedby</code>.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Placeholder descriptivo (<code>"Seleccione un país"</code>).</li>
+          <li>Ordena opciones por relevancia o alfabéticamente — la más común primero.</li>
+          <li>Para listas largas (15+) considera un searchable select.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No uses select para 2-3 opciones — usa segmented-control o radio-group.</li>
+          <li>No uses select sin label.</li>
+          <li>No incluyas la opción "Seleccione…" dentro de las options — usa <code>placeholder</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

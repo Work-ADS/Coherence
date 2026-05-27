@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-type Thumb = 'whitelabel' | 'proceso';
+type Thumb = 'whitelabel' | 'proceso' | 'talk';
 
 interface BlogPost {
   slug: string;
@@ -10,12 +10,24 @@ interface BlogPost {
   date: string;
   intro: string;
   thumb: Thumb;
+  /** Optional route override; defaults to `/blog/<slug>`. */
+  to?: string;
 }
 
 // Most-recent first. Other historical posts (decisiones-* / iteracion-* /
 // bitácora) moved under their demo case studies — they aren't standalone
 // editorial pieces.
 const POSTS: BlogPost[] = [
+  {
+    slug: 'stitch-vs-claude',
+    title: 'Stitch vs Claude: ¿qué herramienta de IA usamos para conceptos de cliente?',
+    eyebrow: 'REUNIÓN DE ÁREA · IA',
+    date: '28 mayo 2026',
+    intro:
+      'Probamos las dos herramientas con el mismo encargo, cinco contextos de marca y una recomendación al final. Slide-show navegable con las flechas del teclado.',
+    thumb: 'talk',
+    to: '/talks/stitch-vs-claude',
+  },
   {
     slug: 'mixin-brand-bind',
     title: 'White-label en una línea: el mixin coherence-brand-bind',

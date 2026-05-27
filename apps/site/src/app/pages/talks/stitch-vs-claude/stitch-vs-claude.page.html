@@ -1,0 +1,167 @@
+<div class="talk" [attr.data-kind]="current().kind">
+  <header class="talk__bar">
+    <div class="talk__counter" aria-live="polite">
+      <span class="talk__counter-current">{{ index() + 1 }}</span>
+      <span class="talk__counter-sep">/</span>
+      <span class="talk__counter-total">{{ total() }}</span>
+    </div>
+    <div class="talk__progress" role="progressbar" [attr.aria-valuenow]="progressPct()" aria-valuemin="0" aria-valuemax="100">
+      <div class="talk__progress-fill" [style.width.%]="progressPct()"></div>
+    </div>
+    <div class="talk__hint">
+      <kbd class="talk__kbd">←</kbd>
+      <kbd class="talk__kbd">→</kbd>
+      <span class="talk__hint-text">para navegar</span>
+    </div>
+  </header>
+
+  <main class="talk__stage">
+    <article class="slide" [attr.data-kind]="current().kind" [attr.data-has-illustration]="current().illustration ? 'true' : 'false'">
+      @if (current().eyebrow) {
+        <p class="slide__eyebrow">{{ current().eyebrow }}</p>
+      }
+
+      <h1 class="slide__title">{{ current().title }}</h1>
+
+      @if (current().body) {
+        <p class="slide__body">{{ current().body }}</p>
+      }
+
+      @if (current().bullets && current().bullets!.length > 0) {
+        <ul class="slide__bullets">
+          @for (item of current().bullets; track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      }
+
+      @if (current().kind === 'prompt') {
+        <figure class="slide__code">
+          <figcaption class="slide__code-header">
+            <span class="slide__code-label">Prompt — planificador de jubilación</span>
+            <div class="slide__code-pills" role="group" aria-label="Copiar variante del prompt">
+              @for (key of promptVariantKeys; track key) {
+                <button
+                  type="button"
+                  class="slide__code-pill"
+                  [class.slide__code-pill--active]="activeVariant() === key"
+                  [class.slide__code-pill--copied]="copiedVariant() === key"
+                  [attr.aria-pressed]="activeVariant() === key"
+                  [attr.aria-label]="copiedVariant() === key ? 'Variante ' + promptVariants[key].label + ' copiada' : 'Copiar variante ' + promptVariants[key].label"
+                  (click)="copyVariant(key)"
+                >
+                  @if (copiedVariant() === key) {
+                    <span aria-hidden="true">✓</span>
+                    <span>Copiado</span>
+                  } @else {
+                    <span aria-hidden="true">⧉</span>
+                    <span>{{ promptVariants[key].label }}</span>
+                  }
+                </button>
+              }
+            </div>
+          </figcaption>
+          <pre class="slide__code-body"><code>{{ activePromptBody() }}</code></pre>
+        </figure>
+      } @else if (current().kind === 'designMd') {
+        <figure class="slide__code">
+          <figcaption class="slide__code-header">
+            <span class="slide__code-label">design-mastercard.md</span>
+            <div class="slide__code-pills" role="group" aria-label="Acciones del design.md">
+              <button
+                type="button"
+                class="slide__code-pill"
+                [class.slide__code-pill--copied]="designMdCopied()"
+                [attr.aria-label]="designMdCopied() ? 'Design.md copiado al portapapeles' : 'Copiar design.md al portapapeles'"
+                (click)="copyDesignMd()"
+              >
+                @if (designMdCopied()) {
+                  <span aria-hidden="true">✓</span>
+                  <span>Copiado</span>
+                } @else {
+                  <span aria-hidden="true">⧉</span>
+                  <span>Copiar</span>
+                }
+              </button>
+              <a
+                class="slide__code-pill"
+                [href]="designMdDownloadHref"
+                download="design-mastercard.md"
+                aria-label="Descargar design-mastercard.md"
+              >
+                <span aria-hidden="true">↓</span>
+                <span>Descargar</span>
+              </a>
+            </div>
+          </figcaption>
+          <pre class="slide__code-body"><code>{{ designMdContent() }}</code></pre>
+        </figure>
+      } @else if (current().code) {
+        <figure class="slide__code">
+          <figcaption class="slide__code-header">
+            <span class="slide__code-label">{{ current().code!.label }}</span>
+          </figcaption>
+          <pre class="slide__code-body"><code>{{ current().code!.body }}</code></pre>
+        </figure>
+      }
+
+      @if (current().callout) {
+        <blockquote class="slide__callout">{{ current().callout }}</blockquote>
+      }
+
+      @if (current().matrix) {
+        <div class="slide__matrix">
+          <table>
+            <thead>
+              <tr>
+                @for (h of current().matrix!.headers; track h) {
+                  <th>{{ h }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of current().matrix!.rows; track row.tool) {
+                <tr>
+                  <th scope="row">{{ row.tool }}</th>
+                  <td [class.slide__matrix-cell--filled]="row.url !== '—'">{{ row.url }}</td>
+                  <td [class.slide__matrix-cell--filled]="row.designMd !== '—'">{{ row.designMd }}</td>
+                  <td [class.slide__matrix-cell--filled]="row.repo !== '—'">{{ row.repo }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (current().illustration) {
+        <figure class="slide__figure">
+          <img [src]="current().illustration" [alt]="current().caption || current().title" loading="lazy" />
+          @if (current().caption) {
+            <figcaption>{{ current().caption }}</figcaption>
+          }
+        </figure>
+      }
+    </article>
+  </main>
+
+  <nav class="talk__nav" aria-label="Navegación de diapositivas">
+    <afi-button
+      variant="secondary"
+      size="md"
+      [disabled]="isFirst()"
+      ariaLabel="Diapositiva anterior"
+      (clicked)="prev()"
+    >
+      ← Anterior
+    </afi-button>
+    <afi-button
+      variant="primary"
+      size="md"
+      [disabled]="isLast()"
+      ariaLabel="Siguiente diapositiva"
+      (clicked)="next()"
+    >
+      Siguiente →
+    </afi-button>
+  </nav>
+</div>

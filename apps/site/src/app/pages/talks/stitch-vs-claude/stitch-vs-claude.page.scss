@@ -1,0 +1,496 @@
+// =============================================================================
+// Stitch vs Claude — talk slide-show.
+// Full-viewport slide deck with arrow-key navigation. Growth.design case-study
+// vibe: centered card, generous whitespace, one idea per slide.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.talk {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100dvh;
+  background: var(--background-default);
+  color: var(--foreground-primary-default);
+  font: var(--type-body-md-400);
+
+  // Cover and close slides get a darker, more dramatic surface.
+  &[data-kind='cover'],
+  &[data-kind='close'] {
+    background: var(--foreground-primary-default);
+    color: var(--background-default);
+  }
+}
+
+// ── Top bar: counter + progress + keyboard hint ─────────────────────────────
+
+.talk__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-xl);
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+
+  .talk[data-kind='cover'] &,
+  .talk[data-kind='close'] & {
+    border-block-end-color: var(--color-white-a14);
+  }
+}
+
+.talk__counter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25ch;
+  font: var(--type-body-sm-600);
+  font-variant-numeric: tabular-nums;
+  min-width: 6ch;
+}
+
+.talk__counter-current {
+  font-size: 1.25em;
+}
+
+.talk__counter-sep,
+.talk__counter-total {
+  color: var(--foreground-secondary-default);
+  opacity: 0.6;
+}
+
+.talk__progress {
+  flex: 1;
+  block-size: var(--dimension-1);
+  background: var(--border-hairline);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+
+  .talk[data-kind='cover'] &,
+  .talk[data-kind='close'] & {
+    background: var(--color-white-a16);
+  }
+}
+
+.talk__progress-fill {
+  block-size: 100%;
+  background: var(--color-afi-azul-500);
+  border-radius: inherit;
+  transition: width 220ms ease-out;
+}
+
+.talk__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5ch;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+
+  .talk[data-kind='cover'] &,
+  .talk[data-kind='close'] & {
+    color: var(--color-white-a72);
+  }
+}
+
+.talk__kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.75em;
+  padding: 0.1em 0.45em;
+  font: var(--type-body-sm-600);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--background-default);
+  color: var(--foreground-primary-default);
+
+  .talk[data-kind='cover'] &,
+  .talk[data-kind='close'] & {
+    background: var(--code-block-background-strong);
+    border-color: var(--color-white-a20);
+    color: var(--color-white-a78);
+  }
+}
+
+.talk__hint-text {
+  margin-inline-start: 0.4ch;
+}
+
+// ── Stage (slide canvas) ────────────────────────────────────────────────────
+
+.talk__stage {
+  display: grid;
+  place-items: center;
+  padding: var(--space-xl) var(--space-xl);
+  overflow: hidden;
+}
+
+// ── Slide content ───────────────────────────────────────────────────────────
+
+.slide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  inline-size: min(100%, 64rem);
+  max-block-size: 100%;
+
+  &[data-has-illustration='true'] {
+    inline-size: min(100%, 72rem);
+  }
+}
+
+.slide__eyebrow {
+  margin: 0;
+  font: var(--type-body-sm-600);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-afi-azul-500);
+
+  .talk[data-kind='cover'] &,
+  .talk[data-kind='close'] & {
+    color: var(--color-afi-azul-500);
+  }
+}
+
+.slide__title {
+  margin: 0;
+  font: var(--type-heading-xl, var(--type-display-md-600));
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: inherit;
+
+  .talk[data-kind='cover'] & {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.05;
+  }
+}
+
+.slide__body {
+  margin: 0;
+  font: var(--type-body-lg-400, var(--type-body-md-400));
+  font-size: clamp(1.05rem, 1.5vw, 1.375rem);
+  line-height: 1.55;
+  max-inline-size: 56ch;
+  color: inherit;
+  opacity: 0.92;
+}
+
+.slide__bullets {
+  margin: 0;
+  padding-inline-start: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  line-height: 1.5;
+  max-inline-size: 64ch;
+
+  li {
+    margin: 0;
+  }
+}
+
+.slide__callout {
+  margin: 0;
+  padding: var(--space-md) var(--space-lg);
+  border-inline-start: var(--dimension-1) solid var(--color-afi-azul-500);
+  background: var(--callout-tint-light);
+  font-style: italic;
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  line-height: 1.5;
+  max-inline-size: 64ch;
+
+  .talk[data-kind='cover'] &,
+  .talk[data-kind='close'] & {
+    background: var(--code-block-background-strong);
+  }
+}
+
+// ── Code / prompt block (ChatGPT-style copyable snippet) ────────────────────
+
+.slide__code {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  max-block-size: 56vh;
+  border-radius: var(--dimension-2-5);
+  overflow: hidden;
+  background: var(--code-block-background);
+  color: var(--code-block-foreground);
+  border: var(--border-width-hairline) solid var(--code-block-divider);
+  box-shadow: var(--code-block-shadow);
+  font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
+
+  .talk[data-kind='cover'] &,
+  .talk[data-kind='close'] & {
+    border-color: var(--color-white-a14);
+  }
+}
+
+.slide__code-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 0.9rem;
+  padding: 0.65rem 0.9rem;
+  background: var(--code-block-background-header);
+  border-block-end: var(--border-width-hairline) solid var(--code-block-divider);
+
+  // Slides with pill rows stack header rows vertically so pills don't wrap mid-row.
+  .slide[data-kind='prompt'] &,
+  .slide[data-kind='designMd'] & {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+  }
+}
+
+.slide__code-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--code-block-foreground-muted);
+}
+
+.slide__code-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.slide__code-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45ch;
+  padding: 0.35rem 0.75rem;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--code-block-foreground-muted);
+  background: var(--code-block-background-soft);
+  border: var(--border-width-hairline) solid var(--code-block-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background 160ms ease-out,
+    border-color 160ms ease-out,
+    color 160ms ease-out,
+    transform 120ms ease-out;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--code-block-background-strong);
+    border-color: var(--code-block-border-strong);
+    color: var(--code-block-foreground);
+  }
+
+  &:active {
+    transform: translateY(0.0625rem);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--color-afi-azul-500);
+    outline-offset: var(--border-width-thick);
+  }
+
+  &--active {
+    color: var(--code-block-foreground);
+    background: var(--code-block-pill-active-bg);
+    border-color: var(--code-block-pill-active-border);
+
+    &:hover {
+      background: var(--code-block-pill-active-bg-hover);
+    }
+  }
+
+  &--copied {
+    color: var(--code-block-pill-copied-fg);
+    border-color: var(--code-block-pill-copied-border);
+    background: var(--code-block-pill-copied-bg);
+
+    &:hover {
+      background: var(--code-block-pill-copied-bg-hover);
+    }
+  }
+}
+
+.slide__code-body {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-size: clamp(0.7rem, 0.78vw, 0.82rem);
+  line-height: 1.55;
+  // Wrap long lines instead of horizontal scroll — keeps the right edge readable.
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  tab-size: 2;
+
+  code {
+    font-family: inherit;
+    color: inherit;
+    background: none;
+  }
+}
+
+// ── Matrix / table slide ────────────────────────────────────────────────────
+
+.slide__matrix {
+  margin-block-start: var(--space-md);
+  inline-size: 100%;
+  overflow-x: auto;
+
+  table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    text-align: start;
+  }
+
+  th,
+  td {
+    padding: var(--space-sm) var(--space-md);
+    border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  thead th {
+    font-weight: 700;
+    color: var(--foreground-secondary-default);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.85em;
+  }
+
+  tbody th {
+    font-weight: 700;
+    color: var(--foreground-primary-default);
+  }
+
+  td {
+    color: var(--foreground-secondary-default);
+  }
+
+  .slide__matrix-cell--filled {
+    color: var(--color-afi-azul-500);
+    font-weight: 600;
+  }
+}
+
+// ── Illustration ────────────────────────────────────────────────────────────
+
+.slide__figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+
+  img {
+    inline-size: 100%;
+    block-size: auto;
+    max-block-size: min(56vh, 28rem);
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    border: var(--border-width-hairline) solid var(--border-hairline);
+    background: var(--figure-paper-tint);
+  }
+
+  figcaption {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+    max-inline-size: 64ch;
+  }
+}
+
+// On slides with an illustration, lay text and image side-by-side on wider
+// viewports. Compact stack on mobile.
+.slide[data-has-illustration='true'] {
+  @media (min-width: 64rem) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    column-gap: var(--space-xl);
+    align-items: center;
+
+    .slide__eyebrow,
+    .slide__title,
+    .slide__body,
+    .slide__bullets,
+    .slide__callout {
+      grid-column: 1;
+    }
+
+    .slide__figure {
+      grid-column: 2;
+      grid-row: 1 / span 4;
+      align-self: center;
+    }
+  }
+}
+
+// Slides that carry a code block (prompt + design.md): two-column on wide.
+.slide[data-kind='prompt'],
+.slide[data-kind='designMd'] {
+  @media (min-width: 56rem) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--space-xl);
+    align-items: start;
+
+    .slide__eyebrow,
+    .slide__title,
+    .slide__body,
+    .slide__callout {
+      grid-column: 1;
+      min-inline-size: 0;
+    }
+
+    .slide__code {
+      grid-column: 2;
+      grid-row: 1 / span 5;
+      align-self: stretch;
+      max-block-size: min(72vh, 38rem);
+      min-inline-size: 0;
+    }
+  }
+}
+
+// ── Bottom nav ──────────────────────────────────────────────────────────────
+
+.talk__nav {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-xl);
+  border-block-start: var(--border-width-hairline) solid var(--border-hairline);
+
+  .talk[data-kind='cover'] &,
+  .talk[data-kind='close'] & {
+    border-block-start-color: var(--color-white-a14);
+  }
+}
+
+// ── Responsive ──────────────────────────────────────────────────────────────
+
+@media (max-width: 48rem) {
+  .talk__bar,
+  .talk__stage,
+  .talk__nav {
+    padding-inline: var(--space-md);
+  }
+
+  .talk__hint {
+    display: none;
+  }
+
+  .slide {
+    gap: var(--space-md);
+  }
+}

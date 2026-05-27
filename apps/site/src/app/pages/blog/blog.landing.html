@@ -10,7 +10,7 @@
   <ul class="blog-landing__list">
     @for (post of posts; track post.slug) {
       <li class="blog-landing__item">
-        <a class="blog-landing__card" [routerLink]="'/blog/' + post.slug">
+        <a class="blog-landing__card" [routerLink]="post.to || ('/blog/' + post.slug)">
           <div class="blog-landing__card-thumb blog-landing__card-thumb--{{ post.thumb }}" aria-hidden="true">
             <!-- Whitelabel: brand stripes that swap on hover -->
             @if (post.thumb === 'whitelabel') {
@@ -30,6 +30,15 @@
                 <span class="thumb-proceso__dot thumb-proceso__dot--3"></span>
                 <span class="thumb-proceso__dot thumb-proceso__dot--4"></span>
                 <span class="thumb-proceso__dot thumb-proceso__dot--5"></span>
+              </div>
+            }
+            <!-- Talk: 3 mini slide cards that shift right on hover (suggests arrow navigation) -->
+            @if (post.thumb === 'talk') {
+              <div class="thumb-talk">
+                <span class="thumb-talk__card thumb-talk__card--1"></span>
+                <span class="thumb-talk__card thumb-talk__card--2"></span>
+                <span class="thumb-talk__card thumb-talk__card--3"></span>
+                <span class="thumb-talk__arrow" aria-hidden="true">→</span>
               </div>
             }
           </div>

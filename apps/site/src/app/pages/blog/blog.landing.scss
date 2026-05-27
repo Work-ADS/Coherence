@@ -99,6 +99,10 @@
   &--proceso {
     background: linear-gradient(135deg, var(--color-afi-azul-profundo-500) 0%, var(--color-afi-azul-500) 100%);
   }
+
+  &--talk {
+    background: linear-gradient(135deg, var(--color-afi-azul-profundo-500) 0%, var(--color-afi-naranja-500, var(--color-afi-azul-500)) 100%);
+  }
 }
 
 .blog-landing__card-body {
@@ -215,4 +219,61 @@
   &--3 { transform: translateY(-12%) scale(1.25); transition-delay: 80ms; }
   &--4 { transform: translateY(-12%) scale(1.1); transition-delay: 120ms; }
   &--5 { transform: translateY(-12%) scale(1.1); transition-delay: 160ms; }
+}
+
+// ─── Talk: 3 stacked slide cards + arrow, cards slide right on hover ────────
+.thumb-talk {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12% 14%;
+
+  &__card {
+    position: absolute;
+    width: 46%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-sm);
+    background: var(--color-white-a78);
+    box-shadow: var(--elevation-md);
+    transition: transform 380ms cubic-bezier(0.2, 0.7, 0.2, 1.1);
+
+    &--1 {
+      transform: translate(-22%, -8%) rotate(-6deg);
+      background: var(--color-white-a55);
+    }
+    &--2 {
+      transform: translate(0, 0) rotate(0deg);
+      background: var(--color-white-a78);
+      z-index: 2;
+    }
+    &--3 {
+      transform: translate(22%, 8%) rotate(6deg);
+      background: var(--color-white-a55);
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%) translateX(40%);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--color-white-a78);
+    opacity: 0;
+    transition:
+      opacity 280ms ease-out,
+      transform 380ms cubic-bezier(0.2, 0.7, 0.2, 1.1);
+  }
+}
+
+.blog-landing__card:hover .thumb-talk {
+  &__card--1 { transform: translate(-30%, -10%) rotate(-9deg); }
+  &__card--2 { transform: translate(-6%, 0) rotate(-1deg); }
+  &__card--3 { transform: translate(18%, 6%) rotate(4deg); }
+  &__arrow {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
 }

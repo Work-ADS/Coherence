@@ -538,6 +538,45 @@
 }
 
 
+// ---------------------------------------------------------------------------
+//   Code block surface (dark editor aesthetic for /talks/* snippets)
+//
+// A specialized "GitHub-style" dark surface used by the talks slide-show
+// (prompt + design.md snippets). Tokens live here so the component SCSS
+// can stay rgb()/hex-free per docs/rules/component-skill.md § 2.
+// ---------------------------------------------------------------------------
+
+:root {
+  --code-block-background:        #0d1117;
+  --code-block-background-header: #161b22;
+  --code-block-background-soft:   rgba(255, 255, 255, 0.04);
+  --code-block-background-strong: rgba(255, 255, 255, 0.08);
+
+  --code-block-foreground:        rgba(232, 237, 244, 0.92);
+  --code-block-foreground-muted:  rgba(232, 237, 244, 0.78);
+
+  --code-block-border:            rgba(255, 255, 255, 0.10);
+  --code-block-border-strong:     rgba(255, 255, 255, 0.20);
+  --code-block-divider:           rgba(255, 255, 255, 0.08);
+
+  --code-block-shadow:            0 0.625rem 2rem rgba(0, 0, 0, 0.22);
+
+  --code-block-pill-active-bg:        rgba(0, 133, 202, 0.18);
+  --code-block-pill-active-bg-hover:  rgba(0, 133, 202, 0.24);
+  --code-block-pill-active-border:    rgba(0, 133, 202, 0.55);
+
+  --code-block-pill-copied-fg:        #5fdc7a;
+  --code-block-pill-copied-bg:        rgba(95, 220, 122, 0.14);
+  --code-block-pill-copied-bg-hover:  rgba(95, 220, 122, 0.20);
+  --code-block-pill-copied-border:    rgba(95, 220, 122, 0.55);
+
+  // Quote-style callout block over a light surface (talks slide-show).
+  --callout-tint-light:               rgba(0, 0, 0, 0.03);
+
+  // Soft warm "paper" background that figures sit on inside dark/cover slides.
+  --figure-paper-tint:                rgba(255, 255, 255, 0.6);
+}
+
 // =============================================================================
 //
 //   §2 — RESPONSIVE OVERRIDES

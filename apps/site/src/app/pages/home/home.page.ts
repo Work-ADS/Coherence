@@ -5,6 +5,7 @@ import { ButtonComponent, LogoComponent } from '@coherence/ui';
 import {
   CollapseGlyphComponent,
   EvolutionGlyphComponent,
+  SlidesGlyphComponent,
   WhitelabelFrameGlyphComponent,
 } from '../../components/glyphs';
 import { LanguageService } from '../../services/language.service';
@@ -14,7 +15,7 @@ interface WorkCard {
   eyebrow: { es: string; en: string };
   title: { es: string; en: string };
   blurb: { es: string; en: string };
-  thumb: 'wealth-planner' | 'sarevi' | 'whitelabel';
+  thumb: 'wealth-planner' | 'sarevi' | 'whitelabel' | 'slides';
 }
 
 @Component({
@@ -27,6 +28,7 @@ interface WorkCard {
     EvolutionGlyphComponent,
     WhitelabelFrameGlyphComponent,
     CollapseGlyphComponent,
+    SlidesGlyphComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.page.html',
@@ -37,6 +39,22 @@ export class HomePage {
   readonly lang = this.language.lang;
 
   private readonly cards: WorkCard[] = [
+    {
+      routerLink: '/talks/stitch-vs-claude',
+      eyebrow: {
+        es: 'REUNIÓN DE ÁREA · IA',
+        en: 'AREA MEETING · AI',
+      },
+      title: {
+        es: 'Stitch vs Claude para conceptos de cliente',
+        en: 'Stitch vs Claude for client concepts',
+      },
+      blurb: {
+        es: 'Mismo prompt, cinco escenarios de marca y una recomendación. Slide-show navegable con flechas y design.md descargable.',
+        en: 'Same prompt, five brand scenarios, one recommendation. Arrow-navigable slide-show with a downloadable design.md.',
+      },
+      thumb: 'slides',
+    },
     {
       routerLink: '/demos/wealth-planner-2026',
       eyebrow: {

@@ -116,6 +116,10 @@ export class App {
   }
 
   private matchFullScreen(url: string): boolean {
-    return /^\/demos\/.+/.test(url) || /^\/afi-insights(\/|$)/.test(url);
+    return (
+      /^\/demos\/.+/.test(url) ||
+      /^\/afi-insights(\/|$)/.test(url) ||
+      /^\/talks\/.+/.test(url)
+    );
   }
 }

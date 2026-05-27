@@ -12,7 +12,7 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   min-height: 100dvh;
-  background: var(--background-default);
+  background: var(--canvas-primary);
   color: var(--foreground-primary-default);
   font: var(--type-body-md-400);
 
@@ -20,7 +20,7 @@
   &[data-kind='cover'],
   &[data-kind='close'] {
     background: var(--foreground-primary-default);
-    color: var(--background-default);
+    color: var(--canvas-primary);
   }
 }
 
@@ -101,7 +101,7 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   border: var(--border-width-hairline) solid var(--border-hairline);
   border-radius: var(--radius-sm);
-  background: var(--background-default);
+  background: var(--canvas-primary);
   color: var(--foreground-primary-default);
 
   .talk[data-kind='cover'] &,

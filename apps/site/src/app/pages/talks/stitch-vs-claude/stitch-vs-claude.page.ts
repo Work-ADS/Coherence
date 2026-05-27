@@ -18,7 +18,6 @@ interface MatrixRow {
   tool: string;
   url: string;
   designMd: string;
-  repo: string;
 }
 
 interface Slide {
@@ -35,7 +34,7 @@ interface Slide {
   code?: { label: string; body: string };
 }
 
-type PromptVariantKey = 'url' | 'designMd' | 'repo';
+type PromptVariantKey = 'url' | 'designMd';
 
 const PROMPT_BASE = `Diseña un planificador de jubilación de dos pantallas para clientes españoles de una firma de asesoramiento patrimonial.
 
@@ -79,13 +78,6 @@ const PROMPT_VARIANTS: Record<PromptVariantKey, { label: string; marca: string }
 - Respeta la paleta, tipografía, radios, espaciado y voz de microcopy que define.
 - No introduzcas estilos fuera del design.md, ni inventes tokens.`,
   },
-  repo: {
-    label: 'Repositorio',
-    marca: `MARCA — fuente: repositorio de diseño disponible
-- Consume los tokens, primitivas y convenciones del repositorio de diseño cargado.
-- Usa los componentes existentes en lugar de redibujar (botones, inputs, cards, charts).
-- Respeta la regla de marca del repositorio (en Afi, el color secundario es la acción).`,
-  },
 };
 
 function buildPrompt(key: PromptVariantKey): string {
@@ -123,97 +115,82 @@ export class StitchVsClaudePage {
       kind: 'cover',
       eyebrow: 'Reunión de área · 2026-05-28',
       title: 'Stitch vs Claude: ¿qué herramienta de IA usamos para conceptos de cliente?',
-      body: 'Primero presentamos las dos plataformas. Después lanzamos el mismo prompt en cinco escenarios de marca. Cerramos con una recomendación.',
+      body: 'Dos plataformas, el mismo prompt, una recomendación.',
     },
     {
       kind: 'content',
       eyebrow: 'Herramienta 1',
       title: 'Stitch — el explorador rápido de Google',
-      body: 'Pensado para iterar conceptos en minutos. Acepta URL, fichero o prompt enriquecido y entrega pantallas estáticas que se hacen clicables con un paso extra.',
+      body: 'Para iterar conceptos en minutos y sacar primeros borradores. Acepta URL, fichero o prompt enriquecido.',
       bullets: [
-        'Entradas al iniciar: URL del cliente, fichero adjunto o prompt enriquecido.',
-        'Salida por defecto: imágenes estáticas; el modo «instant prototype» las hace navegables.',
-        'Sistema de diseño: tres plantillas de color predefinidas, sin personalización profunda.',
-        'Vista previa con cambio de viewport (móvil, tablet, escritorio).',
+        '1. Inicio: URL del cliente, fichero adjunto o prompt enriquecido.',
+        '2. Sistema de diseño: tres plantillas predefinidas, sin personalización profunda.',
+        '3. Generar → salida estática: imágenes; «instant prototype» las hace navegables.',
+        '4. Vista previa: móvil, tablet o escritorio.',
+        '5. Export: AI Studio o ZIP.',
       ],
-      callout: 'Aquí cambiamos a Stitch en directo para enseñar la pantalla de inicio.',
+      callout: 'Mostrar Stitch en vivo.',
     },
     {
       kind: 'content',
       eyebrow: 'Herramienta 2',
       title: 'Claude — el constructor con sistema de diseño',
-      body: 'Diseña interacciones completas y se entrega a Claude Code sin pérdidas. Construye el sistema de diseño antes de empezar, a partir de un repo o una URL.',
+      body: 'Para arrancar proyectos de cliente de forma más escalable y sofisticada. Diseña interacciones completas y se entrega a Claude Code sin pérdidas.',
       bullets: [
-        'Modos al iniciar: prototipo, slide deck, plantilla.',
-        'Modo de fidelidad: wireframe o hi-fi (en hi-fi se incorpora la marca).',
-        'Sistema de diseño construido por adelantado (consume ~20 % de la cuota diaria).',
-        'Panel de «tweaks» para ajustar densidad, color, layout o velocidad en directo.',
+        '1. Inicio: tipo de proyecto (prototipo, slide deck, plantilla) y sistema de diseño.',
+        '2. Modo de fidelidad: wireframe o hi-fi (en hi-fi se incorpora la marca).',
+        '3. Preguntas de aclaración: con URL pregunta para afinar; con design.md, va directo.',
+        '4. Crear → lienzo vacío: bocetamos e iteramos directamente sobre el prompt.',
+        '5. Panel de «tweaks»: densidad, color, layout y velocidad en directo.',
+        '6. Handoff a Claude Code: un comando conserva tokens y primitivas.',
       ],
-      callout: 'Aquí cambiamos a Claude en directo para enseñar las opciones de inicio.',
-    },
-    {
-      kind: 'content',
-      eyebrow: '¿Qué modo elegimos?',
-      title: 'Wireframe para nuevos productos. Hi-fi cuando ya hay marca.',
-      body: 'Wireframe primero valida el flujo sin distracciones de marca. Hi-fi después aplica color, tipografía y tokens sobre un esqueleto ya validado.',
-      bullets: [
-        'Wireframe: estructura, jerarquía, microcopy. Útil cuando el producto es nuevo.',
-        'Hi-fi: marca aplicada. Útil cuando hay un cliente y un sistema de referencia.',
-        'Hoy probamos en hi-fi porque la marca (Mastercard, Afi) es parte del experimento.',
-      ],
-      callout:
-        'Hacer wireframe y hi-fi a la vez diluye el flujo en decisiones de marca prematuras.',
+      callout: 'Mostrar Claude en vivo.',
     },
     {
       kind: 'content',
       eyebrow: 'El caso',
       title: 'Planificador de jubilación de dos pantallas, inspirado en Mutualidad',
-      body: 'Una pantalla recoge edad, ahorro y aportación. Otra muestra la proyección, la viabilidad y la recomendación. Misma estructura para los cinco escenarios.',
+      body: 'Sale de nuestros simuladores. Es el más simple: unas preguntas y un resumen en una página. Algo real con lo que el equipo puede identificarse, sin sobrecomplicarlo.',
       illustration: '/talks/stitch-vs-claude/reference/planificador-jubilacion.png',
       caption:
-        'Mutualidad — Planificador de jubilación (Release candidate 24). Sirve como referencia estructural en los cinco escenarios.',
+        'Mutualidad — Planificador de jubilación (Release candidate 24). Sirve como referencia estructural.',
+    },
+    {
+      kind: 'prompt',
+      eyebrow: 'El prompt',
+      title: 'Mismo texto. Cambia solo la fuente de marca.',
+      body: 'Queríamos probar dos productos y dos fuentes de contexto: URL cuando aún no conocemos al cliente, y design.md cuando podemos construirlo nosotros (como hace el equipo de diseño). La salida depende del contexto que demos a la IA, no solo de la herramienta.',
     },
     {
       kind: 'matrix',
       eyebrow: 'La matriz',
-      title: 'Cinco escenarios: misma pregunta, distintas fuentes de marca',
-      body: 'Comprobamos cómo se comporta cada herramienta cuando la marca llega como URL, como design.md externo o como repositorio propio.',
+      title: 'Cuatro escenarios: misma pregunta, distintas fuentes de marca',
+      body: 'Cómo se comporta cada herramienta cuando la marca llega como URL o como design.md externo.',
       matrix: {
-        headers: ['Herramienta', 'URL', 'design.md', 'Repositorio'],
+        headers: ['Herramienta', 'URL', 'design.md'],
         rows: [
-          { tool: 'Stitch', url: 'Escenario 1', designMd: 'Escenario 3', repo: '—' },
-          { tool: 'Claude', url: 'Escenario 2', designMd: 'Escenario 4', repo: '—' },
-          { tool: 'Claude Code', url: '—', designMd: '—', repo: 'Escenario 5' },
+          { tool: 'Stitch', url: 'Escenario 1', designMd: 'Escenario 3' },
+          { tool: 'Claude', url: 'Escenario 2', designMd: 'Escenario 4' },
         ],
       },
       callout:
         'Si el resultado mejora entre escenarios, la mejora viene del contexto de marca, no de la herramienta.',
     },
     {
-      kind: 'prompt',
-      eyebrow: 'El prompt',
-      title: 'Mismo texto en los cinco escenarios. Cambia solo el adjunto.',
-      body: 'Selecciona la fuente de marca con la que vas a ejecutar el prompt. Cada píldora copia la variante correspondiente al portapapeles.',
-      callout:
-        'Pausa: cambiamos al navegador para ejecutar el prompt en directo en Stitch y en Claude.',
-    },
-    {
       kind: 'designMd',
       eyebrow: 'El design.md',
       title: 'Design.md de Mastercard, listo para adjuntar',
-      body: 'El fichero que usamos en los escenarios 3 y 4. Cópialo con un clic o descárgalo y arrástralo a Stitch o Claude como contexto de marca.',
-      callout:
-        'Inspirado en el catálogo público de getdesign.md/mastercard, adaptado aquí como fichero estático.',
+      body: 'Sacamos este design.md de getdesign.md/mastercard. Elegimos Mastercard porque es una marca muy conocida del mundo financiero — punto de partida creíble y consistente, sin debate sobre qué representa.',
     },
     {
       kind: 'finding',
       eyebrow: 'Aprendizajes',
-      title: 'Lo que llevamos de los cinco escenarios',
-      body: 'Resumen rápido mientras seguimos viendo los resultados en directo en Stitch, Claude y Claude Code.',
+      title: 'Lo que llevamos de los cuatro escenarios',
+      body: 'Resumen rápido mientras seguimos viendo los resultados en directo.',
       bullets: [
         '1. Detalle: Claude entrega microcopy, datos simulados y jerarquía visual al primer intento. Stitch parte de un layout más esquemático que necesita pasos adicionales.',
         '2. Interactividad: Claude es navegable de fábrica. Stitch produce imágenes estáticas hasta activar «instant prototype».',
-        '3. Fidelidad de marca: URL < design.md < repositorio propio. El salto entre escenario 4 y 5 no es la herramienta, es la fuente de marca.',
+        '3. Fuente de marca: el design.md eleva claramente a Stitch. En Claude, URL y design.md son equivalentes — incluso la URL de Mastercard saca un punto más.',
         '4. Handoff: solo Claude conserva la fidelidad al entregarse a Claude Code. Stitch exporta a AI Studio o a un zip y parte del estilo se pierde.',
         '5. Iteración: Claude expone un panel de ajustes para densidad, color o layout en directo. Stitch redirige cada cambio al prompt inicial.',
       ],
@@ -230,25 +207,18 @@ export class StitchVsClaudePage {
         'Stitch → AI Studio o ZIP: la marca y la interactividad se degradan; obliga a re-trabajo de desarrollo.',
         'Si el concepto va a producción, el handoff decide la elección de herramienta.',
       ],
-      callout:
-        'El handoff no es un detalle técnico: es donde se decide si el diseño llega vivo a la siguiente fase.',
     },
     {
       kind: 'ask',
       eyebrow: 'Propuesta',
-      title: 'Adoptemos Claude para conceptos de cliente, con un design.md por cliente como fuente de marca',
-      body: 'El design.md de Afi se redacta en quince minutos y vive en nuestro recurso interno. Cualquier developer lo recoge y lo adjunta a Claude o a Stitch como contexto de marca. La inversión se amortiza desde el segundo cliente.',
-      bullets: [
-        '1. Redactamos el primer design.md de Afi esta semana.',
-        '2. Replicamos el ejercicio con un cliente real la semana siguiente.',
-        '3. Si funciona, ampliamos la biblioteca cliente a cliente.',
-      ],
+      title: 'Adoptemos Claude para conceptos de cliente',
+      body: 'Planifica el proyecto por tu cuenta (Claude Code o Claude), trae el prompt a Claude con URL o design.md (URL si vas con prisa) e itera ahí mismo. Cuando esté listo, comparte el enlace conmigo y lo adapto para producción.',
     },
     {
       kind: 'close',
-      eyebrow: 'Recapitulación',
-      title: 'Stitch para explorar rápido; Claude para conceptos que sobreviven al handoff',
-      body: '¿Preguntas, dudas, contraejemplos? El brief, el prompt y los cinco resultados están en la rama docs/talk-stitch-vs-claude. Gracias.',
+      eyebrow: 'Conclusión',
+      title: 'Stitch para explorar rápido; Claude para escalar y sobrevivir al handoff',
+      body: '¿Preguntas, dudas, contraejemplos? El brief, el prompt y los cuatro resultados están en la rama docs/talk-stitch-vs-claude. Gracias.',
     },
   ];
 
@@ -257,7 +227,7 @@ export class StitchVsClaudePage {
   // Prompt variant state — which MARCA branch is currently visible and copyable.
   readonly activeVariant = signal<PromptVariantKey>('url');
   readonly copiedVariant = signal<PromptVariantKey | null>(null);
-  readonly promptVariantKeys: readonly PromptVariantKey[] = ['url', 'designMd', 'repo'];
+  readonly promptVariantKeys: readonly PromptVariantKey[] = ['url', 'designMd'];
   readonly promptVariants = PROMPT_VARIANTS;
 
   readonly activePromptBody = computed(() => buildPrompt(this.activeVariant()));

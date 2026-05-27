@@ -23,8 +23,24 @@ Same six as Brief I, plus:
 ## Sources of truth
 
 - **Figma:** TBD — pull from `888lN7vbJSc4gLYt7nP3DW` "Optimización asset allocation" frame before activation.
-- **PDF:** [`CambiosAfiWealthPlanner20260226.pdf`](../../CambiosAfiWealthPlanner20260226.pdf) pp. 9–10 — the verbatim "delete these controls" guidance.
+- **PDF:** [`CambiosAfiWealthPlanner20260226.pdf`](../../CambiosAfiWealthPlanner20260226.pdf) pp. 9–10 — §4.c. Drop the first definition screen; lift the listboxes to a top filter strip with `Vista` (default `comparada`) + `Escenario` (default `medio`) + a `Comparar perfiles de riesgo` toggle that swaps to all-profiles chart.
+- **Screens (added 2026-05-27):** `Afi brand/Wealth manager screens 2026/Optimización del asset allocation/`:
+  - `Perfil de riesgo_.png` + `-1.png` + `-2.png` — "Evolución esperada" tab; Vista=Comparada + Escenario=Medio + Actual vs Optimizada lines
+  - `Comparar perfiles de riesgo.png` — "Comparativa de perfiles" tab; 5-line chart (Actual / Conservadora / Moderada / Dinámica / Agresiva)
+  - `Empty.png` + `-1.png` + `-2.png` — empty / partial states
+  - `Tooltips.png` + variants — tooltip overlays
 - **Granola:** sessions 2026-02-26 + 2026-02-27 + 2026-03-05.
+
+## Coding standards
+
+Inherited from [chore-sidebar brief § Coding standards](2026-05-27-awp-chore-sidebar-section-5-6-split.md#coding-standards-locked-from-brief-i):
+
+- **3-file rule** — `.ts` + `.html` + `.scss`, NO inline template / styles.
+- **Reuse libs/ui primitives** — `<afi-page-header>`, `<afi-tabs>` + `<afi-tab-item>` for the 2-tab layout, `<afi-select>` for Vista + Escenario, `<afi-evolucion-bar-chart>` or `<afi-chart-line>` for the projection. Comparar perfiles toggle uses `<afi-switch>` or `<afi-button variant="ghost">`.
+- **Tokens only in SCSS** — zero hex / rgb / bare px.
+- **Tailwind utilities for layout** matching Brief I.
+- **Visual anchor:** Brief I + the existing `EvolucionPatrimonialProposalPage` patterns. The filter strip mirrors Evolución patrimonial's; the chart slot reuses the same primitive.
+- **Cross-brief state:** `PerfilRiesgo` + `perfilRiesgoActivo` signal now live in the store (added by the [chore-sidebar brief](2026-05-27-awp-chore-sidebar-section-5-6-split.md)). Consume `store.perfilRiesgoActivo()` — do NOT declare local profile state. The "Comparar perfiles" toggle overrides this with an all-profiles view but the underlying `perfilRiesgoActivo` should stay the persisted user choice.
 
 ## Chrome wrapping
 

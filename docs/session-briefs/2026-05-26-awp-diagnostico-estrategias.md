@@ -30,8 +30,22 @@ Same six as Brief I, plus:
 ## Sources of truth
 
 - **Figma:** TBD — pull from `888lN7vbJSc4gLYt7nP3DW` "Estrategias" frame before activation.
-- **PDF:** [`CambiosAfiWealthPlanner20260226.pdf`](../../CambiosAfiWealthPlanner20260226.pdf) pp. 8–9 — "Estrategias" section.
+- **PDF:** [`CambiosAfiWealthPlanner20260226.pdf`](../../CambiosAfiWealthPlanner20260226.pdf) pp. 8–9 — "Estrategias" section. Four tabs: Rentabilidad objetivo · Gasto anual máximo · Ingreso anual mínimo · Edad de retiro mínima.
+- **Screens (added 2026-05-27):** `Afi brand/Wealth manager screens 2026/daignóstico/` (folder name has a typo in the source — "daignóstico" not "diagnóstico"; don't rename):
+  - `rentabilidad objetivo.png` — Rentabilidad objetivo tab (gradient probability bar)
+  - `capacidad de gasto anual.png` — Gasto anual máximo tab (4×4 table)
+  - `salario bruto anual objetivo.png` + `-1.png` — Ingreso anual mínimo tab variants
 - **Granola:** sessions 2026-02-26 + 2026-02-27.
+
+## Coding standards
+
+Inherited from [chore-sidebar brief § Coding standards](2026-05-27-awp-chore-sidebar-section-5-6-split.md#coding-standards-locked-from-brief-i):
+
+- **3-file rule** — `.ts` + `.html` + `.scss`, NO inline template / styles.
+- **Reuse libs/ui primitives** — `<afi-page-header>`, `<afi-tabs>` + `<afi-tab-item>` for the 4-tab layout, `<afi-chart-line>` for the Rentabilidad objetivo gradient (or hand-rolled per the gradient design), `<afi-table>` or hand-rolled `.pp-table` (Brief I) for the comparison tables. Grep `libs/ui/src/` before authoring markup.
+- **Tokens only in SCSS** — zero hex / rgb / bare px. Pre-commit hook enforces.
+- **Tailwind utilities for layout** matching Brief I (`mx-space-8 mt-space-6 …`).
+- **Visual anchor:** Patrimonio previsto (Brief I) — Estrategias is its read-only Diagnóstico sibling.
 
 ## Chrome wrapping
 

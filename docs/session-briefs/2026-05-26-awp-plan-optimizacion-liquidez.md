@@ -26,8 +26,23 @@ Same six as Brief I, plus:
 ## Sources of truth
 
 - **Figma:** TBD — pull from `888lN7vbJSc4gLYt7nP3DW` "Optimización de liquidez" frame before activation.
-- **PDF:** [`CambiosAfiWealthPlanner20260226.pdf`](../../CambiosAfiWealthPlanner20260226.pdf) pp. 9–10.
+- **PDF:** [`CambiosAfiWealthPlanner20260226.pdf`](../../CambiosAfiWealthPlanner20260226.pdf) p. 9 — §4.b. Key directives: (1) drop the definition-only first screen; (2) add an "Activar optimización de la liquidez" toggle as the gate; (3) drop the "Colchón de liquidez inmediata"; (4) chart + table stay as-is.
+- **Screens (added 2026-05-27):** `Afi brand/Wealth manager screens 2026/Optimiación de la liquidez/` (folder name has a typo — "Optimiación" not "Optimización"; don't rename):
+  - `Empty.png` — gate-off state with dark "Activar optimización de la liquidez" CTA
+  - `Default.png` — gate-on state with switch + Perfil de riesgo select + line chart + rentabilidades table
+  - `Toolip/` — tooltip variants
 - **Granola:** sessions 2026-02-26 + 2026-02-27.
+
+## Coding standards
+
+Inherited from [chore-sidebar brief § Coding standards](2026-05-27-awp-chore-sidebar-section-5-6-split.md#coding-standards-locked-from-brief-i):
+
+- **3-file rule** — `.ts` + `.html` + `.scss`, NO inline template / styles.
+- **Reuse libs/ui primitives** — `<afi-page-header>`, `<afi-switch>` (the activation gate), `<afi-select>` (Perfil de riesgo), `<afi-evolucion-bar-chart>` or `<afi-chart-line>` (Brief I pattern), `<afi-table>` or hand-rolled `.pp-table` (Brief I).
+- **Tokens only in SCSS** — zero hex / rgb / bare px.
+- **Tailwind utilities for layout** matching Brief I.
+- **Visual anchor:** Patrimonio previsto. The "Default" state should mirror Brief I's KPI-row + filter-strip + chart + table flow.
+- **Cross-brief state:** `PerfilRiesgo` + `perfilRiesgoActivo` signal now live in the store (added by the [chore-sidebar brief](2026-05-27-awp-chore-sidebar-section-5-6-split.md)). Consume `store.perfilRiesgoActivo()` and `store.setPerfilRiesgoActivo(value)` — do NOT declare local profile state.
 
 ## Chrome wrapping
 

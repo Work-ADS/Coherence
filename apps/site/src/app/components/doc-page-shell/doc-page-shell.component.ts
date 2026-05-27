@@ -64,7 +64,6 @@ export class DocPageShellComponent implements OnDestroy {
   }
 
   onPreviewClick(event: MouseEvent): void {
-    if (!this.handoff.isActive()) return;
     const target = event.target as HTMLElement | null;
     if (!target) return;
     const token = this.inspect.getHandoffToken(target);

@@ -81,6 +81,14 @@ export const demos_routes: Routes = [
         (m) => m.EvolucionPatrimonialProposalPage,
       ),
   },
+  // Diagnóstico — Brief I
+  {
+    path: 'wealth-planner-2026/patrimonio-previsto',
+    loadComponent: () =>
+      import('./patrimonio-previsto/patrimonio-previsto.page').then(
+        (m) => m.PatrimonioPrevistoPage,
+      ),
+  },
   // Laboral Kutxa — Sarevi 360 overview (3-tab demo shell)
   {
     path: 'laboral-kutxa-sarevi',

@@ -67,7 +67,7 @@ export interface LastCopied {
 
 @Injectable({ providedIn: 'root' })
 export class HandoffInspectService {
-  readonly isActive = signal(false);
+  readonly isActive = signal(true);
   readonly active = signal<ActiveHandoff | null>(null);
 
   /**

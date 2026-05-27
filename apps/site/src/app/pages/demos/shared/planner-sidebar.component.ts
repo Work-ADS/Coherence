@@ -127,7 +127,12 @@ export class PlannerSidebarComponent {
     {
       label: 'Diagnóstico',
       items: [
-        { key: 'patrimonio-previsto', label: 'Patrimonio previsto', state: 'empty' },
+        {
+          key: 'patrimonio-previsto',
+          label: 'Patrimonio previsto',
+          state: this.store.patrimonioPrevistoState(),
+          route: '/demos/wealth-planner-2026/patrimonio-previsto',
+        },
         { key: 'estrategias', label: 'Estrategias', state: 'empty' },
       ],
     },

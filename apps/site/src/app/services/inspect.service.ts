@@ -103,6 +103,12 @@ export interface HandoffSections {
   typography: HandoffLine[];
 }
 
+export interface HandoffRow {
+  property: string;
+  token: string;
+  value: string;
+}
+
 const PROPERTY_CATEGORIES: Record<string, TokenCategory> = {
   color: 'color',
   'background-color': 'color',
@@ -574,6 +580,49 @@ export class InspectService {
       }
 
       return sections;
+    } finally {
+      restoreInjected();
+    }
+  }
+
+  /**
+   * Programmer-facing handoff table: CSS attribute → token → raw value.
+   * Only tokenized declarations are included, so the panel stays focused on
+   * design-system consumption instead of browser-default CSS noise.
+   */
+  getHandoffRows(element: HTMLElement): HandoffRow[] {
+    const restoreInjected = this.suspendInjectedClasses(element);
+    try {
+      const computed = getComputedStyle(element);
+      const applied = this.getAppliedDeclarations(element);
+      const rows: HandoffRow[] = [];
+
+      for (const prop of Object.keys(SECTION_BY_PROPERTY)) {
+        const computedValue = computed.getPropertyValue(prop).trim();
+        if (this.isUninteresting(prop, computedValue, computed)) continue;
+
+        let authoredValue = applied.values.get(prop);
+        if (authoredValue == null && INHERITABLE_PROPERTIES.has(prop)) {
+          authoredValue = this.findInheritedAuthoredValue(element, prop);
+        }
+        if (!authoredValue) continue;
+
+        const chain = this.buildChain(authoredValue, prop);
+        if (chain.length === 0) continue;
+
+        const value = this.isColorProperty(prop)
+          ? this.toHex(computedValue) ?? computedValue
+          : computedValue;
+        const token = chain[0]!.token;
+
+        if (rows.some((row) => row.property === prop && row.token === token && row.value === value)) {
+          continue;
+        }
+
+        rows.push({ property: prop, token, value });
+      }
+
+      return rows;
     } finally {
       restoreInjected();
     }
@@ -1348,8 +1397,11 @@ export class InspectService {
 
     while (current && depth < 3) {
       let part = current.tagName.toLowerCase();
-      if (current.classList.length > 0) {
-        part += '.' + Array.from(current.classList).slice(0, 2).join('.');
+      const classes = Array.from(current.classList)
+        .filter((cls) => !/^demo-shell-(?:pinned|highlight)-(?:inspect|comment)$/.test(cls))
+        .slice(0, 2);
+      if (classes.length > 0) {
+        part += '.' + classes.join('.');
       }
       parts.unshift(part);
       current = current.parentElement;

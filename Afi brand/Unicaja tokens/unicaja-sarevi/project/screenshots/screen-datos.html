@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sarevi 360 — Unicaja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #F4F4F2; color: #1C1C1B; font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    input, select, button, textarea { font-family: inherit; }
+    input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; background: #DFDEDD; border-radius: 2px; outline: none; cursor: pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #00843D; cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 5px rgba(0,132,61,0.35); }
+    input[type=checkbox] { width: 15px; height: 15px; accent-color: #00843D; cursor: pointer; flex-shrink: 0; }
+    input[type=radio] { accent-color: #00843D; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #C8C8C6; border-radius: 3px; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .fade-up { animation: fadeUp 0.22s ease-out; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+/* ── THEME ── */
+const U = {
+  green: '#006272', greenDk: '#004E5C', greenMd: '#1A7E8E',
+  greenLt: '#E1F4F6', greenXLt: '#EEF8FA',
+  blue: '#005FA3', blueLt: '#E5EFF9',
+  text: '#1C1C1B', textMd: '#4A4949', textLt: '#767574',
+  border: '#DFDEDD', borderMd: '#C5C5C3',
+  bg: '#F4F4F2', white: '#FFFFFF',
+  warn: '#C2650A', warnLt: '#FEF3E2', warnBorder: '#F5D8A8',
+  red: '#C62828', shadow: '0 1px 3px rgba(0,0,0,0.07)', shadowMd: '0 2px 10px rgba(0,0,0,0.10)',
+};
+
+/* ── UNICAJA LOGO ── */
+function UnicajaFan({ h = 32 }) {
+  const w = h * 0.88;
+  return (
+    <svg viewBox="0 0 30 34" width={w} height={h} fill="none">
+      <path d="M14 31C4 26 1 17 3 9C5 3 10 1 14 4C9 8 7 17 14 31Z" fill="#00843D"/>
+      <path d="M14 31C16 17 16 8 14 4C20 3 25 8 24 15C23 22 17 28 14 31Z" fill="#1E9C5A"/>
+      <path d="M14 31C19 25 26 17 26 9C26 4 29 4 29 9C29 18 21 26 14 31Z" fill="#005FA3"/>
+    </svg>
+  );
+}
+
+/* ── ENERGY LABEL ── */
+const ENG = { A:{bg:'#007A32',t:'#fff'}, B:{bg:'#3FA535',t:'#fff'}, C:{bg:'#A2CC3B',t:'#1C1C1B'}, D:{bg:'#F5CC1C',t:'#1C1C1B'}, E:{bg:'#F5A000',t:'#fff'}, F:{bg:'#E05000',t:'#fff'}, G:{bg:'#C62828',t:'#fff'} };
+function EnergyLabel({ level, lg }) {
+  const c = ENG[level] || ENG.E;
+  const s = lg ? {w:38,h:38,fs:20,r:8} : {w:27,h:27,fs:14,r:5};
+  return <div style={{display:'inline-flex',alignItems:'center',justifyContent:'center',background:c.bg,color:c.t,fontWeight:700,fontSize:s.fs,width:s.w,height:s.h,borderRadius:s.r,flexShrink:0}}>{level}</div>;
+}
+
+/* ── IMPACT BADGE ── */
+const IMP = { alto:{bg:'#FEE2E2',t:'#B91C1C',b:'#FECACA'}, medio:{bg:'#FFF3E0',t:'#C2650A',b:'#FDDCA8'}, bajo:{bg:'#F1F2F4',t:'#4B5563',b:'#E3E5E9'}, equipo:{bg:'#F1F2F4',t:'#6B7280',b:'#E3E5E9'} };
+const IMP_LABEL = { alto:'Impacto alto', medio:'Impacto medio', bajo:'Impacto bajo', equipo:'No hay equipo' };
+function ImpactBadge({ level }) {
+  if (!level) return null;
+  const s = IMP[level] || IMP.bajo;
+  return <span style={{display:'inline-block',padding:'2px 8px',borderRadius:20,fontSize:11,fontWeight:500,background:s.bg,color:s.t,border:`1px solid ${s.b}`,whiteSpace:'nowrap'}}>{IMP_LABEL[level]}</span>;
+}
+
+/* ── SHARED FORM ── */
+function Lbl({ children }) { return <div style={{fontSize:12,color:U.textMd,marginBottom:5,fontWeight:500}}>{children}</div>; }
+
+function RadioGroup({ opts, val, onChange, name }) {
+  return (
+    <div style={{border:`1px solid ${U.border}`,borderRadius:8,overflow:'hidden'}}>
+      {opts.map((o,i) => (
+        <label key={o.v} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 14px',cursor:'pointer',background:val===o.v?U.greenXLt:U.white,borderBottom:i<opts.length-1?`1px solid ${U.border}`:'none',transition:'background .12s',userSelect:'none'}}>
+          <input type="radio" name={name} value={o.v} checked={val===o.v} onChange={()=>onChange(o.v)} style={{display:'none'}} />
+          <span style={{fontSize:13,fontWeight:500,color:val===o.v?U.green:U.text}}>{o.l}</span>
+          <div style={{width:20,height:20,borderRadius:'50%',border:`2px solid ${val===o.v?U.green:U.borderMd}`,background:val===o.v?U.green:'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .15s'}}>
+            {val===o.v&&<div style={{width:7,height:7,borderRadius:'50%',background:U.white}}/>}
+          </div>
+        </label>
+      ))}
+    </div>
+  );
+}
+
+function FSelect({ val, onChange, children, full }) {
+  return (
+    <select value={val} onChange={e=>onChange(e.target.value)} style={{width:full?'100%':'auto',padding:'7px 30px 7px 10px',border:`1.5px solid ${U.border}`,borderRadius:7,fontSize:13,color:val?U.text:U.textLt,background:U.white,cursor:'pointer',outline:'none',appearance:'none',backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23767574' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,backgroundRepeat:'no-repeat',backgroundPosition:'right 10px center'}}>
+      {children}
+    </select>
+  );
+}
+
+function SubCard({ title, children }) {
+  return (
+    <div style={{background:U.bg,border:`1px solid ${U.border}`,borderRadius:8,padding:'12px 14px',marginBottom:12}}>
+      <div style={{fontWeight:600,fontSize:13,color:U.text,marginBottom:10,paddingBottom:8,borderBottom:`1px solid ${U.border}`}}>{title}</div>
+      {children}
+    </div>
+  );
+}
+
+/* ── HEADER ── */
+function Header({ step=0, refCode=null, onDownload=null }) {
+  return (
+    <header style={{background:U.white,borderBottom:`1px solid ${U.border}`,position:'sticky',top:0,zIndex:100,boxShadow:U.shadow}}>
+      <div style={{maxWidth:780,margin:'0 auto',padding:'0 18px'}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 0',borderBottom:step>0?`1px solid ${U.border}`:'none'}}>
+          <div style={{display:'flex',alignItems:'center',gap:9}}>
+            <UnicajaFan h={30} />
+            <div style={{width:1,height:22,background:U.border,margin:'0 4px'}} />
+            <span style={{fontSize:13,fontWeight:500,color:U.textMd,letterSpacing:'.01em'}}>Sarevi 360</span>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:12}}>
+            {refCode && (
+              <div style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:U.textLt}}>
+                <span>Código de referencia</span>
+                <span style={{background:U.greenLt,color:U.green,padding:'2px 8px',borderRadius:4,fontWeight:600,fontSize:11,display:'flex',alignItems:'center',gap:5}}>
+                  <svg width="10" height="10" fill="none" viewBox="0 0 16 16"><circle cx="6" cy="6" r="4" stroke={U.green} strokeWidth="1.8"/><path d="M9.5 9.5l4 4" stroke={U.green} strokeWidth="1.8" strokeLinecap="round"/></svg>
+                  {refCode}
+                </span>
+              </div>
+            )}
+            {onDownload && (
+              <button onClick={onDownload} style={{display:'flex',alignItems:'center',gap:5,background:'none',border:`1.5px solid ${U.border}`,borderRadius:6,padding:'5px 10px',fontSize:12,color:U.textMd,cursor:'pointer'}}>
+                <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M8 2v8M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                Descargar PDF
+              </button>
+            )}
+          </div>
+        </div>
+        {step>0 && (
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6,padding:'9px 0'}}>
+            {[{n:1,l:'Datos'},{n:2,l:'Medidas'},{n:3,l:'Resumen'}].map((s,i)=>(
+              <React.Fragment key={s.n}>
+                <div style={{display:'flex',alignItems:'center',gap:7,opacity:s.n>step?.45:1}}>
+                  <div style={{width:27,height:27,borderRadius:'50%',background:s.n<=step?U.green:U.border,color:s.n<=step?U.white:U.textLt,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,transition:'all .2s'}}>
+                    {s.n<step?'✓':`0${s.n}`}
+                  </div>
+                  <div>
+                    <div style={{fontSize:12,fontWeight:s.n===step?600:400,color:s.n===step?U.text:U.textMd}}>{s.l}</div>
+                    {s.n===step&&<div style={{fontSize:10,color:U.green,marginTop:-1}}>En curso</div>}
+                  </div>
+                </div>
+                {i<2&&<div style={{width:36,height:1,background:U.border}}/>}
+              </React.Fragment>
+            ))}
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}
+
+/* ── BOTTOM NAV ── */
+function BottomNav({ onBack, onNext, nextLabel='Siguiente →' }) {
+  return (
+    <div style={{position:'sticky',bottom:0,background:U.white,borderTop:`1px solid ${U.border}`,padding:'10px 18px',display:'flex',justifyContent:'space-between',alignItems:'center',zIndex:50,boxShadow:'0 -2px 8px rgba(0,0,0,0.06)',maxWidth:'100%'}}>
+      <button onClick={onBack} style={{padding:'8px 16px',borderRadius:7,border:`1.5px solid ${U.border}`,background:U.white,color:U.text,fontSize:13,fontWeight:500,cursor:'pointer',display:'flex',alignItems:'center',gap:5}}>
+        ← Volver
+      </button>
+      {onNext&&<button onClick={onNext} style={{padding:'8px 18px',borderRadius:7,border:'none',background:U.green,color:U.white,fontSize:13,fontWeight:600,cursor:'pointer',display:'flex',alignItems:'center',gap:5,transition:'background .15s'}} onMouseEnter={e=>e.target.style.background=U.greenDk} onMouseLeave={e=>e.target.style.background=U.green}>
+        {nextLabel}
+      </button>}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   SCREEN 1: HOME
+───────────────────────────────────────── */
+function HomeScreen({ onSelect, onRecover }) {
+  const [hov, setHov] = useState(null);
+  const cards = [
+    { id:'edificio', title:'Edificio', desc:'Para comunidades de propietarios y edificios completos',
+      icon: <svg width="36" height="36" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1" stroke="white" strokeWidth="1.6"/><path d="M7 7h2M7 11h2M7 15h2M15 7h2M15 11h2M15 15h2M10 21v-5h4v5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg> },
+    { id:'vivienda', title:'Vivienda', desc:'Para casas, apartamentos y pisos individuales',
+      icon: <svg width="36" height="36" fill="none" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z" stroke="white" strokeWidth="1.6" strokeLinejoin="round"/><path d="M9 21v-7h6v7" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg> },
+  ];
+  return (
+    <div className="fade-up" style={{minHeight:'100vh',background:U.white}}>
+      <Header />
+      <div style={{maxWidth:660,margin:'0 auto',padding:'64px 20px 48px',textAlign:'center'}}>
+        <div style={{display:'inline-flex',alignItems:'center',gap:6,background:U.greenLt,color:U.green,padding:'5px 14px',borderRadius:20,fontSize:12,fontWeight:600,marginBottom:22,letterSpacing:'.02em'}}>
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 22C6 22 2 17 2 11c0-2 3-7 6-9 0 3 2 5 4 5 0-2 2-5 5-6 1 3 0 7-3 9 2 0 4-1 5-3 1 4-2 9-7 15z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>
+          Sostenibilidad
+        </div>
+        <h1 style={{fontSize:36,fontWeight:700,color:U.text,lineHeight:1.15,letterSpacing:'-.5px',marginBottom:10}}>
+          Simulador de eficiencia energética
+        </h1>
+        <p style={{fontSize:15,color:U.textMd,marginBottom:48}}>Selecciona el tipo de simulación que deseas realizar</p>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:18,marginBottom:44}}>
+          {cards.map(c=>(
+            <button key={c.id} onClick={()=>onSelect(c.id)} onMouseEnter={()=>setHov(c.id)} onMouseLeave={()=>setHov(null)}
+              style={{background:hov===c.id?U.greenXLt:'#F2F3F5',border:`2px solid ${hov===c.id?U.green:'transparent'}`,borderRadius:14,padding:'30px 18px 24px',cursor:'pointer',textAlign:'center',transition:'all .2s',boxShadow:hov===c.id?`0 6px 20px rgba(0,132,61,.15)`:U.shadow,transform:hov===c.id?'translateY(-3px)':'none'}}>
+              <div style={{width:70,height:70,borderRadius:13,background:hov===c.id?U.green:'#1C3A4A',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px',transition:'background .2s'}}>
+                {c.icon}
+              </div>
+              <div style={{fontSize:17,fontWeight:700,color:U.text,marginBottom:7}}>{c.title}</div>
+              <div style={{fontSize:13,color:U.textMd,lineHeight:1.55}}>{c.desc}</div>
+            </button>
+          ))}
+        </div>
+        <button onClick={onRecover} style={{background:'none',border:'none',color:U.green,textDecoration:'underline',cursor:'pointer',fontSize:13}}>
+          ¿Ya tienes un código de simulación? Recuperar simulación anterior
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   SCREEN 2: DATOS
+───────────────────────────────────────── */
+function DatosScreen({ onNext, onBack }) {
+  const [vType, setVType] = useState('piso');
+  const [direccion, setDireccion] = useState('');
+  const [muni, setMuni] = useState('');
+  const [cert, setCert] = useState('si');
+  const [certLvl, setCertLvl] = useState('E');
+  const [size, setSize] = useState(120);
+  const [hab, setHab] = useState(2);
+  const [calef, setCalef] = useState('');
+  const [refri, setRefri] = useState('');
+  const EL = ['A','B','C','D','E','F','G'];
+  return (
+    <div className="fade-up">
+      <Header step={1} refCode="t8Tp8Xx3" />
+      <div style={{maxWidth:740,margin:'0 auto',padding:'18px 16px 80px'}}>
+        {/* Title */}
+        <div style={{background:U.white,border:`1px solid ${U.border}`,borderRadius:10,overflow:'hidden',marginBottom:12}}>
+          <div style={{padding:'13px 16px',borderBottom:`1px solid ${U.border}`,display:'flex',gap:8,alignItems:'center',background:U.white}}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z" stroke={U.textMd} strokeWidth="1.6" strokeLinejoin="round"/><path d="M9 21v-7h6v7" stroke={U.textMd} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <div>
+              <div style={{fontWeight:700,fontSize:15}}>Datos de la vivienda</div>
+              <div style={{fontSize:12,color:U.textLt,marginTop:1}}>Calcula la eficiencia energética que podrías alcanzar en los proyectos de tu vivienda.</div>
+            </div>
+          </div>
+          <div style={{padding:'14px 16px'}}>
+            <SubCard title="Caso de reformas para mi vivienda">
+              <Lbl>¿De qué tipo es tu vivienda?</Lbl>
+              <RadioGroup opts={[{v:'piso',l:'Piso'},{v:'chalet',l:'Chalet adosado'},{v:'chaletInd',l:'Chalet independiente'}]} val={vType} onChange={setVType} name="vtype" />
+              <div style={{marginTop:13}}>
+                <Lbl>Dirección de la vivienda</Lbl>
+                <div style={{position:'relative',marginBottom:12}}>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',pointerEvents:'none'}}><circle cx="11" cy="11" r="8" stroke={U.textLt} strokeWidth="1.6"/><path d="m21 21-4.35-4.35" stroke={U.textLt} strokeWidth="1.6" strokeLinecap="round"/></svg>
+                  <input type="text" value={direccion} onChange={e=>setDireccion(e.target.value)} placeholder="Escribe tu calle, número y localidad…" style={{width:'100%',padding:'8px 12px 8px 34px',border:`1.5px solid ${U.border}`,borderRadius:7,fontSize:13,outline:'none',color:U.text}} />
+                </div>
+                <Lbl>¿En qué municipio se encuentra?</Lbl>
+                <FSelect val={muni} onChange={setMuni} full>
+                  <option value="">Selecciona una opción</option>
+                  {['Madrid','Barcelona','Málaga','Sevilla','Granada','Valencia','Almería'].map(m=><option key={m}>{m}</option>)}
+                </FSelect>
+              </div>
+            </SubCard>
+
+            <SubCard title="Certificado de eficiencia energética">
+              <Lbl>¿Tienes certificado de eficiencia energética?</Lbl>
+              <RadioGroup opts={[{v:'si',l:'Sí'},{v:'no',l:'No'}]} val={cert} onChange={setCert} name="cert" />
+              {cert==='si'&&(
+                <div style={{marginTop:11}}>
+                  <div style={{display:'flex',gap:5,alignItems:'center',marginBottom:4}}>
+                    {EL.map(l=>(
+                      <button key={l} onClick={()=>setCertLvl(l)} style={{width:33,height:33,borderRadius:6,border:`2.5px solid ${certLvl===l?U.text:'transparent'}`,background:ENG[l].bg,color:ENG[l].t,fontWeight:700,fontSize:14,cursor:'pointer',transition:'border .1s'}}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                  <div style={{display:'flex',justifyContent:'space-between',fontSize:10,color:U.textLt,maxWidth:242}}>
+                    <span>Más eficiente</span><span>Menos eficiente</span>
+                  </div>
+                </div>
+              )}
+            </SubCard>
+
+            <SubCard title="Características físicas">
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+                <div>
+                  <Lbl>Tamaño medio de las viviendas ⓘ</Lbl>
+                  <div style={{position:'relative'}}>
+                    <input type="number" value={size} onChange={e=>setSize(e.target.value)} style={{width:'100%',padding:'7px 36px 7px 10px',border:`1.5px solid ${U.border}`,borderRadius:7,fontSize:13,outline:'none'}} />
+                    <span style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',fontSize:12,color:U.textLt,pointerEvents:'none'}}>m²</span>
+                  </div>
+                </div>
+                <div>
+                  <Lbl>Número de habitantes</Lbl>
+                  <div style={{position:'relative'}}>
+                    <input type="number" value={hab} onChange={e=>setHab(e.target.value)} style={{width:'100%',padding:'7px 70px 7px 10px',border:`1.5px solid ${U.border}`,borderRadius:7,fontSize:13,outline:'none'}} />
+                    <span style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',fontSize:11,color:U.textLt,pointerEvents:'none'}}>habitantes</span>
+                  </div>
+                </div>
+              </div>
+            </SubCard>
+
+            <SubCard title="Sistemas de climatización">
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+                <div>
+                  <Lbl>Sistema de calefacción central actual</Lbl>
+                  <FSelect val={calef} onChange={setCalef} full>
+                    <option value="">Selecciona una opción</option>
+                    {['Gas natural centralizado','Gas natural individual','Bomba de calor','Eléctrico directo','Gasoil','Sin calefacción'].map(o=><option key={o}>{o}</option>)}
+                  </FSelect>
+                </div>
+                <div>
+                  <Lbl>Sistema de refrigeración actual</Lbl>
+                  <FSelect val={refri} onChange={setRefri} full>
+                    <option value="">Selecciona una opción</option>
+                    {['Aire acondicionado','Bomba de calor','Sin refrigeración'].map(o=><option key={o}>{o}</option>)}
+                  </FSelect>
+                </div>
+              </div>
+            </SubCard>
+          </div>
+        </div>
+
+        {/* Estimados */}
+        <div style={{background:U.white,border:`1px solid ${U.border}`,borderRadius:10,padding:'14px 16px',marginBottom:10}}>
+          <div style={{fontWeight:600,fontSize:14,marginBottom:12,color:U.text}}>Datos actuales estimados</div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,textAlign:'center',marginBottom:14}}>
+            <div><div style={{fontSize:11,color:U.textLt,marginBottom:5}}>Etiqueta estimada</div><EnergyLabel level="E" lg /></div>
+            <div><div style={{fontSize:11,color:U.textLt,marginBottom:5}}>Gasto anual</div><div style={{fontSize:24,fontWeight:700}}>1.567<span style={{fontSize:12,fontWeight:400}}>€</span></div></div>
+            <div><div style={{fontSize:11,color:U.textLt,marginBottom:5}}>Consumo anual</div><div style={{fontSize:20,fontWeight:700}}>612.423<span style={{fontSize:11,fontWeight:400}}>KWH</span></div></div>
+          </div>
+          <div style={{textAlign:'center'}}>
+            <div style={{fontSize:11,color:U.textLt,marginBottom:4}}>Emisiones anuales</div>
+            <div style={{fontSize:22,fontWeight:700}}>44<span style={{fontSize:12,fontWeight:400}}>KG CO₂</span></div>
+          </div>
+        </div>
+
+        {/* Alert */}
+        <div style={{background:U.warnLt,border:`1px solid ${U.warnBorder}`,borderRadius:8,padding:'11px 13px',display:'flex',gap:9}}>
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{flexShrink:0,marginTop:1}}><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke={U.warn} strokeWidth="1.8"/><line x1="12" y1="9" x2="12" y2="13" stroke={U.warn} strokeWidth="1.8" strokeLinecap="round"/><circle cx="12" cy="17" r=".5" fill={U.warn} stroke={U.warn} strokeWidth="1.5"/></svg>
+          <div>
+            <div style={{fontWeight:600,fontSize:12,color:U.warn,marginBottom:2}}>Alerta</div>
+            <div style={{fontSize:12,color:'#8A4A00',lineHeight:1.55}}>La herramienta realiza cálculos automáticos basados en hipótesis y proyectos de referencia. Costes, materiales y dificultades técnicas pueden variar considerablemente. La reducción del consumo energético depende de múltiples factores. Por ello, es esencial consultar a un profesional cualificado para determinar costes y mejoras de eficiencia precisos.</div>
+          </div>
+        </div>
+      </div>
+      <BottomNav onBack={onBack} onNext={onNext} />
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   SCREEN 3: MEDIDAS
+───────────────────────────────────────── */
+const MEDIDAS_DATA = [
+  { id:'sate',label:'"SATE" - Sistema de aislamiento exterior',impact:'medio',cae:true,cost:38045,def:true },
+  { id:'aislamCam',label:'Aislamiento de cámaras interior (muros, buhardillas y tejados)',impact:'bajo',cae:false,cost:14387,def:false },
+  { id:'cubiertas',label:'Actuaciones en cubiertas',impact:'medio',cae:false,cost:59315,def:false },
+  { id:'solar',label:'Paneles solares térmicos para ACS',impact:'bajo',cae:false,cost:5169,def:false },
+  { id:'aerotermia',label:'Aerotermia',impact:'alto',cae:false,cost:56262,def:false },
+  { id:'suelo',label:'Suelo radiante/refrigerante',impact:'medio',cae:false,cost:52800,def:false },
+  { id:'ilum',label:'Sustitución iluminación',impact:'equipo',cae:false,cost:8580,def:false },
+  { id:'ventanas',label:'Sustitución de ventanas',impact:'medio',cae:true,cost:69366,def:true },
+  { id:'fotov',label:'Paneles solares fotovoltaicos - Autoconsumo',impact:'bajo',cae:false,cost:15115,def:false },
+  { id:'auditoria',label:'Auditoría energética',impact:'bajo',cae:false,cost:900,def:false },
+  { id:'certificado',label:'Certificado energético',impact:null,cae:false,cost:900,def:false },
+];
+
+function MedidasScreen({ onNext, onBack, onDetalle }) {
+  const [checked, setChecked] = useState(new Set(MEDIDAS_DATA.filter(m=>m.def).map(m=>m.id)));
+  const [tab, setTab] = useState('basica');
+  const toggle = id => setChecked(prev => { const s=new Set(prev); s.has(id)?s.delete(id):s.add(id); return s; });
+  const fmt = n => n.toLocaleString('es-ES')+' €';
+
+  return (
+    <div className="fade-up">
+      <Header step={2} refCode="t8Tp8Xx3" />
+      <div style={{maxWidth:740,margin:'0 auto',padding:'18px 16px 80px'}}>
+        <div style={{marginBottom:14}}>
+          <div style={{marginBottom:4}}>
+            <h2 style={{fontSize:17,fontWeight:700}}>Medidas para mejorar tu vivienda</h2>
+          </div>
+          <p style={{fontSize:12,color:U.textMd}}>Marca las que deseas incluir en el cálculo</p>
+        </div>
+
+        {/* Tabs */}
+        <div style={{display:'inline-flex',gap:2,background:U.bg,border:`1px solid ${U.border}`,borderRadius:8,padding:3,marginBottom:12}}>
+          {[['basica','Reforma básica'],['personalizada','Reforma personalizada']].map(([id,lbl])=>(
+            <button key={id} onClick={()=>setTab(id)} style={{padding:'5px 13px',borderRadius:6,border:'none',cursor:'pointer',fontSize:12,fontWeight:500,background:tab===id?U.white:'transparent',color:tab===id?U.green:U.textMd,boxShadow:tab===id?U.shadow:'none',transition:'all .15s'}}>
+              {lbl}
+            </button>
+          ))}
+        </div>
+
+        {/* Measures */}
+        <div style={{background:U.white,border:`1px solid ${U.border}`,borderRadius:10,overflow:'hidden',marginBottom:12}}>
+          <div style={{padding:'11px 15px',borderBottom:`1px solid ${U.border}`,display:'flex',gap:7,alignItems:'center'}}>
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke={U.textMd} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <span style={{fontWeight:600,fontSize:14}}>Tipos de medidas</span>
+          </div>
+          {MEDIDAS_DATA.map((m,i)=>(
+            <div key={m.id} style={{padding:'10px 15px',borderBottom:i<MEDIDAS_DATA.length-1?`1px solid ${U.border}`:'none',display:'flex',alignItems:'center',gap:9,background:checked.has(m.id)?U.greenXLt:U.white,transition:'background .12s'}}>
+              <input type="checkbox" checked={checked.has(m.id)} onChange={()=>toggle(m.id)} />
+              <span style={{flex:1,fontSize:13,color:U.text,fontWeight:checked.has(m.id)?500:400,lineHeight:1.4}}>{m.label}</span>
+              <div style={{display:'flex',gap:7,alignItems:'center',flexShrink:0}}>
+                {m.impact&&<ImpactBadge level={m.impact} />}
+                {m.cae&&<span style={{background:U.text,color:U.white,fontSize:10,fontWeight:700,padding:'1px 6px',borderRadius:4,letterSpacing:'.03em'}}>CAE</span>}
+                <span style={{fontSize:12,color:U.textMd,minWidth:66,textAlign:'right',fontVariantNumeric:'tabular-nums'}}>{fmt(m.cost)}</span>
+                <button onClick={()=>onDetalle(m)} style={{background:'none',border:'none',color:U.blue,fontSize:12,cursor:'pointer',textDecoration:'underline',padding:0,flexShrink:0}}>Detalles</button>
+              </div>
+            </div>
+          ))}
+          <div style={{padding:'9px 15px',background:U.bg,textAlign:'center'}}>
+            <button style={{background:'none',border:`1.5px dashed ${U.borderMd}`,borderRadius:6,padding:'6px 18px',fontSize:12,color:U.textMd,cursor:'pointer'}}>
+              + Añadir actuación personalizada
+            </button>
+          </div>
+        </div>
+
+        {/* Realizando la reforma */}
+        <div style={{background:U.white,border:`1px solid ${U.border}`,borderRadius:10,padding:'14px 16px',marginBottom:12}}>
+          <div style={{fontWeight:600,fontSize:14,marginBottom:12,display:'flex',gap:7,alignItems:'center'}}>
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke={U.textMd} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            Realizando la reforma
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+            {[
+              {label:'Datos actuales estimados',eti:'E',gasto:'77.890',consumo:'612.423',emi:'44',accent:false},
+              {label:'Datos tras la reforma',eti:'A',gasto:'450',consumo:'2.402',emi:'38',accent:true},
+            ].map(d=>(
+              <div key={d.label} style={{background:d.accent?U.greenXLt:U.bg,border:`1px solid ${d.accent?U.greenLt:U.border}`,borderRadius:8,padding:'12px 14px'}}>
+                <div style={{fontSize:11,color:d.accent?U.green:U.textLt,fontWeight:600,marginBottom:10}}>{d.label}</div>
+                <div style={{display:'flex',alignItems:'center',gap:7,marginBottom:10}}>
+                  <span style={{fontSize:11,color:U.textMd}}>Etiqueta estimada</span>
+                  <EnergyLabel level={d.eti} />
+                </div>
+                {[['Gasto anual',d.gasto,'€'],['Consumo anual',d.consumo,'KWH'],['Emisiones anuales',d.emi,'KgCO₂']].map(([lbl,val,unit])=>(
+                  <div key={lbl} style={{marginBottom:8}}>
+                    <div style={{fontSize:10,color:U.textLt}}>{lbl}</div>
+                    <div style={{fontSize:18,fontWeight:700,color:d.accent?U.green:U.text}}>{val}<span style={{fontSize:10,fontWeight:400}}> {unit}</span></div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Costes */}
+        <div style={{background:U.white,border:`1px solid ${U.border}`,borderRadius:10,padding:'14px 16px'}}>
+          <div style={{fontWeight:600,fontSize:14,marginBottom:12,display:'flex',gap:7,alignItems:'center'}}>
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke={U.textMd} strokeWidth="1.6"/><path d="M12 6v2m0 8v2M9.5 9.5a2.5 2.5 0 015 0c0 1.5-1 2-2.5 2.5S9.5 15 9.5 16h5" stroke={U.textMd} strokeWidth="1.5" strokeLinecap="round"/></svg>
+            Costes aproximados
+          </div>
+          <table style={{width:'100%',fontSize:13,borderCollapse:'collapse'}}>
+            <thead><tr><th style={{textAlign:'left',padding:'5px 0',color:U.textLt,fontWeight:500,borderBottom:`1px solid ${U.border}`}}>Concepto</th><th style={{textAlign:'right',padding:'5px 0',color:U.textLt,fontWeight:500,borderBottom:`1px solid ${U.border}`}}>Cantidad</th></tr></thead>
+            <tbody>
+              {[['Coste estimado de las actuaciones','79.200 €',false,false],
+                ['Coste estimado de tramitación administrativa','1.323 €',false,false],
+                ['Importe utilizado del IVA (IVA)','−9.001 €',true,false],
+                ['Importe total','16.461 €',false,true],
+                ['Importe total aplicado CAE','71.961 €',false,false,true],
+              ].map(([lbl,val,blue,bold,green])=>(
+                <tr key={lbl} style={{borderBottom:`1px solid ${U.border}`}}>
+                  <td style={{padding:'8px 0',color:blue?U.blue:U.text,fontSize:12}}>{lbl}</td>
+                  <td style={{padding:'8px 0',textAlign:'right',fontWeight:bold||green?700:400,color:green?U.green:blue?U.red:U.text,fontSize:12}}>{val}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div style={{background:U.greenLt,border:`1px solid ${U.greenLt}`,borderRadius:6,padding:'9px 11px',marginTop:12,fontSize:12,color:U.greenDk,display:'flex',gap:7,alignItems:'flex-start'}}>
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10" stroke={U.green} strokeWidth="1.6"/><path d="M12 8v1M12 11v5" stroke={U.green} strokeWidth="1.8" strokeLinecap="round"/></svg>
+            <span>El CAE es un beneficio que puedes recibir por reformas sostenibles. <a href="#" style={{color:U.green}}>Leer más aquí.</a></span>
+          </div>
+        </div>
+      </div>
+      <BottomNav onBack={onBack} onNext={onNext} />
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   SCREEN 4: RESUMEN
+───────────────────────────────────────── */
+function ResumenScreen({ onBack }) {
+  const [imp, setImp] = useState(62);
+  const [plazo, setPlazo] = useState(71);
+  const impVal = Math.round(imp*814.3).toLocaleString('es-ES');
+  const plazoVal = Math.max(1,Math.round(plazo*.07));
+
+  return (
+    <div className="fade-up">
+      <Header step={3} refCode="t8Tp8Xx3" onDownload={()=>{}} />
+      <div style={{maxWidth:740,margin:'0 auto',padding:'18px 16px 80px'}}>
+        <div style={{marginBottom:14}}>
+          <h2 style={{fontSize:17,fontWeight:700}}>Evaluación de la eficiencia energética</h2>
+          <p style={{fontSize:12,color:U.textMd,marginTop:2}}>Marca todas las que deseas incluir en el cálculo</p>
+        </div>
+
+        {/* Ahorro */}
+        <div style={{background:U.white,border:`1px solid ${U.border}`,borderRadius:10,padding:'16px',marginBottom:10}}>
+          <div style={{fontWeight:600,fontSize:14,marginBottom:14,display:'flex',gap:7,alignItems:'center'}}>
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24"><path d="M12 22C6 22 2 17 2 11c0-2 3-7 6-9 0 3 2 5 4 5 0-2 2-5 5-6 1 3 0 7-3 9 2 0 4-1 5-3 1 4-2 9-7 15z" stroke={U.green} strokeWidth="1.6" strokeLinejoin="round"/></svg>
+            Ahorro anual estimado
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:20,flexWrap:'wrap'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:U.greenLt,borderRadius:10,padding:'14px 18px',flex:'0 0 auto'}}>
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 2L3 8v13h18V8L12 2z" stroke={U.green} strokeWidth="1.6" fill={U.greenLt}/></svg>
+              <span style={{fontSize:30,fontWeight:700,color:U.green}}>54.282 <span style={{fontSize:16}}>€</span></span>
+            </div>
+            <div style={{display:'flex',gap:18,flex:1}}>
+              {[['Reducción de consumo','-64%'],['Reducción de emisiones','-64%']].map(([lbl,v])=>(
+                <div key={lbl} style={{textAlign:'center'}}>
+                  <div style={{fontSize:10,color:U.textLt,marginBottom:2}}>{lbl}</div>
+                  <div style={{fontSize:22,fontWeight:700,color:U.green}}>{v}</div>
+                </div>
+              ))}
+              <div style={{textAlign:'center'}}>
+                <div style={{fontSize:10,color:U.textLt,marginBottom:4}}>Calificación</div>
+                <div style={{display:'flex',alignItems:'center',gap:5}}>
+                  <EnergyLabel level="E" /><span style={{fontSize:16}}>→</span><EnergyLabel level="B" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Alert */}
+        <div style={{background:U.warnLt,border:`1px solid ${U.warnBorder}`,borderRadius:8,padding:'10px 12px',marginBottom:10,display:'flex',gap:8,fontSize:12,color:'#8A4A00',lineHeight:1.55}}>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" style={{flexShrink:0,marginTop:1}}><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke={U.warn} strokeWidth="1.8"/><line x1="12" y1="9" x2="12" y2="13" stroke={U.warn} strokeWidth="1.8" strokeLinecap="round"/></svg>
+          <span><strong style={{color:U.warn}}>Alerta: </strong>Se estima que cada vivienda tendrá el mismo ahorro energético anual. La distribución final puede variar según el consumo y las características de cada hogar.</span>
+        </div>
+
+        {/* Costes */}
+        <div style={{background:U.white,border:`1px solid ${U.border}`,borderRadius:10,padding:'14px 16px',marginBottom:10}}>
+          <div style={{fontWeight:600,fontSize:14,marginBottom:11,display:'flex',gap:7,alignItems:'center'}}>
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke={U.textMd} strokeWidth="1.6"/><path d="M12 6v2m0 8v2M9.5 9.5a2.5 2.5 0 015 0c0 1.5-1 2-2.5 2.5S9.5 15 9.5 16h5" stroke={U.textMd} strokeWidth="1.5" strokeLinecap="round"/></svg>
+            Costes aproximados
+          </div>
+          <table style={{width:'100%',fontSize:12,borderCollapse:'collapse'}}>
+            <tbody>
+              {[['Coste estimado de las obras','81.033 €',false,false],
+                ['Deducciones en el IRPF','−3.149 €',true,false],
+                ['CUES obtenidos','−6.040 €',true,false],
+                ['Total','71.186 €',false,true],
+              ].map(([lbl,val,link,bold])=>(
+                <tr key={lbl} style={{borderBottom:`1px solid ${U.border}`}}>
+                  <td style={{padding:'8px 0',color:link?U.blue:U.text}}>{lbl}{link&&<span style={{marginLeft:4,fontSize:11}}>ⓘ Ver detalles</span>}</td>
+                  <td style={{padding:'8px 0',textAlign:'right',fontWeight:bold?700:400}}>{val}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Financiación */}
+        <div style={{background:U.white,border:`1px solid ${U.border}`,borderRadius:10,padding:'14px 16px',marginBottom:10}}>
+          <div style={{fontWeight:600,fontSize:14,marginBottom:14,display:'flex',gap:7,alignItems:'center'}}>
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" stroke={U.textMd} strokeWidth="1.6"/><path d="M2 10h20" stroke={U.textMd} strokeWidth="1.6"/></svg>
+            Personaliza los parámetros de la financiación
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20,marginBottom:18}}>
+            {[
+              {lbl:'Importe a financiar',val:`${impVal} €`,min:'0 €',max:'81.430 €',state:imp,set:setImp},
+              {lbl:'Plazo',val:`${plazoVal} año${plazoVal>1?'s':''}`,min:'1 año',max:'7 años',state:plazo,set:setPlazo},
+            ].map(s=>(
+              <div key={s.lbl}>
+                <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+                  <span style={{fontSize:12,color:U.textMd,fontWeight:500}}>{s.lbl}</span>
+                  <span style={{fontSize:12,fontWeight:700,color:U.green}}>{s.val}</span>
+                </div>
+                <input type="range" min="0" max="100" value={s.state} onChange={e=>s.set(e.target.value)} />
+                <div style={{display:'flex',justifyContent:'space-between',fontSize:10,color:U.textLt,marginTop:3}}>
+                  <span>{s.min}</span><span>{s.max}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Single loan card */}
+          <div style={{background:U.white,border:`1.5px solid ${U.green}`,borderRadius:12,padding:'20px',display:'flex',gap:32,alignItems:'flex-start'}}>
+            <div style={{flex:1}}>
+              <span style={{display:'inline-block',background:U.green,color:U.white,fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:5,marginBottom:16,letterSpacing:'.02em'}}>Con bonificación CAE</span>
+              <div style={{fontSize:34,fontWeight:700,color:U.text,lineHeight:1,letterSpacing:'-.5px',marginBottom:4}}>
+                203,58 <span style={{fontSize:17,fontWeight:400,color:U.textMd}}>€ / mes</span>
+              </div>
+              <div style={{fontSize:12,color:U.textMd,marginBottom:10}}>Cuota primeros 12 meses</div>
+              <ul style={{fontSize:12,color:U.textMd,paddingLeft:16,marginBottom:0,lineHeight:1.8}}>
+                <li>TIN primeros 12 meses: 3,00 %</li>
+              </ul>
+            </div>
+            <div style={{width:1,alignSelf:'stretch',background:U.border}} />
+            <div style={{flex:1}}>
+              <div style={{fontSize:12,color:U.textMd,marginBottom:6,marginTop:43}}>Cuota resto del plazo</div>
+              <div style={{fontSize:34,fontWeight:700,color:U.text,lineHeight:1,letterSpacing:'-.5px',marginBottom:4}}>
+                1.237,25 <span style={{fontSize:17,fontWeight:400,color:U.textMd}}>€ / mes</span>
+              </div>
+              <ul style={{fontSize:12,color:U.textMd,paddingLeft:16,marginTop:10,lineHeight:1.8}}>
+                <li>TIN resto del plazo: 3,00 %</li>
+                <li>TAE*: 5,854 %</li>
+              </ul>
+              <div style={{marginTop:14}}>
+                <a href="#" style={{color:U.green,fontSize:13,textDecoration:'underline'}}>Ver ejemplo representativo</a>
+              </div>
+            </div>
+            <div style={{flex:'0 0 auto',display:'flex',flexDirection:'column',gap:8,marginTop:43}}>
+              {[['Comisión apertura','1,00 %'],['TIN','3,00 %'],['TAE*','5,854 %']].map(([k,v])=>(
+                <div key={k} style={{textAlign:'center',background:U.greenXLt,borderRadius:8,padding:'8px 14px'}}>
+                  <div style={{fontSize:10,color:U.textLt,marginBottom:1}}>{k}</div>
+                  <div style={{fontSize:15,fontWeight:700,color:U.green}}>{v}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p style={{fontSize:10,color:U.textLt,marginTop:11,lineHeight:1.6}}>
+            * Cálculo realizado bajo el supuesto de una financiación de 81.430 euros a 84 meses, con 12 meses de carencia de capital, formalizado el primer día del mes, con tipo de interés nominal anual fijo de 4,00 % y comisión de inspección 1,0%. La reducción del tipo con CAE puede variar en función del importe certificado.
+          </p>
+        </div>
+
+        {/* CTA */}
+        <div style={{background:U.green,borderRadius:10,padding:'18px',textAlign:'center',marginBottom:12}}>
+          <button style={{background:U.white,color:U.green,border:'none',borderRadius:8,padding:'11px 26px',fontSize:14,fontWeight:700,cursor:'pointer',boxShadow:'0 2px 8px rgba(0,0,0,.12)'}}>
+            Pulsa aquí para más información
+          </button>
+        </div>
+
+        {/* Proveedores */}
+        <div style={{background:U.white,border:`1px solid ${U.border}`,borderRadius:10,padding:'16px'}}>
+          <div style={{fontWeight:700,fontSize:15,marginBottom:4}}>¿Necesitas ayuda con tu proyecto?</div>
+          <p style={{fontSize:12,color:U.textMd,marginBottom:16}}>Empresas especializadas en reformas de eficiencia energética que pueden ayudarte a ejecutar tu plan.</p>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12}}>
+            {[
+              {name:'EcoRehab Solutions',icon:<svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke={U.green} strokeWidth="1.6"/><polyline points="9,22 9,12 15,12 15,22" stroke={U.green} strokeWidth="1.5"/></svg>,desc:'Rehabilitación energética integral. Instalación certificada de SATE, ventanas de alta eficiencia y cubiertas aislantes.'},
+              {name:'CertiEnergy España',icon:<svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke={U.green} strokeWidth="1.6"/><path d="M9 12l2 2 4-4" stroke={U.green} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,desc:'Auditoría energética y certificación técnica de viviendas. Más de 5.000 proyectos completados con profesionales acreditados.'},
+              {name:'SolarPlus Instalaciones',icon:<svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" stroke={U.green} strokeWidth="1.6"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke={U.green} strokeWidth="1.5" strokeLinecap="round"/></svg>,desc:'Instalación de aerotermia, paneles solares fotovoltaicos y sistemas de climatización de bajo consumo energético.'},
+            ].map(p=>(
+              <div key={p.name} style={{border:`1px solid ${U.border}`,borderRadius:9,padding:'14px',display:'flex',flexDirection:'column',gap:9}}>
+                <div style={{width:38,height:38,borderRadius:8,background:U.greenXLt,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  {p.icon}
+                </div>
+                <div style={{fontWeight:700,fontSize:13,color:U.text}}>{p.name}</div>
+                <div style={{fontSize:12,color:U.textMd,lineHeight:1.6,flex:1}}>{p.desc}</div>
+                <button style={{background:'none',border:`1.5px solid ${U.green}`,borderRadius:7,padding:'7px 12px',fontSize:12,fontWeight:600,color:U.green,cursor:'pointer',marginTop:4,textAlign:'center'}}>Más información →</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <BottomNav onBack={onBack} onNext={null} />
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   MODALS
+───────────────────────────────────────── */
+function Overlay({ onClose, children }) {
+  return (
+    <div onClick={e=>{if(e.target===e.currentTarget)onClose();}} style={{position:'fixed',inset:0,background:'rgba(0,0,0,.46)',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+      <div style={{background:U.white,borderRadius:14,width:'100%',maxWidth:580,maxHeight:'88vh',overflowY:'auto',boxShadow:'0 24px 64px rgba(0,0,0,.22)',animation:'modalIn .2s ease-out'}}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function DetalleModal({ medida, onClose }) {
+  const [tab, setTab] = useState('que');
+  return (
+    <Overlay onClose={onClose}>
+      <div style={{padding:'22px 26px'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12}}>
+          <h2 style={{fontSize:18,fontWeight:700,lineHeight:1.3,maxWidth:'82%'}}>{medida.label}</h2>
+          <button onClick={onClose} style={{background:'none',border:'none',fontSize:22,cursor:'pointer',color:U.textLt,lineHeight:1,padding:'0 2px'}}>×</button>
+        </div>
+        <div style={{display:'flex',gap:7,marginBottom:16}}>
+          {medida.impact&&<ImpactBadge level={medida.impact} />}
+          {medida.cae&&<span style={{background:U.text,color:U.white,fontSize:11,fontWeight:700,padding:'2px 7px',borderRadius:4}}>CAE</span>}
+        </div>
+        <div style={{display:'flex',gap:0,borderBottom:`2px solid ${U.border}`,marginBottom:16}}>
+          {[['que','¿Qué es?'],['como','¿Cómo lo calculamos?']].map(([id,lbl])=>(
+            <button key={id} onClick={()=>setTab(id)} style={{padding:'7px 15px',background:'none',border:'none',cursor:'pointer',fontSize:13,fontWeight:tab===id?600:400,color:tab===id?U.green:U.textMd,borderBottom:`2px solid ${tab===id?U.green:'transparent'}`,marginBottom:-2}}>
+              {lbl}
+            </button>
+          ))}
+        </div>
+        {tab==='que'?(
+          <div style={{fontSize:13,lineHeight:1.75,color:U.text}}>
+            <p style={{marginBottom:14}}>El sistema de aislamiento térmico de exterior (SATE) es un sistema de aislamiento compuesto por paneles sintéticos colocados en las paredes exteriores del edificio. Estos paneles forman un ensamblaje que aisla tanto térmicamente como desde el punto de vista acústico, reduciendo sustancialmente el consumo de energía necesaria para enfriar el interior en los meses de mayor calor, y calentar en los meses más fríos.</p>
+            <p>Además de la mejora del aislamiento térmico y acústico, genera mejoras estéticas, en la medida en que recubren la fachada antigua del edificio.</p>
+          </div>
+        ):(
+          <div style={{fontSize:13,lineHeight:1.75,color:U.text}}>
+            <p>El cálculo se realiza en base a la superficie exterior del edificio, el clima de la zona y el nivel de aislamiento actual. Se utiliza un modelo energético certificado para estimar el ahorro obtenido tras la instalación del sistema SATE.</p>
+          </div>
+        )}
+        <div style={{borderTop:`1px solid ${U.border}`,marginTop:20,paddingTop:14,textAlign:'right'}}>
+          <button onClick={onClose} style={{background:U.text,color:U.white,border:'none',borderRadius:8,padding:'9px 22px',fontSize:13,fontWeight:600,cursor:'pointer'}}>Cerrar</button>
+        </div>
+      </div>
+    </Overlay>
+  );
+}
+
+function RecuperarModal({ onClose }) {
+  const [code, setCode] = useState('');
+  return (
+    <Overlay onClose={onClose}>
+      <div style={{padding:'22px 26px'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+          <h2 style={{fontSize:18,fontWeight:700}}>Recuperar simulación anterior</h2>
+          <button onClick={onClose} style={{background:'none',border:'none',fontSize:22,cursor:'pointer',color:U.textLt,lineHeight:1}}>×</button>
+        </div>
+        <p style={{fontSize:13,color:U.textMd,marginBottom:14}}>Introduce el código de simulación que recibiste para continuar donde lo dejaste.</p>
+        <input value={code} onChange={e=>setCode(e.target.value)} placeholder="Introduce el código de referencia…"
+          style={{width:'100%',padding:'9px 12px',border:`1.5px solid ${U.border}`,borderRadius:8,fontSize:13,marginBottom:16,outline:'none'}}
+        />
+        <div style={{display:'flex',gap:9,justifyContent:'flex-end'}}>
+          <button onClick={onClose} style={{background:'none',border:`1.5px solid ${U.border}`,borderRadius:7,padding:'8px 16px',fontSize:13,cursor:'pointer',color:U.text}}>Cancelar</button>
+          <button style={{background:U.green,color:U.white,border:'none',borderRadius:7,padding:'8px 18px',fontSize:13,fontWeight:600,cursor:'pointer'}}>Recuperar</button>
+        </div>
+      </div>
+    </Overlay>
+  );
+}
+
+/* ─────────────────────────────────────────
+   APP
+───────────────────────────────────────── */
+function App() {
+  const [screen, setScreen] = useState('datos');
+  const [modal, setModal] = useState(null);
+
+  useEffect(()=>{ window.scrollTo({top:0,behavior:'instant'}); }, [screen]);
+
+  return (
+    <div style={{minHeight:'100vh',background:U.bg}}>
+      {screen==='home'&&<HomeScreen onSelect={()=>setScreen('datos')} onRecover={()=>setModal('recuperar')} />}
+      {screen==='datos'&&<DatosScreen onNext={()=>setScreen('medidas')} onBack={()=>setScreen('home')} />}
+      {screen==='medidas'&&<MedidasScreen onNext={()=>setScreen('resumen')} onBack={()=>setScreen('datos')} onDetalle={m=>setModal({t:'detalle',m})} />}
+      {screen==='resumen'&&<ResumenScreen onBack={()=>setScreen('medidas')} />}
+      {modal==='recuperar'&&<RecuperarModal onClose={()=>setModal(null)} />}
+      {modal?.t==='detalle'&&<DetalleModal medida={modal.m} onClose={()=>setModal(null)} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

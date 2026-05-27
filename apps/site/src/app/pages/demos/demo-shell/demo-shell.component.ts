@@ -25,7 +25,7 @@ import {
 import { CommentComposerComponent, ComposerSubmit } from '../../../components/comment-composer';
 import { CommentPinComponent } from '../../../components/comment-pin';
 import { ConfirmActionComponent } from '../../../components/confirm-action';
-import { InspectService } from '../../../services/inspect.service';
+import { InspectService, type HandoffRow } from '../../../services/inspect.service';
 import {
   CommentService,
   DemoComment,
@@ -35,8 +35,8 @@ import {
 const MODE_KEY = 'coherence-demo-panel-mode';
 const WIDTH_KEY = 'coherence-demo-panel-width';
 const FLOAT_KEY = 'coherence-demo-panel-float';
-const MIN_WIDTH = 280;
-const MAX_WIDTH = 600;
+const MIN_WIDTH = 300;
+const MAX_WIDTH = 520;
 const SNAP_PX = 60;
 
 export type PanelMode = 'docked-left' | 'docked-right' | 'floating';
@@ -140,14 +140,12 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   readonly copiedSection = signal<string | null>(null);
 
   /**
-   * Figma-style 3-section render of the active inspect result. Re-derives
-   * from the element each time inspect changes — cheap, and avoids
-   * leaking section state into the service.
+   * Programmer-facing inspect rows: attribute, token and computed value.
    */
-  readonly handoffSections = computed(() => {
+  readonly handoffRows = computed<HandoffRow[]>(() => {
     const result = this.inspect.activeResult();
-    if (!result) return null;
-    return this.inspect.getHandoffSections(result.element);
+    if (!result) return [];
+    return this.inspect.getHandoffRows(result.element);
   });
 
   readonly demoCommentCount = computed(
@@ -157,6 +155,12 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   readonly viewComments = computed(() =>
     this.comments.getForView(this.demoSlug(), this.activeView()),
   );
+
+  readonly inspectedComments = computed(() => {
+    const selector = this.inspect.activeResult()?.selector;
+    if (!selector) return [];
+    return this.comments.getForElement(this.demoSlug(), this.activeView(), selector);
+  });
 
   private readonly pinTick = signal(0);
 
@@ -229,7 +233,7 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   }
 
   private loadMode(): PanelMode {
-    if (typeof window === 'undefined') return 'docked-right';
+    if (typeof window === 'undefined') return 'floating';
     try {
       const v = localStorage.getItem(MODE_KEY);
       if (v === 'docked-left' || v === 'docked-right' || v === 'floating') return v;
@@ -239,18 +243,18 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
     } catch {
       // ignore
     }
-    return 'docked-right';
+    return 'floating';
   }
 
   private loadWidth(): number {
-    if (typeof window === 'undefined') return 400;
+    if (typeof window === 'undefined') return 340;
     try {
       const v = Number(localStorage.getItem(WIDTH_KEY) ?? '');
       if (!Number.isNaN(v) && v >= MIN_WIDTH && v <= MAX_WIDTH) return v;
     } catch {
       // ignore
     }
-    return 400;
+    return 340;
   }
 
   private loadFloat(): FloatPos {
@@ -438,11 +442,9 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   }
 
   copySection(section: 'layout' | 'style' | 'typography'): void {
-    const sections = this.handoffSections();
-    if (!sections || !navigator?.clipboard) return;
-    const lines = sections[section];
-    if (!lines.length) return;
-    const text = lines.map((l) => `${l.name}: ${l.value};`).join('\n');
+    const rows = this.handoffRows();
+    if (!rows.length || !navigator?.clipboard) return;
+    const text = rows.map((row) => `${row.property}: ${row.token} (${row.value})`).join('\n');
     navigator.clipboard
       .writeText(text)
       .then(() => {
@@ -483,6 +485,7 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
       this.inspect.deactivate();
       this.clearPinned();
     } else {
+      if (this.panelMode() !== 'floating') this.setMode('floating');
       this.activeMode.set('inspect');
       this.inspect.activate();
       this.comments.deactivate();
@@ -496,6 +499,7 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
       this.comments.deactivate();
       this.closeComposer();
     } else {
+      if (this.panelMode() !== 'floating') this.setMode('floating');
       this.activeMode.set('comment');
       this.comments.activate();
       this.inspect.deactivate();
@@ -622,8 +626,8 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
       e.stopPropagation();
 
       if (this.activeMode() === 'inspect') {
-        this.pinElement(target, 'inspect');
         this.inspect.inspect(target);
+        this.pinElement(target, 'inspect');
       } else if (this.activeMode() === 'comment') {
         const selector = this.buildSelector(target);
         this.pinElement(target, 'comment');

@@ -39,6 +39,14 @@
   white-space: nowrap;
 }
 
+.brand-context-row__status {
+  display: inline-flex;
+  align-items: center;
+  height: var(--control-h-sm);
+  color: var(--foreground-secondary-default);
+  font: var(--type-body-sm-500);
+}
+
 @keyframes brand-context-row-copied-fade {
   0%   { opacity: 0; transform: translateY(calc(-1 * var(--dimension-1))); }
   10%  { opacity: 1; transform: translateY(0); }

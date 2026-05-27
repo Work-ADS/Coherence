@@ -146,6 +146,22 @@ export interface InversionFuturaRow {
   titular: string | null;
 }
 
+// ── Diagnóstico — shared scenario type (Briefs I / J / K / L) ─────────────
+//
+// Authored here because Brief I lands first. Briefs J (Estrategias), K
+// (Optimización liquidez) and L (Optimización asset allocation) all import
+// this type — see `2026-05-26-awp-diagnostico-estrategias.md` for the
+// `ScenarioWithActual` widening that Brief J adds on top.
+export type Scenario = 'objetivo' | 'optimista' | 'medio' | 'pesimista';
+
+export interface ScenarioRow {
+  scenario: Scenario;
+  /** € — años cubiertos × gasto anual estimado. */
+  coberturaVital: number;
+  legadoInmobiliario: number;
+  legadoFinanciero: number;
+}
+
 // ── Sociedades (Brief B) ─────────────────────────────────────────────────
 export type Tributacion = 'patrimonial' | 'holding' | 'socimi';
 
@@ -708,4 +724,23 @@ export class WealthPlannerStore {
       conyuge: { activa: value },
     }));
   }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Diagnóstico · Patrimonio previsto (Brief I)
+  // ──────────────────────────────────────────────────────────────────────
+  //
+  // Read-only Diagnóstico output — seeded from PDF p.7-8 mocks. Real
+  // projection engine is Conclusiones territory (Brief M); for now these
+  // are static numbers the gestor sees as soon as Patrimonio previsto
+  // mounts. Briefs J/K/L will derive their own outputs off this baseline.
+
+  readonly patrimonioPrevisto = signal<ScenarioRow[]>([
+    { scenario: 'objetivo',  coberturaVital: 3_020_000, legadoInmobiliario: 1_520_000, legadoFinanciero: 0 },
+    { scenario: 'optimista', coberturaVital: 4_120_000, legadoInmobiliario: 1_930_000, legadoFinanciero: 0 },
+    { scenario: 'medio',     coberturaVital: 2_730_000, legadoInmobiliario: 1_220_000, legadoFinanciero: 0 },
+    { scenario: 'pesimista', coberturaVital: 1_030_000, legadoInmobiliario:         0, legadoFinanciero: 0 },
+  ]);
+
+  /** Sidebar chip — always `complete` because this is a derived read-only output. */
+  readonly patrimonioPrevistoState = computed<SectionState>(() => 'complete');
 }

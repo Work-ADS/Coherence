@@ -89,7 +89,10 @@ export class DocTokensComponent {
 
   copyTokens(): void {
     const text = this.activeRows()
-      .map(r => `${r.property}: ${r.token}`)
+      .map((r) => {
+        const value = r.value ?? r.primitive;
+        return `${r.property}: ${r.token}${value ? ` (${value})` : ''}`;
+      })
       .join('\n');
     navigator.clipboard.writeText(text).then(() => {
       this.copied.set(true);

@@ -1,0 +1,140 @@
+<site-objetivos-page-shell
+  [views]="['Patrimonio previsto']"
+  demoSlug="patrimonio-previsto"
+  demoRoute="/demos/wealth-planner-2026/patrimonio-previsto"
+  activeKey="patrimonio-previsto"
+  versionAriaLabel="Versión del layout de Patrimonio previsto"
+  [showBanner]="store.legadoRetiroEstablished()"
+>
+  <afi-page-header
+    title="Patrimonio previsto"
+    subtitle="Proyección del patrimonio bajo cuatro escenarios. Marca cobertura vital y legado por escenario."
+    [sticky]="false"
+    [scrollFade]="false"
+  >
+    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
+      DIAGNÓSTICO
+    </span>
+  </afi-page-header>
+
+  <!-- ─── KPI data-cards — top summary, mirrors Patrimonio layout ─────── -->
+  <div class="mx-space-8 mt-space-6 grid grid-cols-4 gap-space-6">
+    @for (kpi of kpis(); track kpi.label) {
+      <div>
+        <p class="text-body-sm text-neutral-500 mb-space-1">{{ kpi.label }}</p>
+        <p class="text-section text-canvas-fg">{{ kpi.value }}</p>
+        <p class="text-body-sm text-neutral-500 mt-space-1">{{ kpi.caption }}</p>
+      </div>
+    }
+  </div>
+
+  <!-- ─── Hero chart — Evolución patrimonial prevista ────────────────── -->
+  <div class="mx-space-8 mt-space-8 pt-space-6 border-t border-border-hairline">
+    <!-- Filter strip — single Escenario selector. Drives KPIs above + chart below. -->
+    <div class="flex items-center gap-space-2 flex-wrap mb-space-6">
+      <afi-select
+        class="block w-[210px]"
+        size="sm"
+        [options]="escenarioOptions"
+        [value]="escenarioSeleccionado()"
+        (valueChange)="setEscenario($event)"
+        ariaLabel="Escenario"
+      />
+    </div>
+
+    <afi-graph-card-header
+      label="Evolución patrimonial prevista"
+      [headline]="headline()"
+      [comparison]="comparison()"
+      [tooltip]="tooltipText"
+    />
+
+    <div class="mt-space-6">
+      <afi-evolucion-bar-chart
+        vista="actual"
+        [escenario]="chartEscenario()"
+        detalle="agregada"
+        [mostrarHitos]="false"
+        [incluirInmobiliario]="true"
+        [mostrarObjetivos]="false"
+        palette="v1"
+        legendPlacement="bottom"
+      />
+    </div>
+
+    <!-- Explainer copy — mirrors Evolución patrimonial's explainer style -->
+    <p class="mt-space-6 text-body-sm text-neutral-500 border-t border-border-hairline pt-space-4 leading-relaxed max-w-[720px]">
+      Proyección año a año del patrimonio bajo el {{ scenarioLabelLong(escenarioSeleccionado()) }}.
+      Los datos numéricos por escenario se muestran en la tabla inferior; el gráfico superpone los
+      tres escenarios económicos (optimista / medio / pesimista) sobre el escenario objetivo de la
+      familia.
+    </p>
+  </div>
+
+  <!-- ─── Scenario read-out table — 4×3 ─────────────────────────────── -->
+  <div class="mx-space-8 mt-space-10">
+    <header class="mb-space-4">
+      <h2 class="text-section text-canvas-fg">Por escenario</h2>
+      <p class="text-body-sm text-neutral-500 mt-space-1">
+        Cobertura vital, legado inmobiliario y legado financiero a la edad de seguridad
+        ({{ store.legadoRetiro().edadSeguridad }} años) en cada uno de los cuatro escenarios.
+      </p>
+    </header>
+    <div class="rounded-lg border border-border-hairline overflow-hidden">
+      <table class="pp-table w-full">
+        <thead>
+          <tr class="pp-table__head-row">
+            <th class="pp-table__th">Escenario</th>
+            <th class="pp-table__th pp-table__th--num">Cobertura vital</th>
+            <th class="pp-table__th pp-table__th--num">Legado inmobiliario</th>
+            <th class="pp-table__th pp-table__th--num">Legado financiero</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of store.patrimonioPrevisto(); track row.scenario) {
+            <tr
+              class="pp-table__row"
+              [class.pp-table__row--active]="row.scenario === escenarioSeleccionado()"
+            >
+              <td class="pp-table__td pp-table__td--name">
+                <button
+                  type="button"
+                  class="pp-table__scenario-btn"
+                  (click)="setEscenario(row.scenario)"
+                  [attr.aria-pressed]="row.scenario === escenarioSeleccionado()"
+                >
+                  {{ scenarioLabel(row.scenario) }}
+                </button>
+              </td>
+              <td class="pp-table__td pp-table__td--num">
+                {{ formatEuroCell(row.coberturaVital) }}
+              </td>
+              <td class="pp-table__td pp-table__td--num">
+                {{ formatEuroCell(row.legadoInmobiliario) }}
+              </td>
+              <td class="pp-table__td pp-table__td--num">
+                {{ formatEuroCell(row.legadoFinanciero) }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── Evolución de ingresos y gastos — secondary chart ─────────── -->
+  <div class="mx-space-8 mt-space-10 pt-space-6 border-t border-border-hairline">
+    <header class="mb-space-4">
+      <h2 class="text-section text-canvas-fg">Evolución de ingresos y gastos</h2>
+      <p class="text-body-sm text-neutral-500 mt-space-1">
+        Cashflow neto anual proyectado sobre el horizonte de planificación
+        (versión simplificada · v1).
+      </p>
+    </header>
+    <afi-chart-bar
+      [data]="cashflowSeries()"
+      title=""
+      ariaLabel="Evolución anual del cashflow neto"
+    />
+  </div>
+</site-objetivos-page-shell>

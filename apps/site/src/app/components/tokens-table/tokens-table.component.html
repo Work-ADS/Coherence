@@ -1,13 +1,55 @@
-<section>
+<section class="tokens-table">
   @if (title()) {
-    <h3 class="text-section text-canvas-fg mb-space-6">{{ title() }}</h3>
+    <h3 class="tokens-table__title">{{ title() }}</h3>
   }
-  <afi-table
-    [columns]="computedColumns()"
-    [rows]="tableRows()"
-    trackByKey="property"
-    density="compact"
-    [rowHoverable]="true"
-    [highlightedRowKey]="highlightedRowKey()"
-  />
+
+  <div class="tokens-table__frame">
+    <table class="tokens-table__table">
+      <thead>
+        <tr>
+          <th scope="col">Atributo</th>
+          <th scope="col">Token</th>
+          <th scope="col">Valor</th>
+          <th scope="col">
+            <span class="tokens-table__sr-only">Copiar</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of tableRows(); track row.key) {
+          <tr
+            [class.tokens-table__row--highlighted]="row.highlighted"
+            [attr.data-row-key]="row.property"
+          >
+            <td>
+              <span class="tokens-table__property">{{ row.property }}</span>
+            </td>
+            <td>
+              <code class="tokens-table__token">{{ row.token }}</code>
+              @if (row.note) {
+                <span class="tokens-table__note">{{ row.note }}</span>
+              }
+            </td>
+            <td>
+              <code class="tokens-table__value">{{ row.value }}</code>
+            </td>
+            <td class="tokens-table__copy-cell">
+              <button
+                type="button"
+                class="tokens-table__copy"
+                [class.tokens-table__copy--copied]="copiedKey() === row.key"
+                [attr.aria-label]="copiedKey() === row.key ? 'Copiado' : 'Copiar token'"
+                (click)="copyRow(row)"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </section>

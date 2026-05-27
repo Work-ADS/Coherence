@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { ButtonComponent } from '@coherence/ui';
-
 import { ScopedBrandPickerComponent } from '../scoped-brand-picker/scoped-brand-picker.component';
 import { HandoffInspectService } from '../../services/handoff-inspect.service';
 
@@ -20,15 +18,11 @@ import { HandoffInspectService } from '../../services/handoff-inspect.service';
 @Component({
   selector: 'site-brand-context-row',
   standalone: true,
-  imports: [ScopedBrandPickerComponent, ButtonComponent],
+  imports: [ScopedBrandPickerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './brand-context-row.component.html',
   styleUrl: './brand-context-row.component.scss',
 })
 export class BrandContextRowComponent {
   protected readonly handoff = inject(HandoffInspectService);
-
-  protected onToggleInspect(): void {
-    this.handoff.toggle();
-  }
 }

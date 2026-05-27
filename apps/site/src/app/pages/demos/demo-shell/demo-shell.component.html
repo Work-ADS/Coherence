@@ -62,40 +62,37 @@
         </afi-icon-button>
       </afi-tooltip>
 
-      <afi-tooltip [text]="activeMode() === 'comment' ? 'Cerrar comentarios' : 'Abrir comentarios'">
-        <afi-icon-button
-          variant="ghost"
-          size="sm"
-          [ariaLabel]="activeMode() === 'comment' ? 'Cerrar comentarios' : 'Abrir comentarios'"
-          [pressed]="activeMode() === 'comment'"
-          (clicked)="toggleComment()"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          </svg>
-        </afi-icon-button>
-      </afi-tooltip>
+      <afi-button
+        variant="secondary"
+        size="sm"
+        iconStart="true"
+        [ariaLabel]="activeMode() === 'comment' ? 'Cerrar comentarios' : 'Abrir comentarios'"
+        [attr.aria-pressed]="activeMode() === 'comment'"
+        (clicked)="toggleComment()"
+      >
+        <svg slot="iconStart" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          <path d="M8 10h.01" />
+          <path d="M12 10h.01" />
+          <path d="M16 10h.01" />
+        </svg>
+        Comentar
+      </afi-button>
 
-      <afi-tooltip [text]="activeMode() === 'inspect' ? 'Cerrar inspección' : 'Abrir inspección'">
-        <afi-icon-button
-          variant="ghost"
-          size="sm"
-          [ariaLabel]="activeMode() === 'inspect' ? 'Cerrar inspección' : 'Abrir inspección'"
-          [pressed]="activeMode() === 'inspect'"
-          (clicked)="toggleInspect()"
-        >
-          <!-- Binoculars -->
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="6" cy="16" r="4" />
-            <circle cx="18" cy="16" r="4" />
-            <path d="M2 12h2" />
-            <path d="M20 12h2" />
-            <path d="M10 16h4" />
-            <path d="M4 12V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5" />
-            <path d="M14 12V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5" />
-          </svg>
-        </afi-icon-button>
-      </afi-tooltip>
+      <afi-button
+        variant="secondary"
+        size="sm"
+        iconStart="true"
+        [ariaLabel]="activeMode() === 'inspect' ? 'Cerrar inspección' : 'Abrir inspección'"
+        [attr.aria-pressed]="activeMode() === 'inspect'"
+        (clicked)="toggleInspect()"
+      >
+        <svg slot="iconStart" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+        Inspección
+      </afi-button>
     </div>
   </header>
 
@@ -154,145 +151,95 @@
 
         <!-- ─── INSPECT PANEL ─── -->
         @if (activeMode() === 'inspect') {
-          <div class="panel__header panel__header--row">
+          <div class="panel__top">
             <div class="panel__header-text">
-              <h3 class="panel__title">Inspect</h3>
-              <span class="panel__hint">Haz click en un elemento para inspeccionar</span>
+              <span class="panel__eyebrow">Handoff</span>
+              <h3 class="panel__title">Inspección</h3>
             </div>
-            <div class="panel__header-actions">
-              @if (inspect.activeResult()) {
-                <afi-button
-                  variant="secondary"
-                  size="sm"
-                  ariaLabel="Copiar inspección como Markdown"
-                  (clicked)="copyInspectList()"
-                >{{ copiedList() ? 'Copiado ✓' : 'Copiar lista' }}</afi-button>
-              }
-              <afi-tooltip text="Anclar a la izquierda">
-                <afi-icon-button
-                  variant="ghost"
-                  size="sm"
-                  ariaLabel="Anclar panel a la izquierda"
-                  [pressed]="panelMode() === 'docked-left'"
-                  (clicked)="setMode('docked-left')"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <rect x="3" y="4" width="8" height="16" rx="1" />
-                    <path d="M14 12h7" />
-                    <path d="m17 9-3 3 3 3" />
-                  </svg>
-                </afi-icon-button>
-              </afi-tooltip>
-              <afi-tooltip text="Anclar a la derecha">
-                <afi-icon-button
-                  variant="ghost"
-                  size="sm"
-                  ariaLabel="Anclar panel a la derecha"
-                  [pressed]="panelMode() === 'docked-right'"
-                  (clicked)="setMode('docked-right')"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <rect x="13" y="4" width="8" height="16" rx="1" />
-                    <path d="M3 12h7" />
-                    <path d="m7 9 3 3-3 3" />
-                  </svg>
-                </afi-icon-button>
-              </afi-tooltip>
-              <afi-tooltip text="Desanclar y arrastrar">
-                <afi-icon-button
-                  variant="ghost"
-                  size="sm"
-                  ariaLabel="Desanclar panel (modo flotante)"
-                  [pressed]="panelMode() === 'floating'"
-                  (clicked)="setMode('floating')"
-                >
-                  <!-- Two overlapping panels = windowed / detached -->
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <rect x="3" y="3" width="13" height="13" rx="1.5" />
-                    <rect x="8" y="8" width="13" height="13" rx="1.5" fill="currentColor" fill-opacity="0.15" />
-                  </svg>
-                </afi-icon-button>
-              </afi-tooltip>
-            </div>
+            <afi-icon-button
+              variant="ghost"
+              size="sm"
+              ariaLabel="Desanclar y arrastrar panel"
+              [pressed]="panelMode() === 'floating'"
+              (clicked)="setMode('floating')"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+              </svg>
+            </afi-icon-button>
           </div>
 
           @if (inspect.activeResult(); as result) {
-            @if (result.componentName) {
-              <div class="panel__component">
-                <code class="panel__component-name">{{ result.componentName }}</code>
+            <section class="inspect-section">
+              <div class="inspect-section__heading">
+                <span>Elemento</span>
               </div>
-            }
+              <div class="inspect-target">
+                @if (result.componentName) {
+                  <code class="inspect-target__name">{{ result.componentName }}</code>
+                }
+                <code class="inspect-target__selector">{{ result.selector }}</code>
+              </div>
+            </section>
 
-            @if (handoffSections(); as sections) {
-              @if (sections.layout.length > 0) {
-                <section class="handoff-card">
-                  <header class="handoff-card__header">
-                    <h4 class="handoff-card__title">Layout</h4>
-                    <afi-icon-button
-                      variant="ghost"
-                      size="sm"
-                      [ariaLabel]="copiedSection() === 'layout' ? 'Copiado' : 'Copiar bloque Layout'"
-                      (clicked)="copySection('layout')"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                      </svg>
-                    </afi-icon-button>
-                  </header>
-                  <pre class="handoff-card__block"><code>@for (l of sections.layout; track l.name) {<span class="handoff-line"><span class="handoff-line__name">{{ l.name }}</span>: <span class="handoff-line__value">{{ l.value }}</span>;
-</span>}</code></pre>
-                </section>
+            <section class="inspect-section">
+              <div class="inspect-section__heading">
+                <span>Variables</span>
+                @if (handoffRows().length > 0) {
+                  <afi-icon-button
+                    variant="ghost"
+                    size="sm"
+                    [ariaLabel]="copiedSection() === 'layout' ? 'Copiado' : 'Copiar variables'"
+                    (clicked)="copySection('layout')"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="9" y="9" width="13" height="13" rx="2" />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                  </afi-icon-button>
+                }
+              </div>
+              @if (handoffRows().length > 0) {
+                <div class="handoff-table" role="table" aria-label="Variables del elemento inspeccionado">
+                  <div class="handoff-table__head" role="row">
+                    <span role="columnheader">Atributo</span>
+                    <span role="columnheader">Token</span>
+                    <span role="columnheader">Valor</span>
+                  </div>
+                  @for (row of handoffRows(); track row.property + row.token) {
+                    <div class="handoff-table__row" role="row">
+                      <code role="cell">{{ row.property }}</code>
+                      <code role="cell" class="handoff-table__token">{{ row.token }}</code>
+                      <code role="cell">{{ row.value }}</code>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <p class="panel__empty">Sin variables rastreables.</p>
               }
+            </section>
 
-              @if (sections.style.length > 0) {
-                <section class="handoff-card">
-                  <header class="handoff-card__header">
-                    <h4 class="handoff-card__title">Style</h4>
-                    <afi-icon-button
-                      variant="ghost"
-                      size="sm"
-                      [ariaLabel]="copiedSection() === 'style' ? 'Copiado' : 'Copiar bloque Style'"
-                      (clicked)="copySection('style')"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                      </svg>
-                    </afi-icon-button>
-                  </header>
-                  <pre class="handoff-card__block"><code>@for (l of sections.style; track l.name) {<span class="handoff-line"><span class="handoff-line__name">{{ l.name }}</span>: <span class="handoff-line__value">{{ l.value }}</span>;
-</span>}</code></pre>
-                </section>
+            <section class="inspect-section">
+              <div class="inspect-section__heading">
+                <span>Comentarios</span>
+                <span class="inspect-section__count">{{ inspectedComments().length }}</span>
+              </div>
+              @if (inspectedComments().length > 0) {
+                <div class="inspect-comments">
+                  @for (c of inspectedComments(); track c.id) {
+                    <article class="inspect-comment">
+                      <span class="inspect-comment__author">{{ c.author }}</span>
+                      <p>{{ c.text }}</p>
+                    </article>
+                  }
+                </div>
+              } @else {
+                <p class="panel__muted">Aún no hay comentarios para este elemento.</p>
               }
-
-              @if (sections.typography.length > 0) {
-                <section class="handoff-card">
-                  <header class="handoff-card__header">
-                    <h4 class="handoff-card__title">Typography</h4>
-                    <afi-icon-button
-                      variant="ghost"
-                      size="sm"
-                      [ariaLabel]="copiedSection() === 'typography' ? 'Copiado' : 'Copiar bloque Typography'"
-                      (clicked)="copySection('typography')"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                      </svg>
-                    </afi-icon-button>
-                  </header>
-                  <pre class="handoff-card__block"><code>@for (l of sections.typography; track l.name) {<span class="handoff-line"><span class="handoff-line__name">{{ l.name }}</span>: <span class="handoff-line__value">{{ l.value }}</span>;
-</span>}</code></pre>
-                </section>
-              }
-
-              @if (sections.layout.length === 0 && sections.style.length === 0 && sections.typography.length === 0) {
-                <p class="panel__empty">Sin propiedades rastreables.</p>
-              }
-            }
+            </section>
           } @else {
-            <p class="panel__empty">Haz click sobre un elemento para ver sus tokens.</p>
+            <p class="panel__empty">Haz click sobre un elemento para ver sus variables.</p>
           }
         }
 

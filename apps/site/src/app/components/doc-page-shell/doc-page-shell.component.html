@@ -29,12 +29,10 @@
   </div>
 
   <!-- Live preview — scoped brand wrapper so ONLY the preview re-skins.
-       Click handoff (when Inspeccionar is active) copies the leaf token line
-       to clipboard and highlights the matching row in Tokens consumidos. -->
+       Click handoff copies the leaf token line and highlights the matching row. -->
   <div
-    class="doc-page__preview"
+    class="doc-page__preview doc-page__preview--inspecting"
     [attr.data-brand]="brandSvc.attr()"
-    [class.doc-page__preview--inspecting]="handoff.isActive()"
     (click)="onPreviewClick($event)"
   >
     <ng-content select="[slot=preview]" />

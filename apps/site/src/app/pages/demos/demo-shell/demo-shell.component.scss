@@ -58,6 +58,10 @@
   margin-inline: var(--space-2xs);
 }
 
+.toolbar__right afi-button[aria-pressed='true'] {
+  color: var(--action-primary-default);
+}
+
 // ─── Body ──────────────────────────────────────────────────────────────────────
 .demo-body {
   display: flex;
@@ -110,7 +114,7 @@
 .side-panel {
   position: absolute;
   z-index: 25;
-  background: var(--surface-quiet);
+  background: var(--surface-default);
   overflow-y: auto;
   padding: var(--space-md);
   display: flex;
@@ -136,9 +140,9 @@
 
   &--floating {
     position: fixed;
-    max-height: 80vh;
+    max-height: calc(100vh - var(--dimension-16));
     border: var(--border-width-hairline) solid var(--border-hairline);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
     z-index: 40;
     cursor: grab;
@@ -194,6 +198,15 @@
   }
 }
 
+.panel__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  border-bottom: var(--border-width-hairline) solid var(--border-hairline);
+}
+
 .panel__header-text {
   display: flex;
   flex-direction: column;
@@ -232,9 +245,14 @@
 }
 
 .panel__title {
-  font: var(--type-body-md-500);
+  font: var(--type-body-md-600);
   color: var(--canvas-fg);
   margin: 0;
+}
+
+.panel__eyebrow {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
 }
 
 .panel__hint {
@@ -259,8 +277,129 @@
 .panel__empty {
   font: var(--type-body-sm-400);
   color: var(--foreground-tertiary-default);
-  text-align: center;
-  padding: var(--space-xl) 0;
+  margin: 0;
+  padding: var(--space-sm) 0;
+}
+
+.panel__muted {
+  margin: 0;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+// ─── Compact inspect panel ───────────────────────────────────────────────────
+.inspect-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.inspect-section__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-tertiary-default);
+}
+
+.inspect-section__count {
+  color: var(--foreground-secondary-default);
+}
+
+.inspect-target {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.inspect-target__name {
+  font: var(--type-body-sm-600);
+  font-family: var(--font-family-mono, ui-monospace, monospace);
+  color: var(--foreground-primary-default);
+}
+
+.inspect-target__selector {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: var(--type-body-sm-400);
+  font-family: var(--font-family-mono, ui-monospace, monospace);
+  color: var(--foreground-tertiary-default);
+}
+
+.handoff-table {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  background: var(--surface-default);
+}
+
+.handoff-table__head,
+.handoff-table__row {
+  display: grid;
+  grid-template-columns: minmax(var(--dimension-20), 0.9fr) minmax(var(--dimension-24), 1.2fr) minmax(var(--dimension-16), 0.8fr);
+  gap: var(--space-xs);
+  align-items: center;
+  padding: var(--space-xs);
+}
+
+.handoff-table__head {
+  border-bottom: var(--border-width-hairline) solid var(--border-hairline);
+  background: var(--surface-quiet);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-tertiary-default);
+}
+
+.handoff-table__row {
+  border-bottom: var(--border-width-hairline) solid var(--border-hairline);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  code {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font: var(--type-body-sm-400);
+    font-family: var(--font-family-mono, ui-monospace, monospace);
+    color: var(--foreground-secondary-default);
+  }
+}
+
+.handoff-table__token {
+  color: var(--brand-primary-background-default) !important;
+}
+
+.inspect-comments {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.inspect-comment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-xs);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  background: var(--surface-quiet);
+
+  p {
+    margin: 0;
+    font: var(--type-body-sm-400);
+    color: var(--foreground-primary-default);
+  }
+}
+
+.inspect-comment__author {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-secondary-default);
 }
 
 // ─── Handoff sections (Figma-style Layout / Style / Typography) ──────────────

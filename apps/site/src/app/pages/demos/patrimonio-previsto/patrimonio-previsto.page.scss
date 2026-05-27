@@ -1,0 +1,86 @@
+// =============================================================================
+// Patrimonio previsto — Diagnóstico page (Brief I).
+// Mirrors the Patrimonio + Evolución patrimonial visual idiom: tokenized
+// table + active-row highlight. Most layout primitives are Tailwind utility
+// classes in the template; this file scopes the scenario table styling.
+// =============================================================================
+
+.pp-table {
+  border-collapse: collapse;
+  font: var(--type-body-md-400);
+}
+
+.pp-table__head-row {
+  background: var(--surface-subtle);
+  border-block-end: var(--border-width-hairline) solid var(--border-default);
+}
+
+.pp-table__th {
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  text-align: start;
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+
+  &--num {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.pp-table__row {
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+  transition: background var(--duration-fast) var(--easing-enter);
+
+  &:last-child {
+    border-block-end: none;
+  }
+
+  &:hover {
+    background: var(--surface-subtle);
+  }
+
+  // Active scenario row picks up the brand accent on the start edge — same
+  // pattern as afi-table's --selected modifier.
+  &--active {
+    background: var(--surface-subtle);
+    box-shadow: inset var(--border-width-thick) 0 0 var(--brand-primary-background-default);
+  }
+}
+
+.pp-table__td {
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  color: var(--foreground-primary-default);
+  vertical-align: middle;
+
+  &--name {
+    font: var(--type-body-md-500);
+  }
+
+  &--num {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.pp-table__scenario-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: start;
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+    border-radius: var(--radius-xs);
+  }
+
+  &[aria-pressed='true'] {
+    color: var(--foreground-primary-default);
+    font-weight: 600;
+  }
+}

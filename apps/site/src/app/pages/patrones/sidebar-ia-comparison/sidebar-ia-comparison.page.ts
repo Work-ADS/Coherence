@@ -9,7 +9,10 @@ import {
 
 type SiteVariant = 'may19' | 'pre-may22' | 'ds-progress';
 type SectionId = 'fundamentos' | 'componentes' | 'patrones' | 'recursos';
-type Status = 'todo' | 'done';
+// 'todo' = task hasn't been done yet (open ring).
+// 'update' = a related page got edited and this one needs review (solid dot).
+// 'done' = no indicator shown at all.
+type Status = 'todo' | 'update' | 'done';
 
 interface VariantSpec {
   id: SiteVariant;
@@ -59,11 +62,11 @@ const VARIANTS: VariantSpec[] = [
     id: 'ds-progress',
     label: 'Custom · DS-progress',
     date: 'propuesta',
-    tagline: 'Títulos en mayúsculas + icono + estado por página',
+    tagline: 'Títulos en mayúsculas + icono + indicador discreto a la derecha',
     rationale:
-      'Sidebar plano (sin chevrons) que muestra TODAS las secciones a la vez. Cada cabecera lleva un icono distintivo y enlaza a la landing de la sección. Cada página tiene un círculo de estado: anillo abierto = pendiente, círculo lleno = listo. Resuelve dos cosas: el usuario ve el alcance completo del sitio de un vistazo y los autores ven dónde queda trabajo por hacer.',
+      'Sidebar plano (sin chevrons) que muestra TODAS las secciones a la vez. Cada cabecera lleva un icono distintivo y enlaza a la landing de la sección. Las páginas en buen estado no llevan indicador; sólo aparece un círculo a la derecha cuando hay algo que atender — anillo abierto = pendiente por hacer, círculo lleno = otra página relacionada ha cambiado y conviene revisar ésta. Se renderiza en dos tonos para ver cómo queda sobre fondo claro y sobre el azul-profundo del planner sidebar.',
     whatChanged:
-      'No existe en el repo todavía — esta variante recoge la versión que recordabas (mayúsculas, círculos de estado, sin chevron, icono por sección). Si la eliges la implementamos en app.component.html.',
+      'No existe en el repo todavía — esta variante recoge la versión que recordabas (mayúsculas, indicadores de estado a la derecha, sin chevron, icono por sección, dos temas). Si la eliges la implementamos en app.component.html.',
   },
 ];
 
@@ -75,7 +78,7 @@ const DS_PROGRESS_SECTIONS: ProgressSection[] = [
     icon: 'layers',
     items: [
       { label: 'Color', href: '/fundamentos/color', status: 'done' },
-      { label: 'Tipografía', href: '/fundamentos/tipografia', status: 'done' },
+      { label: 'Tipografía', href: '/fundamentos/tipografia', status: 'update' },
       { label: 'Espacio', href: '/fundamentos/espacio', status: 'done' },
       { label: 'Movimiento', href: '/fundamentos/movimiento', status: 'done' },
       { label: 'Accesibilidad', href: '/fundamentos/accesibilidad', status: 'todo' },
@@ -89,7 +92,7 @@ const DS_PROGRESS_SECTIONS: ProgressSection[] = [
     items: [
       { label: 'Button', href: '/componentes/button', status: 'done' },
       { label: 'Input', href: '/componentes/input', status: 'done' },
-      { label: 'Checkbox', href: '/componentes/checkbox', status: 'done' },
+      { label: 'Checkbox', href: '/componentes/checkbox', status: 'update' },
       { label: 'Card', href: '/componentes/card', status: 'done' },
       { label: 'Modal', href: '/componentes/modal', status: 'done' },
       { label: 'Drawer', href: '/componentes/drawer', status: 'done' },
@@ -113,7 +116,7 @@ const DS_PROGRESS_SECTIONS: ProgressSection[] = [
     items: [
       { label: 'Shells', href: '/patrones/shells', status: 'done' },
       { label: 'Cabeceras', href: '/patrones/cabeceras', status: 'done' },
-      { label: 'Gráficos', href: '/patrones/graficos', status: 'todo' },
+      { label: 'Gráficos', href: '/patrones/graficos', status: 'update' },
       { label: 'Tablas', href: '/patrones/tablas', status: 'done' },
       { label: 'Tarjetas', href: '/patrones/tarjetas', status: 'todo' },
       { label: 'Selectores', href: '/patrones/selectores', status: 'done' },
@@ -127,7 +130,7 @@ const DS_PROGRESS_SECTIONS: ProgressSection[] = [
     icon: 'book',
     items: [
       { label: 'Descargas', href: '/recursos/descargas', status: 'todo' },
-      { label: 'Changelog', href: '/recursos/changelog', status: 'todo' },
+      { label: 'Changelog', href: '/recursos/changelog', status: 'update' },
       { label: 'Roadmap', href: '/recursos/roadmap', status: 'todo' },
       { label: 'FAQ', href: '/recursos/faq', status: 'todo' },
     ],

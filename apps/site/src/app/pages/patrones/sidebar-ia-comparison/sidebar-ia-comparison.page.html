@@ -46,14 +46,111 @@
     </div>
   }
 
-  <div class="ia-comparison__stage">
-    <div class="ia-comparison__frame">
-      <afi-sidebar mode="static" ariaLabel="Sidebar preview">
-        <div slot="top">
-          <coherence-logo variant="color" size="sm" />
-        </div>
+  <div
+    class="ia-comparison__stage"
+    [class.ia-comparison__stage--dual]="selectedVariant() === 'ds-progress'"
+  >
+    @if (selectedVariant() === 'ds-progress') {
+      <!-- Variant C: two themed previews side by side (neutral + secondary-azul). -->
+      <div class="ds-progress-pair">
+        @for (theme of ['neutral', 'dark']; track theme) {
+          <div
+            class="ia-comparison__frame ia-comparison__frame--themed"
+            [class.ia-comparison__frame--dark]="theme === 'dark'"
+          >
+            <span class="ia-comparison__frame-label">
+              {{ theme === 'dark' ? 'Azul profundo' : 'Neutral' }}
+            </span>
+            <afi-sidebar
+              mode="static"
+              [variant]="theme === 'dark' ? 'secondary-azul' : 'neutral'"
+              ariaLabel="Sidebar preview"
+            >
+              <div slot="top">
+                <coherence-logo
+                  [variant]="theme === 'dark' ? 'positivo' : 'color'"
+                  size="sm"
+                />
+              </div>
 
-        @if (selectedVariant() === 'may19') {
+              <div class="ds-progress">
+                @for (section of dsProgressSections; track section.id) {
+                  <section class="ds-progress__section">
+                    <a class="ds-progress__title" [href]="section.href">
+                      <span class="ds-progress__title-icon" aria-hidden="true">
+                        @switch (section.icon) {
+                          @case ('layers') {
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M12 2 2 7l10 5 10-5-10-5z" />
+                              <path d="m2 17 10 5 10-5" />
+                              <path d="m2 12 10 5 10-5" />
+                            </svg>
+                          }
+                          @case ('grid') {
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="3" y="3" width="7" height="7" rx="1" />
+                              <rect x="14" y="3" width="7" height="7" rx="1" />
+                              <rect x="3" y="14" width="7" height="7" rx="1" />
+                              <rect x="14" y="14" width="7" height="7" rx="1" />
+                            </svg>
+                          }
+                          @case ('template') {
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="3" y="3" width="18" height="7" rx="1" />
+                              <rect x="3" y="14" width="9" height="7" rx="1" />
+                              <rect x="14" y="14" width="7" height="7" rx="1" />
+                            </svg>
+                          }
+                          @case ('book') {
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                            </svg>
+                          }
+                        }
+                      </span>
+                      <span class="ds-progress__title-label">{{ section.label }}</span>
+                    </a>
+                    <ul class="ds-progress__list">
+                      @for (item of section.items; track item.href) {
+                        <li>
+                          <a class="ds-progress__item" [href]="item.href">
+                            <span class="ds-progress__item-label">{{ item.label }}</span>
+                            @if (item.status !== 'done') {
+                              <span
+                                class="ds-progress__dot"
+                                [class.ds-progress__dot--update]="item.status === 'update'"
+                                [attr.aria-label]="
+                                  item.status === 'update'
+                                    ? 'Tiene actualizaciones'
+                                    : 'Pendiente'
+                                "
+                                [attr.title]="
+                                  item.status === 'update'
+                                    ? 'Tiene actualizaciones'
+                                    : 'Pendiente'
+                                "
+                              ></span>
+                            }
+                          </a>
+                        </li>
+                      }
+                    </ul>
+                  </section>
+                }
+              </div>
+            </afi-sidebar>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="ia-comparison__frame">
+        <afi-sidebar mode="static" ariaLabel="Sidebar preview">
+          <div slot="top">
+            <coherence-logo variant="color" size="sm" />
+          </div>
+
+          @if (selectedVariant() === 'may19') {
           @switch (may19Section()) {
             @case ('fundamentos') {
               <afi-nav-section
@@ -114,7 +211,8 @@
               </afi-nav-section>
             }
           }
-        } @else if (selectedVariant() === 'pre-may22') {
+        } @else {
+          <!-- pre-may22 -->
           <afi-nav-section
             label="Components"
             [defaultExpanded]="true"
@@ -135,66 +233,10 @@
               <afi-nav-item [label]="item.label" [showIcon]="false" />
             }
           </afi-nav-section>
-        } @else {
-          <!-- Variant C — DS-progress: uppercase title + icon + status dots, no chevron. -->
-          <div class="ds-progress">
-            @for (section of dsProgressSections; track section.id) {
-              <section class="ds-progress__section">
-                <a class="ds-progress__title" [href]="section.href">
-                  <span class="ds-progress__title-icon" aria-hidden="true">
-                    @switch (section.icon) {
-                      @case ('layers') {
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M12 2 2 7l10 5 10-5-10-5z" />
-                          <path d="m2 17 10 5 10-5" />
-                          <path d="m2 12 10 5 10-5" />
-                        </svg>
-                      }
-                      @case ('grid') {
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                          <rect x="3" y="3" width="7" height="7" rx="1" />
-                          <rect x="14" y="3" width="7" height="7" rx="1" />
-                          <rect x="3" y="14" width="7" height="7" rx="1" />
-                          <rect x="14" y="14" width="7" height="7" rx="1" />
-                        </svg>
-                      }
-                      @case ('template') {
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                          <rect x="3" y="3" width="18" height="7" rx="1" />
-                          <rect x="3" y="14" width="9" height="7" rx="1" />
-                          <rect x="14" y="14" width="7" height="7" rx="1" />
-                        </svg>
-                      }
-                      @case ('book') {
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                        </svg>
-                      }
-                    }
-                  </span>
-                  <span class="ds-progress__title-label">{{ section.label }}</span>
-                </a>
-                <ul class="ds-progress__list">
-                  @for (item of section.items; track item.href) {
-                    <li>
-                      <a class="ds-progress__item" [href]="item.href">
-                        <span
-                          class="ds-progress__dot"
-                          [class.ds-progress__dot--done]="item.status === 'done'"
-                          [attr.aria-label]="item.status === 'done' ? 'Listo' : 'Pendiente'"
-                        ></span>
-                        <span class="ds-progress__item-label">{{ item.label }}</span>
-                      </a>
-                    </li>
-                  }
-                </ul>
-              </section>
-            }
-          </div>
         }
-      </afi-sidebar>
-    </div>
+        </afi-sidebar>
+      </div>
+    }
 
     <aside class="ia-comparison__notes">
       <h2 class="ia-comparison__variant-title">{{ selectedSpec().label }}</h2>
@@ -229,8 +271,14 @@
           <li>Cabeceras en mayúsculas con icono distintivo y enlace a la landing de la sección.</li>
           <li>Sin chevrons — las secciones no se colapsan; el sidebar es plano y predecible.</li>
           <li>
-            Círculo de estado por página: anillo abierto = pendiente, círculo lleno = listo.
-            Útil para autores y para que el lector entienda qué partes del sitio están maduras.
+            Indicador a la <strong>derecha</strong> y sólo cuando hay algo que atender:
+            anillo abierto = pendiente por hacer; círculo lleno = otra página relacionada
+            ha cambiado y conviene revisar ésta. Las páginas en buen estado no llevan
+            indicador (silencio = todo bien).
+          </li>
+          <li>
+            Se renderiza en dos tonos para validar el contraste tanto en fondo claro
+            (sidebar de docs) como en azul profundo (planner sidebar AWM).
           </li>
           <li>
             Los estados son hardcoded en esta demo (orientativo). Una versión real los

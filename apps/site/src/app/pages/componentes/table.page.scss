@@ -9,3 +9,18 @@
   width: 100%;
   padding: var(--space-2xl);
 }
+
+// Inline explanatory note under the "Acciones en fila" segmented control.
+// Lives here (not in shared) because only the table page currently needs
+// the long-form Opción 1 / Opción 2 caption. Promote to _doc-page-shared.scss
+// if a second page picks up the pattern.
+.control-group__hint {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  max-width: var(--dimension-90);
+
+  strong {
+    color: var(--foreground-secondary-default);
+    font-weight: 500;
+  }
+}

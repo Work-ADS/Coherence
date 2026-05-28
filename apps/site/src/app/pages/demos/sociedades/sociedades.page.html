@@ -72,79 +72,20 @@
               </div>
             </div>
           } @else {
-            <table class="sociedades-table">
-              <thead>
-                <tr class="sociedades-table__head-row">
-                  <th class="sociedades-table__th">Nombre</th>
-                  <th class="sociedades-table__th">Tributación</th>
-                  <th class="sociedades-table__th sociedades-table__th--actions">
-                    <span class="sr-only">Acciones</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (s of store.sociedades(); track s.id) {
-                  <tr
-                    class="sociedades-table__row"
-                    (click)="openEdit(s.id)"
-                  >
-                    <td class="sociedades-table__td sociedades-table__td--name">
-                      {{ s.nombre || 'Sin nombre' }}
-                    </td>
-                    <td class="sociedades-table__td">
-                      {{ tributacionLabel(s.tributacion) }}
-                    </td>
-                    <td class="sociedades-table__td sociedades-table__td--actions">
-                      <afi-icon-button
-                        variant="ghost"
-                        size="sm"
-                        ariaLabel="Editar sociedad"
-                        (clicked)="openEdit(s.id); $event.event?.stopPropagation?.()"
-                      >
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true"
-                        >
-                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                          <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                        </svg>
-                      </afi-icon-button>
-                      <afi-icon-button
-                        variant="destruction"
-                        size="sm"
-                        ariaLabel="Borrar sociedad"
-                        (clicked)="removeSociedad(s.id, $event.event)"
-                      >
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true"
-                        >
-                          <path d="M3 6h18" />
-                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                          <path d="M10 11v6" />
-                          <path d="M14 11v6" />
-                        </svg>
-                      </afi-icon-button>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
+            <!-- 2026-05-28 — migrated from bespoke `<table class="sociedades-table">`
+                 to `<afi-table>`. Preset = Propuesta (modal flavor). Actions:
+                 1 inline primary (Editar) + ⋯ overflow menu (Duplicar +
+                 Borrar). `actionsReveal` inherits the primitive default
+                 (`'hover'` — locked 2026-05-28); no explicit binding needed. -->
+            <afi-table
+              [columns]="sociedadColumns"
+              [rows]="sociedadRows()"
+              [rowActions]="sociedadActions"
+              trackByKey="id"
+              density="comfortable"
+              (rowClicked)="onSociedadRowClick($event)"
+              (rowActionClicked)="onSociedadAction($event)"
+            />
           }
         </div>
       </div>

@@ -68,6 +68,7 @@ export class App {
     if (url.startsWith('/componentes')) return 'componentes';
     if (url.startsWith('/patrones')) return 'patrones';
     if (url.startsWith('/recursos')) return 'recursos';
+    if (url.startsWith('/demos')) return 'demos';
     return null;
   });
 
@@ -116,8 +117,16 @@ export class App {
   }
 
   private matchFullScreen(url: string): boolean {
+    // Demos: full-screen only inside an interactive demo. Demo OVERVIEW pages
+    // (depth 2, e.g. /demos/wealth-planner-2026 or /demos/laboral-kutxa-sarevi)
+    // keep the section sidebar so users can navigate between AFI demos and
+    // Sarevi demos. Going deeper (depth 3+, e.g. /demo, /familia, /gastos)
+    // hands the chrome to the demo itself. `/demos/sarevi-unicaja` is the
+    // demo surface directly (no overview page) so it's also full-screen.
+    const demosFullScreen =
+      /^\/demos\/[^/]+\/.+/.test(url) || /^\/demos\/sarevi-unicaja(?:\/|$)/.test(url);
     return (
-      /^\/demos\/.+/.test(url) ||
+      demosFullScreen ||
       /^\/afi-insights(\/|$)/.test(url) ||
       /^\/talks\/.+/.test(url)
     );

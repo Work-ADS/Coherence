@@ -2,13 +2,3 @@
   <span class="control-group__label">Marca</span>
   <site-scoped-brand-picker />
 </div>
-<div class="control-group">
-  <span class="control-group__label">Inspección</span>
-  <span class="brand-context-row__status">Siempre activa</span>
-</div>
-@if (handoff.lastCopied(); as copied) {
-  <div class="control-group control-group--copied" role="status" aria-live="polite">
-    <span class="control-group__label">Copiado</span>
-    <code class="brand-context-row__copied">{{ copied.name }}: {{ copied.value }}</code>
-  </div>
-}

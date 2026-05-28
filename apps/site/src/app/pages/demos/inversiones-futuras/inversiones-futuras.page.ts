@@ -8,13 +8,13 @@ import {
 
 import {
   ButtonComponent,
-  IconButtonComponent,
   InputComponent,
   ModalComponent,
   PageHeaderComponent,
   SelectComponent,
+  TableComponent,
 } from '@coherence/ui';
-import type { SelectOption } from '@coherence/ui';
+import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
 import { ObjetivosPageShellComponent } from '../wealth-planner-2026/shared/objetivos-page-shell.component';
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
@@ -39,11 +39,11 @@ import type {
   standalone: true,
   imports: [
     ButtonComponent,
-    IconButtonComponent,
     InputComponent,
     ModalComponent,
     PageHeaderComponent,
     SelectComponent,
+    TableComponent,
     ObjetivosPageShellComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,6 +80,42 @@ export class InversionesFuturasPage {
     if (id === null) return null;
     return this.store.inversionesFuturas().find((row) => row.id === id) ?? null;
   });
+
+  // ── <afi-table> column + action defs (Propuesta preset — modal flavor) ─
+  readonly tableColumns: TableColumn[] = [
+    { key: 'nombre', label: 'Nombre', emphasis: true },
+    { key: 'tipo', label: 'Tipo' },
+    { key: 'anio', label: 'Año' },
+    { key: 'titular', label: 'Titular' },
+    { key: 'importe', label: 'Importe', align: 'end' },
+  ];
+
+  readonly tableActions: TableRowAction[] = [
+    { key: 'edit', label: 'Editar', ariaLabel: 'Editar inversión futura', icon: 'edit' },
+    { key: 'duplicate', label: 'Duplicar', overflow: true },
+    {
+      key: 'delete',
+      label: 'Borrar',
+      overflow: true,
+      variant: 'danger',
+    },
+  ];
+
+  /**
+   * Display rows. Maps raw enum values + numeric fields to human-formatted
+   * strings (tipo label, año, titular label, importe €) so the table can
+   * render them via its default `cellText` formatter.
+   */
+  readonly tableRows = computed(() =>
+    this.store.inversionesFuturas().map((row) => ({
+      id: row.id,
+      nombre: row.nombre || 'Sin nombre',
+      tipo: this.tipoLabel(row.tipo),
+      anio: this.formatAnio(row.anio),
+      titular: this.titularLabel(row.titular),
+      importe: this.formatEuro(row.importe),
+    })),
+  );
 
   // ── Label helpers (used by the table) ─────────────────────────────────
   tipoLabel(tipo: InversionFuturaTipo | null): string {
@@ -120,6 +156,42 @@ export class InversionesFuturasPage {
   removeInversionFutura(id: string, event?: Event): void {
     event?.stopPropagation();
     this.store.removeInversionFutura(id);
+  }
+
+  /** Duplicar: clone source fields onto a fresh row, then open the modal. */
+  duplicateInversionFutura(id: string): void {
+    const source = this.store.inversionesFuturas().find((r) => r.id === id);
+    if (!source) return;
+    const next = this.store.addInversionFutura();
+    this.store.updateInversionFutura(next.id, {
+      nombre: source.nombre ? `${source.nombre} (copia)` : '',
+      tipo: source.tipo,
+      anio: source.anio,
+      titular: source.titular,
+      importe: source.importe,
+    });
+    this.editingId.set(next.id);
+  }
+
+  /** Row-click handler — opens edit modal. */
+  onTableRowClick(event: { row: Record<string, unknown>; event: MouseEvent }): void {
+    this.openEdit(event.row['id'] as string);
+  }
+
+  /** Row-action dispatcher (inline + overflow). */
+  onTableAction(event: { action: TableRowAction; row: Record<string, unknown> }): void {
+    const id = event.row['id'] as string;
+    switch (event.action.key) {
+      case 'edit':
+        this.openEdit(id);
+        break;
+      case 'duplicate':
+        this.duplicateInversionFutura(id);
+        break;
+      case 'delete':
+        this.removeInversionFutura(id);
+        break;
+    }
   }
 
   // ── Field handlers ────────────────────────────────────────────────────

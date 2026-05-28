@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { TableComponent, SegmentedControlComponent } from '@coherence/ui';
-import type { TableColumn, TableDensity } from '@coherence/ui';
+import type { TableActionsReveal, TableColumn, TableDensity, TableRowAction } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
@@ -19,6 +19,30 @@ const SAMPLE_ROWS: Record<string, unknown>[] = [
   { id: 2, nombre: 'Operación Beta', estado: 'Pendiente', monto: '$8,300' },
   { id: 3, nombre: 'Operación Gamma', estado: 'Cerrado', monto: '$45,000' },
   { id: 4, nombre: 'Operación Delta', estado: 'Activo', monto: '$3,200' },
+];
+
+// Mirrors the locked WP action pattern (2026-05-28): 1 primary inline +
+// the rest in the `⋯` overflow menu. Keeps the docs demo in lockstep with
+// the real product surfaces so the team sees the same shape everywhere.
+const SAMPLE_ROW_ACTIONS: TableRowAction[] = [
+  { key: 'edit', label: 'Editar', icon: 'edit', ariaLabel: 'Editar operación' },
+  { key: 'duplicate', label: 'Duplicar', overflow: true },
+  {
+    key: 'delete',
+    label: 'Borrar',
+    ariaLabel: 'Borrar operación',
+    overflow: true,
+    variant: 'danger',
+  },
+];
+
+// Team-evaluation control: two action-reveal modes side-by-side until we
+// pick one as the default in <afi-table>. Opción 1 = strict hover-only
+// (Notion / Granola); Opción 2 = soft-at-rest (~40% opacity, brightens
+// on hover). Decision lands in `table.variants.ts` as the new default.
+const ACTION_REVEAL_OPTIONS = [
+  { value: 'hover', label: 'Opción 1' },
+  { value: 'soft', label: 'Opción 2' },
 ];
 
 const TOKEN_CATEGORIES: DocTokenCategory[] = [
@@ -67,9 +91,15 @@ const DENSITY_OPTIONS = [
 })
 export class TablePage {
   readonly density = signal<TableDensity>('compact');
+  // Docs-page default mirrors the primitive default (`'hover'`, locked
+  // 2026-05-28). The Opción 1 / 2 toggle stays as an educational affordance
+  // so the team can demonstrate the contrast with `'soft'` from the docs.
+  readonly actionReveal = signal<TableActionsReveal>('hover');
 
   readonly densityOptions = DENSITY_OPTIONS;
+  readonly actionRevealOptions = ACTION_REVEAL_OPTIONS;
   readonly columns = SAMPLE_COLUMNS;
   readonly rows = SAMPLE_ROWS;
+  readonly rowActions = SAMPLE_ROW_ACTIONS;
   readonly tokenCategories = TOKEN_CATEGORIES;
 }

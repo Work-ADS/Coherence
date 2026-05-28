@@ -35,6 +35,13 @@
   &--xl {
     max-width: var(--dimension-modal-xl, 56rem);
   }
+
+  // 2-pane layouts (form + preview / form + live result). Larger than xl
+  // by design — reach for this only when a single pane genuinely doesn't
+  // fit. Added 2026-05-28 for patrimonial's add-asset dialog.
+  &--xxl {
+    max-width: var(--dimension-modal-xxl, 65rem);
+  }
 }
 
 .afi-modal__panel {

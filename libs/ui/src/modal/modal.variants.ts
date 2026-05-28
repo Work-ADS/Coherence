@@ -6,7 +6,16 @@
  * This file exports the union types consumed by the component's signal inputs.
  */
 
-export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
+/**
+ * - `sm` (28rem) — confirms, prompts.
+ * - `md` (32rem) — default forms.
+ * - `lg` (42rem) — longer forms.
+ * - `xl` (56rem) — multi-section forms.
+ * - `xxl` (65rem) — 2-pane layouts (form + live preview). Added 2026-05-28
+ *   for the patrimonial add-asset dialog; reach for it only when a single
+ *   pane genuinely doesn't fit the content.
+ */
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
 export const tokenUsage = [
   { property: 'Fondo panel', token: 'var(--surface-raised)' },

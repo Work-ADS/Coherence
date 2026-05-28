@@ -15,12 +15,15 @@ import {
   ButtonComponent,
   InputComponent,
   KbdComponent,
+  ModalComponent,
   PageHeaderComponent,
   SelectComponent,
+  TableComponent,
 } from '@coherence/ui';
-import type { SelectOption } from '@coherence/ui';
+import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
 import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patrimonial/graph-card-header.component';
+import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { ActionToastComponent } from '../shared/action-toast.component';
 import { bridgeDesignReviewVersion } from '../shared/design-review-bridge';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
@@ -77,8 +80,11 @@ type AddedAsset = {
     ButtonComponent,
     InputComponent,
     KbdComponent,
+    ModalComponent,
     PageHeaderComponent,
     SelectComponent,
+    TableComponent,
+    DemoShellComponent,
     GraphCardHeaderComponent,
     ActionToastComponent,
     PlannerSidebarComponent,
@@ -964,6 +970,111 @@ export class PatrimonialProposalPage {
     const parts = ['minmax(320px, 1fr)'].concat(section.columns.map((c) => c.width));
     parts.push('32px');
     return parts.join(' ');
+  }
+
+  // ── <afi-table> migration helpers (2026-05-28) ──────────────────────────
+  //
+  // Each section is rendered as its own `<afi-table>` (different column
+  // schemas per section). The bespoke `<div class="grid">` block was
+  // replaced by these calls; the row data, expand state, and actions all
+  // come from these helpers. Children are passed via the table's reserved
+  // `children` magic key.
+  //
+  // Migration trade-offs (documented for follow-up):
+  //   - Nameless badges (`row.nameTags`) and `subtitle` lose their visual
+  //     treatment — only `name` is shown in the first cell. Re-add when
+  //     <afi-table> grows a multi-line / tags cell renderer.
+  //   - The "Nuevo" badge animation on newly-added rows is replaced by the
+  //     primitive's `highlightedRowKey` flash.
+  //   - The leading drag-handle / `+` add-row affordance is removed
+  //     (leadingActions axis pending Phase 2).
+
+  /** Table-level action set. Per-row overrides not used here (all asset
+   *  rows + their children get the same set). */
+  readonly assetTableActions: TableRowAction[] = [
+    { key: 'edit', label: 'Editar', icon: 'edit', ariaLabel: 'Editar activo' },
+    { key: 'duplicate', label: 'Duplicar', overflow: true },
+    {
+      key: 'delete',
+      label: 'Borrar',
+      overflow: true,
+      variant: 'danger',
+    },
+  ];
+
+  /** Prepend a "Nombre" column to the section's own column array. */
+  tableColumnsFor(section: AssetSection): TableColumn[] {
+    return [
+      { key: 'name', label: 'Nombre', emphasis: true },
+      ...section.columns.map<TableColumn>((c) => ({
+        key: c.key,
+        label: c.label,
+        align: c.align,
+        emphasis: c.emphasis,
+      })),
+    ];
+  }
+
+  /**
+   * Map AssetRow[] (filtered through the section's row visibility) into
+   * the `Record<string, unknown>[]` shape `<afi-table>` expects. Spreads
+   * cells onto the row, prepends `name`, recurses for children via the
+   * reserved `children` magic key.
+   */
+  tableRowsFor(section: AssetSection, rows: AssetRow[]): Record<string, unknown>[] {
+    return rows.map((row) => this.toTableRow(row));
+  }
+
+  private toTableRow(row: AssetRow): Record<string, unknown> {
+    const mapped: Record<string, unknown> = {
+      id: row.id ?? row.name,
+      name: row.name,
+      ...row.cells,
+    };
+    if (row.children && row.children.length > 0) {
+      mapped['children'] = row.children.map((c) => this.toTableRow(c));
+    }
+    return mapped;
+  }
+
+  /** Convert global `expandedRows` set → per-section array of row keys. */
+  expandedKeysFor(sectionKey: string): unknown[] {
+    const prefix = `${sectionKey}::`;
+    return Array.from(this.expandedRows())
+      .filter((k) => k.startsWith(prefix))
+      .map((k) => k.substring(prefix.length));
+  }
+
+  /** Bridge `<afi-table>` (expandedKeysChange: unknown[]) → global Set<string>. */
+  onSectionExpandedChange(sectionKey: string, expanded: unknown[]): void {
+    const next = new Set(this.expandedRows());
+    const prefix = `${sectionKey}::`;
+    // Remove all existing entries for this section
+    for (const key of Array.from(next)) {
+      if (key.startsWith(prefix)) next.delete(key);
+    }
+    // Add the new set
+    for (const k of expanded) {
+      next.add(`${prefix}${String(k)}`);
+    }
+    this.expandedRows.set(next);
+  }
+
+  /**
+   * Row-click handler from `<afi-table>` — no-op for now (patrimonial
+   * doesn't open a detail page on row click, only on action click).
+   * Wired so the table doesn't complain about the missing handler.
+   */
+  onSectionRowClicked(_event: { row: Record<string, unknown>; event: MouseEvent }): void {
+    /* intentional no-op */
+  }
+
+  /** Row-action dispatcher. All three actions are placeholders pending
+   *  real implementations from the store; closes the toast on each. */
+  onSectionAction(event: { action: TableRowAction; row: Record<string, unknown> }): void {
+    // TODO(2026-05-28): wire to the patrimonial store once edit/duplicate/
+    // delete persist. For now the actions just dismiss the row-actions menu.
+    void event;
   }
 
   // ---- Filter state ----

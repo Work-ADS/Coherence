@@ -31,69 +31,9 @@
   margin-block-start: var(--space-lg);
 }
 
-// ─── Table ──────────────────────────────────────────────────────────────────
-.if-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-block-start: var(--space-md);
-  font: var(--type-body-md-400);
-}
-
-.if-table__head-row {
-  border-block-end: var(--border-width-hairline) solid var(--border-default);
-}
-
-.if-table__th {
-  padding-block: var(--space-sm);
-  padding-inline: var(--space-md);
-  text-align: start;
-  font: var(--type-body-sm-600);
-  color: var(--foreground-secondary-default);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.if-table__th--num {
-  text-align: end;
-}
-
-.if-table__th--actions {
-  inline-size: 1%;
-  white-space: nowrap;
-}
-
-.if-table__row {
-  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--easing-enter);
-
-  &:hover {
-    background: var(--surface-subtle);
-  }
-}
-
-.if-table__td {
-  padding-block: var(--space-md);
-  padding-inline: var(--space-md);
-  color: var(--foreground-primary-default);
-}
-
-.if-table__td--name {
-  font: var(--type-body-md-500);
-}
-
-.if-table__td--num {
-  text-align: end;
-  font-variant-numeric: tabular-nums;
-}
-
-.if-table__td--actions {
-  display: flex;
-  gap: var(--space-2xs);
-  justify-content: flex-end;
-  align-items: center;
-  white-space: nowrap;
-}
+// ─── Table — REMOVED 2026-05-28 ─────────────────────────────────────────────
+// Bespoke `.if-table*` styles deleted when this page migrated to `<afi-table>`.
+// Variant / hover / action styling now lives in the primitive's SCSS.
 
 // ─── Modal form ─────────────────────────────────────────────────────────────
 .if-form {

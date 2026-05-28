@@ -91,6 +91,22 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
 
   readonly activeMode = signal<'inspect' | 'comment' | null>(null);
 
+  /**
+   * 3-mode rule (LOCKED 2026-05-28): the user is always in EXACTLY ONE of
+   * Vista / Comentar / Inspección. Vista is the implicit default (no panel,
+   * no overlay listeners). Picking Comentar or Inspección always cancels
+   * the other. The Vista chip is always present so the user can exit any
+   * active mode in one click — mirrors the "view" affordance Figma /
+   * Notion / Linear all expose on inspect-mode workspaces.
+   */
+  readonly modeOptions = [
+    { value: 'view', label: 'Vista' },
+    { value: 'comment', label: 'Comentar' },
+    { value: 'inspect', label: 'Inspección' },
+  ];
+
+  readonly activeModeValue = computed(() => this.activeMode() ?? 'view');
+
   // ─── Configurable per-demo inputs ────────────────────────────────────────
   // Defaults preserve the original wealth-planner wiring so existing
   // consumers don't need to pass anything. New demos pass their own slug,
@@ -479,32 +495,51 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
     this.comments.deactivate();
   }
 
-  toggleInspect(): void {
-    if (this.activeMode() === 'inspect') {
+  /**
+   * Unified mode setter — drives the toolbar segmented control. Picking
+   * `'view'` exits whatever mode is active. Picking `'comment'` or
+   * `'inspect'` deactivates the other automatically (rule: only one mode
+   * at a time). `'inspect'` defaults to `docked-right` (LOCKED
+   * 2026-05-28) so the handoff panel doesn't cover the demo content;
+   * user can still drag/dock elsewhere from inside the panel.
+   */
+  setActiveMode(value: string): void {
+    if (value === 'view') {
       this.activeMode.set(null);
       this.inspect.deactivate();
+      this.comments.deactivate();
       this.clearPinned();
-    } else {
-      if (this.panelMode() !== 'floating') this.setMode('floating');
-      this.activeMode.set('inspect');
-      this.inspect.activate();
-      this.comments.deactivate();
       this.closeComposer();
+      return;
     }
-  }
-
-  toggleComment(): void {
-    if (this.activeMode() === 'comment') {
-      this.activeMode.set(null);
-      this.comments.deactivate();
-      this.closeComposer();
-    } else {
-      if (this.panelMode() !== 'floating') this.setMode('floating');
+    if (value === 'comment') {
       this.activeMode.set('comment');
       this.comments.activate();
       this.inspect.deactivate();
       this.clearPinned();
+      return;
     }
+    if (value === 'inspect') {
+      // Always start docked-right (locked 2026-05-28). Keeps the current
+      // panelWidth (340 default, or stored preference) — only the
+      // position changes.
+      this.setMode('docked-right');
+      this.activeMode.set('inspect');
+      this.inspect.activate();
+      this.comments.deactivate();
+      this.closeComposer();
+      return;
+    }
+  }
+
+  /** @deprecated kept for back-compat with consumers; prefer setActiveMode. */
+  toggleInspect(): void {
+    this.setActiveMode(this.activeMode() === 'inspect' ? 'view' : 'inspect');
+  }
+
+  /** @deprecated kept for back-compat with consumers; prefer setActiveMode. */
+  toggleComment(): void {
+    this.setActiveMode(this.activeMode() === 'comment' ? 'view' : 'comment');
   }
 
   goHome(): void {

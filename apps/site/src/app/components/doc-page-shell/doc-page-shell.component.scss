@@ -107,15 +107,4 @@
   &:empty {
     display: none;
   }
-
-  // When Inspeccionar is active, swap to a crosshair cursor inside the
-  // preview so the user knows clicks now copy a token line instead of
-  // triggering the component's normal interaction.
-  &--inspecting {
-    cursor: crosshair;
-
-    * {
-      cursor: crosshair !important;
-    }
-  }
 }

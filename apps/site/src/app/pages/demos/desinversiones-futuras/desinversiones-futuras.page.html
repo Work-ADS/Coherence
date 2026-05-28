@@ -47,86 +47,18 @@
       </div>
     </div>
   } @else {
-    <table class="df-table">
-      <thead>
-        <tr class="df-table__head-row">
-          <th class="df-table__th">Nombre</th>
-          <th class="df-table__th">Objetivo</th>
-          <th class="df-table__th df-table__th--num">Importe bruto</th>
-          <th class="df-table__th df-table__th--num">Importe neto</th>
-          <th class="df-table__th df-table__th--actions">
-            <span class="sr-only">Acciones</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of store.desinversiones(); track row.id) {
-          <tr
-            class="df-table__row"
-            [routerLink]="['/demos/wealth-planner-2026/desinversiones-futuras', row.id]"
-          >
-            <td class="df-table__td df-table__td--name">
-              {{ row.nombre || 'Sin nombre' }}
-            </td>
-            <td class="df-table__td">{{ objetivoLabel(row.objetivo) }}</td>
-            <td class="df-table__td df-table__td--num">
-              {{ formatEuro(row.importeBruto) }}
-            </td>
-            <td class="df-table__td df-table__td--num">
-              {{ formatEuro(row.importeNeto) }}
-            </td>
-            <td class="df-table__td df-table__td--actions">
-              <afi-icon-button
-                variant="ghost"
-                size="sm"
-                ariaLabel="Editar desinversión"
-                [routerLink]="['/demos/wealth-planner-2026/desinversiones-futuras', row.id]"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                  />
-                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                </svg>
-              </afi-icon-button>
-              <afi-icon-button
-                variant="ghost"
-                size="sm"
-                ariaLabel="Borrar desinversión"
-                (clicked)="removeRow(row.id, $event.event)"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M3 6h18" />
-                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                  <path d="M10 11v6" />
-                  <path d="M14 11v6" />
-                </svg>
-              </afi-icon-button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+    <!-- 2026-05-28 — migrated from bespoke `<table class="df-table">` to
+         `<afi-table>`. Propuesta preset (route flavor): row click + editar
+         inline both navigate to the detail page; ⋯ overflow has duplicar
+         (clones + navigates) + borrar. Inherits `actionsReveal="hover"`. -->
+    <afi-table
+      [columns]="tableColumns"
+      [rows]="tableRows()"
+      [rowActions]="tableActions"
+      trackByKey="id"
+      density="comfortable"
+      (rowClicked)="onTableRowClick($event)"
+      (rowActionClicked)="onTableAction($event)"
+    />
   }
 </site-objetivos-page-shell>

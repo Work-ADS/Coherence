@@ -16,6 +16,7 @@ import {
   type Vista,
   type Escenario,
   type Detalle,
+  type ChartPalette,
 } from './evolucion-bar-chart.component';
 
 /**
@@ -278,12 +279,49 @@ import {
                   </div>
                 </div>
 
+                <!-- Palette switcher — temporary 2026-Q2 design-review control.
+                     After the decision lands, the winning palette gets promoted
+                     to --chart-stacked-{1..7} in libs/tokens/charts.scss, the
+                     candidate + legacy slots are removed, and this switcher
+                     comes out of the page. -->
+                <div
+                  class="mt-space-4 flex flex-wrap items-center gap-space-3 rounded-md border border-border-hairline bg-surface-quiet px-space-3 py-space-2"
+                >
+                  <span class="text-caption uppercase tracking-wider text-neutral-500">
+                    Paleta (decisión)
+                  </span>
+                  <div
+                    class="inline-flex overflow-hidden rounded border border-border-hairline"
+                    role="group"
+                    aria-label="Paleta candidata"
+                  >
+                    @for (p of paletteOptions; track p.value) {
+                      <button
+                        type="button"
+                        (click)="palette.set(p.value)"
+                        [attr.aria-pressed]="palette() === p.value"
+                        class="px-space-3 py-space-1 text-body-sm transition-colors duration-fast border-l border-border-hairline first:border-l-0"
+                        [class.bg-action-700]="palette() === p.value"
+                        [class.text-white]="palette() === p.value"
+                        [class.text-canvas-fg]="palette() !== p.value"
+                        [class.hover:bg-surface-100]="palette() !== p.value"
+                      >
+                        {{ p.label }}
+                      </button>
+                    }
+                  </div>
+                  <span class="text-caption text-neutral-500">
+                    Sólo visible con Detalle = "Por tipo de activo".
+                  </span>
+                </div>
+
                 <!-- Chart body — monochromatic bars, reactive to Vista, with ghost-ceiling on hover -->
                 <div class="mt-space-4">
                   <afi-evolucion-bar-chart
                     [vista]="vista()"
                     [escenario]="escenario()"
                     [detalle]="detalle()"
+                    [palette]="palette()"
                     [mostrarHitos]="ajusteMostrarHitos()"
                     [incluirInmobiliario]="ajusteIncluirInmobiliario()"
                   />
@@ -627,7 +665,17 @@ comparison = "Al final del plan, a los &#123;endAge&#125; años"</code></pre>
 export class EvolucionPatrimonialPage {
   readonly vista = signal<Vista>('actual');
   readonly escenario = signal<Escenario>('medio');
-  readonly detalle = signal<Detalle>('agregada');
+  readonly detalle = signal<Detalle>('activo');
+  readonly palette = signal<ChartPalette>('a');
+
+  readonly paletteOptions: { value: ChartPalette; label: string }[] = [
+    { value: 'a', label: 'A · Azul+Gris' },
+    { value: 'b', label: 'B · Azul puro' },
+    { value: 'c', label: 'C · Mixto' },
+    { value: 'v1', label: 'v1' },
+    { value: 'v2', label: 'v2' },
+    { value: 'v3', label: 'v3' },
+  ];
 
   /** Zone 3 actions dropdown (descarga / tabla / accesibilidad). */
   readonly actionsMenuOpen = signal(false);

@@ -304,7 +304,9 @@ import {
             <div class="py-space-6 flex flex-col gap-space-8">
               <!-- Cabecera -->
               <article class="border border-border-hairline rounded-md p-space-6">
-                <header class="flex items-center justify-between mb-space-3">
+                <header
+                  class="flex items-center justify-between pb-space-3 mb-space-4 border-b border-border-hairline"
+                >
                   <div class="flex items-center gap-space-2">
                     <span class="text-caption uppercase tracking-wider text-system-success"
                       >Decidido</span
@@ -404,7 +406,9 @@ comparison = "Al final del plan, a los &#123;endAge&#125; años"</code></pre>
 
               <!-- Filtros -->
               <article class="border border-border-hairline rounded-md p-space-6">
-                <header class="flex items-center justify-between mb-space-3">
+                <header
+                  class="flex items-center justify-between pb-space-3 mb-space-4 border-b border-border-hairline"
+                >
                   <div class="flex items-center gap-space-2">
                     <span class="text-caption uppercase tracking-wider text-system-success"
                       >Decidido</span
@@ -518,7 +522,9 @@ comparison = "Al final del plan, a los &#123;endAge&#125; años"</code></pre>
 
               <!-- Barras -->
               <article class="border border-border-hairline rounded-md p-space-6">
-                <header class="flex items-center justify-between mb-space-3">
+                <header
+                  class="flex items-center justify-between pb-space-3 mb-space-4 border-b border-border-hairline"
+                >
                   <div class="flex items-center gap-space-2">
                     <span class="text-caption uppercase tracking-wider text-action-700"
                       >Propuesto</span
@@ -542,7 +548,9 @@ comparison = "Al final del plan, a los &#123;endAge&#125; años"</code></pre>
 
               <!-- Leyenda -->
               <article class="border border-border-hairline rounded-md p-space-6">
-                <header class="flex items-center justify-between mb-space-3">
+                <header
+                  class="flex items-center justify-between pb-space-3 mb-space-4 border-b border-border-hairline"
+                >
                   <div class="flex items-center gap-space-2">
                     <span class="text-caption uppercase tracking-wider text-action-700"
                       >Propuesto</span
@@ -561,7 +569,9 @@ comparison = "Al final del plan, a los &#123;endAge&#125; años"</code></pre>
 
               <!-- Hover ghost ceiling -->
               <article class="border border-border-hairline rounded-md p-space-6">
-                <header class="flex items-center justify-between mb-space-3">
+                <header
+                  class="flex items-center justify-between pb-space-3 mb-space-4 border-b border-border-hairline"
+                >
                   <div class="flex items-center gap-space-2">
                     <span class="text-caption uppercase tracking-wider text-action-700"
                       >Propuesto</span
@@ -580,7 +590,9 @@ comparison = "Al final del plan, a los &#123;endAge&#125; años"</code></pre>
 
               <!-- Barra lateral -->
               <article class="border border-border-hairline rounded-md p-space-6">
-                <header class="flex items-center justify-between mb-space-3">
+                <header
+                  class="flex items-center justify-between pb-space-3 mb-space-4 border-b border-border-hairline"
+                >
                   <div class="flex items-center gap-space-2">
                     <span class="text-caption uppercase tracking-wider text-system-success"
                       >Decidido</span

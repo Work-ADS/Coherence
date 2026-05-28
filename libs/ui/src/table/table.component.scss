@@ -15,6 +15,56 @@
   width: 100%;
   font: var(--type-body-sm-400);
   border-collapse: collapse;
+
+  // ─── Actions reveal modifiers ──────────────────────────────────────────
+  // Two table-team-evaluation modes for row trailing actions. Default
+  // (`always`, no modifier) preserves current AFI behavior. The two
+  // alternatives below are scoped via descendant selectors so individual
+  // `.afi-table__action` elements stay simple. See `TableActionsReveal`
+  // JSDoc for the rationale.
+  //
+  // Opacity transitions inherit the same `duration-fast` / `easing-enter`
+  // already on `.afi-table__action` (color/background transitions).
+  // Reduced-motion users see the state change instantly because the
+  // existing transition rule already respects `prefers-reduced-motion`
+  // via the `transition` property only animating valid GPU-composited
+  // properties (opacity).
+  &--actions-hover .afi-table__action {
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity var(--duration-fast) var(--easing-enter),
+      background-color var(--duration-fast) var(--easing-enter),
+      color var(--duration-fast) var(--easing-enter);
+  }
+
+  &--actions-hover .afi-table__row:hover .afi-table__action,
+  &--actions-hover .afi-table__row:focus-within .afi-table__action,
+  &--actions-hover .afi-table__action:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &--actions-soft .afi-table__action {
+    opacity: 0.4;
+    transition:
+      opacity var(--duration-fast) var(--easing-enter),
+      background-color var(--duration-fast) var(--easing-enter),
+      color var(--duration-fast) var(--easing-enter);
+  }
+
+  &--actions-soft .afi-table__row:hover .afi-table__action,
+  &--actions-soft .afi-table__row:focus-within .afi-table__action,
+  &--actions-soft .afi-table__action:focus-visible {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &--actions-hover .afi-table__action,
+    &--actions-soft .afi-table__action {
+      transition-duration: 0ms;
+    }
+  }
 }
 
 // ─── Header ───────────────────────────────────────────────────────────────
@@ -180,6 +230,111 @@
       color: var(--feedback-error-foreground);
     }
   }
+
+  // Icon-only action — square footprint, icon centered.
+  &--icon {
+    min-width: var(--dimension-7);
+    padding-inline: var(--space-2xs);
+  }
+}
+
+.afi-table__action-icon {
+  width: var(--dimension-4);
+  height: var(--dimension-4);
+  display: block;
+}
+
+// Wrapper around the overflow `⋯` trigger + its `<afi-menu>` panel. Inline-
+// flex so the trigger sits next to inline actions in the same gap; relative
+// positioning lets the menu panel anchor to the trigger's right edge via
+// the menu's `placement="bottom-end"` mode.
+.afi-table__action-overflow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+// ─── Expand variant (rowActivation='expand') ──────────────────────────────
+//
+// Chevron prepended to the first cell of any row that has `children` OR
+// when `expandDetailTpl` is set. Rotates 90° on expand. Inline-flex so it
+// reads as part of the cell's content (Notion-style).
+.afi-table__expand-toggle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-5);
+  height: var(--dimension-5);
+  margin-inline-end: var(--space-2xs);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--foreground-secondary-default);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  vertical-align: middle;
+  transition:
+    transform var(--duration-fast) var(--easing-enter),
+    background-color var(--duration-fast) var(--easing-enter),
+    color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-muted);
+    color: var(--foreground-primary-default);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  &--open {
+    transform: rotate(90deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: background-color var(--duration-fast) var(--easing-enter);
+    // Keep the rotation but make it instant — direction stays semantic.
+    &--open {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.afi-table__expand-icon {
+  display: block;
+}
+
+// Child rows: indent the first cell so the hierarchy reads visually.
+// `--dimension-6` on top of the existing cell padding-inline. With
+// `selectable`, the SELECT cell is first — we still indent it; the
+// checkbox shifts right which correctly signals "this is a child".
+.afi-table__row--child {
+  > .afi-table__td:first-child,
+  > .afi-table__td-select:first-child {
+    padding-inline-start: calc(var(--space-md) + var(--dimension-6));
+  }
+
+  // Children sit on the same hairline but with no top border to read as
+  // grouped under the parent. The parent's bottom border doubles as the
+  // group's separator.
+  > .afi-table__td {
+    color: var(--foreground-secondary-default);
+  }
+}
+
+// Free-form detail panel — single full-width row below the parent when
+// `expandDetailTpl` is set + no children. Padding wraps the projected
+// template content; background hints at the nested relationship.
+.afi-table__detail-row {
+  background: var(--surface-subtle);
+}
+
+.afi-table__detail-cell {
+  padding: var(--space-lg) var(--space-md);
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+  color: var(--foreground-secondary-default);
 }
 
 // ─── Empty + skeleton states ──────────────────────────────────────────────

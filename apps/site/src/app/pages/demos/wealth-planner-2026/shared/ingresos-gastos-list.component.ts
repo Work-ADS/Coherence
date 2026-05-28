@@ -99,9 +99,26 @@ export class IngresosGastosListComponent {
     { key: 'valor', label: 'Valor', align: 'end', emphasis: true },
   ];
 
+  /**
+   * Locked action pattern (2026-05-28): 1 primary inline + the rest in
+   * the `⋯` overflow menu. Matches sociedades, inversiones-futuras,
+   * desinversiones-futuras. Editar inline (most-used) → Duplicar +
+   * Borrar in overflow.
+   */
   readonly tableActions: TableRowAction[] = [
-    { key: 'edit', label: 'Editar' },
-    { key: 'delete', label: 'Borrar', variant: 'danger' },
+    {
+      key: 'edit',
+      label: 'Editar',
+      icon: 'edit',
+      ariaLabel: 'Editar fila',
+    },
+    { key: 'duplicate', label: 'Duplicar', overflow: true },
+    {
+      key: 'delete',
+      label: 'Borrar',
+      overflow: true,
+      variant: 'danger',
+    },
   ];
 
   readonly tableRows = computed<Record<string, unknown>[]>(() =>
@@ -181,6 +198,30 @@ export class IngresosGastosListComponent {
     }
   }
 
+  /**
+   * Duplicar: clone fields onto a fresh row via the matching store add
+   * method. Doesn't open the modal (store add takes the partial directly);
+   * the new row appears at the bottom of the list. Slightly different from
+   * sociedades / if / df where the modal opens — but that's because this
+   * store's add API takes the full row payload instead of returning a
+   * blank one.
+   */
+  duplicateRow(id: string): void {
+    const source = this.rows().find((r) => r.id === id);
+    if (!source) return;
+    const { id: _omitId, ...fields } = source;
+    void _omitId;
+    const cloned = {
+      ...fields,
+      concepto: source.concepto ? `${source.concepto} (copia)` : '',
+    };
+    if (this.mode() === 'ingreso') {
+      this.store.addIngreso(cloned);
+    } else {
+      this.store.addGasto(cloned);
+    }
+  }
+
   onTableRowClicked(payload: { row: Record<string, unknown>; event: MouseEvent }): void {
     const id = this.tableRowId(payload.row);
     if (id) this.openEdit(id);
@@ -194,10 +235,16 @@ export class IngresosGastosListComponent {
     const id = this.tableRowId(payload.row);
     if (!id) return;
 
-    if (payload.action.key === 'delete') {
-      this.removeRow(id, payload.event);
-    } else {
-      this.openEdit(id);
+    switch (payload.action.key) {
+      case 'edit':
+        this.openEdit(id);
+        break;
+      case 'duplicate':
+        this.duplicateRow(id);
+        break;
+      case 'delete':
+        this.removeRow(id, payload.event);
+        break;
     }
   }
 

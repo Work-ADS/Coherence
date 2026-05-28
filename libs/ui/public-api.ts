@@ -25,9 +25,12 @@ export { TabsComponent, TabItemComponent } from './src/tabs';
 export type { TabsSize } from './src/tabs';
 export { TableComponent } from './src/table';
 export type {
+  TableActionsReveal,
   TableCellKind,
   TableColumn,
+  TableReservedKey,
   TableRowAction,
+  TableRowActionIcon,
   TableRowActionVariant,
   TableSortState,
   TableDensity,

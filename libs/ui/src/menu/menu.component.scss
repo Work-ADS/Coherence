@@ -15,22 +15,34 @@
   min-width: 12rem;
   padding: var(--space-2xs) 0;
   background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-hairline) solid var(--border-subtle);
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-md);
   animation: menu-enter var(--duration-fast) var(--easing-enter);
 
-  /* Placement modifiers */
-  &.placement-bottom-start { left: 0; top: 100%; margin-top: var(--space-2xs); }
-  &.placement-bottom-end   { right: 0; top: 100%; margin-top: var(--space-2xs); }
-  &.placement-top-start    { left: 0; bottom: 100%; margin-bottom: var(--space-2xs); }
-  &.placement-top-end      { right: 0; bottom: 100%; margin-bottom: var(--space-2xs); }
+  /* Placement modifiers — apply only when NOT anchored (i.e. when the
+     panel positions absolutely relative to the menu host). Anchored mode
+     uses inline `top/left/right/bottom` styles set from JS, so we skip
+     these. */
+  &:not(.menu__panel--anchored) {
+    &.placement-bottom-start { left: 0; top: 100%; margin-top: var(--space-2xs); }
+    &.placement-bottom-end   { right: 0; top: 100%; margin-top: var(--space-2xs); }
+    &.placement-top-start    { left: 0; bottom: 100%; margin-bottom: var(--space-2xs); }
+    &.placement-top-end      { right: 0; bottom: 100%; margin-bottom: var(--space-2xs); }
+  }
+
+  /* Anchored mode: panel is `position: fixed` (set inline from the
+     component) so it escapes ancestor overflow clipping. Raise z-index
+     above app chrome (sidebars, top bars) so it lays over everything. */
+  &--anchored {
+    z-index: 1000;
+  }
 }
 
 @keyframes menu-enter {
   from {
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateY(calc(-1 * var(--space-2xs)));
   }
   to {
     opacity: 1;

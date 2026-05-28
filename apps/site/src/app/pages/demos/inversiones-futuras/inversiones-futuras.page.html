@@ -47,84 +47,19 @@
       </div>
     </div>
   } @else {
-    <table class="if-table">
-      <thead>
-        <tr class="if-table__head-row">
-          <th class="if-table__th">Nombre</th>
-          <th class="if-table__th">Tipo</th>
-          <th class="if-table__th">Año</th>
-          <th class="if-table__th">Titular</th>
-          <th class="if-table__th if-table__th--num">Importe</th>
-          <th class="if-table__th if-table__th--actions">
-            <span class="sr-only">Acciones</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of store.inversionesFuturas(); track row.id) {
-          <tr class="if-table__row" (click)="openEdit(row.id)">
-            <td class="if-table__td if-table__td--name">
-              {{ row.nombre || 'Sin nombre' }}
-            </td>
-            <td class="if-table__td">{{ tipoLabel(row.tipo) }}</td>
-            <td class="if-table__td">{{ formatAnio(row.anio) }}</td>
-            <td class="if-table__td">{{ titularLabel(row.titular) }}</td>
-            <td class="if-table__td if-table__td--num">
-              {{ formatEuro(row.importe) }}
-            </td>
-            <td class="if-table__td if-table__td--actions">
-              <afi-icon-button
-                variant="ghost"
-                size="sm"
-                ariaLabel="Editar inversión futura"
-                (clicked)="openEdit(row.id)"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                  />
-                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                </svg>
-              </afi-icon-button>
-              <afi-icon-button
-                variant="ghost"
-                size="sm"
-                ariaLabel="Borrar inversión futura"
-                (clicked)="removeInversionFutura(row.id, $event.event)"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M3 6h18" />
-                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                  <path d="M10 11v6" />
-                  <path d="M14 11v6" />
-                </svg>
-              </afi-icon-button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+    <!-- 2026-05-28 — migrated from bespoke `<table class="if-table">` to
+         `<afi-table>`. Propuesta preset (modal flavor): editar inline +
+         ⋯ overflow with duplicar + borrar. Inherits primitive default
+         `actionsReveal="hover"`. -->
+    <afi-table
+      [columns]="tableColumns"
+      [rows]="tableRows()"
+      [rowActions]="tableActions"
+      trackByKey="id"
+      density="comfortable"
+      (rowClicked)="onTableRowClick($event)"
+      (rowActionClicked)="onTableAction($event)"
+    />
   }
 </site-objetivos-page-shell>
 

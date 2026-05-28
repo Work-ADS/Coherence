@@ -27,6 +27,19 @@
         ariaLabel="Table density"
       />
     </div>
+    <div class="control-group">
+      <span class="control-group__label">Acciones en fila</span>
+      <afi-segmented-control
+        [options]="actionRevealOptions"
+        [(value)]="actionReveal"
+        size="sm"
+        ariaLabel="Revelado de acciones de fila"
+      />
+      <span class="control-group__hint">
+        <strong>Opción 1</strong> — oculto hasta hover (Notion / Granola).
+        <strong>Opción 2</strong> — atenuado en reposo, vivo al pasar el ratón.
+      </span>
+    </div>
   </div>
 
   <div slot="preview" class="preview">
@@ -34,6 +47,8 @@
       [columns]="columns"
       [rows]="rows"
       [density]="density()"
+      [rowActions]="rowActions"
+      [actionsReveal]="actionReveal()"
       trackByKey="id"
     />
   </div>

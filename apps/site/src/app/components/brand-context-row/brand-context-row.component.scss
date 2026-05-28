@@ -2,8 +2,12 @@
 // brand-context-row.component.scss
 //
 // Renders inline inside the doc-page-shell controls row, alongside per-page
-// filters like Variant / Size. Two control-group blocks (Marca + Inspeccionar)
-// styled to match the shared control-group spec from _doc-page-shared.scss.
+// filters like Variant / Size. One control-group block (Marca) styled to
+// match the shared control-group spec from _doc-page-shared.scss.
+//
+// 2026-05-28: Inspección block + Copiado feedback removed. The Tokens
+// consumidos table below the playground IS the inspection on component
+// pages now — hover-to-copy is reserved for /demos.
 // =============================================================================
 
 :host {
@@ -19,37 +23,4 @@
     font: var(--type-body-sm-400);
     color: var(--foreground-tertiary-default);
   }
-
-  &--copied {
-    animation: brand-context-row-copied-fade 1.8s ease-out forwards;
-  }
-}
-
-.brand-context-row__copied {
-  display: inline-flex;
-  align-items: center;
-  height: var(--control-h-sm);
-  padding-inline: var(--space-sm);
-  background: var(--feedback-success-background);
-  color: var(--feedback-success-foreground);
-  border: var(--border-width-hairline) solid var(--feedback-success-border);
-  border-radius: var(--radius-control);
-  font: var(--type-body-sm-500);
-  font-family: var(--font-family-mono, ui-monospace, monospace);
-  white-space: nowrap;
-}
-
-.brand-context-row__status {
-  display: inline-flex;
-  align-items: center;
-  height: var(--control-h-sm);
-  color: var(--foreground-secondary-default);
-  font: var(--type-body-sm-500);
-}
-
-@keyframes brand-context-row-copied-fade {
-  0%   { opacity: 0; transform: translateY(calc(-1 * var(--dimension-1))); }
-  10%  { opacity: 1; transform: translateY(0); }
-  85%  { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(calc(-1 * var(--dimension-1))); }
 }

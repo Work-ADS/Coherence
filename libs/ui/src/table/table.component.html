@@ -1,5 +1,5 @@
 <div class="afi-table__scroll">
-  <table class="afi-table">
+  <table [class]="tableClasses()">
     <thead>
       <tr class="afi-table__head-row">
         @if (selectable()) {
@@ -75,9 +75,13 @@
           </td>
         </tr>
       } @else {
-        @for (row of rows(); track trackKey(row)) {
+        <!-- Row template reused for parents AND children (single source of
+             truth for cell rendering). `isChild` defaults to false; child
+             invocation passes `true` so the row picks up `--child` class
+             and the first cell gets indented via CSS. -->
+        <ng-template #rowTpl let-row let-isChild="isChild">
           <tr
-            [class]="rowClasses(isSelected(row), isHighlighted(row))"
+            [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild)"
             [attr.data-row-key]="row[trackByKey()]"
             (click)="onRowClick(row, $event)"
           >
@@ -91,8 +95,33 @@
                 />
               </td>
             }
-            @for (col of visibleColumns(); track col.key) {
+            @for (col of visibleColumns(); track col.key; let isFirstCol = $first) {
               <td [class]="cellClasses(col)">
+                @if (isFirstCol && !isChild && hasExpansion(row)) {
+                  <button
+                    type="button"
+                    class="afi-table__expand-toggle"
+                    [class.afi-table__expand-toggle--open]="isExpanded(row)"
+                    [attr.aria-label]="isExpanded(row) ? 'Colapsar fila' : 'Expandir fila'"
+                    [attr.aria-expanded]="isExpanded(row)"
+                    (click)="toggleExpand(row, $event)"
+                  >
+                    <svg
+                      class="afi-table__expand-icon"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="9 6 15 12 9 18" />
+                    </svg>
+                  </button>
+                }
                 @if (col.kind === 'badge') {
                   @if (cellText(row, col)) {
                     <afi-badge [intent]="col.badgeIntent ?? 'neutral'" size="sm">
@@ -105,22 +134,142 @@
               </td>
             }
             @if (hasRowActions()) {
-              <td class="afi-table__td-actions">
+              <!-- Stop propagation on the actions cell so a click on empty
+                   gutter space (not directly on a button) doesn't bubble to
+                   the row's click handler and trigger `rowClicked`. -->
+              <td class="afi-table__td-actions" (click)="$event.stopPropagation()">
                 <div class="afi-table__actions">
-                  @for (action of rowActions(); track action.key) {
+                  @for (action of inlineActionsFor(row); track action.key) {
                     <button
                       type="button"
                       [class]="actionClasses(action)"
                       [attr.aria-label]="action.ariaLabel ?? action.label"
                       (click)="onRowAction(action, row, $event)"
                     >
-                      {{ action.label }}
+                      @if (action.icon) {
+                        <svg
+                          class="afi-table__action-icon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          @switch (action.icon) {
+                            @case ('edit') {
+                              <path
+                                d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                              />
+                              <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            }
+                            @case ('delete') {
+                              <path d="M3 6h18" />
+                              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                              <path d="M10 11v6" />
+                              <path d="M14 11v6" />
+                            }
+                            @case ('more') {
+                              <circle cx="12" cy="6" r="1.4" />
+                              <circle cx="12" cy="12" r="1.4" />
+                              <circle cx="12" cy="18" r="1.4" />
+                            }
+                          }
+                        </svg>
+                      } @else {
+                        {{ action.label }}
+                      }
                     </button>
+                  }
+                  @if (hasOverflowActionsFor(row)) {
+                    <span class="afi-table__action-overflow">
+                      <button
+                        type="button"
+                        class="afi-table__action afi-table__action--icon"
+                        [attr.aria-label]="'Más acciones'"
+                        [attr.aria-haspopup]="'menu'"
+                        [attr.aria-expanded]="isMenuOpen(row)"
+                        (click)="toggleMenu(row, $event)"
+                      >
+                        <svg
+                          class="afi-table__action-icon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <circle cx="12" cy="6" r="1.4" />
+                          <circle cx="12" cy="12" r="1.4" />
+                          <circle cx="12" cy="18" r="1.4" />
+                        </svg>
+                      </button>
+                      <!-- `[anchor]` is the actually-clicked trigger element
+                           captured at toggle time, not a template-ref. The
+                           ref-based approach mis-resolved across @for views
+                           wrapped in `*ngTemplateOutlet`. -->
+                      <afi-menu
+                        [open]="isMenuOpen(row)"
+                        placement="bottom-end"
+                        ariaLabel="Acciones de fila"
+                        [anchor]="menuAnchor()"
+                        (openChange)="$event ? null : closeMenu()"
+                      >
+                        @for (action of overflowStandardActionsFor(row); track action.key) {
+                          <afi-menu-item
+                            [label]="action.label"
+                            variant="default"
+                            (clicked)="onOverflowAction(action, row, $event.event)"
+                          />
+                        }
+                        @if (hasOverflowDividerFor(row)) {
+                          <afi-menu-divider />
+                        }
+                        @for (action of overflowDangerActionsFor(row); track action.key) {
+                          <afi-menu-item
+                            [label]="action.label"
+                            variant="danger"
+                            (clicked)="onOverflowAction(action, row, $event.event)"
+                          />
+                        }
+                      </afi-menu>
+                    </span>
                   }
                 </div>
               </td>
             }
           </tr>
+        </ng-template>
+
+        @for (row of rows(); track trackKey(row)) {
+          <!-- Parent row -->
+          <ng-container
+            *ngTemplateOutlet="rowTpl; context: { $implicit: row, isChild: false }"
+          />
+
+          @if (isExpanded(row)) {
+            @if (hasChildren(row)) {
+              <!-- Children mode: same column schema, indented via CSS. -->
+              @for (child of childrenOf(row); track trackKey(child)) {
+                <ng-container
+                  *ngTemplateOutlet="rowTpl; context: { $implicit: child, isChild: true }"
+                />
+              }
+            } @else if (expandDetailTpl()) {
+              <!-- Detail mode: free-form panel spanning all columns. -->
+              <tr class="afi-table__detail-row">
+                <td [attr.colspan]="totalColumns()" class="afi-table__detail-cell">
+                  <ng-container
+                    *ngTemplateOutlet="expandDetailTpl()!; context: { $implicit: row }"
+                  />
+                </td>
+              </tr>
+            }
+          }
         }
       }
     </tbody>

@@ -1,3 +1,8 @@
+<site-demo-shell
+  [views]="['Patrimonio']"
+  demoSlug="patrimonial"
+  demoRoute="/demos/wealth-planner-2026/patrimonial"
+>
     <div class="h-screen flex bg-canvas-base overflow-hidden">
       <site-planner-sidebar activeKey="patrimonio" />
 
@@ -714,240 +719,26 @@
                           <h2 class="text-section text-canvas-fg">{{ s.total }}</h2>
                         </div>
                       }
-                      <!-- Free-flowing table — grid built from section.columns widths -->
-                      <div>
-                        <!-- Header row -->
-                        <div
-                          class="grid gap-space-3 text-body-sm border-b border-border-hairline pb-space-2"
-                          [style.grid-template-columns]="gridTemplateFor(s)"
-                        >
-                          <button
-                            type="button"
-                            class="flex items-center gap-1 font-medium text-canvas-fg text-left hover:text-action transition-colors"
-                          >
-                            <span>Nombre</span>
-                            <svg
-                              class="w-3 h-3 text-neutral-500"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              aria-hidden="true"
-                            >
-                              <path d="m7 15 5 5 5-5" />
-                              <path d="m17 9-5-5-5 5" />
-                            </svg>
-                          </button>
-                          @for (c of s.columns; track c.key) {
-                            @if (c.emphasis) {
-                              <button
-                                type="button"
-                                class="flex items-center gap-1 font-medium text-canvas-fg hover:text-action transition-colors"
-                                [class.justify-end]="c.align === 'end'"
-                                [class.text-right]="c.align === 'end'"
-                              >
-                                <span>{{ c.label }}</span>
-                                <svg
-                                  class="w-3 h-3 text-neutral-500"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  aria-hidden="true"
-                                >
-                                  <path d="m7 15 5 5 5-5" />
-                                  <path d="m17 9-5-5-5 5" />
-                                </svg>
-                              </button>
-                            } @else {
-                              <span
-                                class="font-medium text-canvas-fg"
-                                [class.text-right]="c.align === 'end'"
-                                >{{ c.label }}</span
-                              >
-                            }
-                          }
-                          <span></span>
-                        </div>
-
-                        <!-- Rows -->
-                        @for (row of rows; track row.id ?? row.name) {
-                          <!-- Parent / standalone row -->
-                          <div
-                            #assetRow
-                            class="grid gap-space-3 text-body-sm py-space-2 border-b last:border-b-0 border-border-hairline items-center"
-                            [class.new-asset-row]="isLatestAdded(row)"
-                            [attr.data-asset-row-id]="row.id ?? null"
-                            [style.grid-template-columns]="gridTemplateFor(s)"
-                          >
-                            <div class="min-w-0 flex items-start gap-space-2">
-                              @if (row.children && row.children.length > 0) {
-                                <button
-                                  type="button"
-                                  (click)="toggleRow(s.key, row.name)"
-                                  class="inline-flex items-center justify-center w-5 h-5 mt-0.5 rounded hover:bg-surface-100 text-neutral-500 shrink-0 transition-transform"
-                                  [attr.aria-expanded]="isRowExpanded(s.key, row.name)"
-                                  [attr.aria-label]="
-                                    (isRowExpanded(s.key, row.name) ? 'Contraer ' : 'Expandir ') +
-                                    row.name
-                                  "
-                                >
-                                  <svg
-                                    class="w-3.5 h-3.5 transition-transform duration-150"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    aria-hidden="true"
-                                    [style.transform]="
-                                      isRowExpanded(s.key, row.name)
-                                        ? 'rotate(90deg)'
-                                        : 'rotate(0deg)'
-                                    "
-                                  >
-                                    <polyline points="9 18 15 12 9 6" />
-                                  </svg>
-                                </button>
-                              }
-                              <div class="min-w-0 flex-1">
-                                <div class="flex items-center gap-space-2">
-                                  <p class="font-medium text-canvas-fg truncate">{{ row.name }}</p>
-                                  @if (isLatestAdded(row)) {
-                                    <span
-                                      class="inline-flex items-center h-5 px-space-2 rounded-full bg-system-info-bg text-system-info-fg text-caption font-medium whitespace-nowrap"
-                                      >Nuevo</span
-                                    >
-                                  }
-                                  @for (tag of row.nameTags ?? []; track tag) {
-                                    <span class="text-caption text-neutral-500 whitespace-nowrap">{{
-                                      tag
-                                    }}</span>
-                                  }
-                                </div>
-                                @if (row.subtitle) {
-                                  <p class="text-caption text-neutral-500 truncate">
-                                    {{ row.subtitle }}
-                                  </p>
-                                }
-                              </div>
-                            </div>
-                            @for (c of s.columns; track c.key) {
-                              <span
-                                [class]="c.align === 'end' ? 'text-right tabular-nums' : ''"
-                                [class.text-canvas-fg]="c.emphasis"
-                                [class.font-medium]="c.emphasis"
-                                [class.text-neutral-700]="!c.emphasis"
-                              >
-                                {{ row.cells[c.key] }}
-                              </span>
-                            }
-                            <div class="relative">
-                              <button
-                                type="button"
-                                class="inline-flex items-center justify-center w-7 h-7 rounded hover:bg-surface-100 text-neutral-500"
-                                aria-label="Acciones de la fila"
-                                aria-haspopup="menu"
-                                [attr.aria-expanded]="rowActionsOpen() === rowActionId(s, row)"
-                                (click)="toggleRowActions(s, row)"
-                              >
-                                <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                                  <path
-                                    d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 14a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"
-                                  />
-                                </svg>
-                              </button>
-                              @if (rowActionsOpen() === rowActionId(s, row)) {
-                                <div
-                                  class="fixed inset-0 z-40"
-                                  (click)="rowActionsOpen.set(null)"
-                                  aria-hidden="true"
-                                ></div>
-                                <div
-                                  role="menu"
-                                  class="absolute right-0 top-full mt-1 z-50 min-w-[160px] p-space-1 bg-canvas-base border border-border-hairline rounded-md shadow-lg"
-                                >
-                                  <button
-                                    type="button"
-                                    role="menuitem"
-                                    class="w-full flex items-center gap-space-2 px-space-2 py-space-2 rounded text-left text-body-sm text-canvas-fg hover:bg-surface-muted"
-                                    (click)="rowActionsOpen.set(null)"
-                                  >
-                                    Editar
-                                  </button>
-                                  <button
-                                    type="button"
-                                    role="menuitem"
-                                    class="w-full flex items-center gap-space-2 px-space-2 py-space-2 rounded text-left text-body-sm text-canvas-fg hover:bg-surface-muted"
-                                    (click)="rowActionsOpen.set(null)"
-                                  >
-                                    Duplicar
-                                  </button>
-                                  <div class="h-px bg-border-hairline my-space-1"></div>
-                                  <button
-                                    type="button"
-                                    role="menuitem"
-                                    class="w-full flex items-center gap-space-2 px-space-2 py-space-2 rounded text-left text-body-sm text-system-error-fg hover:bg-system-error-bg"
-                                    (click)="rowActionsOpen.set(null)"
-                                  >
-                                    Borrar
-                                  </button>
-                                </div>
-                              }
-                            </div>
-                          </div>
-
-                          <!-- Child rows — indented under the parent, no background -->
-                          @if (isRowExpanded(s.key, row.name)) {
-                            @for (child of row.children ?? []; track child.id ?? child.name) {
-                              <div
-                                class="grid gap-space-3 text-body-sm py-space-2 border-b last:border-b-0 border-border-hairline items-center"
-                                [style.grid-template-columns]="gridTemplateFor(s)"
-                              >
-                                <div class="min-w-0 pl-space-10 relative">
-                                  <!-- Thin guideline threading the children back to the parent -->
-                                  <span
-                                    aria-hidden="true"
-                                    class="absolute left-[18px] top-0 bottom-0 w-px bg-border-hairline"
-                                  ></span>
-                                  <div class="flex items-center gap-space-2">
-                                    <p class="font-medium text-canvas-fg truncate">
-                                      {{ child.name }}
-                                    </p>
-                                    @for (tag of child.nameTags ?? []; track tag) {
-                                      <span
-                                        class="text-caption text-neutral-500 whitespace-nowrap"
-                                        >{{ tag }}</span
-                                      >
-                                    }
-                                  </div>
-                                  @if (child.subtitle) {
-                                    <p class="text-caption text-neutral-500 truncate">
-                                      {{ child.subtitle }}
-                                    </p>
-                                  }
-                                </div>
-                                @for (c of s.columns; track c.key) {
-                                  <span
-                                    [class]="c.align === 'end' ? 'text-right tabular-nums' : ''"
-                                    [class.text-canvas-fg]="c.emphasis"
-                                    [class.font-medium]="c.emphasis"
-                                    [class.text-neutral-700]="!c.emphasis"
-                                  >
-                                    {{ child.cells[c.key] }}
-                                  </span>
-                                }
-                                <span></span>
-                              </div>
-                            }
-                          }
-                        }
-                      </div>
+                      <!-- 2026-05-28 — migrated from bespoke `<div class="grid">`
+                           per-section rendering to `<afi-table>` using the
+                           new `rowActivation='expand'` variant. Children are
+                           passed through via the table's reserved `children`
+                           magic key (mapped in `tableRowsFor`). Per-section
+                           column schemas come from `tableColumnsFor`. Reveal
+                           inherits the locked `'hover'` default. Trade-offs
+                           documented on the helpers in the .ts file (lose
+                           subtitle/nameTags/Nuevo-badge until follow-up). -->
+                      <afi-table
+                        [columns]="tableColumnsFor(s)"
+                        [rows]="tableRowsFor(s, rows)"
+                        [rowActions]="assetTableActions"
+                        [expandedKeys]="expandedKeysFor(s.key)"
+                        (expandedKeysChange)="onSectionExpandedChange(s.key, $event)"
+                        trackByKey="id"
+                        density="compact"
+                        (rowClicked)="onSectionRowClicked($event)"
+                        (rowActionClicked)="onSectionAction($event)"
+                      />
                     </section>
                   }
                 }
@@ -995,42 +786,21 @@
       </div>
 
       <!-- "+ Añadir" dialog — Stripe-style: form on the left, live preview chart on the right -->
-      @if (addDialogOpen()) {
-        <div
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-space-6"
-          (click)="addDialogOpen.set(false)"
-          role="presentation"
-        >
-          <div
-            role="dialog"
-            aria-label="Añadir activo"
-            class="bg-canvas-base border border-border-hairline rounded-lg shadow-xl w-[1040px] max-w-full h-[640px] max-h-[calc(100vh-48px)] flex flex-col overflow-hidden"
-            (click)="$event.stopPropagation()"
-          >
-            <!-- Stripe-style top bar: X · hairline · title -->
-            <header
-              class="flex items-center gap-space-3 px-space-4 h-12 border-b border-border-hairline bg-canvas-base shrink-0"
-            >
-              <button
-                type="button"
-                (click)="addDialogOpen.set(false)"
-                class="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-surface-100 text-neutral-500 hover:text-canvas-fg transition-colors"
-                aria-label="Cerrar"
-              >
-                <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.22 4.22a.75.75 0 011.06 0L10 8.94l4.72-4.72a.75.75 0 111.06 1.06L11.06 10l4.72 4.72a.75.75 0 11-1.06 1.06L10 11.06l-4.72 4.72a.75.75 0 01-1.06-1.06L8.94 10 4.22 5.28a.75.75 0 010-1.06z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
-              <span class="w-px h-5 bg-border-hairline shrink-0" aria-hidden="true"></span>
-              <h2 class="text-body-md font-medium text-canvas-fg">Añadir activo</h2>
-            </header>
-
-            <!-- Body: form left · live resumen right -->
-            <div class="flex-1 min-h-0 flex overflow-hidden">
+      <!-- 2026-05-28 — migrated from bespoke `<div class="fixed inset-0 ...">`
+           to `<afi-modal size="xxl">`. The 2-pane layout (form left, live
+           preview right) stays as the modal's projected body; cancel + save
+           live in `slot=footer`. Close button is provided automatically by
+           the primitive (top-right). -->
+      <afi-modal
+        size="xxl"
+        title="Añadir activo"
+        [open]="addDialogOpen()"
+        [closeOnEsc]="true"
+        [closeOnBackdrop]="true"
+        (openChange)="addDialogOpen.set($event)"
+      >
+        <!-- Body: form left · live resumen right -->
+        <div class="patrimonial-add__body flex overflow-hidden">
               <!-- Left: form -->
               <div class="flex-[1.1] min-w-0 flex flex-col border-r border-border-hairline">
                 <div class="flex-1 overflow-y-auto px-space-6 py-space-6 flex flex-col gap-space-4">
@@ -1362,25 +1132,21 @@
               </div>
             </div>
 
-            <!-- Footer actions — committed controls live at the bottom of the modal. -->
-            <footer
-              class="h-14 px-space-4 border-t border-border-hairline bg-canvas-base shrink-0 flex items-center justify-end gap-space-3"
-            >
-              <p
-                class="text-caption text-neutral-500 inline-flex items-center gap-space-1 mr-space-1"
-              >
-                <afi-kbd [keys]="escShortcut" size="sm" /> para cancelar
-              </p>
-              <afi-button variant="ghost" size="sm" (clicked)="addDialogOpen.set(false)"
-                >Cancelar</afi-button
-              >
-              <afi-button variant="primary" size="sm" (clicked)="saveNewActivo()"
-                >Guardar activo</afi-button
-              >
-            </footer>
-          </div>
-        </div>
-      }
+        <!-- Footer actions — projected into the modal's footer slot -->
+        <ng-container slot="footer">
+          <p
+            class="text-caption text-neutral-500 inline-flex items-center gap-space-1 mr-space-1"
+          >
+            <afi-kbd [keys]="escShortcut" size="sm" /> para cancelar
+          </p>
+          <afi-button variant="ghost" size="sm" (clicked)="addDialogOpen.set(false)"
+            >Cancelar</afi-button
+          >
+          <afi-button variant="primary" size="sm" (clicked)="saveNewActivo()"
+            >Guardar activo</afi-button
+          >
+        </ng-container>
+      </afi-modal>
 
       <!-- Page-level toast for saveNewActivo confirmation -->
       <site-action-toast
@@ -1391,3 +1157,4 @@
         (dismissed)="savedToastVisible.set(false)"
       />
     </div>
+</site-demo-shell>

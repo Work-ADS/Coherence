@@ -1,15 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  effect,
-  inject,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 
 import { BrandContextRowComponent } from '../brand-context-row';
-import { HandoffInspectService } from '../../services/handoff-inspect.service';
-import { InspectService } from '../../services/inspect.service';
 import { ScopedBrandService } from '../../services/scoped-brand.service';
 
 /**
@@ -18,10 +9,15 @@ import { ScopedBrandService } from '../../services/scoped-brand.service';
  * Provides the standard layout skeleton:
  *   breadcrumb → overline → title → description → use-cases → brand picker → controls → preview → tokens
  *
- * Brand picker + inspect popover are baked in — every page that uses the
- * shell gets them automatically. Pages pass `componentName` (and optional
- * `variant`) so the popover composes the team-style flat-output name
- * (e.g. `button-primary-background: var(--brand-secondary-background-default)`).
+ * 2026-05-28: Click-to-copy handoff inspection removed from component
+ * pages — the `Tokens consumidos` table below the playground IS the
+ * inspection now (per user feedback: the panel itself shows what tokens
+ * the current variant consumes). Inspect mode is still live on the full
+ * /demos shell via `InspectService` for the "click any element on a real
+ * screen" workflow. `componentName` and `variant` inputs are kept as
+ * no-op accepts so the ~21 consumer pages don't break; if you're a future
+ * reader and they're still unused, drop them and update consumers in one
+ * sweep.
  *
  * Each section is a named slot. Empty slots are hidden automatically.
  */
@@ -33,42 +29,15 @@ import { ScopedBrandService } from '../../services/scoped-brand.service';
   templateUrl: './doc-page-shell.component.html',
   styleUrl: './doc-page-shell.component.scss',
 })
-export class DocPageShellComponent implements OnDestroy {
+export class DocPageShellComponent {
   readonly title = input.required<string>();
   readonly overline = input<string | null>(null);
   readonly description = input<string | null>(null);
 
-  /** Component slug for the handoff popover (e.g. 'button', 'card'). */
+  /** Kept for backward compatibility with existing pages; no longer wired. */
   readonly componentName = input<string | null>(null);
-  /** Active variant (e.g. 'primary'). Reactive — re-registers on change. */
+  /** Kept for backward compatibility with existing pages; no longer wired. */
   readonly variant = input<string | null>(null);
 
-  private readonly inspect = inject(InspectService);
-  protected readonly handoff = inject(HandoffInspectService);
   protected readonly brandSvc = inject(ScopedBrandService);
-
-  constructor() {
-    effect(() => {
-      const name = this.componentName();
-      if (!name) {
-        this.handoff.setContext(null);
-        return;
-      }
-      const variant = this.variant();
-      this.handoff.setContext(variant ? { name, variant } : { name });
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.handoff.setContext(null);
-  }
-
-  onPreviewClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null;
-    if (!target) return;
-    const token = this.inspect.getHandoffToken(target);
-    if (token) {
-      void this.handoff.copyLeaf(token);
-    }
-  }
 }

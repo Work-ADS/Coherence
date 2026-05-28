@@ -22,18 +22,18 @@
     <ng-content select="[slot=use-cases]" />
   </div>
 
-  <!-- Controls (Marca + Inspeccionar + per-page filters: variant, size, level, mode, etc.) -->
+  <!-- Controls (Marca + per-page filters: variant, size, level, mode, etc.) -->
   <div class="doc-page__controls">
     <site-brand-context-row />
     <ng-content select="[slot=controls]" />
   </div>
 
   <!-- Live preview — scoped brand wrapper so ONLY the preview re-skins.
-       Click handoff copies the leaf token line and highlights the matching row. -->
+       Click-to-copy inspection was removed 2026-05-28; `Tokens consumidos`
+       below the playground is the inspection on component pages now. -->
   <div
-    class="doc-page__preview doc-page__preview--inspecting"
+    class="doc-page__preview"
     [attr.data-brand]="brandSvc.attr()"
-    (click)="onPreviewClick($event)"
   >
     <ng-content select="[slot=preview]" />
   </div>

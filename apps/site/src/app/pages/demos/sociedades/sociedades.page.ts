@@ -8,13 +8,13 @@ import {
 
 import {
   ButtonComponent,
-  IconButtonComponent,
   InputComponent,
   ModalComponent,
   PageHeaderComponent,
   SelectComponent,
+  TableComponent,
 } from '@coherence/ui';
-import type { SelectOption } from '@coherence/ui';
+import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
@@ -43,11 +43,11 @@ import type { Sociedad, Tributacion } from '../wealth-planner-2026/store';
   standalone: true,
   imports: [
     ButtonComponent,
-    IconButtonComponent,
     InputComponent,
     ModalComponent,
     PageHeaderComponent,
     SelectComponent,
+    TableComponent,
     DemoShellComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
@@ -66,6 +66,45 @@ export class SociedadesPage {
     { value: 'holding', label: 'Holding' },
     { value: 'socimi', label: 'SOCIMI' },
   ];
+
+  // ── <afi-table> column + action defs (Propuesta preset — modal flavor) ─
+  readonly sociedadColumns: TableColumn[] = [
+    { key: 'nombre', label: 'Nombre', emphasis: true },
+    { key: 'tributacion', label: 'Tributación' },
+  ];
+
+  /**
+   * Row-actions pattern (2026-05-28, team-locked): 1 primary inline + the
+   * rest in the `⋯` overflow menu. Matches the patrimonial reference.
+   *   - Editar → inline (most-used action; visible on hover via the
+   *     primitive's `actionsReveal` setting)
+   *   - Duplicar → overflow
+   *   - Borrar → overflow + danger variant (auto-divider above it)
+   */
+  readonly sociedadActions: TableRowAction[] = [
+    { key: 'edit', label: 'Editar', ariaLabel: 'Editar sociedad', icon: 'edit' },
+    { key: 'duplicate', label: 'Duplicar', overflow: true },
+    {
+      key: 'delete',
+      label: 'Borrar',
+      overflow: true,
+      variant: 'danger',
+    },
+  ];
+
+  /**
+   * Display rows. Maps the raw `Tributacion` enum value to its human label
+   * so `<afi-table>` can render it directly without a custom cell renderer
+   * (its `cellText` calls `String(value)`). `nombre` defaults to a
+   * placeholder when blank, matching the bespoke table's prior behavior.
+   */
+  readonly sociedadRows = computed(() =>
+    this.store.sociedades().map((s) => ({
+      id: s.id,
+      nombre: s.nombre || 'Sin nombre',
+      tributacion: this.tributacionLabel(s.tributacion),
+    })),
+  );
 
   // ── Dialog state ──────────────────────────────────────────────────────
   /** id of the sociedad being edited; null when dialog is closed. */
@@ -119,6 +158,55 @@ export class SociedadesPage {
   removeSociedad(id: string, event?: Event): void {
     event?.stopPropagation();
     this.store.removeSociedad(id);
+  }
+
+  /**
+   * Duplicar: minimum-viable demo flow. Creates a new sociedad with the
+   * shape of the source (nombre + tributación copied; participantes left
+   * empty in this MVP — would need a store-level deep-clone helper).
+   * Opens the modal on the new row so the user can adjust.
+   */
+  duplicateSociedad(id: string): void {
+    const source = this.store.sociedades().find((s) => s.id === id);
+    if (!source) return;
+    const next = this.store.addSociedad();
+    this.store.updateSociedad(next.id, {
+      nombre: source.nombre ? `${source.nombre} (copia)` : '',
+      tributacion: source.tributacion,
+    });
+    this.editingId.set(next.id);
+  }
+
+  /**
+   * Row-click handler from `<afi-table>` — opens the edit modal. Action
+   * clicks (edit / delete) emit `rowActionClicked` instead and the table
+   * stops propagation internally, so this handler only fires for genuine
+   * row clicks.
+   */
+  onSociedadRowClick(event: { row: Record<string, unknown>; event: MouseEvent }): void {
+    this.openEdit(event.row['id'] as string);
+  }
+
+  /**
+   * Row-action handler from `<afi-table>`. Edit dispatches to the modal;
+   * duplicate clones via the store; delete removes the sociedad. The
+   * table's `onRowAction` already stopPropagated for inline actions, and
+   * `onOverflowAction` closes the menu after emitting — so handlers here
+   * stay side-effect-light.
+   */
+  onSociedadAction(event: { action: TableRowAction; row: Record<string, unknown> }): void {
+    const id = event.row['id'] as string;
+    switch (event.action.key) {
+      case 'edit':
+        this.openEdit(id);
+        break;
+      case 'duplicate':
+        this.duplicateSociedad(id);
+        break;
+      case 'delete':
+        this.removeSociedad(id);
+        break;
+    }
   }
 
   // ── Field handlers ────────────────────────────────────────────────────

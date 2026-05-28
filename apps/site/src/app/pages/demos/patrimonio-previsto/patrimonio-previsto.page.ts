@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
 import {
-  ButtonComponent,
   ChartBarComponent,
   PageHeaderComponent,
   SelectComponent,
+  TableComponent,
 } from '@coherence/ui';
-import type { BarDatum, SelectOption } from '@coherence/ui';
+import type { BarDatum, SelectOption, TableColumn } from '@coherence/ui';
 
 import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patrimonial/graph-card-header.component';
 import {
@@ -39,10 +39,10 @@ import type { Scenario, ScenarioRow } from '../wealth-planner-2026/store';
   selector: 'site-patrimonio-previsto-page',
   standalone: true,
   imports: [
-    ButtonComponent,
     ChartBarComponent,
     PageHeaderComponent,
     SelectComponent,
+    TableComponent,
     GraphCardHeaderComponent,
     EvolucionBarChartComponent,
     ObjetivosPageShellComponent,
@@ -171,6 +171,31 @@ export class PatrimonioPrevistoPage {
 
   formatEuroCell(v: number): string {
     return this.formatEuro(v);
+  }
+
+  // ── <afi-table> for the 4-row scenario readout ─────────────────────────
+  // No row actions; click selects via the existing `setEscenario` channel.
+  // Active row tracked through the primitive's `highlightedRowKey` input.
+  readonly scenarioColumns: TableColumn[] = [
+    { key: 'scenario', label: 'Escenario', emphasis: true },
+    { key: 'coberturaVital', label: 'Cobertura vital', align: 'end' },
+    { key: 'legadoInmobiliario', label: 'Legado inmobiliario', align: 'end' },
+    { key: 'legadoFinanciero', label: 'Legado financiero', align: 'end' },
+  ];
+
+  readonly scenarioRows = computed(() =>
+    this.store.patrimonioPrevisto().map((row) => ({
+      // `id` so the table can trackByKey on the raw enum.
+      id: row.scenario,
+      scenario: this.scenarioLabel(row.scenario),
+      coberturaVital: this.formatEuro(row.coberturaVital),
+      legadoInmobiliario: this.formatEuro(row.legadoInmobiliario),
+      legadoFinanciero: this.formatEuro(row.legadoFinanciero),
+    })),
+  );
+
+  onScenarioRowClick(event: { row: Record<string, unknown>; event: MouseEvent }): void {
+    this.setEscenario(event.row['id'] as string);
   }
 
   // ── Section 2: Evolución de ingresos y gastos — bar chart ────────────

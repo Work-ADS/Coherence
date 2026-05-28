@@ -80,46 +80,18 @@
         ({{ store.legadoRetiro().edadSeguridad }} años) en cada uno de los cuatro escenarios.
       </p>
     </header>
-    <div class="rounded-lg border border-border-hairline overflow-hidden">
-      <table class="pp-table w-full">
-        <thead>
-          <tr class="pp-table__head-row">
-            <th class="pp-table__th">Escenario</th>
-            <th class="pp-table__th pp-table__th--num">Cobertura vital</th>
-            <th class="pp-table__th pp-table__th--num">Legado inmobiliario</th>
-            <th class="pp-table__th pp-table__th--num">Legado financiero</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of store.patrimonioPrevisto(); track row.scenario) {
-            <tr
-              class="pp-table__row"
-              [class.pp-table__row--active]="row.scenario === escenarioSeleccionado()"
-            >
-              <td class="pp-table__td pp-table__td--name">
-                <button
-                  type="button"
-                  class="pp-table__scenario-btn"
-                  (click)="setEscenario(row.scenario)"
-                  [attr.aria-pressed]="row.scenario === escenarioSeleccionado()"
-                >
-                  {{ scenarioLabel(row.scenario) }}
-                </button>
-              </td>
-              <td class="pp-table__td pp-table__td--num">
-                {{ formatEuroCell(row.coberturaVital) }}
-              </td>
-              <td class="pp-table__td pp-table__td--num">
-                {{ formatEuroCell(row.legadoInmobiliario) }}
-              </td>
-              <td class="pp-table__td pp-table__td--num">
-                {{ formatEuroCell(row.legadoFinanciero) }}
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+    <!-- 2026-05-28 — migrated from bespoke `<table class="pp-table">` to
+         `<afi-table>`. No row actions: clicking a row sets the active
+         scenario via the existing `setEscenario` channel; the active row
+         renders via the primitive's `highlightedRowKey` input. -->
+    <afi-table
+      [columns]="scenarioColumns"
+      [rows]="scenarioRows()"
+      [highlightedRowKey]="escenarioSeleccionado()"
+      trackByKey="id"
+      density="comfortable"
+      (rowClicked)="onScenarioRowClick($event)"
+    />
   </div>
 
   <!-- ─── Evolución de ingresos y gastos — secondary chart ─────────── -->

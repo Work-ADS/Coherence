@@ -27,11 +27,18 @@
     outline-offset: var(--border-width-thick);
   }
 
+  // Destructive action treatment — red text + red-tinted hover background.
+  // LOCKED 2026-05-28: the `danger` variant is the visual rule for any
+  // menu item that performs a destructive task (Borrar, Eliminar, Archivar
+  // permanently, Cancel suscripción, etc.). Consumers should pass
+  // `variant="danger"` on any menu-item whose action removes / destroys
+  // state. Reads from `--feedback-error-*` semantic tokens so brand-swap
+  // continues to work.
   &.is-danger {
-    color: var(--feedback-error-foreground-default);
+    color: var(--feedback-error-foreground);
 
     &:hover {
-      background: var(--feedback-error-background-default);
+      background: var(--feedback-error-background);
     }
   }
 

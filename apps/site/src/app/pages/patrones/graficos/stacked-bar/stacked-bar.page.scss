@@ -1,0 +1,288 @@
+.stacked-bar {
+  max-width: var(--content-home-max);
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+  padding-block: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  &__kicker {
+    font: var(--type-body-sm-500);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--action-700);
+    margin: 0;
+  }
+
+  &__title {
+    font: var(--type-title);
+    color: var(--canvas-fg);
+    margin: 0;
+  }
+
+  &__lede {
+    font: var(--type-body);
+    color: var(--canvas-fg);
+    max-width: var(--content-prose);
+    margin: 0;
+
+    &--small {
+      font: var(--type-body-md-400);
+      color: var(--foreground-tertiary-default);
+    }
+
+    code {
+      font: var(--type-body-sm-500);
+      padding: 0 var(--space-2xs);
+      background: var(--surface-quiet);
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  &__link {
+    color: var(--action-700);
+    text-decoration: underline;
+    text-underline-offset: 0.125rem;
+
+    &:hover {
+      color: var(--action-900, var(--action-700));
+    }
+  }
+
+  &__h2 {
+    font: var(--type-section);
+    color: var(--canvas-fg);
+    margin: 0 0 var(--space-md);
+  }
+
+  // ── Preview ──────────────────────────────────────────────────────────────
+  &__preview-section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
+    gap: var(--space-lg);
+    align-items: start;
+
+    @media (max-width: 920px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__preview {
+    border: var(--border-width-hairline) solid var(--border-hairline);
+    border-radius: var(--radius-md);
+    background: var(--canvas-primary);
+    padding: var(--space-md);
+  }
+
+  &__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__axis-label {
+    font: var(--type-informe);
+    fill: var(--foreground-tertiary-default);
+  }
+
+  &__legend {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-md);
+    border: var(--border-width-hairline) solid var(--border-hairline);
+    border-radius: var(--radius-md);
+    background: var(--surface-elevated);
+  }
+
+  &__legend-row {
+    display: grid;
+    grid-template-columns: var(--space-md) 1fr auto;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  &__legend-label {
+    font: var(--type-body-sm-500);
+    color: var(--canvas-fg);
+  }
+
+  &__legend-token {
+    font: var(--type-informe);
+    color: var(--foreground-tertiary-default);
+  }
+
+  &__chip {
+    width: var(--space-md);
+    height: var(--space-md);
+    border-radius: var(--radius-sm);
+    border: var(--border-width-hairline) solid var(--border-hairline);
+  }
+
+  // ── Rules columns ────────────────────────────────────────────────────────
+  &__rules {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-lg);
+
+    @media (max-width: 720px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding-left: var(--space-md);
+    margin: 0;
+    max-width: var(--content-prose);
+
+    li {
+      font: var(--type-body-md-400);
+      color: var(--canvas-fg);
+    }
+
+    code {
+      font: var(--type-body-sm-500);
+      padding: 0 var(--space-2xs);
+      background: var(--surface-quiet);
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  // ── Tokens table ─────────────────────────────────────────────────────────
+  &__tokens {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  &__tokens-table {
+    display: flex;
+    flex-direction: column;
+    border: var(--border-width-hairline) solid var(--border-hairline);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  &__tokens-head,
+  &__tokens-row {
+    display: grid;
+    grid-template-columns: var(--space-md) minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-md);
+    border-bottom: var(--border-width-hairline) solid var(--border-hairline);
+  }
+
+  &__tokens-head {
+    background: var(--surface-quiet);
+    font: var(--type-body-sm-600);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--foreground-tertiary-default);
+  }
+
+  &__tokens-row {
+    background: var(--canvas-primary);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  &__token-name,
+  &__token-value {
+    font: var(--type-informe);
+    color: var(--canvas-fg);
+  }
+
+  &__token-value {
+    text-transform: uppercase;
+  }
+
+  &__token-usage {
+    font: var(--type-body-sm-400);
+    color: var(--canvas-fg);
+  }
+
+  // ── Dos & Don'ts ─────────────────────────────────────────────────────────
+  &__dos-donts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  &__dos-donts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-lg);
+
+    @media (max-width: 720px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Matches the style used on the dropdown / drawer pattern pages (the user's
+// canonical Dos & Don'ts look).
+.dos-donts__card {
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  background: var(--surface-elevated);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  h3 {
+    font: var(--type-body-md-600);
+    margin: 0;
+    padding-bottom: var(--space-2xs);
+    border-bottom: var(--border-width-hairline) solid var(--border-hairline);
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding-left: var(--space-md);
+    margin: 0;
+  }
+
+  li {
+    font: var(--type-body-sm-400);
+    color: var(--canvas-fg);
+  }
+
+  code {
+    font: var(--type-informe);
+    padding: 0 var(--space-2xs);
+    background: var(--surface-quiet);
+    border-radius: var(--radius-sm);
+  }
+
+  &--do {
+    border-color: var(--system-success, var(--border-hairline));
+
+    h3 {
+      color: var(--system-success, var(--canvas-fg));
+    }
+  }
+
+  &--dont {
+    border-color: var(--system-error, var(--border-hairline));
+
+    h3 {
+      color: var(--system-error, var(--canvas-fg));
+    }
+  }
+}

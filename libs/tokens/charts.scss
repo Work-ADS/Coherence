@@ -55,18 +55,37 @@
   --chart-tt-pop-max-width: 17.5rem;     // 280px
 
   // ---------------------------------------------------------------------------
-  // 2026-Q2 palette candidates — a / b / c (under design review)
-  // After decision: rename winner slots to --chart-stacked-{1..7}, delete losers.
-  // Each palette is ordered bottom→top of stack: slot 1 = largest segment.
+  // Canonical stacked-bar palette (LOCKED 2026-05-28 — winner of the 2026-Q2
+  // A/B/C comparison; documented at /patrones/graficos/stacked-bar).
+  //
+  // Order is bottom→top of stack: slot 1 = largest/foundational segment,
+  // slot 7 = smallest/topmost. Reads as monochromatic AFI azul with grays
+  // at the tail so adjacent series stay distinguishable at small heights.
   // ---------------------------------------------------------------------------
-  // A · Azul + Gris ladder (full azul ramp + grays at the tail)
-  --chart-palette-a-1: var(--color-afi-azul-profundo-900);
-  --chart-palette-a-2: var(--color-afi-azul-900);
-  --chart-palette-a-3: var(--color-afi-azul-700);
-  --chart-palette-a-4: var(--color-afi-azul-500);
-  --chart-palette-a-5: var(--color-afi-azul-300);
-  --chart-palette-a-6: var(--color-afi-gris-700);
-  --chart-palette-a-7: var(--color-afi-gris-500);
+  --chart-stacked-1: var(--color-afi-azul-profundo-900);
+  --chart-stacked-2: var(--color-afi-azul-900);
+  --chart-stacked-3: var(--color-afi-azul-700);
+  --chart-stacked-4: var(--color-afi-azul-500);
+  --chart-stacked-5: var(--color-afi-azul-300);
+  --chart-stacked-6: var(--color-afi-gris-700);
+  --chart-stacked-7: var(--color-afi-gris-500);
+
+  // ---------------------------------------------------------------------------
+  // 2026-Q2 candidate palettes — kept for diff/regression on the comparison
+  // page (/patrones/graficos/palette-comparison) and as inputs to the
+  // EvolucionBarChartComponent's palette switcher. Delete once those surfaces
+  // are removed.
+  //
+  // A (winner) is aliased back to the canonical --chart-stacked-* tokens so
+  // there's a single source of truth for the locked palette.
+  // ---------------------------------------------------------------------------
+  --chart-palette-a-1: var(--chart-stacked-1);
+  --chart-palette-a-2: var(--chart-stacked-2);
+  --chart-palette-a-3: var(--chart-stacked-3);
+  --chart-palette-a-4: var(--chart-stacked-4);
+  --chart-palette-a-5: var(--chart-stacked-5);
+  --chart-palette-a-6: var(--chart-stacked-6);
+  --chart-palette-a-7: var(--chart-stacked-7);
 
   // B · Pure azul ladder (luminance-only, no grays)
   --chart-palette-b-1: var(--color-afi-azul-profundo-900);

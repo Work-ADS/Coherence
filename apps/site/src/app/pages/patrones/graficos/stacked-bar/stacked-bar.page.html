@@ -1,0 +1,169 @@
+<div class="stacked-bar">
+  <header class="stacked-bar__header">
+    <p class="stacked-bar__kicker">PATRONES / GRÁFICOS</p>
+    <h1 class="stacked-bar__title">Barra apilada — monocromática</h1>
+    <p class="stacked-bar__lede">
+      Patrón estándar para mostrar la composición de un total a lo largo del
+      tiempo o entre categorías. Paleta monocromática AFI azul con grises al
+      final del stack para máximo contraste entre series adyacentes. Decisión
+      registrada el 2026-05-28 tras comparar tres candidatas en
+      <a class="stacked-bar__link" href="/patrones/graficos/palette-comparison">
+        /patrones/graficos/palette-comparison
+      </a>.
+    </p>
+  </header>
+
+  <section class="stacked-bar__preview-section">
+    <div class="stacked-bar__preview">
+      <svg
+        [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight"
+        class="stacked-bar__svg"
+        role="img"
+        aria-label="Evolución del patrimonio neto por tipo de activo, edades 55 a 85."
+      >
+        @for (t of yTicks; track t) {
+          <line
+            [attr.x1]="padLeft"
+            [attr.x2]="chartWidth - padRight"
+            [attr.y1]="yFor(t)"
+            [attr.y2]="yFor(t)"
+            stroke="var(--border-hairline)"
+            stroke-dasharray="2,3"
+          />
+          <text
+            [attr.x]="padLeft - 8"
+            [attr.y]="yFor(t) + 4"
+            text-anchor="end"
+            class="stacked-bar__axis-label"
+          >
+            {{ formatTick(t) }}
+          </text>
+        }
+
+        @for (stack of stacks; track stack.age) {
+          <g>
+            @for (seg of stack.segments; track $index) {
+              <rect
+                [attr.x]="columnX(stack.age) + (columnWidth - barWidth) / 2"
+                [attr.y]="seg.y"
+                [attr.width]="barWidth"
+                [attr.height]="seg.h"
+                [attr.fill]="seg.color"
+              >
+                <title>{{ seg.label }} · {{ stack.age }} años</title>
+              </rect>
+            }
+          </g>
+        }
+
+        @for (age of ages; track age) {
+          <text
+            [attr.x]="columnX(age) + columnWidth / 2"
+            [attr.y]="chartHeight - 10"
+            text-anchor="middle"
+            class="stacked-bar__axis-label"
+          >
+            {{ age }}
+          </text>
+        }
+      </svg>
+    </div>
+
+    <div class="stacked-bar__legend">
+      @for (seg of segments; track seg.tokenSlot) {
+        <div class="stacked-bar__legend-row">
+          <span
+            class="stacked-bar__chip"
+            [style.background]="'var(--chart-stacked-' + seg.tokenSlot + ')'"
+          ></span>
+          <span class="stacked-bar__legend-label">{{ seg.label }}</span>
+          <code class="stacked-bar__legend-token">--chart-stacked-{{ seg.tokenSlot }}</code>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="stacked-bar__rules">
+    <article>
+      <h2 class="stacked-bar__h2">Cuándo usar</h2>
+      <ul class="stacked-bar__list">
+        <li>Descomponer un total a lo largo del tiempo (cómo evoluciona la composición).</li>
+        <li>Mostrar la mezcla por categoría cuando el total importa tanto como las partes.</li>
+        <li>Hasta 7 series. Más segmentos comprometen la lectura.</li>
+        <li>Asignar la categoría más grande a la posición 1 (base del stack) y descender.</li>
+      </ul>
+    </article>
+
+    <article>
+      <h2 class="stacked-bar__h2">Cuándo NO usar</h2>
+      <ul class="stacked-bar__list">
+        <li>Comparar valores absolutos entre categorías — usa Bar simple.</li>
+        <li>Más de 7 series — agrupa "Otros" o reorganiza.</li>
+        <li>Cuando lo importante es la tendencia individual de una serie — usa Line.</li>
+        <li>Cuando hay valores negativos mezclados — necesita un patrón diferente (Bar diverging).</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="stacked-bar__tokens">
+    <h2 class="stacked-bar__h2">Tokens consumidos</h2>
+    <p class="stacked-bar__lede stacked-bar__lede--small">
+      Las siete posiciones de la paleta monocromática. Los tokens
+      <code>--chart-stacked-1</code>…<code>--chart-stacked-7</code> son la fuente
+      única; cualquier consumidor del gráfico apilado referencia estos slots.
+    </p>
+    <div class="stacked-bar__tokens-table">
+      <div class="stacked-bar__tokens-head">
+        <span>Slot</span>
+        <span>Token</span>
+        <span>Valor</span>
+        <span>Asignado a (ejemplo)</span>
+      </div>
+      @for (seg of segments; track seg.tokenSlot) {
+        <div class="stacked-bar__tokens-row">
+          <span class="stacked-bar__chip" [style.background]="'var(--chart-stacked-' + seg.tokenSlot + ')'"></span>
+          <code class="stacked-bar__token-name">--chart-stacked-{{ seg.tokenSlot }}</code>
+          <code class="stacked-bar__token-value">{{ seg.hex }}</code>
+          <span class="stacked-bar__token-usage">{{ seg.label }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="stacked-bar__dos-donts">
+    <h2 class="stacked-bar__h2">Do &amp; Don't</h2>
+    <div class="stacked-bar__dos-donts-grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <h3>Do</h3>
+        <ul>
+          <li>Ordena las series de mayor a menor (slot 1 = base, slot 7 = cima).</li>
+          <li>Limita a 7 segmentos por columna como máximo.</li>
+          <li>Mantén la línea base en cero — siempre.</li>
+          <li>Deja un hueco fino (1px) entre segmentos para separar series adyacentes.</li>
+          <li>Etiqueta los ejes con tabular-nums para alinear los números.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <h3>Don't</h3>
+        <ul>
+          <li>No mezcles paletas: si pintas con <code>--chart-stacked-*</code>, todos los segmentos usan esta paleta.</li>
+          <li>No reordenes los slots por columna — la misma serie siempre usa el mismo color.</li>
+          <li>No uses degradados ni gradientes — la paleta ya está calibrada.</li>
+          <li>No metas más de un color por slot — un cliente con marca distinta sobreescribe el token, no el render.</li>
+          <li>No representes datos negativos en este patrón — necesita un diseño aparte.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="stacked-bar__accessibility">
+    <h2 class="stacked-bar__h2">Accesibilidad</h2>
+    <ul class="stacked-bar__list">
+      <li>Cada segmento lleva un <code>&lt;title&gt;</code> SVG con etiqueta + valor para que el hover muestre el dato exacto.</li>
+      <li>El <code>aria-label</code> del SVG resume el contenido del gráfico para lectores de pantalla.</li>
+      <li>Contraste verificado AA entre cada par de slots adyacentes contra fondo claro y oscuro.</li>
+      <li>La paleta no depende del color para diferenciar series — la posición vertical en el stack es la clave de lectura.</li>
+      <li>Para usuarios con visión cromática limitada, considera añadir una capa de textura opcional (todavía no implementada — TODO documentado en el roadmap).</li>
+    </ul>
+  </section>
+</div>

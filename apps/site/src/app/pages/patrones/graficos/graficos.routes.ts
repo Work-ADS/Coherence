@@ -22,4 +22,9 @@ export const graficos_routes: Routes = [
         (m) => m.EvolucionPatrimonialPage,
       ),
   },
+  {
+    path: 'palette-comparison',
+    loadComponent: () =>
+      import('./palette-comparison/palette-comparison.page').then((m) => m.PaletteComparisonPage),
+  },
 ];

@@ -153,11 +153,16 @@ export class PaletteComparisonPage {
         const yBottom = this.yFor(running);
         const yTop = this.yFor(running + value);
         running += value;
+        // 1px canvas-tinted gap between segments (skip for the bottom segment
+        // so it still meets the baseline). Shrinks the segment's bottom edge
+        // by 1px, exposing canvas underneath = a visible separator that adapts
+        // to light/dark theme for free.
+        const gapPx = i === 0 ? 0 : 1;
         return {
           label: ac.label,
           ratio: ac.ratio,
           y: Math.min(yTop, yBottom),
-          h: Math.abs(yBottom - yTop),
+          h: Math.max(0, Math.abs(yBottom - yTop) - gapPx),
           color: color.cssVar,
           hex: color.hex,
         };

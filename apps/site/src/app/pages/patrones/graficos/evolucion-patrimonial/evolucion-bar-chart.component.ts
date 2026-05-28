@@ -773,7 +773,7 @@ export class EvolucionBarChartComponent {
   readonly incluirInmobiliario = input<boolean>(true);
   /** Toggle via Ajustes. When true, financial objetivos are pinned at their (age, value) points. */
   readonly mostrarObjetivos = input<boolean>(false);
-  readonly palette = input<ChartPalette>('v1');
+  readonly palette = input<ChartPalette>('a');
   readonly legendPlacement = input<LegendPlacement>('top');
 
   readonly hoveredAge = signal<number | null>(null);

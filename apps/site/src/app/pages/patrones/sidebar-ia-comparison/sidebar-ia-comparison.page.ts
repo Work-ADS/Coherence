@@ -7,8 +7,9 @@ import {
   SidebarComponent,
 } from '@coherence/ui';
 
-type SiteVariant = 'may19' | 'pre-may22';
+type SiteVariant = 'may19' | 'pre-may22' | 'ds-progress';
 type SectionId = 'fundamentos' | 'componentes' | 'patrones' | 'recursos';
+type Status = 'todo' | 'done';
 
 interface VariantSpec {
   id: SiteVariant;
@@ -17,6 +18,20 @@ interface VariantSpec {
   tagline: string;
   rationale: string;
   whatChanged: string;
+}
+
+interface ProgressItem {
+  label: string;
+  href: string;
+  status: Status;
+}
+
+interface ProgressSection {
+  id: SectionId;
+  label: string;
+  href: string;
+  icon: 'layers' | 'grid' | 'template' | 'book';
+  items: ProgressItem[];
 }
 
 const VARIANTS: VariantSpec[] = [
@@ -40,6 +55,83 @@ const VARIANTS: VariantSpec[] = [
     whatChanged:
       'Vino del refactor del 2026-05-22 (commit 1b7b632 — /novedades → /demos + team taxonomy). El sidebar plano duró pocos días: el 2026-05-25 se reemplazó por la versión actual que sí usa @switch para diferenciar Fundamentos / Demos / Default, pero ya sin el detalle de Patrones / Recursos del original.',
   },
+  {
+    id: 'ds-progress',
+    label: 'Custom · DS-progress',
+    date: 'propuesta',
+    tagline: 'Títulos en mayúsculas + icono + estado por página',
+    rationale:
+      'Sidebar plano (sin chevrons) que muestra TODAS las secciones a la vez. Cada cabecera lleva un icono distintivo y enlaza a la landing de la sección. Cada página tiene un círculo de estado: anillo abierto = pendiente, círculo lleno = listo. Resuelve dos cosas: el usuario ve el alcance completo del sitio de un vistazo y los autores ven dónde queda trabajo por hacer.',
+    whatChanged:
+      'No existe en el repo todavía — esta variante recoge la versión que recordabas (mayúsculas, círculos de estado, sin chevron, icono por sección). Si la eliges la implementamos en app.component.html.',
+  },
+];
+
+const DS_PROGRESS_SECTIONS: ProgressSection[] = [
+  {
+    id: 'fundamentos',
+    label: 'Fundamentos',
+    href: '/fundamentos',
+    icon: 'layers',
+    items: [
+      { label: 'Color', href: '/fundamentos/color', status: 'done' },
+      { label: 'Tipografía', href: '/fundamentos/tipografia', status: 'done' },
+      { label: 'Espacio', href: '/fundamentos/espacio', status: 'done' },
+      { label: 'Movimiento', href: '/fundamentos/movimiento', status: 'done' },
+      { label: 'Accesibilidad', href: '/fundamentos/accesibilidad', status: 'todo' },
+    ],
+  },
+  {
+    id: 'componentes',
+    label: 'Componentes',
+    href: '/componentes',
+    icon: 'grid',
+    items: [
+      { label: 'Button', href: '/componentes/button', status: 'done' },
+      { label: 'Input', href: '/componentes/input', status: 'done' },
+      { label: 'Checkbox', href: '/componentes/checkbox', status: 'done' },
+      { label: 'Card', href: '/componentes/card', status: 'done' },
+      { label: 'Modal', href: '/componentes/modal', status: 'done' },
+      { label: 'Drawer', href: '/componentes/drawer', status: 'done' },
+      { label: 'Table', href: '/componentes/table', status: 'done' },
+      { label: 'Tabs', href: '/componentes/tabs', status: 'done' },
+      { label: 'Sidebar', href: '/componentes/sidebar', status: 'done' },
+      { label: 'Nav Item', href: '/componentes/nav-item', status: 'todo' },
+      { label: 'Nav Section', href: '/componentes/nav-section', status: 'todo' },
+      { label: 'Page Header', href: '/componentes/page-header', status: 'done' },
+      { label: 'Shell', href: '/componentes/shell', status: 'done' },
+      { label: 'Menu', href: '/componentes/menu', status: 'done' },
+      { label: 'Filter Chip', href: '/componentes/filter-chip', status: 'todo' },
+      { label: 'Search', href: '/componentes/search', status: 'todo' },
+    ],
+  },
+  {
+    id: 'patrones',
+    label: 'Patrones',
+    href: '/patrones',
+    icon: 'template',
+    items: [
+      { label: 'Shells', href: '/patrones/shells', status: 'done' },
+      { label: 'Cabeceras', href: '/patrones/cabeceras', status: 'done' },
+      { label: 'Gráficos', href: '/patrones/graficos', status: 'todo' },
+      { label: 'Tablas', href: '/patrones/tablas', status: 'done' },
+      { label: 'Tarjetas', href: '/patrones/tarjetas', status: 'todo' },
+      { label: 'Selectores', href: '/patrones/selectores', status: 'done' },
+      { label: 'Flujos', href: '/patrones/flujos', status: 'todo' },
+    ],
+  },
+  {
+    id: 'recursos',
+    label: 'Recursos',
+    href: '/recursos',
+    icon: 'book',
+    items: [
+      { label: 'Descargas', href: '/recursos/descargas', status: 'todo' },
+      { label: 'Changelog', href: '/recursos/changelog', status: 'todo' },
+      { label: 'Roadmap', href: '/recursos/roadmap', status: 'todo' },
+      { label: 'FAQ', href: '/recursos/faq', status: 'todo' },
+    ],
+  },
 ];
 
 @Component({
@@ -54,6 +146,7 @@ export class SidebarIaComparisonPage {
   readonly variants = VARIANTS;
   readonly selectedVariant = signal<SiteVariant>('may19');
   readonly may19Section = signal<SectionId>('componentes');
+  readonly dsProgressSections = DS_PROGRESS_SECTIONS;
 
   readonly selectedSpec = computed(
     () => this.variants.find((v) => v.id === this.selectedVariant())!,

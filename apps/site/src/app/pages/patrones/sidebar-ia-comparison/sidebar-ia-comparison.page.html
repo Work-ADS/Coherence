@@ -114,7 +114,7 @@
               </afi-nav-section>
             }
           }
-        } @else {
+        } @else if (selectedVariant() === 'pre-may22') {
           <afi-nav-section
             label="Components"
             [defaultExpanded]="true"
@@ -135,6 +135,63 @@
               <afi-nav-item [label]="item.label" [showIcon]="false" />
             }
           </afi-nav-section>
+        } @else {
+          <!-- Variant C — DS-progress: uppercase title + icon + status dots, no chevron. -->
+          <div class="ds-progress">
+            @for (section of dsProgressSections; track section.id) {
+              <section class="ds-progress__section">
+                <a class="ds-progress__title" [href]="section.href">
+                  <span class="ds-progress__title-icon" aria-hidden="true">
+                    @switch (section.icon) {
+                      @case ('layers') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M12 2 2 7l10 5 10-5-10-5z" />
+                          <path d="m2 17 10 5 10-5" />
+                          <path d="m2 12 10 5 10-5" />
+                        </svg>
+                      }
+                      @case ('grid') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="7" height="7" rx="1" />
+                          <rect x="14" y="3" width="7" height="7" rx="1" />
+                          <rect x="3" y="14" width="7" height="7" rx="1" />
+                          <rect x="14" y="14" width="7" height="7" rx="1" />
+                        </svg>
+                      }
+                      @case ('template') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="18" height="7" rx="1" />
+                          <rect x="3" y="14" width="9" height="7" rx="1" />
+                          <rect x="14" y="14" width="7" height="7" rx="1" />
+                        </svg>
+                      }
+                      @case ('book') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                        </svg>
+                      }
+                    }
+                  </span>
+                  <span class="ds-progress__title-label">{{ section.label }}</span>
+                </a>
+                <ul class="ds-progress__list">
+                  @for (item of section.items; track item.href) {
+                    <li>
+                      <a class="ds-progress__item" [href]="item.href">
+                        <span
+                          class="ds-progress__dot"
+                          [class.ds-progress__dot--done]="item.status === 'done'"
+                          [attr.aria-label]="item.status === 'done' ? 'Listo' : 'Pendiente'"
+                        ></span>
+                        <span class="ds-progress__item-label">{{ item.label }}</span>
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
         }
       </afi-sidebar>
     </div>
@@ -157,13 +214,28 @@
           <li>Patrones lista las 9 páginas hijas, incluidas las decisiones.</li>
           <li>Recursos tiene su propio sub-nav (Descargas, Changelog, Roadmap, FAQ).</li>
         </ul>
-      } @else {
+      } @else if (selectedVariant() === 'pre-may22') {
         <h3 class="ia-comparison__h3">Reglas de la variante</h3>
         <ul class="ia-comparison__list">
           <li>El sidebar es idéntico en todas las páginas — no responde a la sección.</li>
           <li>Components muestra sólo una selección curada (8 items), no todos los primitivos.</li>
           <li>Patterns lista 3 items: Sidebar, Headers, Dropdown.</li>
           <li>No hay sub-navs para Patrones ni Recursos.</li>
+        </ul>
+      } @else {
+        <h3 class="ia-comparison__h3">Reglas de la variante</h3>
+        <ul class="ia-comparison__list">
+          <li>Cuatro secciones siempre visibles a la vez — el usuario ve el alcance completo del sitio.</li>
+          <li>Cabeceras en mayúsculas con icono distintivo y enlace a la landing de la sección.</li>
+          <li>Sin chevrons — las secciones no se colapsan; el sidebar es plano y predecible.</li>
+          <li>
+            Círculo de estado por página: anillo abierto = pendiente, círculo lleno = listo.
+            Útil para autores y para que el lector entienda qué partes del sitio están maduras.
+          </li>
+          <li>
+            Los estados son hardcoded en esta demo (orientativo). Una versión real los
+            leería de un mapa <code>page → status</code> mantenido en el repo.
+          </li>
         </ul>
       }
     </aside>

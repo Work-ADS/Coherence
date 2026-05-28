@@ -221,9 +221,9 @@ export class StitchVsClaudePage {
       eyebrow: 'Conclusión',
       title: 'Stitch para explorar rápido; Claude para escalar y sobrevivir al handoff',
       bullets: [
-        'Stitch: para explorar rápido y sacar primeros borradores.',
-        'Claude: para conceptos que escalan y sobreviven al handoff a Claude Code.',
-        'El contexto importa más que la herramienta — URL, design.md y claridad UX/UI elevan cualquier output.',
+        '1. Stitch: para explorar rápido y sacar primeros borradores.',
+        '2. Claude: para conceptos que escalan y sobreviven al handoff a Claude Code.',
+        '3. El contexto importa más que la herramienta — URL, design.md y claridad UX/UI elevan cualquier output.',
       ],
     },
   ];

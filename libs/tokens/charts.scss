@@ -1,0 +1,117 @@
+// =============================================================================
+// charts.scss — chart-specific semantic tokens
+// =============================================================================
+//
+// Tokens consumed by chart primitives + chart pages. Separated from
+// semantic.scss because chart concerns (palette slots, tooltip chrome,
+// band fills) don't fit the 6 standard semantic buckets and proliferate
+// quickly. Keeps semantic.scss focused on the core surface/action/control
+// roles.
+//
+// Naming:
+//   --chart-<role>           single-purpose tokens (deuda, marker-fill, …)
+//   --chart-tooltip-<role>   tooltip chrome (background, foreground, width)
+//   --chart-palette-<id>-<n> candidate palette slots (a/b/c) — temporary
+//                            during the 2026-Q2 palette decision
+//   --chart-legacy-v<n>-<n>  pre-2026-Q2 production palettes preserved for diff
+//
+// Once the palette decision lands, the winning palette is promoted to
+// --chart-stacked-{1..7} (the canonical, non-namespaced token set) and the
+// candidate + legacy slots are removed. Same applies to the tooltip/band
+// tokens if a more universal semantic role emerges.
+// =============================================================================
+
+:root {
+  // ---------------------------------------------------------------------------
+  // Universal chart colors (do not theme-vary)
+  // ---------------------------------------------------------------------------
+  --chart-deuda: #C81E1E;
+  // Role: any value < 0. Debt is debt regardless of asset class or palette.
+
+  --chart-band-fill: #37BBF4;
+  // Role: confidence-band fill (used at low opacity in line modes).
+
+  --chart-marker-fill: #ffffff;
+  // Role: endpoint marker fills, life-event icon bubbles.
+
+  // ---------------------------------------------------------------------------
+  // Hover tooltip chrome (Figma "organism/tooltip/escenarios/base")
+  // ---------------------------------------------------------------------------
+  --chart-tooltip-background: #ffffff;
+  --chart-tooltip-foreground: #111418;
+  --chart-tooltip-foreground-muted: #5d6266;
+  --chart-tooltip-divider: rgba(0, 0, 0, 0.06);
+  --chart-tooltip-shadow:
+    0 2px 6px 2px rgba(0, 0, 0, 0.09),
+    0 1px 2px rgba(0, 0, 0, 0.22);
+  --chart-tooltip-width: 17.5rem;        // 280px
+  --chart-tooltip-value-min-width: 5rem; // 80px
+
+  // ---------------------------------------------------------------------------
+  // Help-cursor pill (chart legend tooltips on hover)
+  // ---------------------------------------------------------------------------
+  --chart-tt-pop-background: #0f172a;
+  --chart-tt-pop-foreground: #ffffff;
+  --chart-tt-pop-max-width: 17.5rem;     // 280px
+
+  // ---------------------------------------------------------------------------
+  // 2026-Q2 palette candidates — a / b / c (under design review)
+  // After decision: rename winner slots to --chart-stacked-{1..7}, delete losers.
+  // Each palette is ordered bottom→top of stack: slot 1 = largest segment.
+  // ---------------------------------------------------------------------------
+  // A · Azul + Gris ladder (full azul ramp + grays at the tail)
+  --chart-palette-a-1: var(--color-afi-azul-profundo-900);
+  --chart-palette-a-2: var(--color-afi-azul-900);
+  --chart-palette-a-3: var(--color-afi-azul-700);
+  --chart-palette-a-4: var(--color-afi-azul-500);
+  --chart-palette-a-5: var(--color-afi-azul-300);
+  --chart-palette-a-6: var(--color-afi-gris-700);
+  --chart-palette-a-7: var(--color-afi-gris-500);
+
+  // B · Pure azul ladder (luminance-only, no grays)
+  --chart-palette-b-1: var(--color-afi-azul-profundo-900);
+  --chart-palette-b-2: var(--color-afi-azul-900);
+  --chart-palette-b-3: var(--color-afi-azul-700);
+  --chart-palette-b-4: var(--color-afi-azul-500);
+  --chart-palette-b-5: var(--color-afi-azul-300);
+  --chart-palette-b-6: var(--color-afi-azul-100);
+  --chart-palette-b-7: var(--color-afi-azul-25);
+
+  // C · Mixed (light → grays → black → azuls; non-linear)
+  --chart-palette-c-1: var(--color-afi-azul-25);
+  --chart-palette-c-2: var(--color-afi-gris-300);
+  --chart-palette-c-3: var(--color-afi-gris-500);
+  --chart-palette-c-4: var(--color-afi-gris-700);
+  --chart-palette-c-5: var(--color-afi-azul-profundo-900);
+  --chart-palette-c-6: var(--color-afi-azul-700);
+  --chart-palette-c-7: var(--color-afi-azul-500);
+
+  // ---------------------------------------------------------------------------
+  // Legacy palettes (pre-2026-Q2) — preserved so the chart still renders v1/v2/v3
+  // for diff/regression checks. To be deleted with the candidate slots once
+  // the decision is locked.
+  // ---------------------------------------------------------------------------
+  --chart-legacy-v1-1: #041F2C;
+  --chart-legacy-v1-2: #1A3A4E;
+  --chart-legacy-v1-3: #2D5472;
+  --chart-legacy-v1-4: #456F92;
+  --chart-legacy-v1-5: #5E8AB0;
+  --chart-legacy-v1-6: #7FA5C4;
+  --chart-legacy-v1-7: #A6C2D9;
+
+  --chart-legacy-v2-1: #041F2C;
+  --chart-legacy-v2-2: #0E4F73;
+  --chart-legacy-v2-3: #1F7AA8;
+  --chart-legacy-v2-4: #37BBF4;
+  --chart-legacy-v2-5: #7BD3F8;
+  --chart-legacy-v2-6: #B8E4FA;
+  --chart-legacy-v2-7: #DEF1FB;
+
+  --chart-legacy-v3-1: #041F2C;
+  --chart-legacy-v3-2: #0085CA;
+  --chart-legacy-v3-3: #13B26F;
+  --chart-legacy-v3-4: #F5A623;
+  --chart-legacy-v3-5: #9C5BD6;
+  --chart-legacy-v3-6: #7FA5C4;
+  --chart-legacy-v3-7: #A6C2D9;
+}

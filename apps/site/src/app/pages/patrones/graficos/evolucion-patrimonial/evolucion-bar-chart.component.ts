@@ -4,15 +4,18 @@ export type Vista = 'actual' | 'simulada' | 'comparada';
 export type Escenario = 'medio' | 'optimista' | 'pesimista' | 'todos';
 export type Detalle = 'agregada' | 'activo' | 'objetivo';
 
-/** Palette variant — passed in from the proposal page (V1 = original,
- *  V2 = higher-contrast monocromático, V3 = brand accents). All three keep
- *  red as the deuda color so any value below zero is unmistakably a debt. */
-export type ChartPalette = 'v1' | 'v2' | 'v3';
+/** Palette variant — passed in from the proposal page.
+ *  v1/v2/v3 are the original 2026-Q1 production options (kept for diff).
+ *  a/b/c are the 2026-Q2 candidates being evaluated against this real chart;
+ *  one of them will become the canonical --chart-stacked-{1..7} token set
+ *  once the design decision is locked. All keep red as the deuda color so any
+ *  value below zero is unmistakably a debt. */
+export type ChartPalette = 'v1' | 'v2' | 'v3' | 'a' | 'b' | 'c';
 export type LegendPlacement = 'top' | 'bottom';
 
-/** Universal deuda red — applied to any negative value regardless of asset
+/** Universal deuda token — applied to any negative value regardless of asset
  *  class or palette. "Debt is debt" — the seniors' rule. */
-const DEUDA_COLOR = '#C81E1E';
+const DEUDA_COLOR = 'var(--chart-deuda)';
 
 /** Asset class — used when Detalle = "Por tipo de activo" (stacked bars + toggleable legend). */
 interface AssetClass {
@@ -47,35 +50,69 @@ const ASSET_CLASSES: AssetClass[] = [
  *       without abandoning the brand. */
 const PALETTES: Record<ChartPalette, Record<string, string> & { base: string; barOnly: string }> = {
   v1: {
-    inmobiliario: '#041F2C',
-    inversiones: '#1A3A4E',
-    pensiones: '#2D5472',
-    privateEquity: '#456F92',
-    participaciones: '#5E8AB0',
-    liquidez: '#7FA5C4',
-    otro: '#A6C2D9',
+    inmobiliario:    'var(--chart-legacy-v1-1)',
+    inversiones:     'var(--chart-legacy-v1-2)',
+    pensiones:       'var(--chart-legacy-v1-3)',
+    privateEquity:   'var(--chart-legacy-v1-4)',
+    participaciones: 'var(--chart-legacy-v1-5)',
+    liquidez:        'var(--chart-legacy-v1-6)',
+    otro:            'var(--chart-legacy-v1-7)',
     base: 'var(--action-700)',
     barOnly: 'var(--action-700)',
   },
   v2: {
-    inmobiliario: '#041F2C',
-    inversiones: '#0E4F73',
-    pensiones: '#1F7AA8',
-    privateEquity: '#37BBF4',
-    participaciones: '#7BD3F8',
-    liquidez: '#B8E4FA',
-    otro: '#DEF1FB',
+    inmobiliario:    'var(--chart-legacy-v2-1)',
+    inversiones:     'var(--chart-legacy-v2-2)',
+    pensiones:       'var(--chart-legacy-v2-3)',
+    privateEquity:   'var(--chart-legacy-v2-4)',
+    participaciones: 'var(--chart-legacy-v2-5)',
+    liquidez:        'var(--chart-legacy-v2-6)',
+    otro:            'var(--chart-legacy-v2-7)',
     base: 'var(--action-700)',
     barOnly: 'var(--action-700)',
   },
   v3: {
-    inmobiliario: '#041F2C',
-    inversiones: '#0085CA',
-    pensiones: '#13B26F',
-    privateEquity: '#F5A623',
-    participaciones: '#9C5BD6',
-    liquidez: '#7FA5C4',
-    otro: '#A6C2D9',
+    inmobiliario:    'var(--chart-legacy-v3-1)',
+    inversiones:     'var(--chart-legacy-v3-2)',
+    pensiones:       'var(--chart-legacy-v3-3)',
+    privateEquity:   'var(--chart-legacy-v3-4)',
+    participaciones: 'var(--chart-legacy-v3-5)',
+    liquidez:        'var(--chart-legacy-v3-6)',
+    otro:            'var(--chart-legacy-v3-7)',
+    base: 'var(--action-700)',
+    barOnly: 'var(--action-700)',
+  },
+  // === 2026-Q2 candidates — see /patrones/graficos/palette-comparison ===
+  a: {
+    inmobiliario:    'var(--chart-palette-a-1)',
+    inversiones:     'var(--chart-palette-a-2)',
+    pensiones:       'var(--chart-palette-a-3)',
+    privateEquity:   'var(--chart-palette-a-4)',
+    participaciones: 'var(--chart-palette-a-5)',
+    liquidez:        'var(--chart-palette-a-6)',
+    otro:            'var(--chart-palette-a-7)',
+    base: 'var(--action-700)',
+    barOnly: 'var(--action-700)',
+  },
+  b: {
+    inmobiliario:    'var(--chart-palette-b-1)',
+    inversiones:     'var(--chart-palette-b-2)',
+    pensiones:       'var(--chart-palette-b-3)',
+    privateEquity:   'var(--chart-palette-b-4)',
+    participaciones: 'var(--chart-palette-b-5)',
+    liquidez:        'var(--chart-palette-b-6)',
+    otro:            'var(--chart-palette-b-7)',
+    base: 'var(--action-700)',
+    barOnly: 'var(--action-700)',
+  },
+  c: {
+    inmobiliario:    'var(--chart-palette-c-1)',
+    inversiones:     'var(--chart-palette-c-2)',
+    pensiones:       'var(--chart-palette-c-3)',
+    privateEquity:   'var(--chart-palette-c-4)',
+    participaciones: 'var(--chart-palette-c-5)',
+    liquidez:        'var(--chart-palette-c-6)',
+    otro:            'var(--chart-palette-c-7)',
     base: 'var(--action-700)',
     barOnly: 'var(--action-700)',
   },
@@ -120,9 +157,9 @@ interface TodosSerie {
 }
 
 const TODOS_SERIES: TodosSerie[] = [
-  { key: 'pesimista', label: 'Pesimista', color: '#7FA5C4', factor: 0.85, marker: 'diamond' },
-  { key: 'medio', label: 'Medio', color: '#041F2C', factor: 1.0, marker: 'square' },
-  { key: 'optimista', label: 'Optimista', color: '#456F92', factor: 1.15, marker: 'circle' },
+  { key: 'pesimista', label: 'Pesimista', color: 'var(--chart-legacy-v1-6)', factor: 0.85, marker: 'diamond' },
+  { key: 'medio',     label: 'Medio',     color: 'var(--chart-legacy-v1-1)', factor: 1.0,  marker: 'square' },
+  { key: 'optimista', label: 'Optimista', color: 'var(--chart-legacy-v1-4)', factor: 1.15, marker: 'circle' },
 ];
 
 /**
@@ -143,131 +180,13 @@ const TODOS_SERIES: TodosSerie[] = [
   selector: 'afi-evolucion-bar-chart',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    :host {
-      display: block;
-    }
-    .bar-transition {
-      transition: opacity 180ms ease-out;
-    }
-    .bar-transition:hover {
-      opacity: 0.82;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .bar-transition {
-        transition-duration: 0ms;
-      }
-    }
-    /* Help-cursor chip tooltip — same visual as the planner top bar tt-pop. */
-    .tt-pop {
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      margin-top: 6px;
-      max-width: 280px;
-      padding: 6px 10px;
-      font-size: 11px;
-      line-height: 15px;
-      color: #ffffff;
-      background: #0f172a;
-      border-radius: 4px;
-      white-space: normal;
-      text-align: left;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 120ms ease-out;
-      z-index: 60;
-      width: max-content;
-    }
-    .group\\/tt:hover .tt-pop,
-    .group\\/tt:focus-within .tt-pop {
-      opacity: 1;
-    }
-
-    /* Floating hover tooltip — mirrors the Figma "organism/tooltip/escenarios/base".
-       Positioned inside the chart container, pointer-events: none so hovering it
-       doesn't steal focus from the column beneath. */
-    .chart-tooltip {
-      position: absolute;
-      top: 16px;
-      z-index: 30;
-      width: 280px;
-      padding: 14px 16px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow:
-        0 2px 6px 2px rgba(0, 0, 0, 0.09),
-        0 1px 2px rgba(0, 0, 0, 0.22);
-      pointer-events: none;
-      font-size: 13px;
-      line-height: 16px;
-    }
-    .chart-tooltip__title {
-      font-size: 17px;
-      line-height: 24px;
-      font-weight: 600;
-      color: #111418;
-      margin-bottom: 12px;
-    }
-    .chart-tooltip__rows {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .tt-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      line-height: 18px;
-      font-weight: 600;
-      color: #111418;
-    }
-    .tt-row--muted {
-      color: #5d6266;
-    }
-    .tt-row--indent {
-      padding-left: 4px;
-    }
-    .tt-chev {
-      width: 12px;
-      height: 12px;
-      flex-shrink: 0;
-      color: currentColor;
-    }
-    .tt-label {
-      flex: 1 1 auto;
-      min-width: 0;
-    }
-    .tt-value {
-      min-width: 80px;
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
-    .tt-footer {
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      font-weight: 600;
-      color: #111418;
-      font-size: 13px;
-    }
-    .tt-footer > span:last-child {
-      font-variant-numeric: tabular-nums;
-      min-width: 80px;
-      text-align: right;
-    }
-  `,
+  styleUrls: ['./evolucion-bar-chart.component.scss'],
   template: `
     <div class="relative flex flex-col gap-space-3">
       <!-- Legend (shapes + labels) + inline hover summary on the right edge.
            Summary shows: age + optional event + aggregate (or Patrimonio neto). -->
       <div
-        class="flex flex-wrap items-center gap-space-3 gap-y-space-1 min-h-[24px] text-body-sm"
+        class="flex flex-wrap items-center gap-space-3 gap-y-space-1 min-h-6 text-body-sm"
         [class.justify-end]="legendPlacement() === 'top'"
         [class.justify-start]="legendPlacement() === 'bottom'"
         [class.order-1]="legendPlacement() === 'top'"
@@ -296,7 +215,7 @@ const TODOS_SERIES: TodosSerie[] = [
                 @case ('line') {
                   <span class="relative inline-flex items-center w-6 h-3">
                     <span
-                      class="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2"
+                      class="absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2"
                       [style.backgroundColor]="s.color"
                     ></span>
                     <span
@@ -323,7 +242,7 @@ const TODOS_SERIES: TodosSerie[] = [
                       style="opacity: 0.10;"
                     ></span>
                     <span
-                      class="absolute inset-y-[3px] inset-x-0"
+                      class="absolute inset-y-[0.1875rem] inset-x-0"
                       [style.backgroundColor]="s.color"
                       style="opacity: 0.24;"
                     ></span>
@@ -384,8 +303,7 @@ const TODOS_SERIES: TodosSerie[] = [
               [attr.x]="padLeft - 8"
               [attr.y]="yFor(t) + 4"
               text-anchor="end"
-              style="font-size: 13px"
-              fill="var(--color-neutral-500)"
+              class="chart-text-axis"
             >
               {{ formatY(t) }}
             </text>
@@ -499,7 +417,7 @@ const TODOS_SERIES: TodosSerie[] = [
                 width="18"
                 height="18"
                 rx="2"
-                fill="#ffffff"
+                fill="var(--chart-marker-fill)"
                 stroke="var(--color-neutral-700)"
                 stroke-width="1.25"
                 transform="rotate(45)"
@@ -557,7 +475,7 @@ const TODOS_SERIES: TodosSerie[] = [
             <!-- Outer band (±30%, "rango posible") -->
             <path
               [attr.d]="areaPathFor(comparadaBand().outerTop, comparadaBand().outerBottom)"
-              fill="#37BBF4"
+              fill="var(--chart-band-fill)"
               fill-opacity="0.08"
               stroke="none"
               pointer-events="none"
@@ -565,7 +483,7 @@ const TODOS_SERIES: TodosSerie[] = [
             <!-- Inner band (±15%, "rango probable") -->
             <path
               [attr.d]="areaPathFor(comparadaBand().innerTop, comparadaBand().innerBottom)"
-              fill="#37BBF4"
+              fill="var(--chart-band-fill)"
               fill-opacity="0.18"
               stroke="none"
               pointer-events="none"
@@ -595,7 +513,7 @@ const TODOS_SERIES: TodosSerie[] = [
                 [attr.cx]="columnX(p0.age) + columnWidth / 2"
                 [attr.cy]="yFor(p0.value)"
                 r="5"
-                fill="#ffffff"
+                fill="var(--chart-marker-fill)"
                 stroke="var(--action-700)"
                 stroke-width="2"
                 pointer-events="none"
@@ -606,7 +524,7 @@ const TODOS_SERIES: TodosSerie[] = [
                 [attr.cx]="columnX(pN.age) + columnWidth / 2"
                 [attr.cy]="yFor(pN.value)"
                 r="5"
-                fill="#ffffff"
+                fill="var(--chart-marker-fill)"
                 stroke="var(--action-700)"
                 stroke-width="2"
                 pointer-events="none"
@@ -627,8 +545,7 @@ const TODOS_SERIES: TodosSerie[] = [
                   x="0"
                   y="-8"
                   text-anchor="middle"
-                  fill="#ffffff"
-                  style="font-size: 12px; font-weight: 600;"
+                  class="chart-text-badge"
                 >
                   {{ formatBadge(pN.value) }}
                 </text>
@@ -641,7 +558,7 @@ const TODOS_SERIES: TodosSerie[] = [
             <!-- Outer band (±30% around Medio, "rango posible") -->
             <path
               [attr.d]="areaPathFor(todosBand().outerTop, todosBand().outerBottom)"
-              fill="#37BBF4"
+              fill="var(--chart-band-fill)"
               fill-opacity="0.08"
               stroke="none"
               pointer-events="none"
@@ -649,7 +566,7 @@ const TODOS_SERIES: TodosSerie[] = [
             <!-- Inner band (Pesimista / Optimista, "rango probable") -->
             <path
               [attr.d]="areaPathFor(todosBand().innerTop, todosBand().innerBottom)"
-              fill="#37BBF4"
+              fill="var(--chart-band-fill)"
               fill-opacity="0.18"
               stroke="none"
               pointer-events="none"
@@ -670,7 +587,7 @@ const TODOS_SERIES: TodosSerie[] = [
                 [attr.cx]="columnX(p0.age) + columnWidth / 2"
                 [attr.cy]="yFor(p0.value)"
                 r="5"
-                fill="#ffffff"
+                fill="var(--chart-marker-fill)"
                 stroke="var(--action-700)"
                 stroke-width="2"
                 pointer-events="none"
@@ -681,7 +598,7 @@ const TODOS_SERIES: TodosSerie[] = [
                 [attr.cx]="columnX(pN.age) + columnWidth / 2"
                 [attr.cy]="yFor(pN.value)"
                 r="5"
-                fill="#ffffff"
+                fill="var(--chart-marker-fill)"
                 stroke="var(--action-700)"
                 stroke-width="2"
                 pointer-events="none"
@@ -701,8 +618,7 @@ const TODOS_SERIES: TodosSerie[] = [
                   x="0"
                   y="-8"
                   text-anchor="middle"
-                  fill="#ffffff"
-                  style="font-size: 12px; font-weight: 600;"
+                  class="chart-text-badge"
                 >
                   {{ formatBadge(pN.value) }}
                 </text>
@@ -730,7 +646,7 @@ const TODOS_SERIES: TodosSerie[] = [
           }
 
           <!-- ---- SINGLE BARS: Agregada / Objetivo, supports negative.
-                 Hovered bar brightens to AFI Azul 500 (#0085CA) — brand color
+                 Hovered bar brightens to AFI Azul 500 — brand color
                  lights up on interaction against the dark navy base. -->
           @default {
             @for (d of chartData(); track d.age) {
@@ -768,8 +684,7 @@ const TODOS_SERIES: TodosSerie[] = [
               [attr.x]="columnX(age) + columnWidth / 2"
               [attr.y]="320 - 8"
               text-anchor="middle"
-              style="font-size: 13px"
-              fill="var(--color-neutral-500)"
+              class="chart-text-axis"
             >
               {{ age }}
             </text>
@@ -784,8 +699,8 @@ const TODOS_SERIES: TodosSerie[] = [
             class="chart-tooltip"
             [style.left]="
               anchor.anchorRight
-                ? 'calc(' + anchor.pct + '% - 16px)'
-                : 'calc(' + anchor.pct + '% + 16px)'
+                ? 'calc(' + anchor.pct + '% - 1rem)'
+                : 'calc(' + anchor.pct + '% + 1rem)'
             "
             [style.transform]="anchor.anchorRight ? 'translateX(-100%)' : 'none'"
             role="tooltip"
@@ -1184,17 +1099,23 @@ export class EvolucionBarChartComponent {
     const totalRatio = visible.reduce((s, a) => s + a.ratio, 0) || 1;
     let running = 0;
     const out = [];
-    for (const a of visible) {
+    for (let i = 0; i < visible.length; i++) {
+      const a = visible[i]!;
       const segValue = d.value * (a.ratio / totalRatio);
       const yBottom = this.yFor(running);
       const yTop = this.yFor(running + segValue);
+      // One-pixel canvas-tinted gap between adjacent segments (skip the
+      // bottommost so it still meets the baseline). The exposed strip of
+      // canvas above each non-bottom segment adapts to light/dark theme
+      // for free.
+      const gapPx = i === 0 ? 0 : 1;
       out.push({
         key: a.key,
         label: a.label,
         color: palette[a.key] ?? palette.base,
         value: segValue,
         y: Math.min(yTop, yBottom),
-        h: Math.abs(yBottom - yTop),
+        h: Math.max(0, Math.abs(yBottom - yTop) - gapPx),
       });
       running += segValue;
     }
@@ -1232,7 +1153,7 @@ export class EvolucionBarChartComponent {
         {
           key: 'band',
           label: 'Rango estimado',
-          color: '#37BBF4',
+          color: 'var(--chart-band-fill)',
           interactive: false,
           mark: 'band',
           tooltip:
@@ -1252,7 +1173,7 @@ export class EvolucionBarChartComponent {
         {
           key: 'band',
           label: 'Rango de escenarios',
-          color: '#37BBF4',
+          color: 'var(--chart-band-fill)',
           interactive: false,
           mark: 'band',
           tooltip:

@@ -1,0 +1,144 @@
+// Evolución bar chart — host + tooltip chrome.
+//
+// All raw values come from libs/tokens/charts.scss (chart-* tokens) or
+// libs/tokens/semantic.scss (--space-*, --radius-*, --type-*).
+
+:host {
+  display: block;
+}
+
+.bar-transition {
+  transition: opacity var(--duration-base, 180ms) ease-out;
+
+  &:hover {
+    opacity: 0.82;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar-transition {
+    transition-duration: 0ms;
+  }
+}
+
+// Help-cursor chip tooltip — same visual as the planner top bar tt-pop.
+.tt-pop {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: var(--space-2xs);
+  max-width: var(--chart-tt-pop-max-width);
+  padding: var(--space-2xs) var(--space-xs);
+  font: var(--type-body-sm-400);
+  color: var(--chart-tt-pop-foreground);
+  background: var(--chart-tt-pop-background);
+  border-radius: var(--radius-sm);
+  white-space: normal;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast, 120ms) ease-out;
+  z-index: 60;
+  width: max-content;
+}
+
+// Tailwind-class group selector — `.group/tt:hover .tt-pop`.
+// Escaped for SCSS attribute selectors.
+.group\/tt:hover .tt-pop,
+.group\/tt:focus-within .tt-pop {
+  opacity: 1;
+}
+
+// Floating hover tooltip — mirrors the Figma "organism/tooltip/escenarios/base".
+// Positioned inside the chart container, pointer-events: none so hovering it
+// doesn't steal focus from the column beneath.
+.chart-tooltip {
+  position: absolute;
+  top: var(--space-md);
+  z-index: 30;
+  width: var(--chart-tooltip-width);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--chart-tooltip-background);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--chart-tooltip-shadow);
+  pointer-events: none;
+  font: var(--type-body-sm-400);
+}
+
+.chart-tooltip__title {
+  font: var(--type-subtitle-body);
+  font-weight: 600;
+  color: var(--chart-tooltip-foreground);
+  margin-bottom: var(--space-sm);
+}
+
+.chart-tooltip__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.tt-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font: var(--type-body-sm-600);
+  color: var(--chart-tooltip-foreground);
+
+  &--muted {
+    color: var(--chart-tooltip-foreground-muted);
+  }
+
+  &--indent {
+    padding-left: var(--space-2xs);
+  }
+}
+
+.tt-chev {
+  width: var(--space-sm);
+  height: var(--space-sm);
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.tt-label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tt-value {
+  min-width: var(--chart-tooltip-value-min-width);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tt-footer {
+  margin-top: var(--space-sm);
+  padding-top: var(--space-xs);
+  border-top: var(--border-width-hairline) solid var(--chart-tooltip-divider);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  font: var(--type-body-sm-600);
+  color: var(--chart-tooltip-foreground);
+}
+
+.tt-footer > span:last-child {
+  font-variant-numeric: tabular-nums;
+  min-width: var(--chart-tooltip-value-min-width);
+  text-align: right;
+}
+
+// SVG text utility classes — applied as `class="…"` on <text> elements
+// inside the inline template. SVG accepts font + fill via CSS the same way
+// HTML does, so token-based class wins over an inline style attribute.
+.chart-text-axis {
+  font: var(--type-body-sm-400);
+  fill: var(--color-neutral-500);
+}
+
+.chart-text-badge {
+  font: var(--type-body-sm-600);
+  fill: var(--chart-marker-fill);
+}

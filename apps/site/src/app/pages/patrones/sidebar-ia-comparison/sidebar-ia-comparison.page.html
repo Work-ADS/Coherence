@@ -1,0 +1,191 @@
+<div class="ia-comparison">
+  <header class="ia-comparison__header">
+    <p class="ia-comparison__kicker">PATRONES / SIDEBAR</p>
+    <h1 class="ia-comparison__title">Comparativa de IA del sidebar del sitio</h1>
+    <p class="ia-comparison__lede">
+      Dos modelos de IA que vivieron en este repo. Se conservan aquí como referencia
+      para decidir cuál (o qué mezcla) volver a aplicar al sidebar de Coherence. El
+      sidebar actual no es exactamente ninguna de las dos — fusiona elementos de
+      ambas sin la profundidad por sección de la primera.
+    </p>
+    <p class="ia-comparison__note">
+      Tras la decisión, esta página se borra (o se convierte en una nota
+      <code>.md</code>). Es una herramienta de comparación, no documentación.
+    </p>
+  </header>
+
+  <div class="ia-comparison__switch" role="group" aria-label="Variante">
+    @for (v of variants; track v.id) {
+      <button
+        type="button"
+        (click)="selectedVariant.set(v.id)"
+        [attr.aria-pressed]="selectedVariant() === v.id"
+        class="switch-btn"
+        [class.switch-btn--active]="selectedVariant() === v.id"
+      >
+        <span class="switch-btn__label">{{ v.label }}</span>
+        <span class="switch-btn__date">{{ v.date }}</span>
+      </button>
+    }
+  </div>
+
+  @if (selectedVariant() === 'may19') {
+    <div class="ia-comparison__sub-switch" role="group" aria-label="Sección activa">
+      <span class="ia-comparison__sub-label">Sección activa:</span>
+      @for (s of sectionOptions; track s.value) {
+        <button
+          type="button"
+          (click)="may19Section.set(s.value)"
+          [attr.aria-pressed]="may19Section() === s.value"
+          class="sub-switch-btn"
+          [class.sub-switch-btn--active]="may19Section() === s.value"
+        >
+          {{ s.label }}
+        </button>
+      }
+    </div>
+  }
+
+  <div class="ia-comparison__stage">
+    <div class="ia-comparison__frame">
+      <afi-sidebar mode="static" ariaLabel="Sidebar preview">
+        <div slot="top">
+          <coherence-logo variant="color" size="sm" />
+        </div>
+
+        @if (selectedVariant() === 'may19') {
+          @switch (may19Section()) {
+            @case ('fundamentos') {
+              <afi-nav-section
+                label="Foundations"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19Fundamentos; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+            }
+            @case ('componentes') {
+              <afi-nav-section
+                label="Ready"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19ComponentesReady; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+              <afi-nav-section
+                label="All"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19ComponentesAll; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+            }
+            @case ('patrones') {
+              <afi-nav-section
+                label="Patterns"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19Patrones; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+            }
+            @case ('recursos') {
+              <afi-nav-section
+                label="Resources"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19Recursos; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+            }
+          }
+        } @else {
+          <afi-nav-section
+            label="Components"
+            [defaultExpanded]="true"
+            [showTreeLines]="true"
+            chevronPosition="right"
+          >
+            @for (item of preMay22Components; track item.href) {
+              <afi-nav-item [label]="item.label" [showIcon]="false" />
+            }
+          </afi-nav-section>
+          <afi-nav-section
+            label="Patterns"
+            [defaultExpanded]="true"
+            [showTreeLines]="true"
+            chevronPosition="right"
+          >
+            @for (item of preMay22Patterns; track item.href) {
+              <afi-nav-item [label]="item.label" [showIcon]="false" />
+            }
+          </afi-nav-section>
+        }
+      </afi-sidebar>
+    </div>
+
+    <aside class="ia-comparison__notes">
+      <h2 class="ia-comparison__variant-title">{{ selectedSpec().label }}</h2>
+      <p class="ia-comparison__variant-tagline">{{ selectedSpec().tagline }}</p>
+
+      <h3 class="ia-comparison__h3">Por qué</h3>
+      <p class="ia-comparison__body">{{ selectedSpec().rationale }}</p>
+
+      <h3 class="ia-comparison__h3">Qué cambió</h3>
+      <p class="ia-comparison__body">{{ selectedSpec().whatChanged }}</p>
+
+      @if (selectedVariant() === 'may19') {
+        <h3 class="ia-comparison__h3">Reglas de la variante</h3>
+        <ul class="ia-comparison__list">
+          <li>El sidebar reacciona a la sección de nivel superior actual.</li>
+          <li>Componentes se divide en <em>Ready</em> + <em>All</em> para mostrar qué está listo.</li>
+          <li>Patrones lista las 9 páginas hijas, incluidas las decisiones.</li>
+          <li>Recursos tiene su propio sub-nav (Descargas, Changelog, Roadmap, FAQ).</li>
+        </ul>
+      } @else {
+        <h3 class="ia-comparison__h3">Reglas de la variante</h3>
+        <ul class="ia-comparison__list">
+          <li>El sidebar es idéntico en todas las páginas — no responde a la sección.</li>
+          <li>Components muestra sólo una selección curada (8 items), no todos los primitivos.</li>
+          <li>Patterns lista 3 items: Sidebar, Headers, Dropdown.</li>
+          <li>No hay sub-navs para Patrones ni Recursos.</li>
+        </ul>
+      }
+    </aside>
+  </div>
+
+  <footer class="ia-comparison__footer">
+    <h2>Decisión pendiente</h2>
+    <ul>
+      <li>
+        <strong>May 19</strong> es más fiel al patrón Wise / Linear / Stripe (contexto
+        por sección) y al lock IA de 2026-04-17-rev2 (cada sección tiene su landing
+        + children).
+      </li>
+      <li>
+        <strong>Pre-May 22</strong> es más simple de mantener pero pierde la profundidad
+        de Patrones y Recursos. El estado actual del sitio se parece a esto.
+      </li>
+      <li>
+        Una tercera opción combinada: mantener el <code>&#64;switch</code> actual y completar el
+        bloque <code>&#64;default</code> con las 9 entradas de Patrones + un sub-nav de Recursos.
+        Recupera la profundidad sin reescribir la mecánica.
+      </li>
+    </ul>
+  </footer>
+</div>

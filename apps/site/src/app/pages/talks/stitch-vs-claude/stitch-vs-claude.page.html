@@ -8,11 +8,14 @@
     <div class="talk__progress" role="progressbar" [attr.aria-valuenow]="progressPct()" aria-valuemin="0" aria-valuemax="100">
       <div class="talk__progress-fill" [style.width.%]="progressPct()"></div>
     </div>
-    <div class="talk__hint">
-      <kbd class="talk__kbd">←</kbd>
-      <kbd class="talk__kbd">→</kbd>
-      <span class="talk__hint-text">para navegar</span>
-    </div>
+    <a
+      class="talk__exit"
+      routerLink="/"
+      aria-label="Salir de la presentación y volver a Coherence"
+    >
+      <span aria-hidden="true">×</span>
+      <span class="talk__exit-text">Salir</span>
+    </a>
   </header>
 
   <main class="talk__stage">
@@ -25,6 +28,12 @@
 
       @if (current().body) {
         <p class="slide__body">{{ current().body }}</p>
+      }
+
+      @if (current().cta) {
+        <a class="slide__cta" [routerLink]="current().cta!.href">
+          {{ current().cta!.label }} <span aria-hidden="true">→</span>
+        </a>
       }
 
       @if (current().bullets && current().bullets!.length > 0) {

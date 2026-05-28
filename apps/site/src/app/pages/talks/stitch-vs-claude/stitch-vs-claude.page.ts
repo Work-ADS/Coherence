@@ -1,4 +1,5 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { ButtonComponent } from '@coherence/ui';
 
@@ -32,6 +33,8 @@ interface Slide {
   matrix?: { headers: string[]; rows: MatrixRow[] };
   /** Copyable code/prompt block. Rendered as a dark snippet with a "Copiar" button. */
   code?: { label: string; body: string };
+  /** Primary call-to-action link rendered as a pill under the body. */
+  cta?: { label: string; href: string };
 }
 
 type PromptVariantKey = 'url' | 'designMd';
@@ -98,7 +101,7 @@ function buildPrompt(key: PromptVariantKey): string {
 @Component({
   selector: 'site-stitch-vs-claude-talk',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './stitch-vs-claude.page.html',
   styleUrl: './stitch-vs-claude.page.scss',
@@ -150,7 +153,7 @@ export class StitchVsClaudePage {
       kind: 'content',
       eyebrow: 'El caso',
       title: 'Planificador de jubilación de dos pantallas, inspirado en Mutualidad',
-      body: 'Sale de nuestros simuladores. Es el más simple: unas preguntas y un resumen en una página. Algo real con lo que el equipo puede identificarse, sin sobrecomplicarlo.',
+      body: 'Uno de los simuladores más simples: unas preguntas y un resumen. Real y reconocible, sin sobrecomplicar.',
       illustration: '/talks/stitch-vs-claude/reference/planificador-jubilacion.png',
       caption:
         'Mutualidad — Planificador de jubilación (Release candidate 24). Sirve como referencia estructural.',
@@ -183,21 +186,6 @@ export class StitchVsClaudePage {
       body: 'Sacamos este design.md de getdesign.md/mastercard. Elegimos Mastercard porque es una marca muy conocida del mundo financiero — punto de partida creíble y consistente, sin debate sobre qué representa.',
     },
     {
-      kind: 'finding',
-      eyebrow: 'Aprendizajes',
-      title: 'Lo que llevamos de los cuatro escenarios',
-      body: 'Resumen rápido mientras seguimos viendo los resultados en directo.',
-      bullets: [
-        '1. Detalle: Claude entrega microcopy, datos simulados y jerarquía visual al primer intento. Stitch parte de un layout más esquemático que necesita pasos adicionales.',
-        '2. Interactividad: Claude es navegable de fábrica. Stitch produce imágenes estáticas hasta activar «instant prototype».',
-        '3. Fuente de marca: el design.md eleva claramente a Stitch. En Claude, URL y design.md son equivalentes — incluso la URL de Mastercard saca un punto más.',
-        '4. Handoff: solo Claude conserva la fidelidad al entregarse a Claude Code. Stitch exporta a AI Studio o a un zip y parte del estilo se pierde.',
-        '5. Iteración: Claude expone un panel de ajustes para densidad, color o layout en directo. Stitch redirige cada cambio al prompt inicial.',
-      ],
-      callout:
-        'Ver la interactividad e iterar sobre ella es como llegamos a un buen diseño.',
-    },
-    {
       kind: 'content',
       eyebrow: 'Export y handoff',
       title: 'Claude llega al código sin pérdida; Stitch reescribe por el camino',
@@ -209,16 +197,34 @@ export class StitchVsClaudePage {
       ],
     },
     {
+      kind: 'finding',
+      eyebrow: 'Aprendizajes',
+      title: 'Lo que llevamos de los cuatro escenarios',
+      bullets: [
+        '1. Interactividad: Claude es navegable de fábrica. Stitch produce imágenes estáticas hasta activar «instant prototype».',
+        '2. Fuente de marca: en Stitch, el design.md gana claro. En Claude, la URL de Mastercard saca el mejor resultado porque pregunta para afinar; el design.md va directo como one-shot. Cuanto más organizadas vengan las decisiones de UX/UI, mejor sale.',
+        '3. Handoff: solo Claude conserva la fidelidad al entregarse a Claude Code. Stitch exporta a AI Studio o a un zip y parte del estilo se pierde.',
+        '4. Iteración: iteramos sobre un prototipo vivo y se conecta sin fricción con nuestro flujo principal.',
+      ],
+      callout:
+        'Ver la interactividad e iterar sobre ella es como llegamos a un buen diseño.',
+    },
+    {
       kind: 'ask',
       eyebrow: 'Propuesta',
       title: 'Adoptemos Claude para conceptos de cliente',
-      body: 'Planifica el proyecto por tu cuenta (Claude Code o Claude), trae el prompt a Claude con URL o design.md (URL si vas con prisa) e itera ahí mismo. Cuando esté listo, comparte el enlace conmigo y lo adapto para producción.',
+      body: 'Planifica el proyecto por tu cuenta (Claude Code, o open-code), trae el prompt a Claude Design con URL o design.md (URL si vas con prisa) e itera ahí mismo. Cuando esté listo, comparte el proyecto conmigo y lo adapto para producción.',
+      cta: { label: 'Ver los demos', href: '/demos' },
     },
     {
       kind: 'close',
       eyebrow: 'Conclusión',
       title: 'Stitch para explorar rápido; Claude para escalar y sobrevivir al handoff',
-      body: '¿Preguntas, dudas, contraejemplos? El brief, el prompt y los cuatro resultados están en la rama docs/talk-stitch-vs-claude. Gracias.',
+      bullets: [
+        'Stitch: para explorar rápido y sacar primeros borradores.',
+        'Claude: para conceptos que escalan y sobreviven al handoff a Claude Code.',
+        'El contexto importa más que la herramienta — URL, design.md y claridad UX/UI elevan cualquier output.',
+      ],
     },
   ];
 

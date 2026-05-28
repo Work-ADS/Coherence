@@ -116,6 +116,52 @@
   margin-inline-start: 0.4ch;
 }
 
+// ── Exit / back-to-Coherence link ───────────────────────────────────────────
+
+.talk__exit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4ch;
+  padding: 0.3rem 0.7rem;
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+  text-decoration: none;
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  transition:
+    background 160ms ease-out,
+    border-color 160ms ease-out,
+    color 160ms ease-out;
+
+  &:hover {
+    background: var(--canvas-secondary);
+    color: var(--foreground-primary-default);
+    border-color: var(--foreground-secondary-default);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--color-afi-azul-500);
+    outline-offset: var(--border-width-thick);
+  }
+
+  // Inverted on dark cover/close slides.
+  .talk[data-kind='cover'] &,
+  .talk[data-kind='close'] & {
+    color: var(--color-white-a72);
+    border-color: var(--color-white-a20);
+
+    &:hover {
+      background: var(--color-white-a14);
+      border-color: var(--color-white-a40);
+      color: var(--color-white);
+    }
+  }
+}
+
+.talk__exit-text {
+  margin-inline-start: 0.1ch;
+}
+
 // ── Stage (slide canvas) ────────────────────────────────────────────────────
 
 .talk__stage {
@@ -188,6 +234,33 @@
 
   li {
     margin: 0;
+  }
+}
+
+.slide__cta {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5ch;
+  padding: 0.65rem 1.1rem;
+  font: var(--type-body-md-600, var(--type-body-md-400));
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  color: var(--canvas-primary);
+  background: var(--color-afi-azul-500);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition:
+    background 160ms ease-out,
+    transform 120ms ease-out;
+
+  &:hover {
+    background: var(--color-afi-azul-600, var(--color-afi-azul-500));
+    transform: translateY(-0.0625rem);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--color-afi-azul-500);
+    outline-offset: var(--border-width-thick);
   }
 }
 
@@ -394,9 +467,9 @@
 
   img {
     inline-size: 100%;
-    block-size: auto;
-    max-block-size: min(56vh, 28rem);
-    object-fit: contain;
+    block-size: min(64vh, 32rem);
+    object-fit: cover;
+    object-position: center top;
     border-radius: var(--radius-md);
     border: var(--border-width-hairline) solid var(--border-hairline);
     background: var(--figure-paper-tint);
@@ -487,6 +560,10 @@
   }
 
   .talk__hint {
+    display: none;
+  }
+
+  .talk__exit-text {
     display: none;
   }
 

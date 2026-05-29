@@ -19,6 +19,34 @@ const BRAND_DISPLAY: Record<string, string> = {
   mutualidad: 'Mutualidad',
 };
 
+/**
+ * Per-brand overrides applied ONLY at download time — the source codebase
+ * keeps its current mapping (live components still need brand-primary-*
+ * pointing to what they actually consume today).
+ *
+ * AFI: components today read brand-primary-* for CTAs (azul-profundo). The
+ * intended convention is brand-primary = identity color (azul), brand-secondary
+ * = action/CTA color (azul-profundo). Until components are migrated to read
+ * brand-secondary for CTAs, we expose the *target* shape in the download so
+ * external programmers can build against the convention from day one.
+ *
+ * Values are stored as primitive token names so the runtime probe resolves
+ * them via getComputedStyle — keeps hex/px out of component code.
+ */
+const BRAND_PRIMITIVE_OVERRIDES: Record<string, Record<string, string>> = {
+  afi: {
+    '--brand-primary-background-default': '--color-afi-azul-500',
+    '--brand-primary-background-hover': '--color-afi-azul-600',
+    '--brand-primary-background-active': '--color-afi-azul-700',
+    '--brand-primary-foreground-default': '--color-afi-azul-0',
+    '--brand-primary-foreground-hover': '--color-afi-azul-25',
+    '--brand-primary-foreground-active': '--color-afi-azul-0',
+    '--brand-primary-border-default': '--color-afi-azul-500',
+    '--brand-primary-border-hover': '--color-afi-azul-600',
+    '--brand-primary-border-active': '--color-afi-azul-700',
+  },
+};
+
 function brandMeta(slug: string): BrandMeta {
   return { slug, displayName: BRAND_DISPLAY[slug] ?? slug };
 }
@@ -53,16 +81,27 @@ function resolveValue(
   entry: SemanticTokenManifestEntry,
   probe: HTMLElement,
   host: HTMLElement,
+  brandSlug: string,
 ): string | null {
+  // Per-brand override: substitute a primitive token at the source so the
+  // probe reads the override's resolved value instead of the live token's.
+  const overridePrimitive = BRAND_PRIMITIVE_OVERRIDES[brandSlug]?.[entry.name];
+
   // Peek at the authored value first: literals like `100%`, `44rem`, or
   // `hsla(...)` skip the var() probe (which would resolve % to px against the
   // probe's containing block, mangling the authored intent).
   const authored = getComputedStyle(host).getPropertyValue(entry.name).trim();
-  const isLiteral = authored.length > 0 && !authored.includes('var(');
+  const isLiteral =
+    !overridePrimitive && authored.length > 0 && !authored.includes('var(');
 
   if (entry.kind === 'color') {
+    const source = overridePrimitive
+      ? `var(${overridePrimitive})`
+      : isLiteral
+        ? authored
+        : `var(${entry.name})`;
     probe.style.color = '';
-    probe.style.color = isLiteral ? authored : `var(${entry.name})`;
+    probe.style.color = source;
     const computed = getComputedStyle(probe).color;
     const isTransparentLiteral =
       authored === 'transparent' || authored.toLowerCase() === 'currentcolor';
@@ -73,8 +112,11 @@ function resolveValue(
 
   if (entry.kind === 'length') {
     if (isLiteral) return authored;
+    const source = overridePrimitive
+      ? `var(${overridePrimitive})`
+      : `var(${entry.name})`;
     probe.style.width = '';
-    probe.style.width = `var(${entry.name})`;
+    probe.style.width = source;
     const computed = getComputedStyle(probe).width;
     if (!computed || computed === 'auto') return null;
     return computed;
@@ -92,7 +134,7 @@ function buildCss(brand: BrandMeta, host: HTMLElement): string {
   const lines: string[] = [];
   try {
     for (const entry of SEMANTIC_TOKEN_MANIFEST) {
-      const value = resolveValue(entry, probe, host);
+      const value = resolveValue(entry, probe, host, brand.slug);
       if (value == null) continue;
       lines.push(`  ${stripBrandPrefix(entry.name)}: ${value};`);
     }

@@ -1,0 +1,189 @@
+// =============================================================================
+// colors-awm.scss — AWM (AFI Wealth Manager) sub-brand primitives
+// =============================================================================
+//
+// Source of truth: AWM/design/design.md (Tier 1 — AFI Primitives).
+// AWM is AFI's B2B wealth-advisor platform built on PrimeNG + Angular. The
+// palette is AFI-rooted but diverges from the base AFI brand in three ways:
+//
+//   1. Mid-tints in azulprofundo / azulafi differ from afi-azul-profundo /
+//      afi-azul (same 500 anchor, different 200–400 steps).
+//   2. The surface/text ramp is PrimeNG Slate — kept 1:1 because AWM is a
+//      data-dense product where Slate's contrast at small sizes is the rule.
+//   3. AzulProfundo (#062D3F) is the light-mode primary; AzulAfi (#0085CA)
+//      is the dark-mode primary + light-mode accent. One role, two palettes,
+//      mode-routed — see semantic.scss for the binding.
+//
+// Naming follows AWM's brand convention (azulprofundo, azulafi, grisafi,
+// blancoafi) rather than Material slots. The design.md anti-pattern is
+// explicit: "Don't call the primary color 'primary' in docs. Use
+// AzulProfundo / AzulAfi." Honored here.
+//
+// Activation: <html data-brand="awm"> or any scoped wrapper with
+// data-brand="awm". On apps/site we scope it to the /demos/awm/:feature
+// sub-route only — the /demos/awm overview stays on default AFI brand.
+// =============================================================================
+
+[data-brand="awm"] {
+  // ===========================================================================
+  // azulprofundo — deep brand navy
+  // Role: primary action color in LIGHT mode (buttons, CTAs, focus, branded
+  // text). Mode-swapped: in dark mode the action role routes to azulafi-400.
+  // ===========================================================================
+  --color-awm-azulprofundo-0:   #FFFFFF;
+  --color-awm-azulprofundo-25:  #F2F6F8;
+  --color-awm-azulprofundo-50:  #E6EEF2;
+  --color-awm-azulprofundo-100: #CCDDE5;
+  --color-awm-azulprofundo-200: #99BBCB;
+  --color-awm-azulprofundo-300: #6699B1;
+  --color-awm-azulprofundo-400: #337797;
+  --color-awm-azulprofundo-500: #062D3F;
+  --color-awm-azulprofundo-600: #052635;
+  --color-awm-azulprofundo-700: #041F2B;
+  --color-awm-azulprofundo-800: #031821;
+  --color-awm-azulprofundo-900: #021117;
+  --color-awm-azulprofundo-950: #010810;
+
+
+  // ===========================================================================
+  // azulafi — bright brand blue
+  // Role: primary action color in DARK mode; accent + secondary chrome in
+  // light mode. The other half of the mode-swapped primary role.
+  // ===========================================================================
+  --color-awm-azulafi-0:   #FFFFFF;
+  --color-awm-azulafi-25:  #F2F9FD;
+  --color-awm-azulafi-50:  #E6F4FB;
+  --color-awm-azulafi-100: #CCE9F6;
+  --color-awm-azulafi-200: #99D3ED;
+  --color-awm-azulafi-300: #66BDE4;
+  --color-awm-azulafi-400: #33A7DB;
+  --color-awm-azulafi-500: #0085CA;
+  --color-awm-azulafi-600: #006EA7;
+  --color-awm-azulafi-700: #005584;
+  --color-awm-azulafi-800: #003C61;
+  --color-awm-azulafi-900: #00243D;
+  --color-awm-azulafi-950: #001826;
+
+
+  // ===========================================================================
+  // grisafi — AFI-owned accent grays
+  // Role: brand-tinted gray accents only (tags, chips, illustration tints).
+  // NOT the surface/text ramp — slate owns that. Per design.md: "accents only".
+  // ===========================================================================
+  --color-awm-grisafi-0:   #FFFFFF;
+  --color-awm-grisafi-25:  #FAFCFD;
+  --color-awm-grisafi-50:  #F4F8FA;
+  --color-awm-grisafi-100: #EDF3F6;
+  --color-awm-grisafi-200: #E2EDF2;
+  --color-awm-grisafi-300: #D6E4EA;
+  --color-awm-grisafi-400: #C8DCE4;
+  --color-awm-grisafi-500: #C8DAE2;
+  --color-awm-grisafi-600: #AFC2C9;
+  --color-awm-grisafi-700: #87979D;
+  --color-awm-grisafi-800: #5F6C70;
+  --color-awm-grisafi-900: #373F43;
+  --color-awm-grisafi-950: #1F2528;
+
+
+  // ===========================================================================
+  // blancoafi — warm off-whites / light grays
+  // Role: subtle surface tints, soft panels, low-contrast backgrounds.
+  // 50 is pure white by design (matches design.md); 0 stays #FFFFFF for
+  // convention parity with sibling brand files.
+  // ===========================================================================
+  --color-awm-blancoafi-0:   #FFFFFF;
+  --color-awm-blancoafi-25:  #FEFEFE;
+  --color-awm-blancoafi-50:  #FFFFFF;
+  --color-awm-blancoafi-100: #FAFAFA;
+  --color-awm-blancoafi-200: #F7F7F7;
+  --color-awm-blancoafi-300: #F5F5F5;
+  --color-awm-blancoafi-400: #F4F4F4;
+  --color-awm-blancoafi-500: #F3F3F3;
+  --color-awm-blancoafi-600: #DADADA;
+  --color-awm-blancoafi-700: #BFBFBF;
+  --color-awm-blancoafi-800: #8F8F8F;
+  --color-awm-blancoafi-900: #5F5F5F;
+  --color-awm-blancoafi-950: #2F2F2F;
+
+
+  // ===========================================================================
+  // slate — surface / text ramp (PrimeNG Slate, 1:1)
+  // Role: page canvas, card surfaces, borders, dividers, body text, headings.
+  // Single ramp drives both surfaces (50–300) and text (500–900). The mono-
+  // chrome look is intentional — data-dense product. Surface 0 is pure white
+  // for content canvases that shouldn't invert in dark mode (data grids,
+  // print-style reports).
+  // ===========================================================================
+  --color-awm-slate-0:   #FFFFFF;
+  --color-awm-slate-25:  #FCFDFE;
+  --color-awm-slate-50:  #F8FAFC;
+  --color-awm-slate-100: #F1F5F9;
+  --color-awm-slate-200: #E2E8F0;
+  --color-awm-slate-300: #CBD5E1;
+  --color-awm-slate-400: #94A3B8;
+  --color-awm-slate-500: #64748B;
+  --color-awm-slate-600: #475569;
+  --color-awm-slate-700: #334155;
+  --color-awm-slate-800: #1E293B;
+  --color-awm-slate-900: #0F172A;
+  --color-awm-slate-950: #020617;
+
+
+  // ===========================================================================
+  // Functional ink — derived from slate (the text ramp)
+  // Provides named-by-role aliases so components don't reach into the ramp.
+  // ===========================================================================
+  --color-awm-ink-default: #0F172A;  // slate-900 — body text, headings
+  --color-awm-ink-soft:    #334155;  // slate-700 — secondary text
+  --color-awm-ink-muted:   #64748B;  // slate-500 — placeholders, captions
+
+
+  // ===========================================================================
+  // Brand fonts — Roboto
+  // Roboto for both display and text; chosen for legibility in dense tables
+  // and forms (per design.md). Mono kept on JetBrains Mono for code samples
+  // in docs / showcase contexts.
+  // ===========================================================================
+  --font-brand-display: "Roboto", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-brand-text:    "Roboto", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-brand-mono:    "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+
+  // ===========================================================================
+  // Graphics — semantic aliases for illustrations and chart accents
+  // Per design.md: dedicated names for illustration palettes, not generic.
+  // ===========================================================================
+  --color-awm-graphics-azulprofundo: #062D3F;
+  --color-awm-graphics-azulclaro:    #37BBF4;
+  --color-awm-graphics-grisafi:      #C8DAE2;
+  --color-awm-graphics-blancoafi:    #F3F3F3;
+
+
+  // ===========================================================================
+  // Positive values — gains, uptrend, success tint (charts)
+  // Sparse ramp (100 / 500 / 900) — matches design.md.
+  // ===========================================================================
+  --color-awm-positive-100: #C6F3C6;
+  --color-awm-positive-500: #72C971;
+  --color-awm-positive-900: #367B35;
+
+
+  // ===========================================================================
+  // Negative values — losses, downtrend, error tint (charts)
+  // Sparse ramp (300 / 700) — matches design.md.
+  // ===========================================================================
+  --color-awm-negative-300: #EB8787;
+  --color-awm-negative-700: #EB5656;
+
+
+  // ===========================================================================
+  // Severity — PrimeNG defaults, kept as-is.
+  // Per design.md: "Severity only ever means severity. Don't use them for
+  // decoration." Listed here for completeness so consumers don't redefine.
+  // ===========================================================================
+  --color-awm-severity-success: #22C55E;
+  --color-awm-severity-info:    #0EA5E9;
+  --color-awm-severity-warn:    #F97316;
+  --color-awm-severity-help:    #A855F7;
+  --color-awm-severity-danger:  #EF4444;
+}

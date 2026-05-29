@@ -105,6 +105,17 @@ export const demos_routes: Routes = [
         (m) => m.LaboralKutxaSareviPage,
       ),
   },
+  // AWM — AFI Wealth Manager — overview (default AFI brand, Coherence cards).
+  {
+    path: 'awm',
+    loadComponent: () => import('./awm/awm.page').then((m) => m.AwmOverviewPage),
+  },
+  // AWM — feature sub-route (host gets data-brand="awm", iframes demo-afiwm.es).
+  {
+    path: 'awm/:feature',
+    loadComponent: () =>
+      import('./awm/awm-feature/awm-feature.page').then((m) => m.AwmFeaturePage),
+  },
   // Sarevi Unicaja — overview surface (shell consumer).
   {
     path: 'sarevi-unicaja',

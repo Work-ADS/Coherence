@@ -1,0 +1,33 @@
+@if (meta(); as m) {
+  <header class="awm-feature-page__chrome">
+    <nav class="awm-feature-page__breadcrumb" aria-label="Breadcrumb">
+      <a class="awm-feature-page__breadcrumb-link" routerLink="/demos/awm">
+        ← AFI Wealth Manager
+      </a>
+    </nav>
+    <div class="awm-feature-page__header">
+      <p class="awm-feature-page__eyebrow">AWM · {{ m.status }}</p>
+      <h1 class="awm-feature-page__title">{{ m.title }}</h1>
+      <p class="awm-feature-page__intro">{{ m.intro }}</p>
+    </div>
+  </header>
+
+  <div class="awm-feature-page__iframe-wrap">
+    <iframe
+      class="awm-feature-page__iframe"
+      [src]="safeIframeUrl()"
+      [title]="m.title + ' — demo en demo-afiwm.es'"
+      loading="lazy"
+      referrerpolicy="no-referrer"
+    ></iframe>
+  </div>
+} @else {
+  <div class="awm-feature-page__not-found">
+    <p class="awm-feature-page__not-found-text">
+      Esta funcionalidad de AWM no existe.
+    </p>
+    <a class="awm-feature-page__not-found-link" routerLink="/demos/awm">
+      ← Volver a AFI Wealth Manager
+    </a>
+  </div>
+}

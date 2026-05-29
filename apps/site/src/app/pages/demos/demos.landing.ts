@@ -42,6 +42,15 @@ const DEMOS: DemoCard[] = [
     status: 'Nuevo',
     overviewRoute: '/demos/sarevi-unicaja',
   },
+  {
+    slug: 'awm',
+    title: 'AFI Wealth Manager',
+    intro:
+      'Plataforma B2B para asesores patrimoniales — sub-marca AFI sobre PrimeNG. Cada funcionalidad abre con marca AWM aplicada.',
+    team: 'digital-solutions',
+    status: 'Sub-marca',
+    overviewRoute: '/demos/awm',
+  },
 ];
 
 const TEAM_OPTIONS: SegmentedOption[] = [

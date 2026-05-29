@@ -1,0 +1,110 @@
+// =============================================================================
+// AWM overview — mirrors demos.landing.scss class structure so the card
+// pattern stays consistent across /demos and /demos/awm. Default Coherence
+// brand (no [data-brand]) on this page; the sub-brand applies on /demos/awm/:feature.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.awm-overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  max-width: var(--dimension-240);
+  margin-inline: auto;
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-md);
+}
+
+.awm-overview__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.awm-overview__eyebrow {
+  margin: 0;
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
+}
+
+.awm-overview__title {
+  margin: 0;
+  font: var(--type-display-md, var(--type-body-lg-600));
+  color: var(--foreground-primary-default);
+}
+
+.awm-overview__intro {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-width: var(--dimension-180);
+}
+
+.awm-overview__grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--dimension-80), 1fr));
+  gap: var(--space-md);
+}
+
+.awm-overview__card-wrap {
+  display: flex;
+}
+
+.awm-overview__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius-card);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  transition:
+    background var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle);
+    border-color: var(--border-default);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+}
+
+.awm-overview__card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.awm-overview__card-title {
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}
+
+.awm-overview__card-status {
+  font: var(--type-body-sm-500);
+  padding: var(--space-2xs) var(--space-xs);
+  background: var(--brand-secondary-neutral-background-default);
+  color: var(--brand-secondary-neutral-foreground-default);
+  border-radius: var(--radius-pill);
+}
+
+.awm-overview__card-intro {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}

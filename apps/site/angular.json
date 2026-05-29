@@ -46,7 +46,7 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "outputPath": {
-              "base": "dist/coheence-site",
+              "base": "dist/coherence-site",
               "browser": ""
             },
             "inlineStyleLanguage": "scss",

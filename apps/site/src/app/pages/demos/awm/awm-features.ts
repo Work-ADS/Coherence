@@ -1,19 +1,27 @@
 /**
- * Shared registry of AWM showcase features. Consumed by:
- *   - awm.page.ts (overview)  — renders one Coherence-style card per entry.
- *   - awm-feature.page.ts (sub-route) — looks up meta by :feature param,
- *     applies data-brand="awm", embeds the iframe.
+ * Shared registry of AWM showcase features. Used by `awm.page.ts` to render
+ * one Coherence-style card per entry; each card opens the live AWM showcase
+ * in a new tab.
  *
- * Add new features here and they appear on both surfaces. The iframe URL
- * points at the deployed AWM showcase (demo-afiwm.es) — AWM lives in its
- * own repo (AfiDesigner/Afi-AWM); Coherence is just the window.
+ * AWM is an independent Angular + PrimeNG app that lives in its own repo
+ * (AfiDesigner/Afi-AWM). Coherence doesn't host AWM — it just links into it.
+ *
+ * URL CONFIGURATION
+ * -----------------
+ * `externalUrl` currently points at `http://localhost:4200/<route>` — the
+ * default port for AWM when you run `ng serve` inside `AWM/showcase/`.
+ * Clicking a card only works while AWM is running locally on that port.
+ *
+ * Once AWM has a public deploy, swap each `externalUrl` to the production
+ * URL (or extract the base into an environment variable so dev / prod
+ * switch automatically).
  */
 export interface AwmFeature {
   slug: string;
   title: string;
   intro: string;
   status?: string;
-  iframeUrl: string;
+  externalUrl: string;
 }
 
 export const AWM_FEATURES: readonly AwmFeature[] = [
@@ -23,7 +31,7 @@ export const AWM_FEATURES: readonly AwmFeature[] = [
     intro:
       'Listado, creación y detalle de propuestas de inversión. Tres flujos por tenant (A · B · C).',
     status: 'Flow C',
-    iframeUrl: 'https://demo-afiwm.es/propuestas',
+    externalUrl: 'http://localhost:4200/propuestas',
   },
   {
     slug: 'sistema-de-importacion',
@@ -31,7 +39,7 @@ export const AWM_FEATURES: readonly AwmFeature[] = [
     intro:
       'Un solo proyecto con 4 sub-pantallas en el tab strip: Datos entrantes, Historial, Ejecuciones y Reglas.',
     status: '4 sub-pantallas',
-    iframeUrl: 'https://demo-afiwm.es/importacion',
+    externalUrl: 'http://localhost:4200/importacion',
   },
   {
     slug: 'busqueda',
@@ -39,19 +47,14 @@ export const AWM_FEATURES: readonly AwmFeature[] = [
     intro:
       'Dos buscadores reutilizables: activos con filtro de mercado embebido + modo avanzado, y multientidad con atajo ⌘K.',
     status: '⌘K',
-    iframeUrl: 'https://demo-afiwm.es/busqueda',
+    externalUrl: 'http://localhost:4200/busqueda',
   },
   {
     slug: 'vista-cliente',
     title: 'Vista cliente',
     intro:
-      'Port 1:1 del informe del cliente final (demo-afiwm.es). 4 tabs · KPIs · evolución · heatmap · posiciones desplegables · 3 donuts.',
+      'Port 1:1 del informe del cliente final. 4 tabs · KPIs · evolución · heatmap · posiciones desplegables · 3 donuts.',
     status: 'Read-only',
-    iframeUrl: 'https://demo-afiwm.es/vista-cliente',
+    externalUrl: 'http://localhost:4200/vista-cliente',
   },
 ] as const;
-
-export function findAwmFeature(slug: string | null | undefined): AwmFeature | null {
-  if (!slug) return null;
-  return AWM_FEATURES.find((f) => f.slug === slug) ?? null;
-}

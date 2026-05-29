@@ -4,15 +4,20 @@
     <h1 class="awm-overview__title">AFI Wealth Manager</h1>
     <p class="awm-overview__intro">
       Plataforma B2B para asesores patrimoniales, construida sobre PrimeNG + Angular.
-      Sub-marca de AFI (AzulProfundo + Slate + Roboto). Cada tarjeta abre la pantalla
-      con la marca AWM aplicada — el resto del sitio se queda en marca AFI por defecto.
+      Sub-marca de AFI (AzulProfundo + Slate + Roboto). Cada tarjeta abre la funcionalidad
+      en el showcase de AWM en una pestaña nueva.
     </p>
   </header>
 
   <ul class="awm-overview__grid">
     @for (feature of features; track feature.slug) {
       <li class="awm-overview__card-wrap">
-        <a class="awm-overview__card" [routerLink]="['/demos/awm', feature.slug]">
+        <a
+          class="awm-overview__card"
+          [href]="feature.externalUrl"
+          target="_blank"
+          rel="noopener"
+        >
           <span class="awm-overview__card-title-row">
             <span class="awm-overview__card-title">{{ feature.title }}</span>
             @if (feature.status) {

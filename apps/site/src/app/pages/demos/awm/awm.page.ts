@@ -1,24 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { AWM_FEATURES } from './awm-features';
 
 /**
  * AWM — AFI Wealth Manager — overview surface on the Coherence demo site.
  *
- * Lives at /demos/awm. Renders in the default AFI/Coherence brand (no host
- * data-brand) using the same card pattern as /demos landing: title row +
- * status pill + intro. Each card routes into /demos/awm/<slug> where the
- * AWM sub-brand kicks in (slate canvas, AzulProfundo CTAs, Roboto) and the
- * AWM showcase loads in an iframe.
- *
- * Inspect/feedback overlay is global (mounted in app.component) — no extra
- * wiring needed for comments to work here or on the sub-pages.
+ * Lives at /demos/awm. Renders in the default AFI/Coherence brand using the
+ * same card pattern as the /demos landing. Each card is an external link
+ * that opens the deployed (or locally-served) AWM showcase in a new tab —
+ * AWM lives in its own repo (AfiDesigner/Afi-AWM); Coherence is the entry
+ * point, not the host.
  */
 @Component({
   selector: 'site-awm-overview',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './awm.page.html',
   styleUrl: './awm.page.scss',

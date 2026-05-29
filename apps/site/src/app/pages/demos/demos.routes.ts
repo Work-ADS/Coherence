@@ -105,16 +105,12 @@ export const demos_routes: Routes = [
         (m) => m.LaboralKutxaSareviPage,
       ),
   },
-  // AWM — AFI Wealth Manager — overview (default AFI brand, Coherence cards).
+  // AWM — AFI Wealth Manager — overview. Cards link out to the AWM showcase
+  // (running locally on :4200 or wherever it's deployed). No sub-route here:
+  // Coherence is the entry point, AWM is where the demo actually lives.
   {
     path: 'awm',
     loadComponent: () => import('./awm/awm.page').then((m) => m.AwmOverviewPage),
-  },
-  // AWM — feature sub-route (host gets data-brand="awm", iframes demo-afiwm.es).
-  {
-    path: 'awm/:feature',
-    loadComponent: () =>
-      import('./awm/awm-feature/awm-feature.page').then((m) => m.AwmFeaturePage),
   },
   // Sarevi Unicaja — overview surface (shell consumer).
   {

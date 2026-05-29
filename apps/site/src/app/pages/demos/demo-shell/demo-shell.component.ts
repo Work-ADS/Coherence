@@ -15,6 +15,8 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { toPng } from 'html-to-image';
 
+import { exportSemanticCss } from '../../../utils/export-semantic-css';
+
 import {
   ButtonComponent,
   IconButtonComponent,
@@ -551,6 +553,13 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
     const current = this.activeView();
     this.activeView.set(-1);
     setTimeout(() => this.activeView.set(current), 0);
+  }
+
+  downloadSemanticCss(): void {
+    const node = this.demoArea?.nativeElement;
+    const scoped = node?.querySelector<HTMLElement>('[data-brand]');
+    const brand = scoped?.getAttribute('data-brand')?.toLowerCase() || 'afi';
+    exportSemanticCss(brand);
   }
 
   async downloadScreenshot(): Promise<void> {

@@ -29,7 +29,7 @@ stages:
     - script: npm ci
       displayName: Install dependencies
 
-    - script: npm run build -- --configuration production
+    - script: npm run build -- --configuration coherence-site
       displayName: Build Angular
 
     - task: ArchiveFiles@2

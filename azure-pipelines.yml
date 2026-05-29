@@ -12,7 +12,7 @@ variables:
   azureSubscription: 'Azure Dev/Pre'
   appName: 'afi-designsystem-as'
   nodeVersion: '24.x'
-  distFolder: 'dist/coherence-site'
+  distFolder: 'apps/site/dist/coherence-site'
 
 stages:
 - stage: BuildAndDeploy

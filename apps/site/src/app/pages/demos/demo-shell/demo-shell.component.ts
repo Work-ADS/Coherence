@@ -13,6 +13,9 @@ import {
   signal,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { toPng } from 'html-to-image';
+
+import { exportSemanticCss } from '../../../utils/export-semantic-css';
 
 import {
   ButtonComponent,
@@ -550,6 +553,42 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
     const current = this.activeView();
     this.activeView.set(-1);
     setTimeout(() => this.activeView.set(current), 0);
+  }
+
+  downloadSemanticCss(): void {
+    const node = this.demoArea?.nativeElement;
+    const scoped = node?.querySelector<HTMLElement>('[data-brand]');
+    const brand = scoped?.getAttribute('data-brand')?.toLowerCase() || 'afi';
+    exportSemanticCss(brand);
+  }
+
+  async downloadScreenshot(): Promise<void> {
+    const node = this.demoArea?.nativeElement;
+    if (!node) return;
+    try {
+      const dataUrl = await toPng(node, {
+        pixelRatio: 2,
+        cacheBust: true,
+        backgroundColor: getComputedStyle(node).backgroundColor,
+      });
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `coherence-${this.demoSlug()}-${this.screenshotTimestamp()}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (err) {
+      console.error('[demo-shell] screenshot failed', err);
+    }
+  }
+
+  private screenshotTimestamp(): string {
+    const d = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return (
+      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}-` +
+      `${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`
+    );
   }
 
   setView(value: string): void {

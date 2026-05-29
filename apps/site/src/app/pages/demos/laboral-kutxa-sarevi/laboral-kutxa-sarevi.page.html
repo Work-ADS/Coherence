@@ -3,7 +3,7 @@
   [demoRoute]="brandConfig().demoRoute"
   [views]="['Simulador']"
 >
-<div class="lk-sarevi" [class.lk-sarevi--unicaja]="brand() === 'unicaja'" [attr.data-brand]="brand()">
+<div class="lk-sarevi" [class.lk-sarevi--unicaja]="brand() === 'unicaja'" [class.lk-sarevi--banco-cooperativo]="brand() === 'banco-cooperativo'" [attr.data-brand]="brand()">
 
   <!-- ─── Top bar ─────────────────────────────────────────────────── -->
   <div class="lk-topbar">
@@ -112,7 +112,6 @@
       <section class="surface" aria-labelledby="datos-title">
         <div class="surface-header">
           <h1 id="datos-title" class="surface-header__title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h5"/></svg>
             Datos de la vivienda
           </h1>
           <div class="surface-header__subtitle">Calcula la eficiencia energética que podrías alcanzar en los proyectos de tu vivienda.</div>
@@ -122,7 +121,6 @@
         <!-- Caso de reformas -->
         <section class="card" aria-labelledby="datos-caso-title">
           <h2 id="datos-caso-title" class="card__title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6 7-12a7 7 0 1 0-14 0c0 6 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
             Caso de reformas para mi vivienda
           </h2>
 
@@ -193,7 +191,6 @@
         <!-- Certificado -->
         <section class="card" aria-labelledby="datos-certificado-title">
           <h2 id="datos-certificado-title" class="card__title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 18c4 0 8-1 11-4 3-3 4-7 4-11-4 0-8 1-11 4-3 3-4 7-4 11Z"/><path d="M5 18c1-4 3-7 6-9"/></svg>
             Certificado de eficiencia energética
           </h2>
           <div>
@@ -228,7 +225,6 @@
         <!-- Características físicas -->
         <section class="card" aria-labelledby="datos-fisicas-title">
           <h2 id="datos-fisicas-title" class="card__title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 4 6 6-4 4-6-6 4-4Z"/><path d="m11 7-7 7v4h4l7-7"/></svg>
             Características físicas
           </h2>
           <div class="grid-2">
@@ -248,7 +244,6 @@
         <!-- Sistemas de climatización -->
         <section class="card" aria-labelledby="datos-clima-title">
           <h2 id="datos-clima-title" class="card__title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M5.5 5.5l13 13M5.5 18.5l13-13"/></svg>
             Sistemas de climatización
           </h2>
           <div class="grid-2">
@@ -344,7 +339,6 @@
       <section class="surface" aria-labelledby="medidas-title">
         <div class="surface-header">
           <h1 id="medidas-title" class="surface-header__title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h5"/></svg>
             Medidas para mejorar tu vivienda
           </h1>
           <div class="surface-header__subtitle">Marca todas las que desees incluir en el cálculo</div>
@@ -353,7 +347,6 @@
         <div class="medidas-layout">
           <section class="card medidas-layout__list" aria-labelledby="medidas-list-title">
             <h2 id="medidas-list-title" class="card__title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 4 6 6-4 4-6-6 4-4Z"/><path d="m11 7-7 7v4h4l7-7"/></svg>
               Tipos de medidas
             </h2>
 
@@ -457,7 +450,6 @@
             <div class="unicaja-medidas-stack">
               <section class="card unicaja-compare" aria-labelledby="medidas-impact-title">
                 <h2 id="medidas-impact-title" class="card__title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 18 5-6 4 3 7-8"/><path d="M14 7h6v6"/></svg>
                   Realizando la reforma
                 </h2>
                 <div class="unicaja-compare__grid">
@@ -504,7 +496,6 @@
 
               <section class="card" aria-labelledby="medidas-costs-title-uc">
                 <h2 id="medidas-costs-title-uc" class="card__title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
                   Costes aproximados
                 </h2>
                 <table class="lk-table">
@@ -617,7 +608,6 @@
       <section class="surface" aria-labelledby="resumen-title">
         <div class="surface-header">
           <h1 id="resumen-title" class="surface-header__title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
             Evaluación de la eficiencia energética
           </h1>
         </div>
@@ -625,7 +615,6 @@
         <!-- Ahorro anual estimado — bento grid: hero + grade + chart -->
         <section class="card card--summary" aria-labelledby="resumen-ahorro-title">
           <h2 id="resumen-ahorro-title" class="card__title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 18c4 0 8-1 11-4 3-3 4-7 4-11-4 0-8 1-11 4-3 3-4 7-4 11Z"/><path d="M5 18c1-4 3-7 6-9"/></svg>
             Ahorro anual estimado
           </h2>
 
@@ -699,14 +688,13 @@
         <!-- Costes aproximados -->
         <section class="card" aria-labelledby="resumen-costs-title">
           <h2 id="resumen-costs-title" class="card__title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6.5A7 7 0 0 0 7 12a7 7 0 0 0 11 5.5"/><path d="M4 10h9M4 14h9"/></svg>
             Costes aproximados
           </h2>
           <table class="lk-table">
             <tbody>
               <tr><td>Coste estimado de las obras</td><td class="lk-table__num">{{ formatEuro(costeObrasResumen) }}</td></tr>
-              <tr><td>Deducciones en el IRPF <a href="#" (click)="$event.preventDefault()">Ver detalles</a></td><td class="lk-table__num">{{ formatEuro(deduccionesIRPF) }}</td></tr>
-              <tr><td>CAES obtenidos <a href="#" (click)="$event.preventDefault()">Ver detalles</a></td><td class="lk-table__num">{{ formatEuro(obtenidosCAE) }}</td></tr>
+              <tr><td>Deducciones en el IRPF <a href="#" (click)="$event.preventDefault()">Ver detalles</a></td><td class="lk-table__num lk-table__neg">{{ formatEuro(deduccionesIRPF) }}</td></tr>
+              <tr><td>CAES obtenidos <a href="#" (click)="$event.preventDefault()">Ver detalles</a></td><td class="lk-table__num lk-table__neg">{{ formatEuro(obtenidosCAE) }}</td></tr>
               <tr class="lk-table__total"><td>Total</td><td class="lk-table__num">{{ formatEuro(totalResumen()) }}</td></tr>
             </tbody>
           </table>
@@ -715,7 +703,6 @@
         <!-- Financiación -->
         <section class="card" aria-labelledby="resumen-finance-title">
           <h2 id="resumen-finance-title" class="card__title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 4l9 6"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8"/><path d="M3 20h18"/></svg>
             Personaliza los parámetros de tu financiación
           </h2>
 
@@ -857,9 +844,12 @@
         </section>
 
         @if (brand() !== 'unicaja') {
-          <!-- Help band -->
+          <!-- Help band — logo asset only rendered for LK; BC's wheat-sheaf
+               renders broken in this size/shape, so we drop it for BC. -->
           <div class="help-band">
-            <img class="lk-mark-img" [src]="brandConfig().logoSrc" alt="" aria-hidden="true" />
+            @if (brand() === 'laboral-kutxa') {
+              <img class="lk-mark-img" [src]="brandConfig().logoSrc" alt="" aria-hidden="true" />
+            }
             <div class="help-band__h">¿Necesitas ayuda con tu proyecto?</div>
             <div class="help-band__p">Nuestros asesores energéticos están listos para ayudarte a optimizar tu inversión y guiarte en el proceso de rehabilitación</div>
             <afi-button variant="secondary">

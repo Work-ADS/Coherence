@@ -153,6 +153,121 @@
   --brand-secondary-border-disabled: var(--color-unicaja-neutral-variant-200);
 }
 
+// ─── Banco Cooperativo Español brand block ────────────────────────────────
+// Remap the same local aliases used by the LK base to Banco Cooperativo
+// primitives. BC follows LK's overall surface shape (warm card + brand-colored
+// chrome + green accents) so we don't need component-by-component overrides
+// like Unicaja — just rerouting the locals via this block flips the look.
+//
+// Color story:
+//   - verde-oscuro takes the role LK gives to magenta — top bar, primary
+//     CTA, focus rings, branded text.
+//   - verde-cooperativo takes the role LK gives to verde — links, pills,
+//     sustainability cues, accents on white.
+//   - amarillo-espiga stays decorative — KPI badges, energy labels at the
+//     upper tier (D/E/F/G), brand mark accent.
+//   - Beige is replaced with cool neutrals (slate-50-ish) — BC's brand uses
+//     a cleaner data-product surface, not the warm paper of LK.
+.lk-sarevi--banco-cooperativo {
+  --bere:        var(--color-banco-cooperativo-verde-oscuro-500);
+  --bere-700:    var(--color-banco-cooperativo-verde-oscuro-700);
+  --bere-500:    var(--color-banco-cooperativo-verde-oscuro-500);
+  --bere-300:    var(--color-banco-cooperativo-verde-oscuro-300);
+  --green:       var(--color-banco-cooperativo-verde-cooperativo-500);
+  --green-700:   var(--color-banco-cooperativo-verde-cooperativo-700);
+  --green-100:   var(--color-banco-cooperativo-verde-cooperativo-100);
+  --green-50:    var(--color-banco-cooperativo-verde-cooperativo-50);
+  --mag:         var(--color-banco-cooperativo-verde-oscuro-500);
+  --mag-100:     var(--color-banco-cooperativo-verde-oscuro-100);
+
+  --beige:       var(--color-base-white);
+  --beige-deep:  transparent;
+  --cream:       var(--color-banco-cooperativo-neutral-50);
+  --card-soft:   var(--color-banco-cooperativo-neutral-50);
+  --card:        var(--color-base-white);
+  --line:        var(--color-banco-cooperativo-verde-oscuro-100);
+  --line-soft:   var(--color-banco-cooperativo-neutral-variant-100);
+  --text:        var(--color-banco-cooperativo-ink-default);
+  --text-soft:   var(--color-banco-cooperativo-ink-soft);
+  --text-muted:  var(--color-banco-cooperativo-ink-muted);
+
+  --warn-bg: var(--color-banco-cooperativo-amarillo-espiga-100);
+  --warn-fg: var(--color-banco-cooperativo-amarillo-espiga-800);
+  --low-bg:  var(--color-banco-cooperativo-neutral-100);
+  --low-fg:  var(--color-banco-cooperativo-ink-soft);
+  --mid-bg:  var(--color-banco-cooperativo-verde-cooperativo-50);
+  --mid-fg:  var(--color-banco-cooperativo-verde-cooperativo-700);
+  --high-bg: var(--color-banco-cooperativo-amarillo-espiga-100);
+  --high-fg: var(--color-banco-cooperativo-amarillo-espiga-800);
+  --none-bg: var(--color-banco-cooperativo-neutral-100);
+  --none-fg: var(--color-banco-cooperativo-neutral-700);
+
+  --energy-A: var(--color-banco-cooperativo-verde-cooperativo-500);
+  --energy-B: var(--color-banco-cooperativo-verde-cooperativo-400);
+  --energy-C: var(--color-banco-cooperativo-verde-cooperativo-100);
+  --energy-D: var(--color-banco-cooperativo-amarillo-espiga-300);
+  --energy-E: var(--color-banco-cooperativo-amarillo-espiga-500);
+  --energy-F: var(--color-banco-cooperativo-amarillo-espiga-700);
+  --energy-G: var(--color-banco-cooperativo-amarillo-espiga-900);
+
+  --brand-secondary-background-disabled: var(--color-banco-cooperativo-neutral-variant-100);
+  --brand-secondary-foreground-disabled: var(--color-banco-cooperativo-ink-muted);
+  --brand-secondary-border-disabled: var(--color-banco-cooperativo-neutral-variant-200);
+
+  // ----- BC decorative touches (green hover + footer band) -----
+  // (Tried espiga yellow accents on cards / pill / link — looked terrible,
+  // removed. Yellow stays reserved for the logo only.)
+
+  // Green tinted hover lift on choice cards — brand-aware via semantic token.
+  .choice-card:hover {
+    box-shadow: 0 var(--dimension-2) var(--dimension-6)
+      color-mix(in srgb, var(--brand-secondary-background-default) 18%, transparent);
+  }
+
+  // Stepper accessibility on the dark-green topbar.
+  // - Inactive ("todo"): base uses --color-white-a74 — washes out on
+  //   verde-oscuro. Bump to white-a90 + thicker outline so it reads.
+  // - Active ("current"): base puts dark-green text on a white badge sitting
+  //   ON the green topbar — three surfaces of green/white competing. Invert:
+  //   verde-oscuro badge + white number reads as one unified token.
+  .step {
+    &--todo .step__badge {
+      color: var(--color-white-a90);
+      box-shadow: inset 0 0 0 var(--dimension-0-25) var(--color-white-a55);
+    }
+    &--todo .step__label {
+      color: var(--color-white-a90);
+    }
+    &--current .step__badge {
+      background: var(--bere);
+      color: var(--brand-secondary-foreground-default);
+    }
+  }
+
+  // CAE in costes-aproximados shows a NEGATIVE value (-9049 €) but it's a
+  // saving for the user. .lk-table__neg defaults to red (warn/danger); for BC
+  // we swap it to verde-cooperativo so the savings read as positive feedback.
+  .lk-table__neg {
+    color: var(--color-banco-cooperativo-verde-cooperativo-700);
+  }
+
+  // BC site-style footer band — sits at the bottom of the simulator viewport
+  // (the .lk-sarevi host is min-height:100vh + flex-column, so the pseudo
+  // element pushes to the bottom via margin-top:auto). Verde-oscuro background
+  // mirrors bancocooperativo.es footer treatment.
+  &::after {
+    content: "© Banco Cooperativo Español 2026 · Aviso legal · Política de cookies · Protección de datos";
+    margin-top: auto;
+    display: block;
+    padding: var(--dimension-5) var(--dimension-14);
+    background: var(--brand-secondary-background-default);
+    color: var(--brand-secondary-foreground-default);
+    text-align: center;
+    font: var(--type-body-sm-400);
+    letter-spacing: 0.02em;
+  }
+}
+
 // ─── Top bar ──────────────────────────────────────────────────────────────
 // LK signature magenta gradient (header strip used across laboralkutxa.com).
 // White text + the official logo's white wordmark sit on top of this without
@@ -163,13 +278,16 @@
   justify-content: space-between;
   padding: var(--dimension-5-5) var(--dimension-14) var(--dimension-4-5);
   gap: var(--dimension-6);
+  // Brand-aware chrome: semantic tokens, NOT hardcoded magenta. LK's brand-bind
+  // resolves these to magenta; BC's to verde-oscuro; any future brand picks up
+  // its own colors with zero per-brand overrides here.
   background: linear-gradient(
     135deg,
-    var(--color-laboral-kutxa-magenta-700) 0%,
-    var(--color-laboral-kutxa-magenta-500) 55%,
-    var(--color-laboral-kutxa-magenta-400) 100%
+    var(--brand-secondary-background-active) 0%,
+    var(--brand-secondary-background-default) 55%,
+    var(--brand-secondary-background-hover) 100%
   );
-  color: var(--color-laboral-kutxa-beige-0);
+  color: var(--brand-secondary-foreground-default);
 
   &__brand {
     display: flex;
@@ -479,7 +597,11 @@
 
   &__ico {
     width: var(--dimension-20); height: var(--dimension-20); border-radius: var(--dimension-4-5);
-    background: var(--bere); color: var(--color-laboral-kutxa-beige-0);
+    // Semantic tokens so brand-bind handles the icon contrast automatically.
+    // bere is still the local accent (LK magenta / BC verde-oscuro / etc.).
+    // The icon glyph color uses --brand-secondary-foreground-default which the
+    // mixin sets to white for every brand — no per-brand override needed.
+    background: var(--bere); color: var(--brand-secondary-foreground-default);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -934,8 +1056,18 @@
   td { color: var(--text); }
   tr + tr td { border-top: var(--dimension-0-25) solid var(--line-soft); }
 
-  &__num { text-align: right; font-variant-numeric: tabular-nums; }
+  &__num { font-variant-numeric: tabular-nums; }
   &__neg { color: var(--color-lk-table-neg); }
+}
+
+// DS rule for numeric cells in .lk-table. Compound selector (th.lk-table__num
+// / td.lk-table__num — specificity 0,2,1) so it beats the base .lk-table th,td
+// rule (0,1,1). Numeric cells NEVER wrap mid-value — "79.220 €" stays on one
+// line even if it means the column grows.
+.lk-table th.lk-table__num,
+.lk-table td.lk-table__num {
+  text-align: right;
+  white-space: nowrap;
 
   &__total td { font-weight: 600; color: var(--text); }
   &__total td:first-child { color: var(--text); }

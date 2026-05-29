@@ -105,10 +105,36 @@ export const demos_routes: Routes = [
         (m) => m.LaboralKutxaSareviPage,
       ),
   },
-  // Sarevi Unicaja — same simulator surface, Unicaja brand mode.
+  // Sarevi Unicaja — overview surface (shell consumer).
   {
     path: 'sarevi-unicaja',
+    loadComponent: () =>
+      import('./sarevi-unicaja-overview/sarevi-unicaja-overview.page').then(
+        (m) => m.SareviUnicajaOverviewPage,
+      ),
+  },
+  // Sarevi Unicaja — interactive simulator (same component as Laboral Kutxa Sarevi,
+  // Unicaja brand mode via route data).
+  {
+    path: 'sarevi-unicaja/demo',
     data: { sareviBrand: 'unicaja' },
+    loadComponent: () =>
+      import('./laboral-kutxa-sarevi/laboral-kutxa-sarevi.page').then(
+        (m) => m.LaboralKutxaSareviPage,
+      ),
+  },
+  // Sarevi Banco Cooperativo — overview surface (shell consumer).
+  {
+    path: 'sarevi-banco-cooperativo',
+    loadComponent: () =>
+      import('./sarevi-banco-cooperativo-overview/sarevi-banco-cooperativo-overview.page').then(
+        (m) => m.SareviBancoCooperativoOverviewPage,
+      ),
+  },
+  // Sarevi Banco Cooperativo — interactive simulator (same component, BC brand mode).
+  {
+    path: 'sarevi-banco-cooperativo/demo',
+    data: { sareviBrand: 'banco-cooperativo' },
     loadComponent: () =>
       import('./laboral-kutxa-sarevi/laboral-kutxa-sarevi.page').then(
         (m) => m.LaboralKutxaSareviPage,

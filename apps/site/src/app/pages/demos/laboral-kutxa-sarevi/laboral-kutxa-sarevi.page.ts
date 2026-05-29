@@ -28,7 +28,7 @@ import { MUNICIPIOS_ES } from './municipios-es';
 
 type Route = 'welcome' | 'datos' | 'medidas' | 'resumen';
 type Variant = 'basica' | 'completa' | 'personalizada';
-type SareviBrand = 'laboral-kutxa' | 'unicaja';
+type SareviBrand = 'laboral-kutxa' | 'unicaja' | 'banco-cooperativo';
 
 interface StepNavItem {
   key: Exclude<Route, 'welcome'>;
@@ -124,7 +124,7 @@ const BRAND_CONFIG: Record<SareviBrand, {
   },
   unicaja: {
     demoSlug: 'sarevi-unicaja',
-    demoRoute: '/demos/sarevi-unicaja',
+    demoRoute: '/demos/sarevi-unicaja/demo',
     brandName: 'Unicaja',
     logoSrc: 'assets/logos/unicaja/logo-dark.svg',
     logoAlt: 'Unicaja',
@@ -133,6 +133,18 @@ const BRAND_CONFIG: Record<SareviBrand, {
     chartSecondary: 'var(--color-unicaja-secondary-700)',
     chartAccent: 'var(--color-unicaja-primary-500)',
     advisorCopy: 'Un asesor de Unicaja se pondrá en contacto contigo.',
+  },
+  'banco-cooperativo': {
+    demoSlug: 'sarevi-banco-cooperativo',
+    demoRoute: '/demos/sarevi-banco-cooperativo/demo',
+    brandName: 'Banco Cooperativo Español',
+    logoSrc: 'assets/logos/banco-cooperativo/logo.png',
+    logoAlt: 'Banco Cooperativo Español',
+    refCode: 'bC5fEz1k',
+    chartPrimary: 'var(--color-banco-cooperativo-verde-cooperativo-500)',
+    chartSecondary: 'var(--color-banco-cooperativo-verde-oscuro-500)',
+    chartAccent: 'var(--color-banco-cooperativo-amarillo-espiga-500)',
+    advisorCopy: 'Un asesor de Banco Cooperativo Español se pondrá en contacto contigo.',
   },
 };
 
@@ -160,7 +172,12 @@ export class LaboralKutxaSareviPage {
   private readonly activatedRoute = inject(ActivatedRoute);
 
   readonly brand = signal<SareviBrand>(
-    this.activatedRoute.snapshot.data['sareviBrand'] === 'unicaja' ? 'unicaja' : 'laboral-kutxa',
+    ((): SareviBrand => {
+      const fromRoute = this.activatedRoute.snapshot.data['sareviBrand'];
+      if (fromRoute === 'unicaja') return 'unicaja';
+      if (fromRoute === 'banco-cooperativo') return 'banco-cooperativo';
+      return 'laboral-kutxa';
+    })(),
   );
   readonly brandConfig = computed(() => BRAND_CONFIG[this.brand()]);
 
@@ -213,23 +230,23 @@ export class LaboralKutxaSareviPage {
   readonly medidasReductionColumns = computed<ChartColumn[]>(() => [
     {
       title: 'Ahorro económico',
-      value: 99,
-      appendString: '%',
-      caption: 'menos gasto anual',
+      value: 320,
+      appendString: ' €',
+      caption: '−99% gasto anual',
       color: this.brandConfig().chartPrimary,
     },
     {
       title: 'Consumo energético',
-      value: 99,
-      appendString: '%',
-      caption: 'menos kWh/año',
+      value: 1843,
+      appendString: ' kWh',
+      caption: '−99% kWh/año',
       color: this.brandConfig().chartSecondary,
     },
     {
       title: 'Emisiones CO₂',
-      value: 14,
-      appendString: '%',
-      caption: 'menos kg/año',
+      value: 47,
+      appendString: ' kg',
+      caption: '−14% CO₂/año',
       color: this.brandConfig().chartAccent,
     },
   ]);
@@ -241,23 +258,23 @@ export class LaboralKutxaSareviPage {
   readonly ahorroChartColumns = computed<ChartColumn[]>(() => [
     {
       title: 'Consumo',
-      value: 64,
-      appendString: '%',
-      caption: 'reducción',
+      value: 1843,
+      appendString: ' kWh',
+      caption: '−64% al año',
       color: this.brandConfig().chartPrimary,
     },
     {
       title: 'Emisiones',
-      value: 64,
-      appendString: '%',
-      caption: 'reducción',
+      value: 47,
+      appendString: ' kg',
+      caption: '−64% CO₂/año',
       color: this.brandConfig().chartSecondary,
     },
     {
       title: 'Gasto',
-      value: 71,
-      appendString: '%',
-      caption: 'menos €/año',
+      value: 320,
+      appendString: ' €',
+      caption: '−71% al año',
       color: this.brandConfig().chartAccent,
     },
   ]);

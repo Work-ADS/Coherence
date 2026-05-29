@@ -1,0 +1,164 @@
+<site-demo-overview-shell
+  overline="DEMO · WHITE-LABEL · BANCO COOPERATIVO ESPAÑOL"
+  title="Sarevi · Banco Cooperativo"
+  intro="Tercera aplicación del simulador Sarevi sobre Coherence DS. Paleta verde-oscuro + verde-cooperativo con amarillo espiga como acento decorativo (el símbolo cooperativo). Open Sans como tipografía. Misma superficie que LK y Unicaja — solo cambia el bloque [data-brand]."
+  demoRoute="/demos/sarevi-banco-cooperativo/demo"
+  demoLabel="Abrir simulador"
+  [relatedPosts]="relatedPosts"
+>
+  <afi-tabs
+    [activeIndex]="activeTab()"
+    (activeChange)="activeTab.set($event)"
+    ariaLabel="Secciones del demo Sarevi Banco Cooperativo"
+  >
+    <!-- ─── Tab 1 · Visión general ──────────────────────────────────── -->
+    <afi-tab-item label="Visión general">
+      <div class="lk-tab">
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">¿Qué es?</h2>
+          <p class="lk-tab__paragraph">
+            La misma herramienta Sarevi (welcome → datos → medidas → resumen
+            + dos modales) que ya existe para Laboral Kutxa y Unicaja, ahora
+            con la identidad de <strong>Banco Cooperativo Español</strong>:
+            <em>verde-oscuro</em> en chrome,
+            <em>verde-cooperativo</em> como acento, y
+            la <em>espiga</em> amarilla — el símbolo
+            cooperativo histórico — reservada para badges KPI.
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">¿Para qué?</h2>
+          <p class="lk-tab__paragraph">
+            Confirmar que el patrón white-label escala más allá de las dos
+            primeras marcas. Si el mixin
+            <code>coherence-brand-bind</code> funcionaba para LK y Unicaja
+            por coincidencia, una tercera marca es la prueba real. Y sí —
+            funciona: el bloque
+            <code>[data-brand="banco-cooperativo"]</code> son ~14 slots
+            sobre el mixin (canvas, surface, control, input, hairline).
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Diferencias respecto a LK y Unicaja</h2>
+          <ul class="lk-tab__list">
+            <li>
+              <strong>Naming brand-específico</strong> (verde-oscuro,
+              verde-cooperativo, amarillo-espiga) en lugar de Material slots.
+              Coincide con el lenguaje interno de la marca.
+            </li>
+            <li>
+              <strong>Open Sans</strong> como fuente — más neutra que el
+              Manrope de Unicaja o el Avenir Next de LK, alineada con la
+              presencia digital de bancocooperativo.es.
+            </li>
+            <li>
+              <strong>Tres roles de color</strong> en vez de dos:
+              verde-oscuro para CTAs / chrome, verde-cooperativo para
+              acentos y links, y amarillo-espiga reservado para decoración
+              (logo + badges). Severity sigue siendo severity.
+            </li>
+          </ul>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 2 · Caso de estudio ─────────────────────────────────── -->
+    <afi-tab-item label="Caso de estudio">
+      <div class="lk-tab">
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Punto de partida</h2>
+          <p class="lk-tab__paragraph">
+            La marca venía documentada en una Figma interna del equipo
+            (Simulador de hipotecas) hecha para otro proyecto. Tres anclas
+            confirmadas desde el archivo:  (header
+            gradient),  (badge accent) y la espiga
+            amarilla del logo PNG histórico. El resto de la rampa se
+            extrapoló a 12 escalones siguiendo el patrón de LK / Unicaja.
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Soluciones</h2>
+          <ul class="lk-tab__list">
+            <li>
+              <strong>Cinco familias de color</strong> en
+              <code>colors-banco-cooperativo.scss</code>: verde-oscuro,
+              verde-cooperativo, amarillo-espiga, neutral, neutral-variant.
+              Ink y fonts después.
+            </li>
+            <li>
+              <strong><code>coherence-brand-bind</code> + overrides
+              puntuales</strong>. El bloque BC se queda en ~30 líneas:
+              mixin + canvas overrides (porque slate-300/neutral-300 son
+              mid-gray, no canvas) + input/control/border overrides para
+              que los inputs del DS lean los colores correctos.
+            </li>
+            <li>
+              <strong>Entrada en <code>BRAND_CONFIG</code></strong>.
+              Logo PNG copiado a <code>assets/logos/banco-cooperativo/</code>,
+              chart colors apuntando a los primitivos BC, refCode propio.
+              Misma página <code>LaboralKutxaSareviPage</code> reconoce el
+              brand vía route data.
+            </li>
+          </ul>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Lecciones</h2>
+          <p class="lk-tab__paragraph">
+            La rampa <code>neutral</code> para BC es gris frío en lugar del
+            beige cálido de LK — y eso requiere overrides explícitos para
+            <code>--canvas-primary</code>,
+            <code>--surface-default</code> y
+            <code>--border-hairline</code> (este último porque es un alias a
+            <code>--border-subtle</code> definido en <code>:root</code> y no
+            hereda el override del bloque <code>[data-brand]</code>).
+            <em>Patrón a documentar</em>: cualquier alias en
+            <code>aliases.scss</code> que las marcas quieran rebrand-ear
+            debe redeclararse en su bloque.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 3 · Bitácora ────────────────────────────────────────── -->
+    <afi-tab-item label="Bitácora">
+      <div class="lk-tab">
+        <p class="lk-tab__paragraph lk-tab__paragraph--lead">
+          Registro de hitos para Banco Cooperativo sobre Sarevi.
+        </p>
+
+        <section class="lk-tab__log-entry">
+          <header class="lk-tab__log-header">
+            <span class="lk-tab__log-date">29 may 2026</span>
+            <h3 class="lk-tab__log-title">v1 — Tokens BC + brand binding</h3>
+          </header>
+          <p class="lk-tab__paragraph">
+            <code>colors-banco-cooperativo.scss</code> creado con cinco
+            familias (anclas confirmadas desde Figma). Bloque
+            <code>[data-brand="banco-cooperativo"]</code> en
+            <code>semantic.scss</code> usando
+            <code>coherence-brand-bind</code> + overrides explícitos para
+            canvas, controles, inputs, hairline.
+          </p>
+        </section>
+
+        <section class="lk-tab__log-entry">
+          <header class="lk-tab__log-header">
+            <span class="lk-tab__log-date">29 may 2026</span>
+            <h3 class="lk-tab__log-title">v2 — Sarevi BC en ruta</h3>
+          </header>
+          <p class="lk-tab__paragraph">
+            Ruta <code>/demos/sarevi-banco-cooperativo</code> y nav-item BC
+            bajo "Sarevi" en el sidebar.
+            <code>SareviBrand</code> ampliado a
+            <code>'banco-cooperativo'</code>, entrada en
+            <code>BRAND_CONFIG</code> con logo, refCode y chart colors.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+  </afi-tabs>
+</site-demo-overview-shell>

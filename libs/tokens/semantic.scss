@@ -74,31 +74,31 @@
 
 
   // ===========================================================================
-  // BRAND - PRIMARY (12) — afi-azul, primary CTAs
+  // BRAND - PRIMARY (12) — afi-azul, brand-identity color
+  //
+  // AFI convention: brand-PRIMARY is the brand-identity color (afi-azul),
+  // brand-SECONDARY is the action/CTA color (afi-azul-profundo). See
+  // [[project_afi_secondary_is_action]]. Components later will read
+  // brand-secondary-* for CTAs and brand-primary-* for brand-identity
+  // surfaces (hero accents, link emphasis, key-figure highlights).
   // ===========================================================================
 
-  --brand-primary-background-default:  var(--color-afi-azul-profundo-500);
-  // Role: primary CTA bg. Default state of "Guardar", "Continuar", "Enviar" buttons.
-  --brand-primary-background-hover:    var(--color-afi-azul-profundo-600);
-  // Role: primary CTA bg on hover.
-  --brand-primary-background-active:   var(--color-afi-azul-profundo-700);
-  // Role: primary CTA bg on press.
+  --brand-primary-background-default:  var(--color-afi-azul-500);
+  // Role: brand-identity bg — hero accents, brand-tinted key surfaces.
+  --brand-primary-background-hover:    var(--color-afi-azul-600);
+  --brand-primary-background-active:   var(--color-afi-azul-700);
   --brand-primary-background-disabled: var(--disabled-background);
-  // Role: primary CTA bg when disabled.
 
-  --brand-primary-foreground-default:  var(--color-afi-azul-profundo-0);
-  // Role: text/icon on primary CTA — white against the deep blue bg.
-  --brand-primary-foreground-hover:    var(--color-afi-azul-profundo-25);
-  // Role: text/icon on primary CTA hover.
-  --brand-primary-foreground-active:   var(--color-afi-azul-profundo-0);
-  // Role: text/icon on primary CTA active.
+  --brand-primary-foreground-default:  var(--color-afi-azul-0);
+  // Role: text/icon on brand-identity bg — white against the brand blue.
+  --brand-primary-foreground-hover:    var(--color-afi-azul-25);
+  --brand-primary-foreground-active:   var(--color-afi-azul-0);
   --brand-primary-foreground-disabled: var(--disabled-foreground);
-  // Role: text/icon on disabled primary CTA.
 
-  --brand-primary-border-default:  var(--color-afi-azul-profundo-500);
-  // Role: border of primary outlined buttons / cards.
-  --brand-primary-border-hover:    var(--color-afi-azul-profundo-600);
-  --brand-primary-border-active:   var(--color-afi-azul-profundo-700);
+  --brand-primary-border-default:  var(--color-afi-azul-500);
+  // Role: border for brand-identity outlines.
+  --brand-primary-border-hover:    var(--color-afi-azul-600);
+  --brand-primary-border-active:   var(--color-afi-azul-700);
   --brand-primary-border-disabled: var(--disabled-border);
 
 

@@ -1,4 +1,3 @@
-@if (unlocked()) {
 <div class="shell">
 
   <!-- Sidebar: logo + section nav (hidden on fullscreen/homepage).
@@ -133,7 +132,4 @@
 
 @if (!isFullScreenRoute()) {
   <site-feedback-overlay />
-}
-} @else {
-<site-password-gate (unlocked)="onUnlocked()" />
 }

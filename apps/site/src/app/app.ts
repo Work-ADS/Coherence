@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { PasswordGateComponent } from './components/password-gate/password-gate.component';
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 // import { BrandPickerComponent } from './components/brand-picker/brand-picker.component'; // hidden 2026-05-26 — see app.component.html
 import { LanguageToggleComponent } from './components/language-toggle/language-toggle.component';
@@ -26,7 +25,6 @@ import {
     SidebarComponent,
     NavItemComponent,
     NavSectionComponent,
-    PasswordGateComponent,
     ThemeToggleComponent,
     // BrandPickerComponent, // hidden 2026-05-26 — see app.component.html
     LanguageToggleComponent,
@@ -37,18 +35,11 @@ import {
   styleUrl: './app.component.scss',
 })
 export class App {
-  private static readonly STORAGE_KEY = 'coherence-unlocked';
-
   private readonly router = inject(Router);
   private readonly language = inject(LanguageService);
 
   /** Current locale for the DS chrome (nav, home, landings). Demos ignore it. */
   readonly lang = this.language.lang;
-
-  readonly unlocked = signal(
-    typeof localStorage !== 'undefined' &&
-      localStorage.getItem(App.STORAGE_KEY) === '1',
-  );
 
   private readonly currentUrl = signal(this.router.url);
 
@@ -90,22 +81,6 @@ export class App {
         this.isFullScreenRoute.set(this.matchFullScreen(e.urlAfterRedirects));
       }
     });
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('storage', (e) => {
-        if (e.key !== App.STORAGE_KEY) return;
-        this.unlocked.set(e.newValue === '1');
-      });
-    }
-  }
-
-  onUnlocked(): void {
-    try {
-      localStorage.setItem(App.STORAGE_KEY, '1');
-    } catch {
-      // Private mode / storage disabled — gate stays open for this tab only.
-    }
-    this.unlocked.set(true);
   }
 
   isActive(path: string): boolean {

@@ -14,6 +14,14 @@
         size="lg"
         [routerLink]="demoRoute()"
       >{{ demoLabel() }}</afi-button>
+
+      @if (hasBrand()) {
+        <afi-button
+          variant="secondary"
+          size="lg"
+          (clicked)="downloadBrandCss()"
+        >Descargar CSS semántico</afi-button>
+      }
     </div>
   </header>
 

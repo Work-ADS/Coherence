@@ -19,9 +19,7 @@ const BRAND_DISPLAY: Record<string, string> = {
   mutualidad: 'Mutualidad',
 };
 
-function currentBrand(): BrandMeta {
-  const slug =
-    document.documentElement.getAttribute('data-brand')?.toLowerCase() || 'afi';
+function brandMeta(slug: string): BrandMeta {
   return { slug, displayName: BRAND_DISPLAY[slug] ?? slug };
 }
 
@@ -54,22 +52,22 @@ function stripBrandPrefix(name: string): string {
 function resolveValue(
   entry: SemanticTokenManifestEntry,
   probe: HTMLElement,
+  host: HTMLElement,
 ): string | null {
   // Peek at the authored value first: literals like `100%`, `44rem`, or
   // `hsla(...)` skip the var() probe (which would resolve % to px against the
   // probe's containing block, mangling the authored intent).
-  const authored = getComputedStyle(document.documentElement)
-    .getPropertyValue(entry.name)
-    .trim();
-  const isLiteral = authored && !authored.includes('var(');
+  const authored = getComputedStyle(host).getPropertyValue(entry.name).trim();
+  const isLiteral = authored.length > 0 && !authored.includes('var(');
 
   if (entry.kind === 'color') {
     probe.style.color = '';
     probe.style.color = isLiteral ? authored : `var(${entry.name})`;
     const computed = getComputedStyle(probe).color;
-    if (!computed || computed === 'rgba(0, 0, 0, 0)' && authored !== 'transparent') {
-      return null;
-    }
+    const isTransparentLiteral =
+      authored === 'transparent' || authored.toLowerCase() === 'currentcolor';
+    if (!computed) return null;
+    if (computed === 'rgba(0, 0, 0, 0)' && !isTransparentLiteral) return null;
     return rgbToHex(computed);
   }
 
@@ -82,20 +80,19 @@ function resolveValue(
     return computed;
   }
 
-  return authored || null;
+  return authored.length > 0 ? authored : null;
 }
 
-function buildCss(brand: BrandMeta): string {
+function buildCss(brand: BrandMeta, host: HTMLElement): string {
   const probe = document.createElement('div');
   probe.setAttribute('aria-hidden', 'true');
-  probe.style.cssText =
-    'position:absolute;left:-9999px;top:-9999px;width:0;height:0;visibility:hidden;contain:strict;';
-  document.body.appendChild(probe);
+  probe.style.cssText = 'width:0;height:0;visibility:hidden;contain:strict;';
+  host.appendChild(probe);
 
   const lines: string[] = [];
   try {
     for (const entry of SEMANTIC_TOKEN_MANIFEST) {
-      const value = resolveValue(entry, probe);
+      const value = resolveValue(entry, probe, host);
       if (value == null) continue;
       lines.push(`  ${stripBrandPrefix(entry.name)}: ${value};`);
     }
@@ -130,9 +127,34 @@ function triggerDownload(filename: string, contents: string): void {
   URL.revokeObjectURL(url);
 }
 
-export function exportSemanticCss(): void {
+/**
+ * Generate + download a flat semantic CSS file for the given brand (default
+ * Afi). When a brand slug is passed, the probe runs inside a hidden
+ * [data-brand="..."] wrapper so the file resolves to that brand's values
+ * even if the current page itself is rendered in the Afi default.
+ */
+export function exportSemanticCss(brandSlug?: string): void {
   if (typeof document === 'undefined') return;
-  const brand = currentBrand();
-  const css = buildCss(brand);
-  triggerDownload(`coherence-${brand.slug}-semantic.css`, css);
+
+  const slug =
+    brandSlug?.toLowerCase() ||
+    document.documentElement.getAttribute('data-brand')?.toLowerCase() ||
+    'afi';
+  const brand = brandMeta(slug);
+
+  const useWrapper = brandSlug != null && brandSlug.length > 0;
+  const host = useWrapper ? document.createElement('div') : document.documentElement;
+  if (useWrapper) {
+    host.setAttribute('data-brand', slug);
+    host.style.cssText =
+      'position:absolute;left:-9999px;top:-9999px;width:0;height:0;visibility:hidden;contain:strict;';
+    document.body.appendChild(host);
+  }
+
+  try {
+    const css = buildCss(brand, host as HTMLElement);
+    triggerDownload(`coherence-${brand.slug}-semantic.css`, css);
+  } finally {
+    if (useWrapper) host.remove();
+  }
 }

@@ -3,6 +3,8 @@ import { RouterLink } from '@angular/router';
 
 import { ButtonComponent } from '@coherence/ui';
 
+import { exportSemanticCss } from '../../utils/export-semantic-css';
+
 export interface DemoOverviewRelatedPost {
   /** Card title. */
   title: string;
@@ -75,4 +77,23 @@ export class DemoOverviewShellComponent {
 
   /** Convenience: hide the related-posts section when none provided. */
   readonly hasRelatedPosts = computed(() => this.relatedPosts().length > 0);
+
+  /**
+   * Brand slug for the "Descargar CSS semántico" button. When set, the
+   * button appears in the hero and downloads a flat semantic file resolved
+   * to this brand's values (e.g. "banco-cooperativo", "laboral-kutxa",
+   * "unicaja"). When null/empty the button is hidden.
+   */
+  readonly brand = input<string | null>(null);
+
+  /** Convenience: hide the download CTA when no brand is provided. */
+  readonly hasBrand = computed(() => {
+    const slug = this.brand();
+    return slug != null && slug.length > 0;
+  });
+
+  downloadBrandCss(): void {
+    const slug = this.brand();
+    if (slug) exportSemanticCss(slug);
+  }
 }

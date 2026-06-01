@@ -105,6 +105,13 @@ export const demos_routes: Routes = [
         (m) => m.LaboralKutxaSareviPage,
       ),
   },
+  // AWM — AFI Wealth Manager — overview. Cards link out to the AWM showcase
+  // (running locally on :4200 or wherever it's deployed). No sub-route here:
+  // Coherence is the entry point, AWM is where the demo actually lives.
+  {
+    path: 'awm',
+    loadComponent: () => import('./awm/awm.page').then((m) => m.AwmOverviewPage),
+  },
   // Sarevi Unicaja — overview surface (shell consumer).
   {
     path: 'sarevi-unicaja',

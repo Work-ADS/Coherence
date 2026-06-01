@@ -1,0 +1,255 @@
+<site-demo-overview-shell
+  overline="DEMOS · AFI WEALTH MANAGER"
+  title="AFI Wealth Manager"
+  intro="Plataforma B2B para asesores patrimoniales, construida sobre PrimeNG + Angular. Sub-marca de AFI (AzulProfundo + Slate + Roboto). Cada tarjeta abre la funcionalidad en el showcase de AWM en una pestaña nueva."
+  demoRoute="/demos/awm"
+  demoLabel="Ver funcionalidades de AWM"
+  brand="awm"
+  [relatedPosts]="relatedPosts"
+>
+  <afi-tabs
+    [activeIndex]="activeTab()"
+    (activeChange)="activeTab.set($event)"
+    ariaLabel="Secciones del demo AFI Wealth Manager"
+  >
+    <!-- ─── Tab 1 · Visión general ──────────────────────────────────── -->
+    <afi-tab-item label="Visión general">
+      <div class="awm-tab">
+        <section class="awm-tab__block">
+          <h2 class="awm-tab__block-title">¿Qué es?</h2>
+          <p class="awm-tab__paragraph">
+            AWM es la plataforma B2B de asesoría patrimonial de AFI:
+            propuestas de inversión, sistema de importación, búsqueda
+            multientidad y vista de cliente. Está construida sobre
+            Angular + PrimeNG y vive en su propio repo
+            (<code>AfiDesigner/Afi-AWM</code>). Coherence aporta la
+            sub-marca; AWM aporta el producto.
+          </p>
+        </section>
+
+        <section class="awm-tab__block">
+          <h2 class="awm-tab__block-title">¿Para qué?</h2>
+          <p class="awm-tab__paragraph">
+            Es el primer consumidor externo del mixin
+            <a class="awm-tab__link" routerLink="/blog/mixin-brand-bind">coherence-brand-bind</a>.
+            Demuestra que el sistema semántico funciona también para
+            productos que <em>no</em> consumen primitivos del DS — los
+            tokens viajan vía CSS variables, la implementación se queda
+            en su sitio. AWM es la prueba de que el patrón white-label
+            cruza fronteras de repositorio.
+          </p>
+        </section>
+
+        <section class="awm-tab__block">
+          <h2 class="awm-tab__block-title">Estado</h2>
+          <p class="awm-tab__paragraph">
+            Cuatro funcionalidades expuestas en el showcase de AWM:
+            Propuestas, Sistema de importación, Búsqueda y Vista cliente.
+            Las tarjetas enlazan a <code>http://localhost:4200/</code>
+            mientras AWM corre en local; se sustituirán por la URL
+            pública en cuanto el producto se despliegue. La sub-marca
+            (AzulProfundo + Slate + Roboto) ya está activa en esta página
+            — el botón "Ver funcionalidades de AWM" arriba se pinta con
+            <code>brand-primary-background-default</code> resuelto vía
+            <code>[data-brand="awm"]</code>.
+          </p>
+        </section>
+
+        <section class="awm-tab__block" aria-labelledby="awm-cards-heading">
+          <h2 id="awm-cards-heading" class="awm-tab__block-title">
+            Funcionalidades
+          </h2>
+          <ul class="awm-overview__grid">
+            @for (feature of features; track feature.slug) {
+              <li class="awm-overview__card-wrap">
+                <a
+                  class="awm-overview__card"
+                  [href]="feature.externalUrl"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span class="awm-overview__card-title-row">
+                    <span class="awm-overview__card-title">{{ feature.title }}</span>
+                    @if (feature.status) {
+                      <span class="awm-overview__card-status">{{ feature.status }}</span>
+                    }
+                  </span>
+                  <span class="awm-overview__card-intro">{{ feature.intro }}</span>
+                </a>
+              </li>
+            }
+          </ul>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 2 · Sub-marca y tokens ──────────────────────────────── -->
+    <afi-tab-item label="Sub-marca y tokens">
+      <div class="awm-tab">
+        <section class="awm-tab__block">
+          <h2 class="awm-tab__block-title">Punto de partida</h2>
+          <p class="awm-tab__paragraph">
+            AWM necesita una identidad visual diferenciada dentro de AFI:
+            mismo grupo, otro producto. La paleta base sigue siendo
+            AFI-azul, pero el producto es denso en datos (tablas,
+            heatmaps, propuestas con docenas de columnas) — el AFI-white
+            como ramp de superficie deja muy poco contraste cuando el
+            texto se reduce. Slate da el peldaño de gris que el AFI-white
+            no tiene; Roboto reemplaza Roboto Serif para que la lectura
+            larga sea más cómoda.
+          </p>
+        </section>
+
+        <section class="awm-tab__block">
+          <h2 class="awm-tab__block-title">Problemas</h2>
+          <ul class="awm-tab__list">
+            <li>
+              <strong>El consumidor no es Coherence.</strong> AWM
+              consume PrimeNG, no <code>afi-button</code> /
+              <code>afi-input</code>. El plan de "rebrand vía tokens"
+              tenía que probarse sin que el receptor importara
+              primitivos del DS.
+            </li>
+            <li>
+              <strong>Canvas default rompe con Slate.</strong> El mixin
+              <code>coherence-brand-bind</code> mapea
+              <code>--canvas-primary</code> al <code>neutral-300</code>
+              del brand. En las marcas anteriores (verde-oscuro, beige,
+              azul), el <code>-300</code> es un near-white. En Slate, el
+              <code>-300</code> es un gris medio — el canvas se ve gris
+              azulado, no blanco.
+            </li>
+            <li>
+              <strong>Naming de roles.</strong> El bind espera
+              <code>$accent</code> y <code>$neutral</code>; el lenguaje
+              de AWM es AzulProfundo / AzulAfi / Slate / GrisAfi. Hubo
+              que decidir cuál cumple el rol de accent y cuál el de
+              neutral sin renombrar las primitivas del brand.
+            </li>
+          </ul>
+        </section>
+
+        <section class="awm-tab__block">
+          <h2 class="awm-tab__block-title">Soluciones</h2>
+          <ul class="awm-tab__list">
+            <li>
+              <strong>Primitivos completos en
+              <code>libs/tokens/colors-awm.scss</code>.</strong>
+              AzulProfundo, AzulAfi, Slate, GrisAfi, BlancoAfi — cada
+              rampa con sus 12 escalones, además de los paletazos de
+              gráficos. El bloque del brand vive aislado bajo
+              <code>[data-brand="awm"]</code> en el mismo Layer 2 que
+              Banco Cooperativo, Mutualidad, Unicaja y Laboral Kutxa.
+            </li>
+            <li>
+              <strong>Invocación al mixin con accent/neutral
+              explícitos.</strong>
+              <code>$accent: 'azulprofundo'</code> y
+              <code>$neutral: 'slate'</code>. AzulProfundo cubre el
+              rol de acción primaria (CTAs); Slate cubre el de superficie
+              y texto. AzulAfi queda libre para el símbolo de marca
+              (<code>--brand-mark-symbol</code>) — el azul brillante para
+              el logo, el azul profundo para la acción.
+            </li>
+            <li>
+              <strong>Sobrescritura de canvas explícita.</strong>
+              Después del <code>@include</code>, el bloque AWM mapea
+              <code>--canvas-primary</code> → slate-50,
+              <code>--canvas-secondary</code> → slate-100 y
+              <code>--surface-default</code> → blanco puro. Tres líneas
+              que devuelven el look near-white-on-slate que el producto
+              necesita.
+            </li>
+            <li>
+              <strong>Una página de Coherence que activa el brand.</strong>
+              Esta misma vista pone <code>data-brand="awm"</code> en su
+              elemento host. Aunque AWM no consume primitivos del DS, la
+              sub-marca queda visible en Coherence — el botón
+              "Ver funcionalidades de AWM" del hero se pinta en
+              AzulProfundo, el fondo en slate-50. Demuestra que el bind
+              funciona sin alojar el producto.
+            </li>
+          </ul>
+        </section>
+
+        <section class="awm-tab__block">
+          <h2 class="awm-tab__block-title">Lecciones</h2>
+          <p class="awm-tab__paragraph">
+            La principal: <em>el sistema semántico cruza fronteras de
+            repositorio</em>. El mismo mixin que rebrandea Sarevi sobre
+            primitivos <code>afi-*</code> también rebrandea un producto
+            PrimeNG vía CSS variables. La segunda:
+            <em>los defaults del mixin no son universales</em>. Cuando
+            el neutral elegido no tiene un step casi-blanco (Slate-300
+            es mid-gray, no off-white), hay que sobrescribir las
+            superficies a mano después del <code>@include</code>. Tres
+            líneas, pero hay que recordar hacerlas.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 3 · Bitácora ────────────────────────────────────────── -->
+    <afi-tab-item label="Bitácora">
+      <div class="awm-tab">
+        <p class="awm-tab__paragraph awm-tab__paragraph--lead">
+          Registro de la integración AWM ↔ Coherence desde el punto de
+          vista del DS. La bitácora del producto AWM (sus features, su
+          roadmap, su backlog) vive en su propio repo.
+        </p>
+
+        <section class="awm-tab__log-entry">
+          <header class="awm-tab__log-header">
+            <span class="awm-tab__log-date">29 may 2026</span>
+            <h3 class="awm-tab__log-title">v1 — Token-pack inicial + superficie /demos/awm</h3>
+          </header>
+          <p class="awm-tab__paragraph">
+            <code>libs/tokens/colors-awm.scss</code> con AzulProfundo /
+            AzulAfi / Slate / GrisAfi / BlancoAfi + paletas de gráficos,
+            extraídos de <code>AWM/design/design.md</code>. Bloque
+            <code>[data-brand="awm"]</code> en
+            <code>semantic.scss</code> llamando a
+            <code>coherence-brand-bind</code> con accent=azulprofundo /
+            neutral=slate. Ruta <code>/demos/awm</code> con tarjeta-grid
+            replicando el patrón de la landing de demos.
+          </p>
+        </section>
+
+        <section class="awm-tab__log-entry">
+          <header class="awm-tab__log-header">
+            <span class="awm-tab__log-date">29 may 2026</span>
+            <h3 class="awm-tab__log-title">v2 — Drop iframe, tarjetas enlazan al showcase</h3>
+          </header>
+          <p class="awm-tab__paragraph">
+            El primer intento incluía una sub-ruta
+            <code>/demos/awm/:feature</code> que cargaba
+            <code>demo-afiwm.es</code> dentro de un iframe. No resolvía y
+            duplicaba el chrome de Coherence sobre el de AWM. Decisión:
+            Coherence es el entry point, AWM aloja el demo en su sitio.
+            Las tarjetas pasan a <code>&lt;a href target="_blank"&gt;</code>
+            apuntando a <code>localhost:4200</code> (cambiará a la URL
+            pública cuando AWM se despliegue).
+          </p>
+        </section>
+
+        <section class="awm-tab__log-entry">
+          <header class="awm-tab__log-header">
+            <span class="awm-tab__log-date">1 jun 2026</span>
+            <h3 class="awm-tab__log-title">v3 — Sub-marca visible + adopción del overview shell</h3>
+          </header>
+          <p class="awm-tab__paragraph">
+            <code>data-brand="awm"</code> aplicado en el elemento host de
+            la página — el bloque de tokens deja de ser declaración
+            huérfana y empieza a pintar superficies reales en Coherence.
+            <code>/demos/awm</code> adopta
+            <code>&lt;site-demo-overview-shell&gt;</code>: hero band con
+            CTA AzulProfundo + 3 tabs (Visión general / Sub-marca y
+            tokens / Bitácora) + lectura relacionada apuntando al post
+            del mixin. Misma plantilla editorial que Sarevi, sin el
+            simulador alojado.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+  </afi-tabs>
+</site-demo-overview-shell>

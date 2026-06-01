@@ -642,6 +642,42 @@
   --input-border-hover: var(--color-unicaja-primary-300);
 }
 
+// ----- AWM (AFI Wealth Manager — sub-brand) -----
+//
+// AWM is AFI's B2B wealth-advisor product, built on PrimeNG. Palette is
+// AFI-rooted but uses Slate as the surface/text ramp (PrimeNG's default,
+// per AWM/design/design.md — data-dense product, Slate's contrast wins)
+// and Roboto as the brand text font.
+//
+// Primary action role: AzulProfundo in light mode. AWM design.md calls
+// for a mode-swap to AzulAfi in dark mode — when we add dark-mode
+// support, override the brand-primary-* tokens under
+// [data-brand="awm"][data-theme="dark"].
+//
+// Canvas slots are explicitly overridden after the mixin call: the mixin
+// expects a pale-300 (beige/white ramps), but slate-300 is a mid-gray.
+// Per design.md, page bg = slate-50/100, surfaces = slate-50 / white.
+[data-brand="awm"] {
+  @include coherence-brand-bind(
+    $brand: 'awm',
+    $accent: 'azulprofundo',
+    $neutral: 'slate',
+    $ink-default: var(--color-awm-ink-default),
+    $ink-soft:    var(--color-awm-ink-soft),
+    $ink-muted:   var(--color-awm-ink-muted),
+  );
+
+  // Surface overrides — slate-50/100 are the real canvas tones in AWM.
+  --canvas-primary:   var(--color-awm-slate-50);
+  --canvas-secondary: var(--color-awm-slate-100);
+  --surface-default:  var(--color-base-white);
+  --surface-subtle:   var(--color-awm-slate-50);
+  --surface-raised:   var(--color-base-white);
+
+  // Brand mark — use the bright azulafi for the logo dot / accent symbol.
+  --brand-mark-symbol: var(--color-awm-azulafi-500);
+}
+
 // ----- Banco Cooperativo Español -----
 //
 // Source: Figma "Banco Cooperativo — Simulador de hipotecas" + bank.es site.

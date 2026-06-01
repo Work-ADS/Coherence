@@ -1,0 +1,211 @@
+// =============================================================================
+// AWM overview — page-scoped styles for the tabbed body.
+//
+// The outer page layout (hero band + tab strip + related-posts band) is
+// owned by <site-demo-overview-shell>. This file styles only:
+//   - the per-tab content wrapper (.awm-tab + .awm-tab__block)
+//   - prose treatments (paragraph, list, inline link, inline code)
+//   - bitácora log entries
+//   - the card grid embedded inside the "Visión general" tab
+//
+// data-brand="awm" lives on the component host, so every token reference
+// below already resolves through the AWM brand-bind.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+// ----- Tab content wrapper ------------------------------------------------
+
+.awm-tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  padding-block: var(--space-lg);
+}
+
+.awm-tab__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.awm-tab__block-title {
+  margin: 0;
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}
+
+// ----- Prose ------------------------------------------------------------
+
+.awm-tab__paragraph {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-width: var(--content-prose);
+
+  em {
+    color: var(--foreground-primary-default);
+    font-style: italic;
+  }
+
+  code {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.9em;
+    color: var(--foreground-primary-default);
+    background: var(--surface-subtle);
+    padding-inline: var(--space-2xs);
+    border-radius: var(--radius-control-sm);
+  }
+
+  &--lead {
+    color: var(--foreground-primary-default);
+    border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+    padding-block-end: var(--space-md);
+  }
+
+  &--placeholder {
+    font-style: italic;
+    color: var(--foreground-tertiary-default);
+  }
+}
+
+.awm-tab__list {
+  margin: 0;
+  padding-inline-start: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-width: var(--content-prose);
+
+  li { margin: 0; }
+
+  strong {
+    color: var(--foreground-primary-default);
+    font-weight: 600;
+  }
+
+  code {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.9em;
+    color: var(--foreground-primary-default);
+    background: var(--surface-subtle);
+    padding-inline: var(--space-2xs);
+    border-radius: var(--radius-control-sm);
+  }
+}
+
+.awm-tab__link {
+  color: var(--foreground-brand-default);
+  text-decoration: underline;
+  text-underline-offset: var(--space-2xs);
+  cursor: pointer;
+
+  &:hover { color: var(--foreground-brand-hover); }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+    border-radius: var(--radius-control);
+  }
+}
+
+// ----- Bitácora log entries ---------------------------------------------
+
+.awm-tab__log-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-block: var(--space-md);
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+
+  &:last-of-type { border-block-end: none; }
+}
+
+.awm-tab__log-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.awm-tab__log-date {
+  font: var(--type-body-sm-500);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
+}
+
+.awm-tab__log-title {
+  margin: 0;
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}
+
+// ----- Embedded card grid (lives inside the Visión general tab) ----------
+
+.awm-overview__grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--dimension-80), 1fr));
+  gap: var(--space-md);
+}
+
+.awm-overview__card-wrap {
+  display: flex;
+}
+
+.awm-overview__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius-card);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  transition:
+    background var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-subtle);
+    border-color: var(--border-default);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+}
+
+.awm-overview__card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.awm-overview__card-title {
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}
+
+.awm-overview__card-status {
+  font: var(--type-body-sm-500);
+  padding: var(--space-2xs) var(--space-xs);
+  background: var(--brand-secondary-neutral-background-default);
+  color: var(--brand-secondary-neutral-foreground-default);
+  border-radius: var(--radius-pill);
+}
+
+.awm-overview__card-intro {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}

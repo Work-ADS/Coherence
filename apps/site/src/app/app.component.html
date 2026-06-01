@@ -20,6 +20,7 @@
             <afi-nav-item label="Space" [showIcon]="false" [active]="isActive('/fundamentos/espacio')" (clicked)="navigate('/fundamentos/espacio')" />
             <afi-nav-item label="Motion" [showIcon]="false" [active]="isActive('/fundamentos/movimiento')" (clicked)="navigate('/fundamentos/movimiento')" />
             <afi-nav-item label="Accessibility" [showIcon]="false" [active]="isActive('/fundamentos/accesibilidad')" (clicked)="navigate('/fundamentos/accesibilidad')" />
+            <afi-nav-item label="Logo" [showIcon]="false" [active]="isActive('/fundamentos/logo')" (clicked)="navigate('/fundamentos/logo')" />
           </afi-nav-section>
         }
 
@@ -33,16 +34,39 @@
           </afi-nav-section>
         }
 
+        @case ('patrones') {
+          <!-- Patterns — composition / layout / UX patterns. All entries must
+               resolve to a /patrones/* URL so the section context stays on
+               Patterns. Components-side primitive docs are linked from the
+               pattern page itself, not from the sidebar. -->
+          <afi-nav-section label="Patterns" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
+            <afi-nav-item label="Charts" [showIcon]="false" [active]="isActive('/patrones/graficos')" (clicked)="navigate('/patrones/graficos')" />
+            <afi-nav-item label="Sidebar" [showIcon]="false" [active]="isActive('/patrones/sidebar-decisiones')" (clicked)="navigate('/patrones/sidebar-decisiones')" />
+
+            <!-- Header — expandable group of cabecera patterns -->
+            <afi-nav-section label="Header" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
+              <afi-nav-item label="Page header" [showIcon]="false" [active]="isActive('/patrones/cabeceras/cabecera-de-pagina')" (clicked)="navigate('/patrones/cabeceras/cabecera-de-pagina')" />
+              <afi-nav-item label="Section header" [showIcon]="false" [active]="isActive('/patrones/cabeceras/cabecera-de-seccion')" (clicked)="navigate('/patrones/cabeceras/cabecera-de-seccion')" />
+              <afi-nav-item label="Top bar" [showIcon]="false" [active]="isActive('/patrones/cabeceras/top-bar')" (clicked)="navigate('/patrones/cabeceras/top-bar')" />
+              <afi-nav-item label="Top nav" [showIcon]="false" [active]="isActive('/patrones/cabeceras/top-nav')" (clicked)="navigate('/patrones/cabeceras/top-nav')" />
+            </afi-nav-section>
+
+            <afi-nav-item label="Modal" [showIcon]="false" [active]="isActive('/patrones/dialog-decisiones')" (clicked)="navigate('/patrones/dialog-decisiones')" />
+            <afi-nav-item label="Shell" [showIcon]="false" [active]="isActive('/patrones/shells')" (clicked)="navigate('/patrones/shells')" />
+            <afi-nav-item label="Table" [showIcon]="false" [active]="isActive('/patrones/tablas')" (clicked)="navigate('/patrones/tablas')" />
+          </afi-nav-section>
+        }
+
         @default {
-          <!-- Components section — flat alphabetical list of every primitive in
-               apps/site/src/app/pages/componentes/componentes.routes.ts -->
+          <!-- Components — primitives only. Composition / layout / UX
+               patterns (sidebar, modal, drawer, page header, nav section,
+               charts, headers) live exclusively under Patterns. -->
           <afi-nav-section label="Components" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
             <afi-nav-item label="Avatar" [showIcon]="false" [active]="isActive('/componentes/avatar')" (clicked)="navigate('/componentes/avatar')" />
             <afi-nav-item label="Badge" [showIcon]="false" [active]="isActive('/componentes/badge')" (clicked)="navigate('/componentes/badge')" />
             <afi-nav-item label="Button" [showIcon]="false" [active]="isActive('/componentes/button')" (clicked)="navigate('/componentes/button')" />
             <afi-nav-item label="Card" [showIcon]="false" [active]="isActive('/componentes/card')" (clicked)="navigate('/componentes/card')" />
             <afi-nav-item label="Checkbox" [showIcon]="false" [active]="isActive('/componentes/checkbox')" (clicked)="navigate('/componentes/checkbox')" />
-            <afi-nav-item label="Drawer" [showIcon]="false" [active]="isActive('/componentes/drawer')" (clicked)="navigate('/componentes/drawer')" />
             <afi-nav-item label="Dropdown Panel" [showIcon]="false" [active]="isActive('/componentes/dropdown-panel')" (clicked)="navigate('/componentes/dropdown-panel')" />
             <afi-nav-item label="Filter Chip" [showIcon]="false" [active]="isActive('/componentes/filter-chip')" (clicked)="navigate('/componentes/filter-chip')" />
             <afi-nav-item label="Icon Button" [showIcon]="false" [active]="isActive('/componentes/icon-button')" (clicked)="navigate('/componentes/icon-button')" />
@@ -50,31 +74,17 @@
             <afi-nav-item label="Input" [showIcon]="false" [active]="isActive('/componentes/input')" (clicked)="navigate('/componentes/input')" />
             <afi-nav-item label="Kbd" [showIcon]="false" [active]="isActive('/componentes/kbd')" (clicked)="navigate('/componentes/kbd')" />
             <afi-nav-item label="Loading Overlay" [showIcon]="false" [active]="isActive('/componentes/loading-overlay')" (clicked)="navigate('/componentes/loading-overlay')" />
-            <afi-nav-item label="Logo" [showIcon]="false" [active]="isActive('/componentes/logo')" (clicked)="navigate('/componentes/logo')" />
             <afi-nav-item label="Menu" [showIcon]="false" [active]="isActive('/componentes/menu')" (clicked)="navigate('/componentes/menu')" />
-            <afi-nav-item label="Modal" [showIcon]="false" [active]="isActive('/componentes/modal')" (clicked)="navigate('/componentes/modal')" />
             <afi-nav-item label="Nav Item" [showIcon]="false" [active]="isActive('/componentes/nav-item')" (clicked)="navigate('/componentes/nav-item')" />
-            <afi-nav-item label="Nav Section" [showIcon]="false" [active]="isActive('/componentes/nav-section')" (clicked)="navigate('/componentes/nav-section')" />
-            <afi-nav-item label="Page Header" [showIcon]="false" [active]="isActive('/componentes/page-header')" (clicked)="navigate('/componentes/page-header')" />
             <afi-nav-item label="Radio Group" [showIcon]="false" [active]="isActive('/componentes/radio-group')" (clicked)="navigate('/componentes/radio-group')" />
             <afi-nav-item label="Segmented Control" [showIcon]="false" [active]="isActive('/componentes/segmented-control')" (clicked)="navigate('/componentes/segmented-control')" />
             <afi-nav-item label="Select" [showIcon]="false" [active]="isActive('/componentes/select')" (clicked)="navigate('/componentes/select')" />
-            <afi-nav-item label="Shell" [showIcon]="false" [active]="isActive('/componentes/shell')" (clicked)="navigate('/componentes/shell')" />
-            <afi-nav-item label="Sidebar" [showIcon]="false" [active]="isActive('/componentes/sidebar')" (clicked)="navigate('/componentes/sidebar')" />
             <afi-nav-item label="Status Chip" [showIcon]="false" [active]="isActive('/componentes/status-chip')" (clicked)="navigate('/componentes/status-chip')" />
             <afi-nav-item label="Switch" [showIcon]="false" [active]="isActive('/componentes/switch')" (clicked)="navigate('/componentes/switch')" />
-            <afi-nav-item label="Table" [showIcon]="false" [active]="isActive('/componentes/table')" (clicked)="navigate('/componentes/table')" />
             <afi-nav-item label="Tabs" [showIcon]="false" [active]="isActive('/componentes/tabs')" (clicked)="navigate('/componentes/tabs')" />
             <afi-nav-item label="Toast" [showIcon]="false" [active]="isActive('/componentes/toast')" (clicked)="navigate('/componentes/toast')" />
             <afi-nav-item label="Tooltip" [showIcon]="false" [active]="isActive('/componentes/tooltip')" (clicked)="navigate('/componentes/tooltip')" />
             <afi-nav-item label="Top Bar" [showIcon]="false" [active]="isActive('/componentes/top-bar')" (clicked)="navigate('/componentes/top-bar')" />
-          </afi-nav-section>
-
-          <!-- Patterns section -->
-          <afi-nav-section label="Patterns" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
-            <afi-nav-item label="Sidebar" [showIcon]="false" [active]="isActive('/componentes/sidebar')" (clicked)="navigate('/componentes/sidebar')" />
-            <afi-nav-item label="Headers" [showIcon]="false" [active]="isActive('/patrones/cabeceras/cabecera-de-pagina')" (clicked)="navigate('/patrones/cabeceras/cabecera-de-pagina')" />
-            <afi-nav-item label="Dropdown" [showIcon]="false" [active]="isActive('/patrones/selectores/dropdown')" (clicked)="navigate('/patrones/selectores/dropdown')" />
           </afi-nav-section>
         }
       }
@@ -96,6 +106,9 @@
             </a>
             <a routerLink="/componentes" routerLinkActive="active" class="top-nav__link">
               {{ lang() === 'es' ? 'Componentes' : 'Components' }}
+            </a>
+            <a routerLink="/patrones" routerLinkActive="active" class="top-nav__link">
+              {{ lang() === 'es' ? 'Patrones' : 'Patterns' }}
             </a>
             <a routerLink="/demos" routerLinkActive="active" class="top-nav__link">
               {{ lang() === 'es' ? 'Demos' : 'Demos' }}

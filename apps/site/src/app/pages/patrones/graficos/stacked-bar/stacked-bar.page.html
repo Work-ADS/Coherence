@@ -91,6 +91,7 @@
         <li>Mostrar la mezcla por categoría cuando el total importa tanto como las partes.</li>
         <li>Hasta 7 series. Más segmentos comprometen la lectura.</li>
         <li>Asignar la categoría más grande a la posición 1 (base del stack) y descender.</li>
+        <li>Mezclar valores positivos y negativos en la misma columna — los negativos se pintan en <code>--chart-negative</code> y cuelgan bajo la línea cero.</li>
       </ul>
     </article>
 
@@ -100,9 +101,48 @@
         <li>Comparar valores absolutos entre categorías — usa Bar simple.</li>
         <li>Más de 7 series — agrupa "Otros" o reorganiza.</li>
         <li>Cuando lo importante es la tendencia individual de una serie — usa Line.</li>
-        <li>Cuando hay valores negativos mezclados — necesita un patrón diferente (Bar diverging).</li>
       </ul>
     </article>
+  </section>
+
+  <section class="stacked-bar__negative">
+    <h2 class="stacked-bar__h2">Valores negativos</h2>
+    <p class="stacked-bar__lede stacked-bar__lede--small">
+      Regla universal: cualquier segmento con valor menor que cero se pinta con
+      <code>--chart-negative</code>, sin escala ni variantes por categoría.
+      Aplica por igual a barras simples y barras apiladas. La magnitud se lee
+      por la longitud del segmento bajo la línea cero, nunca por el tono. Un
+      único rojo plano para que "deuda" o "pérdida" sea inequívoco a primera
+      vista.
+    </p>
+
+    <div class="stacked-bar__negative-grid">
+      <div class="stacked-bar__negative-preview" aria-hidden="true">
+        <svg viewBox="0 0 120 200" class="stacked-bar__svg">
+          <!-- positive stack: slot 1 (base) → slot 3 (top) -->
+          <rect x="40" y="20"  width="40" height="40" fill="var(--chart-stacked-3)" />
+          <rect x="40" y="61"  width="40" height="34" fill="var(--chart-stacked-2)" />
+          <rect x="40" y="96"  width="40" height="14" fill="var(--chart-stacked-1)" />
+          <!-- zero baseline -->
+          <line x1="16" x2="104" y1="110" y2="110" stroke="var(--canvas-fg)" stroke-width="1" />
+          <text x="12" y="113" text-anchor="end" class="stacked-bar__axis-label">0</text>
+          <!-- negative segment -->
+          <rect x="40" y="111" width="40" height="60" fill="var(--chart-negative)" />
+        </svg>
+      </div>
+
+      <div class="stacked-bar__legend stacked-bar__legend--negative">
+        <div class="stacked-bar__legend-row">
+          <span class="stacked-bar__chip" style="background: var(--chart-negative);"></span>
+          <span class="stacked-bar__legend-label">Cualquier valor &lt; 0</span>
+          <code class="stacked-bar__legend-token">--chart-negative</code>
+        </div>
+        <p class="stacked-bar__lede stacked-bar__lede--small">
+          También expuesto como <code>--chart-deuda</code> (alias) para la
+          continuidad del chart de evolución patrimonial.
+        </p>
+      </div>
+    </div>
   </section>
 
   <section class="stacked-bar__tokens">
@@ -150,7 +190,7 @@
           <li>No reordenes los slots por columna — la misma serie siempre usa el mismo color.</li>
           <li>No uses degradados ni gradientes — la paleta ya está calibrada.</li>
           <li>No metas más de un color por slot — un cliente con marca distinta sobreescribe el token, no el render.</li>
-          <li>No representes datos negativos en este patrón — necesita un diseño aparte.</li>
+          <li>No pintes con <code>--chart-negative</code> un valor positivo "destacado" — el rojo se reserva para valores &lt; 0.</li>
         </ul>
       </div>
     </div>

@@ -25,8 +25,15 @@
   // ---------------------------------------------------------------------------
   // Universal chart colors (do not theme-vary)
   // ---------------------------------------------------------------------------
-  --chart-deuda: #C81E1E;
-  // Role: any value < 0. Debt is debt regardless of asset class or palette.
+  --chart-negative: #C81E1E;
+  // Role: ANY value < 0 in a bar, stacked-bar, or comparable chart. Single
+  // flat red — no ladder, no per-category variant. The signal is "this is
+  // debt / loss / below zero" and it must read identically regardless of
+  // asset class, position in the stack, or active palette. Locked 2026-06-01.
+
+  --chart-deuda: var(--chart-negative);
+  // Back-compat alias. "Deuda" is the seniors' vocabulary in the
+  // evolución-patrimonial chart; the canonical name is --chart-negative.
 
   --chart-band-fill: #37BBF4;
   // Role: confidence-band fill (used at low opacity in line modes).

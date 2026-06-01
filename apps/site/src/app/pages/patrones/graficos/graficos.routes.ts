@@ -22,4 +22,13 @@ export const graficos_routes: Routes = [
         (m) => m.EvolucionPatrimonialPage,
       ),
   },
+  {
+    path: 'palette-comparison',
+    loadComponent: () =>
+      import('./palette-comparison/palette-comparison.page').then((m) => m.PaletteComparisonPage),
+  },
+  {
+    path: 'stacked-bar',
+    loadComponent: () => import('./stacked-bar/stacked-bar.page').then((m) => m.StackedBarPage),
+  },
 ];

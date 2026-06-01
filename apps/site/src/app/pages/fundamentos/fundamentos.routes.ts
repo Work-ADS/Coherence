@@ -11,4 +11,7 @@ export const fundamentos_routes: Routes = [
   { path: 'espacio', loadComponent: () => import('./espacio/espacio.page').then(m => m.EspacioPage) },
   { path: 'movimiento', loadComponent: () => import('./movimiento/movimiento.page').then(m => m.MovimientoPage) },
   { path: 'accesibilidad', loadComponent: () => import('./accesibilidad/accesibilidad.page').then(m => m.AccesibilidadPage) },
+  // Logo lives under Componentes/ but conceptually belongs to Foundations.
+  // Reusing the existing LogoPage keeps a single source of truth.
+  { path: 'logo', loadComponent: () => import('../componentes/logo.page').then(m => m.LogoPage) },
 ];

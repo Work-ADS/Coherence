@@ -54,6 +54,7 @@
 
 // Layer 4 — Component tokens (per-component sizing, spacing; references semantics)
 @import './components.scss';
+@import './charts.scss';
 
 // Layer 5 — Backward-compat aliases
 @import './aliases.scss';

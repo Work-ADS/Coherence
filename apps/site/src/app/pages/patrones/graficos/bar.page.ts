@@ -15,6 +15,7 @@ import { TokensTableComponent, type TokenRow } from '../../../components/tokens-
 
 const BAR_TOKENS: TokenRow[] = [
   { property: 'Paleta series', token: 'var(--data-neutral-strong), var(--data-highlight-primary)' },
+  { property: 'Valores < 0', token: 'var(--chart-negative)' },
   { property: 'Ejes / grid', token: 'var(--border-hairline)' },
   { property: 'Texto ejes', token: 'text-neutral-500 (body-sm)' },
   { property: 'Título', token: 'text-section text-canvas-fg' },
@@ -120,6 +121,21 @@ const SORTS: (BarSort | 'none')[] = ['none', 'asc', 'desc'];
             <li>Comparación de dos valores por categoría — use Dumbbell.</li>
             <li>Correlación bidimensional — use Heatmap.</li>
           </ul>
+          <h3 id="valores-negativos" class="text-body-md font-medium text-canvas-fg mb-space-3">Valores negativos</h3>
+          <p class="text-body-md text-neutral-600 mb-space-3">
+            Cualquier barra con valor menor que cero se pinta con
+            <code class="font-mono text-action-700">var(--chart-negative)</code>
+            (rojo plano, #C81E1E) y cuelga bajo la línea cero. Es una regla
+            universal del DS: el rojo en cualquier gráfico señala deuda o
+            pérdida, sin escala ni variantes por categoría. La magnitud se
+            lee por la longitud, no por el tono.
+          </p>
+          <p class="text-body-md text-neutral-500 mb-space-8">
+            Primitiva pendiente — el <code class="font-mono">&lt;afi-chart-bar&gt;</code>
+            todavía asume <code class="font-mono">value &gt;= 0</code>; el soporte
+            de eje cero centrado llega en una iteración posterior. Hasta entonces,
+            la regla queda registrada como contrato del DS.
+          </p>
           <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
           <afi-code-block [code]="realWorldCode" language="html" />
         </section>

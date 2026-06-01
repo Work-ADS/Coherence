@@ -82,7 +82,7 @@ import { RouterLink } from '@angular/router';
       <nav class="flex flex-wrap gap-space-4 text-body-sm">
         <span class="text-neutral-400">Temas relacionados:</span>
         <a routerLink="/componentes/shell" class="text-action-500 hover:underline">Shell</a>
-        <a routerLink="/componentes/sidebar" class="text-action-500 hover:underline">Sidebar</a>
+        <a routerLink="/patrones/sidebar-ia-comparison" class="text-action-500 hover:underline">Sidebar</a>
         <a routerLink="/componentes/table" class="text-action-500 hover:underline">Table</a>
         <a routerLink="/patrones/shells/docs" class="text-action-500 hover:underline">Docs shell</a>
       </nav>

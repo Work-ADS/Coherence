@@ -54,4 +54,11 @@ export const patrones_routes: Routes = [
         (m) => m.DialogDecisionesPage,
       ),
   },
+  {
+    path: 'sidebar-ia-comparison',
+    loadComponent: () =>
+      import('./sidebar-ia-comparison/sidebar-ia-comparison.page').then(
+        (m) => m.SidebarIaComparisonPage,
+      ),
+  },
 ];

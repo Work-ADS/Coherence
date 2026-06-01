@@ -60,19 +60,19 @@
             <afi-nav-item label="Segmented Control" [showIcon]="false" [active]="isActive('/componentes/segmented-control')" (clicked)="navigate('/componentes/segmented-control')" />
             <afi-nav-item label="Select" [showIcon]="false" [active]="isActive('/componentes/select')" (clicked)="navigate('/componentes/select')" />
             <afi-nav-item label="Shell" [showIcon]="false" [active]="isActive('/componentes/shell')" (clicked)="navigate('/componentes/shell')" />
-            <afi-nav-item label="Sidebar" [showIcon]="false" [active]="isActive('/componentes/sidebar')" (clicked)="navigate('/componentes/sidebar')" />
             <afi-nav-item label="Status Chip" [showIcon]="false" [active]="isActive('/componentes/status-chip')" (clicked)="navigate('/componentes/status-chip')" />
             <afi-nav-item label="Switch" [showIcon]="false" [active]="isActive('/componentes/switch')" (clicked)="navigate('/componentes/switch')" />
             <afi-nav-item label="Table" [showIcon]="false" [active]="isActive('/componentes/table')" (clicked)="navigate('/componentes/table')" />
             <afi-nav-item label="Tabs" [showIcon]="false" [active]="isActive('/componentes/tabs')" (clicked)="navigate('/componentes/tabs')" />
             <afi-nav-item label="Toast" [showIcon]="false" [active]="isActive('/componentes/toast')" (clicked)="navigate('/componentes/toast')" />
             <afi-nav-item label="Tooltip" [showIcon]="false" [active]="isActive('/componentes/tooltip')" (clicked)="navigate('/componentes/tooltip')" />
-            <afi-nav-item label="Top Bar" [showIcon]="false" [active]="isActive('/componentes/top-bar')" (clicked)="navigate('/componentes/top-bar')" />
           </afi-nav-section>
 
-          <!-- Patterns section -->
+          <!-- Patterns section — composite UI made of primitives (sidebar, top bar, etc.).
+               Standalone primitives stay in the Components section above. -->
           <afi-nav-section label="Patterns" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
-            <afi-nav-item label="Sidebar" [showIcon]="false" [active]="isActive('/componentes/sidebar')" (clicked)="navigate('/componentes/sidebar')" />
+            <afi-nav-item label="Sidebar" [showIcon]="false" [active]="isActive('/patrones/sidebar-ia-comparison')" (clicked)="navigate('/patrones/sidebar-ia-comparison')" />
+            <afi-nav-item label="Top Bar" [showIcon]="false" [active]="isActive('/patrones/cabeceras/top-bar')" (clicked)="navigate('/patrones/cabeceras/top-bar')" />
             <afi-nav-item label="Headers" [showIcon]="false" [active]="isActive('/patrones/cabeceras/cabecera-de-pagina')" (clicked)="navigate('/patrones/cabeceras/cabecera-de-pagina')" />
             <afi-nav-item label="Dropdown" [showIcon]="false" [active]="isActive('/patrones/selectores/dropdown')" (clicked)="navigate('/patrones/selectores/dropdown')" />
           </afi-nav-section>

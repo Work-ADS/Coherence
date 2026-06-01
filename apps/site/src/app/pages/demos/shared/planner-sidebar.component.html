@@ -3,32 +3,88 @@
   variant="secondary-azul"
   [ariaLabel]="ariaLabel()"
 >
-  <!-- Top slot: logo -->
+  <!-- Top slot: logo + product label -->
   <div slot="top" class="planner-sidebar__brand">
     <coherence-logo variant="monochrome" size="sm" />
     <span class="planner-sidebar__brand-label">Wealth Planner</span>
   </div>
 
-  <!-- Nav sections -->
-  @for (section of sections(); track section.label) {
-    <afi-nav-section
-      [label]="section.label"
-      [defaultExpanded]="true"
-      [hideHeader]="false"
-      chevronPosition="right"
-      [showTreeLines]="true"
-    >
-      @for (item of section.items; track item.key) {
-        <afi-nav-item
-          [label]="item.label"
-          [active]="item.key === activeKey()"
-          [showIcon]="false"
-          [sidebarExpanded]="true"
-          [routerLink]="item.route ?? null"
-        />
-      }
-    </afi-nav-section>
-  }
+  <!-- Editorial nav: section labels are non-clickable separators (h3 with a
+       leading Lucide icon); items below render as plain rows. Same pattern
+       as the Editorial variant of /patrones/sidebar-ia-comparison. -->
+  <nav class="ds-progress" [attr.aria-label]="ariaLabel()">
+    @for (section of sections(); track section.label) {
+      <section class="ds-progress__section">
+        <h3 class="ds-progress__title">
+          <span class="ds-progress__title-icon" aria-hidden="true">
+            @switch (section.icon) {
+              @case ('wallet') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 12V8H6a2 2 0 0 1 0-4h12v4" />
+                  <path d="M4 6v12c0 1.1.9 2 2 2h14v-4" />
+                  <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+                </svg>
+              }
+              @case ('target') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="6" />
+                  <circle cx="12" cy="12" r="2" />
+                </svg>
+              }
+              @case ('clipboard-list') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                  <path d="M12 11h4" />
+                  <path d="M12 16h4" />
+                  <path d="M8 11h.01" />
+                  <path d="M8 16h.01" />
+                </svg>
+              }
+              @case ('route') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="6" cy="19" r="3" />
+                  <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" />
+                  <circle cx="18" cy="5" r="3" />
+                </svg>
+              }
+              @case ('flag') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                  <line x1="4" x2="4" y1="22" y2="15" />
+                </svg>
+              }
+              @case ('file-text') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                  <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                  <path d="M10 9H8" />
+                  <path d="M16 13H8" />
+                  <path d="M16 17H8" />
+                </svg>
+              }
+            }
+          </span>
+          <span class="ds-progress__title-label">{{ section.label }}</span>
+        </h3>
+        <ul class="ds-progress__list">
+          @for (item of section.items; track item.key) {
+            <li>
+              <!-- Item rows use the DS primitive. Section headers above stay
+                   bespoke (h3) until nav-section gains a `separator` mode. -->
+              <afi-nav-item
+                [label]="item.label"
+                [active]="item.key === activeKey()"
+                [showIcon]="false"
+                [routerLink]="item.route ?? null"
+              />
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  </nav>
 
   <!-- Bottom slot: gestor -->
   <div slot="bottom" class="planner-sidebar__gestor">

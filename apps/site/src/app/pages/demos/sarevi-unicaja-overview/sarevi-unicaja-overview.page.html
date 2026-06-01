@@ -1,0 +1,147 @@
+<site-demo-overview-shell
+  overline="DEMO · WHITE-LABEL · UNICAJA"
+  title="Sarevi · Unicaja"
+  intro="Misma superficie que Sarevi 360 (Laboral Kutxa), recoloreada con la paleta Unicaja: primary teal profundo, neutrales fríos, Manrope como tipografía. Cero CSS por componente — solo el bloque [data-brand=&quot;unicaja&quot;] en semantic.scss."
+  demoRoute="/demos/sarevi-unicaja/demo"
+  demoLabel="Abrir simulador"
+  brand="unicaja"
+  [relatedPosts]="relatedPosts"
+>
+  <afi-tabs
+    [activeIndex]="activeTab()"
+    (activeChange)="activeTab.set($event)"
+    ariaLabel="Secciones del demo Sarevi Unicaja"
+  >
+    <!-- ─── Tab 1 · Visión general ──────────────────────────────────── -->
+    <afi-tab-item label="Visión general">
+      <div class="lk-tab">
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">¿Qué es?</h2>
+          <p class="lk-tab__paragraph">
+            La misma herramienta Sarevi (welcome → datos → medidas → resumen
+            + dos modales) que existe para Laboral Kutxa, pero con la
+            identidad visual de Unicaja: <em>primary</em> teal profundo, <em>secondary</em> verde Unicaja,
+            superficies blancas con bordes neutros fríos, y
+            <strong>Manrope</strong> como fuente de display y texto.
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">¿Para qué?</h2>
+          <p class="lk-tab__paragraph">
+            Demostrar la promesa <em>white-label</em> con un segundo cliente:
+            el mismo flujo, los mismos componentes
+            (<code>afi-button</code>, <code>afi-input</code>,
+            <code>afi-select</code>, <code>afi-modal</code>...) y solo cambia
+            el bloque <code>[data-brand="unicaja"]</code> en
+            <code>semantic.scss</code>. Si el mixin
+            <code>coherence-brand-bind</code> es la pieza clave, esto lo
+            demuestra al segundo intento — no al primero.
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Diferencias respecto a Laboral Kutxa</h2>
+          <ul class="lk-tab__list">
+            <li>
+              <strong>Tokens Material-named</strong> (primary / secondary /
+              tertiary / neutral / neutral-variant), no funcional como LK.
+              Refleja la entrega original de Figma — el sistema soporta los
+              dos estilos sin fricción.
+            </li>
+            <li>
+              <strong>Fuente Manrope</strong> en lugar de Avenir Next.
+              Sube como <code>--font-brand-text</code> y se propaga a todos
+              los componentes vía la lógica de typografía del mixin.
+            </li>
+            <li>
+              <strong>Sin gradiente</strong> en el top bar. Header blanco,
+              acento teal sobre los iconos y la marca.
+            </li>
+          </ul>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 2 · Caso de estudio ─────────────────────────────────── -->
+    <afi-tab-item label="Caso de estudio">
+      <div class="lk-tab">
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Punto de partida</h2>
+          <p class="lk-tab__paragraph">
+            Los tokens Unicaja venían como capturas de Figma (<code>Afi
+            brand/Unicaja tokens/</code>) usando naming Material — primary,
+            secondary, tertiary, neutral, neutral-variant. Decisión: traducir
+            esos rangos directamente a primitivos
+            <code>--color-unicaja-&#123;family&#125;-&#123;step&#125;</code> sin renombrar para
+            que el handoff con el equipo de marca quede 1:1.
+          </p>
+        </section>
+
+        <section class="lk-tab__block">
+          <h2 class="lk-tab__block-title">Soluciones</h2>
+          <ul class="lk-tab__list">
+            <li>
+              <strong>Reuso del mixin
+              <code>coherence-brand-bind</code></strong>. Mismo recipe, otro
+              brand argument. El bloque Unicaja en
+              <code>semantic.scss</code> son 27 líneas — 8 del mixin + 19 de
+              overrides puntuales para input border, surface selected y
+              control colors.
+            </li>
+            <li>
+              <strong>Misma página, ruta nueva.</strong>
+              <code>/demos/sarevi-unicaja/demo</code> carga el mismo
+              <code>LaboralKutxaSareviPage</code> con
+              <code>data: &#123; sareviBrand: 'unicaja' &#125;</code>.
+              La página lee la ruta y aplica
+              <code>data-brand="unicaja"</code> en su raíz.
+            </li>
+            <li>
+              <strong>Logo + refCode propios.</strong>
+              <code>BRAND_CONFIG['unicaja']</code> en
+              <code>laboral-kutxa-sarevi.page.ts</code> centraliza el logo,
+              el código de referencia y la copy del modal "asesor".
+            </li>
+          </ul>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 3 · Bitácora ────────────────────────────────────────── -->
+    <afi-tab-item label="Bitácora">
+      <div class="lk-tab">
+        <p class="lk-tab__paragraph lk-tab__paragraph--lead">
+          Registro de los hitos de aplicación Unicaja sobre el simulador
+          Sarevi. Demo joven, lista corta — crecerá según iteremos con marca.
+        </p>
+
+        <section class="lk-tab__log-entry">
+          <header class="lk-tab__log-header">
+            <span class="lk-tab__log-date">26 may 2026</span>
+            <h3 class="lk-tab__log-title">v1 — Tokens Unicaja extraídos</h3>
+          </header>
+          <p class="lk-tab__paragraph">
+            <code>colors-unicaja.scss</code> creado a partir de las capturas
+            Figma. Cinco familias de 12 escalones + ink + fonts + tokens
+            específicos de simulador (energy, impact, alert, table).
+          </p>
+        </section>
+
+        <section class="lk-tab__log-entry">
+          <header class="lk-tab__log-header">
+            <span class="lk-tab__log-date">26 may 2026</span>
+            <h3 class="lk-tab__log-title">v2 — Brand binding con el mixin</h3>
+          </header>
+          <p class="lk-tab__paragraph">
+            Bloque <code>[data-brand="unicaja"]</code> en
+            <code>semantic.scss</code> usando
+            <code>coherence-brand-bind</code> + overrides puntuales para
+            inputs y controles. <code>sarevi-unicaja</code> route apuntando a
+            <code>LaboralKutxaSareviPage</code> con la flag de brand.
+          </p>
+        </section>
+      </div>
+    </afi-tab-item>
+  </afi-tabs>
+</site-demo-overview-shell>

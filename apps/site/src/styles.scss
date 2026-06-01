@@ -205,3 +205,28 @@ body {
     }
   }
 }
+
+// ---------------------------------------------------------------------------
+// Sidebar IA comparison playground — surface pinning.
+//
+// The Editorial variant on /patrones/sidebar-ia-comparison previews the
+// same sidebar against three canonical chrome backgrounds. The Brand /
+// Azul-profundo options use afi-sidebar variant="secondary-azul", whose
+// internal SCSS remaps --nav-sidebar to --brand-secondary-background-default
+// (which flips lighter in dark mode). The playground intentionally pins
+// those two surfaces to fixed primitive shades so navy stays the same in
+// both modes — the user's stated lock.
+//
+// Defined globally (same precedent as .demo-shell-highlight-* above)
+// because .sidebar--secondary-azul lives inside the afi-sidebar component's
+// emulated-encapsulation scope and a component-scoped rule wouldn't reach
+// it. Scoping via `.ia-comparison__frame--themed[data-surface]` keeps the
+// override from affecting other secondary-azul sidebars elsewhere.
+// ---------------------------------------------------------------------------
+.ia-comparison__frame--themed[data-surface='brand'] .sidebar--secondary-azul {
+  --nav-sidebar: var(--color-afi-azul-profundo-500);
+}
+
+.ia-comparison__frame--themed[data-surface='deep'] .sidebar--secondary-azul {
+  --nav-sidebar: var(--color-afi-azul-profundo-900);
+}

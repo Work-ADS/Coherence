@@ -1,0 +1,141 @@
+// =============================================================================
+// colors-banco-cooperativo.scss — Banco Cooperativo Español brand primitives
+// =============================================================================
+//
+// Source of truth: Figma "Banco Cooperativo — Simulador de hipotecas"
+// (file gAMaXflbqgikmf9UlnSUUQ, node 969:527 header frame).
+//
+// Anchor values confirmed from the Figma file:
+//   - verde-oscuro 500: #1D4A3B   (header gradient, primary chrome)
+//   - verde-cooperativo 500: #007A5D (accent, badges, link/icon highlights)
+//   - amarillo-espiga 500: #F2C40A (wheat-sheaf logo, KPI accents — visible
+//                                    in simulator screenshots; estimated from
+//                                    the logo PNG, refine if Figma differs)
+//   - brand font: "Open Sans" (Bold + SemiBold + variable-width axis)
+//
+// Mid-tints and ramps are extrapolated 12-step from each anchor — refine any
+// specific step if it disagrees with the Figma token panel.
+//
+// Activation: <html data-brand="banco-cooperativo"> or any scoped wrapper.
+// =============================================================================
+
+[data-brand="banco-cooperativo"] {
+  // ===========================================================================
+  // verde-oscuro — deep cooperative teal (PRIMARY)
+  // Role: main brand chrome — top bar, footer, primary CTA, branded headings.
+  // Confirmed from Figma at #1D4A3B (header gradient anchor).
+  // ===========================================================================
+  --color-banco-cooperativo-verde-oscuro-0:   #FFFFFF;
+  --color-banco-cooperativo-verde-oscuro-25:  #F4F8F6;
+  --color-banco-cooperativo-verde-oscuro-50:  #EBF0EE;
+  --color-banco-cooperativo-verde-oscuro-100: #D7E1DD;
+  --color-banco-cooperativo-verde-oscuro-200: #A9C0B8;
+  --color-banco-cooperativo-verde-oscuro-300: #7CA092;
+  --color-banco-cooperativo-verde-oscuro-400: #4F806C;
+  --color-banco-cooperativo-verde-oscuro-500: #1D4A3B;
+  --color-banco-cooperativo-verde-oscuro-600: #173B2F;
+  --color-banco-cooperativo-verde-oscuro-700: #122E25;
+  --color-banco-cooperativo-verde-oscuro-800: #0E221C;
+  --color-banco-cooperativo-verde-oscuro-900: #091711;
+
+
+  // ===========================================================================
+  // verde-cooperativo — mid brand green (SECONDARY / ACCENT)
+  // Role: brand accent — link colors, badge fills, sustainability cues,
+  // secondary chrome on white surfaces.
+  // Confirmed from Figma at #007A5D.
+  // ===========================================================================
+  --color-banco-cooperativo-verde-cooperativo-0:   #FFFFFF;
+  --color-banco-cooperativo-verde-cooperativo-25:  #F2FAF7;
+  --color-banco-cooperativo-verde-cooperativo-50:  #E5F6F1;
+  --color-banco-cooperativo-verde-cooperativo-100: #BDE5D8;
+  --color-banco-cooperativo-verde-cooperativo-200: #7AC9B0;
+  --color-banco-cooperativo-verde-cooperativo-300: #3DAD88;
+  --color-banco-cooperativo-verde-cooperativo-400: #199565;
+  --color-banco-cooperativo-verde-cooperativo-500: #007A5D;
+  --color-banco-cooperativo-verde-cooperativo-600: #00684F;
+  --color-banco-cooperativo-verde-cooperativo-700: #005542;
+  --color-banco-cooperativo-verde-cooperativo-800: #003D2F;
+  --color-banco-cooperativo-verde-cooperativo-900: #002A20;
+
+
+  // ===========================================================================
+  // amarillo-espiga — wheat-sheaf yellow (TERTIARY / DECORATIVE ACCENT)
+  // Role: brand accent — KPI badges, logo color, illustration highlights.
+  // The "espiga" (wheat ear) is the cooperative bank's heritage symbol.
+  // Anchor estimated from logo PNG — confirm with the Figma token panel.
+  // ===========================================================================
+  --color-banco-cooperativo-amarillo-espiga-0:   #FFFFFF;
+  --color-banco-cooperativo-amarillo-espiga-25:  #FFFCEB;
+  --color-banco-cooperativo-amarillo-espiga-50:  #FEF8E0;
+  --color-banco-cooperativo-amarillo-espiga-100: #FDEFB8;
+  --color-banco-cooperativo-amarillo-espiga-200: #FBE38C;
+  --color-banco-cooperativo-amarillo-espiga-300: #F9D560;
+  --color-banco-cooperativo-amarillo-espiga-400: #F7CD34;
+  --color-banco-cooperativo-amarillo-espiga-500: #F2C40A;
+  --color-banco-cooperativo-amarillo-espiga-600: #D5AB00;
+  --color-banco-cooperativo-amarillo-espiga-700: #A6850A;
+  --color-banco-cooperativo-amarillo-espiga-800: #806410;
+  --color-banco-cooperativo-amarillo-espiga-900: #5C470A;
+
+
+  // ===========================================================================
+  // neutral — cool gray ramp (NEUTRAL)
+  // Role: canvas, surfaces, dividers, secondary text. Cool gray matches the
+  // teal-rooted brand better than warm gray.
+  // ===========================================================================
+  --color-banco-cooperativo-neutral-0:   #FFFFFF;
+  --color-banco-cooperativo-neutral-25:  #FBFCFD;
+  --color-banco-cooperativo-neutral-50:  #F7F9FA;
+  --color-banco-cooperativo-neutral-100: #EEF2F4;
+  --color-banco-cooperativo-neutral-200: #DDE3E6;
+  --color-banco-cooperativo-neutral-300: #C2CACE;
+  --color-banco-cooperativo-neutral-400: #94A0A6;
+  --color-banco-cooperativo-neutral-500: #6E7B82;
+  --color-banco-cooperativo-neutral-600: #525E65;
+  --color-banco-cooperativo-neutral-700: #3A464C;
+  --color-banco-cooperativo-neutral-800: #232B30;
+  --color-banco-cooperativo-neutral-900: #11171A;
+
+
+  // ===========================================================================
+  // neutral-variant — slightly warmer neutral
+  // Role: control borders, soft panels, table lines, low-contrast separators.
+  // ===========================================================================
+  --color-banco-cooperativo-neutral-variant-0:   #FFFFFF;
+  --color-banco-cooperativo-neutral-variant-25:  #FBFCFC;
+  --color-banco-cooperativo-neutral-variant-50:  #F4F6F6;
+  --color-banco-cooperativo-neutral-variant-100: #E7EAEB;
+  --color-banco-cooperativo-neutral-variant-200: #CDD3D4;
+  --color-banco-cooperativo-neutral-variant-300: #B1B8B9;
+  --color-banco-cooperativo-neutral-variant-400: #8E9596;
+  --color-banco-cooperativo-neutral-variant-500: #6E7475;
+  --color-banco-cooperativo-neutral-variant-600: #565C5D;
+  --color-banco-cooperativo-neutral-variant-700: #3F4344;
+  --color-banco-cooperativo-neutral-variant-800: #292B2C;
+  --color-banco-cooperativo-neutral-variant-900: #131415;
+
+
+  // ===========================================================================
+  // Functional ink + brand fonts.
+  // Open Sans is the confirmed brand font from the Figma simulator design.
+  // ===========================================================================
+  --color-banco-cooperativo-ink-default: #11171A;  // neutral-900
+  --color-banco-cooperativo-ink-soft:    #3A464C;  // neutral-700
+  --color-banco-cooperativo-ink-muted:   #6E7B82;  // neutral-500
+
+  --font-brand-display: "Open Sans", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-brand-text:    "Open Sans", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-brand-mono:    "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+
+  // ===========================================================================
+  // Mortgage-simulator-specific accent slots (Simulador de hipotecas).
+  // The simulator shows yellow KPI badges over green chrome — these slots
+  // bridge those visual patterns to semantic tokens used by the Sarevi shell.
+  // ===========================================================================
+  --color-banco-cooperativo-kpi-accent-bg: #FEF8E0;  // amarillo-espiga-50
+  --color-banco-cooperativo-kpi-accent-fg: #806410;  // amarillo-espiga-800
+  --color-banco-cooperativo-cta-bg:        #1D4A3B;  // verde-oscuro-500
+  --color-banco-cooperativo-cta-fg:        #FFFFFF;
+}

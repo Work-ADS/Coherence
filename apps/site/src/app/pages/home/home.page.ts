@@ -9,6 +9,7 @@ import {
   WhitelabelFrameGlyphComponent,
 } from '../../components/glyphs';
 import { LanguageService } from '../../services/language.service';
+import { exportSemanticCss } from '../../utils/export-semantic-css';
 
 interface WorkCard {
   routerLink: string;
@@ -115,4 +116,8 @@ export class HomePage {
       blurb: c.blurb[this.lang()],
     })),
   );
+
+  downloadSemanticCss(): void {
+    exportSemanticCss();
+  }
 }

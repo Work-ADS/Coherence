@@ -1,0 +1,306 @@
+<div class="ia-comparison">
+  <header class="ia-comparison__header">
+    <p class="ia-comparison__kicker">PATRONES / SIDEBAR</p>
+    <h1 class="ia-comparison__title">Comparativa de IA del sidebar del sitio</h1>
+    <p class="ia-comparison__lede">
+      Dos modelos de IA que vivieron en este repo. Se conservan aquí como referencia
+      para decidir cuál (o qué mezcla) volver a aplicar al sidebar de Coherence. El
+      sidebar actual no es exactamente ninguna de las dos — fusiona elementos de
+      ambas sin la profundidad por sección de la primera.
+    </p>
+    <p class="ia-comparison__note">
+      Tras la decisión, esta página se borra (o se convierte en una nota
+      <code>.md</code>). Es una herramienta de comparación, no documentación.
+    </p>
+  </header>
+
+  <div class="ia-comparison__stage">
+    @if (selectedVariant() === 'ds-progress') {
+      <!-- Variant C: single sidebar preview, surface picked via sub-switch above. -->
+      <div
+        class="ia-comparison__frame ia-comparison__frame--themed"
+        [attr.data-surface]="selectedSurface()"
+      >
+        <afi-sidebar
+          mode="static"
+          [variant]="surfaceVariant()"
+          ariaLabel="Sidebar preview"
+        >
+          <div slot="top">
+            <coherence-logo [variant]="logoVariant()" size="sm" />
+          </div>
+
+          <div class="ds-progress">
+            @for (section of dsProgressSections; track section.id) {
+              <section class="ds-progress__section">
+                <h3 class="ds-progress__title">
+                  <span class="ds-progress__title-icon" aria-hidden="true">
+                    @switch (section.icon) {
+                      @case ('palette') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                          <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+                          <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                          <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
+                        </svg>
+                      }
+                      @case ('component') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M5.5 8.5 9 12l-3.5 3.5L2 12l3.5-3.5z" />
+                          <path d="m12 2 3.5 3.5L12 9 8.5 5.5 12 2z" />
+                          <path d="M18.5 8.5 22 12l-3.5 3.5L15 12l3.5-3.5z" />
+                          <path d="m12 15 3.5 3.5L12 22l-3.5-3.5L12 15z" />
+                        </svg>
+                      }
+                      @case ('layout-template') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                          <rect width="18" height="7" x="3" y="3" rx="1" />
+                          <rect width="9" height="7" x="3" y="14" rx="1" />
+                          <rect width="5" height="7" x="16" y="14" rx="1" />
+                        </svg>
+                      }
+                      @case ('book-open') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M12 7v14" />
+                          <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+                        </svg>
+                      }
+                    }
+                  </span>
+                  <span class="ds-progress__title-label">{{ section.label }}</span>
+                </h3>
+                <ul class="ds-progress__list">
+                  @for (item of section.items; track item.href) {
+                    <li>
+                      <a class="ds-progress__item" [href]="item.href">
+                        <span class="ds-progress__item-label">{{ item.label }}</span>
+                        @if (item.status === 'update') {
+                          <span
+                            class="ds-progress__dot"
+                            aria-label="Tiene actualizaciones"
+                            title="Tiene actualizaciones"
+                          ></span>
+                        }
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
+        </afi-sidebar>
+      </div>
+    } @else {
+      <div class="ia-comparison__frame">
+        <afi-sidebar mode="static" ariaLabel="Sidebar preview">
+          <div slot="top">
+            <coherence-logo variant="color" size="sm" />
+          </div>
+
+          @if (selectedVariant() === 'may19') {
+          @switch (may19Section()) {
+            @case ('fundamentos') {
+              <afi-nav-section
+                label="Foundations"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19Fundamentos; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+            }
+            @case ('componentes') {
+              <afi-nav-section
+                label="Ready"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19ComponentesReady; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+              <afi-nav-section
+                label="All"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19ComponentesAll; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+            }
+            @case ('patrones') {
+              <afi-nav-section
+                label="Patterns"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19Patrones; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+            }
+            @case ('recursos') {
+              <afi-nav-section
+                label="Resources"
+                [defaultExpanded]="true"
+                [showTreeLines]="true"
+                chevronPosition="right"
+              >
+                @for (item of may19Recursos; track item.href) {
+                  <afi-nav-item [label]="item.label" [showIcon]="false" />
+                }
+              </afi-nav-section>
+            }
+          }
+        } @else {
+          <!-- pre-may22 -->
+          <afi-nav-section
+            label="Components"
+            [defaultExpanded]="true"
+            [showTreeLines]="true"
+            chevronPosition="right"
+          >
+            @for (item of preMay22Components; track item.href) {
+              <afi-nav-item [label]="item.label" [showIcon]="false" />
+            }
+          </afi-nav-section>
+          <afi-nav-section
+            label="Patterns"
+            [defaultExpanded]="true"
+            [showTreeLines]="true"
+            chevronPosition="right"
+          >
+            @for (item of preMay22Patterns; track item.href) {
+              <afi-nav-item [label]="item.label" [showIcon]="false" />
+            }
+          </afi-nav-section>
+        }
+        </afi-sidebar>
+      </div>
+    }
+
+    <aside class="ia-comparison__notes">
+      <section class="ia-comparison__controls" aria-label="Configurar la comparativa">
+        <h2 class="ia-comparison__controls-title">Configurar</h2>
+
+        <div class="control-group">
+          <span class="control-group__label">Variante</span>
+          <afi-segmented-control
+            [options]="variantOptions"
+            [value]="selectedVariant()"
+            (valueChange)="selectedVariant.set($any($event))"
+            size="sm"
+            ariaLabel="Variante de sidebar"
+          />
+        </div>
+
+        @if (selectedVariant() === 'may19') {
+          <div class="control-group">
+            <span class="control-group__label">Sección activa</span>
+            <afi-segmented-control
+              [options]="sectionOptions"
+              [value]="may19Section()"
+              (valueChange)="may19Section.set($any($event))"
+              size="sm"
+              ariaLabel="Sección activa en May 19"
+            />
+          </div>
+        }
+
+        @if (selectedVariant() === 'ds-progress') {
+          <div class="control-group">
+            <span class="control-group__label">Superficie</span>
+            <afi-segmented-control
+              [options]="surfaceOptions"
+              [value]="selectedSurface()"
+              (valueChange)="selectedSurface.set($any($event))"
+              size="sm"
+              ariaLabel="Superficie del sidebar"
+            />
+          </div>
+        }
+      </section>
+
+      <hr class="ia-comparison__rail-sep" aria-hidden="true" />
+
+      <h2 class="ia-comparison__variant-title">{{ selectedSpec().label }}</h2>
+      <p class="ia-comparison__variant-tagline">{{ selectedSpec().tagline }}</p>
+
+      <h3 class="ia-comparison__h3">Por qué</h3>
+      <p class="ia-comparison__body">{{ selectedSpec().rationale }}</p>
+
+      <h3 class="ia-comparison__h3">Qué cambió</h3>
+      <p class="ia-comparison__body">{{ selectedSpec().whatChanged }}</p>
+
+      @if (selectedVariant() === 'may19') {
+        <h3 class="ia-comparison__h3">Reglas de la variante</h3>
+        <ul class="ia-comparison__list">
+          <li>El sidebar reacciona a la sección de nivel superior actual.</li>
+          <li>Componentes se divide en <em>Ready</em> + <em>All</em> para mostrar qué está listo.</li>
+          <li>Patrones lista las 9 páginas hijas, incluidas las decisiones.</li>
+          <li>Recursos tiene su propio sub-nav (Descargas, Changelog, Roadmap, FAQ).</li>
+        </ul>
+      } @else if (selectedVariant() === 'pre-may22') {
+        <h3 class="ia-comparison__h3">Reglas de la variante</h3>
+        <ul class="ia-comparison__list">
+          <li>El sidebar es idéntico en todas las páginas — no responde a la sección.</li>
+          <li>Components muestra sólo una selección curada (8 items), no todos los primitivos.</li>
+          <li>Patterns lista 3 items: Sidebar, Headers, Dropdown.</li>
+          <li>No hay sub-navs para Patrones ni Recursos.</li>
+        </ul>
+      } @else {
+        <h3 class="ia-comparison__h3">Reglas de la variante</h3>
+        <ul class="ia-comparison__list">
+          <li>Cuatro secciones siempre visibles a la vez — el usuario ve el alcance completo del sitio.</li>
+          <li>
+            Cabeceras en mayúsculas con icono Lucide distintivo. Funcionan como
+            <strong>separador no clicable</strong>, no como enlace a la landing.
+          </li>
+          <li>Sin chevrons — las secciones no se colapsan; el sidebar es plano y predecible.</li>
+          <li>
+            Indicador a la <strong>derecha</strong> sólo cuando otra página relacionada
+            ha cambiado y conviene revisar ésta. Sin indicador = página estable o pendiente
+            (los estados <code>todo</code> siguen en el modelo de datos para automatizaciones
+            futuras, pero la sidebar ya no los anuncia visualmente).
+          </li>
+          <li>
+            Selector de superficie (<strong>Blanco</strong> / <strong>Azul marca</strong> /
+            <strong>Azul profundo</strong>) para validar contraste en cualquiera de los fondos
+            que el DS soporta — blanco flipa con el modo oscuro; los dos azules quedan fijos.
+          </li>
+          <li>
+            Los estados son hardcoded en esta demo (orientativo). Una versión real los
+            leería de un mapa <code>page → status</code> mantenido en el repo.
+          </li>
+        </ul>
+      }
+    </aside>
+  </div>
+
+  <footer class="ia-comparison__footer">
+    <h2>Decisión pendiente</h2>
+    <ul>
+      <li>
+        <strong>May 19</strong> es más fiel al patrón Wise / Linear / Stripe (contexto
+        por sección) y al lock IA de 2026-04-17-rev2 (cada sección tiene su landing
+        + children).
+      </li>
+      <li>
+        <strong>Pre-May 22</strong> es más simple de mantener pero pierde la profundidad
+        de Patrones y Recursos. El estado actual del sitio se parece a esto.
+      </li>
+      <li>
+        Una tercera opción combinada: mantener el <code>&#64;switch</code> actual y completar el
+        bloque <code>&#64;default</code> con las 9 entradas de Patrones + un sub-nav de Recursos.
+        Recupera la profundidad sin reescribir la mecánica.
+      </li>
+    </ul>
+  </footer>
+</div>

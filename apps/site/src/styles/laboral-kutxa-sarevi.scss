@@ -1180,6 +1180,14 @@
   }
 }
 
+// Parallel brand block for Banco Cooperativo Español. Mirrors the Unicaja
+// structure above; every Unicaja primitive is swapped for the matching
+// `--color-banco-cooperativo-*` token so the BC Sarevi simulator picks up the
+// same surface treatments (top bar, cards, sliders, bento, finance band) under
+// its own palette (verde-oscuro primary, verde-cooperativo secondary, amarillo-
+// espiga accent). Comments are dropped here to keep the block tight; the
+// Unicaja section above documents the intent of each rule.
+
 // Container queries are the important bit for this demo. The simulator can sit
 // inside a narrow preview canvas while the browser viewport is still desktop
 // width, so the responsive behavior must react to the product surface, not the

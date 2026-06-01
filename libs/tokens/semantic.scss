@@ -642,6 +642,75 @@
   --input-border-hover: var(--color-unicaja-primary-300);
 }
 
+// ----- Banco Cooperativo Español -----
+//
+// Source: Figma "Banco Cooperativo — Simulador de hipotecas" + bank.es site.
+// Palette is teal-rooted with a yellow "espiga" (wheat) accent for the
+// cooperative-banking heritage symbol. Open Sans is the brand text font.
+//
+// Re-binds AFI's blue/white-control roles to BC's verde-oscuro / neutral
+// production palette. The amarillo-espiga ramp is reserved as decoration —
+// use it for KPI badges and brand illustration tints, NOT for actions
+// (per the existing convention "severity only means severity, brand colors
+// for brand chrome").
+[data-brand="banco-cooperativo"] {
+  @include coherence-brand-bind(
+    $brand: 'banco-cooperativo',
+    $accent: 'verde-oscuro',
+    $neutral: 'neutral',
+    $ink-default: var(--color-banco-cooperativo-ink-default),
+    $ink-soft:    var(--color-banco-cooperativo-ink-soft),
+    $ink-muted:   var(--color-banco-cooperativo-ink-muted),
+  );
+
+  // Pale canvas overrides — mixin's default canvas-primary maps to neutral-300
+  // which is mid-gray here. Per Figma, the simulator canvas is white-on-white
+  // with subtle neutral-50/100 bands.
+  --canvas-primary:   var(--color-banco-cooperativo-neutral-50);
+  --canvas-secondary: var(--color-banco-cooperativo-neutral-100);
+  --surface-default:  var(--color-base-white);
+  --surface-subtle:   var(--color-banco-cooperativo-neutral-50);
+  --surface-raised:   var(--color-base-white);
+  --surface-selected: var(--color-banco-cooperativo-verde-oscuro-50);
+
+  // Mid-green secondary slot — verde-cooperativo carries the accent role
+  // separate from the deep verde-oscuro used for CTAs / chrome.
+  --foreground-brand-default: var(--color-banco-cooperativo-verde-cooperativo-500);
+  --foreground-brand-hover:   var(--color-banco-cooperativo-verde-cooperativo-600);
+  --foreground-brand-active:  var(--color-banco-cooperativo-verde-cooperativo-700);
+
+  // Control surfaces — mirror the AFI default pattern (neutral-50 default,
+  // neutral-100 hover, neutral-200 selected) so the active state actually
+  // reads against the white surface. Foreground = brand-secondary-active
+  // (verde-oscuro-700) like the AFI rule binds it.
+  --control-background-default:  var(--color-banco-cooperativo-neutral-50);
+  --control-background-hover:    var(--color-banco-cooperativo-neutral-100);
+  --control-background-selected: var(--color-banco-cooperativo-neutral-200);
+  --control-foreground-default:  var(--color-banco-cooperativo-verde-oscuro-500);
+  --control-foreground-hover:    var(--color-banco-cooperativo-verde-oscuro-600);
+  --control-foreground-selected: var(--color-banco-cooperativo-verde-oscuro-700);
+  --control-border-default:      var(--color-banco-cooperativo-neutral-variant-200);
+  --control-border-hover:        var(--color-banco-cooperativo-verde-oscuro-300);
+
+  // Borders — neutral subtle by default, verde-oscuro for focus/strong.
+  // --border-hairline is an alias of --border-subtle in aliases.scss but the
+  // alias is set at :root and doesn't pick up brand-scoped --border-subtle, so
+  // re-declare it explicitly here. Input/control default borders read it.
+  --border-subtle:   var(--color-banco-cooperativo-neutral-variant-100);
+  --border-hairline: var(--color-banco-cooperativo-neutral-variant-100);
+  --border-default:  var(--color-banco-cooperativo-verde-oscuro-500);
+  --border-focus:    var(--color-banco-cooperativo-verde-oscuro-500);
+
+  // Inputs (text fields) — slight neutral tint so they read as recessed wells
+  // ON the white surface (otherwise white-on-white = inputs disappear). The
+  // border stays the contrast cue; the bg tint is the supporting differentiator.
+  --input-background-default: var(--color-banco-cooperativo-neutral-50);
+  --input-border-default:     var(--color-banco-cooperativo-neutral-variant-200);
+  --input-border-hover:       var(--color-banco-cooperativo-verde-oscuro-300);
+
+  --brand-mark-symbol: var(--color-banco-cooperativo-amarillo-espiga-500);
+}
+
 // ----- Laboral Kutxa -----
 //
 // Re-binds AFI's blue/white-control roles to LK's production palette.

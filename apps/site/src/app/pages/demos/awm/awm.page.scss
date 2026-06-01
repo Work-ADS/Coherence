@@ -1,49 +1,53 @@
 // =============================================================================
-// AWM overview — mirrors demos.landing.scss class structure so the card
-// pattern stays consistent across /demos and /demos/awm. Default Coherence
-// brand (no [data-brand]) on this page; the sub-brand applies on /demos/awm/:feature.
+// AWM overview — page-scoped styles for the tabbed body.
+//
+// The outer page layout (hero band + tab strip + related-posts band) is
+// owned by <site-demo-overview-shell>. This file styles only:
+//   - the per-tab content wrapper (.awm-tab + .awm-tab__block)
+//   - the card grid embedded inside the "Visión general" tab
+//
+// data-brand="awm" lives on the component host, so every token reference
+// below already resolves through the AWM brand-bind.
 // =============================================================================
 
 :host {
   display: block;
 }
 
-.awm-overview {
+// ----- Tab content wrapper ------------------------------------------------
+
+.awm-tab {
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
-  max-width: var(--dimension-240);
-  margin-inline: auto;
-  padding-block: var(--space-2xl);
-  padding-inline: var(--space-md);
+  padding-block: var(--space-lg);
 }
 
-.awm-overview__header {
+.awm-tab__block {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
 }
 
-.awm-overview__eyebrow {
+.awm-tab__block-title {
   margin: 0;
-  font: var(--type-body-sm-500);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-  color: var(--foreground-tertiary-default);
-}
-
-.awm-overview__title {
-  margin: 0;
-  font: var(--type-display-md, var(--type-body-lg-600));
+  font: var(--type-body-lg-600);
   color: var(--foreground-primary-default);
 }
 
-.awm-overview__intro {
+.awm-tab__paragraph {
   margin: 0;
   font: var(--type-body-md-400);
   color: var(--foreground-secondary-default);
-  max-width: var(--dimension-180);
+  max-width: var(--content-prose);
 }
+
+.awm-tab__paragraph--placeholder {
+  font-style: italic;
+  color: var(--foreground-tertiary-default);
+}
+
+// ----- Embedded card grid (lives inside the Visión general tab) ----------
 
 .awm-overview__grid {
   list-style: none;

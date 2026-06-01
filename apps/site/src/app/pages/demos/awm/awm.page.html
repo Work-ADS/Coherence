@@ -1,32 +1,77 @@
-<section class="awm-overview" data-brand="awm">
-  <header class="awm-overview__header">
-    <p class="awm-overview__eyebrow">DEMOS · AFI WEALTH MANAGER</p>
-    <h1 class="awm-overview__title">AFI Wealth Manager</h1>
-    <p class="awm-overview__intro">
-      Plataforma B2B para asesores patrimoniales, construida sobre PrimeNG + Angular.
-      Sub-marca de AFI (AzulProfundo + Slate + Roboto). Cada tarjeta abre la funcionalidad
-      en el showcase de AWM en una pestaña nueva.
-    </p>
-  </header>
+<site-demo-overview-shell
+  overline="DEMOS · AFI WEALTH MANAGER"
+  title="AFI Wealth Manager"
+  intro="Plataforma B2B para asesores patrimoniales, construida sobre PrimeNG + Angular. Sub-marca de AFI (AzulProfundo + Slate + Roboto). Cada tarjeta abre la funcionalidad en el showcase de AWM en una pestaña nueva."
+  demoRoute="/demos/awm"
+  demoLabel="Ver funcionalidades de AWM"
+  brand="awm"
+>
+  <afi-tabs
+    [activeIndex]="activeTab()"
+    (activeChange)="activeTab.set($event)"
+    ariaLabel="Secciones del demo AFI Wealth Manager"
+  >
+    <!-- ─── Tab 1 · Visión general ──────────────────────────────────── -->
+    <afi-tab-item label="Visión general">
+      <div class="awm-tab">
+        <section class="awm-tab__block">
+          <p class="awm-tab__paragraph">
+            AWM es la herramienta interna de asesoría patrimonial de AFI.
+            Vive en su propio repo (<code>AfiDesigner/Afi-AWM</code>) y
+            está construida sobre Angular + PrimeNG. Coherence no la
+            re-implementa — actúa como punto de entrada, mostrando la
+            sub-marca AWM (AzulProfundo · Slate · Roboto) y enlazando a
+            cada funcionalidad del showcase.
+          </p>
+        </section>
 
-  <ul class="awm-overview__grid">
-    @for (feature of features; track feature.slug) {
-      <li class="awm-overview__card-wrap">
-        <a
-          class="awm-overview__card"
-          [href]="feature.externalUrl"
-          target="_blank"
-          rel="noopener"
-        >
-          <span class="awm-overview__card-title-row">
-            <span class="awm-overview__card-title">{{ feature.title }}</span>
-            @if (feature.status) {
-              <span class="awm-overview__card-status">{{ feature.status }}</span>
+        <section class="awm-tab__block" aria-labelledby="awm-cards-heading">
+          <h2 id="awm-cards-heading" class="awm-tab__block-title">
+            Funcionalidades
+          </h2>
+          <ul class="awm-overview__grid">
+            @for (feature of features; track feature.slug) {
+              <li class="awm-overview__card-wrap">
+                <a
+                  class="awm-overview__card"
+                  [href]="feature.externalUrl"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span class="awm-overview__card-title-row">
+                    <span class="awm-overview__card-title">{{ feature.title }}</span>
+                    @if (feature.status) {
+                      <span class="awm-overview__card-status">{{ feature.status }}</span>
+                    }
+                  </span>
+                  <span class="awm-overview__card-intro">{{ feature.intro }}</span>
+                </a>
+              </li>
             }
-          </span>
-          <span class="awm-overview__card-intro">{{ feature.intro }}</span>
-        </a>
-      </li>
-    }
-  </ul>
-</section>
+          </ul>
+        </section>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 2 · Sub-marca y tokens ──────────────────────────────── -->
+    <afi-tab-item label="Sub-marca y tokens">
+      <div class="awm-tab">
+        <p class="awm-tab__paragraph awm-tab__paragraph--placeholder">
+          Pendiente — el walkthrough del brand-bind de AWM y la decisión
+          de Slate sobre AFI-white como ramp de superficie llegará en el
+          siguiente commit.
+        </p>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 3 · Bitácora ────────────────────────────────────────── -->
+    <afi-tab-item label="Bitácora">
+      <div class="awm-tab">
+        <p class="awm-tab__paragraph awm-tab__paragraph--placeholder">
+          Pendiente — registro de versiones de la integración AWM ↔
+          Coherence llegará en el siguiente commit.
+        </p>
+      </div>
+    </afi-tab-item>
+  </afi-tabs>
+</site-demo-overview-shell>

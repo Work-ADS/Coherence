@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { TabItemComponent, TabsComponent } from '@coherence/ui';
 
-import { DemoOverviewShellComponent } from '../../../components/demo-overview-shell';
+import {
+  DemoOverviewShellComponent,
+  type DemoOverviewRelatedPost,
+} from '../../../components/demo-overview-shell';
 
 import { AWM_FEATURES } from './awm-features';
 
@@ -21,7 +25,7 @@ import { AWM_FEATURES } from './awm-features';
 @Component({
   selector: 'site-awm-overview',
   standalone: true,
-  imports: [DemoOverviewShellComponent, TabsComponent, TabItemComponent],
+  imports: [RouterLink, DemoOverviewShellComponent, TabsComponent, TabItemComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './awm.page.html',
   styleUrl: './awm.page.scss',
@@ -32,4 +36,14 @@ import { AWM_FEATURES } from './awm-features';
 export class AwmOverviewPage {
   readonly features = AWM_FEATURES;
   readonly activeTab = signal(0);
+
+  readonly relatedPosts: DemoOverviewRelatedPost[] = [
+    {
+      title: 'White-label en una línea: el mixin coherence-brand-bind',
+      slug: 'mixin-brand-bind',
+      eyebrow: 'BLOG · TOKENS',
+      description:
+        'El mismo mixin que aplica Sarevi al rebrand de LK aplica AWM a su sub-marca AzulProfundo + Slate.',
+    },
+  ];
 }

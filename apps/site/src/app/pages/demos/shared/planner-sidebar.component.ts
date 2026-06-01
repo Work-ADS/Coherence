@@ -9,12 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import {
-  LogoComponent,
-  SidebarComponent,
-  NavItemComponent,
-  NavSectionComponent,
-} from '@coherence/ui';
+import { LogoComponent, NavItemComponent, SidebarComponent } from '@coherence/ui';
 
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
 
@@ -27,20 +22,38 @@ export type NavItem = {
   route?: string;
 };
 
+/**
+ * Lucide icon keys used by the planner sidebar's section separators.
+ * Each maps to an inline SVG in the template — kept narrow on purpose so
+ * adding a new section is a deliberate choice (also add its icon).
+ */
+export type NavSectionIcon =
+  | 'wallet'
+  | 'target'
+  | 'clipboard-list'
+  | 'route'
+  | 'flag'
+  | 'file-text';
+
 export type NavSection = {
   label: string;
+  icon: NavSectionIcon;
   items: NavItem[];
   required?: boolean;
 };
 
 /**
- * Wealth Planner sidebar — secondary-azul variant, static mode (always expanded, no collapse).
- * Uses afi-sidebar (variant="secondary-azul", mode="static") + afi-nav-section + afi-nav-item.
+ * Wealth Planner sidebar — Editorial style on secondary-azul.
+ *
+ * Section labels are all-caps non-clickable separators with a leading Lucide
+ * icon (calibrated from the Figma node 458:174715). Items below render as
+ * plain navigation rows. This mirrors the Editorial variant of the patterns
+ * playground at /patrones/sidebar-ia-comparison.
  */
 @Component({
   selector: 'site-planner-sidebar',
   standalone: true,
-  imports: [RouterLink, LogoComponent, SidebarComponent, NavItemComponent, NavSectionComponent],
+  imports: [RouterLink, LogoComponent, SidebarComponent, NavItemComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './planner-sidebar.component.html',
   styleUrls: ['./planner-sidebar.component.scss'],
@@ -60,6 +73,7 @@ export class PlannerSidebarComponent {
   readonly sections = computed<NavSection[]>(() => [
     {
       label: 'Situación actual',
+      icon: 'wallet',
       required: true,
       items: [
         {
@@ -96,6 +110,7 @@ export class PlannerSidebarComponent {
     },
     {
       label: 'Objetivos',
+      icon: 'target',
       required: true,
       items: [
         {
@@ -126,6 +141,7 @@ export class PlannerSidebarComponent {
     },
     {
       label: 'Diagnóstico',
+      icon: 'clipboard-list',
       items: [
         {
           key: 'patrimonio-previsto',
@@ -138,6 +154,7 @@ export class PlannerSidebarComponent {
     },
     {
       label: 'Plan de acción',
+      icon: 'route',
       items: [
         { key: 'optimizacion-liquidez', label: 'Optimización de la liquidez', state: 'empty' },
         { key: 'optimizacion-asset', label: 'Optimización del asset allocation', state: 'empty' },
@@ -145,6 +162,7 @@ export class PlannerSidebarComponent {
     },
     {
       label: 'Conclusiones',
+      icon: 'flag',
       items: [
         {
           key: 'evolucion-comparada',
@@ -157,6 +175,7 @@ export class PlannerSidebarComponent {
     },
     {
       label: 'Informe',
+      icon: 'file-text',
       items: [{ key: 'generador-informes', label: 'Generador de informes', state: 'empty' }],
     },
   ]);

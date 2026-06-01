@@ -50,29 +50,6 @@
     }
   }
 
-  &__switch {
-    display: inline-flex;
-    gap: var(--space-2xs);
-    align-self: flex-start;
-    padding: var(--space-2xs);
-    background: var(--surface-quiet);
-    border-radius: var(--radius-md);
-    border: var(--border-width-hairline) solid var(--border-hairline);
-  }
-
-  &__sub-switch {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-xs);
-    align-self: flex-start;
-  }
-
-  &__sub-label {
-    font: var(--type-body-sm-500);
-    color: var(--foreground-tertiary-default);
-  }
-
   &__stage {
     display: grid;
     grid-template-columns: minmax(0, 16.25rem) minmax(0, 1fr);
@@ -81,16 +58,6 @@
 
     @media (max-width: 880px) {
       grid-template-columns: 1fr;
-    }
-
-    // Variant C uses the dual-frame layout (light + dark side by side)
-    // and needs more horizontal room for the pair.
-    &--dual {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
-
-      @media (max-width: 1080px) {
-        grid-template-columns: 1fr;
-      }
     }
   }
 
@@ -107,25 +74,28 @@
       height: 100%;
     }
 
+    // Variant C — surface-driven frame. The `data-surface` attribute on the
+    // frame swaps the outer (frame) background per option. The corresponding
+    // --nav-sidebar override on the inner .sidebar--secondary-azul element
+    // lives in apps/site/src/styles.scss (a global stylesheet) because
+    // component-scoped rules can't pierce the afi-sidebar primitive's
+    // emulated-encapsulation scope (and encapsulation-piercing selectors are
+    // banned per clean-code-check).
+    // Compare --color-thumb-wp-dark-navy in libs/tokens/colors.scss for the
+    // same "primitive token = fixed across themes" precedent.
     &--themed {
       display: flex;
       flex-direction: column;
-    }
 
-    &--dark {
-      background: var(--color-afi-azul-profundo-900);
-    }
-  }
+      // White surface falls through to --surface-default — flips dark in dark mode.
+      &[data-surface='brand'] {
+        background: var(--color-afi-azul-profundo-500);
+      }
 
-  &__frame-label {
-    font: var(--type-body-sm-600);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wider);
-    color: var(--foreground-tertiary-default);
-    padding: var(--space-2xs) var(--space-sm);
-    border-bottom: var(--border-width-hairline) solid var(--border-hairline);
-    background: var(--surface-quiet);
-    flex-shrink: 0;
+      &[data-surface='deep'] {
+        background: var(--color-afi-azul-profundo-900);
+      }
+    }
   }
 
   &__notes {
@@ -136,6 +106,29 @@
     border: var(--border-width-hairline) solid var(--border-hairline);
     border-radius: var(--radius-md);
     background: var(--surface-elevated);
+  }
+
+  // Top section of the rail — the playground controls (variant + optional
+  // section/surface pickers). Sits above the explanation. No card surface
+  // of its own — it lives inside __notes and is separated by __rail-sep.
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  &__controls-title {
+    font: var(--type-body-sm-600);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--foreground-tertiary-default);
+    margin: 0;
+  }
+
+  &__rail-sep {
+    border: 0;
+    border-top: var(--border-width-hairline) solid var(--border-hairline);
+    margin: var(--space-xs) 0;
   }
 
   &__variant-title {
@@ -214,83 +207,21 @@
   }
 }
 
-.switch-btn {
+// Playground control-group — label on top, control below. Matches the
+// convention used across the rest of the site (e.g. switch.page,
+// checkbox.page) so this playground reads the same as every other.
+.control-group {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-3xs);
-  padding: var(--space-2xs) var(--space-sm);
-  background: transparent;
-  border: 0;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--canvas-fg);
-  transition: background var(--duration-fast, 120ms) ease-out;
-
-  &:hover {
-    background: var(--surface-elevated);
-  }
+  gap: var(--space-2xs);
 
   &__label {
-    font: var(--type-body-md-500);
-  }
-
-  &__date {
-    font: var(--type-informe);
+    font: var(--type-body-sm-400);
     color: var(--foreground-tertiary-default);
-  }
-
-  &--active {
-    background: var(--action-700);
-    color: var(--canvas-primary);
-
-    &:hover {
-      background: var(--action-700);
-    }
-
-    .switch-btn__date {
-      color: var(--canvas-primary);
-      opacity: 0.7;
-    }
-  }
-}
-
-.sub-switch-btn {
-  padding: var(--space-2xs) var(--space-sm);
-  font: var(--type-body-sm-400);
-  background: transparent;
-  border: var(--border-width-hairline) solid var(--border-hairline);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--canvas-fg);
-  transition: background var(--duration-fast, 120ms) ease-out;
-
-  &:hover {
-    background: var(--surface-elevated);
-  }
-
-  &--active {
-    background: var(--action-700);
-    color: var(--canvas-primary);
-    border-color: var(--action-700);
-
-    &:hover {
-      background: var(--action-700);
-    }
   }
 }
 
 // ── Variant C — DS-progress sidebar style ──────────────────────────────────
-.ds-progress-pair {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-md);
-
-  @media (max-width: 760px) {
-    grid-template-columns: 1fr;
-  }
-}
-
 .ds-progress {
   display: flex;
   flex-direction: column;
@@ -303,28 +234,22 @@
     gap: var(--space-2xs);
   }
 
+  // Section header — non-clickable separator (was an <a>, now an <h3>).
+  // No link behaviour, no hover state. The all-caps + leading icon visual
+  // matches the Figma reference (node 458:174715).
+  // --foreground-tertiary-default is overridden by .sidebar--secondary-azul
+  // to a light-on-dark value, so the title contrast inverts automatically
+  // inside the navy frames.
   &__title {
     display: flex;
     align-items: center;
     gap: var(--space-xs);
+    margin: 0;
     padding: var(--space-2xs) var(--space-sm);
     font: var(--type-body-sm-600);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wider);
-    // --foreground-tertiary-default is overridden by .sidebar--secondary-azul
-    // to a light-on-dark value, so the title contrast inverts automatically
-    // inside the dark frame.
     color: var(--foreground-tertiary-default);
-    text-decoration: none;
-    border-radius: var(--radius-sm);
-    transition:
-      color var(--duration-fast, 120ms) ease-out,
-      background var(--duration-fast, 120ms) ease-out;
-
-    &:hover {
-      // currentColor brightens via opacity since both themes hit the same code path.
-      opacity: 1;
-    }
   }
 
   &__title-icon {
@@ -360,7 +285,7 @@
     padding: var(--space-2xs) var(--space-sm) var(--space-2xs) var(--space-lg);
     font: var(--type-body-md-400);
     // Inherit the sidebar's own `color` property — light text inside the
-    // dark variant, dark text inside the neutral variant. No theme branching.
+    // navy variants, dark text inside the neutral variant. No theme branching.
     color: inherit;
     text-decoration: none;
     border-radius: var(--radius-sm);
@@ -371,23 +296,15 @@
     }
   }
 
-  // Indicator sits to the RIGHT of the label. Only renders when the page
-  // has a non-'done' status. Default visual is an open ring (todo); the
-  // --update modifier fills it solid (related page changed → needs review).
-  // currentColor + opacity inverts naturally between light and dark frames.
+  // Right-aligned filled dot. Renders only for items whose related work was
+  // updated and that need a review pass (status === 'update' in the data).
+  // currentColor inverts naturally between light and navy frames.
   &__dot {
     flex-shrink: 0;
     width: 0.4375rem;
     height: 0.4375rem;
     border-radius: var(--radius-pill);
-    border: var(--border-width-hairline) solid currentColor;
-    background: transparent;
-    opacity: 0.5;
-
-    &--update {
-      background: currentColor;
-      opacity: 1;
-    }
+    background: currentColor;
   }
 
   &__item-label {

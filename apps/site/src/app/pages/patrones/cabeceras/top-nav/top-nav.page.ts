@@ -35,7 +35,7 @@ import type { Estado } from '@coherence/ui';
 })
 export class TopNavPage {
   // ─── Live preview state ──────────────────────────────────────────────────
-  readonly clientName = signal('Ricard Vazquez Fajardo');
+  readonly clientName = signal('Ricardo Vázquez Pérez');
   readonly simId = signal('SIM-2025-0011');
   readonly estado = signal<Estado>('borrador');
 

@@ -1,0 +1,206 @@
+<site-demo-shell
+  [views]="['Planificaciones']"
+  [demoSlug]="demoSlug"
+  [demoRoute]="demoRoute"
+>
+  <div class="lp">
+    <site-planner-top-bar
+      decisionesRoute="/listado-planificaciones"
+      [clientName]="clientName()"
+    />
+
+    <main class="lp__main">
+      <div class="lp__container">
+        <!-- Page header -->
+        <afi-page-header
+          title="Planificaciones"
+          [subtitle]="clientName()"
+          [sticky]="false"
+          [scrollFade]="false"
+        >
+          <span slot="breadcrumb" class="lp__eyebrow">LISTADO</span>
+          <afi-button
+            slot="actions"
+            variant="primary"
+            size="sm"
+            (clicked)="openNueva()"
+            ariaLabel="Crear nueva planificación"
+          >
+            + Nueva planificación
+          </afi-button>
+        </afi-page-header>
+
+        <!-- Body -->
+        <div class="lp__body">
+          @if (isEmpty()) {
+            <!-- Empty state -->
+            <div class="lp__empty">
+              <div class="lp__empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+                </svg>
+              </div>
+              <h2 class="lp__empty-title">No hay planificaciones aún</h2>
+              <p class="lp__empty-copy">
+                Crea la primera para empezar a planificar el patrimonio del cliente.
+              </p>
+              <div class="lp__empty-cta">
+                <afi-button
+                  variant="primary"
+                  size="md"
+                  (clicked)="openNueva()"
+                  ariaLabel="Crear primera planificación"
+                >
+                  + Crear primera planificación
+                </afi-button>
+              </div>
+            </div>
+          } @else {
+            <!-- Table -->
+            <table class="lp__table" role="table">
+              <thead>
+                <tr>
+                  <th scope="col" class="lp__th lp__th--fecha">Fecha creación</th>
+                  <th scope="col" class="lp__th lp__th--nombre">Nombre</th>
+                  <th scope="col" class="lp__th lp__th--estado">Estado</th>
+                  <th scope="col" class="lp__th lp__th--gestor">Gestor</th>
+                  <th scope="col" class="lp__th lp__th--actions" aria-label="Acciones"></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (p of rows(); track p.id) {
+                  <tr
+                    class="lp__row"
+                    [class.lp__row--archived]="p.estado === 'archivada'"
+                    [class.lp__row--renaming]="renamingId() === p.id"
+                    [attr.data-estado]="p.estado"
+                    (click)="openRow(p, $event)"
+                    (keydown.enter)="openRow(p)"
+                    tabindex="0"
+                    role="link"
+                    [attr.aria-label]="'Abrir ' + p.nombre"
+                  >
+                    <td class="lp__td lp__td--fecha">{{ formatFecha(p.createdAt) }}</td>
+                    <td class="lp__td lp__td--nombre">
+                      @if (renamingId() === p.id) {
+                        <input
+                          #renameInput
+                          class="lp__rename-input"
+                          type="text"
+                          [value]="renameValue()"
+                          (input)="setRenameValue($any($event.target).value)"
+                          (keydown)="onRenameKeydown($event)"
+                          (blur)="commitRename()"
+                          (click)="$event.stopPropagation()"
+                          aria-label="Nuevo nombre de la planificación"
+                        />
+                      } @else {
+                        <span class="lp__nombre">{{ p.nombre }}</span>
+                      }
+                    </td>
+                    <td class="lp__td lp__td--estado">
+                      <afi-badge size="sm" [intent]="estadoIntent(p.estado)">
+                        {{ estadoLabel(p.estado) }}
+                      </afi-badge>
+                    </td>
+                    <td class="lp__td lp__td--gestor">{{ p.gestor }}</td>
+                    <td class="lp__td lp__td--actions">
+                      @if (p.estado !== 'archivada') {
+                        <div class="lp__actions">
+                          <afi-icon-button
+                            ariaLabel="Editar nombre"
+                            size="sm"
+                            variant="ghost"
+                            (clicked)="startRename(p, $event.event)"
+                          >
+                            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L4 13.172V16h2.828l7.379-7.379-2.828-2.828z" />
+                            </svg>
+                          </afi-icon-button>
+                          <afi-icon-button
+                            ariaLabel="Duplicar planificación"
+                            size="sm"
+                            variant="ghost"
+                            (clicked)="duplicateRow(p, $event.event)"
+                          >
+                            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="M7 3a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V5a2 2 0 00-2-2H7zm-3 5a2 2 0 00-2 2v7a2 2 0 002 2h6a2 2 0 002-2v-1H7a4 4 0 01-4-4V8H4z" />
+                            </svg>
+                          </afi-icon-button>
+                          <afi-icon-button
+                            ariaLabel="Archivar planificación"
+                            size="sm"
+                            variant="ghost"
+                            (clicked)="archiveRow(p, $event.event)"
+                          >
+                            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm1 4h12v8a2 2 0 01-2 2H6a2 2 0 01-2-2V8zm4 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                            </svg>
+                          </afi-icon-button>
+                        </div>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Nueva planificación modal -->
+  <afi-modal
+    [open]="nuevaModalOpen()"
+    title="Nueva planificación"
+    description="La información básica del cliente (alias, residencia fiscal, situación laboral) se prerellenará desde la planificación actual."
+    size="sm"
+    (closed)="closeNueva()"
+  >
+    <div class="lp__modal-body">
+      <afi-input
+        label="Nombre de la planificación"
+        placeholder="Ej. Planificación 2026 Q3"
+        [value]="nuevaNombre()"
+        [required]="true"
+        (valueChange)="setNuevaNombre($event)"
+      />
+    </div>
+    <div class="lp__modal-actions">
+      <afi-button variant="secondary" size="md" (clicked)="closeNueva()">
+        Cancelar
+      </afi-button>
+      <afi-button
+        variant="primary"
+        size="md"
+        [disabled]="!nuevaNombre().trim()"
+        (clicked)="submitNueva()"
+      >
+        Crear planificación
+      </afi-button>
+    </div>
+  </afi-modal>
+
+  <!-- Archivar confirm modal -->
+  <afi-modal
+    [open]="archivarModalOpen()"
+    title="¿Archivar planificación?"
+    [description]="
+      'La planificación ' +
+      (archivarTarget()?.nombre || '') +
+      ' pasará a estado archivada y dejará de aparecer en la lista activa.'
+    "
+    size="sm"
+    (closed)="cancelArchivar()"
+  >
+    <div class="lp__modal-actions">
+      <afi-button variant="secondary" size="md" (clicked)="cancelArchivar()">
+        Cancelar
+      </afi-button>
+      <afi-button variant="primary" size="md" (clicked)="confirmArchivar()">
+        Archivar
+      </afi-button>
+    </div>
+  </afi-modal>
+</site-demo-shell>

@@ -1,4 +1,10 @@
-<site-demo-shell [views]="views()" [demoSlug]="demoSlug()" [demoRoute]="demoRoute()">
+<site-demo-shell
+  [views]="views()"
+  [demoSlug]="demoSlug()"
+  [demoRoute]="demoRoute()"
+  homeRoute="/listado-planificaciones"
+  homeLabel="Volver al listado"
+>
   <div class="ops">
     <site-planner-sidebar [activeKey]="activeKey()" />
 

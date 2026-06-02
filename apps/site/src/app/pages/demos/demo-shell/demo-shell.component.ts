@@ -119,6 +119,13 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   readonly demoSlug = input<string>('wealth-planner');
   readonly demoRoute = input<string>('/demos/wealth-planner-2026/demo');
   readonly views = input<string[]>(['Patrimonio', 'Evolución']);
+  /**
+   * Where the chrome back-arrow lands. Default is the site root; demos that
+   * sit inside a per-cliente flow (AWP simulation pages) override with the
+   * listado route so the back arrow returns to the planificaciones hub.
+   */
+  readonly homeRoute = input<string>('/');
+  readonly homeLabel = input<string>('Volver a Coherence DS');
 
   readonly activeView = signal(0);
 
@@ -558,7 +565,7 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   }
 
   goHome(): void {
-    this.router.navigate(['/']);
+    this.router.navigateByUrl(this.homeRoute());
   }
 
   restart(): void {

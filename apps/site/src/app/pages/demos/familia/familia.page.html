@@ -2,6 +2,8 @@
   [views]="['Familia']"
   demoSlug="familia"
   demoRoute="/demos/wealth-planner-2026/familia"
+  homeRoute="/listado-planificaciones"
+  homeLabel="Volver al listado"
 >
 <div class="h-screen flex bg-canvas-base overflow-hidden">
   <site-planner-sidebar activeKey="familia" />
@@ -10,7 +12,7 @@
   <div class="flex-1 flex flex-col min-w-0">
     <site-planner-top-bar
       decisionesRoute="/demos/wealth-planner-2026"
-      clientName="Ricard Vazquez Fajardo"
+      clientName="Ricardo Vázquez Pérez"
     />
 
     <main class="flex-1 min-w-0 overflow-y-auto">
@@ -58,7 +60,7 @@
                   <div class="familia-grid familia-grid--3">
                     <afi-input
                       label="Alias del cliente"
-                      placeholder="Ej. Ricard Vázquez"
+                      placeholder="Ej. Ricardo Vázquez"
                       [value]="store.cliente().alias"
                       [required]="true"
                       (valueChange)="setClienteAlias($event)"
@@ -93,7 +95,7 @@
 
                 <!-- Card 2 · Situación laboral -->
                 <afi-section title="Situación laboral">
-                  <afi-radio-group legend="Tipo de actividad *">
+                  <afi-radio-group legend="Tipo de actividad" [required]="true">
                     @for (opt of tipoActividadOptions; track opt.value) {
                       <afi-radio-group-item
                         [value]="opt.value"
@@ -232,7 +234,7 @@
                         (valueChange)="setConyugeGradoDiscapacidad($event)"
                       />
                       <div class="familia-conyuge-form__actividad">
-                        <afi-radio-group legend="Tipo de actividad *">
+                        <afi-radio-group legend="Tipo de actividad" [required]="true">
                           @for (opt of tipoActividadOptions; track opt.value) {
                             <afi-radio-group-item
                               [value]="opt.value"

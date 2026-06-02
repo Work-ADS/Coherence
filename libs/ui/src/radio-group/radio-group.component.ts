@@ -164,7 +164,12 @@ export class RadioGroupItemComponent {
       role="radiogroup"
     >
       @if (legend()) {
-        <legend class="text-body-md font-medium text-canvas-fg mb-space-2 w-full">{{ legend() }}</legend>
+        <legend class="text-body-sm font-medium text-canvas-fg mb-space-2 w-full">
+          {{ legend() }}
+          @if (required()) {
+            <span style="color: var(--feedback-error-foreground)" aria-hidden="true"> *</span>
+          }
+        </legend>
       }
       <ng-content />
     </fieldset>
@@ -173,6 +178,7 @@ export class RadioGroupItemComponent {
 export class RadioGroupComponent implements OnInit {
   readonly value = input<string | null>(null);
   readonly legend = input<string | null>(null);
+  readonly required = input<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
   readonly ariaLabelledBy = input<string | null>(null);

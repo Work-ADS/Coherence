@@ -13,7 +13,7 @@
   <ul slot="use-cases" class="use-cases">
     <li><span class="use-cases__label">Entrada de texto libre</span> — nombre, correo electrónico, URL, descripción corta.</li>
     <li><span class="use-cases__label">Texto multilínea</span> — comentarios, notas o instrucciones con <code>type="textarea"</code>.</li>
-    <li><span class="use-cases__label">Valores numéricos</span> — importes, cantidades, edades con step/min/max.</li>
+    <li><span class="use-cases__label">Valores numéricos</span> — importes, cantidades, edades con step/min/max. Se alinean a la derecha por convención (calculadoras, hojas de cálculo, importes).</li>
     <li><span class="use-cases__label">Contraseña enmascarada</span> — campos sensibles con <code>type="password"</code>.</li>
     <li><span class="use-cases__label">Email con validación</span> — combina <code>type="email"</code> + <code>autocomplete</code>.</li>
   </ul>
@@ -85,6 +85,7 @@
           <li>Mensajes de error específicos: describe el problema y cómo corregirlo.</li>
           <li>Hint para guiar formato esperado (<code>"DD/MM/YYYY"</code>, <code>"mínimo 8 caracteres"</code>).</li>
           <li>Empareja con <code>autocomplete</code> para campos comunes (email, name, address).</li>
+          <li><code>type="number"</code> alinea el texto a la derecha automáticamente — refleja la convención de calculadora/hoja de cálculo.</li>
         </ul>
       </div>
       <div class="dos-donts__card dos-donts__card--dont">

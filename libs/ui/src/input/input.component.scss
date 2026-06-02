@@ -22,7 +22,10 @@
   display: block;
   width: 100%;
   border-radius: var(--radius-md);
-  background: var(--surface-default);
+  // Use the control surface so form fields are visually distinct from
+  // the section/card background. Same rule applies to select, checkbox,
+  // radio, switch, segmented-control.
+  background: var(--control-background-default);
   color: var(--foreground-primary-default);
   border: var(--border-width-hairline) solid var(--border-hairline);
   font: var(--type-body-md-400);
@@ -52,7 +55,7 @@
   }
 
   &[readonly] {
-    background: var(--surface-subtle);
+    background: var(--control-background-hover);
     cursor: default;
   }
 
@@ -89,6 +92,14 @@
     padding-block: var(--space-xs);
     padding-inline: var(--space-md);
     resize: vertical;
+  }
+
+  // Numeric inputs right-align by convention (calculator / spreadsheet /
+  // financial UIs read magnitudes right-to-left). Logical `end` so RTL
+  // locales still align toward the reading flow.
+  &[data-type='number'] {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
   }
 }
 

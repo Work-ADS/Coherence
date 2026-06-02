@@ -118,7 +118,7 @@ export class IngresoGastoFormModalComponent {
   readonly hijoOptions = computed<SelectOption[]>(() =>
     this.familyHijos().map((h, i) => ({
       value: h.id,
-      label: h.nombre.trim() || `Hijo ${i + 1}`,
+      label: h.alias.trim() || `Hijo ${i + 1}`,
     })),
   );
 

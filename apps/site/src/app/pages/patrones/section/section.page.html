@@ -1,0 +1,221 @@
+<div class="min-h-screen flex flex-col bg-canvas-base">
+  <!-- ─── Breadcrumb chrome ─────────────────────────────────────────────── -->
+  <div
+    class="flex items-center gap-space-3 border-b border-border-hairline px-space-4 h-10 bg-surface-quiet shrink-0 text-body-sm"
+  >
+    <a
+      routerLink="/patrones"
+      class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-surface-100 text-neutral-500"
+      aria-label="Volver a Patrones"
+    >
+      <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+    <span class="text-neutral-500">Patrones</span>
+    <span class="text-neutral-400" aria-hidden="true">/</span>
+    <span class="text-canvas-fg font-medium">Sección</span>
+  </div>
+
+  <main class="flex-1 overflow-y-auto">
+    <div class="max-w-[920px] mx-auto py-space-10 px-space-6">
+      <p class="text-body-sm uppercase tracking-wider text-action-700 mb-space-2">
+        PATTERN
+      </p>
+      <h1 class="text-subtitle text-canvas-fg mb-space-3">Sección</h1>
+      <p class="max-w-[640px] text-body-md text-neutral-600 mb-space-8">
+        Contenedor con título en mayúsculas y un cuerpo de campos o contenido,
+        opcionalmente colapsable. Es el patrón canónico para agrupar campos en
+        un formulario largo — graduado de los antiguos
+        <code class="patron-section__code">.dd-section</code>,
+        <code class="patron-section__code">.familia-section</code>,
+        <code class="patron-section__code">.lr-section</code> y compañía, que
+        rehacían la misma tarjeta con nombres distintos en cada página.
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!--  Variant · Default                                                  -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <section class="patron-section__demo">
+        <h2 class="patron-section__demo-title">Default</h2>
+        <p class="patron-section__demo-body">
+          Una sección estática. El cuerpo siempre está visible. Usa esta variante
+          cuando agrupas campos relacionados y no quieres dar al usuario la opción
+          de ocultar nada.
+        </p>
+
+        <div class="patron-section__preview">
+          <afi-section title="Información general">
+            <div class="patron-section__grid">
+              <afi-input
+                label="Alias"
+                placeholder="Ej. Ricard"
+                [value]="demoFieldValue()"
+                (valueChange)="setFieldValue($event)"
+              />
+              <afi-select
+                label="Categoría"
+                placeholder="Selecciona"
+                [options]="demoOptions"
+                [value]="demoSelectValue()"
+                (valueChange)="setSelectValue($event)"
+              />
+            </div>
+          </afi-section>
+        </div>
+
+        <pre class="patron-section__code-block"><code>&lt;afi-section title="Información general"&gt;
+  &lt;!-- form fields --&gt;
+&lt;/afi-section&gt;</code></pre>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!--  Variant · Collapsible                                              -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <section class="patron-section__demo">
+        <h2 class="patron-section__demo-title">Collapsible</h2>
+        <p class="patron-section__demo-body">
+          La cabecera se convierte en botón; al pulsarla, el cuerpo se oculta o
+          se muestra. La flecha rota 180°. Pasa
+          <code class="patron-section__code">variant="collapsible"</code> y
+          enlaza
+          <code class="patron-section__code">[expanded]</code> a una señal
+          local.
+        </p>
+
+        <div class="patron-section__preview">
+          <afi-section
+            title="Datos opcionales"
+            variant="collapsible"
+            [expanded]="collapsibleExpanded()"
+            (expandedChange)="collapsibleExpanded.set($event)"
+          >
+            <p class="patron-section__body-copy">
+              Cuerpo de la sección colapsable. Pulsa la cabecera para
+              ocultarlo.
+            </p>
+          </afi-section>
+        </div>
+
+        <pre class="patron-section__code-block"><code>&lt;afi-section
+  title="Datos opcionales"
+  variant="collapsible"
+  [expanded]="expanded()"
+  (expandedChange)="expanded.set($event)"&gt;
+  &lt;!-- body --&gt;
+&lt;/afi-section&gt;</code></pre>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!--  Decoration · count                                                 -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <section class="patron-section__demo">
+        <h2 class="patron-section__demo-title">Con contador</h2>
+        <p class="patron-section__demo-body">
+          Útil cuando la sección representa una colección y el usuario quiere
+          ver el tamaño desde la cabecera sin abrirla. Pasa
+          <code class="patron-section__code">[count]</code> como string o
+          número.
+        </p>
+
+        <div class="patron-section__preview">
+          <afi-section
+            title="Hijos"
+            variant="collapsible"
+            [expanded]="countDemoExpanded()"
+            (expandedChange)="countDemoExpanded.set($event)"
+            count="3 hijos"
+          >
+            <p class="patron-section__body-copy">
+              Aquí irían las filas de los hijos registrados.
+            </p>
+          </afi-section>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!--  Decoration · complete                                              -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <section class="patron-section__demo">
+        <h2 class="patron-section__demo-title">Marca de completado</h2>
+        <p class="patron-section__demo-body">
+          Pasa <code class="patron-section__code">[complete]="true"</code> para
+          renderizar un check al lado del título. Útil como señal de progreso
+          en flujos largos (goal-gradient).
+        </p>
+
+        <div class="patron-section__preview">
+          <afi-section
+            title="Cónyuge"
+            variant="collapsible"
+            [expanded]="completeDemoExpanded()"
+            (expandedChange)="completeDemoExpanded.set($event)"
+            count="1 cónyuge"
+            [complete]="true"
+          >
+            <p class="patron-section__body-copy">
+              Sección rellena correctamente.
+            </p>
+          </afi-section>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!--  Slot · header-actions                                              -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <section class="patron-section__demo">
+        <h2 class="patron-section__demo-title">Acciones en la cabecera</h2>
+        <p class="patron-section__demo-body">
+          Cualquier botón o link puede vivir a la derecha del título — usa
+          <code class="patron-section__code">slot="header-actions"</code>. El
+          click no propaga al toggle del colapsable.
+        </p>
+
+        <div class="patron-section__preview">
+          <afi-section title="Documentos adjuntos">
+            <afi-button
+              slot="header-actions"
+              variant="secondary"
+              size="sm"
+            >
+              + Subir documento
+            </afi-button>
+            <p class="patron-section__body-copy">
+              Lista de documentos subidos.
+            </p>
+          </afi-section>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!--  When to use                                                        -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <section class="patron-section__demo">
+        <h2 class="patron-section__demo-title">Cuándo usarlo</h2>
+        <ul class="patron-section__list">
+          <li>
+            Agrupar campos de un formulario largo bajo un encabezado
+            descriptivo.
+          </li>
+          <li>
+            Esconder secciones secundarias detrás de un toggle (modo
+            colapsable).
+          </li>
+          <li>
+            Mostrar progreso o conteos en flujos multi-sección — combina
+            <code class="patron-section__code">count</code> +
+            <code class="patron-section__code">complete</code>.
+          </li>
+          <li>
+            <strong>No lo uses</strong> dentro de modales o popovers — el peso
+            visual del contenedor compite con el de la propia ventana.
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</div>

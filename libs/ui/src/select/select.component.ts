@@ -1,4 +1,5 @@
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -7,6 +8,7 @@ import {
   inject,
   input,
   isDevMode,
+  OnDestroy,
   OnInit,
   output,
   signal,
@@ -35,7 +37,7 @@ let nextId = 0;
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
   readonly size = input<SelectSize>('md');
   readonly options = input<SelectOption[]>([]);
   readonly value = input<string | number | null>(null);
@@ -63,6 +65,13 @@ export class SelectComponent implements OnInit {
   readonly open = signal(false);
   readonly focusedIndex = signal(-1);
   readonly searchQuery = signal('');
+
+  /**
+   * Inline style for the floating panel — recomputed from the trigger's
+   * bounding rect every time the panel opens (and on scroll/resize while
+   * open). Lets the panel sit outside any clipping ancestor.
+   */
+  readonly panelStyle = signal<Record<string, string>>({});
 
   private readonly el = inject(ElementRef);
   readonly triggerEl = viewChild<ElementRef<HTMLButtonElement>>('triggerEl');
@@ -130,6 +139,38 @@ export class SelectComponent implements OnInit {
     }
   }
 
+  /**
+   * Portal the panel + backdrop out of the component's local DOM and into
+   * `document.body` after each render where they exist. Needed because the
+   * demo-shell viewport sizer (and other ancestors) apply CSS `transform`,
+   * which makes `position: fixed` anchor to *that* element rather than the
+   * viewport. Reparenting to body escapes every such containing block.
+   */
+  ngAfterViewChecked(): void {
+    if (!this.open()) return;
+    const host = this.el.nativeElement as HTMLElement;
+    const panelEl = host.querySelector('.afi-select__panel') as HTMLElement | null;
+    const backdropEl = host.querySelector('.afi-select__backdrop') as HTMLElement | null;
+    if (panelEl && panelEl.parentElement !== document.body) {
+      document.body.appendChild(panelEl);
+    }
+    if (backdropEl && backdropEl.parentElement !== document.body) {
+      document.body.appendChild(backdropEl);
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Failsafe: if the component is destroyed while the panel is open,
+    // the portaled nodes won't be cleaned up by Angular (they're outside
+    // the component's view). Yank them manually.
+    if (this.open()) {
+      document.querySelectorAll('.afi-select__panel, .afi-select__backdrop').forEach((el) => {
+        if (el.parentElement === document.body) el.remove();
+      });
+    }
+    document.removeEventListener('scroll', this.onAncestorScroll, true);
+  }
+
   toggle(): void {
     if (this.open()) {
       this.close();
@@ -141,6 +182,13 @@ export class SelectComponent implements OnInit {
   openPanel(): void {
     if (this.disabled()) return;
     this.open.set(true);
+    this.recomputePanelPosition();
+    // Capture-phase scroll listener: `@HostListener('window:scroll')` only
+    // fires for the document — nested scroll containers (e.g. <main> in the
+    // demos page) need this to keep the panel anchored when the trigger
+    // moves. The capture flag is required because scroll events don't
+    // bubble.
+    document.addEventListener('scroll', this.onAncestorScroll, true);
     const opts = this.displayOptions();
     const selectedIdx = opts.findIndex((o) => o.value === this.value());
     this.focusedIndex.set(selectedIdx >= 0 ? selectedIdx : 0);
@@ -150,12 +198,66 @@ export class SelectComponent implements OnInit {
     }
   }
 
+  /**
+   * Re-anchor the panel when any ancestor scrolls. If the scroll happened
+   * inside the panel's own listbox (user scrolling through 200 cities),
+   * ignore it — only outer-page scrolls move the trigger.
+   */
+  private readonly onAncestorScroll = (event: Event): void => {
+    if (!this.open()) return;
+    const target = event.target as Element | null;
+    if (target && 'closest' in target && target.closest('.afi-select__panel')) {
+      return;
+    }
+    this.recomputePanelPosition();
+  };
+
+  /**
+   * Anchor the floating panel to the trigger. Flips upward when there's
+   * more room above than below the viewport edge. Matches the trigger's
+   * width so options align visually.
+   */
+  private recomputePanelPosition(): void {
+    const trigger = this.triggerEl()?.nativeElement;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const viewportH = window.innerHeight;
+    const panelMaxH = 288; // mirrors --dimension-72 (max-height of .afi-select__panel)
+    const gap = 4; // small visual gap so the panel doesn't kiss the trigger
+    const spaceBelow = viewportH - rect.bottom;
+    const spaceAbove = rect.top;
+    const openUp = spaceBelow < Math.min(panelMaxH, 160) && spaceAbove > spaceBelow;
+
+    if (openUp) {
+      this.panelStyle.set({
+        left: `${rect.left}px`,
+        width: `${rect.width}px`,
+        bottom: `${viewportH - rect.top + gap}px`,
+        top: 'auto',
+      });
+    } else {
+      this.panelStyle.set({
+        left: `${rect.left}px`,
+        width: `${rect.width}px`,
+        top: `${rect.bottom + gap}px`,
+        bottom: 'auto',
+      });
+    }
+  }
+
+  @HostListener('window:resize')
+  @HostListener('window:scroll')
+  onViewportChange(): void {
+    if (this.open()) this.recomputePanelPosition();
+  }
+
   close(): void {
     this.open.set(false);
     this.focusedIndex.set(-1);
     if (this.searchable()) {
       this.searchQuery.set('');
     }
+    document.removeEventListener('scroll', this.onAncestorScroll, true);
     this.closed.emit();
     this.triggerEl()?.nativeElement?.focus();
   }

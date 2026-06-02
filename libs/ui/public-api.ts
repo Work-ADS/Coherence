@@ -19,6 +19,8 @@ export { SwitchComponent } from './src/switch';
 export type { SwitchSize } from './src/switch';
 export { CardComponent } from './src/card';
 export type { CardVariant, CardPadding } from './src/card';
+export { SectionComponent } from './src/section';
+export type { SectionVariant } from './src/section';
 export { ModalComponent } from './src/modal';
 export type { ModalSize } from './src/modal';
 export { TabsComponent, TabItemComponent } from './src/tabs';

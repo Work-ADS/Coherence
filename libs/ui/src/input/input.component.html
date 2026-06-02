@@ -29,6 +29,7 @@
     [id]="inputId"
     [type]="type()"
     [class]="fieldClasses()"
+    [attr.data-type]="type()"
     [placeholder]="placeholder() ?? ''"
     [disabled]="disabled()"
     [readOnly]="readonly()"
@@ -39,6 +40,7 @@
     [attr.autocomplete]="autocomplete()"
     [value]="value() ?? ''"
     (input)="onInput($event)"
+    (keydown)="onKeydown($event)"
     (focus)="focused.emit($event)"
     (blur)="blurred.emit($event)"
   />

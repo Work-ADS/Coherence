@@ -225,9 +225,9 @@
               </div>
               <div class="inspect-target">
                 @if (result.componentName) {
-                  <code class="inspect-target__name">{{ result.componentName }}</code>
+                  <code class="inspect-target__name">{{ prettyAfiName(result.componentName) }}</code>
                 }
-                <code class="inspect-target__selector">{{ result.selector }}</code>
+                <code class="inspect-target__selector">{{ prettyAfiName(result.selector) }}</code>
               </div>
             </section>
 

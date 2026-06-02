@@ -1,50 +1,19 @@
 // =============================================================================
-// Familia — Situación Actual page-specific styles.
-// Form pattern reference: Origin Settings (uppercase mini-headers, clean
-// hairline spacing, no boxed sub-sections, 2–3 col grid).
-// All visual values route through semantic tokens.
+// Familia — Situación Actual page-specific layout helpers.
+// Section chrome lives in <afi-section> (libs/ui); this file only ships the
+// inter-section stack, the per-section field grid, and the repeater row
+// layout for Hijos / Ascendientes.
 // =============================================================================
 
-// ─── Section dividers + headers ───────────────────────────────────────────────
-.familia-section {
-  margin-block-start: var(--space-2xl);
-
-  &:first-of-type {
-    margin-block-start: var(--space-xl);
-  }
-}
-
-.familia-section__head {
+// ─── Stack of <afi-section> cards inside a tab ──────────────────────────────
+.familia-stack {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-lg);
-  margin-block-end: var(--space-md);
-  padding-block-end: var(--space-sm);
-  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-block-start: var(--space-lg);
 }
 
-.familia-section__title {
-  margin: 0;
-  font: var(--type-body-sm-600);
-  color: var(--foreground-secondary-default);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.familia-section__hint {
-  margin: 0;
-  font: var(--type-body-sm-400);
-  color: var(--foreground-tertiary-default);
-  max-inline-size: 56ch;
-}
-
-// ─── Toggle row (¿Tiene pareja?) — flush with the section, no inset card ────
-.familia-toggle {
-  margin-block-end: var(--space-lg);
-}
-
-// ─── Grid for stacking labelled fields side-by-side ──────────────────────────
+// ─── Field grid (2 / 3 columns, responsive down to 1) ───────────────────────
 .familia-grid {
   display: grid;
   gap: var(--space-md) var(--space-lg);
@@ -58,7 +27,6 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-// ─── Responsive breakpoints ─────────────────────────────────────────────────
 @media (max-width: 1023px) {
   .familia-grid--3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -72,15 +40,37 @@
   }
 }
 
-@media (max-width: 479px) {
-  .familia-section__head--with-action {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+// ─── ¿Tiene cónyuge? binary at the top of the cónyuge card ─────────────────
+.familia-conyuge-binary {
+  margin-block-end: var(--space-lg);
+  padding-block-end: var(--space-md);
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
 }
 
-// ─── Repeater rows (Hijos, Ascendientes) — flat, hairline-divided, no boxes ──
-.familia-rows {
+.familia-conyuge-form__actividad {
+  // Tipo de actividad spans both grid columns since the radio row is wider
+  // than a single input.
+  grid-column: 1 / -1;
+}
+
+// ─── Empty state inside an expanded collapsible card ───────────────────────
+.familia-empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  align-items: flex-start;
+  padding-block: var(--space-sm);
+}
+
+.familia-empty__copy {
+  margin: 0;
+  max-inline-size: 60ch;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+// ─── Repeater list (Hijos / Ascendientes) ──────────────────────────────────
+.familia-list {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -88,16 +78,17 @@
   flex-direction: column;
 }
 
-.familia-row {
+.familia-list__item {
   padding-block: var(--space-md);
   border-block-start: var(--border-width-hairline) solid var(--border-subtle);
 
   &:first-child {
     border-block-start: 0;
+    padding-block-start: 0;
   }
 }
 
-.familia-row__head {
+.familia-list__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -105,21 +96,44 @@
   margin-block-end: var(--space-sm);
 }
 
-.familia-row__index {
+.familia-list__index {
   font: var(--type-body-sm-600);
   color: var(--foreground-secondary-default);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
-.familia-row__footer {
+.familia-list__confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.familia-list__confirm-q {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+}
+
+.familia-list__footer {
   margin-block-start: var(--space-sm);
 }
 
-// ─── Empty-state copy under each repeater ────────────────────────────────────
-.familia-empty {
-  margin: 0;
-  padding-block: var(--space-lg);
-  font: var(--type-body-sm-400);
-  color: var(--foreground-tertiary-default);
+.familia-list__add {
+  margin-block-start: var(--space-md);
+  padding-block-start: var(--space-md);
+  border-block-start: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+// Save + Borrar pair on each row header.
+.familia-list__head-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+// Conditional fields that follow the Tipo de actividad radio. Visually
+// hangs from the radio with a small gap so the relationship reads as
+// "answer + follow-up", not "two siblings".
+.familia-actividad-extras {
+  margin-block-start: var(--space-md);
 }

@@ -21,6 +21,7 @@ import {
 } from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
 
+import { NotificationStore } from '../../../services/notification.store';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
@@ -91,6 +92,7 @@ type CardKey = 'conyuge' | 'hijos' | 'ascendientes';
 })
 export class FamiliaPage {
   readonly store = inject(WealthPlannerStore);
+  private readonly notif = inject(NotificationStore);
 
   // ── Tabs ──────────────────────────────────────────────────────────────
   readonly activeTab = signal<number>(0);
@@ -450,6 +452,17 @@ export class FamiliaPage {
   readonly toastVisible = signal<boolean>(false);
   private toastTimer: ReturnType<typeof setTimeout> | null = null;
 
+  constructor() {
+    // Constructor placed AFTER toast field initializers so the consume +
+    // showInfo path can safely call this.toastMessage / this.toastVisible.
+    // Picks up any cross-route notice queued by the caller (e.g. listado's
+    // Nueva planificación → "Información del cliente prerellenada").
+    const pending = this.notif.consume();
+    if (pending !== null) {
+      this.showInfo(pending);
+    }
+  }
+
   private showSaved(label: string): void {
     this.toastMessage.set(`Cambios guardados · ${label}`);
     this.toastVisible.set(true);
@@ -457,6 +470,20 @@ export class FamiliaPage {
     this.toastTimer = setTimeout(() => {
       this.toastVisible.set(false);
     }, 2500);
+  }
+
+  /**
+   * One-shot informational toast (e.g. cross-route notices). Longer dwell
+   * than showSaved because it conveys context the gestor likely hasn't seen
+   * before, not a routine save acknowledgment.
+   */
+  private showInfo(message: string): void {
+    this.toastMessage.set(message);
+    this.toastVisible.set(true);
+    if (this.toastTimer !== null) clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => {
+      this.toastVisible.set(false);
+    }, 5000);
   }
 
   dismissToast(): void {

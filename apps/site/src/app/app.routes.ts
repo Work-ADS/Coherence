@@ -60,6 +60,14 @@ export const routes: Routes = [
   { path: 'novedades/nav-bar-decisiones', redirectTo: '/patrones/top-bar-decisiones' },
   { path: 'novedades/dialog-decisiones', redirectTo: '/patrones/dialog-decisiones' },
   { path: 'novedades', redirectTo: '/demos' }, // catchall for any nested /novedades/*
+  // ─── Listado de planificaciones — top-level per-cliente hub ───
+  {
+    path: 'listado-planificaciones',
+    loadComponent: () =>
+      import('./pages/demos/listado-planificaciones/listado-planificaciones.page').then(
+        (m) => m.ListadoPlanificacionesPage,
+      ),
+  },
   {
     path: 'afi-insights',
     loadChildren: () =>

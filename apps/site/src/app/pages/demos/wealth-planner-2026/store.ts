@@ -230,6 +230,24 @@ const EMPTY_PERSONA: PersonaBase = {
 
 const EMPTY_CLIENTE: ClienteData = { ...EMPTY_PERSONA };
 
+/**
+ * Seeded cliente identity. Persists across planificaciones for the same
+ * cliente — when a gestor opens a new plan via the listado, this data is
+ * already in the store so the Familia tab renders prefilled. The user
+ * surface labels this as "Información del cliente prerellenada".
+ */
+const SEEDED_CLIENTE: ClienteData = {
+  alias: 'Ricardo Vázquez Pérez',
+  residenciaFiscal: 'Madrid',
+  anoNacimiento: 1975,
+  gradoDiscapacidad: 'sin',
+  tipoActividad: 'jubilado',
+  anoJubilacion: 2042,
+  anosCotizados: null,
+  anoDejoCotizar: null,
+  tipoCotizacion: null,
+};
+
 const DEFAULT_LEGADO_RETIRO: LegadoRetiroData = {
   edadSeguridad: 100,
   legadoObjetivo: null,
@@ -246,6 +264,26 @@ let nextIngresoId = 1;
 let nextGastoId = 1;
 let nextInversionFuturaId = 1;
 let nextDesinversionId = 1;
+let nextPlanificacionId = 1;
+
+// ── Listado · Planificaciones per cliente (Brief Listado) ─────────────────
+//
+// v1 model: one cliente per WealthPlannerStore instance. Each Planificacion
+// is a named container the gestor switches between; the cliente identity
+// (Información básica) persists across plans because it lives on the same
+// store. Plan-scoped data (patrimonio, objetivos, etc.) is NOT yet split
+// per plan in v1 — that migration is the deferred `:simulationId` chore.
+export type PlanificacionEstado = 'borrador' | 'activa' | 'archivada';
+
+export interface Planificacion {
+  id: string;
+  nombre: string;
+  createdAt: string;
+  estado: PlanificacionEstado;
+  gestor: string;
+  /** Route the "Abrir" action navigates to. v1 hardcodes the flat AWP routes. */
+  route: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class WealthPlannerStore {
@@ -253,7 +291,7 @@ export class WealthPlannerStore {
   // Familia (Brief A)
   // ──────────────────────────────────────────────────────────────────────
 
-  readonly cliente = signal<ClienteData>({ ...EMPTY_CLIENTE });
+  readonly cliente = signal<ClienteData>({ ...SEEDED_CLIENTE });
   readonly conyugeStatus = signal<ConyugeStatus>('unanswered');
   readonly conyuge = signal<ConyugeData | null>(null);
   readonly hijos = signal<HijoData[]>([]);
@@ -813,4 +851,95 @@ export class WealthPlannerStore {
 
   /** Sidebar chip — always `complete` because this is a derived read-only output. */
   readonly patrimonioPrevistoState = computed<SectionState>(() => 'complete');
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Listado · Planificaciones per cliente (Brief Listado)
+  // ──────────────────────────────────────────────────────────────────────
+  //
+  // Seeded with 3 plans so all three estado chips are visible on first
+  // visit. Newest first per the locked sort order (no filter in v1).
+
+  readonly planificaciones = signal<Planificacion[]>([
+    {
+      id: 'plan-q1-2026',
+      nombre: 'Planificación 2026 Q1',
+      createdAt: '2026-01-15T10:00:00Z',
+      estado: 'activa',
+      gestor: 'Juan García Pérez',
+      route: '/demos/wealth-planner-2026/familia',
+    },
+    {
+      id: 'plan-q2-2026',
+      nombre: 'Planificación 2026 Q2 — revisión',
+      createdAt: '2026-04-03T14:30:00Z',
+      estado: 'borrador',
+      gestor: 'Juan García Pérez',
+      route: '/demos/wealth-planner-2026/familia',
+    },
+    {
+      id: 'plan-2025-final',
+      nombre: 'Planificación 2025 final',
+      createdAt: '2025-12-20T09:00:00Z',
+      estado: 'archivada',
+      gestor: 'Juan García Pérez',
+      route: '/demos/wealth-planner-2026/familia',
+    },
+  ]);
+
+  /** Sorted reverse-chronologically (newest first). v1 has no filter. */
+  readonly planificacionesSorted = computed<Planificacion[]>(() =>
+    [...this.planificaciones()].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    ),
+  );
+
+  /**
+   * Append a new borrador planificación. Cliente Información básica is
+   * inherited automatically because it lives on the same store.
+   */
+  addPlanificacion(nombre: string): Planificacion {
+    const next: Planificacion = {
+      id: `plan-${nextPlanificacionId++}`,
+      nombre: nombre.trim() || 'Planificación sin nombre',
+      createdAt: new Date().toISOString(),
+      estado: 'borrador',
+      gestor: 'Juan García Pérez',
+      route: '/demos/wealth-planner-2026/familia',
+    };
+    this.planificaciones.update((rows) => [...rows, next]);
+    return next;
+  }
+
+  renamePlanificacion(id: string, nombre: string): void {
+    const trimmed = nombre.trim();
+    if (!trimmed) return;
+    this.planificaciones.update((rows) =>
+      rows.map((p) => (p.id === id ? { ...p, nombre: trimmed } : p)),
+    );
+  }
+
+  duplicarPlanificacion(id: string): Planificacion | null {
+    const source = this.planificaciones().find((p) => p.id === id);
+    if (!source) return null;
+    const next: Planificacion = {
+      ...source,
+      id: `plan-${nextPlanificacionId++}`,
+      nombre: `${source.nombre} (copia)`,
+      createdAt: new Date().toISOString(),
+      estado: 'borrador',
+    };
+    this.planificaciones.update((rows) => [...rows, next]);
+    return next;
+  }
+
+  archivarPlanificacion(id: string): void {
+    this.planificaciones.update((rows) =>
+      rows.map((p) => (p.id === id ? { ...p, estado: 'archivada' as const } : p)),
+    );
+  }
+
+  /** v1-only — used by the empty-state demo to clear the seed. */
+  clearPlanificaciones(): void {
+    this.planificaciones.set([]);
+  }
 }

@@ -1,8 +1,9 @@
 # AWP 2026 — Pre-flow · Listado de planificaciones
 
-**Status:** drafted 2026-05-27, awaits user "go"
-**Branch:** `feature/awp-listado-planificaciones` (to be created)
+**Status:** active 2026-06-02 — building on `richard/listado`
+**Branch:** `richard/listado` (umbrella; this brief lands a PR on it)
 **Created:** 2026-05-27
+**Activated:** 2026-06-02 — all 5 Open decisions locked, build in progress
 **Activates:** independent — can ship any time. Does NOT block on the §5/§6 chore.
 **Plan reference:** [`/Users/richardgriner/.claude/plans/okay-now-let-s-plan-concurrent-quiche.md`](../../.claude/plans/okay-now-let-s-plan-concurrent-quiche.md) — Brief 4
 
@@ -163,17 +164,21 @@ Centered card, secondary CTA. Use the same empty-state pattern from `desinversio
 4. **Wire the `Ir al listado de planificaciones` link** in `planner-top-bar.component.html` to point at the new route (currently it's likely a `href="#"` or missing).
 5. **Verify** at three viewport presets. Test all three row states (borrador / activa / archivada) render with the correct estado chip.
 
-## Open decisions (need user input before build)
+## Locked decisions (2026-06-02)
 
-1. **Chrome composition.** Wrap with `<site-demo-shell>` directly (proposed default) OR build a new lean `<site-listado-shell>` component? Resolves the "no sidebar" question.
+1. **Chrome composition** → `<site-demo-shell>` directly. No new shell component; the existing shell provides top-bar + viewport sizer + inspect/comment tools and the listado just renders into its body slot.
 
-2. **Action set per row.** Default: `Abrir` · `Duplicar` · `Archivar`. Confirm — could also include `Editar nombre` inline, or `Eliminar` (vs. just archive).
+2. **Action set per row** → `Abrir` · `Editar nombre` · `Duplicar` · `Archivar`. `Editar nombre` is inline (click-to-edit on the row's nombre cell). No hard `Eliminar` in v1 — `Archivar` is the soft delete. `Abrir` is the primary action.
 
-3. **`+ Nueva planificación` flow.** Default: a modal asking only for the new planificación's name, then pushes to `/demos/wealth-planner-2026/familia` (the new flat route). Confirm: should it duplicate the active planificación's state by default, or always start blank?
+3. **`+ Nueva planificación` flow** → Modal asks for `nombre`. On submit, the new planificación is created in `borrador` estado AND inherits the cliente's stable **Información básica** (alias, residenciaFiscal, anoNacimiento, gradoDiscapacidad, tipoActividad + dependents like cotizado/jubilación + miembros de familia). Everything else (patrimonio, sociedades, ingresos/gastos, objetivos, plan, conclusiones, informe) starts blank. Route lands on `/demos/wealth-planner-2026/familia` AND surfaces a toast: *"Información del cliente prerellenada — puedes editarla si cambió."* The cliente-data ↔ plan-data split is the seed of the multi-cliente model (Brief 4) but doesn't require it.
 
-4. **Estado chip styling.** Default proposal: `<afi-status-chip>` with intent mapping — `activa` = success, `borrador` = neutral, `archivada` = muted.
+4. **Estado chip styling** → `<afi-status-chip>` with intent: `activa` = `success`, `borrador` = `neutral`, `archivada` = `muted`.
 
-5. **Sort order / filter.** Default: reverse-chronological (newest at top), no filter. Confirm.
+5. **Sort order / filter** → Reverse-chronological by `createdAt`, no filter chips, no search. v1 ships with 3 seeded rows; filters are premature.
+
+### Content fix (locked alongside the 5 decisions)
+
+- Rename the seeded cliente throughout AWP from "Manuel González Sánchez" → **"Ricardo Vázquez Pérez"** (matches the placeholder pattern and the user-facing convention). Updates: store seed value, planner-top-bar display, page-header subtitle, listado header.
 
 ## Out of scope (called out explicitly)
 
@@ -189,12 +194,15 @@ Centered card, secondary CTA. Use the same empty-state pattern from `desinversio
 
 ## Exit criteria
 
-- [ ] `/listado-planificaciones` routes and renders
-- [ ] Three seeded rows visible with correct estado chips (activa · borrador · archivada)
-- [ ] `+ Nueva planificación` adds a row in `borrador` state and navigates into the flow (per Open decision #3 default)
+- [ ] `/listado-planificaciones` routes and renders inside `<site-demo-shell>` chrome
+- [ ] Three seeded rows visible with correct estado chips (activa · borrador · archivada), reverse-chronological
+- [ ] `+ Nueva planificación` opens a modal asking only for nombre, creates a `borrador` row that inherits the cliente's Información básica, navigates to `/demos/wealth-planner-2026/familia`, and shows the prefill notification toast
 - [ ] `Abrir` action navigates to `/demos/wealth-planner-2026/familia`
-- [ ] `Archivar` action transitions the row's estado (and surfaces a confirmation)
+- [ ] `Editar nombre` enables inline-edit on the nombre cell with Enter to confirm / Escape to cancel
+- [ ] `Duplicar` clones the row (`(copia)` suffix on the nombre)
+- [ ] `Archivar` action transitions the row's estado to `archivada` (with confirmation modal)
 - [ ] Empty state renders when the seed is cleared
 - [ ] `Ir al listado de planificaciones` link in the planner top bar lands here (regression check from every in-simulation page)
+- [ ] Cliente renamed everywhere to "Ricardo Vázquez Pérez"
 - [ ] Clean-code + token-guardian + 3-file checks clean
-- [ ] PR notes the chrome composition decision (1) + action set (2) + new-planificación flow (3)
+- [ ] iteracion-4 Listado surface populated with this brief's tasks

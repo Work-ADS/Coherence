@@ -1,0 +1,208 @@
+// =============================================================================
+// listado-planificaciones.page.scss — Per-cliente plan hub
+// =============================================================================
+//
+// BEM under `.lp`. Token-only; no hex / px / rgba outside libs/tokens.
+// Hand-rolled table per the brief's allowance (afi-table can't vary the
+// badge intent per row). Follows the desinversiones-futuras precedent.
+// =============================================================================
+
+.lp {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--canvas-base);
+
+  &__main {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  &__container {
+    max-width: var(--content-xl);
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  &__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--color-action-700);
+    font: var(--type-body-sm-500);
+  }
+
+  &__body {
+    margin-top: var(--space-2xl);
+  }
+
+  // ─── Table ──────────────────────────────────────────────────────────────
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--canvas-base);
+    font: var(--type-body-md-400);
+    color: var(--canvas-fg);
+  }
+
+  &__th {
+    text-align: start;
+    padding: var(--space-sm) var(--space-md);
+    font: var(--type-body-sm-500);
+    color: var(--foreground-tertiary-default);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    border-bottom: thin solid var(--border-hairline);
+    white-space: nowrap;
+
+    &--fecha {
+      width: var(--dimension-44);
+    }
+
+    &--estado {
+      width: var(--dimension-32);
+    }
+
+    &--actions {
+      width: var(--dimension-32);
+      text-align: end;
+    }
+  }
+
+  &__td {
+    padding: var(--space-md);
+    border-bottom: thin solid var(--border-hairline);
+    vertical-align: middle;
+
+    &--fecha {
+      color: var(--foreground-secondary-default);
+      white-space: nowrap;
+    }
+
+    &--actions {
+      text-align: end;
+    }
+  }
+
+  &__row {
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--easing-enter);
+    outline: none;
+
+    &:hover:not(.lp__row--renaming) {
+      background: var(--surface-quiet);
+    }
+
+    &:focus-visible {
+      box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
+    }
+
+    &--archived {
+      color: var(--foreground-tertiary-default);
+
+      .lp__nombre {
+        color: var(--foreground-tertiary-default);
+      }
+    }
+
+    &--renaming {
+      cursor: default;
+      background: var(--surface-quiet);
+    }
+  }
+
+  &__nombre {
+    font: var(--type-body-md-500);
+    color: var(--canvas-fg);
+  }
+
+  &__rename-input {
+    width: 100%;
+    display: block;
+    border-radius: var(--radius-md);
+    background: var(--control-background-default);
+    color: var(--canvas-fg);
+    border: var(--border-width-hairline) solid var(--border-default);
+    font: var(--type-body-md-500);
+    padding: var(--space-2xs) var(--space-sm);
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
+      border-color: var(--border-focus);
+    }
+  }
+
+  &__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    justify-content: flex-end;
+    // Hide-by-default revealed on row hover / focus to keep the resting
+    // table calm. Matches the afi-table action reveal modifier.
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--easing-enter);
+  }
+
+  &__row:hover &__actions,
+  &__row:focus-within &__actions,
+  &__row--renaming &__actions {
+    opacity: 1;
+  }
+
+  // ─── Empty state ────────────────────────────────────────────────────────
+  &__empty {
+    margin: var(--space-2xl) auto 0;
+    max-width: var(--dimension-96, 24rem);
+    padding: var(--space-2xl);
+    border: thin dashed var(--border-hairline);
+    border-radius: var(--radius-lg);
+    background: var(--surface-quiet);
+    text-align: center;
+    color: var(--foreground-secondary-default);
+  }
+
+  &__empty-icon {
+    color: var(--foreground-tertiary-default);
+    margin: 0 auto var(--space-md);
+    width: var(--dimension-12);
+    height: var(--dimension-12);
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__empty-title {
+    margin: 0;
+    font: var(--type-heading-sm, var(--type-body-lg-500));
+    color: var(--canvas-fg);
+  }
+
+  &__empty-copy {
+    margin: var(--space-xs) 0 var(--space-lg);
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+  }
+
+  &__empty-cta {
+    display: inline-flex;
+  }
+
+  // ─── Modal slots ────────────────────────────────────────────────────────
+  &__modal-body {
+    margin-top: var(--space-md);
+  }
+
+  &__modal-actions {
+    margin-top: var(--space-lg);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+  }
+
+  // Sr-only label removed — the empty actions <th> is announced by
+  // screen readers as a column without a header, which is fine when the
+  // cells contain icon-buttons with their own aria-label.
+}

@@ -1,11 +1,17 @@
-<site-demo-shell [views]="views()" [demoSlug]="demoSlug()" [demoRoute]="demoRoute()">
+<site-demo-shell
+  [views]="views()"
+  [demoSlug]="demoSlug()"
+  [demoRoute]="demoRoute()"
+  homeRoute="/listado-planificaciones"
+  homeLabel="Volver al listado"
+>
   <div class="h-screen flex bg-canvas-base overflow-hidden">
     <site-planner-sidebar [activeKey]="activeKey()" />
 
     <div class="flex-1 flex flex-col min-w-0">
       <site-planner-top-bar
         decisionesRoute="/demos/wealth-planner-2026"
-        clientName="Ricard Vazquez Fajardo"
+        clientName="Ricardo Vázquez Pérez"
       />
 
       <main class="flex-1 min-w-0 overflow-y-auto">

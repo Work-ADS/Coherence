@@ -38,8 +38,8 @@ import { SettingsDropdownComponent, SimulationSettings } from './settings-dropdo
 })
 export class PlannerTopBarComponent {
   readonly decisionesRoute = input.required<string>();
-  readonly listadoRoute = input<string>('/demos');
-  readonly clientName = input<string>('Ricard Vazquez Fajardo');
+  readonly listadoRoute = input<string>('/listado-planificaciones');
+  readonly clientName = input<string>('Ricardo Vázquez Pérez');
 
   readonly plansOpen = signal(false);
   readonly stateOpen = signal(false);

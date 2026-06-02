@@ -1,0 +1,121 @@
+<div class="i4">
+  <!-- Breadcrumb top bar -->
+  <div class="i4__breadcrumb">
+    <a
+      routerLink="/blog"
+      class="i4__breadcrumb-back"
+      aria-label="Volver al blog"
+    >
+      <svg class="i4__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+    <span class="i4__breadcrumb-parent">Blog</span>
+    <span class="i4__breadcrumb-separator" aria-hidden="true">/</span>
+    <span class="i4__breadcrumb-current">Iteración 4</span>
+  </div>
+
+  <main class="i4__main">
+    <div class="i4__layout">
+      <div class="i4__content">
+        <afi-page-header
+          title="DS — Iteración 4"
+          subtitle="Listado de planificaciones, documentación del demo overview, responsive y multi-cliente. Cuatro briefs encadenados sobre la rama richard/listado — esta página es el ancla."
+          [sticky]="false"
+          [scrollFade]="false"
+        >
+          <span slot="breadcrumb" class="i4__eyebrow">ITERACIÓN 4 · EN CURSO</span>
+        </afi-page-header>
+
+        <!-- Summary -->
+        <section class="i4__summary">
+          <afi-section-header
+            eyebrow="Resumen"
+            title="Alcance de la iteración"
+            snippet="Cuatro briefs (uno ya redactado, tres por escribir) — Brief 1 (listado) aterrizado salvo el toast diferido. Briefs 2, 3 y 4 pendientes."
+          />
+          <div class="i4__badges">
+            @if (totalTasks() === 0) {
+              <afi-badge size="sm" intent="neutral">4 · Briefs por activar</afi-badge>
+            } @else {
+              @if (doneCount() > 0) {
+                <afi-badge size="sm" intent="success">{{ doneCount() }} · Hecho</afi-badge>
+              }
+              @if (enCursoCount() > 0) {
+                <afi-badge size="sm" intent="info">{{ enCursoCount() }} · En curso</afi-badge>
+              }
+              @if (pendingCount() > 0) {
+                <afi-badge size="sm" intent="neutral">{{ pendingCount() }} · Pendiente</afi-badge>
+              }
+            }
+          </div>
+        </section>
+
+        <!-- Surfaces -->
+        <div class="i4__surfaces">
+          @for (s of surfaces; track s.id) {
+            <article class="i4__surface" [id]="s.id">
+              <afi-section-header
+                [eyebrow]="s.eyebrow"
+                [title]="s.title"
+                [snippet]="s.snippet"
+              />
+
+              <ul class="i4__tasks">
+                @if (s.tasks.length === 0) {
+                  <li class="i4__task i4__task--empty">
+                    <p class="i4__task-text i4__task-text--empty">
+                      Brief pendiente · sin tareas registradas todavía.
+                    </p>
+                  </li>
+                } @else {
+                  @for (t of s.tasks; track t.text) {
+                    <li class="i4__task" [class.i4__task--done]="t.status === 'Hecho'">
+                      <p class="i4__task-text">
+                        <afi-badge
+                          class="i4__task-badge"
+                          size="sm"
+                          [intent]="
+                            t.status === 'Hecho'
+                              ? 'success'
+                              : t.status === 'En curso'
+                                ? 'info'
+                                : 'neutral'
+                          "
+                        >
+                          {{ t.status }}
+                        </afi-badge>
+                        <afi-badge class="i4__task-badge" size="sm" intent="neutral">
+                          {{ t.source }}
+                        </afi-badge>
+                        @if (t.href) {
+                          <a [routerLink]="t.href" class="i4__task-link">{{ t.text }}</a>
+                        } @else {
+                          {{ t.text }}
+                        }
+                      </p>
+                    </li>
+                  }
+                }
+              </ul>
+            </article>
+          }
+
+          <p class="i4__footnote">
+            Para añadir una tarea: edita
+            <code class="i4__code"
+              >apps/site/src/app/pages/blog/iteracion-4/iteracion-4.page.ts</code
+            >
+            y prepende un objeto al array <code class="i4__code">tasks</code> de la sección.
+          </p>
+        </div>
+      </div>
+
+      <site-on-this-page class="i4__rail" [sections]="tocSections" />
+    </div>
+  </main>
+</div>

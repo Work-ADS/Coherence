@@ -22,6 +22,11 @@ export const patrones_routes: Routes = [
     loadChildren: () => import('./tarjetas/tarjetas.routes').then((m) => m.tarjetas_routes),
   },
   {
+    path: 'section',
+    loadComponent: () =>
+      import('./section/section.page').then((m) => m.PatronSectionPage),
+  },
+  {
     path: 'cabeceras',
     loadChildren: () => import('./cabeceras/cabeceras.routes').then((m) => m.cabeceras_routes),
   },

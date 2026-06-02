@@ -72,9 +72,9 @@ let nextId = 0;
   `,
   template: `
     <label [for]="checkboxId"
-           [class]="compact() ? 'inline-flex items-center gap-1.5 cursor-pointer' : 'inline-flex items-start gap-space-2 min-h-[44px] min-w-[44px] cursor-pointer'"
+           [class]="compact() ? 'inline-flex items-center gap-1.5 cursor-pointer' : 'inline-flex items-start gap-space-2 min-h-[var(--dimension-11)] min-w-[var(--dimension-11)] cursor-pointer'"
            [class.opacity-50]="disabled()" [class.cursor-not-allowed]="disabled()">
-      <span [class]="compact() ? 'relative flex items-center justify-center' : 'relative flex items-center justify-center min-h-[44px] min-w-[44px]'">
+      <span [class]="compact() ? 'relative flex items-center justify-center' : 'relative flex items-center justify-center min-h-[var(--dimension-11)] min-w-[var(--dimension-11)]'">
         <!-- Hidden native input for a11y -->
         <input
           #inputEl
@@ -122,7 +122,7 @@ let nextId = 0;
         </span>
       </span>
       @if (label()) {
-        <span [class]="compact() ? 'flex flex-col' : 'flex flex-col pt-[10px]'">
+        <span [class]="compact() ? 'flex flex-col' : 'flex flex-col pt-[var(--dimension-2-5)]'">
           <span [class]="compact() ? 'text-body-sm text-canvas-fg' : 'text-body-md text-canvas-fg'">
             {{ label() }}
             @if (required()) {
@@ -180,7 +180,7 @@ export class CheckboxComponent implements OnInit {
       // Size
       boxSizeClasses[this.size()],
       // Color states
-      active ? 'bg-action border-action' : 'bg-surface border-border-hairline',
+      active ? 'bg-action border-action' : 'bg-control border-border-hairline',
       errorBorder ? 'border-system-error' : '',
     ].filter(Boolean).join(' ');
   });

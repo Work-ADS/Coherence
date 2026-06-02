@@ -14,14 +14,14 @@
     />
 
     <main class="flex-1 min-w-0 overflow-y-auto">
-      <div class="max-w-[1180px] mx-auto py-space-8">
+      <div class="max-w-[1180px] mx-auto py-space-8 px-space-6">
         <!-- Page header — Familia. Version toggle pinned top-right so seniors
              can compare layout variants across reviews (v1 = current; v2/v3
              reserved). -->
         <div class="relative">
           <afi-page-header
             title="Familia"
-            subtitle="Compone el núcleo familiar del cliente. Esta información es la base del cálculo de objetivos, herencia y simulaciones."
+            subtitle="Proporciona la información básica del cliente para comenzar la planificación financiera. Esta información inicial será utilizada para identificar y organizar el resto de los datos del cliente."
             [sticky]="false"
             [scrollFade]="false"
           >
@@ -41,11 +41,7 @@
           </div>
         </div>
 
-        <!-- ─── Tabs: Información básica · Miembros de la familia ─────────
-             Tabs + content sit at the same column-left as the page-header
-             title (no extra mx-* on this wrapper). Page-header carries its
-             own internal padding; matching that to extra wrapper margin is
-             how the prior layout drifted out of alignment. -->
+        <!-- ─── Tabs: Información básica · Miembros de la familia ───────── -->
         <div class="mt-space-6">
           <afi-tabs
             [activeIndex]="activeTab()"
@@ -56,297 +52,516 @@
             <!--  Tab 1 · Información básica                                 -->
             <!-- ═══════════════════════════════════════════════════════════ -->
             <afi-tab-item label="Información básica">
-              <!-- ─── Información personal ─────────────────────────────── -->
-              <section class="familia-section">
-                <header class="familia-section__head">
-                  <h2 class="familia-section__title">Información personal</h2>
-                </header>
-
-                <div class="familia-grid familia-grid--2">
-                  <afi-input
-                    label="Nombre"
-                    placeholder="Ricard"
-                    [value]="store.cliente().nombre"
-                    (valueChange)="setClienteNombre($event)"
-                    autocomplete="given-name"
-                  />
-                  <afi-input
-                    label="Apellidos"
-                    placeholder="Vazquez Fajardo"
-                    [value]="store.cliente().apellidos"
-                    (valueChange)="setClienteApellidos($event)"
-                    autocomplete="family-name"
-                  />
-                  <afi-input
-                    label="Fecha de nacimiento"
-                    type="date"
-                    [value]="store.cliente().fechaNacimiento"
-                    (valueChange)="setClienteFechaNacimiento($event)"
-                    autocomplete="bday"
-                  />
-                  <afi-select
-                    label="Sexo"
-                    placeholder="Selecciona"
-                    [options]="sexoOptions"
-                    [value]="store.cliente().sexo"
-                    (valueChange)="setClienteSexo($event)"
-                  />
-                </div>
-              </section>
-
-              <!-- ─── Estado civil ─────────────────────────────────────── -->
-              <section class="familia-section">
-                <header class="familia-section__head">
-                  <h2 class="familia-section__title">Estado civil</h2>
-                </header>
-
-                <div class="familia-grid familia-grid--2">
-                  <afi-select
-                    label="Estado civil"
-                    placeholder="Selecciona"
-                    [options]="estadoCivilOptions"
-                    [value]="store.cliente().estadoCivil"
-                    (valueChange)="setClienteEstadoCivil($event)"
-                  />
-                  @if (showsRegimen()) {
-                    <afi-select
-                      label="Régimen económico matrimonial"
-                      placeholder="Selecciona"
-                      [options]="regimenOptions"
-                      [value]="store.cliente().regimenEconomico"
-                      (valueChange)="setClienteRegimen($event)"
+              <div class="familia-stack">
+                <!-- Card 1 · Información general (cliente) -->
+                <afi-section title="Información general">
+                  <div class="familia-grid familia-grid--3">
+                    <afi-input
+                      label="Alias del cliente"
+                      placeholder="Ej. Ricard Vázquez"
+                      [value]="store.cliente().alias"
+                      [required]="true"
+                      (valueChange)="setClienteAlias($event)"
                     />
+                    <afi-select
+                      label="Residencia fiscal"
+                      placeholder="Selecciona ciudad"
+                      [options]="residenciaFiscalOptions"
+                      [searchable]="true"
+                      [required]="true"
+                      [value]="store.cliente().residenciaFiscal"
+                      (valueChange)="setClienteResidenciaFiscal($event)"
+                    />
+                    <afi-input
+                      label="Año de nacimiento"
+                      type="number"
+                      placeholder="1975"
+                      [value]="store.cliente().anoNacimiento"
+                      [required]="true"
+                      [hint]="anoHint(store.cliente().anoNacimiento)"
+                      (valueChange)="setClienteAnoNacimiento($event)"
+                    />
+                    <afi-select
+                      label="Grado de discapacidad"
+                      placeholder="Seleccionar grado de discapacidad"
+                      [options]="gradoDiscapacidadOptions"
+                      [value]="store.cliente().gradoDiscapacidad"
+                      (valueChange)="setClienteGradoDiscapacidad($event)"
+                    />
+                  </div>
+                </afi-section>
+
+                <!-- Card 2 · Situación laboral -->
+                <afi-section title="Situación laboral">
+                  <afi-radio-group legend="Tipo de actividad *">
+                    @for (opt of tipoActividadOptions; track opt.value) {
+                      <afi-radio-group-item
+                        [value]="opt.value"
+                        [label]="opt.label"
+                        [selected]="store.cliente().tipoActividad === opt.value"
+                        (selectedChange)="setClienteTipoActividad(opt.value)"
+                      />
+                    }
+                  </afi-radio-group>
+
+                  <!-- Conditional inputs per actividad. Always wrapped in a
+                       single row so the radio + extra fields read as one
+                       answered question, not separate sections. -->
+                  @if (store.cliente().tipoActividad === 'activo') {
+                    <div class="familia-grid familia-grid--3 familia-actividad-extras">
+                      <afi-input
+                        label="Número de años cotizados"
+                        type="number"
+                        placeholder="18"
+                        [value]="store.cliente().anosCotizados"
+                        [required]="true"
+                        (valueChange)="setClienteAnosCotizados($event)"
+                      />
+                    </div>
                   }
-                </div>
-              </section>
-
-              <!-- ─── Nacionalidad y fiscalidad ────────────────────────── -->
-              <section class="familia-section">
-                <header class="familia-section__head">
-                  <h2 class="familia-section__title">
-                    Nacionalidad y fiscalidad
-                  </h2>
-                </header>
-
-                <div class="familia-grid familia-grid--3">
-                  <afi-input
-                    label="Nacionalidad"
-                    placeholder="Española"
-                    [value]="store.cliente().nacionalidad"
-                    (valueChange)="setClienteNacionalidad($event)"
-                  />
-                  <afi-input
-                    label="País de residencia fiscal"
-                    placeholder="España"
-                    [value]="store.cliente().residenciaFiscal"
-                    (valueChange)="setClienteResidenciaFiscal($event)"
-                  />
-                  <afi-input
-                    label="NIF / NIE"
-                    placeholder="00000000A"
-                    [value]="store.cliente().nif"
-                    (valueChange)="setClienteNif($event)"
-                  />
-                </div>
-              </section>
+                  @if (store.cliente().tipoActividad === 'jubilado') {
+                    <div class="familia-grid familia-grid--3 familia-actividad-extras">
+                      <afi-input
+                        label="Año de jubilación"
+                        type="number"
+                        placeholder="2042"
+                        [value]="store.cliente().anoJubilacion"
+                        [required]="true"
+                        [hint]="anoHint(store.cliente().anoJubilacion)"
+                        (valueChange)="setClienteAnoJubilacion($event)"
+                      />
+                    </div>
+                  }
+                  @if (store.cliente().tipoActividad === 'inactivo') {
+                    <div class="familia-grid familia-grid--3 familia-actividad-extras">
+                      <afi-input
+                        label="Número de años cotizados"
+                        type="number"
+                        placeholder="18"
+                        [value]="store.cliente().anosCotizados"
+                        [required]="true"
+                        (valueChange)="setClienteAnosCotizados($event)"
+                      />
+                      <afi-input
+                        label="Año en que dejó de cotizar"
+                        type="number"
+                        placeholder="2018"
+                        [value]="store.cliente().anoDejoCotizar"
+                        [required]="true"
+                        [hint]="anoHint(store.cliente().anoDejoCotizar)"
+                        (valueChange)="setClienteAnoDejoCotizar($event)"
+                      />
+                      <afi-select
+                        label="Tipo de cotización"
+                        placeholder="Selecciona"
+                        [options]="tipoCotizacionOptions"
+                        [required]="true"
+                        [value]="store.cliente().tipoCotizacion"
+                        (valueChange)="setClienteTipoCotizacion($event)"
+                      />
+                    </div>
+                  }
+                </afi-section>
+              </div>
             </afi-tab-item>
 
             <!-- ═══════════════════════════════════════════════════════════ -->
             <!--  Tab 2 · Miembros de la familia                             -->
             <!-- ═══════════════════════════════════════════════════════════ -->
             <afi-tab-item label="Miembros de la familia">
-              <!-- ─── Pareja ───────────────────────────────────────────── -->
-              <section class="familia-section">
-                <header class="familia-section__head">
-                  <h2 class="familia-section__title">Pareja</h2>
-                </header>
-
-                <div class="familia-toggle">
-                  <afi-switch
-                    label="¿Tiene pareja?"
-                    hint="Activa si vas a registrar al cónyuge o pareja de hecho."
-                    [checked]="store.tienePareja()"
-                    (checkedChange)="setTienePareja($event)"
-                  />
-                </div>
-
-                @if (store.tienePareja() && store.conyuge() !== null) {
-                  <div class="familia-grid familia-grid--2">
-                    <afi-input
-                      label="Nombre"
-                      [value]="store.conyuge()?.nombre ?? ''"
-                      (valueChange)="setConyugeNombre($event)"
-                    />
-                    <afi-input
-                      label="Apellidos"
-                      [value]="store.conyuge()?.apellidos ?? ''"
-                      (valueChange)="setConyugeApellidos($event)"
-                    />
-                    <afi-input
-                      label="Fecha de nacimiento"
-                      type="date"
-                      [value]="store.conyuge()?.fechaNacimiento ?? ''"
-                      (valueChange)="setConyugeFechaNacimiento($event)"
-                    />
-                    <afi-select
-                      label="Sexo"
-                      placeholder="Selecciona"
-                      [options]="sexoOptions"
-                      [value]="store.conyuge()?.sexo ?? null"
-                      (valueChange)="setConyugeSexo($event)"
-                    />
-                    <afi-input
-                      label="Nacionalidad"
-                      [value]="store.conyuge()?.nacionalidad ?? ''"
-                      (valueChange)="setConyugeNacionalidad($event)"
-                    />
+              <div class="familia-stack">
+                <!-- ─── Card · Cónyuge ─────────────────────────────────── -->
+                <afi-section
+                  title="Cónyuge"
+                  variant="collapsible"
+                  [expanded]="expanded().conyuge"
+                  (expandedChange)="setExpanded('conyuge', $event)"
+                  [count]="conyugeCount()"
+                  [complete]="conyugeAnswered()"
+                  ariaLabel="Mostrar u ocultar la información del cónyuge"
+                >
+                  <div class="familia-conyuge-binary">
+                    <afi-radio-group legend="¿Tiene cónyuge?">
+                      <afi-radio-group-item
+                        value="yes"
+                        label="Sí"
+                        [selected]="store.conyugeStatus() === 'yes'"
+                        (selectedChange)="setConyugeStatus('yes')"
+                      />
+                      <afi-radio-group-item
+                        value="no"
+                        label="No"
+                        [selected]="store.conyugeStatus() === 'no'"
+                        (selectedChange)="setConyugeStatus('no')"
+                      />
+                    </afi-radio-group>
                   </div>
-                }
-              </section>
 
-              <!-- ─── Hijos ────────────────────────────────────────────── -->
-              <section class="familia-section">
-                <header class="familia-section__head">
-                  <h2 class="familia-section__title">Hijos</h2>
-                  <afi-button
-                    variant="secondary"
-                    size="sm"
-                    (clicked)="addHijo()"
-                    ariaLabel="Añadir hijo"
-                  >
-                    + Añadir hijo
-                  </afi-button>
-                </header>
+                  @if (store.conyugeStatus() === 'yes' && store.conyuge() !== null) {
+                    <div class="familia-grid familia-grid--3 familia-conyuge-form">
+                      <afi-input
+                        label="Alias del cónyuge"
+                        placeholder="Ej. María González"
+                        [value]="store.conyuge()?.alias ?? ''"
+                        [required]="true"
+                        (valueChange)="setConyugeAlias($event)"
+                      />
+                      <afi-select
+                        label="Residencia fiscal"
+                        placeholder="Selecciona ciudad"
+                        [options]="residenciaFiscalOptions"
+                        [searchable]="true"
+                        [required]="true"
+                        [value]="store.conyuge()?.residenciaFiscal ?? ''"
+                        (valueChange)="setConyugeResidenciaFiscal($event)"
+                      />
+                      <afi-input
+                        label="Año de nacimiento"
+                        type="number"
+                        placeholder="1978"
+                        [value]="store.conyuge()?.anoNacimiento ?? null"
+                        [required]="true"
+                        [hint]="anoHint(store.conyuge()?.anoNacimiento ?? null)"
+                        (valueChange)="setConyugeAnoNacimiento($event)"
+                      />
+                      <afi-select
+                        label="Grado de discapacidad"
+                        placeholder="Seleccionar grado de discapacidad"
+                        [options]="gradoDiscapacidadOptions"
+                        [value]="store.conyuge()?.gradoDiscapacidad ?? null"
+                        (valueChange)="setConyugeGradoDiscapacidad($event)"
+                      />
+                      <div class="familia-conyuge-form__actividad">
+                        <afi-radio-group legend="Tipo de actividad *">
+                          @for (opt of tipoActividadOptions; track opt.value) {
+                            <afi-radio-group-item
+                              [value]="opt.value"
+                              [label]="opt.label"
+                              [selected]="store.conyuge()?.tipoActividad === opt.value"
+                              (selectedChange)="setConyugeTipoActividad(opt.value)"
+                            />
+                          }
+                        </afi-radio-group>
+                      </div>
 
-                @if (store.hijos().length === 0) {
-                  <p class="familia-empty">
-                    Aún no hay hijos registrados.
-                  </p>
-                } @else {
-                  <ul class="familia-rows">
-                    @for (hijo of store.hijos(); track hijo.id) {
-                      <li class="familia-row">
-                        <div class="familia-row__head">
-                          <span class="familia-row__index">
-                            Hijo {{ $index + 1 }}
-                          </span>
-                          <afi-button
-                            variant="danger"
-                            size="sm"
-                            (clicked)="removeHijo(hijo.id)"
-                            ariaLabel="Borrar hijo"
-                          >
-                            Borrar
-                          </afi-button>
-                        </div>
-                        <div class="familia-grid familia-grid--2">
+                      @if (store.conyuge()?.tipoActividad === 'activo') {
+                        <div class="familia-grid familia-grid--3 familia-actividad-extras familia-conyuge-form__actividad">
                           <afi-input
-                            label="Nombre"
-                            [value]="hijo.nombre"
-                            (valueChange)="setHijoNombre(hijo.id, $event)"
+                            label="Número de años cotizados"
+                            type="number"
+                            placeholder="18"
+                            [value]="store.conyuge()?.anosCotizados ?? null"
+                            [required]="true"
+                            (valueChange)="setConyugeAnosCotizados($event)"
+                          />
+                        </div>
+                      }
+                      @if (store.conyuge()?.tipoActividad === 'jubilado') {
+                        <div class="familia-grid familia-grid--3 familia-actividad-extras familia-conyuge-form__actividad">
+                          <afi-input
+                            label="Año de jubilación"
+                            type="number"
+                            placeholder="2042"
+                            [value]="store.conyuge()?.anoJubilacion ?? null"
+                            [required]="true"
+                            [hint]="anoHint(store.conyuge()?.anoJubilacion ?? null)"
+                            (valueChange)="setConyugeAnoJubilacion($event)"
+                          />
+                        </div>
+                      }
+                      @if (store.conyuge()?.tipoActividad === 'inactivo') {
+                        <div class="familia-grid familia-grid--3 familia-actividad-extras familia-conyuge-form__actividad">
+                          <afi-input
+                            label="Número de años cotizados"
+                            type="number"
+                            placeholder="18"
+                            [value]="store.conyuge()?.anosCotizados ?? null"
+                            [required]="true"
+                            (valueChange)="setConyugeAnosCotizados($event)"
                           />
                           <afi-input
-                            label="Fecha de nacimiento"
-                            type="date"
-                            [value]="hijo.fechaNacimiento"
-                            (valueChange)="
-                              setHijoFechaNacimiento(hijo.id, $event)
-                            "
-                          />
-                        </div>
-                        <div class="familia-row__footer">
-                          <afi-checkbox
-                            label="A cargo del cliente"
-                            [checked]="hijo.aCargo"
-                            (checkedChange)="setHijoACargo(hijo.id, $event)"
-                          />
-                        </div>
-                      </li>
-                    }
-                  </ul>
-                }
-              </section>
-
-              <!-- ─── Ascendientes ─────────────────────────────────────── -->
-              <section class="familia-section">
-                <header class="familia-section__head">
-                  <h2 class="familia-section__title">Ascendientes</h2>
-                  <afi-button
-                    variant="secondary"
-                    size="sm"
-                    (clicked)="addAscendiente()"
-                    ariaLabel="Añadir ascendiente"
-                  >
-                    + Añadir ascendiente
-                  </afi-button>
-                </header>
-
-                @if (store.ascendientes().length === 0) {
-                  <p class="familia-empty">
-                    Aún no hay ascendientes registrados.
-                  </p>
-                } @else {
-                  <ul class="familia-rows">
-                    @for (asc of store.ascendientes(); track asc.id) {
-                      <li class="familia-row">
-                        <div class="familia-row__head">
-                          <span class="familia-row__index">
-                            Ascendiente {{ $index + 1 }}
-                          </span>
-                          <afi-button
-                            variant="danger"
-                            size="sm"
-                            (clicked)="removeAscendiente(asc.id)"
-                            ariaLabel="Borrar ascendiente"
-                          >
-                            Borrar
-                          </afi-button>
-                        </div>
-                        <div class="familia-grid familia-grid--3">
-                          <afi-input
-                            label="Nombre"
-                            [value]="asc.nombre"
-                            (valueChange)="
-                              setAscendienteNombre(asc.id, $event)
-                            "
+                            label="Año en que dejó de cotizar"
+                            type="number"
+                            placeholder="2018"
+                            [value]="store.conyuge()?.anoDejoCotizar ?? null"
+                            [required]="true"
+                            [hint]="anoHint(store.conyuge()?.anoDejoCotizar ?? null)"
+                            (valueChange)="setConyugeAnoDejoCotizar($event)"
                           />
                           <afi-select
-                            label="Parentesco"
+                            label="Tipo de cotización"
                             placeholder="Selecciona"
-                            [options]="parentescoOptions"
-                            [value]="asc.parentesco"
-                            (valueChange)="
-                              setAscendienteParentesco(asc.id, $event)
-                            "
-                          />
-                          <afi-input
-                            label="Fecha de nacimiento"
-                            type="date"
-                            [value]="asc.fechaNacimiento"
-                            (valueChange)="
-                              setAscendienteFechaNacimiento(asc.id, $event)
-                            "
+                            [options]="tipoCotizacionOptions"
+                            [required]="true"
+                            [value]="store.conyuge()?.tipoCotizacion ?? null"
+                            (valueChange)="setConyugeTipoCotizacion($event)"
                           />
                         </div>
-                        <div class="familia-row__footer">
-                          <afi-checkbox
-                            label="A cargo del cliente"
-                            [checked]="asc.aCargo"
-                            (checkedChange)="
-                              setAscendienteACargo(asc.id, $event)
-                            "
-                          />
-                        </div>
-                      </li>
-                    }
-                  </ul>
-                }
-              </section>
+                      }
+                    </div>
+                  }
+                </afi-section>
+
+                <!-- ─── Card · Hijos ───────────────────────────────────── -->
+                <afi-section
+                  title="Hijos"
+                  variant="collapsible"
+                  [expanded]="expanded().hijos"
+                  (expandedChange)="setExpanded('hijos', $event)"
+                  [count]="hijosCount()"
+                  ariaLabel="Mostrar u ocultar la información de hijos"
+                >
+                  @if (store.hijos().length === 0) {
+                    <div class="familia-empty">
+                      <p class="familia-empty__copy">
+                        Aún no has añadido hijos. Si el cliente tiene
+                        descendencia, añádela aquí para que entre en los
+                        cálculos de herencia y simulaciones.
+                      </p>
+                      <afi-button
+                        variant="secondary"
+                        size="sm"
+                        (clicked)="addHijo()"
+                        ariaLabel="Añadir mi primer hijo"
+                      >
+                        + Añadir mi primer hijo
+                      </afi-button>
+                    </div>
+                  } @else {
+                    <ul class="familia-list">
+                      @for (hijo of store.hijos(); track hijo.id; let i = $index) {
+                        <li class="familia-list__item">
+                          <header class="familia-list__head">
+                            <span class="familia-list__index">
+                              Hijo {{ i + 1 }}
+                            </span>
+                            @if (isPendingDelete(hijo.id)) {
+                              <span class="familia-list__confirm">
+                                <span class="familia-list__confirm-q">
+                                  ¿Borrar este hijo?
+                                </span>
+                                <afi-button
+                                  variant="danger"
+                                  size="sm"
+                                  (clicked)="confirmRemoveHijo(hijo.id)"
+                                >
+                                  Sí, borrar
+                                </afi-button>
+                                <afi-button
+                                  variant="ghost"
+                                  size="sm"
+                                  (clicked)="cancelRemove(hijo.id)"
+                                >
+                                  Cancelar
+                                </afi-button>
+                              </span>
+                            } @else {
+                              <afi-button
+                                variant="danger-ghost"
+                                size="sm"
+                                (clicked)="requestRemoveHijo(hijo.id)"
+                                ariaLabel="Borrar hijo"
+                              >
+                                Borrar
+                              </afi-button>
+                            }
+                          </header>
+                          <div class="familia-grid familia-grid--3">
+                            <afi-input
+                              label="Alias"
+                              placeholder="Ej. Mateo"
+                              [value]="hijo.alias"
+                              [required]="true"
+                              (valueChange)="setHijoAlias(hijo.id, $event)"
+                            />
+                            <afi-input
+                              label="Año de nacimiento"
+                              type="number"
+                              placeholder="2010"
+                              [value]="hijo.anoNacimiento"
+                              [required]="true"
+                              [hint]="anoHint(hijo.anoNacimiento)"
+                              (valueChange)="
+                                setHijoAnoNacimiento(hijo.id, $event)
+                              "
+                            />
+                            <afi-select
+                              label="Grado de discapacidad"
+                              placeholder="Seleccionar grado de discapacidad"
+                              [options]="gradoDiscapacidadOptions"
+                              [value]="hijo.gradoDiscapacidad"
+                              (valueChange)="
+                                setHijoGradoDiscapacidad(hijo.id, $event)
+                              "
+                            />
+                          </div>
+                          <div class="familia-list__footer">
+                            <afi-checkbox
+                              label="Hijo del cliente"
+                              [checked]="hijo.delCliente"
+                              (checkedChange)="setHijoDelCliente(hijo.id, $event)"
+                            />
+                          </div>
+                        </li>
+                      }
+                    </ul>
+                    <div class="familia-list__add">
+                      <afi-button
+                        variant="secondary"
+                        size="sm"
+                        (clicked)="addHijo()"
+                        ariaLabel="Añadir otro hijo"
+                      >
+                        + Añadir otro hijo
+                      </afi-button>
+                    </div>
+                  }
+                </afi-section>
+
+                <!-- ─── Card · Ascendientes ────────────────────────────── -->
+                <afi-section
+                  title="Ascendientes"
+                  variant="collapsible"
+                  [expanded]="expanded().ascendientes"
+                  (expandedChange)="setExpanded('ascendientes', $event)"
+                  [count]="ascendientesCount()"
+                  ariaLabel="Mostrar u ocultar la información de ascendientes"
+                >
+                  @if (store.ascendientes().length === 0) {
+                    <div class="familia-empty">
+                      <p class="familia-empty__copy">
+                        Aún no has añadido ascendientes (padres, abuelos,
+                        suegros…). Añade los que el cliente quiera incluir
+                        en la planificación.
+                      </p>
+                      <afi-button
+                        variant="secondary"
+                        size="sm"
+                        (clicked)="addAscendiente()"
+                        ariaLabel="Añadir mi primer ascendiente"
+                      >
+                        + Añadir mi primer ascendiente
+                      </afi-button>
+                    </div>
+                  } @else {
+                    <ul class="familia-list">
+                      @for (asc of store.ascendientes(); track asc.id; let i = $index) {
+                        <li class="familia-list__item">
+                          <header class="familia-list__head">
+                            <span class="familia-list__index">
+                              Ascendiente {{ i + 1 }}
+                            </span>
+                            @if (isPendingDelete(asc.id)) {
+                              <span class="familia-list__confirm">
+                                <span class="familia-list__confirm-q">
+                                  ¿Borrar este ascendiente?
+                                </span>
+                                <afi-button
+                                  variant="danger"
+                                  size="sm"
+                                  (clicked)="confirmRemoveAscendiente(asc.id)"
+                                >
+                                  Sí, borrar
+                                </afi-button>
+                                <afi-button
+                                  variant="ghost"
+                                  size="sm"
+                                  (clicked)="cancelRemove(asc.id)"
+                                >
+                                  Cancelar
+                                </afi-button>
+                              </span>
+                            } @else {
+                              <afi-button
+                                variant="danger-ghost"
+                                size="sm"
+                                (clicked)="requestRemoveAscendiente(asc.id)"
+                                ariaLabel="Borrar ascendiente"
+                              >
+                                Borrar
+                              </afi-button>
+                            }
+                          </header>
+                          <div class="familia-grid familia-grid--3">
+                            <afi-input
+                              label="Alias"
+                              placeholder="Ej. Antonio (padre)"
+                              [value]="asc.alias"
+                              [required]="true"
+                              (valueChange)="
+                                setAscendienteAlias(asc.id, $event)
+                              "
+                            />
+                            <afi-select
+                              label="Parentesco"
+                              placeholder="Selecciona"
+                              [options]="parentescoOptions"
+                              [required]="true"
+                              [value]="asc.parentesco"
+                              (valueChange)="
+                                setAscendienteParentesco(asc.id, $event)
+                              "
+                            />
+                            <afi-input
+                              label="Año de nacimiento"
+                              type="number"
+                              placeholder="1948"
+                              [value]="asc.anoNacimiento"
+                              [required]="true"
+                              [hint]="anoHint(asc.anoNacimiento)"
+                              (valueChange)="
+                                setAscendienteAnoNacimiento(asc.id, $event)
+                              "
+                            />
+                            <afi-select
+                              label="Grado de discapacidad"
+                              placeholder="Seleccionar grado de discapacidad"
+                              [options]="gradoDiscapacidadOptions"
+                              [value]="asc.gradoDiscapacidad"
+                              (valueChange)="
+                                setAscendienteGradoDiscapacidad(asc.id, $event)
+                              "
+                            />
+                          </div>
+                          <div class="familia-list__footer">
+                            <afi-checkbox
+                              label="Ascendiente del cliente"
+                              [checked]="asc.delCliente"
+                              (checkedChange)="
+                                setAscendienteDelCliente(asc.id, $event)
+                              "
+                            />
+                          </div>
+                        </li>
+                      }
+                    </ul>
+                    <div class="familia-list__add">
+                      <afi-button
+                        variant="secondary"
+                        size="sm"
+                        (clicked)="addAscendiente()"
+                        ariaLabel="Añadir otro ascendiente"
+                      >
+                        + Añadir otro ascendiente
+                      </afi-button>
+                    </div>
+                  }
+                </afi-section>
+              </div>
             </afi-tab-item>
           </afi-tabs>
         </div>
       </div>
     </main>
   </div>
+
+  <!-- Save-confirmation toast — bottom-of-viewport (toast primitive owns its
+       fixed positioning). Auto-dismisses after ~2.5 s; parent owns the timer. -->
+  <afi-toast
+    [message]="toastMessage()"
+    [visible]="toastVisible()"
+    [showUndo]="false"
+    (dismissed)="dismissToast()"
+  />
 </div>
 </site-demo-shell>

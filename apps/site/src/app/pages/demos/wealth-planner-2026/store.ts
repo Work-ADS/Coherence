@@ -11,47 +11,82 @@ import { Injectable, computed, signal } from '@angular/core';
  * v1 = in-memory only. No backend, no persistence across reloads.
  */
 
-export type Sexo = 'femenino' | 'masculino' | 'otro';
+/**
+ * Familia field shape — aligned with Figma Wealth planner V2 (file
+ * `888lN7vbJSc4gLYt7nP3DW`, page "↳ Familia ✅"). The cliente and cónyuge
+ * share a single `PersonaBase` shape; hijos / ascendientes carry a smaller
+ * subset because the planner doesn't need their tax/employment details.
+ *
+ * TODO(awp-familia): split `inactivo` into `inactivo-sin-cotizaciones` and
+ * `inactivo-con-cotizaciones` again if/when the backend differentiates the
+ * pension calculation. Today the single `inactivo` collapses both since the
+ * fields they capture are identical (años cotizados, año de baja, tipo de
+ * cotización). Confirm with Borja before any backend migration.
+ */
+export type TipoActividad = 'activo' | 'jubilado' | 'inactivo';
 
-export type EstadoCivil = 'soltero' | 'casado' | 'pareja-de-hecho' | 'divorciado' | 'viudo';
-
-export type RegimenEconomico = 'gananciales' | 'separacion-de-bienes' | 'participacion';
+export type TipoCotizacion =
+  | 'regimen-general'
+  | 'autonomo'
+  | 'agrario'
+  | 'mar'
+  | 'empleadas-hogar'
+  | 'otro';
 
 export type Parentesco = 'padre' | 'madre' | 'suegro' | 'suegra' | 'abuelo' | 'abuela' | 'otro';
 
-export interface ClienteData {
-  nombre: string;
-  apellidos: string;
-  fechaNacimiento: string;
-  sexo: Sexo | null;
-  estadoCivil: EstadoCivil | null;
-  regimenEconomico: RegimenEconomico | null;
-  nacionalidad: string;
+/**
+ * Tri-state answer to "¿Tiene cónyuge?".
+ * - `unanswered` — initial state, sidebar chip stays in-progress at most.
+ * - `no`         — explicit "no spouse"; conyuge data is null.
+ * - `yes`        — has spouse; `conyuge` carries the form data.
+ */
+export type ConyugeStatus = 'unanswered' | 'no' | 'yes';
+
+/**
+ * Disability options. Spanish IMSERSO scale.
+ * TODO(awp-familia): confirm the canonical option list against the Figma
+ * select. Today's enum is a reasonable working set — may need to add
+ * "necesita tercera persona" / "movilidad reducida" classifications.
+ */
+export type GradoDiscapacidad = 'sin' | '33-64' | '65-74' | '75+';
+
+export interface PersonaBase {
+  alias: string;
   residenciaFiscal: string;
-  nif: string;
+  anoNacimiento: number | null;
+  gradoDiscapacidad: GradoDiscapacidad | null;
+  tipoActividad: TipoActividad | null;
+  /** Conditional · Jubilado → year of retirement. */
+  anoJubilacion: number | null;
+  /** Conditional · Inactivo → years contributed before leaving the workforce. */
+  anosCotizados: number | null;
+  /** Conditional · Inactivo → year contributions stopped. */
+  anoDejoCotizar: number | null;
+  /** Conditional · Inactivo → contribution scheme. */
+  tipoCotizacion: TipoCotizacion | null;
 }
 
-export interface ConyugeData {
-  nombre: string;
-  apellidos: string;
-  fechaNacimiento: string;
-  sexo: Sexo | null;
-  nacionalidad: string;
-}
+export type ClienteData = PersonaBase;
+export type ConyugeData = PersonaBase;
 
 export interface HijoData {
   id: string;
-  nombre: string;
-  fechaNacimiento: string;
-  aCargo: boolean;
+  alias: string;
+  anoNacimiento: number | null;
+  gradoDiscapacidad: GradoDiscapacidad | null;
+  /** True when this hijo is financially dependent on the cliente. */
+  delCliente: boolean;
 }
 
 export interface AscendienteData {
   id: string;
-  nombre: string;
+  alias: string;
   parentesco: Parentesco | null;
-  fechaNacimiento: string;
-  aCargo: boolean;
+  anoNacimiento: number | null;
+  gradoDiscapacidad: GradoDiscapacidad | null;
+  /** True when this ascendiente is financially dependent on the cliente. */
+  delCliente: boolean;
 }
 
 // ── Ingresos + Gastos (Brief D) ──────────────────────────────────────────
@@ -181,17 +216,19 @@ export interface Sociedad {
 
 export type SectionState = 'empty' | 'in-progress' | 'complete';
 
-const EMPTY_CLIENTE: ClienteData = {
-  nombre: '',
-  apellidos: '',
-  fechaNacimiento: '',
-  sexo: null,
-  estadoCivil: null,
-  regimenEconomico: null,
-  nacionalidad: '',
+const EMPTY_PERSONA: PersonaBase = {
+  alias: '',
   residenciaFiscal: '',
-  nif: '',
+  anoNacimiento: null,
+  gradoDiscapacidad: null,
+  tipoActividad: null,
+  anoJubilacion: null,
+  anosCotizados: null,
+  anoDejoCotizar: null,
+  tipoCotizacion: null,
 };
+
+const EMPTY_CLIENTE: ClienteData = { ...EMPTY_PERSONA };
 
 const DEFAULT_LEGADO_RETIRO: LegadoRetiroData = {
   edadSeguridad: 100,
@@ -217,18 +254,43 @@ export class WealthPlannerStore {
   // ──────────────────────────────────────────────────────────────────────
 
   readonly cliente = signal<ClienteData>({ ...EMPTY_CLIENTE });
-  readonly tienePareja = signal<boolean>(false);
+  readonly conyugeStatus = signal<ConyugeStatus>('unanswered');
   readonly conyuge = signal<ConyugeData | null>(null);
   readonly hijos = signal<HijoData[]>([]);
   readonly ascendientes = signal<AscendienteData[]>([]);
 
-  /** Sidebar chip state derived from cliente completeness. */
+  /**
+   * Backwards-compatible boolean for consumers in other briefs (Sociedades,
+   * Protección familiar). `true` exactly when the explicit answer is "yes"
+   * AND we have cónyuge data; falls back to the conyuge() null-check so
+   * `tienePareja()` and `conyuge()` never disagree.
+   */
+  readonly tienePareja = computed<boolean>(
+    () => this.conyugeStatus() === 'yes' && this.conyuge() !== null,
+  );
+
+  /** Sidebar chip state derived from cliente completeness (Figma fields). */
   readonly familiaState = computed<SectionState>(() => {
     const c = this.cliente();
-    if (!c.nombre.trim()) return 'empty';
+    if (!c.alias.trim()) return 'empty';
     const required =
-      c.nombre.trim() && c.apellidos.trim() && c.fechaNacimiento && c.estadoCivil !== null;
+      c.alias.trim() &&
+      c.residenciaFiscal.trim() &&
+      c.anoNacimiento !== null &&
+      c.tipoActividad !== null;
     return required ? 'complete' : 'in-progress';
+  });
+
+  /** True if the Cónyuge form has the same four required fields filled. */
+  readonly conyugeComplete = computed<boolean>(() => {
+    const co = this.conyuge();
+    if (co === null) return false;
+    return (
+      co.alias.trim() !== '' &&
+      co.residenciaFiscal.trim() !== '' &&
+      co.anoNacimiento !== null &&
+      co.tipoActividad !== null
+    );
   });
 
   // Mutations
@@ -236,18 +298,20 @@ export class WealthPlannerStore {
     this.cliente.update((c) => ({ ...c, ...partial }));
   }
 
-  setTienePareja(value: boolean): void {
-    this.tienePareja.set(value);
-    if (!value) {
+  /**
+   * Set the cónyuge presence answer. Side effects:
+   *  - `yes` — lazily creates an empty cónyuge form if none exists.
+   *  - `no` / `unanswered` — clears cónyuge data so downstream selectors
+   *    don't see stale fields.
+   */
+  setConyugeStatus(status: ConyugeStatus): void {
+    this.conyugeStatus.set(status);
+    if (status === 'yes') {
+      if (this.conyuge() === null) {
+        this.conyuge.set({ ...EMPTY_PERSONA });
+      }
+    } else {
       this.conyuge.set(null);
-    } else if (this.conyuge() === null) {
-      this.conyuge.set({
-        nombre: '',
-        apellidos: '',
-        fechaNacimiento: '',
-        sexo: null,
-        nacionalidad: '',
-      });
     }
   }
 
@@ -257,7 +321,16 @@ export class WealthPlannerStore {
 
   addHijo(): void {
     const id = `hijo-${nextHijoId++}`;
-    this.hijos.update((rows) => [...rows, { id, nombre: '', fechaNacimiento: '', aCargo: false }]);
+    this.hijos.update((rows) => [
+      ...rows,
+      {
+        id,
+        alias: '',
+        anoNacimiento: null,
+        gradoDiscapacidad: null,
+        delCliente: true,
+      },
+    ]);
   }
 
   removeHijo(id: string): void {
@@ -274,10 +347,11 @@ export class WealthPlannerStore {
       ...rows,
       {
         id,
-        nombre: '',
+        alias: '',
         parentesco: null,
-        fechaNacimiento: '',
-        aCargo: false,
+        anoNacimiento: null,
+        gradoDiscapacidad: null,
+        delCliente: false,
       },
     ]);
   }
@@ -319,34 +393,30 @@ export class WealthPlannerStore {
   readonly familiaParticipantes = computed<ParticipanteSociedad[]>(() => {
     const out: ParticipanteSociedad[] = [];
     const c = this.cliente();
-    if (c.nombre.trim()) {
-      out.push({
-        id: 'cliente',
-        label: `${c.nombre} ${c.apellidos}`.trim() || 'Cliente',
-        porcentaje: 0,
-      });
-    } else {
-      out.push({ id: 'cliente', label: 'Cliente', porcentaje: 0 });
-    }
+    out.push({
+      id: 'cliente',
+      label: c.alias.trim() || 'Cliente',
+      porcentaje: 0,
+    });
     if (this.tienePareja()) {
       const co = this.conyuge();
       out.push({
         id: 'conyuge',
-        label: co?.nombre.trim() ? `${co.nombre} ${co.apellidos}`.trim() : 'Cónyuge',
+        label: co?.alias.trim() ? co.alias : 'Cónyuge',
         porcentaje: 0,
       });
     }
     this.hijos().forEach((h, i) => {
       out.push({
         id: h.id,
-        label: h.nombre.trim() || `Hijo ${i + 1}`,
+        label: h.alias.trim() || `Hijo ${i + 1}`,
         porcentaje: 0,
       });
     });
     this.ascendientes().forEach((a, i) => {
       out.push({
         id: a.id,
-        label: a.nombre.trim() || `Ascendiente ${i + 1}`,
+        label: a.alias.trim() || `Ascendiente ${i + 1}`,
         porcentaje: 0,
       });
     });

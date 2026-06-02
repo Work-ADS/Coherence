@@ -16,6 +16,14 @@
   border: var(--border-width-hairline) solid var(--border-subtle);
   background: var(--surface-default);
   box-shadow: var(--elevation-lg);
+
+  // Anchor-start variant: align the panel's left edge with the trigger's
+  // left edge so the panel extends to the right. Use when the trigger
+  // sits at the left side of the viewport.
+  &--start {
+    right: auto;
+    left: 0;
+  }
 }
 
 .panel__header {

@@ -28,6 +28,14 @@ export class DropdownPanelComponent {
   readonly width = input<number>(320);
   readonly maxHeight = input<number>(400);
   readonly ariaLabel = input<string>('');
+  /**
+   * Anchor edge. 'end' (default) aligns the panel's right edge with the
+   * trigger's right edge — the panel extends LEFT. 'start' aligns the
+   * panel's left edge with the trigger's left edge — the panel extends
+   * RIGHT. Use 'start' when the trigger sits at the LEFT of the viewport
+   * (otherwise the panel overflows off-screen).
+   */
+  readonly placement = input<'start' | 'end'>('end');
 
   readonly closed = output<void>();
 

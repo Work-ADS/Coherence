@@ -117,3 +117,68 @@
   font: var(--type-body-md-600);
   color: var(--foreground-primary-default);
 }
+
+// ─── Inner sub-tabs (Documento funcional · Semántica CSS) ─────────────────
+.wp-subtab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-block-start: var(--space-md);
+}
+
+// ─── Flow titles inside Documento funcional ────────────────────────────────
+.wp-tab__flow-title {
+  margin: var(--space-md) 0 var(--space-2xs);
+  font: var(--type-body-sm-600);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
+}
+
+// ─── Semántica CSS code block ──────────────────────────────────────────────
+.wp-css {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.wp-css__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.wp-css__code {
+  margin: 0;
+  padding: var(--space-md);
+  border-radius: var(--radius-card);
+  background: var(--surface-quiet);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  overflow-x: auto;
+  max-height: var(--dimension-180);
+  font: var(--type-body-sm-400);
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  color: var(--foreground-primary-default);
+  white-space: pre;
+}
+
+.wp-subtab__placeholder {
+  padding: var(--space-md);
+  background: var(--surface-quiet);
+  border: var(--border-width-hairline) dashed var(--border-hairline);
+  border-radius: var(--radius-control-md);
+  color: var(--foreground-tertiary-default);
+}
+
+// ─── Persona grid ───────────────────────────────────────────────────────
+.wp-tab__persona-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--dimension-72, 18rem), 1fr));
+  gap: var(--space-md);
+}
+
+.wp-tab__persona-cell {
+  margin: 0;
+}

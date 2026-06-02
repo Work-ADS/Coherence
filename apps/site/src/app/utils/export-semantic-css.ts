@@ -170,13 +170,13 @@ function triggerDownload(filename: string, contents: string): void {
 }
 
 /**
- * Generate + download a flat semantic CSS file for the given brand (default
- * Afi). When a brand slug is passed, the probe runs inside a hidden
- * [data-brand="..."] wrapper so the file resolves to that brand's values
- * even if the current page itself is rendered in the Afi default.
+ * Build the semantic CSS string for the given brand (default Afi) WITHOUT
+ * triggering a download. Used by the Semántica CSS tab on the demo
+ * overview to render the same content inline that the download button
+ * produces.
  */
-export function exportSemanticCss(brandSlug?: string): void {
-  if (typeof document === 'undefined') return;
+export function buildSemanticCssString(brandSlug?: string): string {
+  if (typeof document === 'undefined') return '';
 
   const slug =
     brandSlug?.toLowerCase() ||
@@ -194,9 +194,25 @@ export function exportSemanticCss(brandSlug?: string): void {
   }
 
   try {
-    const css = buildCss(brand, host as HTMLElement);
-    triggerDownload(`coherence-${brand.slug}-semantic.css`, css);
+    return buildCss(brand, host as HTMLElement);
   } finally {
     if (useWrapper) host.remove();
   }
+}
+
+/**
+ * Generate + download a flat semantic CSS file for the given brand (default
+ * Afi). When a brand slug is passed, the probe runs inside a hidden
+ * [data-brand="..."] wrapper so the file resolves to that brand's values
+ * even if the current page itself is rendered in the Afi default.
+ */
+export function exportSemanticCss(brandSlug?: string): void {
+  if (typeof document === 'undefined') return;
+  const slug =
+    brandSlug?.toLowerCase() ||
+    document.documentElement.getAttribute('data-brand')?.toLowerCase() ||
+    'afi';
+  const css = buildSemanticCssString(brandSlug);
+  if (!css) return;
+  triggerDownload(`coherence-${slug}-semantic.css`, css);
 }

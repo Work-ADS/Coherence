@@ -26,35 +26,53 @@
 
       <afi-dropdown-panel
         [open]="plansOpen()"
-        ariaLabel="Planificaciones"
+        [ariaLabel]="clientPickerMode() ? 'Clientes recientes' : 'Planificaciones'"
         [width]="280"
+        placement="start"
         (closed)="plansOpen.set(false)"
       >
-        <p slot="header" class="ptb__plans-heading">Planificaciones</p>
+        <p slot="header" class="ptb__plans-heading">
+          {{ clientPickerMode() ? 'Clientes recientes' : 'Planificaciones' }}
+        </p>
         <div slot="body" class="ptb__plans">
-          <a
-            [routerLink]="listadoRoute()"
-            class="ptb__plans-link"
-            (click)="plansOpen.set(false)"
-          >
-            <svg class="ptb__plans-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="m12 19-7-7 7-7" /><path d="M19 12H5" />
-            </svg>
-            <span>Ir al listado</span>
-          </a>
-          <afi-menu-divider />
-          @for (p of plans; track p.id) {
-            <afi-menu-item
-              [label]="p.name"
-              [secondaryLabel]="p.id"
-              (clicked)="selectPlan(p.id)"
+          @if (!clientPickerMode()) {
+            <a
+              [routerLink]="listadoRoute()"
+              class="ptb__plans-link"
+              (click)="plansOpen.set(false)"
             >
-              @if (p.id === simId()) {
-                <svg slot="trailing" class="ptb__plans-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              }
-            </afi-menu-item>
+              <svg class="ptb__plans-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m12 19-7-7 7-7" /><path d="M19 12H5" />
+              </svg>
+              <span>Ir al listado</span>
+            </a>
+            <afi-menu-divider />
+            @for (p of plans; track p.id) {
+              <afi-menu-item
+                [label]="p.name"
+                [secondaryLabel]="p.id"
+                (clicked)="selectPlan(p.id)"
+              >
+                @if (p.id === simId()) {
+                  <svg slot="trailing" class="ptb__plans-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                }
+              </afi-menu-item>
+            }
+          } @else {
+            @for (c of clientList() ?? []; track c.id) {
+              <afi-menu-item
+                [label]="c.name"
+                (clicked)="selectClient(c.id)"
+              >
+                @if (c.id === activeClientId()) {
+                  <svg slot="trailing" class="ptb__plans-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                }
+              </afi-menu-item>
+            }
           }
         </div>
       </afi-dropdown-panel>

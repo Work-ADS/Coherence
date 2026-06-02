@@ -1,0 +1,24 @@
+<afi-card [ariaLabel]="ariaLabel()" padding="md">
+  <div slot="header" class="pc__header">
+    <div class="pc__avatar" aria-hidden="true">{{ initials() }}</div>
+    <div class="pc__identity">
+      <p class="pc__alias">{{ persona().alias }}</p>
+      <p class="pc__meta">
+        <span class="pc__age">{{ persona().age }} años</span>
+        <span class="pc__sep" aria-hidden="true">·</span>
+        <afi-badge size="sm" intent="info">{{ persona().profileLabel }}</afi-badge>
+      </p>
+    </div>
+  </div>
+
+  <div class="pc__body">
+    <ul class="pc__attrs" aria-label="Atributos clave">
+      @for (attr of persona().keyAttributes; track attr) {
+        <li class="pc__attr">
+          <afi-badge size="sm" intent="neutral">{{ attr }}</afi-badge>
+        </li>
+      }
+    </ul>
+    <p class="pc__summary">{{ persona().summary }}</p>
+  </div>
+</afi-card>

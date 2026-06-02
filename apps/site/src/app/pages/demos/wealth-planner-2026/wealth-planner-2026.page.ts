@@ -2,16 +2,21 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
-  AnimatedChartComponent,
+  ButtonComponent,
   TabItemComponent,
   TabsComponent,
-  type ChartColumn,
 } from '@coherence/ui';
 
 import {
   DemoOverviewShellComponent,
   type DemoOverviewRelatedPost,
 } from '../../../components/demo-overview-shell';
+import { PersonaCardComponent } from '../../../components/persona-card';
+import {
+  buildSemanticCssString,
+  exportSemanticCss,
+} from '../../../utils/export-semantic-css';
+import { AWP_PERSONAS, type Persona } from './data/personas';
 
 /**
  * Wealth Planner 2026 — demo overview surface.
@@ -35,7 +40,8 @@ import {
     DemoOverviewShellComponent,
     TabsComponent,
     TabItemComponent,
-    AnimatedChartComponent,
+    ButtonComponent,
+    PersonaCardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './wealth-planner-2026.page.html',
@@ -44,17 +50,32 @@ import {
 export class WealthPlannerOverviewPage {
   readonly activeTab = signal(0);
 
-  // Same AnimatedChart primitive that the LK Sarevi demo uses — here it
-  // runs under the AFI default brand, so the data-viz series palette
-  // resolves to AFI's azul-tinted series colors instead of LK's magenta/
-  // verde. Proof that the chart component is brand-agnostic: one source,
-  // two visual identities.
-  readonly portfolioColumns: ChartColumn[] = [
-    { title: 'Liquidez',     value: 18, appendString: '%', caption: 'cash + bonos', series: 2 },
-    { title: 'Renta fija',   value: 32, appendString: '%', caption: 'bonos + IF',   series: 1 },
-    { title: 'Renta variable', value: 35, appendString: '%', caption: 'acciones',   series: 5 },
-    { title: 'Inmuebles',    value: 15, appendString: '%', caption: 'vivienda',     series: 6 },
-  ];
+  /**
+   * Inner sub-tab indices for the two product-scoped tabs (Documento
+   * funcional, Semántica CSS). Each is independent so the user can leave
+   * one on Familia while exploring the other on Listado.
+   */
+  readonly activeFuncionalSubTab = signal(0);
+  readonly activeSemanticaSubTab = signal(0);
+
+  readonly personas: Persona[] = AWP_PERSONAS;
+
+  /**
+   * Same content that "Descargar CSS semántico" produces — rendered inline
+   * inside the Semántica CSS tab. Lazy: computed on first access so SSR
+   * never touches the DOM probe.
+   */
+  private cachedSemanticCss: string | null = null;
+  get semanticCss(): string {
+    if (this.cachedSemanticCss == null) {
+      this.cachedSemanticCss = buildSemanticCssString();
+    }
+    return this.cachedSemanticCss;
+  }
+
+  downloadSemanticCss(): void {
+    exportSemanticCss();
+  }
 
   readonly relatedPosts: DemoOverviewRelatedPost[] = [
     {

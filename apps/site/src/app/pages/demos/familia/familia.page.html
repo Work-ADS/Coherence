@@ -93,7 +93,7 @@
 
                 <!-- Card 2 · Situación laboral -->
                 <afi-section title="Situación laboral">
-                  <afi-radio-group legend="Tipo de actividad *">
+                  <afi-radio-group legend="Tipo de actividad" [required]="true">
                     @for (opt of tipoActividadOptions; track opt.value) {
                       <afi-radio-group-item
                         [value]="opt.value"
@@ -232,7 +232,7 @@
                         (valueChange)="setConyugeGradoDiscapacidad($event)"
                       />
                       <div class="familia-conyuge-form__actividad">
-                        <afi-radio-group legend="Tipo de actividad *">
+                        <afi-radio-group legend="Tipo de actividad" [required]="true">
                           @for (opt of tipoActividadOptions; track opt.value) {
                             <afi-radio-group-item
                               [value]="opt.value"

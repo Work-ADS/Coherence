@@ -1,0 +1,123 @@
+// =============================================================================
+// product-identity-bar.component.scss — persistent AWP identity strip
+// =============================================================================
+//
+// BEM under `.pib`. Token-only. Sits as the top band of any AWP route.
+// Responsive: identity stays put, context cluster densifies at <768.
+// =============================================================================
+
+.pib {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--surface-quiet);
+  border-bottom: var(--border-width-hairline) solid var(--border-hairline);
+  color: var(--canvas-fg);
+  min-height: var(--space-2xl);
+
+  &__identity {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-shrink: 0;
+    color: var(--color-action-700);
+  }
+
+  &__mark {
+    display: inline-flex;
+    width: var(--dimension-8);
+    height: var(--dimension-3);
+    color: var(--color-action-700);
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__product {
+    font: var(--type-body-md-600);
+    color: var(--canvas-fg);
+    letter-spacing: var(--tracking-tight, 0);
+  }
+
+  &__context {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-2xs);
+    min-width: 0;
+  }
+
+  &__crumbs {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default);
+  }
+
+  &__crumb {
+    color: var(--foreground-tertiary-default);
+
+    &--link {
+      color: var(--color-action-700);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+        border-radius: var(--radius-control-sm);
+      }
+    }
+  }
+
+  &__crumb-sep {
+    color: var(--border-default);
+
+    &:last-of-type {
+      display: none;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font: var(--type-body-md-600);
+    color: var(--canvas-fg);
+  }
+}
+
+// ─── Narrow viewports — densify context cluster ──────────────────────────
+@media (max-width: 768px) {
+  .pib {
+    padding: var(--space-xs) var(--space-md);
+
+    &__product {
+      font: var(--type-body-sm-600);
+    }
+
+    &__crumbs {
+      // Collapse to the most-recent (parent) step only — keep enough context
+      // to know where you are without consuming the whole row.
+      .pib__crumb:not(:nth-last-child(2)),
+      .pib__crumb-sep:not(:nth-last-child(2)) {
+        display: none;
+      }
+    }
+
+    &__title {
+      font: var(--type-body-sm-600);
+      text-align: end;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 60vw;
+    }
+  }
+}

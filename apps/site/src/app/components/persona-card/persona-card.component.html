@@ -1,4 +1,9 @@
-<afi-card [ariaLabel]="ariaLabel()" padding="md">
+<afi-card
+  [ariaLabel]="ariaLabel()"
+  padding="md"
+  [interactive]="interactive()"
+  (clicked)="onCardClick()"
+>
   <div slot="header" class="pc__header">
     <div class="pc__avatar" aria-hidden="true">{{ initials() }}</div>
     <div class="pc__identity">

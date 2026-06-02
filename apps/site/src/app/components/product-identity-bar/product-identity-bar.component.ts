@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { LogoComponent } from '@coherence/ui';
+
 export interface IdentityBreadcrumbStep {
   label: string;
   /** Router link; absent on the current (terminal) step. */
@@ -23,7 +25,7 @@ export interface IdentityBreadcrumbStep {
 @Component({
   selector: 'site-product-identity-bar',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LogoComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './product-identity-bar.component.html',
   styleUrls: ['./product-identity-bar.component.scss'],

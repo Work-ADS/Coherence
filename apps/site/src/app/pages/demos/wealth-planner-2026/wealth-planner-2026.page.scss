@@ -117,3 +117,33 @@
   font: var(--type-body-md-600);
   color: var(--foreground-primary-default);
 }
+
+// ─── Inner sub-tabs (Documento funcional · Semántica CSS) ─────────────────
+.wp-subtab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-block-start: var(--space-md);
+}
+
+.wp-subtab__placeholder {
+  padding: var(--space-md);
+  background: var(--surface-quiet);
+  border: var(--border-width-hairline) dashed var(--border-hairline);
+  border-radius: var(--radius-control-md);
+  color: var(--foreground-tertiary-default);
+}
+
+// ─── Persona grid ───────────────────────────────────────────────────────
+.wp-tab__persona-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--dimension-72, 18rem), 1fr));
+  gap: var(--space-md);
+}
+
+.wp-tab__persona-cell {
+  margin: 0;
+}

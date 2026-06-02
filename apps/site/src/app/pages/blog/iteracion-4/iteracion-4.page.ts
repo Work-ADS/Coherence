@@ -10,7 +10,8 @@ type TaskSource =
   | 'Brief 1 — listado-planificaciones'
   | 'Brief 2 — demo-overview-tabs'
   | 'Brief 3 — responsive-chrome'
-  | 'Brief 4 — clientes-multi-cliente';
+  | 'Brief 4 — clientes-multi-cliente'
+  | 'Follow-up — empty-state-import-dialog';
 
 type Task = {
   text: string;
@@ -108,7 +109,44 @@ export class Iteracion4Page {
       eyebrow: 'AWP · Demo overview',
       snippet:
         'Tres pestañas nuevas en /demos/wealth-planner-2026: Documento funcional, Semántica CSS y User personas. Estructura primero, contenido en próximas iteraciones.',
-      tasks: [],
+      tasks: [
+        {
+          status: 'Hecho',
+          source: 'Brief 2 — demo-overview-tabs',
+          text: 'Tres pestañas añadidas al overview de AWP: Documento funcional, Semántica CSS y User personas (en ese orden, después de Bitácora).',
+          href: '/demos/wealth-planner-2026',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 2 — demo-overview-tabs',
+          text: 'Documento funcional + Semántica CSS llevan sub-pestañas internas (Listado · Familia) con placeholders "En construcción" — se rellenan a medida que cada producto gradúa.',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 2 — demo-overview-tabs',
+          text: 'User personas muestra 2 personas (María Fernández Castro 42 · Carmen López Martín 64) con chips de perfil + atributos clave + resumen. Sin Activar en v1.',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 2 — demo-overview-tabs',
+          text: '<site-persona-card> (3 archivos en apps/site/src/app/components/persona-card/) envuelve <afi-card>; fixture en apps/site/src/app/pages/demos/wealth-planner-2026/data/personas.ts.',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 2 — demo-overview-tabs',
+          text: 'Nav DS oculta en /listado-planificaciones — el regex matchFullScreen ahora incluye la ruta top-level del listado.',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 2 — demo-overview-tabs',
+          text: 'Dropdown del top-bar en /listado-planificaciones muestra "Clientes recientes" con las 2 personas (preview de multi-cliente). Click → toast "Multi-cliente disponible próximamente". <afi-dropdown-panel> ganó input placement=start|end para evitar que el panel se salga por la izquierda.',
+        },
+        {
+          status: 'Pendiente',
+          source: 'Brief 2 — demo-overview-tabs',
+          text: 'Renderizador real de Semántica CSS (tabla con nombre · valor · muestra · grupo, alimentado por exportSemanticCss). Brief de continuación.',
+        },
+      ],
     },
     {
       id: 'responsive',

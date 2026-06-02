@@ -12,6 +12,8 @@ import {
   DemoOverviewShellComponent,
   type DemoOverviewRelatedPost,
 } from '../../../components/demo-overview-shell';
+import { PersonaCardComponent } from '../../../components/persona-card';
+import { AWP_PERSONAS, type Persona } from './data/personas';
 
 /**
  * Wealth Planner 2026 — demo overview surface.
@@ -36,6 +38,7 @@ import {
     TabsComponent,
     TabItemComponent,
     AnimatedChartComponent,
+    PersonaCardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './wealth-planner-2026.page.html',
@@ -43,6 +46,16 @@ import {
 })
 export class WealthPlannerOverviewPage {
   readonly activeTab = signal(0);
+
+  /**
+   * Inner sub-tab indices for the two product-scoped tabs (Documento
+   * funcional, Semántica CSS). Each is independent so the user can leave
+   * one on Familia while exploring the other on Listado.
+   */
+  readonly activeFuncionalSubTab = signal(0);
+  readonly activeSemanticaSubTab = signal(0);
+
+  readonly personas: Persona[] = AWP_PERSONAS;
 
   // Same AnimatedChart primitive that the LK Sarevi demo uses — here it
   // runs under the AFI default brand, so the data-viz series palette

@@ -314,5 +314,124 @@
         </section>
       </div>
     </afi-tab-item>
+
+    <!-- ─── Tab 4 · Documento funcional ───────────────────────────────── -->
+    <afi-tab-item label="Documento funcional">
+      <div class="wp-tab">
+        <p class="wp-tab__paragraph wp-tab__paragraph--lead">
+          Documento funcional por producto — requisitos técnicos, requisitos
+          no técnicos y buenas prácticas. Se va rellenando a medida que cada
+          página gradúa al "modo correcto". Por ahora, esqueletos.
+        </p>
+
+        <afi-tabs
+          [activeIndex]="activeFuncionalSubTab()"
+          (activeChange)="activeFuncionalSubTab.set($event)"
+          ariaLabel="Producto del documento funcional"
+        >
+          <afi-tab-item label="Listado">
+            <div class="wp-subtab">
+              <section class="wp-tab__block wp-subtab__placeholder">
+                <h3 class="wp-tab__block-title">Requisitos técnicos</h3>
+                <p class="wp-tab__paragraph">
+                  En construcción · se rellena en próximas iteraciones.
+                </p>
+              </section>
+              <section class="wp-tab__block wp-subtab__placeholder">
+                <h3 class="wp-tab__block-title">Requisitos no técnicos</h3>
+                <p class="wp-tab__paragraph">
+                  En construcción · se rellena en próximas iteraciones.
+                </p>
+              </section>
+              <section class="wp-tab__block wp-subtab__placeholder">
+                <h3 class="wp-tab__block-title">Buenas prácticas</h3>
+                <p class="wp-tab__paragraph">
+                  En construcción · se rellena en próximas iteraciones.
+                </p>
+              </section>
+            </div>
+          </afi-tab-item>
+          <afi-tab-item label="Familia">
+            <div class="wp-subtab">
+              <section class="wp-tab__block wp-subtab__placeholder">
+                <h3 class="wp-tab__block-title">Requisitos técnicos</h3>
+                <p class="wp-tab__paragraph">
+                  En construcción · se rellena en próximas iteraciones.
+                </p>
+              </section>
+              <section class="wp-tab__block wp-subtab__placeholder">
+                <h3 class="wp-tab__block-title">Requisitos no técnicos</h3>
+                <p class="wp-tab__paragraph">
+                  En construcción · se rellena en próximas iteraciones.
+                </p>
+              </section>
+              <section class="wp-tab__block wp-subtab__placeholder">
+                <h3 class="wp-tab__block-title">Buenas prácticas</h3>
+                <p class="wp-tab__paragraph">
+                  En construcción · se rellena en próximas iteraciones.
+                </p>
+              </section>
+            </div>
+          </afi-tab-item>
+        </afi-tabs>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 5 · Semántica CSS ──────────────────────────────────────── -->
+    <afi-tab-item label="Semántica CSS">
+      <div class="wp-tab">
+        <p class="wp-tab__paragraph wp-tab__paragraph--lead">
+          Tabla de tokens semánticos por página — nombre, valor resuelto,
+          muestra y grupo. Lee del mismo origen que el botón "Descargar CSS
+          semántico" del demo-shell. La tabla aterriza en un brief de
+          continuación.
+        </p>
+
+        <afi-tabs
+          [activeIndex]="activeSemanticaSubTab()"
+          (activeChange)="activeSemanticaSubTab.set($event)"
+          ariaLabel="Producto de la semántica CSS"
+        >
+          <afi-tab-item label="Listado">
+            <div class="wp-subtab">
+              <section class="wp-tab__block wp-subtab__placeholder">
+                <p class="wp-tab__paragraph">
+                  En construcción · llegará junto con el documento funcional.
+                </p>
+              </section>
+            </div>
+          </afi-tab-item>
+          <afi-tab-item label="Familia">
+            <div class="wp-subtab">
+              <section class="wp-tab__block wp-subtab__placeholder">
+                <p class="wp-tab__paragraph">
+                  En construcción · llegará junto con el documento funcional.
+                </p>
+              </section>
+            </div>
+          </afi-tab-item>
+        </afi-tabs>
+      </div>
+    </afi-tab-item>
+
+    <!-- ─── Tab 6 · User personas ──────────────────────────────────────── -->
+    <afi-tab-item label="User personas">
+      <div class="wp-tab">
+        <p class="wp-tab__paragraph wp-tab__paragraph--lead">
+          Los datos de cliente reales son sensibles — con AI especialmente,
+          no los queremos en el demo. Estas personas son escenarios de
+          stand-in: realistas pero confidenciales, suficientes para mover el
+          flujo de planificación de extremo a extremo.
+        </p>
+
+        <ul class="wp-tab__persona-grid" aria-label="Personas del demo">
+          @for (p of personas; track p.id) {
+            <li class="wp-tab__persona-cell">
+              <site-persona-card [persona]="p" />
+            </li>
+          }
+        </ul>
+      </div>
+    </afi-tab-item>
   </afi-tabs>
 </site-demo-overview-shell>

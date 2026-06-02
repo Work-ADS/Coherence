@@ -41,6 +41,18 @@ export class PlannerTopBarComponent {
   readonly listadoRoute = input<string>('/listado-planificaciones');
   readonly clientName = input<string>('Ricardo Vázquez Pérez');
 
+  /**
+   * When true, the plan-switcher dropdown morphs into a client-picker
+   * preview: heading reads "Clientes recientes", the "Ir al listado" link
+   * is hidden (you're already on it), and the items come from
+   * `clientList()` instead of the hardcoded `plans` array. Used by the
+   * /listado-planificaciones page as a preview of the full multi-cliente
+   * flow (Brief 4). v1 selection just emits a toast; no store switching.
+   */
+  readonly clientPickerMode = input<boolean>(false);
+  readonly clientList = input<{ id: string; name: string }[] | null>(null);
+  readonly activeClientId = input<string | null>(null);
+
   readonly plansOpen = signal(false);
   readonly stateOpen = signal(false);
   readonly notesOpen = signal(false);
@@ -91,6 +103,25 @@ export class PlannerTopBarComponent {
     this.plansOpen.set(false);
     this.showToast(`Planificación cambiada a ${picked?.name ?? id}`, () =>
       this.simId.set(previous),
+    );
+  }
+
+  /**
+   * v1 client-picker selection. Multi-cliente switching infrastructure
+   * lands in Brief 4 (clientes-multi-cliente); until then the click just
+   * acknowledges via a toast so the affordance is visible without
+   * silently breaking the page.
+   */
+  selectClient(id: string): void {
+    if (id === this.activeClientId()) {
+      this.plansOpen.set(false);
+      return;
+    }
+    const picked = this.clientList()?.find((c) => c.id === id);
+    this.plansOpen.set(false);
+    this.showToast(
+      `Multi-cliente disponible próximamente — ${picked?.name ?? id}`,
+      () => undefined,
     );
   }
 

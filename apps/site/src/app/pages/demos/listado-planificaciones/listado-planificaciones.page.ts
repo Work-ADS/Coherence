@@ -22,6 +22,7 @@ import {
 import { NotificationStore } from '../../../services/notification.store';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
+import { AWP_PERSONAS } from '../wealth-planner-2026/data/personas';
 import {
   WealthPlannerStore,
   type Planificacion,
@@ -68,6 +69,17 @@ export class ListadoPlanificacionesPage {
   readonly clientName = computed<string>(
     () => this.store.cliente().alias || 'Sin cliente',
   );
+
+  /** Personas exposed as {id, name} for the top-bar client-picker preview. */
+  readonly clientPickerList: { id: string; name: string }[] = AWP_PERSONAS.map(
+    (p) => ({ id: p.id, name: p.alias }),
+  );
+
+  /** The currently active cliente in the picker — matches the seeded alias. */
+  readonly activeClientId = computed<string | null>(() => {
+    const alias = this.store.cliente().alias;
+    return this.clientPickerList.find((c) => c.name === alias)?.id ?? null;
+  });
 
   readonly rows = computed<Planificacion[]>(() => this.store.planificacionesSorted());
   readonly isEmpty = computed<boolean>(() => this.store.planificaciones().length === 0);

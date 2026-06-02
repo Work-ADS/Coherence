@@ -91,9 +91,9 @@ export class Iteracion4Page {
           text: 'Fix transversal: <afi-radio-group> alinea su legend con <afi-input>/<afi-select> (tamaño body-sm + asterisco rojo separado).',
         },
         {
-          status: 'Pendiente',
+          status: 'Hecho',
           source: 'Brief 1 — listado-planificaciones',
-          text: 'Toast "Información del cliente prerellenada" tras Nueva planificación. Necesita un NotificationStore mínimo + montaje de <afi-toast> en la página /familia. Sin bloquear el resto del brief 1.',
+          text: 'Toast "Información del cliente prerellenada" tras Nueva planificación. NotificationStore mínimo (single-slot queue, providedIn root) en apps/site/src/app/services/, familia lo consume en su constructor y reutiliza el <afi-toast> existente con showInfo (5 s en lugar de los 2.5 s del save toast).',
         },
         {
           status: 'Pendiente',

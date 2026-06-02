@@ -19,6 +19,7 @@ import {
   type BadgeIntent,
 } from '@coherence/ui';
 
+import { NotificationStore } from '../../../services/notification.store';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
 import {
@@ -59,6 +60,7 @@ import {
 export class ListadoPlanificacionesPage {
   readonly store = inject(WealthPlannerStore);
   private readonly router = inject(Router);
+  private readonly notif = inject(NotificationStore);
 
   readonly demoSlug = 'listado-planificaciones';
   readonly demoRoute = '/listado-planificaciones';
@@ -157,6 +159,11 @@ export class ListadoPlanificacionesPage {
     if (!nombre) return;
     const plan = this.store.addPlanificacion(nombre);
     this.nuevaModalOpen.set(false);
+    // Queue the prefill notice; the destination page (Familia) consumes
+    // it on init and surfaces it via its existing <afi-toast>.
+    this.notif.queue(
+      'Información del cliente prerellenada — puedes editarla si cambió.',
+    );
     this.router.navigateByUrl(plan.route);
   }
 

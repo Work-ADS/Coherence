@@ -27,8 +27,8 @@ export interface Persona {
 
 export const AWP_PERSONAS: Persona[] = [
   {
-    id: 'maria-fernandez-castro',
-    alias: 'María Fernández Castro',
+    id: 'marco-fernandez-castro',
+    alias: 'Marco Fernández Castro',
     age: 42,
     profileSlug: 'acumulador',
     profileLabel: 'Acumulador',

@@ -331,23 +331,73 @@
         >
           <afi-tab-item label="Listado">
             <div class="wp-subtab">
-              <section class="wp-tab__block wp-subtab__placeholder">
+              <section class="wp-tab__block">
                 <h3 class="wp-tab__block-title">Requisitos técnicos</h3>
-                <p class="wp-tab__paragraph">
-                  En construcción · se rellena en próximas iteraciones.
-                </p>
+                <ul class="wp-tab__list">
+                  <li>Ruta top-level <code>/listado-planificaciones</code> (NO bajo <code>/demos/</code>) — es el punto de entrada al flujo, no parte de él.</li>
+                  <li>Chrome con <code>&lt;site-demo-shell&gt;</code> sin <code>&lt;site-planner-sidebar&gt;</code> — el sidebar §1-§6 sólo existe dentro de una planificación.</li>
+                  <li>Tabla a mano (no <code>&lt;afi-table&gt;</code>) — el primitivo bloquea el <em>intent</em> del badge a nivel columna, pero cada fila de estado necesita un intent diferente (success / info / neutral).</li>
+                  <li><code>WealthPlannerStore.planificaciones</code> es la fuente de verdad — array de <code>Planificacion</code> con mutaciones <code>add</code> / <code>rename</code> / <code>duplicar</code> / <code>archivar</code>.</li>
+                  <li>Orden inverso-cronológico por <code>createdAt</code> — sin filtros en v1.</li>
+                </ul>
               </section>
-              <section class="wp-tab__block wp-subtab__placeholder">
+
+              <section class="wp-tab__block">
                 <h3 class="wp-tab__block-title">Requisitos no técnicos</h3>
-                <p class="wp-tab__paragraph">
-                  En construcción · se rellena en próximas iteraciones.
-                </p>
+                <ul class="wp-tab__list">
+                  <li>Una sola identidad de cliente por sesión (Ricardo Vázquez Pérez) — el multi-cliente real llega con Brief 4.</li>
+                  <li>Texto en español, locale <code>es-ES</code> (fecha "03 abr 2026").</li>
+                  <li>Información del cliente es sensible — no usar datos reales en demo, usar personas (ver pestaña <strong>User personas</strong>).</li>
+                  <li>El listado vive fuera de la simulación, así que la chrome DS (top nav + sidebar de secciones) se oculta — la página es la experiencia.</li>
+                </ul>
               </section>
-              <section class="wp-tab__block wp-subtab__placeholder">
-                <h3 class="wp-tab__block-title">Buenas prácticas</h3>
-                <p class="wp-tab__paragraph">
-                  En construcción · se rellena en próximas iteraciones.
-                </p>
+
+              <section class="wp-tab__block">
+                <h3 class="wp-tab__block-title">Flujos y buenas prácticas</h3>
+
+                <h4 class="wp-tab__flow-title">Click "+ Nueva planificación"</h4>
+                <ul class="wp-tab__list">
+                  <li>Modal con un único input <em>Nombre</em> + botones Cancelar / Crear planificación.</li>
+                  <li>Tras Crear: se crea una <code>Planificacion</code> en estado <strong>borrador</strong> con la fecha actual, y se navega a <code>/demos/wealth-planner-2026/familia</code>.</li>
+                  <li>Si el cliente ya tiene Información básica (alias, residencia, año nacimiento, situación laboral): se prerellena en Familia y aparece un toast <em>"Información del cliente prerellenada — puedes editarla si cambió."</em></li>
+                  <li><strong>Pendiente (brief de continuación):</strong> si el cliente está vacío, el modal pregunta primero por la Información básica antes de crear la planificación — empty-state + import dialog página por página.</li>
+                </ul>
+
+                <h4 class="wp-tab__flow-title">Click en una fila</h4>
+                <ul class="wp-tab__list">
+                  <li>Abrir la planificación → navega a <code>/demos/wealth-planner-2026/familia</code> (en v1, todas apuntan a la misma ruta plana).</li>
+                  <li>Las filas archivadas mantienen el click, pero las acciones desaparecen.</li>
+                </ul>
+
+                <h4 class="wp-tab__flow-title">Editar nombre (icono lápiz)</h4>
+                <ul class="wp-tab__list">
+                  <li>La celda <em>Nombre</em> se vuelve un input editable in-place.</li>
+                  <li>Enter confirma · Escape cancela · click fuera también guarda el cambio.</li>
+                </ul>
+
+                <h4 class="wp-tab__flow-title">Duplicar (icono copia)</h4>
+                <ul class="wp-tab__list">
+                  <li>Clona la planificación añadiendo " (copia)" al nombre.</li>
+                  <li>La copia aparece al final con fecha de creación actual y estado <strong>borrador</strong>.</li>
+                </ul>
+
+                <h4 class="wp-tab__flow-title">Archivar (icono archivo)</h4>
+                <ul class="wp-tab__list">
+                  <li>Modal de confirmación con el nombre exacto de la planificación.</li>
+                  <li>Tras confirmar: el estado pasa a <strong>archivada</strong>, la fila se atenúa, las acciones desaparecen. No hay borrado duro en v1.</li>
+                </ul>
+
+                <h4 class="wp-tab__flow-title">Empty state</h4>
+                <ul class="wp-tab__list">
+                  <li>Cuando no hay planificaciones se muestra una tarjeta centrada con CTA <em>"+ Crear primera planificación"</em>.</li>
+                  <li>Mensaje: <em>"No hay planificaciones aún · Crea la primera para empezar a planificar el patrimonio del cliente."</em></li>
+                </ul>
+
+                <h4 class="wp-tab__flow-title">Volver atrás</h4>
+                <ul class="wp-tab__list">
+                  <li>Desde el listado: el back arrow del demo-shell vuelve a Coherence DS (raíz).</li>
+                  <li>Desde una planificación abierta: el back arrow lee "Volver al listado" y regresa aquí.</li>
+                </ul>
               </section>
             </div>
           </afi-tab-item>
@@ -356,19 +406,19 @@
               <section class="wp-tab__block wp-subtab__placeholder">
                 <h3 class="wp-tab__block-title">Requisitos técnicos</h3>
                 <p class="wp-tab__paragraph">
-                  En construcción · se rellena en próximas iteraciones.
+                  En construcción · llega en su propio brief de continuación.
                 </p>
               </section>
               <section class="wp-tab__block wp-subtab__placeholder">
                 <h3 class="wp-tab__block-title">Requisitos no técnicos</h3>
                 <p class="wp-tab__paragraph">
-                  En construcción · se rellena en próximas iteraciones.
+                  En construcción · llega en su propio brief de continuación.
                 </p>
               </section>
               <section class="wp-tab__block wp-subtab__placeholder">
-                <h3 class="wp-tab__block-title">Buenas prácticas</h3>
+                <h3 class="wp-tab__block-title">Flujos y buenas prácticas</h3>
                 <p class="wp-tab__paragraph">
-                  En construcción · se rellena en próximas iteraciones.
+                  En construcción · llega en su propio brief de continuación.
                 </p>
               </section>
             </div>
@@ -381,36 +431,25 @@
     <afi-tab-item label="Semántica CSS">
       <div class="wp-tab">
         <p class="wp-tab__paragraph wp-tab__paragraph--lead">
-          Tabla de tokens semánticos por página — nombre, valor resuelto,
-          muestra y grupo. Lee del mismo origen que el botón "Descargar CSS
-          semántico" del demo-shell. La tabla aterriza en un brief de
-          continuación.
+          Lista completa de tokens semánticos resueltos para AFI. Mismo
+          contenido que produce el botón <em>"Descargar CSS semántico"</em> —
+          plano, sin var() encadenado, sin prefijo de marca. Pega tal cual en
+          tu proyecto para alinearte con el sistema.
         </p>
 
-        <afi-tabs
-          [activeIndex]="activeSemanticaSubTab()"
-          (activeChange)="activeSemanticaSubTab.set($event)"
-          ariaLabel="Producto de la semántica CSS"
-        >
-          <afi-tab-item label="Listado">
-            <div class="wp-subtab">
-              <section class="wp-tab__block wp-subtab__placeholder">
-                <p class="wp-tab__paragraph">
-                  En construcción · llegará junto con el documento funcional.
-                </p>
-              </section>
-            </div>
-          </afi-tab-item>
-          <afi-tab-item label="Familia">
-            <div class="wp-subtab">
-              <section class="wp-tab__block wp-subtab__placeholder">
-                <p class="wp-tab__paragraph">
-                  En construcción · llegará junto con el documento funcional.
-                </p>
-              </section>
-            </div>
-          </afi-tab-item>
-        </afi-tabs>
+        <div class="wp-css">
+          <div class="wp-css__actions">
+            <afi-button
+              variant="secondary"
+              size="sm"
+              (clicked)="downloadSemanticCss()"
+              ariaLabel="Descargar CSS semántico"
+            >
+              Descargar como .css
+            </afi-button>
+          </div>
+          <pre class="wp-css__code" aria-label="Semántica CSS"><code>{{ semanticCss }}</code></pre>
+        </div>
       </div>
     </afi-tab-item>
 

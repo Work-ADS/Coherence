@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import {
   AnimatedChartComponent,
+  ButtonComponent,
   TabItemComponent,
   TabsComponent,
   type ChartColumn,
@@ -13,6 +14,10 @@ import {
   type DemoOverviewRelatedPost,
 } from '../../../components/demo-overview-shell';
 import { PersonaCardComponent } from '../../../components/persona-card';
+import {
+  buildSemanticCssString,
+  exportSemanticCss,
+} from '../../../utils/export-semantic-css';
 import { AWP_PERSONAS, type Persona } from './data/personas';
 
 /**
@@ -38,6 +43,7 @@ import { AWP_PERSONAS, type Persona } from './data/personas';
     TabsComponent,
     TabItemComponent,
     AnimatedChartComponent,
+    ButtonComponent,
     PersonaCardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,6 +62,23 @@ export class WealthPlannerOverviewPage {
   readonly activeSemanticaSubTab = signal(0);
 
   readonly personas: Persona[] = AWP_PERSONAS;
+
+  /**
+   * Same content that "Descargar CSS semántico" produces — rendered inline
+   * inside the Semántica CSS tab. Lazy: computed on first access so SSR
+   * never touches the DOM probe.
+   */
+  private cachedSemanticCss: string | null = null;
+  get semanticCss(): string {
+    if (this.cachedSemanticCss == null) {
+      this.cachedSemanticCss = buildSemanticCssString();
+    }
+    return this.cachedSemanticCss;
+  }
+
+  downloadSemanticCss(): void {
+    exportSemanticCss();
+  }
 
   // Same AnimatedChart primitive that the LK Sarevi demo uses — here it
   // runs under the AFI default brand, so the data-viz series palette

@@ -15,9 +15,17 @@
 
 .ops {
   display: flex;
+  flex-direction: column;
   block-size: 100vh;
   overflow: hidden;
   background: var(--canvas-base);
+}
+
+.ops__body {
+  display: flex;
+  flex: 1;
+  min-block-size: 0;
+  overflow: hidden;
 }
 
 .ops__main {

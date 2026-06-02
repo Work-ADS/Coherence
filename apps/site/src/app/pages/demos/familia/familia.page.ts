@@ -22,6 +22,10 @@ import {
 import type { SelectOption } from '@coherence/ui';
 
 import { NotificationStore } from '../../../services/notification.store';
+import {
+  ProductIdentityBarComponent,
+  type IdentityBreadcrumbStep,
+} from '../../../components/product-identity-bar';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
@@ -84,6 +88,7 @@ type CardKey = 'conyuge' | 'hijos' | 'ascendientes';
     DemoShellComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
+    ProductIdentityBarComponent,
     VersionToggleComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -93,6 +98,15 @@ type CardKey = 'conyuge' | 'hijos' | 'ascendientes';
 export class FamiliaPage {
   readonly store = inject(WealthPlannerStore);
   private readonly notif = inject(NotificationStore);
+
+  /** Identity-bar breadcrumb: Clientes › [cliente name] › (Familia is current). */
+  readonly identityBreadcrumb = computed<IdentityBreadcrumbStep[]>(() => [
+    { label: 'Clientes', route: '/clientes' },
+    {
+      label: this.store.cliente().alias || 'Cliente',
+      route: '/listado-planificaciones',
+    },
+  ]);
 
   // ── Tabs ──────────────────────────────────────────────────────────────
   readonly activeTab = signal<number>(0);

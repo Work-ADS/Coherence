@@ -1,5 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 
+import {
+  ProductIdentityBarComponent,
+  type IdentityBreadcrumbStep,
+} from '../../../../components/product-identity-bar';
 import { DemoShellComponent } from '../../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../../shared/planner-top-bar.component';
@@ -28,6 +32,7 @@ import { ObjetivosBannerComponent } from './objetivos-banner.component';
     DemoShellComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
+    ProductIdentityBarComponent,
     VersionToggleComponent,
     ObjetivosBannerComponent,
   ],
@@ -40,9 +45,16 @@ export class ObjetivosPageShellComponent {
   readonly demoSlug = input.required<string>();
   readonly demoRoute = input.required<string>();
   readonly activeKey = input.required<string>();
-  readonly clientName = input<string>('Ricardo Vázquez Pérez');
+  readonly clientName = input<string>('Marco Fernández Castro');
+  readonly pageTitle = input<string>('');
   readonly showBanner = input<boolean>(false);
   readonly versionAriaLabel = input<string>('Versión del layout');
+
+  /** Identity-bar breadcrumb: Clientes › [cliente name]. */
+  readonly identityBreadcrumb = computed<IdentityBreadcrumbStep[]>(() => [
+    { label: 'Clientes', route: '/clientes' },
+    { label: this.clientName(), route: '/listado-planificaciones' },
+  ]);
 
   readonly version = signal<string>('v1');
   readonly versions: VersionOption[] = [

@@ -1,11 +1,17 @@
-    <div class="h-screen flex bg-canvas-base overflow-hidden">
+    <div class="h-screen flex flex-col bg-canvas-base overflow-hidden">
+      <site-product-identity-bar
+        productLabel="Wealth Planner"
+        pageTitle="Evolución patrimonial"
+        [breadcrumb]="identityBreadcrumb()"
+      />
+      <div class="flex-1 flex bg-canvas-base overflow-hidden min-h-0">
       <site-planner-sidebar activeKey="evolucion-comparada" />
 
       <!-- Main column: top bar + content (top bar no longer spans the sidebar) -->
       <div class="flex-1 flex flex-col min-w-0">
         <site-planner-top-bar
           decisionesRoute="/demos/wealth-planner-2026"
-          clientName="Ricardo Vázquez Pérez"
+          [clientName]="store.cliente().alias || 'Sin cliente'"
         />
 
         <!-- Main content -->
@@ -461,5 +467,6 @@
             </ng-template>
           </div>
         </main>
+      </div>
       </div>
     </div>

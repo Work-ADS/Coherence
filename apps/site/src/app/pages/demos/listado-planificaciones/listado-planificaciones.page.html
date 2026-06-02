@@ -4,6 +4,11 @@
   [demoRoute]="demoRoute"
 >
   <div class="lp">
+    <site-product-identity-bar
+      productLabel="Wealth Planner"
+      [pageTitle]="identityTitle()"
+      [breadcrumb]="identityBreadcrumb"
+    />
     <site-planner-top-bar
       decisionesRoute="/listado-planificaciones"
       [clientName]="clientName()"

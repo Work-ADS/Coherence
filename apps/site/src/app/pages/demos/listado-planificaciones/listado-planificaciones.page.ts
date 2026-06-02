@@ -20,6 +20,10 @@ import {
 } from '@coherence/ui';
 
 import { NotificationStore } from '../../../services/notification.store';
+import {
+  ProductIdentityBarComponent,
+  type IdentityBreadcrumbStep,
+} from '../../../components/product-identity-bar';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
 import { AWP_PERSONAS } from '../wealth-planner-2026/data/personas';
@@ -53,6 +57,7 @@ import {
     PageHeaderComponent,
     DemoShellComponent,
     PlannerTopBarComponent,
+    ProductIdentityBarComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './listado-planificaciones.page.html',
@@ -69,6 +74,14 @@ export class ListadoPlanificacionesPage {
   readonly clientName = computed<string>(
     () => this.store.cliente().alias || 'Sin cliente',
   );
+
+  readonly identityTitle = computed<string>(
+    () => `Listado del cliente · ${this.clientName()}`,
+  );
+
+  readonly identityBreadcrumb: IdentityBreadcrumbStep[] = [
+    { label: 'Clientes', route: '/clientes' },
+  ];
 
   /** Personas exposed as {id, name} for the top-bar client-picker preview. */
   readonly clientPickerList: { id: string; name: string }[] = AWP_PERSONAS.map(

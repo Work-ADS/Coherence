@@ -51,5 +51,11 @@ export class PatronesLandingPage {
       description:
         'Tabla de patrimonio — secciones, columnas dinámicas, filas con menú de acciones',
     },
+    {
+      slug: 'section',
+      name: 'Sección',
+      description:
+        'Contenedor con título en mayúsculas, opcionalmente colapsable, con contador y check de completado.',
+    },
   ];
 }

@@ -1,0 +1,106 @@
+// =============================================================================
+// afi-section — boxed section container, optionally collapsible.
+// Lifted from the .dd-section pattern (desinversion-detail). Token-driven.
+// =============================================================================
+
+:host {
+  display: block;
+  padding: var(--space-lg);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-card);
+
+  // Stack sections with breathing room when used back-to-back.
+  & + & {
+    margin-block-start: var(--space-md);
+  }
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+.afi-section__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  text-align: start;
+  color: inherit;
+  font: inherit;
+}
+
+.afi-section__head--button {
+  cursor: pointer;
+  appearance: none;
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--space-2xs);
+    border-radius: var(--radius-sm);
+  }
+}
+
+.afi-section__title {
+  flex: 1 1 auto;
+  margin: 0;
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.afi-section__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--dimension-5);
+  padding-inline: var(--space-sm);
+  padding-block: var(--space-2xs);
+  background: var(--color-afi-azul-25);
+  color: var(--color-afi-azul-900);
+  border-radius: var(--radius-pill);
+  font: var(--type-body-xs-500, var(--type-body-sm-500));
+  white-space: nowrap;
+}
+
+.afi-section__complete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--feedback-success-foreground, var(--brand-primary-foreground-default));
+}
+
+.afi-section__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.afi-section__chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground-secondary-default);
+  transition: transform var(--duration-fast) var(--easing-enter);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// ─── Body ────────────────────────────────────────────────────────────────────
+.afi-section__body {
+  margin-block-start: var(--space-md);
+}
+
+// ─── Collapsible state ───────────────────────────────────────────────────────
+:host([data-variant='collapsible'][data-expanded='true']) .afi-section__chevron {
+  transform: rotate(180deg);
+}
+
+:host([data-variant='collapsible'][data-expanded='false']) .afi-section__body {
+  display: none;
+  margin: 0;
+}

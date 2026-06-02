@@ -34,6 +34,18 @@ module.exports = {
           elevated: 'var(--surface-elevated)',
           overlay:  'var(--surface-overlay)',
         },
+        // Form-control surface ramp — used by input, select, checkbox,
+        // radio, switch, segmented-control. Kept distinct from `surface`
+        // so a form field never blends into the card it sits on.
+        control: {
+          DEFAULT:  'var(--control-background-default)',
+          bg:       'var(--control-background-default)',
+          hover:    'var(--control-background-hover)',
+          active:   'var(--control-background-active)',
+          selected: 'var(--control-background-selected)',
+          focus:    'var(--control-background-focus)',
+          disabled: 'var(--control-background-disabled)',
+        },
         action: {
           DEFAULT: 'var(--action-500)',
           50:  'var(--action-50)',

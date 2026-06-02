@@ -64,9 +64,9 @@ let nextItemId = 0;
   `,
   template: `
     <label [for]="radioId"
-           [class]="compact() ? 'inline-flex items-center gap-1.5 cursor-pointer' : 'inline-flex items-start gap-space-2 min-h-[44px] min-w-[44px] cursor-pointer'"
+           [class]="compact() ? 'inline-flex items-center gap-1.5 cursor-pointer' : 'inline-flex items-start gap-space-2 min-h-[var(--dimension-11)] min-w-[var(--dimension-11)] cursor-pointer'"
            [class.opacity-50]="disabled()" [class.cursor-not-allowed]="disabled()">
-      <span [class]="compact() ? 'relative flex items-center justify-center' : 'relative flex items-center justify-center min-h-[44px] min-w-[44px]'">
+      <span [class]="compact() ? 'relative flex items-center justify-center' : 'relative flex items-center justify-center min-h-[var(--dimension-11)] min-w-[var(--dimension-11)]'">
         <!-- Hidden native radio for a11y -->
         <input
           type="radio"
@@ -85,7 +85,7 @@ let nextItemId = 0;
         </span>
       </span>
       @if (label()) {
-        <span [class]="compact() ? 'flex flex-col' : 'flex flex-col pt-[10px]'">
+        <span [class]="compact() ? 'flex flex-col' : 'flex flex-col pt-[var(--dimension-2-5)]'">
           <span [class]="compact() ? 'text-body-sm text-canvas-fg' : 'text-body-md text-canvas-fg'">{{ label() }}</span>
           @if (hint()) {
             <span [id]="hintId" class="text-body-sm text-neutral-500">{{ hint() }}</span>
@@ -121,7 +121,7 @@ export class RadioGroupItemComponent {
       'absolute flex items-center justify-center rounded-full border-2 cursor-pointer',
       'peer-focus-visible:ring-2 peer-focus-visible:ring-border-focus peer-focus-visible:ring-offset-2',
       dotSizeClasses[this.size()],
-      isSelected ? 'bg-action border-action' : 'bg-surface border-border-hairline',
+      isSelected ? 'bg-action border-action' : 'bg-control border-border-hairline',
       hasError ? 'border-system-error' : '',
     ].filter(Boolean).join(' ');
   });
@@ -160,11 +160,11 @@ export class RadioGroupItemComponent {
     <fieldset
       [attr.aria-label]="ariaLabel()"
       [attr.aria-labelledby]="ariaLabelledBy()"
-      class="flex flex-col gap-space-1"
+      [class]="fieldsetClasses()"
       role="radiogroup"
     >
       @if (legend()) {
-        <legend class="text-body-md font-medium text-canvas-fg mb-space-2">{{ legend() }}</legend>
+        <legend class="text-body-md font-medium text-canvas-fg mb-space-2 w-full">{{ legend() }}</legend>
       }
       <ng-content />
     </fieldset>
@@ -176,6 +176,18 @@ export class RadioGroupComponent implements OnInit {
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
   readonly ariaLabelledBy = input<string | null>(null);
+  /**
+   * Default `horizontal` — radios sit inline and wrap on narrow viewports.
+   * Use `vertical` for long option lists where each option needs a full row
+   * (e.g. card-style choices with sub-copy).
+   */
+  readonly orientation = input<'horizontal' | 'vertical'>('horizontal');
+
+  readonly fieldsetClasses = computed(() =>
+    this.orientation() === 'horizontal'
+      ? 'flex flex-row flex-wrap gap-x-space-4 gap-y-space-2'
+      : 'flex flex-col gap-space-1',
+  );
 
   readonly valueChange = output<string>();
 

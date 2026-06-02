@@ -90,6 +90,23 @@
     }
   }
 
+  // Ghost destructive — transparent body, red outline + label. Hover tints
+  // the surface so the action reads as deliberate; matches the destructive
+  // intent of `danger` without the heavyweight filled look.
+  &--danger-ghost {
+    background: transparent;
+    color: var(--feedback-error-foreground);
+    border: var(--border-width-hairline) solid var(--feedback-error-foreground);
+
+    &:hover:not(:disabled) {
+      background: var(--feedback-error-background);
+    }
+    &:active:not(:disabled) {
+      background: var(--feedback-error-background);
+      opacity: 0.85;
+    }
+  }
+
   // ─── Sizes ───────────────────────────────────────────────────────────────
   &--sm {
     height: var(--control-h-sm, var(--dimension-8));

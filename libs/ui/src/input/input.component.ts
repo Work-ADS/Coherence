@@ -77,9 +77,55 @@ export class InputComponent implements OnInit {
 
   onInput(event: Event): void {
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
-    const raw = target.value;
+    let raw = target.value;
+
+    // Numeric input · spinner-from-empty seed.
+    //
+    // The browser's default is "empty + up-spinner = 1" / "empty + down-spinner = -1".
+    // For year inputs (placeholder = 1975, 2010, …) that lands the user on `1`,
+    // which is jarring. If the value was empty AND this is NOT a typed/pasted
+    // event AND the placeholder parses as a 4+ digit number, seed with the
+    // placeholder so the first spinner click lands on a sensible year.
+    if (this.type() === 'number' && raw !== '') {
+      const wasEmpty =
+        this.value() === null || this.value() === '' || this.value() === undefined;
+      const isTypedInput =
+        event instanceof InputEvent &&
+        (event.inputType === 'insertText' ||
+          event.inputType === 'insertFromPaste' ||
+          event.inputType === 'insertCompositionText');
+      const newNum = Number(raw);
+      const ph = parseInt(this.placeholder() ?? '', 10);
+
+      if (
+        wasEmpty &&
+        !isTypedInput &&
+        Number.isFinite(newNum) &&
+        Math.abs(newNum) <= 9 &&
+        Number.isFinite(ph) &&
+        ph >= 1000
+      ) {
+        raw = String(ph);
+        (target as HTMLInputElement).value = raw;
+      }
+    }
+
     this.valueChange.emit(
       this.type() === 'number' && raw !== '' ? Number(raw) : raw,
     );
+  }
+
+  /** Keyboard arrow seed — twin of the spinner-from-empty seed above. */
+  onKeydown(event: KeyboardEvent): void {
+    if (this.type() !== 'number') return;
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+    const v = this.value();
+    if (v !== null && v !== '' && v !== undefined) return;
+
+    const ph = parseInt(this.placeholder() ?? '', 10);
+    if (!Number.isFinite(ph) || ph < 1000) return;
+
+    event.preventDefault();
+    this.valueChange.emit(ph);
   }
 }

@@ -30,7 +30,8 @@
   width: 100%;
   appearance: none;
   border-radius: var(--radius-md);
-  background: var(--surface-default);
+  // Control surface — matches input/checkbox/etc.
+  background: var(--control-background-default);
   color: var(--foreground-primary-default);
   border: var(--border-width-hairline) solid var(--border-hairline);
   font: var(--type-body-md-400);
@@ -112,12 +113,12 @@
 }
 
 .afi-select__panel {
-  position: absolute;
+  // Fixed positioning lets the panel escape clipping ancestors
+  // (overflow:hidden on afi-tabs panels, border-radius on cards, etc.).
+  // The component computes top / left / width from the trigger's
+  // bounding rect on every open + scroll/resize.
+  position: fixed;
   z-index: 50;
-  top: 100%;
-  left: 0;
-  margin-block-start: var(--space-2xs);
-  width: 100%;
   min-width: var(--dimension-48);
   background: var(--surface-elevated);
   border: var(--border-width-hairline) solid var(--border-hairline);
@@ -240,9 +241,13 @@
   align-items: center;
   gap: var(--space-xs);
   margin-inline: var(--space-2xs);
-  padding: var(--space-xs) var(--space-sm);
+  // Match the trigger's md size — same min-height, same horizontal padding,
+  // same body font — so an open menu reads as a vertical continuation of
+  // the trigger (Granola / macOS pattern) instead of a denser list.
+  min-height: var(--control-h-md, var(--dimension-10));
+  padding: var(--space-xs) var(--space-md);
   border-radius: var(--radius-sm);
-  font: var(--type-body-sm-400);
+  font: var(--type-body-md-400);
   color: var(--foreground-primary-default);
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--easing-enter);
@@ -252,7 +257,7 @@
   }
 
   &--selected {
-    font: var(--type-body-sm-500);
+    font: var(--type-body-md-500);
   }
 
   &--disabled {

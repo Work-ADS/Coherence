@@ -181,6 +181,18 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
     return this.comments.getForElement(this.demoSlug(), this.activeView(), selector);
   });
 
+  /**
+   * Friendly display name for the inspect panel — strips the `afi-`
+   * brand prefix from tagnames and BEM class names so the panel reads
+   * "input" / "select" instead of "afi-input" / "afi-select". The
+   * underlying selector stored on comments and used in handoff stays
+   * intact; only the rendered string changes.
+   */
+  prettyAfiName(value: string | null): string | null {
+    if (!value) return null;
+    return value.replace(/(^|[\s>.#])afi-/g, '$1');
+  }
+
   private readonly pinTick = signal(0);
 
   readonly pins = computed<PinPos[]>(() => {

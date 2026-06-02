@@ -1,0 +1,80 @@
+// =============================================================================
+// Patrón · Sección — docs page styles. Layout helpers only; the section
+// chrome itself lives in <afi-section>.
+// =============================================================================
+
+.patron-section__demo {
+  margin-block-start: var(--space-2xl);
+
+  &:first-of-type {
+    margin-block-start: 0;
+  }
+}
+
+.patron-section__demo-title {
+  margin: 0 0 var(--space-2xs);
+  font: var(--type-body-md-600);
+  color: var(--foreground-primary-default);
+}
+
+.patron-section__demo-body {
+  margin: 0 0 var(--space-md);
+  max-inline-size: 60ch;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+.patron-section__preview {
+  margin-block-end: var(--space-md);
+}
+
+.patron-section__body-copy {
+  margin: 0;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+.patron-section__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md) var(--space-lg);
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.patron-section__code {
+  padding: 0 var(--space-2xs);
+  background: var(--surface-subtle);
+  border-radius: var(--radius-sm);
+  font: var(--type-body-sm-500);
+  font-family: var(--type-mono-family, ui-monospace, SFMono-Regular, monospace);
+}
+
+.patron-section__code-block {
+  margin: 0;
+  padding: var(--space-md);
+  background: var(--surface-subtle);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+
+  code {
+    font: var(--type-body-sm-400);
+    font-family: var(--type-mono-family, ui-monospace, SFMono-Regular, monospace);
+    color: var(--foreground-primary-default);
+    white-space: pre;
+  }
+}
+
+.patron-section__list {
+  margin: 0;
+  padding-inline-start: var(--space-lg);
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+
+  li {
+    margin-block: var(--space-xs);
+  }
+}

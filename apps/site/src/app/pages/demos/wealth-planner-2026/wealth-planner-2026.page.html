@@ -1,5 +1,5 @@
 <site-demo-overview-shell
-  overline="DIGITAL SOLUTIONS · WEALTH PLANNER 2026"
+  overline="SIMULATORS · WEALTH PLANNER 2026"
   title="Wealth Planner 2026"
   intro="Rediseño completo del planificador financiero — patrimonio, evolución y simulación — sobre Coherence DS. Cinco iteraciones con seniors entre 21 abr y 28 abr 2026."
   demoRoute="/listado-planificaciones"
@@ -15,20 +15,6 @@
     <!-- ─── Tab 1 · Visión general ────────────────────────────────────── -->
     <afi-tab-item label="Visión general">
       <div class="wp-tab">
-        <!-- Portfolio snapshot — same AnimatedChart primitive as the LK
-             Sarevi demo, here under AFI's default brand so the data-viz
-             series palette resolves to AFI's azul-tinted colors. -->
-        <section class="wp-tab__block wp-tab__block--chart">
-          <afi-animated-chart
-            title="Composición de cartera modelo"
-            subtitle="Distribución típica de un cliente AFI patrimonial"
-            [columns]="portfolioColumns"
-            [maxValue]="50"
-            size="md"
-            ariaLabel="Composición de cartera: liquidez 18%, renta fija 32%, renta variable 35%, inmuebles 15%."
-          />
-        </section>
-
         <section class="wp-tab__block">
           <h2 class="wp-tab__block-title">¿Qué es?</h2>
           <p class="wp-tab__paragraph">
@@ -42,54 +28,11 @@
         </section>
 
         <section class="wp-tab__block">
-          <h2 class="wp-tab__block-title">¿Para qué?</h2>
-          <p class="wp-tab__paragraph">
-            El producto sustituye al Excel + hoja-blanca-en-reunión que el
-            equipo usaba. El financiero entra al planner durante la propia
-            sesión con el cliente, mete datos en vivo, ajusta inflación o
-            esperanza de vida en el drawer de Ajustes globales, y comparte la
-            pantalla. La decisión se toma viendo el gráfico, no leyendo un PDF
-            de la semana siguiente.
-          </p>
-        </section>
-
-        <section class="wp-tab__block">
-          <h2 class="wp-tab__block-title">Cuándo</h2>
-          <ul class="wp-tab__list">
-            <li>
-              <strong>21 abr 2026</strong> — Iteración 1: primera revisión con
-              seniors sobre la propuesta inicial.
-            </li>
-            <li>
-              <strong>28 abr 2026</strong> — Iteraciones 2 a 5: cuatro pases
-              consecutivos cerrando refinamientos de sidebar, gráfico, tabla,
-              diálogo y documentación.
-            </li>
-            <li>
-              <strong>19 may 2026</strong> — Sesión modo oscuro: tokens
-              semánticos completos y toggle en la sidebar (Iteración 3 de DS).
-            </li>
-          </ul>
-        </section>
-
-        <section class="wp-tab__block">
           <h2 class="wp-tab__block-title">Equipo</h2>
           <p class="wp-tab__paragraph">
-            Demo del equipo de <strong>Digital Solutions</strong>. Diseño y
-            handoff trabajan sobre Coherence DS — cada decisión de chrome
-            usa el primitivo correspondiente; los detalles del producto viven
-            dentro.
-          </p>
-        </section>
-
-        <section class="wp-tab__block">
-          <h2 class="wp-tab__block-title">Estado</h2>
-          <p class="wp-tab__paragraph">
-            Las cinco iteraciones están cerradas. Pendiente: replicar la
-            plantilla de case-study al resto de pantallas (Sidebar, Diálogo,
-            Patrimonio, Evolución) y resolver los comentarios anclados sobre
-            tabla y gráfico que quedaron como "pendiente" en Iteración 2.
-            Ver la <a class="wp-tab__link" (click)="activeTab.set(2)" role="button" tabindex="0" (keydown.enter)="activeTab.set(2)">bitácora</a>.
+            Demo del equipo de <strong>Simulators</strong>. Diseño y handoff
+            trabajan sobre Coherence DS — cada decisión de chrome usa el
+            primitivo correspondiente; los detalles del producto viven dentro.
           </p>
         </section>
       </div>

@@ -2,11 +2,9 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
-  AnimatedChartComponent,
   ButtonComponent,
   TabItemComponent,
   TabsComponent,
-  type ChartColumn,
 } from '@coherence/ui';
 
 import {
@@ -42,7 +40,6 @@ import { AWP_PERSONAS, type Persona } from './data/personas';
     DemoOverviewShellComponent,
     TabsComponent,
     TabItemComponent,
-    AnimatedChartComponent,
     ButtonComponent,
     PersonaCardComponent,
   ],
@@ -79,18 +76,6 @@ export class WealthPlannerOverviewPage {
   downloadSemanticCss(): void {
     exportSemanticCss();
   }
-
-  // Same AnimatedChart primitive that the LK Sarevi demo uses — here it
-  // runs under the AFI default brand, so the data-viz series palette
-  // resolves to AFI's azul-tinted series colors instead of LK's magenta/
-  // verde. Proof that the chart component is brand-agnostic: one source,
-  // two visual identities.
-  readonly portfolioColumns: ChartColumn[] = [
-    { title: 'Liquidez',     value: 18, appendString: '%', caption: 'cash + bonos', series: 2 },
-    { title: 'Renta fija',   value: 32, appendString: '%', caption: 'bonos + IF',   series: 1 },
-    { title: 'Renta variable', value: 35, appendString: '%', caption: 'acciones',   series: 5 },
-    { title: 'Inmuebles',    value: 15, appendString: '%', caption: 'vivienda',     series: 6 },
-  ];
 
   readonly relatedPosts: DemoOverviewRelatedPost[] = [
     {

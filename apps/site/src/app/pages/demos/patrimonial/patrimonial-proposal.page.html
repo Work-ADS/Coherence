@@ -5,13 +5,7 @@
   homeRoute="/listado-planificaciones"
   homeLabel="Volver al listado"
 >
-    <div class="h-screen flex flex-col bg-canvas-base overflow-hidden">
-      <site-product-identity-bar
-        productLabel="Wealth Planner"
-        pageTitle="Patrimonio"
-        [breadcrumb]="identityBreadcrumb()"
-      />
-      <div class="flex-1 flex bg-canvas-base overflow-hidden min-h-0">
+    <div class="h-screen flex bg-canvas-base overflow-hidden">
       <site-planner-sidebar activeKey="patrimonio" />
 
       <!-- Main column: top bar + content -->
@@ -1164,6 +1158,5 @@
         (undo)="savedToastVisible.set(false)"
         (dismissed)="savedToastVisible.set(false)"
       />
-      </div>
     </div>
 </site-demo-shell>

@@ -5,13 +5,7 @@
   homeRoute="/listado-planificaciones"
   homeLabel="Volver al listado"
 >
-<div class="h-screen flex flex-col bg-canvas-base overflow-hidden">
-  <site-product-identity-bar
-    productLabel="Wealth Planner"
-    pageTitle="Familia"
-    [breadcrumb]="identityBreadcrumb()"
-  />
-  <div class="flex-1 flex bg-canvas-base overflow-hidden min-h-0">
+<div class="h-screen flex bg-canvas-base overflow-hidden">
   <site-planner-sidebar activeKey="familia" />
 
   <!-- Main column: top bar + content -->
@@ -571,6 +565,5 @@
     [showUndo]="false"
     (dismissed)="dismissToast()"
   />
-  </div>
 </div>
 </site-demo-shell>

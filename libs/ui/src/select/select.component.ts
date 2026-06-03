@@ -140,33 +140,53 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   /**
-   * Portal the panel + backdrop out of the component's local DOM and into
-   * `document.body` after each render where they exist. Needed because the
-   * demo-shell viewport sizer (and other ancestors) apply CSS `transform`,
-   * which makes `position: fixed` anchor to *that* element rather than the
-   * viewport. Reparenting to body escapes every such containing block.
+   * Portal the panel + backdrop out of the component's local DOM after each
+   * render where they exist. Two destinations:
+   *
+   *   1. When the trigger sits inside an open native `<dialog>` (i.e. an
+   *      `afi-modal` opened via `showModal()`), portal to **that dialog**.
+   *      The dialog renders in the browser's top-layer, which sits above
+   *      every z-indexed element — a panel portaled to `document.body`
+   *      would be painted *behind* the dialog backdrop regardless of its
+   *      `z-index`. Putting the panel inside the dialog lets it inherit
+   *      the same top-layer.
+   *
+   *   2. Otherwise, portal to `document.body`. Needed because the
+   *      demo-shell viewport sizer (and other ancestors) apply CSS
+   *      `transform`, which makes `position: fixed` anchor to *that*
+   *      element rather than the viewport. Reparenting to body escapes
+   *      every such containing block.
    */
   ngAfterViewChecked(): void {
     if (!this.open()) return;
     const host = this.el.nativeElement as HTMLElement;
     const panelEl = host.querySelector('.afi-select__panel') as HTMLElement | null;
     const backdropEl = host.querySelector('.afi-select__backdrop') as HTMLElement | null;
-    if (panelEl && panelEl.parentElement !== document.body) {
-      document.body.appendChild(panelEl);
+    const dialogAncestor = host.closest('dialog') as HTMLDialogElement | null;
+    const target: HTMLElement =
+      dialogAncestor && dialogAncestor.open ? dialogAncestor : document.body;
+    if (panelEl && panelEl.parentElement !== target) {
+      target.appendChild(panelEl);
     }
-    if (backdropEl && backdropEl.parentElement !== document.body) {
-      document.body.appendChild(backdropEl);
+    if (backdropEl && backdropEl.parentElement !== target) {
+      target.appendChild(backdropEl);
     }
   }
 
   ngOnDestroy(): void {
     // Failsafe: if the component is destroyed while the panel is open,
     // the portaled nodes won't be cleaned up by Angular (they're outside
-    // the component's view). Yank them manually.
+    // the component's view). Yank them manually whether the portal target
+    // is `document.body` or a `<dialog>` ancestor (modal flavor).
     if (this.open()) {
-      document.querySelectorAll('.afi-select__panel, .afi-select__backdrop').forEach((el) => {
-        if (el.parentElement === document.body) el.remove();
-      });
+      document
+        .querySelectorAll('.afi-select__panel, .afi-select__backdrop')
+        .forEach((el) => {
+          const parent = el.parentElement;
+          if (parent === document.body || parent instanceof HTMLDialogElement) {
+            el.remove();
+          }
+        });
     }
     document.removeEventListener('scroll', this.onAncestorScroll, true);
   }

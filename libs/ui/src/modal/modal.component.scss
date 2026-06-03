@@ -13,7 +13,20 @@
   border: 0;
   background: transparent;
   width: 100%;
-  margin-inline: auto;
+
+  // Center the dialog both horizontally and vertically in the viewport.
+  // Native <dialog> defaults to top-centered, which looks unbalanced.
+  // `inset: 0` + `margin: auto` is the standard top-layer centering
+  // pattern and works because each size variant gives the dialog an
+  // explicit max-width.
+  inset: 0;
+  margin: auto;
+
+  // Tall dialogs (e.g. Inmobiliario, Private equity) can exceed viewport
+  // height. Cap at viewport minus breathing room and let the panel scroll
+  // internally rather than push past the bottom edge.
+  max-height: calc(100vh - var(--space-2xl));
+  overflow: hidden;
 
   &::backdrop {
     background: var(--surface-overlay);
@@ -50,6 +63,13 @@
   background: var(--surface-raised);
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-lg);
+
+  // Flex column so the body can scroll when the modal hits its
+  // `max-height` cap (set on `.afi-modal__dialog`). Header / footer
+  // stay pinned; only the body scrolls.
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
 }
 
 // ─── Close button ─────────────────────────────────────────────────────────
@@ -105,6 +125,12 @@
 .afi-modal__body {
   padding-block: var(--space-md);
   padding-inline: var(--space-lg);
+
+  // Allow the body to absorb the modal's available height and scroll
+  // independently when content overflows. Keeps header / footer pinned.
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 // ─── Footer ───────────────────────────────────────────────────────────────

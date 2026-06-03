@@ -28,45 +28,45 @@
     }
   </afi-page-header>
 
-  @if (store.inversionesFuturas().length === 0) {
-    <div class="if-empty">
-      <h2 class="if-empty__title">Aún no hay inversiones futuras registradas.</h2>
-      <p class="if-empty__hint">
-        Es opcional. Añade una si la familia planea comprar una vivienda u otro
-        activo en el futuro.
-      </p>
-      <div class="if-empty__action">
-        <afi-button
-          variant="primary"
-          size="md"
-          (clicked)="openAdd()"
-          ariaLabel="Añadir primera inversión futura"
-        >
-          + Añadir inversión futura
-        </afi-button>
+  <div class="if-stack">
+    @if (store.inversionesFuturas().length === 0) {
+      <div class="if-empty">
+        <h2 class="if-empty__title">Aún no hay inversiones futuras registradas.</h2>
+        <p class="if-empty__hint">
+          Es opcional. Añade una si la familia planea comprar una vivienda u otro
+          activo en el futuro.
+        </p>
+        <div class="if-empty__action">
+          <afi-button
+            variant="primary"
+            size="md"
+            (clicked)="openAdd()"
+            ariaLabel="Añadir primera inversión futura"
+          >
+            + Añadir inversión futura
+          </afi-button>
+        </div>
       </div>
-    </div>
-  } @else {
-    <!-- 2026-05-28 — migrated from bespoke `<table class="if-table">` to
-         `<afi-table>`. Propuesta preset (modal flavor): editar inline +
-         ⋯ overflow with duplicar + borrar. Inherits primitive default
-         `actionsReveal="hover"`. -->
-    <afi-table
-      [columns]="tableColumns"
-      [rows]="tableRows()"
-      [rowActions]="tableActions"
-      trackByKey="id"
-      density="comfortable"
-      (rowClicked)="onTableRowClick($event)"
-      (rowActionClicked)="onTableAction($event)"
-    />
-  }
+    } @else {
+      <afi-section title="Inversiones registradas">
+        <afi-table
+          [columns]="tableColumns"
+          [rows]="tableRows()"
+          [rowActions]="tableActions"
+          trackByKey="id"
+          density="comfortable"
+          (rowClicked)="onTableRowClick($event)"
+          (rowActionClicked)="onTableAction($event)"
+        />
+      </afi-section>
+    }
+  </div>
 </site-objetivos-page-shell>
 
 <!-- ─── Add / Edit modal ─────────────────────────────────────────────── -->
 <afi-modal
   [open]="dialogOpen()"
-  title="Inversión futura"
+  title="Añadir inversión futura"
   size="md"
   [closeOnEsc]="true"
   [closeOnBackdrop]="false"
@@ -74,34 +74,196 @@
 >
   @if (editing(); as row) {
     <div class="if-form">
+      <!-- Tipo de inversión (universal) -->
+      <afi-select
+        label="Tipo de inversión"
+        placeholder="Selecciona"
+        [required]="true"
+        [options]="tipoOptions"
+        [value]="row.tipo"
+        (valueChange)="setTipo($event)"
+      />
+
+      <!-- Type-specific fields. Each branch contains only the fields the
+           Figma V2 spec lists for that tipo, on top of the common base
+           (Nombre, Valor actual, Año de adquisición, Titular). -->
+      @switch (row.tipo) {
+        @case ('private-equity') {
+          <div class="if-form__grid">
+            <afi-input
+              label="Compromiso de pago"
+              type="number"
+              [value]="row.compromisoPago"
+              (valueChange)="setCompromisoPago($event)"
+            />
+            <afi-input
+              label="Desembolso realizado"
+              type="number"
+              [value]="row.desembolsoRealizado"
+              (valueChange)="setDesembolsoRealizado($event)"
+            />
+          </div>
+          <div class="if-form__grid">
+            <afi-input
+              label="Año fin desembolsos"
+              type="number"
+              placeholder="2028"
+              [value]="row.anioFinDesembolsos === null ? '' : row.anioFinDesembolsos"
+              (valueChange)="setAnioFinDesembolsos($event)"
+            />
+            <afi-input
+              label="Año inicio distribuciones"
+              type="number"
+              placeholder="2035"
+              [value]="row.anioInicioDistribuciones === null ? '' : row.anioInicioDistribuciones"
+              (valueChange)="setAnioInicioDistribuciones($event)"
+            />
+            <afi-input
+              label="Año fin distribuciones"
+              type="number"
+              placeholder="2038"
+              [value]="row.anioFinDistribuciones === null ? '' : row.anioFinDistribuciones"
+              (valueChange)="setAnioFinDistribuciones($event)"
+            />
+          </div>
+          <afi-select
+            label="Rentabilidad – riesgo"
+            placeholder="Selecciona"
+            [options]="riesgoOptions"
+            [value]="row.rentabilidadRiesgo"
+            (valueChange)="setRentabilidadRiesgo($event)"
+          />
+        }
+        @case ('inmobiliario') {
+          <afi-input
+            label="Revalorización esperada (%)"
+            type="number"
+            placeholder="2"
+            [value]="row.revalorizacionEsperadaPct === null ? '' : row.revalorizacionEsperadaPct"
+            (valueChange)="setRevalorizacionEsperadaPct($event)"
+          />
+          <div class="if-form__grid">
+            <afi-select
+              label="Nivel de riesgo"
+              placeholder="Selecciona"
+              [required]="true"
+              [options]="riesgoOptions"
+              [value]="row.nivelRiesgo"
+              (valueChange)="setNivelRiesgo($event)"
+            />
+            <afi-select
+              label="Uso de la vivienda"
+              placeholder="Selecciona"
+              [required]="true"
+              [options]="usoViviendaOptions"
+              [value]="row.uso"
+              (valueChange)="setUsoVivienda($event)"
+            />
+          </div>
+        }
+        @case ('participaciones-empresariales') {
+          <div class="if-form__grid">
+            <afi-select
+              label="Rentabilidad – riesgo"
+              placeholder="Selecciona"
+              [options]="riesgoOptions"
+              [value]="row.rentabilidadRiesgo"
+              (valueChange)="setRentabilidadRiesgo($event)"
+            />
+            <afi-input
+              label="Dividendo anual (%)"
+              type="number"
+              [value]="row.dividendoAnualPct === null ? '' : row.dividendoAnualPct"
+              (valueChange)="setDividendoAnualPct($event)"
+            />
+          </div>
+        }
+        @case ('otros-activos') {
+          <div class="if-form__grid">
+            <afi-select
+              label="Rentabilidad – riesgo"
+              placeholder="Selecciona"
+              [options]="riesgoOptions"
+              [value]="row.rentabilidadRiesgo"
+              (valueChange)="setRentabilidadRiesgo($event)"
+            />
+            <afi-input
+              label="Ingresos netos anuales (%)"
+              type="number"
+              [value]="row.ingresosNetosAnualesPct === null ? '' : row.ingresosNetosAnualesPct"
+              (valueChange)="setIngresosNetosAnualesPct($event)"
+            />
+          </div>
+        }
+        @case ('fondos') {
+          <afi-select
+            label="Rentabilidad – riesgo"
+            placeholder="Selecciona"
+            [options]="riesgoOptions"
+            [value]="row.rentabilidadRiesgo"
+            (valueChange)="setRentabilidadRiesgo($event)"
+          />
+        }
+        @case ('acciones-cotizadas') {
+          <afi-input
+            label="Dividendo anual (%)"
+            type="number"
+            [value]="row.dividendoAnualPct === null ? '' : row.dividendoAnualPct"
+            (valueChange)="setDividendoAnualPct($event)"
+          />
+        }
+        @case ('deudas') {
+          <div class="if-form__grid">
+            <afi-input
+              label="Tipo de interés (%)"
+              type="number"
+              [required]="true"
+              [value]="row.tipoInteresPct === null ? '' : row.tipoInteresPct"
+              (valueChange)="setTipoInteresPct($event)"
+            />
+            <afi-input
+              label="Plazo medio pendiente (años)"
+              type="number"
+              [required]="true"
+              placeholder="5"
+              [value]="row.plazoAnios === null ? '' : row.plazoAnios"
+              (valueChange)="setPlazoAnios($event)"
+            />
+          </div>
+          <afi-select
+            label="Activo financiado"
+            placeholder="Selecciona una inversión"
+            [options]="activoFinanciadoOptions()"
+            [value]="row.activoFinanciadoId"
+            (valueChange)="setActivoFinanciadoId($event)"
+          />
+        }
+        @case ('liquidez') {
+          <!-- Liquidez has no type-specific fields beyond the base. -->
+        }
+      }
+
+      <!-- Common base fields (every tipo) -->
       <afi-input
         label="Nombre"
         placeholder="Vivienda principal"
         [value]="row.nombre"
         (valueChange)="setNombre($event)"
       />
-      <afi-select
-        label="Tipo"
-        placeholder="Selecciona"
-        [options]="tipoOptions"
-        [value]="row.tipo"
-        (valueChange)="setTipo($event)"
-      />
-      <afi-input
-        label="Año en que se realizará"
-        type="number"
-        placeholder="2030"
-        [value]="row.anio === null ? '' : row.anio"
-        (valueChange)="setAnio($event)"
-      />
-      <div class="if-form__importe">
+      <div class="if-form__grid">
         <afi-input
-          label="Importe"
+          label="Año de adquisición"
+          type="number"
+          placeholder="2026"
+          [value]="row.anio === null ? '' : row.anio"
+          (valueChange)="setAnio($event)"
+        />
+        <afi-input
+          label="Valor actual"
           type="number"
           [value]="row.importe"
           (valueChange)="setImporte($event)"
         />
-        <span class="if-form__importe-unit">€</span>
       </div>
       <afi-select
         label="Titular"
@@ -110,6 +272,24 @@
         [value]="row.titular"
         (valueChange)="setTitular($event)"
       />
+
+      <!-- ¿Hay financiación asociada? — every tipo except Deudas. -->
+      @if (showsFinanciacion()) {
+        <afi-radio-group legend="¿Hay financiación asociada?">
+          <afi-radio-group-item
+            value="si"
+            label="Sí"
+            [selected]="row.financiacionAsociada === true"
+            (selectedChange)="setFinanciacionAsociada('si')"
+          />
+          <afi-radio-group-item
+            value="no"
+            label="No"
+            [selected]="row.financiacionAsociada === false"
+            (selectedChange)="setFinanciacionAsociada('no')"
+          />
+        </afi-radio-group>
+      }
     </div>
   }
 
@@ -126,9 +306,9 @@
       variant="primary"
       size="md"
       (clicked)="closeDialog()"
-      ariaLabel="Guardar inversión futura"
+      ariaLabel="Aceptar"
     >
-      Guardar
+      Aceptar
     </afi-button>
   </ng-container>
 </afi-modal>

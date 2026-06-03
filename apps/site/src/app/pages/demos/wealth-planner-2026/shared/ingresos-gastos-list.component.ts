@@ -8,10 +8,6 @@ import {
   type TableRowAction,
 } from '@coherence/ui';
 
-import {
-  ProductIdentityBarComponent,
-  type IdentityBreadcrumbStep,
-} from '../../../../components/product-identity-bar';
 import { DemoShellComponent } from '../../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../../shared/planner-top-bar.component';
@@ -43,7 +39,6 @@ import {
     DemoShellComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
-    ProductIdentityBarComponent,
     VersionToggleComponent,
     IngresoGastoFormModalComponent,
   ],
@@ -53,11 +48,6 @@ import {
 })
 export class IngresosGastosListComponent {
   readonly store = inject(WealthPlannerStore);
-
-  readonly identityBreadcrumb = computed<IdentityBreadcrumbStep[]>(() => [
-    { label: 'Clientes', route: '/clientes' },
-    { label: this.store.cliente().alias || 'Cliente', route: '/listado-planificaciones' },
-  ]);
 
   /** Which section we're rendering — drives copy + which store slice we read. */
   readonly mode = input.required<IngresoGastoMode>();

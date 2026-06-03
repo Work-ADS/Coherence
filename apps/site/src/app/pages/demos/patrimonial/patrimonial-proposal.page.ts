@@ -24,10 +24,6 @@ import {
 import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
 import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patrimonial/graph-card-header.component';
-import {
-  ProductIdentityBarComponent,
-  type IdentityBreadcrumbStep,
-} from '../../../components/product-identity-bar';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
 import { ActionToastComponent } from '../shared/action-toast.component';
@@ -95,7 +91,6 @@ type AddedAsset = {
     ActionToastComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
-    ProductIdentityBarComponent,
     VersionToggleComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -103,12 +98,7 @@ type AddedAsset = {
   styleUrls: ['./patrimonial-proposal.page.scss'],
 })
 export class PatrimonialProposalPage {
-  private readonly store = inject(WealthPlannerStore);
-
-  readonly identityBreadcrumb = computed<IdentityBreadcrumbStep[]>(() => [
-    { label: 'Clientes', route: '/clientes' },
-    { label: this.store.cliente().alias || 'Cliente', route: '/listado-planificaciones' },
-  ]);
+  readonly store = inject(WealthPlannerStore);
 
   constructor() {
     // Measure the tab strip after first render so the left/right chevrons

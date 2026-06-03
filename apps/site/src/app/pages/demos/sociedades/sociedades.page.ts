@@ -16,10 +16,6 @@ import {
 } from '@coherence/ui';
 import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
-import {
-  ProductIdentityBarComponent,
-  type IdentityBreadcrumbStep,
-} from '../../../components/product-identity-bar';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
@@ -50,7 +46,6 @@ import type { Sociedad, Tributacion } from '../wealth-planner-2026/store';
     InputComponent,
     ModalComponent,
     PageHeaderComponent,
-    ProductIdentityBarComponent,
     SelectComponent,
     TableComponent,
     DemoShellComponent,
@@ -64,11 +59,6 @@ import type { Sociedad, Tributacion } from '../wealth-planner-2026/store';
 })
 export class SociedadesPage {
   readonly store = inject(WealthPlannerStore);
-
-  readonly identityBreadcrumb = computed<IdentityBreadcrumbStep[]>(() => [
-    { label: 'Clientes', route: '/clientes' },
-    { label: this.store.cliente().alias || 'Cliente', route: '/listado-planificaciones' },
-  ]);
 
   // ── Tributación options (confirmed Mar 5 with Borja) ──────────────────
   readonly tributacionOptions: SelectOption[] = [

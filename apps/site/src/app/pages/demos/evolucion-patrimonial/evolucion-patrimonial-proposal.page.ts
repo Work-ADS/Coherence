@@ -23,10 +23,6 @@ import {
   type Escenario,
   type Detalle,
 } from '../../patrones/graficos/evolucion-patrimonial/evolucion-bar-chart.component';
-import {
-  ProductIdentityBarComponent,
-  type IdentityBreadcrumbStep,
-} from '../../../components/product-identity-bar';
 import { bridgeDesignReviewVersion } from '../shared/design-review-bridge';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
@@ -56,7 +52,6 @@ type LayoutVersion = 'v1' | 'v2' | 'v3';
     EvolucionBarChartComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
-    ProductIdentityBarComponent,
     VersionToggleComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,11 +60,6 @@ type LayoutVersion = 'v1' | 'v2' | 'v3';
 })
 export class EvolucionPatrimonialProposalPage {
   readonly store = inject(WealthPlannerStore);
-
-  readonly identityBreadcrumb = computed<IdentityBreadcrumbStep[]>(() => [
-    { label: 'Clientes', route: '/clientes' },
-    { label: this.store.cliente().alias || 'Cliente', route: '/listado-planificaciones' },
-  ]);
 
   readonly vista = signal<Vista>('actual');
   readonly escenario = signal<Escenario>('medio');

@@ -168,18 +168,121 @@ export interface DesinversionFutura {
   importeNeto: number;
 }
 
-// ── Objetivos · Inversiones futuras (Brief F) ──────────────────────────────
-export type InversionFuturaTipo = 'vivienda' | 'otros';
+// ── Objetivos · Inversiones futuras (Brief F · V2) ─────────────────────────
+//
+// V2 dialog (Figma file `T3hIzIj78bTHVJhpSimJyK`, node `68489:167246`):
+// 8 tipos, each with its own set of type-specific fields. Mirrors the
+// patrimonio inventory taxonomy.
+export type InversionFuturaTipo =
+  | 'liquidez'
+  | 'fondos'
+  | 'acciones-cotizadas'
+  | 'participaciones-empresariales'
+  | 'private-equity'
+  | 'inmobiliario'
+  | 'otros-activos'
+  | 'deudas';
 
-export interface InversionFuturaRow {
+/** Risk profile, shared between Fondos / Participaciones / Private equity / Otros. */
+export type InversionFuturaRiesgo =
+  | 'nulo'
+  | 'bajo'
+  | 'moderado'
+  | 'alto'
+  | 'muy-alto';
+
+/** Use of a Vivienda / Inmobiliario asset (Figma: Inmobiliario.Uso de la vivienda). */
+export type InversionFuturaUsoVivienda =
+  | 'principal'
+  | 'secundaria'
+  | 'inversion';
+
+interface InversionFuturaBase {
   id: string;
+  /** User-facing label. */
   nombre: string;
-  tipo: InversionFuturaTipo | null;
+  /** Year of acquisition / target year. */
   anio: number | null;
+  /** Valor actual (€). Renamed from `importe` for parity with Figma copy. */
   importe: number;
   /** Family-member id ('cliente' | 'conyuge' | hijo.id | ascendiente.id) or null. */
   titular: string | null;
+  /**
+   * `¿Hay financiación asociada?` — shown on all tipos except Deudas
+   * (Deudas IS a debt, so the field is meaningless there).
+   */
+  financiacionAsociada: boolean | null;
 }
+
+export interface InversionFuturaLiquidez extends InversionFuturaBase {
+  tipo: 'liquidez';
+}
+
+export interface InversionFuturaFondos extends InversionFuturaBase {
+  tipo: 'fondos';
+  rentabilidadRiesgo: InversionFuturaRiesgo | null;
+}
+
+export interface InversionFuturaAcciones extends InversionFuturaBase {
+  tipo: 'acciones-cotizadas';
+  dividendoAnualPct: number | null;
+}
+
+export interface InversionFuturaParticipaciones extends InversionFuturaBase {
+  tipo: 'participaciones-empresariales';
+  rentabilidadRiesgo: InversionFuturaRiesgo | null;
+  dividendoAnualPct: number | null;
+}
+
+export interface InversionFuturaPrivateEquity extends InversionFuturaBase {
+  tipo: 'private-equity';
+  compromisoPago: number;
+  desembolsoRealizado: number;
+  anioFinDesembolsos: number | null;
+  anioInicioDistribuciones: number | null;
+  anioFinDistribuciones: number | null;
+  rentabilidadRiesgo: InversionFuturaRiesgo | null;
+}
+
+export interface InversionFuturaInmobiliario extends InversionFuturaBase {
+  tipo: 'inmobiliario';
+  /** Revalorización esperada (%). */
+  revalorizacionEsperadaPct: number | null;
+  nivelRiesgo: InversionFuturaRiesgo | null;
+  uso: InversionFuturaUsoVivienda | null;
+}
+
+export interface InversionFuturaOtrosActivos extends InversionFuturaBase {
+  tipo: 'otros-activos';
+  rentabilidadRiesgo: InversionFuturaRiesgo | null;
+  ingresosNetosAnualesPct: number | null;
+}
+
+export interface InversionFuturaDeudas extends InversionFuturaBase {
+  tipo: 'deudas';
+  /** Tipo de interés (%). */
+  tipoInteresPct: number | null;
+  /** Plazo medio pendiente, en años. */
+  plazoAnios: number | null;
+  /** Id of the inversión future this deuda finances, or null. */
+  activoFinanciadoId: string | null;
+}
+
+/** Freshly added row — the user hasn't picked Tipo yet. */
+export interface InversionFuturaDraft extends InversionFuturaBase {
+  tipo: null;
+}
+
+export type InversionFuturaRow =
+  | InversionFuturaDraft
+  | InversionFuturaLiquidez
+  | InversionFuturaFondos
+  | InversionFuturaAcciones
+  | InversionFuturaParticipaciones
+  | InversionFuturaPrivateEquity
+  | InversionFuturaInmobiliario
+  | InversionFuturaOtrosActivos
+  | InversionFuturaDeudas;
 
 // ── Diagnóstico — shared scenario type (Briefs I / J / K / L) ─────────────
 //
@@ -753,22 +856,28 @@ export class WealthPlannerStore {
     this.inversionesFuturas().length === 0 ? 'empty' : 'in-progress',
   );
 
-  addInversionFutura(): InversionFuturaRow {
-    const next: InversionFuturaRow = {
+  addInversionFutura(): InversionFuturaDraft {
+    const next: InversionFuturaDraft = {
       id: `inv-fut-${nextInversionFuturaId++}`,
       nombre: '',
       tipo: null,
       anio: null,
       importe: 0,
       titular: null,
+      financiacionAsociada: null,
     };
     this.inversionesFuturas.update((rows) => [...rows, next]);
     return next;
   }
 
-  updateInversionFutura(id: string, partial: Partial<InversionFuturaRow>): void {
+  updateInversionFutura(
+    id: string,
+    partial: Partial<InversionFuturaRow>,
+  ): void {
     this.inversionesFuturas.update((rows) =>
-      rows.map((row) => (row.id === id ? { ...row, ...partial } : row)),
+      rows.map((row) =>
+        row.id === id ? ({ ...row, ...partial } as InversionFuturaRow) : row,
+      ),
     );
   }
 

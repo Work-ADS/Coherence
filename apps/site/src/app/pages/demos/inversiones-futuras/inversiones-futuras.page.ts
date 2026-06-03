@@ -11,6 +11,9 @@ import {
   InputComponent,
   ModalComponent,
   PageHeaderComponent,
+  RadioGroupComponent,
+  RadioGroupItemComponent,
+  SectionComponent,
   SelectComponent,
   TableComponent,
 } from '@coherence/ui';
@@ -19,20 +22,22 @@ import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 import { ObjetivosPageShellComponent } from '../wealth-planner-2026/shared/objetivos-page-shell.component';
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
 import type {
+  InversionFuturaRiesgo,
   InversionFuturaRow,
   InversionFuturaTipo,
+  InversionFuturaUsoVivienda,
 } from '../wealth-planner-2026/store';
 
 /**
- * Objetivos · Inversiones futuras (Brief F).
+ * Objetivos · Inversiones futuras (Brief F · V2).
  *
- * Optional section — captures planned future asset acquisitions (Vivienda
- * o Otros). Table + add/edit modal, same shape as Sociedades and
- * Ingresos/Gastos. The `<site-objetivos-banner>` strip is gated on
- * `store.legadoRetiroEstablished()` via the shared `<site-objetivos-page-shell>`.
- *
- * Figma reference: node `28:174808` ("↳ Inversiones futuras") in file
- * `888lN7vbJSc4gLYt7nP3DW`. PDF: p.5 ("Inversiones futuras (opcional)").
+ * V2 split (Figma file `T3hIzIj78bTHVJhpSimJyK`, node `68489:167246`):
+ * the add/edit dialog is type-conditional with 8 tipos — Liquidez, Fondos,
+ * Acciones cotizadas, Participaciones empresariales, Private equity,
+ * Inmobiliario, Otros activos, Deudas. Each tipo carries its own set of
+ * type-specific fields layered on top of the common Nombre / Año / Valor
+ * actual / Titular base. See the discriminated union in
+ * `apps/site/src/app/pages/demos/wealth-planner-2026/store.ts`.
  */
 @Component({
   selector: 'site-inversiones-futuras-page',
@@ -42,6 +47,9 @@ import type {
     InputComponent,
     ModalComponent,
     PageHeaderComponent,
+    RadioGroupComponent,
+    RadioGroupItemComponent,
+    SectionComponent,
     SelectComponent,
     TableComponent,
     ObjetivosPageShellComponent,
@@ -53,10 +61,34 @@ import type {
 export class InversionesFuturasPage {
   readonly store = inject(WealthPlannerStore);
 
-  // ── Tipo options (locked per PDF p.5) ─────────────────────────────────
+  // ── Tipo options (Figma V2: 8 tipos) ──────────────────────────────────
   readonly tipoOptions: SelectOption[] = [
-    { value: 'vivienda', label: 'Vivienda' },
-    { value: 'otros', label: 'Otros' },
+    { value: 'liquidez', label: 'Liquidez' },
+    { value: 'fondos', label: 'Fondos de inversión' },
+    { value: 'acciones-cotizadas', label: 'Acciones cotizadas' },
+    {
+      value: 'participaciones-empresariales',
+      label: 'Participaciones empresariales',
+    },
+    { value: 'private-equity', label: 'Private equity' },
+    { value: 'inmobiliario', label: 'Inmobiliario' },
+    { value: 'otros-activos', label: 'Otros activos' },
+    { value: 'deudas', label: 'Deudas' },
+  ];
+
+  // ── Shared option sets for type-specific fields ───────────────────────
+  readonly riesgoOptions: SelectOption[] = [
+    { value: 'nulo', label: 'Nulo' },
+    { value: 'bajo', label: 'Bajo' },
+    { value: 'moderado', label: 'Moderado' },
+    { value: 'alto', label: 'Alto' },
+    { value: 'muy-alto', label: 'Muy alto' },
+  ];
+
+  readonly usoViviendaOptions: SelectOption[] = [
+    { value: 'principal', label: 'Vivienda principal' },
+    { value: 'secundaria', label: 'Vivienda secundaria' },
+    { value: 'inversion', label: 'Inversión' },
   ];
 
   /**
@@ -70,6 +102,20 @@ export class InversionesFuturasPage {
     })),
   );
 
+  /**
+   * Activo financiado options (Deudas tipo): every OTHER inversión futura the
+   * user has already added — a Deuda links to the asset it finances.
+   */
+  readonly activoFinanciadoOptions = computed<SelectOption[]>(() =>
+    this.store
+      .inversionesFuturas()
+      .filter((row) => row.id !== this.editingId() && row.tipo !== 'deudas')
+      .map((row) => ({
+        value: row.id,
+        label: row.nombre || 'Sin nombre',
+      })),
+  );
+
   // ── Dialog state ──────────────────────────────────────────────────────
   /** id of the inversión being edited; null when dialog is closed. */
   readonly editingId = signal<string | null>(null);
@@ -81,13 +127,13 @@ export class InversionesFuturasPage {
     return this.store.inversionesFuturas().find((row) => row.id === id) ?? null;
   });
 
-  // ── <afi-table> column + action defs (Propuesta preset — modal flavor) ─
+  // ── <afi-table> column + action defs ──────────────────────────────────
   readonly tableColumns: TableColumn[] = [
     { key: 'nombre', label: 'Nombre', emphasis: true },
     { key: 'tipo', label: 'Tipo' },
     { key: 'anio', label: 'Año' },
     { key: 'titular', label: 'Titular' },
-    { key: 'importe', label: 'Importe', align: 'end' },
+    { key: 'importe', label: 'Valor actual', align: 'end' },
   ];
 
   readonly tableActions: TableRowAction[] = [
@@ -103,8 +149,8 @@ export class InversionesFuturasPage {
 
   /**
    * Display rows. Maps raw enum values + numeric fields to human-formatted
-   * strings (tipo label, año, titular label, importe €) so the table can
-   * render them via its default `cellText` formatter.
+   * strings (tipo label, año, titular label, valor actual €) so the table
+   * can render them via its default `cellText` formatter.
    */
   readonly tableRows = computed(() =>
     this.store.inversionesFuturas().map((row) => ({
@@ -117,7 +163,15 @@ export class InversionesFuturasPage {
     })),
   );
 
-  // ── Label helpers (used by the table) ─────────────────────────────────
+  /** True when the dialog should render the "¿Hay financiación asociada?" radio. */
+  readonly showsFinanciacion = computed(() => {
+    const tipo = this.editing()?.tipo;
+    // Per Figma, Deudas does NOT carry this radio — a debt is itself the
+    // financiación. All other tipos (including Draft) render it.
+    return tipo !== 'deudas';
+  });
+
+  // ── Label helpers (used by the table + edit form) ─────────────────────
   tipoLabel(tipo: InversionFuturaTipo | null): string {
     return this.tipoOptions.find((o) => o.value === tipo)?.label ?? '—';
   }
@@ -163,12 +217,12 @@ export class InversionesFuturasPage {
     const source = this.store.inversionesFuturas().find((r) => r.id === id);
     if (!source) return;
     const next = this.store.addInversionFutura();
+    // Spread keeps every type-specific field intact; the cast widens the
+    // Draft return type so the union shape matches.
     this.store.updateInversionFutura(next.id, {
+      ...source,
+      id: next.id,
       nombre: source.nombre ? `${source.nombre} (copia)` : '',
-      tipo: source.tipo,
-      anio: source.anio,
-      titular: source.titular,
-      importe: source.importe,
     });
     this.editingId.set(next.id);
   }
@@ -211,12 +265,67 @@ export class InversionesFuturasPage {
     this.store.updateInversionFutura(id, { nombre: this.toStr(value) });
   }
 
+  /**
+   * Switching tipo seeds the type-specific defaults so the next render has
+   * a fully-typed row to narrow against. Without this, going from
+   * `liquidez` → `inmobiliario` would leave Inmobiliario's required
+   * `revalorizacionEsperadaPct` undefined and TS would still accept it
+   * (the union spreads via Partial), which is exactly the discipline the
+   * union was meant to enforce.
+   */
   setTipo(value: string | number | null): void {
     const id = this.editingId();
     if (id === null) return;
-    this.store.updateInversionFutura(id, {
-      tipo: (value as InversionFuturaTipo | null) ?? null,
-    });
+    const tipo = (value as InversionFuturaTipo | null) ?? null;
+    this.store.updateInversionFutura(id, this.defaultsForTipo(tipo));
+  }
+
+  private defaultsForTipo(
+    tipo: InversionFuturaTipo | null,
+  ): Partial<InversionFuturaRow> {
+    switch (tipo) {
+      case null:
+      case 'liquidez':
+        return { tipo };
+      case 'fondos':
+        return { tipo, rentabilidadRiesgo: null };
+      case 'acciones-cotizadas':
+        return { tipo, dividendoAnualPct: null };
+      case 'participaciones-empresariales':
+        return { tipo, rentabilidadRiesgo: null, dividendoAnualPct: null };
+      case 'private-equity':
+        return {
+          tipo,
+          compromisoPago: 0,
+          desembolsoRealizado: 0,
+          anioFinDesembolsos: null,
+          anioInicioDistribuciones: null,
+          anioFinDistribuciones: null,
+          rentabilidadRiesgo: null,
+        };
+      case 'inmobiliario':
+        return {
+          tipo,
+          revalorizacionEsperadaPct: null,
+          nivelRiesgo: null,
+          uso: null,
+        };
+      case 'otros-activos':
+        return {
+          tipo,
+          rentabilidadRiesgo: null,
+          ingresosNetosAnualesPct: null,
+        };
+      case 'deudas':
+        return {
+          tipo,
+          tipoInteresPct: null,
+          plazoAnios: null,
+          activoFinanciadoId: null,
+          // Deudas drops the financiación radio per Figma.
+          financiacionAsociada: null,
+        };
+    }
   }
 
   setAnio(value: string | number | null): void {
@@ -239,6 +348,131 @@ export class InversionesFuturasPage {
     if (id === null) return;
     this.store.updateInversionFutura(id, {
       titular: value === null || value === '' ? null : String(value),
+    });
+  }
+
+  setFinanciacionAsociada(value: string): void {
+    const id = this.editingId();
+    if (id === null) return;
+    // afi-radio-group emits the selected option's `value` as string.
+    this.store.updateInversionFutura(id, {
+      financiacionAsociada: value === 'si',
+    });
+  }
+
+  // ── Type-specific setters ─────────────────────────────────────────────
+  setRentabilidadRiesgo(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      rentabilidadRiesgo: (value as InversionFuturaRiesgo | null) ?? null,
+    });
+  }
+
+  setDividendoAnualPct(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      dividendoAnualPct: this.toNumberOrNull(value),
+    });
+  }
+
+  setIngresosNetosAnualesPct(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      ingresosNetosAnualesPct: this.toNumberOrNull(value),
+    });
+  }
+
+  setCompromisoPago(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    const num = this.toNumberOrNull(value);
+    this.store.updateInversionFutura(id, {
+      compromisoPago: num === null ? 0 : Math.max(0, num),
+    });
+  }
+
+  setDesembolsoRealizado(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    const num = this.toNumberOrNull(value);
+    this.store.updateInversionFutura(id, {
+      desembolsoRealizado: num === null ? 0 : Math.max(0, num),
+    });
+  }
+
+  setAnioFinDesembolsos(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      anioFinDesembolsos: this.toNumberOrNull(value),
+    });
+  }
+
+  setAnioInicioDistribuciones(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      anioInicioDistribuciones: this.toNumberOrNull(value),
+    });
+  }
+
+  setAnioFinDistribuciones(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      anioFinDistribuciones: this.toNumberOrNull(value),
+    });
+  }
+
+  setRevalorizacionEsperadaPct(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      revalorizacionEsperadaPct: this.toNumberOrNull(value),
+    });
+  }
+
+  setNivelRiesgo(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      nivelRiesgo: (value as InversionFuturaRiesgo | null) ?? null,
+    });
+  }
+
+  setUsoVivienda(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      uso: (value as InversionFuturaUsoVivienda | null) ?? null,
+    });
+  }
+
+  setTipoInteresPct(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      tipoInteresPct: this.toNumberOrNull(value),
+    });
+  }
+
+  setPlazoAnios(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      plazoAnios: this.toNumberOrNull(value),
+    });
+  }
+
+  setActivoFinanciadoId(value: string | number | null): void {
+    const id = this.editingId();
+    if (id === null) return;
+    this.store.updateInversionFutura(id, {
+      activoFinanciadoId:
+        value === null || value === '' ? null : String(value),
     });
   }
 }

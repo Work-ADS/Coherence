@@ -1,7 +1,20 @@
 // =============================================================================
-// Inversiones futuras — Objetivos page (Brief F).
-// Mirrors the Sociedades table + modal shape; semantic tokens only.
+// Inversiones futuras — Objetivos page (Brief F · V2).
+// V2 layout: content stacks inside .if-stack, table sits in an <afi-section>
+// card (same rhythm as legado-retiro V2). Semantic tokens only.
 // =============================================================================
+
+// ─── V2 stack — rhythm between sections ────────────────────────────────────
+// Mirrors `.lr-stack` (legado-retiro) and `.familia-stack`: page-header
+// → space-xl gap → first afi-section, then space-lg between sections.
+// When extracted into a shared utility this will live in the shared
+// objetivos-page-shell SCSS as `.ops-stack` (follow-up brief).
+.if-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-block-start: var(--space-xl);
+}
 
 // ─── Empty state ────────────────────────────────────────────────────────────
 .if-empty {
@@ -36,23 +49,22 @@
 // Variant / hover / action styling now lives in the primitive's SCSS.
 
 // ─── Modal form ─────────────────────────────────────────────────────────────
+// Vertical stack of fields. The grid pairs adjacent fields side-by-side
+// (e.g. Año + Valor actual, Compromiso + Desembolso) at md+ widths and
+// collapses to a single column on small viewports.
 .if-form {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
 }
 
-.if-form__importe {
+.if-form__grid {
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: end;
-  gap: var(--space-2xs);
-}
-
-.if-form__importe-unit {
-  font: var(--type-body-md-400);
-  color: var(--foreground-tertiary-default);
-  padding-block-end: calc(var(--control-h-md, var(--dimension-10)) / 2 - var(--space-2xs));
+  gap: var(--space-md) var(--space-lg);
+  // Adaptive: each child claims at least ~14rem; the dialog body (~28rem
+  // wide at md modal size) fits two side-by-side, three when the dialog
+  // expands at xl+ sizes.
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
 }
 
 // ─── Visually-hidden helper ─────────────────────────────────────────────────

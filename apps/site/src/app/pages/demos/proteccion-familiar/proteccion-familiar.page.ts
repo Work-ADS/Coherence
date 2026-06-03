@@ -1,35 +1,38 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 import {
   BadgeComponent,
   ButtonComponent,
-  ModalComponent,
+  IconButtonComponent,
   PageHeaderComponent,
   SwitchComponent,
 } from '@coherence/ui';
 
 import { ObjetivosPageShellComponent } from '../wealth-planner-2026/shared/objetivos-page-shell.component';
-import { WealthPlannerStore } from '../wealth-planner-2026/store';
+import {
+  WealthPlannerStore,
+  type ProductoProteccionTipo,
+} from '../wealth-planner-2026/store';
 
 type ProteccionRow = 'cliente' | 'conyuge';
+
+const TIPO_LABELS: Record<ProductoProteccionTipo, string> = {
+  'seguro-vida': 'Seguro de vida',
+  'incapacidad-temporal': 'Incapacidad temporal',
+  'incapacidad-permanente': 'Incapacidad permanente',
+  dependencia: 'Dependencia',
+  salud: 'Salud',
+};
 
 /**
  * Objetivos · Protección familiar (Brief H).
  *
- * Smallest of the four Objetivos pages. Two toggleable rows (cliente +
- * cónyuge — the second only when `tienePareja()` is true) with per-row
- * Activar/Consultar/Desactivar actions. The actual "Flujo de protección
- * familiar" wizard is out of scope here; clicking Activar/Consultar opens
- * a placeholder modal that lets the gestor mark the row as activated
- * manually for now, and the real wizard ships in a future iteration.
- *
- * Figma reference: node `60:36493`. PDF: p.6.
+ * Two toggleable rows (cliente + cónyuge) with per-row product lists.
+ * Clicking "Añadir" navigates to the dedicated 3-step flujo page
+ * (`/proteccion-familiar/flujo`) — Patrimonio a disponer → Impacto en
+ * ingresos y gastos → Simulación. The flow is NOT a modal; it's its own
+ * focused route.
  */
 @Component({
   selector: 'site-proteccion-familiar-page',
@@ -37,7 +40,7 @@ type ProteccionRow = 'cliente' | 'conyuge';
   imports: [
     BadgeComponent,
     ButtonComponent,
-    ModalComponent,
+    IconButtonComponent,
     PageHeaderComponent,
     SwitchComponent,
     ObjetivosPageShellComponent,
@@ -48,38 +51,49 @@ type ProteccionRow = 'cliente' | 'conyuge';
 })
 export class ProteccionFamiliarPage {
   readonly store = inject(WealthPlannerStore);
-
-  /** Which row triggered the placeholder modal; null when the modal is closed. */
-  readonly activatingRow = signal<ProteccionRow | null>(null);
-  readonly flowPlaceholderOpen = computed(() => this.activatingRow() !== null);
+  private readonly router = inject(Router);
 
   // ── Gate handler ──────────────────────────────────────────────────────
   setEstablished(value: boolean): void {
     this.store.setProteccionFamiliarEstablished(value);
   }
 
-  // ── Modal handlers ────────────────────────────────────────────────────
-  openFlowPlaceholder(row: ProteccionRow): void {
-    this.activatingRow.set(row);
+  // ── Navigate to the 3-step flujo ──────────────────────────────────────
+  goToFlujo(row: ProteccionRow): void {
+    this.router.navigate(
+      ['/demos/wealth-planner-2026/proteccion-familiar/flujo'],
+      { queryParams: { row } },
+    );
   }
 
-  closeFlowPlaceholder(): void {
-    this.activatingRow.set(null);
+  // ── Row mutations ─────────────────────────────────────────────────────
+  removeProducto(row: ProteccionRow, id: string): void {
+    this.store.removeProteccionProducto(row, id);
   }
 
-  markActiveAndClose(): void {
-    const row = this.activatingRow();
-    if (row === 'cliente') this.store.setClienteActiva(true);
-    if (row === 'conyuge') this.store.setConyugeActiva(true);
-    this.activatingRow.set(null);
+  deactivateRow(row: ProteccionRow): void {
+    if (row === 'cliente') this.store.setClienteActiva(false);
+    if (row === 'conyuge') this.store.setConyugeActiva(false);
   }
 
-  // ── Direct row mutations ──────────────────────────────────────────────
-  deactivateCliente(): void {
-    this.store.setClienteActiva(false);
+  // ── Helpers ───────────────────────────────────────────────────────────
+  tipoLabel(tipo: ProductoProteccionTipo | undefined): string {
+    if (!tipo) return '';
+    return TIPO_LABELS[tipo] ?? tipo;
   }
 
-  deactivateConyuge(): void {
-    this.store.setConyugeActiva(false);
+  beneficiarioLabel(id: string | undefined): string {
+    if (!id) return '';
+    const found = this.store.familiaParticipantes().find((p) => p.id === id);
+    return found?.label ?? id;
+  }
+
+  formatEuro(n: number | undefined): string {
+    if (n === undefined || !Number.isFinite(n)) return '€0';
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'EUR',
+      maximumFractionDigits: 0,
+    }).format(n);
   }
 }

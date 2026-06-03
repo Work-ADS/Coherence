@@ -70,6 +70,13 @@ export const demos_routes: Routes = [
       ),
   },
   {
+    path: 'wealth-planner-2026/proteccion-familiar/flujo',
+    loadComponent: () =>
+      import('./proteccion-familiar/flujo/proteccion-familiar-flujo.page').then(
+        (m) => m.ProteccionFamiliarFlujoPage,
+      ),
+  },
+  {
     path: 'wealth-planner-2026/patrimonial',
     loadComponent: () =>
       import('./patrimonial/patrimonial-proposal.page').then((m) => m.PatrimonialProposalPage),

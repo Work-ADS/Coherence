@@ -1,0 +1,42 @@
+<nav [class]="rootClasses()" [attr.aria-label]="ariaLabel()">
+  <div class="afi-stepper__list" role="list">
+    @for (step of steps(); let i = $index; track step.key) {
+      @let index = i + 1;
+      @let state = stateFor(index);
+      <div [class]="itemClasses(state)" role="listitem">
+        <button
+          type="button"
+          class="afi-stepper__button"
+          [attr.aria-current]="state === 'current' ? 'step' : null"
+          [attr.aria-label]="step.label + (state === 'done' ? ', paso completado' : state === 'current' ? ', paso actual' : ', paso pendiente')"
+          [disabled]="!isInteractive(state)"
+          (click)="onClick(step, index, state)"
+        >
+          <span class="afi-stepper__badge" aria-hidden="true">
+            @if (state === 'done') {
+              <svg viewBox="0 0 16 16" class="afi-stepper__check">
+                <path
+                  d="M3.5 8.5L6.5 11.5L12.5 4.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            } @else {
+              <span class="afi-stepper__number">{{ index }}</span>
+            }
+          </span>
+          <span class="afi-stepper__label">{{ step.label }}</span>
+        </button>
+      </div>
+      @if (index < steps().length) {
+        <span
+          [class]="connectorClasses(state)"
+          aria-hidden="true"
+        ></span>
+      }
+    }
+  </div>
+</nav>

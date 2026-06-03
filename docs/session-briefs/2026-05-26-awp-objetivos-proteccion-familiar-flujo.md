@@ -1,9 +1,9 @@
 # AWP 2026 — Objetivos · Brief H-Plus: Protección familiar — Flujo
 
-**Status:** parked, awaits user "go" — **builds on Brief H** ([Protección familiar](2026-05-25-awp-objetivos-proteccion-familiar.md), already complete)
-**Branch:** `feature/awp-proteccion-familiar-flujo` (to be created)
+**Status:** shipped 2026-06-03 — **builds on Brief H** ([Protección familiar](2026-05-25-awp-objetivos-proteccion-familiar.md), already complete)
+**Branch:** `feature/awp-proteccion-familiar-flujo`
 **Created:** 2026-05-26
-**Activates:** when the user is ready to replace the placeholder modal with the real wizard
+**Shipped:** 2026-06-03
 **Plan reference:** [`/Users/richardgriner/.claude/plans/add-the-flow-to-robust-cherny.md`](../../.claude/plans/add-the-flow-to-robust-cherny.md) — Deliverable 1
 
 ---
@@ -28,15 +28,15 @@ When the gestor finishes the wizard, the row's `activa` flag flips to `true` AND
 - **PDF:** [`CambiosAfiWealthPlanner20260226.pdf`](../../CambiosAfiWealthPlanner20260226.pdf) p.6 — "Flujo de protección familiar" is referenced but not specced; details deferred to this brief.
 - **Granola:** sessions 2026-02-26 + 2026-02-27 mention Borja's framing of protección as a per-product capture (life / disability / dependency).
 
-## Open questions (resolve one-at-a-time at activation per memory rule)
+## Open questions (answered 2026-06-03)
 
-These shape the data model and step set. Surface them in order; don't batch.
+All answered with defaults; no variance from proposal.
 
-1. **Cardinality per protégé** — one product per row (cliente has at most 1, cónyuge has at most 1) OR multiple products per row (list of policies)? Default proposal: **multiple**. Most families carry separate life + disability + dependency products and the page should reflect that.
-2. **Product types in v1** — proposal: `seguro-vida` · `incapacidad-temporal` · `incapacidad-permanente` · `dependencia` · `salud`. Confirm with Borja which subset ships in v1; leave the rest as future product types.
-3. **Sub-fields per product type** — do different products need different fields? Proposal v1: same 4 fields for all (tipo / beneficiario / capital / prima) and treat per-type sub-fields as a v2 enhancement.
-4. **Cliente vs cónyuge variance** — does the wizard differ between the two rows? Default: no. Same wizard, same fields, only the row context changes.
-5. **Edit flow** — clicking "Consultar" on an activated row should open the wizard prepopulated with the row's product. Confirm.
+1. **Cardinality per protégé** — ✅ **multiple**. Each row supports a `productos[]` array.
+2. **Product types in v1** — ✅ all five: `seguro-vida` · `incapacidad-temporal` · `incapacidad-permanente` · `dependencia` · `salud`.
+3. **Sub-fields per product type** — ✅ same 4 fields for all (tipo / beneficiario / capital / prima). Per-type sub-fields deferred to v2.
+4. **Cliente vs cónyuge variance** — ✅ no variance. Same wizard, same fields, row context changes only.
+5. **Edit flow** — ✅ clicking the edit icon on a product row opens the wizard prepopulated with that product's data.
 
 ## Page composition (locked once Q1–Q5 are answered)
 
@@ -190,12 +190,12 @@ Standard 5-point check, plus:
 
 ## Exit criteria
 
-- [ ] Q1–Q5 answered and locked at the top of the brief
-- [ ] Store extended with `ProductoProteccion` + per-row product arrays
-- [ ] Wizard replaces the placeholder modal in `proteccion-familiar.page.html`
-- [ ] Wizard navigates 4 steps forward + back with validated next-button gating
-- [ ] Saved products appear under the row's badge with edit / delete affordances
-- [ ] Sidebar chip transitions empty → in-progress → complete based on product presence (not just `activa`)
+- [x] Q1–Q5 answered and locked at the top of the brief
+- [x] Store extended with `ProductoProteccion` + per-row product arrays
+- [x] Wizard replaces the placeholder modal in `proteccion-familiar.page.html`
+- [x] Wizard navigates 4 steps forward + back with validated next-button gating
+- [x] Saved products appear under the row's badge with edit / delete affordances
+- [x] Sidebar chip transitions empty → in-progress → complete based on product presence (not just `activa`)
+- [x] Clean-code + token-guardian + 3-file checks clean
 - [ ] Brief H's completion note updated with a 1-line addendum referencing this brief
-- [ ] Clean-code + token-guardian + 3-file checks clean
 - [ ] PR notes the cardinality decision and the v1 product-type subset

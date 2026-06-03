@@ -25,6 +25,7 @@ import {
   ChartLineComponent,
   ChartHeatmapComponent,
   ChartDumbbellComponent,
+  StepperComponent,
 } from '@coherence/ui';
 import type {
   SelectOption,
@@ -33,6 +34,7 @@ import type {
   LineSeries,
   HeatmapCell,
   DumbbellDatum,
+  StepperItem,
 } from '@coherence/ui';
 
 @Component({
@@ -64,6 +66,7 @@ import type {
     ChartLineComponent,
     ChartHeatmapComponent,
     ChartDumbbellComponent,
+    StepperComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -735,6 +738,42 @@ import type {
             />
           </div>
         </afi-primitive-card>
+
+        <!-- Stepper -->
+        <afi-primitive-card
+          name="Stepper"
+          description="Indicador de pasos horizontal. Cada paso pasa por tres estados (pendiente / actual / completado) y los pasos completados son interactivos."
+        >
+          <div class="flex flex-col gap-space-6 w-full">
+            <afi-stepper
+              [steps]="stepperItems"
+              [current]="stepperCurrent()"
+              ariaLabel="Demostración del flujo de protección familiar"
+              (stepClicked)="onStepClicked($event)"
+            />
+            <div class="flex gap-space-3 items-center">
+              <afi-button
+                variant="ghost"
+                size="sm"
+                [disabled]="stepperCurrent() === 1"
+                (clicked)="stepperPrev()"
+              >
+                Anterior
+              </afi-button>
+              <afi-button
+                variant="primary"
+                size="sm"
+                [disabled]="stepperCurrent() === stepperItems.length"
+                (clicked)="stepperNext()"
+              >
+                Siguiente
+              </afi-button>
+              <span class="text-body-sm text-foreground-tertiary">
+                Paso {{ stepperCurrent() }} de {{ stepperItems.length }}
+              </span>
+            </div>
+          </div>
+        </afi-primitive-card>
       </div>
     </main>
   `,
@@ -767,6 +806,26 @@ export class PreviewPage {
 
   protected toggleOverlay(): void {
     this.overlayDemo.update((v) => !v);
+  }
+
+  // ── Stepper demo state ───────────────────────────────────────────────
+  readonly stepperItems: StepperItem[] = [
+    { key: 'patrimonio', label: 'Patrimonio a disponer' },
+    { key: 'impacto', label: 'Impacto en ingresos y gastos' },
+    { key: 'simulacion', label: 'Simulación' },
+  ];
+  readonly stepperCurrent = signal<number>(2);
+
+  protected stepperNext(): void {
+    this.stepperCurrent.update((s) => Math.min(this.stepperItems.length, s + 1));
+  }
+
+  protected stepperPrev(): void {
+    this.stepperCurrent.update((s) => Math.max(1, s - 1));
+  }
+
+  protected onStepClicked(event: { key: string; index: number }): void {
+    this.stepperCurrent.set(event.index);
   }
 
   readonly tableColumns: TableColumn[] = [

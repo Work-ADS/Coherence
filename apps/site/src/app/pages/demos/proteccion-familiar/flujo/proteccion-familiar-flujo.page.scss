@@ -1,0 +1,653 @@
+// =============================================================================
+// Protección familiar · Flujo (3-step page).
+//
+// Layout mirrors AWP grid: chrome + stepper + main use full-bleed surfaces;
+// inner content is constrained via `__inner` to `var(--content-xl)`. Every
+// section uses the `<afi-section>` primitive (eyebrow uppercase title + card
+// surface). Tables sit BARE inside afi-section — no extra card wrap.
+// =============================================================================
+
+.pff {
+  display: flex;
+  flex-direction: column;
+  block-size: 100vh;
+  overflow: hidden;
+  background: var(--canvas-base);
+}
+
+// ─── Page chrome (shield + title + Cancelar/Siguiente) ──────────────────
+.pff-chrome {
+  background: var(--surface-default);
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+.pff-chrome__inner {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: var(--space-md);
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+}
+
+.pff-chrome__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--dimension-9);
+  block-size: var(--dimension-9);
+  border-radius: var(--radius-full);
+  color: var(--foreground-primary-default);
+  text-decoration: none;
+
+  &:hover {
+    background: var(--surface-quiet);
+  }
+
+  svg {
+    inline-size: var(--dimension-5);
+    block-size: var(--dimension-5);
+  }
+}
+
+.pff-chrome__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--dimension-9);
+  block-size: var(--dimension-9);
+  border-radius: var(--radius-full);
+  background: var(--surface-quiet);
+  color: var(--foreground-secondary-default);
+
+  svg {
+    inline-size: var(--dimension-6);
+    block-size: var(--dimension-6);
+  }
+}
+
+.pff-chrome__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-inline-size: 0;
+}
+
+.pff-chrome__title {
+  margin: 0;
+  font: var(--type-body-md-500);
+  color: var(--foreground-primary-default);
+}
+
+.pff-chrome__subtitle {
+  margin: 0;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+.pff-chrome__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+// ─── Stepper row ────────────────────────────────────────────────────────
+.pff-stepper {
+  background: var(--surface-default);
+}
+
+.pff-stepper__inner {
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+}
+
+.pff-divider {
+  margin: 0;
+  border: none;
+  block-size: var(--border-width-hairline);
+  background: var(--border-subtle);
+}
+
+// ─── Main step body (scroll area) ───────────────────────────────────────
+.pff-main {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+}
+
+.pff-main__inner {
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-xl) var(--space-3xl);
+  padding-inline: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+// ─── Page head (Step title + subtitle) ─────────────────────────────────
+.pff-page-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pff-page-head__title {
+  margin: 0;
+  font: var(--type-display-sm, var(--type-heading-lg));
+  color: var(--foreground-primary-default);
+}
+
+.pff-page-head__subtitle {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-inline-size: 80ch;
+}
+
+// Section + corner CTA (workaround: Angular content projection through the
+// `[slot=header-actions]` selector silently drops children when the afi-section
+// lives inside an `@case` block. Wrap the section in a relative container
+// and absolutely position the CTA over the section's header padding).
+.pff-section-stack {
+  position: relative;
+}
+
+.pff-section-stack__cta {
+  position: absolute;
+  inset-block-start: var(--section-padding-block);
+  inset-inline-end: var(--section-padding-inline);
+  z-index: 1;
+}
+
+// ─── Tables — sit clean inside <afi-section> (which owns the card border,
+//     radius, surface, and inline+block padding). No wrapper, no extra borders.
+.pff-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default);
+  table-layout: auto;
+
+  th,
+  td {
+    padding: var(--space-sm) var(--space-md);
+    text-align: start;
+    vertical-align: middle;
+    border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+  }
+
+  // Drop the inline edge padding so the first column sits flush against the
+  // section's own inline padding (avoids double inset).
+  th:first-child,
+  td:first-child {
+    padding-inline-start: 0;
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-inline-end: 0;
+  }
+
+  th {
+    font: var(--type-body-sm-500);
+    color: var(--foreground-secondary-default);
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child td {
+    border-block-end: none;
+  }
+
+  &__check {
+    inline-size: var(--dimension-10);
+  }
+
+  &__num {
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  &__importe-col {
+    text-align: end;
+  }
+
+  &__row--selected td {
+    color: var(--foreground-primary-default);
+  }
+
+  &__row--total td {
+    font: var(--type-body-sm-500);
+    color: var(--foreground-primary-default);
+  }
+}
+
+.pff-th-sub {
+  font: var(--type-body-xs-400);
+  color: var(--foreground-tertiary-default);
+}
+
+// ─── Cell stack (multi-line name cell with badge + isin) ───────────────
+.pff-cell-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.pff-cell-stack__top {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.pff-cell-stack__expand {
+  color: var(--foreground-tertiary-default);
+}
+
+.pff-cell-stack__sub {
+  font: var(--type-body-xs-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.pff-meta {
+  font: var(--type-body-xs-400);
+  color: var(--foreground-secondary-default);
+}
+
+// Compact host for the inline Afi brand mark in table cells. The logo keeps
+// its primitive size (`size="sm"`) — see follow-up to add an `xs` size to
+// LogoComponent so we can shrink it without piercing ViewEncapsulation.
+.pff-logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+// ─── Importe cell (only renders when row is selected) ─────────────────
+.pff-importe {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  inline-size: 100%;
+}
+
+.pff-importe__label {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+  white-space: nowrap;
+}
+
+.pff-importe__hint {
+  margin: var(--space-2xs) 0 0;
+  text-align: end;
+  font: var(--type-body-xs-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.pff-importe__readonly {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default);
+  white-space: nowrap;
+}
+
+// ─── Step 3: Simulación layout (form left + content right) ────────────
+.pff-sim {
+  display: grid;
+  grid-template-columns: minmax(var(--dimension-65, 16.25rem), var(--dimension-80, 20rem)) 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+  position: relative;
+}
+
+.pff-sim__form {
+  display: flex;
+  flex-direction: column;
+}
+
+// Hamburger trigger — only visible at narrow widths (mirrors planner-top-bar
+// pattern, which inlines an afi-icon-button bound to MobileDrawerService).
+.pff-sim__hamburger {
+  display: none;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-block-end: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--foreground-primary-default);
+  cursor: pointer;
+  font: var(--type-body-sm-500);
+
+  svg {
+    inline-size: var(--dimension-5);
+    block-size: var(--dimension-5);
+  }
+
+  &:hover {
+    background: var(--surface-quiet);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--space-2xs);
+  }
+}
+
+// Backdrop — hidden by default, only visible when drawer is open at <1024.
+.pff-sim__backdrop {
+  display: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.pff-sim__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.pff-sim__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.pff-sim__label {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+}
+
+.pff-sim__value {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font: var(--type-body-md-400);
+  color: var(--foreground-primary-default);
+
+  &--readonly {
+    background: var(--surface-quiet);
+    text-align: end;
+  }
+}
+
+.pff-sim__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  min-inline-size: 0;
+}
+
+// ─── Chart container + legend ──────────────────────────────────────────
+.pff-chart-host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.pff-chart-legend {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pff-chart-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+.pff-chart-legend__dot {
+  inline-size: var(--space-sm);
+  block-size: var(--space-sm);
+  border-radius: var(--radius-full);
+}
+
+.pff-chart-legend__item--pesimista .pff-chart-legend__dot { background: var(--status-danger-background-strong); }
+.pff-chart-legend__item--medio     .pff-chart-legend__dot { background: var(--status-warning-background-strong); }
+.pff-chart-legend__item--optimista .pff-chart-legend__dot { background: var(--status-success-background-strong); }
+
+// ─── Year-detail tooltip (Figma 78:189124 / 78:189137) ─────────────────
+.pff-year-tip {
+  position: absolute;
+  inset-block-start: var(--space-md);
+  inset-inline-end: var(--space-md);
+  inline-size: min(var(--dimension-135, 33.75rem), 100%);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  z-index: 2;
+}
+
+.pff-year-tip__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.pff-year-tip__title {
+  margin: 0;
+  font: var(--type-body-md-500);
+  color: var(--foreground-primary-default);
+}
+
+.pff-year-tip__tabs {
+  display: inline-flex;
+  background: var(--surface-quiet);
+  border-radius: var(--radius-md);
+  padding: var(--space-2xs);
+  gap: var(--space-2xs);
+}
+
+.pff-year-tip__tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-sm);
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-secondary-default);
+  cursor: pointer;
+}
+
+.pff-year-tip__tab--active {
+  background: var(--surface-default) !important;
+  color: var(--foreground-primary-default) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.pff-year-tip__tab-check {
+  color: var(--brand-secondary-background-default, var(--foreground-action-default));
+}
+
+.pff-year-tip__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-primary-default);
+
+  th,
+  td {
+    padding: var(--space-xs) var(--space-sm);
+    text-align: end;
+    border: none;
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: start;
+    color: var(--foreground-secondary-default);
+  }
+
+  th {
+    font: var(--type-body-xs-500);
+    color: var(--foreground-secondary-default);
+  }
+
+  &__head--pesi { color: var(--status-danger-background-strong) !important; }
+  &__head--medio { color: var(--status-warning-background-strong) !important; }
+  &__head--opti { color: var(--status-success-background-strong) !important; }
+}
+
+.pff-year-tip__row--total td {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+}
+
+// ─── KPI cards (3 scenarios — pesimista / medio / optimista) ──────────
+.pff-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+.pff-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: var(--surface-quiet);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.pff-kpi__head {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.pff-kpi__dot {
+  inline-size: var(--space-sm);
+  block-size: var(--space-sm);
+  border-radius: var(--radius-full);
+
+  &[data-scenario='pesimista'] { background: var(--status-danger-background-strong); }
+  &[data-scenario='medio']     { background: var(--status-warning-background-strong); }
+  &[data-scenario='optimista'] { background: var(--status-success-background-strong); }
+}
+
+.pff-kpi__label {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+}
+
+.pff-kpi__probability {
+  margin: 0;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+.pff-kpi__year {
+  margin: 0;
+  font: var(--type-display-sm, var(--type-heading-md));
+  color: var(--foreground-primary-default);
+}
+
+.pff-kpi__detail {
+  margin: 0;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+// ─── A11y helper ──────────────────────────────────────────────────────
+.sr-only {
+  position: absolute;
+  inline-size: var(--border-width-hairline);
+  block-size: var(--border-width-hairline);
+  padding: 0;
+  margin: calc(var(--border-width-hairline) * -1);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ─── Responsive ──────────────────────────────────────────────────────────
+@media (max-width: 1024px) {
+  // Form column becomes an off-canvas drawer; content column takes the full row.
+  .pff-sim {
+    grid-template-columns: 1fr;
+  }
+
+  .pff-sim__hamburger {
+    display: inline-flex;
+  }
+
+  .pff-sim__form {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 50;
+    inline-size: min(var(--dimension-72, 18rem), 80vw);
+    padding: var(--space-lg);
+    background: var(--surface-default);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(-100%);
+    transition: transform var(--duration-fast) var(--easing-enter);
+    overflow-y: auto;
+  }
+
+  .pff-sim--drawer-open .pff-sim__form {
+    transform: translateX(0);
+  }
+
+  .pff-sim__backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--surface-overlay);
+    z-index: 49;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-fast) var(--easing-enter);
+  }
+
+  .pff-sim--drawer-open .pff-sim__backdrop {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .pff-kpis {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .pff-chrome__inner,
+  .pff-stepper__inner,
+  .pff-main__inner {
+    padding-inline: var(--space-md);
+  }
+
+  .pff-chrome__inner {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      'back text actions'
+      'icon icon icon';
+  }
+
+  .pff-chrome__back { grid-area: back; }
+  .pff-chrome__icon { display: none; }
+  .pff-chrome__text { grid-area: text; }
+  .pff-chrome__actions { grid-area: actions; }
+}

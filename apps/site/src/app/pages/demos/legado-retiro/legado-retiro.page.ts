@@ -4,6 +4,7 @@ import {
   CheckboxComponent,
   InputComponent,
   PageHeaderComponent,
+  SectionComponent,
   SelectComponent,
   SwitchComponent,
 } from '@coherence/ui';
@@ -13,7 +14,8 @@ import { ObjetivosPageShellComponent } from '../wealth-planner-2026/shared/objet
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
 import type { LegadoObjetivo } from '../wealth-planner-2026/store';
 
-const retiroAges = new Set([56, 57, 58, 59, 60, 63, 64]);
+// "Retiro" = early retirement (56–60). Jubilación ages (61+) do NOT trigger this.
+const retiroAges = new Set([56, 57, 58, 59, 60]);
 
 function range(from: number, to: number): number[] {
   return Array.from({ length: to - from + 1 }, (_, index) => from + index);
@@ -26,13 +28,14 @@ function range(from: number, to: number): number[] {
     CheckboxComponent,
     InputComponent,
     PageHeaderComponent,
+    SectionComponent,
     SelectComponent,
     SwitchComponent,
     ObjetivosPageShellComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './legado-retiro.page.html',
-  styleUrls: ['./legado-retiro.page.scss'],
+  styleUrl: './legado-retiro.page.scss',
 })
 export class LegadoRetiroPage {
   readonly store = inject(WealthPlannerStore);

@@ -27,84 +27,31 @@
   </section>
 
   @if (store.legadoRetiroEstablished()) {
-    <section class="lr-section">
-      <header class="lr-section__head">
-        <h2 class="lr-section__title">Edad de seguridad</h2>
-      </header>
-      <div class="lr-grid">
+    <div class="lr-stack">
+    <afi-section title="Datos generales">
+      <div class="lr-grid lr-grid--compact">
         <afi-input
           label="Edad de seguridad"
           type="number"
-          hint="Edad hasta la que debe durar el patrimonio. Por defecto, 100 años."
+          hint="Edad hasta la que debe durar el patrimonio."
           [value]="store.legadoRetiro().edadSeguridad"
           (valueChange)="setEdadSeguridad($event)"
         />
-      </div>
-    </section>
 
-    <section class="lr-section">
-      <header class="lr-section__head">
-        <h2 class="lr-section__title">Legado objetivo</h2>
-      </header>
-      <div class="lr-grid">
-        <afi-select
-          label="¿Qué quieres preservar?"
-          placeholder="Selecciona"
-          [options]="legadoObjetivoOptions"
-          [value]="store.legadoRetiro().legadoObjetivo"
-          (valueChange)="setLegadoObjetivo($event)"
-        />
-      </div>
-
-      @if (showsManualLegado()) {
-        <div class="lr-manual">
-          <h3 class="lr-manual__title">Activos a conservar</h3>
-
-          @if (store.patrimonio().length === 0) {
-            <p class="lr-empty">Aún no hay activos registrados.</p>
-          } @else {
-            <ul class="lr-asset-list">
-              @for (asset of store.patrimonio(); track asset.id) {
-                <li class="lr-asset-list__row">
-                  <afi-checkbox
-                    [label]="asset.nombre + ' - ' + formatEuro(asset.valor)"
-                    [checked]="isAssetSelected(asset.id)"
-                    (checkedChange)="toggleAsset(asset.id, $event)"
-                  />
-                </li>
-              }
-            </ul>
-          }
-
-          <p class="lr-total">
-            Total seleccionado:
-            <strong>{{ totalSelected() }}</strong>
-          </p>
-
-          <div class="lr-grid">
-            <afi-input
-              label="Patrimonio financiero adicional"
-              type="number"
-              hint="Importe adicional que debe preservarse junto con los activos seleccionados."
-              [value]="store.legadoRetiro().patrimonioFinancieroAdicional"
-              (valueChange)="setPatrimonioFinancieroAdicional($event)"
-            />
-          </div>
-        </div>
-      }
-    </section>
-
-    <section class="lr-section">
-      <header class="lr-section__head">
-        <h2 class="lr-section__title">Retiro objetivo</h2>
-      </header>
-      <div class="lr-grid">
         <afi-select
           label="Edad de jubilación o retiro"
           placeholder="Selecciona"
           [options]="edadJubilacionOptions"
           [value]="store.legadoRetiro().edadRetiro"
           (valueChange)="setEdadRetiro($event)"
+        />
+
+        <afi-select
+          label="Legado objetivo"
+          placeholder="Selecciona"
+          [options]="legadoObjetivoOptions"
+          [value]="store.legadoRetiro().legadoObjetivo"
+          (valueChange)="setLegadoObjetivo($event)"
         />
       </div>
 
@@ -117,6 +64,42 @@
           />
         </div>
       }
-    </section>
+    </afi-section>
+
+    @if (showsManualLegado()) {
+      <afi-section title="Activos a conservar">
+        @if (store.patrimonio().length === 0) {
+          <p class="lr-empty">Aún no hay activos registrados.</p>
+        } @else {
+          <ul class="lr-asset-list">
+            @for (asset of store.patrimonio(); track asset.id) {
+              <li class="lr-asset-list__row">
+                <afi-checkbox
+                  [label]="asset.nombre + ' - ' + formatEuro(asset.valor)"
+                  [checked]="isAssetSelected(asset.id)"
+                  (checkedChange)="toggleAsset(asset.id, $event)"
+                />
+              </li>
+            }
+          </ul>
+        }
+
+        <p class="lr-total">
+          Total seleccionado:
+          <strong>{{ totalSelected() }}</strong>
+        </p>
+
+        <div class="lr-grid">
+          <afi-input
+            label="Patrimonio financiero adicional"
+            type="number"
+            hint="Importe adicional que debe preservarse junto con los activos seleccionados."
+            [value]="store.legadoRetiro().patrimonioFinancieroAdicional"
+            (valueChange)="setPatrimonioFinancieroAdicional($event)"
+          />
+        </div>
+      </afi-section>
+    }
+    </div>
   }
 </site-objetivos-page-shell>

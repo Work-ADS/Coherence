@@ -6,9 +6,10 @@
   homeLabel="Volver al listado"
 >
   <div class="ops">
-    <site-planner-sidebar [activeKey]="activeKey()" />
+    <div class="ops__body">
+      <site-planner-sidebar [activeKey]="activeKey()" />
 
-    <div class="ops__main">
+      <div class="ops__main">
       <site-planner-top-bar
         decisionesRoute="/demos/wealth-planner-2026"
         [clientName]="clientName()"
@@ -39,4 +40,5 @@
       </main>
     </div>
   </div>
+</div>
 </site-demo-shell>

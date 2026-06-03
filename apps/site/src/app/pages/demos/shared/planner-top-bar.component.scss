@@ -21,6 +21,17 @@
   min-width: 0;
 }
 
+// Hamburger only renders at <768; collapses the planner-sidebar drawer.
+.ptb__hamburger {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .ptb__hamburger {
+    display: inline-flex;
+  }
+}
+
 .ptb__end {
   display: flex;
   align-items: center;

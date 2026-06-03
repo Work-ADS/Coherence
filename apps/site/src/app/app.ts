@@ -99,10 +99,12 @@ export class App {
     // the chrome to the demo itself.
     const demosFullScreen = /^\/demos\/[^/]+\/.+/.test(url);
     // Top-level demo destinations that aren't under /demos/* but still belong
-    // to a demo experience (so DS chrome would feel out of place). The AWP
-    // listado is the per-cliente entry hub — it brings its own <site-demo-shell>
-    // and <site-planner-top-bar>, so the section nav is double chrome.
-    const topLevelDemoRoutes = /^\/listado-planificaciones(\/|$)/.test(url);
+    // to a demo experience (so DS chrome would feel out of place). /clientes
+    // and /listado-planificaciones both bring their own demo-shell + identity
+    // bar, so the section nav would be double chrome.
+    const topLevelDemoRoutes =
+      /^\/clientes(\/|$)/.test(url) ||
+      /^\/listado-planificaciones(\/|$)/.test(url);
     return (
       demosFullScreen ||
       topLevelDemoRoutes ||

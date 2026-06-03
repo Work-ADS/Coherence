@@ -1,6 +1,24 @@
 <div class="ptb">
-  <!-- Left cluster: plan switcher · identity · state -->
+  <!-- Left cluster: hamburger (narrow) · plan switcher · identity · state -->
   <div class="ptb__start">
+    <!-- Hamburger trigger — only visible at <768; opens the sidebar drawer. -->
+    <afi-tooltip text="Menú" position="bottom">
+      <afi-icon-button
+        class="ptb__hamburger"
+        ariaLabel="Abrir menú"
+        variant="ghost"
+        size="md"
+        [expanded]="drawer.open()"
+        (clicked)="drawer.toggle()"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 6h18" />
+          <path d="M3 12h18" />
+          <path d="M3 18h18" />
+        </svg>
+      </afi-icon-button>
+    </afi-tooltip>
+
     <!-- Plan switcher: tooltip + dual-icon button + dropdown panel -->
     <div class="ptb__anchor">
       <afi-tooltip text="Cambiar planificación" position="bottom">

@@ -22,6 +22,7 @@ import {
   IconButtonComponent,
   InputComponent,
   SegmentedControlComponent,
+  SelectComponent,
   TooltipComponent,
 } from '@coherence/ui';
 
@@ -77,6 +78,7 @@ interface PinPos {
     IconButtonComponent,
     InputComponent,
     SegmentedControlComponent,
+    SelectComponent,
     TooltipComponent,
     CommentComposerComponent,
     CommentPinComponent,

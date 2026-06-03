@@ -16,6 +16,7 @@
 - Route registered, sidebar entry now reads `store.proteccionFamiliarState()` with a real `route` field (replacing the hardcoded `'empty'` placeholder).
 - Verified live (1440 wide): gate off → no sections → sidebar `empty`. Gate on (no pareja) → cliente section + hint card → sidebar `in-progress`. Set `tienePareja(true)` → cónyuge section appears → sidebar still `in-progress`. Activar cliente via modal → "Marcar como activada" flips state, badge → Activada, Consultar/Desactivar buttons appear → sidebar still `in-progress` (cónyuge not yet). Activar cónyuge → sidebar `complete`. Desactivar cliente → sidebar back to `in-progress`. Console clean.
 - **Out-of-scope per the brief:** the real "Flujo de protección familiar" wizard. Today's modal is just a stub that lets the gestor flip the state manually — the wizard ships in a future iteration. Suggested follow-up: dedicated wizard component with steps for product type (seguro de vida / incapacidad / etc.), beneficiary, capital, premium → on completion, write back into `proteccionFamiliar().cliente` / `.conyuge` with the structured data.
+- **Update 2026-06-03:** the wizard shipped in Brief H-Plus ([`2026-05-26-awp-objetivos-proteccion-familiar-flujo.md`](./2026-05-26-awp-objetivos-proteccion-familiar-flujo.md)). The placeholder modal is replaced by a 4-step wizard (tipo → beneficiario → capital → prima) with per-row product lists, edit/delete affordances, and structured `ProductoProteccion` storage.
 
 ## Objetivos chunk recap
 

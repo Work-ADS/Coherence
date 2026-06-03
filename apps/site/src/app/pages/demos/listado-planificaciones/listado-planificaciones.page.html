@@ -6,15 +6,7 @@
   <div class="lp">
     <site-product-identity-bar
       productLabel="Wealth Planner"
-      [pageTitle]="identityTitle()"
-      [breadcrumb]="identityBreadcrumb"
-    />
-    <site-planner-top-bar
-      decisionesRoute="/listado-planificaciones"
-      [clientName]="clientName()"
-      [clientPickerMode]="true"
-      [clientList]="clientPickerList"
-      [activeClientId]="activeClientId()"
+      [breadcrumb]="identityBreadcrumb()"
     />
 
     <main class="lp__main">

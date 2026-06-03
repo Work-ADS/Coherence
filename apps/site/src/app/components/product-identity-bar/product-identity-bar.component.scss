@@ -2,8 +2,10 @@
 // product-identity-bar.component.scss — persistent AWP identity strip
 // =============================================================================
 //
-// BEM under `.pib`. Token-only. Sits as the top band of any AWP route.
-// Responsive: identity stays put, context cluster densifies at <768.
+// BEM under `.pib`. Token-only. Sits as the top band of /clientes and
+// /listado-planificaciones (the routes without a planner-sidebar).
+// Identity (logo + wordmark) + breadcrumb cluster sit together on the
+// LEFT. Right side reserved for future global affordances.
 // =============================================================================
 
 .pib {
@@ -16,6 +18,14 @@
   border-bottom: var(--border-width-hairline) solid var(--border-hairline);
   color: var(--canvas-fg);
   min-height: var(--space-2xl);
+
+  &__left {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-md);
+    min-width: 0;
+    flex: 1;
+  }
 
   &__identity {
     display: inline-flex;
@@ -30,12 +40,12 @@
     letter-spacing: var(--tracking-tight, 0);
   }
 
-  &__context {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--space-2xs);
-    min-width: 0;
+  &__divider {
+    display: inline-block;
+    width: var(--border-width-hairline);
+    height: var(--space-lg);
+    background: var(--border-hairline);
+    flex-shrink: 0;
   }
 
   &__crumbs {
@@ -44,10 +54,12 @@
     gap: var(--space-2xs);
     font: var(--type-body-sm-400);
     color: var(--foreground-tertiary-default);
+    min-width: 0;
   }
 
   &__crumb {
     color: var(--foreground-tertiary-default);
+    white-space: nowrap;
 
     &--link {
       color: var(--color-action-700);
@@ -63,48 +75,46 @@
         border-radius: var(--radius-control-sm);
       }
     }
+
+    &--current {
+      color: var(--canvas-fg);
+      font: var(--type-body-sm-500);
+    }
   }
 
   &__crumb-sep {
     color: var(--border-default);
-
-    &:last-of-type {
-      display: none;
-    }
   }
 
-  &__title {
-    margin: 0;
-    font: var(--type-body-md-600);
-    color: var(--canvas-fg);
+  &__right {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-shrink: 0;
   }
 }
 
-// ─── Narrow viewports — densify context cluster ──────────────────────────
+// ─── Narrow viewports — collapse breadcrumb to last parent step ─────────
 @media (max-width: 768px) {
   .pib {
     padding: var(--space-xs) var(--space-md);
 
     &__product {
-      font: var(--type-body-sm-600);
+      // Hide wordmark text; logo alone identifies. Saves room for breadcrumb.
+      display: none;
+    }
+
+    &__divider {
+      display: none;
     }
 
     &__crumbs {
-      // Collapse to the most-recent (parent) step only — keep enough context
-      // to know where you are without consuming the whole row.
-      .pib__crumb:not(:nth-last-child(2)),
-      .pib__crumb-sep:not(:nth-last-child(2)) {
+      // Keep only the parent step (the route the back-arrow would lead to)
+      // and the current step — drop all earlier ancestors.
+      .pib__crumb:not(:nth-last-of-type(-n+2)),
+      .pib__crumb-sep:not(:last-of-type) {
         display: none;
       }
-    }
-
-    &__title {
-      font: var(--type-body-sm-600);
-      text-align: end;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 60vw;
     }
   }
 }

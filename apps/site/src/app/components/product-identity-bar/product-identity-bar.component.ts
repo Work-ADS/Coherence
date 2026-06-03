@@ -11,16 +11,15 @@ export interface IdentityBreadcrumbStep {
 
 /**
  * site-product-identity-bar — thin persistent strip identifying the AWP
- * product across all 3 contexts (/clientes · /listado-planificaciones ·
- * simulation pages).
+ * product on the routes that don't have a planner-sidebar (/clientes and
+ * /listado-planificaciones). Carries the AFI mark + product wordmark on
+ * the left, followed by an optional breadcrumb path inline. The page's
+ * own `<afi-page-header>` handles the title — this bar is purely identity
+ * + position context.
  *
- * Carries: AFI mark + product label (left), page title + optional
- * breadcrumb (right). Densifies at <768 px — breadcrumb collapses to a
- * single back-arrow showing the previous step.
- *
- * Sits ABOVE the existing chrome (planner-top-bar / page header). Brought
- * in via composition: each AWP page mounts it in its own template and
- * passes the right pageTitle + breadcrumb.
+ * Not mounted on simulation pages — the sidebar already carries the
+ * wordmark via `<coherence-logo>`, and the planner-top-bar carries the
+ * operational context.
  */
 @Component({
   selector: 'site-product-identity-bar',
@@ -32,8 +31,5 @@ export interface IdentityBreadcrumbStep {
 })
 export class ProductIdentityBarComponent {
   readonly productLabel = input<string>('Wealth Planner');
-  readonly pageTitle = input.required<string>();
   readonly breadcrumb = input<IdentityBreadcrumbStep[]>([]);
-  /** Hint route for the back-arrow at <768; falls back to the last breadcrumb step. */
-  readonly backRoute = input<string | null>(null);
 }

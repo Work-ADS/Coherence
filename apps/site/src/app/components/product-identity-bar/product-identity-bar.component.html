@@ -1,22 +1,28 @@
 <header class="pib" role="banner">
-  <div class="pib__identity">
-    <coherence-logo variant="color" size="sm" />
-    <span class="pib__product">{{ productLabel() }}</span>
-  </div>
+  <div class="pib__left">
+    <div class="pib__identity">
+      <coherence-logo variant="color" size="sm" />
+      <span class="pib__product">{{ productLabel() }}</span>
+    </div>
 
-  <div class="pib__context">
     @if (breadcrumb().length > 0) {
+      <span class="pib__divider" aria-hidden="true"></span>
       <nav class="pib__crumbs" aria-label="Breadcrumb">
-        @for (step of breadcrumb(); track step.label) {
-          @if (step.route) {
+        @for (step of breadcrumb(); track step.label; let last = $last) {
+          @if (step.route && !last) {
             <a [routerLink]="step.route" class="pib__crumb pib__crumb--link">{{ step.label }}</a>
           } @else {
-            <span class="pib__crumb">{{ step.label }}</span>
+            <span class="pib__crumb pib__crumb--current">{{ step.label }}</span>
           }
-          <span class="pib__crumb-sep" aria-hidden="true">/</span>
+          @if (!last) {
+            <span class="pib__crumb-sep" aria-hidden="true">/</span>
+          }
         }
       </nav>
     }
-    <h1 class="pib__title">{{ pageTitle() }}</h1>
+  </div>
+
+  <div class="pib__right">
+    <!-- Reserved for future global affordances (cliente picker, theme, etc.) -->
   </div>
 </header>

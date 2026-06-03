@@ -75,13 +75,10 @@ export class ListadoPlanificacionesPage {
     () => this.store.cliente().alias || 'Sin cliente',
   );
 
-  readonly identityTitle = computed<string>(
-    () => `Listado del cliente · ${this.clientName()}`,
-  );
-
-  readonly identityBreadcrumb: IdentityBreadcrumbStep[] = [
+  readonly identityBreadcrumb = computed<IdentityBreadcrumbStep[]>(() => [
     { label: 'Clientes', route: '/clientes' },
-  ];
+    { label: this.clientName() },
+  ]);
 
   /** Personas exposed as {id, name} for the top-bar client-picker preview. */
   readonly clientPickerList: { id: string; name: string }[] = AWP_PERSONAS.map(

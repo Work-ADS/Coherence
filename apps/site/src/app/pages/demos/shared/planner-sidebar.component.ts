@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   computed,
   inject,
   input,
@@ -11,6 +12,7 @@ import { RouterLink } from '@angular/router';
 
 import { LogoComponent, NavItemComponent, SidebarComponent } from '@coherence/ui';
 
+import { MobileDrawerService } from '../../../services/mobile-drawer.service';
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
 
 export type NavItemState = 'empty' | 'in-progress' | 'complete';
@@ -60,6 +62,12 @@ export type NavSection = {
 })
 export class PlannerSidebarComponent {
   private readonly store = inject(WealthPlannerStore);
+  protected readonly drawer = inject(MobileDrawerService);
+
+  /** Bound on the host so SCSS can flip to off-canvas mode at <768. */
+  @HostBinding('class.drawer-open') get drawerOpenClass(): boolean {
+    return this.drawer.open();
+  }
 
   readonly activeKey = input<string>('');
   readonly ariaLabel = input<string>('Navegación del planificador financiero');

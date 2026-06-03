@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
@@ -12,6 +12,8 @@ import {
   TooltipComponent,
 } from '@coherence/ui';
 import type { Estado } from '@coherence/ui';
+
+import { MobileDrawerService } from '../../../services/mobile-drawer.service';
 
 import { NotesDropdownComponent, PlanNote } from './notes-dropdown.component';
 import { SettingsDropdownComponent, SimulationSettings } from './settings-dropdown.component';
@@ -37,6 +39,8 @@ import { SettingsDropdownComponent, SimulationSettings } from './settings-dropdo
   styleUrls: ['./planner-top-bar.component.scss'],
 })
 export class PlannerTopBarComponent {
+  protected readonly drawer = inject(MobileDrawerService);
+
   readonly decisionesRoute = input.required<string>();
   readonly listadoRoute = input<string>('/listado-planificaciones');
   readonly clientName = input<string>('Ricardo Vázquez Pérez');

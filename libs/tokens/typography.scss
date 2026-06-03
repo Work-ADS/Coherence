@@ -74,6 +74,13 @@
   --type-button:        500 14px/14px var(--font-family-serif);
   --type-informe:       400 12px/14px var(--font-family-serif);
 
+  // afi-section header text tokens. Pinned non-responsive to match Figma
+  // section spec (file pajleACyFdm5y, node 466:28470): eyebrow 12/16 all-caps,
+  // title 16/20 medium, subtitle 14/16 regular.
+  --type-section-eyebrow:  400 12px/16px var(--font-family-serif);
+  --type-section-title:    500 16px/20px var(--font-family-serif);
+  --type-section-subtitle: 400 14px/16px var(--font-family-serif);
+
 
   // ---------------------------------------------------------------------------
   // Letter-spacing — tracking tokens for headings and utility text

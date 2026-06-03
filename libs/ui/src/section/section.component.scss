@@ -1,14 +1,16 @@
 // =============================================================================
 // afi-section — boxed section container, optionally collapsible.
-// Lifted from the .dd-section pattern (desinversion-detail). Token-driven.
+// Visual spec locked to Figma `pajleACyFdm5y` / node `466:28470`.
+// Tokens only.
 // =============================================================================
 
 :host {
   display: block;
-  padding: var(--space-lg);
-  background: var(--surface-default);
+  padding-block: var(--section-padding-block);
+  padding-inline: var(--section-padding-inline);
+  background: var(--surface-subtle);
   border: var(--border-width-hairline) solid var(--border-subtle);
-  border-radius: var(--radius-card);
+  border-radius: var(--section-radius);
 
   // Stack sections with breathing room when used back-to-back.
   & + & {
@@ -16,11 +18,11 @@
   }
 }
 
-// ─── Header ──────────────────────────────────────────────────────────────────
+// ─── Header row: text stack (left) + actions/decorations (right) ────────
 .afi-section__head {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-md);
   width: 100%;
   margin: 0;
   padding: 0;
@@ -42,15 +44,34 @@
   }
 }
 
-.afi-section__title {
+.afi-section__text {
   flex: 1 1 auto;
-  margin: 0;
-  font: var(--type-body-sm-600);
-  color: var(--foreground-secondary-default);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }
 
+.afi-section__eyebrow {
+  font: var(--type-section-eyebrow);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.afi-section__title {
+  margin: 0;
+  font: var(--type-section-title);
+  color: var(--foreground-primary-default);
+}
+
+.afi-section__subtitle {
+  margin: 0;
+  font: var(--type-section-subtitle);
+  color: var(--foreground-secondary-default);
+}
+
+// ─── Right-side decorations (count chip, complete check, slot, chevron) ──
 .afi-section__count {
   display: inline-flex;
   align-items: center;
@@ -63,6 +84,7 @@
   border-radius: var(--radius-pill);
   font: var(--type-body-xs-500, var(--type-body-sm-500));
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .afi-section__complete {
@@ -70,12 +92,14 @@
   align-items: center;
   justify-content: center;
   color: var(--feedback-success-foreground, var(--brand-primary-foreground-default));
+  flex-shrink: 0;
 }
 
 .afi-section__actions {
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
+  flex-shrink: 0;
 }
 
 .afi-section__chevron {
@@ -84,18 +108,25 @@
   justify-content: center;
   color: var(--foreground-secondary-default);
   transition: transform var(--duration-fast) var(--easing-enter);
+  flex-shrink: 0;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
 }
 
-// ─── Body ────────────────────────────────────────────────────────────────────
+// ─── Body — token-driven gap below the header per spec ──────────────────
 .afi-section__body {
-  margin-block-start: var(--space-md);
+  margin-block-start: var(--section-gap);
 }
 
-// ─── Collapsible state ───────────────────────────────────────────────────────
+// When there is no header text (eyebrow/title/subtitle all blank) and no
+// decorations, hide the gap so a bare-body section sits flush.
+:host:not(:has(.afi-section__head)) .afi-section__body {
+  margin-block-start: 0;
+}
+
+// ─── Collapsible state ───────────────────────────────────────────────────
 :host([data-variant='collapsible'][data-expanded='true']) .afi-section__chevron {
   transform: rotate(180deg);
 }

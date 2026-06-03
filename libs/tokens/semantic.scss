@@ -458,14 +458,10 @@
   // -----------------------------------------------------------------------
   // SECTION chrome (mid-level padding + radius + gaps) — partially responsive.
   // -----------------------------------------------------------------------
-  @include responsive-token(--section-padding-inline, (
-    base: var(--dimension-4),
-    md:   var(--dimension-5),
-    lg:   var(--dimension-6),
-  ));
-  --section-padding-block:  var(--dimension-5);
-  --section-gap:            var(--dimension-6);
-  --section-radius:         var(--radius-md);
+  --section-padding-inline: var(--dimension-4);  // 16 px (static, per Figma 466:28470)
+  --section-padding-block:  var(--dimension-4);  // 16 px
+  --section-gap:            var(--dimension-6);  // 24 px header → body
+  --section-radius:         var(--radius-lg);    // 12 px
 
   // -----------------------------------------------------------------------
   // GAP — semantic spacing-between roles.

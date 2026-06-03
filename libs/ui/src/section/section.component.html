@@ -7,7 +7,17 @@
     [attr.aria-label]="ariaLabel()"
     (click)="onToggle()"
   >
-    <h2 class="afi-section__title">{{ title() }}</h2>
+    <span class="afi-section__text">
+      @if (hasEyebrow()) {
+        <span class="afi-section__eyebrow">{{ eyebrow() }}</span>
+      }
+      @if (hasTitle()) {
+        <h2 class="afi-section__title">{{ title() }}</h2>
+      }
+      @if (hasSubtitle()) {
+        <span class="afi-section__subtitle">{{ subtitle() }}</span>
+      }
+    </span>
     @if (complete()) {
       <span class="afi-section__complete" aria-label="Sección completa">
         <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
@@ -43,7 +53,17 @@
   </button>
 } @else {
   <header class="afi-section__head">
-    <h2 class="afi-section__title">{{ title() }}</h2>
+    <div class="afi-section__text">
+      @if (hasEyebrow()) {
+        <span class="afi-section__eyebrow">{{ eyebrow() }}</span>
+      }
+      @if (hasTitle()) {
+        <h2 class="afi-section__title">{{ title() }}</h2>
+      }
+      @if (hasSubtitle()) {
+        <p class="afi-section__subtitle">{{ subtitle() }}</p>
+      }
+    </div>
     @if (complete()) {
       <span class="afi-section__complete" aria-label="Sección completa">
         <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">

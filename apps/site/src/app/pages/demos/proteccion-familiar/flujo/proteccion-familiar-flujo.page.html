@@ -1,0 +1,682 @@
+<site-demo-shell
+  [views]="['Protección familiar · Flujo']"
+  [demoSlug]="demoSlug"
+  [demoRoute]="demoRoute"
+>
+  <div class="pff">
+    <site-product-identity-bar
+      productLabel="Wealth Planner"
+      [breadcrumb]="identityBreadcrumb()"
+    />
+
+    <!-- ─── Page chrome: shield icon + title + Cancelar/Siguiente ──── -->
+    <header class="pff-chrome">
+      <div class="pff-chrome__inner">
+        <a
+          class="pff-chrome__back"
+          routerLink="/demos/wealth-planner-2026/proteccion-familiar"
+          aria-label="Volver a Protección familiar"
+        >
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M12.5 16l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+
+        <span class="pff-chrome__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+
+        <div class="pff-chrome__text">
+          <h1 class="pff-chrome__title">Protección familiar</h1>
+          <p class="pff-chrome__subtitle">{{ subjectLabel() }}</p>
+        </div>
+
+        <div class="pff-chrome__actions">
+          <afi-button
+            variant="ghost"
+            size="md"
+            (clicked)="cancel()"
+            ariaLabel="Cancelar y volver"
+          >
+            Cancelar
+          </afi-button>
+          @if (currentStepKey() === 'simulacion') {
+            <afi-button
+              variant="primary"
+              size="md"
+              (clicked)="cancel()"
+              ariaLabel="Guardar la configuración"
+            >
+              Guardar
+            </afi-button>
+          } @else {
+            <afi-button
+              variant="primary"
+              size="md"
+              (clicked)="goNext()"
+              ariaLabel="Continuar al siguiente paso"
+            >
+              Siguiente
+            </afi-button>
+          }
+        </div>
+      </div>
+    </header>
+
+    <!-- ─── Stepper ────────────────────────────────────────────────── -->
+    <div class="pff-stepper">
+      <div class="pff-stepper__inner">
+        <afi-stepper
+          [steps]="stepperItems"
+          [current]="currentStep()"
+          ariaLabel="Pasos del flujo de protección familiar"
+          (stepClicked)="onStepClicked($event)"
+        />
+      </div>
+    </div>
+
+    <hr class="pff-divider" aria-hidden="true" />
+
+    <!-- ─── Step body ─────────────────────────────────────────────── -->
+    <main class="pff-main">
+      <div class="pff-main__inner">
+      @switch (currentStepKey()) {
+        @case ('patrimonio') {
+          <header class="pff-page-head">
+            <h2 class="pff-page-head__title">Patrimonio a disponer</h2>
+            <p class="pff-page-head__subtitle">
+              Marca aquí el patrimonio del que se dispone para dar cobertura a las
+              necesidades del resto de la familia en caso de fallecimiento de la
+              persona.
+            </p>
+          </header>
+
+          <!-- ── Inmobiliario ───────────────────────────────────── -->
+          <afi-section title="Inmobiliario">
+            <table class="pff-table">
+              <thead>
+                <tr>
+                  <th class="pff-table__check" scope="col"><span class="sr-only">Seleccionar</span></th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Tipo</th>
+                  <th class="pff-table__importe-col" scope="col">Importe</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of inmobiliario; track row.id) {
+                  <tr [class.pff-table__row--selected]="isSelected(row.id)">
+                    <td class="pff-table__check">
+                      <afi-checkbox
+                        [checked]="isSelected(row.id)"
+                        (checkedChange)="toggleSelected(row.id, $event)"
+                        [ariaLabel]="'Seleccionar ' + row.nombre"
+                      />
+                    </td>
+                    <td>{{ row.nombre }}</td>
+                    <td>{{ row.tipo }}</td>
+                    <td class="pff-table__importe-col">
+                      <ng-container
+                        *ngTemplateOutlet="importeCell; context: { id: row.id, max: row.max, base: row.importe, name: row.nombre, selected: isSelected(row.id) }"
+                      />
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </afi-section>
+
+          <!-- ── Liquidez ─────────────────────────────────────── -->
+          <afi-section title="Liquidez">
+            <table class="pff-table">
+              <thead>
+                <tr>
+                  <th class="pff-table__check" scope="col"><span class="sr-only">Seleccionar</span></th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Tipo</th>
+                  <th scope="col">Entidad</th>
+                  <th class="pff-table__importe-col" scope="col">Importe</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of liquidez; track row.id) {
+                  <tr [class.pff-table__row--selected]="isSelected(row.id)">
+                    <td class="pff-table__check">
+                      <afi-checkbox
+                        [checked]="isSelected(row.id)"
+                        (checkedChange)="toggleSelected(row.id, $event)"
+                        [ariaLabel]="'Seleccionar ' + row.nombre"
+                      />
+                    </td>
+                    <td>{{ row.nombre }}</td>
+                    <td>{{ row.tipo }}</td>
+                    <td>{{ row.entidad }}</td>
+                    <td class="pff-table__importe-col">
+                      <ng-container
+                        *ngTemplateOutlet="importeCell; context: { id: row.id, max: row.max, base: row.importe, name: row.nombre, selected: isSelected(row.id) }"
+                      />
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </afi-section>
+
+          <!-- ── Inversiones ──────────────────────────────────── -->
+          <afi-section title="Inversiones">
+            <table class="pff-table">
+              <thead>
+                <tr>
+                  <th class="pff-table__check" scope="col"><span class="sr-only">Seleccionar</span></th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Tipo</th>
+                  <th scope="col">Entidad</th>
+                  <th class="pff-table__importe-col" scope="col">Importe</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of inversiones; track row.id) {
+                  <tr [class.pff-table__row--selected]="isSelected(row.id)">
+                    <td class="pff-table__check">
+                      <afi-checkbox
+                        [checked]="isSelected(row.id)"
+                        (checkedChange)="toggleSelected(row.id, $event)"
+                        [ariaLabel]="'Seleccionar ' + row.nombre"
+                      />
+                    </td>
+                    <td>
+                      <div class="pff-cell-stack">
+                        <span class="pff-cell-stack__top">
+                          @if (row.carteraCount) {
+                            <span class="pff-cell-stack__expand" aria-hidden="true">▾</span>
+                          }
+                          <span>{{ row.nombre }}</span>
+                          @if (row.carteraCount) {
+                            <span class="pff-meta">{{ row.carteraCount }} instrumentos</span>
+                          }
+                          @if (row.badgeIcon === 'afi') {
+                            <span class="pff-logo">
+                              <coherence-logo size="sm" />
+                            </span>
+                          }
+                          @if (row.badge) {
+                            <span class="pff-meta">{{ row.badge }}</span>
+                          }
+                        </span>
+                        @if (row.isin) {
+                          <span class="pff-cell-stack__sub">{{ row.isin }}</span>
+                        }
+                      </div>
+                    </td>
+                    <td>{{ row.tipo }}</td>
+                    <td>{{ row.entidad }}</td>
+                    <td class="pff-table__importe-col">
+                      <ng-container
+                        *ngTemplateOutlet="importeCell; context: { id: row.id, max: row.max, base: row.importe, name: row.nombre, selected: isSelected(row.id) }"
+                      />
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </afi-section>
+
+          <!-- ── Planes de pensiones y EPSV ───────────────────── -->
+          <afi-section title="Planes de pensiones y EPSV">
+            <table class="pff-table">
+              <thead>
+                <tr>
+                  <th class="pff-table__check" scope="col"><span class="sr-only">Seleccionar</span></th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Entidad</th>
+                  <th class="pff-table__num" scope="col">
+                    Derechos consolidados<br /><span class="pff-th-sub">anteriores a 2007</span>
+                  </th>
+                  <th class="pff-table__importe-col" scope="col">Derechos consolidados</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of pensiones; track row.id) {
+                  <tr [class.pff-table__row--selected]="isSelected(row.id)">
+                    <td class="pff-table__check">
+                      <afi-checkbox
+                        [checked]="isSelected(row.id)"
+                        (checkedChange)="toggleSelected(row.id, $event)"
+                        [ariaLabel]="'Seleccionar ' + row.nombre"
+                      />
+                    </td>
+                    <td>
+                      <div class="pff-cell-stack">
+                        <span class="pff-cell-stack__top">
+                          <span>{{ row.nombre }}</span>
+                          @if (row.badgeIcon === 'afi') {
+                            <span class="pff-logo">
+                              <coherence-logo size="sm" />
+                            </span>
+                          }
+                          @if (row.badge) {
+                            <span class="pff-meta">{{ row.badge }}</span>
+                          }
+                        </span>
+                        <span class="pff-cell-stack__sub">{{ row.isin }}</span>
+                      </div>
+                    </td>
+                    <td>{{ row.entidad }}</td>
+                    <td class="pff-table__num">{{ formatEuro(row.derechosAntes2007) }}</td>
+                    <td class="pff-table__importe-col">
+                      <ng-container
+                        *ngTemplateOutlet="importeCell; context: { id: row.id, max: row.max, base: row.derechosTotal, name: row.nombre, selected: isSelected(row.id) }"
+                      />
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </afi-section>
+
+          <!-- ── Participaciones empresariales ────────────────── -->
+          <afi-section title="Participaciones empresariales">
+            <table class="pff-table">
+              <thead>
+                <tr>
+                  <th class="pff-table__check" scope="col"><span class="sr-only">Seleccionar</span></th>
+                  <th scope="col">Nombre</th>
+                  <th class="pff-table__importe-col" scope="col">Importe</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of participaciones; track row.id) {
+                  <tr [class.pff-table__row--selected]="isSelected(row.id)">
+                    <td class="pff-table__check">
+                      <afi-checkbox
+                        [checked]="isSelected(row.id)"
+                        (checkedChange)="toggleSelected(row.id, $event)"
+                        [ariaLabel]="'Seleccionar ' + row.nombre"
+                      />
+                    </td>
+                    <td>{{ row.nombre }}</td>
+                    <td class="pff-table__importe-col">
+                      <ng-container
+                        *ngTemplateOutlet="importeCell; context: { id: row.id, max: row.max, base: row.importe, name: row.nombre, selected: isSelected(row.id) }"
+                      />
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </afi-section>
+
+          <!-- ── Otros activos ────────────────────────────────── -->
+          <afi-section title="Otros activos">
+            <table class="pff-table">
+              <thead>
+                <tr>
+                  <th class="pff-table__check" scope="col"><span class="sr-only">Seleccionar</span></th>
+                  <th scope="col">Nombre</th>
+                  <th class="pff-table__importe-col" scope="col">Importe</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of otros; track row.id) {
+                  <tr [class.pff-table__row--selected]="isSelected(row.id)">
+                    <td class="pff-table__check">
+                      <afi-checkbox
+                        [checked]="isSelected(row.id)"
+                        (checkedChange)="toggleSelected(row.id, $event)"
+                        [ariaLabel]="'Seleccionar ' + row.nombre"
+                      />
+                    </td>
+                    <td>{{ row.nombre }}</td>
+                    <td class="pff-table__importe-col">
+                      <ng-container
+                        *ngTemplateOutlet="importeCell; context: { id: row.id, max: row.max, base: row.importe, name: row.nombre, selected: isSelected(row.id) }"
+                      />
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </afi-section>
+
+          <!-- ── Seguros de vida ──────────────────────────────── -->
+          <afi-section title="Seguros de vida">
+            <table class="pff-table">
+              <thead>
+                <tr>
+                  <th class="pff-table__check" scope="col"><span class="sr-only">Seleccionar</span></th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Entidad</th>
+                  <th class="pff-table__num" scope="col">Año de vencimiento</th>
+                  <th class="pff-table__num" scope="col">Prima anual</th>
+                  <th class="pff-table__importe-col" scope="col">Capital de fallecimiento</th>
+                  <th class="pff-table__num" scope="col">Capital de invalidez</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of segurosVida; track row.id) {
+                  <tr [class.pff-table__row--selected]="isSelected(row.id)">
+                    <td class="pff-table__check">
+                      <afi-checkbox
+                        [checked]="isSelected(row.id)"
+                        (checkedChange)="toggleSelected(row.id, $event)"
+                        [ariaLabel]="'Seleccionar ' + row.nombre"
+                      />
+                    </td>
+                    <td>{{ row.nombre }}</td>
+                    <td>{{ row.entidad }}</td>
+                    <td class="pff-table__num">{{ formatNumber(row.vencimiento) }}</td>
+                    <td class="pff-table__num">{{ formatEuro(row.primaAnual) }}</td>
+                    <td class="pff-table__importe-col">
+                      <ng-container
+                        *ngTemplateOutlet="importeCell; context: { id: row.id, max: row.max, base: row.capitalFallecimiento, name: row.nombre, selected: isSelected(row.id) }"
+                      />
+                    </td>
+                    <td class="pff-table__num">{{ formatEuro(row.capitalInvalidez) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </afi-section>
+        }
+
+        @case ('impacto') {
+          <header class="pff-page-head">
+            <h2 class="pff-page-head__title">Impacto en ingresos y gastos</h2>
+            <p class="pff-page-head__subtitle">
+              Indica la situación esperada de ingresos y gastos en el caso de que
+              la persona fallezca o quede inválida.
+            </p>
+          </header>
+
+          <div class="pff-section-stack">
+            <afi-button class="pff-section-stack__cta" variant="secondary" size="sm" ariaLabel="Añadir ingreso">
+              + Añadir ingreso
+            </afi-button>
+            <afi-section title="Ingresos">
+              <table class="pff-table">
+              <thead>
+                <tr>
+                  <th scope="col">Concepto</th>
+                  <th scope="col">Inicio</th>
+                  <th scope="col">Fin</th>
+                  <th scope="col">Incremento</th>
+                  <th scope="col">Frecuencia</th>
+                  <th class="pff-table__num" scope="col">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of impactoIngresos; track row.id) {
+                  <tr>
+                    <td>{{ row.concepto }}</td>
+                    <td>{{ row.inicio }}</td>
+                    <td>{{ row.fin }}</td>
+                    <td>{{ row.incremento }}</td>
+                    <td>{{ row.frecuencia }}</td>
+                    <td class="pff-table__num">{{ formatEuro(row.valor) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            </afi-section>
+          </div>
+
+          <div class="pff-section-stack">
+            <afi-button class="pff-section-stack__cta" variant="secondary" size="sm" ariaLabel="Añadir gasto">
+              + Añadir gastos
+            </afi-button>
+            <afi-section title="Gastos">
+              <table class="pff-table">
+              <thead>
+                <tr>
+                  <th scope="col">Concepto</th>
+                  <th scope="col">Inicio</th>
+                  <th scope="col">Fin</th>
+                  <th scope="col">Incremento</th>
+                  <th scope="col">Frecuencia</th>
+                  <th class="pff-table__num" scope="col">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of impactoGastos; track row.id) {
+                  <tr>
+                    <td>{{ row.concepto }}</td>
+                    <td>{{ row.inicio }}</td>
+                    <td>{{ row.fin }}</td>
+                    <td>{{ row.incremento }}</td>
+                    <td>{{ row.frecuencia }}</td>
+                    <td class="pff-table__num">{{ formatEuro(row.valor) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            </afi-section>
+          </div>
+        }
+
+        @case ('simulacion') {
+          <header class="pff-page-head">
+            <h2 class="pff-page-head__title">Simulación</h2>
+          </header>
+
+          <button
+            type="button"
+            class="pff-sim__hamburger"
+            (click)="toggleSimFormDrawer()"
+            [attr.aria-expanded]="simFormDrawerOpen()"
+            aria-controls="pff-sim-form-panel"
+            aria-label="Mostrar parámetros"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6h18" />
+              <path d="M3 12h18" />
+              <path d="M3 18h18" />
+            </svg>
+            Parámetros
+          </button>
+
+          <div class="pff-sim" [class.pff-sim--drawer-open]="simFormDrawerOpen()">
+            <button
+              type="button"
+              class="pff-sim__backdrop"
+              (click)="closeSimFormDrawer()"
+              aria-label="Cerrar panel de parámetros"
+              tabindex="-1"
+            ></button>
+            <!-- Left form column (becomes a slide-in drawer at narrow widths) -->
+            <div class="pff-sim__form" id="pff-sim-form-panel">
+              <afi-section title="Parámetros">
+                <div class="pff-sim__fields">
+                  <afi-select
+                    label="Plazo"
+                    [options]="plazoOptions"
+                    [value]="plazo()"
+                    (valueChange)="setPlazo($event)"
+                    [required]="true"
+                  />
+                  <afi-input
+                    label="Años de cobertura"
+                    type="number"
+                    [value]="anosCobertura()"
+                    (valueChange)="setAnosCobertura($event)"
+                  />
+                  <div class="pff-sim__field">
+                    <span class="pff-sim__label">Patrimonio prescindible</span>
+                    <span class="pff-sim__value pff-sim__value--readonly">{{ formatEuro(patrimonioPrescindible()) }}</span>
+                  </div>
+                  <div class="pff-sim__field">
+                    <span class="pff-sim__label">Capital de fallecimiento asegurado</span>
+                    <span class="pff-sim__value pff-sim__value--readonly">{{ formatEuro(capitalFallecimientoAsegurado()) }}</span>
+                  </div>
+                  <afi-input
+                    label="Capital adicional a cubrir"
+                    type="number"
+                    [value]="capitalAdicionalACubrir()"
+                    (valueChange)="setCapitalAdicionalACubrir($event)"
+                    [hint]="'Capital adicional necesario: ' + formatEuro(capitalAdicionalNecesario())"
+                  />
+                  <div class="pff-sim__field">
+                    <span class="pff-sim__label">Prima anual aproximada</span>
+                    <span class="pff-sim__value pff-sim__value--readonly">{{ formatEuro(primaAnualAproximada()) }}</span>
+                  </div>
+                </div>
+              </afi-section>
+            </div>
+
+            <!-- Right content -->
+            <div class="pff-sim__content">
+              <afi-section title="Evolución esperada">
+                <div class="pff-chart-host">
+                  <afi-chart-line
+                    [data]="simulacionChartData"
+                    height="320px"
+                    [baselineZero]="true"
+                    [showMarkers]="true"
+                    (dataPointActivated)="onChartPointActivated($event)"
+                  />
+                  <div class="pff-chart-legend">
+                    <span class="pff-chart-legend__item pff-chart-legend__item--pesimista">
+                      <span class="pff-chart-legend__dot"></span> Escenario pesimista
+                    </span>
+                    <span class="pff-chart-legend__item pff-chart-legend__item--medio">
+                      <span class="pff-chart-legend__dot"></span> Escenario medio
+                    </span>
+                    <span class="pff-chart-legend__item pff-chart-legend__item--optimista">
+                      <span class="pff-chart-legend__dot"></span> Escenario optimista
+                    </span>
+                  </div>
+
+                  @if (activeYearDetail(); as year) {
+                    <aside class="pff-year-tip" role="tooltip">
+                      <header class="pff-year-tip__head">
+                        <h4 class="pff-year-tip__title">Año {{ year.year }}</h4>
+                        <div class="pff-year-tip__tabs" role="tablist">
+                          <button
+                            type="button"
+                            role="tab"
+                            [class.pff-year-tip__tab--active]="yearTipMode() === 'ano'"
+                            [attr.aria-selected]="yearTipMode() === 'ano'"
+                            (click)="yearTipMode.set('ano')"
+                          >
+                            <span class="pff-year-tip__tab-check" aria-hidden="true">✓</span>
+                            Año
+                          </button>
+                          <button
+                            type="button"
+                            role="tab"
+                            [class.pff-year-tip__tab--active]="yearTipMode() === 'acumulado'"
+                            [attr.aria-selected]="yearTipMode() === 'acumulado'"
+                            (click)="yearTipMode.set('acumulado')"
+                          >
+                            Acumulado
+                          </button>
+                        </div>
+                      </header>
+                      <table class="pff-year-tip__table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Concepto</th>
+                            <th class="pff-year-tip__head--pesi">● Pesimista</th>
+                            <th class="pff-year-tip__head--medio">● Medio</th>
+                            <th class="pff-year-tip__head--opti">● Optimista</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (line of yearTipLines(); track line.label) {
+                            <tr [class.pff-year-tip__row--total]="line.total">
+                              <td>{{ line.label }}</td>
+                              <td>{{ line.pesimista }}</td>
+                              <td>{{ line.medio }}</td>
+                              <td>{{ line.optimista }}</td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </aside>
+                  }
+                </div>
+              </afi-section>
+
+              <afi-section title="Consumo total del patrimonio prescindible">
+                <div class="pff-kpis">
+                  @for (kpi of simulacionKpis; track kpi.scenario) {
+                    <article class="pff-kpi" [attr.data-scenario]="kpi.scenario">
+                      <header class="pff-kpi__head">
+                        <span class="pff-kpi__dot" [attr.data-scenario]="kpi.scenario" aria-hidden="true"></span>
+                        <span class="pff-kpi__label">{{ kpi.label }}</span>
+                      </header>
+                      <p class="pff-kpi__probability">{{ kpi.probability }}</p>
+                      <p class="pff-kpi__year">{{ kpi.year }}</p>
+                      @if (kpi.detail) {
+                        <p class="pff-kpi__detail">{{ kpi.detail }}</p>
+                      }
+                    </article>
+                  }
+                </div>
+              </afi-section>
+
+              <afi-section title="Prestaciones de la Seguridad Social estimadas">
+                <table class="pff-table">
+                  <thead>
+                    <tr>
+                      <th scope="col"></th>
+                      <th class="pff-table__num" scope="col">Pensión anual</th>
+                      <th class="pff-table__num" scope="col">{{ anosCobertura() }} años</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of simulacionSS; track row.concepto) {
+                      <tr>
+                        <td>{{ row.concepto }}</td>
+                        <td class="pff-table__num">{{ formatEuro(row.pensionAnual) }}</td>
+                        <td class="pff-table__num">{{ formatEuro(row.veinteAnios) }}</td>
+                      </tr>
+                    }
+                    <tr class="pff-table__row--total">
+                      <td>Total</td>
+                      <td class="pff-table__num">{{ formatEuro(simulacionSSTotal().pensionAnual) }}</td>
+                      <td class="pff-table__num">{{ formatEuro(simulacionSSTotal().veinteAnios) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </afi-section>
+            </div>
+          </div>
+        }
+      }
+      </div>
+    </main>
+  </div>
+</site-demo-shell>
+
+<!-- ─── Shared importe cell (selected → toggle + input + hint; idle → plain) ── -->
+<ng-template
+  #importeCell
+  let-id="id"
+  let-max="max"
+  let-base="base"
+  let-name="name"
+  let-selected="selected"
+>
+  @if (selected) {
+    <div class="pff-importe">
+      <afi-switch
+        size="sm"
+        [checked]="isTodoActivo(id)"
+        (checkedChange)="setTodoActivo(id, $event)"
+        [ariaLabel]="'Todo el activo de ' + name"
+      />
+      <span class="pff-importe__label">Todo el activo</span>
+      <afi-input
+        type="number"
+        [value]="isTodoActivo(id) ? max : importeFor(id, base)"
+        [disabled]="isTodoActivo(id)"
+        (valueChange)="setImporte(id, $event)"
+        [ariaLabel]="'Importe ' + name"
+      />
+    </div>
+    <p class="pff-importe__hint">Máx.: {{ formatEuro(max) }}</p>
+  } @else {
+    <span class="pff-importe__readonly">{{ formatEuro(base) }}</span>
+  }
+</ng-template>

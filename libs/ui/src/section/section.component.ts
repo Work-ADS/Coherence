@@ -12,11 +12,18 @@ export type SectionVariant = 'default' | 'collapsible';
 let nextId = 0;
 
 /**
- * Boxed section container — title row + body, optionally collapsible.
+ * Boxed section container — eyebrow + title + subtitle + body, optionally
+ * collapsible. Header text stack and action slot live side-by-side in the
+ * header row; the body is gated below by `--section-gap`.
  *
- * Graduated from the `.dd-section` / `.familia-section` pattern that was
- * being reinvented across multiple pages. Use anywhere you need a labelled
- * group of fields/content with a clear surface boundary.
+ * Visual spec — locked 2026-06-03 to Figma file `pajleACyFdm5y`,
+ * node `466:28470`. All values flow through tokens:
+ *  - Eyebrow: `--type-section-eyebrow`, all-caps, foreground/secondary/default.
+ *  - Title:   `--type-section-title` medium, foreground/primary/default.
+ *  - Subtitle: `--type-section-subtitle` regular, foreground/secondary/default.
+ *  - Card: `--section-padding-inline` + `--section-padding-block`,
+ *    `--section-radius`, surface/subtle background, hairline border-subtle.
+ *  - Header → body gap: `--section-gap`.
  *
  * Variants:
  *  - `default`     — static container, always shows the body.
@@ -41,7 +48,11 @@ let nextId = 0;
   },
 })
 export class SectionComponent {
+  /** Small all-caps text rendered above the title (e.g. "OBJETIVOS"). */
+  readonly eyebrow = input<string | null>(null);
   readonly title = input<string>('');
+  /** Optional descriptive line under the title (14/16 regular). */
+  readonly subtitle = input<string | null>(null);
   readonly variant = input<SectionVariant>('default');
   readonly expanded = model<boolean>(true);
   readonly count = input<string | number | null>(null);
@@ -61,6 +72,21 @@ export class SectionComponent {
   readonly hasCount = computed(() => {
     const c = this.count();
     return c !== null && c !== undefined && c !== '';
+  });
+
+  readonly hasEyebrow = computed(() => {
+    const e = this.eyebrow();
+    return e !== null && e !== undefined && e.trim() !== '';
+  });
+
+  readonly hasSubtitle = computed(() => {
+    const s = this.subtitle();
+    return s !== null && s !== undefined && s.trim() !== '';
+  });
+
+  readonly hasTitle = computed(() => {
+    const t = this.title();
+    return t !== null && t !== undefined && t.trim() !== '';
   });
 
   onToggle(): void {

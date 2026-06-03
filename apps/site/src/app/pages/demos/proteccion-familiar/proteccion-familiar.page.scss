@@ -1,6 +1,7 @@
 // =============================================================================
-// Protección familiar — Objetivos page (Brief H).
-// Gate + two rows (cliente, conyuge) with badge + per-row actions. Tokens only.
+// Protección familiar — Objetivos page (Brief H + H-Plus).
+// Gate + two rows (cliente, conyuge) with product lists + wizard modal.
+// Tokens only.
 // =============================================================================
 
 .pf-gate {
@@ -66,6 +67,50 @@
   }
 }
 
+// ─── Product list ────────────────────────────────────────────────────────
+.pf-product-list {
+  list-style: none;
+  margin: var(--space-md) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pf-product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--surface-quiet);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.pf-product-item__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.pf-product-item__tipo {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-primary-default);
+}
+
+.pf-product-item__detail {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+.pf-product-item__actions {
+  display: flex;
+  gap: var(--space-2xs);
+  flex-shrink: 0;
+}
+
 // ─── Hint shown when the gate is on but no conyuge exists in Familia ──
 .pf-pareja-hint {
   margin-block-start: var(--space-lg);
@@ -79,19 +124,29 @@
   text-align: center;
 }
 
-// ─── Placeholder modal body ──────────────────────────────────────────────
-.pf-modal {
+// ─── Wizard ──────────────────────────────────────────────────────────────
+.pf-wizard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-lg);
 }
 
-.pf-modal__body {
-  margin: 0;
-  font: var(--type-body-md-400);
-  color: var(--foreground-primary-default);
+.pf-wizard__body {
+  min-height: var(--dimension-40);
+}
 
-  & + & {
-    color: var(--foreground-secondary-default);
-  }
+.pf-wizard__step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.pf-wizard__summary {
+  margin: 0;
+  padding: var(--space-md);
+  background: var(--surface-quiet);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
 }

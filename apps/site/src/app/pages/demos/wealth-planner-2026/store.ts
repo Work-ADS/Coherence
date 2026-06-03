@@ -144,9 +144,29 @@ export interface LegadoRetiroData {
 }
 
 // ── Objetivos · Protección familiar (Brief H) ───────────────────────────────
+export type ProductoProteccionTipo =
+  | 'seguro-vida'
+  | 'incapacidad-temporal'
+  | 'incapacidad-permanente'
+  | 'dependencia'
+  | 'salud';
+
+export interface ProductoProteccion {
+  id: string;
+  tipo: ProductoProteccionTipo;
+  beneficiarioId: string;
+  capital: number;
+  prima: number;
+}
+
+export interface ProteccionFamiliarPerson {
+  activa: boolean;
+  productos: ProductoProteccion[];
+}
+
 export interface ProteccionFamiliarData {
-  cliente: { activa: boolean };
-  conyuge: { activa: boolean };
+  cliente: ProteccionFamiliarPerson;
+  conyuge: ProteccionFamiliarPerson;
 }
 
 // ── Objetivos · Desinversiones futuras (Brief G) ────────────────────────────
@@ -303,6 +323,7 @@ let nextIngresoId = 1;
 let nextGastoId = 1;
 let nextInversionFuturaId = 1;
 let nextDesinversionId = 1;
+let nextProductoId = 1;
 let nextPlanificacionId = 1;
 
 // ── Listado · Planificaciones per cliente (Brief Listado) ─────────────────
@@ -864,20 +885,20 @@ export class WealthPlannerStore {
 
   readonly proteccionFamiliarEstablished = signal<boolean>(false);
   readonly proteccionFamiliar = signal<ProteccionFamiliarData>({
-    cliente: { activa: false },
-    conyuge: { activa: false },
+    cliente: { activa: false, productos: [] },
+    conyuge: { activa: false, productos: [] },
   });
 
   /**
    * `empty` when the gate is off. Once the gate flips on we're at least
-   * `in-progress`; reaching `complete` requires cliente.activa, plus
-   * conyuge.activa when `tienePareja()` is true.
+   * `in-progress`; reaching `complete` requires at least one product on
+   * cliente, plus at least one on conyuge when `tienePareja()` is true.
    */
   readonly proteccionFamiliarState = computed<SectionState>(() => {
     if (!this.proteccionFamiliarEstablished()) return 'empty';
     const pf = this.proteccionFamiliar();
-    if (!pf.cliente.activa) return 'in-progress';
-    if (this.tienePareja() && !pf.conyuge.activa) return 'in-progress';
+    if (pf.cliente.productos.length === 0) return 'in-progress';
+    if (this.tienePareja() && pf.conyuge.productos.length === 0) return 'in-progress';
     return 'complete';
   });
 
@@ -888,15 +909,51 @@ export class WealthPlannerStore {
   setClienteActiva(value: boolean): void {
     this.proteccionFamiliar.update((current) => ({
       ...current,
-      cliente: { activa: value },
+      cliente: { ...current.cliente, activa: value },
     }));
   }
 
   setConyugeActiva(value: boolean): void {
     this.proteccionFamiliar.update((current) => ({
       ...current,
-      conyuge: { activa: value },
+      conyuge: { ...current.conyuge, activa: value },
     }));
+  }
+
+  addProteccionProducto(row: 'cliente' | 'conyuge', producto: Omit<ProductoProteccion, 'id'>): ProductoProteccion {
+    const next: ProductoProteccion = { ...producto, id: `prod-prot-${nextProductoId++}` };
+    this.proteccionFamiliar.update((current) => {
+      const person = current[row];
+      return {
+        ...current,
+        [row]: { activa: true, productos: [...person.productos, next] },
+      } as ProteccionFamiliarData;
+    });
+    return next;
+  }
+
+  updateProteccionProducto(row: 'cliente' | 'conyuge', id: string, partial: Partial<ProductoProteccion>): void {
+    this.proteccionFamiliar.update((current) => {
+      const person = current[row];
+      return {
+        ...current,
+        [row]: {
+          activa: person.activa,
+          productos: person.productos.map((p) => (p.id === id ? { ...p, ...partial } : p)),
+        },
+      } as ProteccionFamiliarData;
+    });
+  }
+
+  removeProteccionProducto(row: 'cliente' | 'conyuge', id: string): void {
+    this.proteccionFamiliar.update((current) => {
+      const person = current[row];
+      const nextProductos = person.productos.filter((p) => p.id !== id);
+      return {
+        ...current,
+        [row]: { activa: nextProductos.length > 0, productos: nextProductos },
+      } as ProteccionFamiliarData;
+    });
   }
 
   // ──────────────────────────────────────────────────────────────────────

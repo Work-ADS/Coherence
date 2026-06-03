@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { BadgeComponent, CardComponent } from '@coherence/ui';
 
@@ -10,10 +10,10 @@ import {
 /**
  * site-persona-card — site-local widget rendering a single Persona.
  *
- * Wraps <afi-card> (memory rule: reuse primitives over bespoke). v1 is
- * descriptive only: no Activar action, no clienteData snapshot. The
- * follow-up brief 2026-XX-XX-awp-persona-activate.md adds the Activar
- * affordance + payload.
+ * Wraps <afi-card> (memory rule: reuse primitives over bespoke). Two modes:
+ *  - default: descriptive only (overview personas tab)
+ *  - interactive: clickable as a cliente picker — emits (activate) with
+ *    the persona id when activated. /clientes page consumes this.
  *
  * Avatar falls back to initials (first letter of first word + first letter
  * of last word in `alias`) — no image asset pipeline in v1.
@@ -28,10 +28,20 @@ import {
 })
 export class PersonaCardComponent {
   readonly persona = input.required<Persona>();
+  readonly interactive = input<boolean>(false);
+
+  readonly activate = output<string>();
 
   readonly initials = computed<string>(() => personaInitials(this.persona().alias));
 
-  readonly ariaLabel = computed<string>(
-    () => `Persona ${this.persona().alias}, ${this.persona().profileLabel}`,
-  );
+  readonly ariaLabel = computed<string>(() => {
+    const p = this.persona();
+    const verb = this.interactive() ? 'Activar persona' : 'Persona';
+    return `${verb} ${p.alias}, ${p.profileLabel}`;
+  });
+
+  onCardClick(): void {
+    if (!this.interactive()) return;
+    this.activate.emit(this.persona().id);
+  }
 }

@@ -1,3 +1,11 @@
+<!-- Backdrop only renders at narrow widths when drawer is open. Click closes. -->
+<button
+  type="button"
+  class="planner-sidebar__backdrop"
+  aria-label="Cerrar menú"
+  (click)="drawer.close()"
+></button>
+
 <afi-sidebar
   mode="static"
   variant="secondary-azul"

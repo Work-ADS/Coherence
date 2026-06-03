@@ -60,6 +60,12 @@ export const routes: Routes = [
   { path: 'novedades/nav-bar-decisiones', redirectTo: '/patrones/top-bar-decisiones' },
   { path: 'novedades/dialog-decisiones', redirectTo: '/patrones/dialog-decisiones' },
   { path: 'novedades', redirectTo: '/demos' }, // catchall for any nested /novedades/*
+  // ─── Clientes — top-level cliente picker for AWP ───
+  {
+    path: 'clientes',
+    loadComponent: () =>
+      import('./pages/demos/clientes/clientes.page').then((m) => m.ClientesPage),
+  },
   // ─── Listado de planificaciones — top-level per-cliente hub ───
   {
     path: 'listado-planificaciones',

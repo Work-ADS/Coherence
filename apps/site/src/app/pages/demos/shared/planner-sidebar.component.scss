@@ -7,6 +7,51 @@
   display: contents;
 }
 
+// Backdrop is hidden by default; only shows at narrow widths when drawer is
+// open. The button serves as the click-outside-to-close affordance.
+.planner-sidebar__backdrop {
+  display: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+// ─── Narrow viewport (drawer mode) ────────────────────────────────────────
+// At <768 the sidebar becomes an off-canvas drawer. Open/close toggled by
+// the host class `.drawer-open` (bound from MobileDrawerService).
+@media (max-width: 768px) {
+  :host {
+    display: block;
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 50;
+    inline-size: min(var(--dimension-72, 18rem), 80vw);
+    transform: translateX(-100%);
+    transition: transform var(--duration-fast) var(--easing-enter);
+  }
+
+  :host(.drawer-open) {
+    transform: translateX(0);
+  }
+
+  .planner-sidebar__backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--surface-overlay);
+    z-index: 49;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-fast) var(--easing-enter);
+  }
+
+  :host(.drawer-open) .planner-sidebar__backdrop {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 // ─── Top slot: logo + product label ───────────────────────────────────────
 .planner-sidebar__brand {
   display: flex;

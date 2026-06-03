@@ -1,0 +1,54 @@
+// =============================================================================
+// clientes.page.scss — Top-level cliente picker for AWP
+// =============================================================================
+//
+// BEM under `.cl`. Token-only. Picks up the identity bar's chrome above,
+// keeps body lean — just a centered grid of interactive persona cards.
+// =============================================================================
+
+.cl {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--canvas-base);
+
+  &__main {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  &__container {
+    max-width: var(--content-xl);
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  &__intro {
+    margin: 0 0 var(--space-xl);
+    font: var(--type-body-md-400);
+    color: var(--foreground-secondary-default);
+    max-width: var(--dimension-180);
+  }
+
+  &__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--dimension-72, 18rem), 1fr));
+    gap: var(--space-md);
+  }
+
+  &__cell {
+    margin: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .cl {
+    &__container {
+      padding: var(--space-lg) var(--space-md);
+    }
+  }
+}

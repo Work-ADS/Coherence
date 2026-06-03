@@ -1,0 +1,33 @@
+<site-demo-shell
+  [views]="['Clientes']"
+  [demoSlug]="demoSlug"
+  [demoRoute]="demoRoute"
+>
+  <div class="cl">
+    <site-product-identity-bar
+      productLabel="Wealth Planner"
+      pageTitle="Listado de clientes"
+    />
+
+    <main class="cl__main">
+      <div class="cl__container">
+        <p class="cl__intro">
+          Selecciona un cliente para abrir sus planificaciones. Las personas
+          de demo sustituyen a clientes reales — datos sensibles por diseño.
+        </p>
+
+        <ul class="cl__grid" aria-label="Clientes">
+          @for (p of personas; track p.id) {
+            <li class="cl__cell">
+              <site-persona-card
+                [persona]="p"
+                [interactive]="true"
+                (activate)="onActivate($event)"
+              />
+            </li>
+          }
+        </ul>
+      </div>
+    </main>
+  </div>
+</site-demo-shell>

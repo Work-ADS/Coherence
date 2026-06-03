@@ -37,6 +37,7 @@
            changing the global brand here has no visible effect. -->
 
       <afi-segmented-control
+        class="toolbar__segmented toolbar__segmented--viewport"
         [options]="viewportPresets"
         [value]="viewportValue()"
         (valueChange)="setViewport($event)"
@@ -44,60 +45,81 @@
         ariaLabel="Cambiar ancho del viewport"
       />
 
+      <afi-select
+        class="toolbar__select toolbar__select--viewport"
+        [options]="viewportPresets"
+        [value]="viewportValue()"
+        (valueChange)="setViewport($any($event))"
+        size="sm"
+        ariaLabel="Cambiar ancho del viewport"
+      />
+
       <span class="toolbar__divider" aria-hidden="true"></span>
 
-      <afi-tooltip text="Reiniciar flujo">
-        <afi-icon-button
-          variant="ghost"
-          size="sm"
-          ariaLabel="Reiniciar flujo"
-          (clicked)="restart()"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-            <path d="M21 3v5h-5" />
-            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-            <path d="M3 21v-5h5" />
-          </svg>
-        </afi-icon-button>
-      </afi-tooltip>
+      <span class="toolbar__tools">
+        <afi-tooltip text="Reiniciar flujo">
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Reiniciar flujo"
+            (clicked)="restart()"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+              <path d="M3 21v-5h5" />
+            </svg>
+          </afi-icon-button>
+        </afi-tooltip>
 
-      <afi-tooltip text="Descargar pantalla como PNG">
-        <afi-icon-button
-          variant="ghost"
-          size="sm"
-          ariaLabel="Descargar pantalla como PNG"
-          (clicked)="downloadScreenshot()"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-        </afi-icon-button>
-      </afi-tooltip>
+        <afi-tooltip text="Descargar pantalla como PNG">
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Descargar pantalla como PNG"
+            (clicked)="downloadScreenshot()"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </afi-icon-button>
+        </afi-tooltip>
 
-      <afi-tooltip text="Descargar CSS semántico de esta marca">
-        <afi-icon-button
-          variant="ghost"
-          size="sm"
-          ariaLabel="Descargar CSS semántico"
-          (clicked)="downloadSemanticCss()"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="16 18 22 12 16 6" />
-            <polyline points="8 6 2 12 8 18" />
-          </svg>
-        </afi-icon-button>
-      </afi-tooltip>
+        <afi-tooltip text="Descargar CSS semántico de esta marca">
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Descargar CSS semántico"
+            (clicked)="downloadSemanticCss()"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </afi-icon-button>
+        </afi-tooltip>
+      </span>
 
       <!-- Mode picker: Vista (default) / Comentar / Inspección. Locked
            2026-05-28 — only one mode at a time, Vista is the "back to view"
            affordance. Click Vista to exit either active mode in one click. -->
       <afi-segmented-control
+        class="toolbar__segmented toolbar__segmented--mode"
         [options]="modeOptions"
         [value]="activeModeValue()"
         (valueChange)="setActiveMode($event)"
+        size="sm"
+        ariaLabel="Modo del demo"
+      />
+
+      <afi-select
+        class="toolbar__select toolbar__select--mode"
+        [options]="modeOptions"
+        [value]="activeModeValue()"
+        (valueChange)="setActiveMode($any($event))"
         size="sm"
         ariaLabel="Modo del demo"
       />

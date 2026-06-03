@@ -4,12 +4,9 @@
   [demoRoute]="demoRoute"
 >
   <div class="lp">
-    <site-planner-top-bar
-      decisionesRoute="/listado-planificaciones"
-      [clientName]="clientName()"
-      [clientPickerMode]="true"
-      [clientList]="clientPickerList"
-      [activeClientId]="activeClientId()"
+    <site-product-identity-bar
+      productLabel="Wealth Planner"
+      [breadcrumb]="identityBreadcrumb()"
     />
 
     <main class="lp__main">

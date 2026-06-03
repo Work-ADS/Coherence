@@ -40,7 +40,7 @@ export class ObjetivosPageShellComponent {
   readonly demoSlug = input.required<string>();
   readonly demoRoute = input.required<string>();
   readonly activeKey = input.required<string>();
-  readonly clientName = input<string>('Ricardo Vázquez Pérez');
+  readonly clientName = input<string>('Marco Fernández Castro');
   readonly showBanner = input<boolean>(false);
   readonly versionAriaLabel = input<string>('Versión del layout');
 

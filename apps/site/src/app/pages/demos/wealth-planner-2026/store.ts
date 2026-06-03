@@ -231,22 +231,61 @@ const EMPTY_PERSONA: PersonaBase = {
 const EMPTY_CLIENTE: ClienteData = { ...EMPTY_PERSONA };
 
 /**
- * Seeded cliente identity. Persists across planificaciones for the same
- * cliente — when a gestor opens a new plan via the listado, this data is
- * already in the store so the Familia tab renders prefilled. The user
- * surface labels this as "Información del cliente prerellenada".
+ * Default cliente seed = Marco Fernández Castro (the first AWP persona).
+ *
+ * Kept inline (not imported from the personas fixture) so the store has no
+ * runtime dependency on the personas list — keeps personas.ts importing
+ * the cliente types one-way. Personas activation goes through
+ * `activatePersona(payload)` which writes a snapshot caller-supplied;
+ * the caller (the /clientes page) constructs the payload from
+ * AWP_PERSONAS.
  */
 const SEEDED_CLIENTE: ClienteData = {
-  alias: 'Ricardo Vázquez Pérez',
+  alias: 'Marco Fernández Castro',
   residenciaFiscal: 'Madrid',
-  anoNacimiento: 1975,
+  anoNacimiento: 1984,
   gradoDiscapacidad: 'sin',
-  tipoActividad: 'jubilado',
-  anoJubilacion: 2042,
-  anosCotizados: null,
+  tipoActividad: 'activo',
+  anoJubilacion: null,
+  anosCotizados: 18,
   anoDejoCotizar: null,
-  tipoCotizacion: null,
+  tipoCotizacion: 'regimen-general',
 };
+
+const SEEDED_CONYUGE: ConyugeData = {
+  alias: 'Laura Castro',
+  residenciaFiscal: 'Madrid',
+  anoNacimiento: 1986,
+  gradoDiscapacidad: 'sin',
+  tipoActividad: 'activo',
+  anoJubilacion: null,
+  anosCotizados: 16,
+  anoDejoCotizar: null,
+  tipoCotizacion: 'regimen-general',
+};
+
+const SEEDED_HIJOS: HijoData[] = [
+  {
+    id: 'hijo-seed-1',
+    alias: 'Lucía Fernández',
+    anoNacimiento: 2020,
+    gradoDiscapacidad: 'sin',
+    delCliente: true,
+  },
+];
+
+/**
+ * Payload accepted by `activatePersona()`. Structural (not the Persona
+ * type itself) so the store stays ignorant of the personas fixture.
+ */
+export interface ActivatePersonaPayload {
+  id: string;
+  cliente: ClienteData;
+  conyugeStatus: ConyugeStatus;
+  conyuge: ConyugeData | null;
+  hijos: Omit<HijoData, 'id'>[];
+  ascendientes: Omit<AscendienteData, 'id'>[];
+}
 
 const DEFAULT_LEGADO_RETIRO: LegadoRetiroData = {
   edadSeguridad: 100,
@@ -292,10 +331,17 @@ export class WealthPlannerStore {
   // ──────────────────────────────────────────────────────────────────────
 
   readonly cliente = signal<ClienteData>({ ...SEEDED_CLIENTE });
-  readonly conyugeStatus = signal<ConyugeStatus>('unanswered');
-  readonly conyuge = signal<ConyugeData | null>(null);
-  readonly hijos = signal<HijoData[]>([]);
+  readonly conyugeStatus = signal<ConyugeStatus>('yes');
+  readonly conyuge = signal<ConyugeData | null>({ ...SEEDED_CONYUGE });
+  readonly hijos = signal<HijoData[]>(SEEDED_HIJOS.map((h) => ({ ...h })));
   readonly ascendientes = signal<AscendienteData[]>([]);
+
+  /**
+   * Id of the currently-active persona (the cliente loaded in the store).
+   * Default matches the seeded cliente (Marco) so direct visits to
+   * /listado-planificaciones still resolve to a valid persona.
+   */
+  readonly activeClienteId = signal<string | null>('marco-fernandez-castro');
 
   /**
    * Backwards-compatible boolean for consumers in other briefs (Sociedades,
@@ -334,6 +380,26 @@ export class WealthPlannerStore {
   // Mutations
   setCliente(partial: Partial<ClienteData>): void {
     this.cliente.update((c) => ({ ...c, ...partial }));
+  }
+
+  /**
+   * Replace the entire cliente slice with a persona's snapshot. Used by
+   * the /clientes page: clicking a persona card swaps the store's cliente
+   * + cónyuge + hijos + ascendientes en bloc, then navigates to the
+   * per-cliente listado. Generates fresh ids for hijos / ascendientes so
+   * downstream code doesn't reuse persona-fixture ids.
+   */
+  activatePersona(payload: ActivatePersonaPayload): void {
+    this.activeClienteId.set(payload.id);
+    this.cliente.set({ ...payload.cliente });
+    this.conyugeStatus.set(payload.conyugeStatus);
+    this.conyuge.set(payload.conyuge ? { ...payload.conyuge } : null);
+    this.hijos.set(
+      payload.hijos.map((h) => ({ ...h, id: `hijo-${nextHijoId++}` })),
+    );
+    this.ascendientes.set(
+      payload.ascendientes.map((a) => ({ ...a, id: `asc-${nextAscendienteId++}` })),
+    );
   }
 
   /**

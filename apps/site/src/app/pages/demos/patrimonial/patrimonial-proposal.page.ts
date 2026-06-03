@@ -5,6 +5,7 @@ import {
   HostListener,
   afterNextRender,
   computed,
+  inject,
   signal,
   viewChild,
   viewChildren,
@@ -24,6 +25,7 @@ import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
 import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patrimonial/graph-card-header.component';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
+import { WealthPlannerStore } from '../wealth-planner-2026/store';
 import { ActionToastComponent } from '../shared/action-toast.component';
 import { bridgeDesignReviewVersion } from '../shared/design-review-bridge';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
@@ -96,6 +98,8 @@ type AddedAsset = {
   styleUrls: ['./patrimonial-proposal.page.scss'],
 })
 export class PatrimonialProposalPage {
+  readonly store = inject(WealthPlannerStore);
+
   constructor() {
     // Measure the tab strip after first render so the left/right chevrons
     // reflect actual overflow from page load (not just after the user scrolls).

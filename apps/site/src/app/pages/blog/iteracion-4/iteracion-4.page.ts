@@ -11,6 +11,7 @@ type TaskSource =
   | 'Brief 2 — demo-overview-tabs'
   | 'Brief 3 — responsive-chrome'
   | 'Brief 4 — clientes-multi-cliente'
+  | 'Brief 3+4 — clientes-flow-and-responsive'
   | 'Follow-up — empty-state-import-dialog';
 
 type Task = {
@@ -154,15 +155,53 @@ export class Iteracion4Page {
       eyebrow: 'AWP · Chrome',
       snippet:
         'Sidebar colapsable a hamburguesa en breakpoints estrechos, escala de padding consistente entre páginas. Familia es la referencia visual.',
-      tasks: [],
+      tasks: [
+        {
+          status: 'Hecho',
+          source: 'Brief 3+4 — clientes-flow-and-responsive',
+          text: '<site-planner-sidebar> se convierte en drawer off-canvas a <768. Trigger hamburger en <site-planner-top-bar>; backdrop con var(--surface-overlay) y click-fuera-cierra. Estado compartido vía nuevo MobileDrawerService (apps/site/src/app/services/mobile-drawer.service.ts).',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 3+4 — clientes-flow-and-responsive',
+          text: 'Listado /listado-planificaciones: la tabla se aplana en cards apiladas a <768. thead oculto, cada fila renderiza como tarjeta (fecha + nombre + estado chip + gestor + acciones full-width). Las acciones dejan de esconderse en hover — los touch targets se ven siempre.',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 3+4 — clientes-flow-and-responsive',
+          text: 'Padding sweep en contenedores exteriores: sociedades, patrimonial, evolucion-patrimonial reciben px-space-6 (alineado con Familia). ops__page y ig-page reciben padding-inline: var(--space-lg). Sin cambios en layouts internos — eso es el follow-up de afi-section.',
+        },
+      ],
     },
     {
       id: 'multi-cliente',
       title: 'Multi-cliente',
-      eyebrow: 'AWP · Flujo · Diferido',
+      eyebrow: 'AWP · Flujo',
       snippet:
-        'Página /clientes + parametrización del listado por cliente. Brief diferido — se activa después de que aterrice el listado de planificaciones.',
-      tasks: [],
+        'Página /clientes + activación de personas como clientes. Reutiliza <site-persona-card> en modo interactive; click activa el snapshot en el WealthPlannerStore y navega al listado.',
+      tasks: [
+        {
+          status: 'Hecho',
+          source: 'Brief 3+4 — clientes-flow-and-responsive',
+          text: 'Nueva ruta top-level /clientes — grid de <site-persona-card interactive> con las 2 personas (Marco · Carmen). Click → store.activatePersona(snapshot) + navigateByUrl(/listado-planificaciones).',
+          href: '/clientes',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 3+4 — clientes-flow-and-responsive',
+          text: 'Personas reciben clienteSnapshot (cliente + cónyuge + hijos + ascendientes). WealthPlannerStore gana activatePersona(payload) + activeClienteId signal. cliente() seed por defecto = Marco.',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 3+4 — clientes-flow-and-responsive',
+          text: 'Nuevo <site-product-identity-bar> (logo AFI + Wealth Planner + breadcrumb) montado en /clientes y /listado-planificaciones (las rutas sin planner-sidebar). En las páginas de simulación el sidebar ya provee la identidad — sin doble chrome.',
+        },
+        {
+          status: 'Hecho',
+          source: 'Brief 3+4 — clientes-flow-and-responsive',
+          text: 'Favicon swap: brand/afi-icon-color.svg sustituye al pink Coherence DS mark heredado.',
+        },
+      ],
     },
   ];
 

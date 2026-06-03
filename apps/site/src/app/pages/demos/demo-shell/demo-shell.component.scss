@@ -62,6 +62,46 @@
   color: var(--action-primary-default);
 }
 
+// ─── Responsive switch: segmented controls → compact selects ─────────────
+// Segmented controls overflow when the toolbar gets narrow (especially the
+// viewport-preset row "Full · 1280 · 768 · 375"). Below 900 px we swap to
+// a compact <afi-select> for both the viewport picker and the mode picker.
+.toolbar__select {
+  display: none;
+  min-inline-size: var(--dimension-24);
+  max-inline-size: var(--dimension-36);
+}
+
+@media (max-width: 900px) {
+  .toolbar__segmented {
+    display: none;
+  }
+  .toolbar__select {
+    display: inline-flex;
+  }
+}
+
+// Secondary icon cluster (reload · download screenshot · download CSS) —
+// wrapped in `.toolbar__tools` so a single rule can hide them at narrow
+// widths.
+.toolbar__tools {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+// At <600 the right cluster is still too crowded — hide the tools cluster
+// + divider. The viewport-preset picker also goes (you're already on a
+// real narrow device). The mode picker stays as the only essential
+// right-cluster control.
+@media (max-width: 600px) {
+  .toolbar__divider,
+  .toolbar__tools,
+  .toolbar__select--viewport {
+    display: none;
+  }
+}
+
 // ─── Body ──────────────────────────────────────────────────────────────────────
 .demo-body {
   display: flex;

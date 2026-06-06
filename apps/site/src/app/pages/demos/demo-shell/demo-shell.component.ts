@@ -113,14 +113,15 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   readonly activeModeValue = computed(() => this.activeMode() ?? 'view');
 
   // ─── Configurable per-demo inputs ────────────────────────────────────────
-  // Defaults preserve the original wealth-planner wiring so existing
-  // consumers don't need to pass anything. New demos pass their own slug,
-  // demo-route, and view labels. When `views` has 0 or 1 entry the
-  // segmented view-switcher in the toolbar is hidden — for flows that
-  // navigate internally (e.g. Sarevi welcome → datos → medidas → resumen).
+  // Demos pass their own slug, demo-route, and view labels. When `views`
+  // has 0 or 1 entry the segmented view-switcher in the toolbar is hidden
+  // — that's the default. The wealth-planner used to render a legacy
+  // Patrimonio/Evolución toggle here when no views were passed, but
+  // every page in the planner now navigates via the sidebar instead, so
+  // the default collapses to a single "Demo" view (no switcher rendered).
   readonly demoSlug = input<string>('wealth-planner');
   readonly demoRoute = input<string>('/demos/wealth-planner-2026/demo');
-  readonly views = input<string[]>(['Patrimonio', 'Evolución']);
+  readonly views = input<string[]>(['Demo']);
   /**
    * Where the chrome back-arrow lands. Default is the site root; demos that
    * sit inside a per-cliente flow (AWP simulation pages) override with the

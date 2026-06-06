@@ -1,14 +1,16 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-type Thumb = 'whitelabel' | 'proceso' | 'talk';
+import { LanguageService } from '../../services/language.service';
+
+type Thumb = 'whitelabel' | 'talk';
 
 interface BlogPost {
   slug: string;
-  title: string;
-  eyebrow: string;
-  date: string;
-  intro: string;
+  eyebrow: { es: string; en: string };
+  title: { es: string; en: string };
+  date: { es: string; en: string };
+  intro: { es: string; en: string };
   thumb: Thumb;
   /** Optional route override; defaults to `/blog/<slug>`. */
   to?: string;
@@ -20,33 +22,56 @@ interface BlogPost {
 const POSTS: BlogPost[] = [
   {
     slug: 'stitch-vs-claude',
-    title: 'Stitch vs Claude: ¿qué herramienta de IA usamos para conceptos de cliente?',
-    eyebrow: 'REUNIÓN DE ÁREA · IA',
-    date: '28 mayo 2026',
-    intro:
-      'Probamos las dos herramientas con el mismo encargo, cinco contextos de marca y una recomendación al final. Slide-show navegable con las flechas del teclado.',
+    eyebrow: {
+      es: 'REUNIÓN DE ÁREA · IA',
+      en: 'AREA MEETING · AI',
+    },
+    title: {
+      es: 'Stitch o Claude: qué herramienta de IA usamos para conceptos de cliente',
+      en: 'Stitch or Claude: which AI tool we use for client concepts',
+    },
+    date: {
+      es: '28 mayo 2026',
+      en: 'May 28, 2026',
+    },
+    intro: {
+      es: 'Mismo encargo, cuatro escenarios de marca y una recomendación al final. Presentación navegable con las flechas del teclado.',
+      en: 'Same brief, four brand scenarios, one recommendation at the end. Keyboard-navigable slide deck.',
+    },
     thumb: 'talk',
     to: '/talks/stitch-vs-claude',
   },
   {
     slug: 'mixin-brand-bind',
-    title: 'White-label en una línea: el mixin coherence-brand-bind',
-    eyebrow: 'TOKENS · WHITE-LABEL',
-    date: '25 mayo 2026',
-    intro:
-      'De 90 líneas de mapeos por marca a un @include de 8 líneas. Cómo el mixin resuelve la conversación de tokens del meeting del 22 de mayo sin romper el contrato con programación.',
+    eyebrow: {
+      es: 'TOKENS · WHITE LABEL',
+      en: 'TOKENS · WHITE LABEL',
+    },
+    title: {
+      es: 'White label en una línea: el mixin coherence-brand-bind',
+      en: 'White label in one line: the coherence-brand-bind mixin',
+    },
+    date: {
+      es: '25 mayo 2026',
+      en: 'May 25, 2026',
+    },
+    intro: {
+      es: 'De 110 líneas de mapeos por marca a un @include de 8. Cómo cerramos la conversación de tokens del 22 de mayo sin tocar el contrato con programación.',
+      en: 'From 110 lines of per-brand mappings to an 8-line @include. How we closed the token conversation from May 22 without touching the contract with engineering.',
+    },
     thumb: 'whitelabel',
   },
-  {
-    slug: 'proceso-componente',
-    title: 'Proceso de componentes',
-    eyebrow: 'PROCESO',
-    date: '12 mayo 2026',
-    intro:
-      'Cómo pasamos de "veo una necesidad de UI" a "spec listo para handoff". Primera entrada del blog.',
-    thumb: 'proceso',
-  },
 ];
+
+interface ViewPost {
+  slug: string;
+  eyebrow: string;
+  title: string;
+  date: string;
+  intro: string;
+  thumb: Thumb;
+  to?: string;
+}
 
 @Component({
   selector: 'site-blog-landing',
@@ -57,5 +82,30 @@ const POSTS: BlogPost[] = [
   styleUrl: './blog.landing.scss',
 })
 export class BlogLandingPage {
-  readonly posts = POSTS;
+  private readonly language = inject(LanguageService);
+  readonly lang = this.language.lang;
+
+  readonly headerCopy = computed(() => {
+    const isEn = this.lang() === 'en';
+    return {
+      eyebrow: isEn ? 'BLOG' : 'BLOG',
+      title: isEn ? 'Notes from the DS' : 'Notas del DS',
+      intro: isEn
+        ? 'Design and architecture decisions, written when the work ships. Per-demo case studies live inside their corresponding /demos/… page.'
+        : 'Decisiones de diseño y arquitectura, escritas al cerrar la entrega. Los casos de estudio por demo viven dentro de su /demos/… correspondiente.',
+    };
+  });
+
+  readonly posts = computed<ViewPost[]>(() => {
+    const isEn = this.lang() === 'en';
+    return POSTS.map((p) => ({
+      slug: p.slug,
+      eyebrow: isEn ? p.eyebrow.en : p.eyebrow.es,
+      title: isEn ? p.title.en : p.title.es,
+      date: isEn ? p.date.en : p.date.es,
+      intro: isEn ? p.intro.en : p.intro.es,
+      thumb: p.thumb,
+      to: p.to,
+    }));
+  });
 }

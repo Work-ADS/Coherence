@@ -11,10 +11,10 @@
     <a
       class="talk__exit"
       routerLink="/"
-      aria-label="Salir de la presentación y volver a Coherence"
+      [attr.aria-label]="chrome().exitAria"
     >
       <span aria-hidden="true">×</span>
-      <span class="talk__exit-text">Salir</span>
+      <span class="talk__exit-text">{{ chrome().exitLabel }}</span>
     </a>
   </header>
 
@@ -47,8 +47,8 @@
       @if (current().kind === 'prompt') {
         <figure class="slide__code">
           <figcaption class="slide__code-header">
-            <span class="slide__code-label">Prompt — planificador de jubilación</span>
-            <div class="slide__code-pills" role="group" aria-label="Copiar variante del prompt">
+            <span class="slide__code-label">{{ chrome().promptLabel }}</span>
+            <div class="slide__code-pills" role="group" [attr.aria-label]="chrome().promptVariantsAriaLabel">
               @for (key of promptVariantKeys; track key) {
                 <button
                   type="button"
@@ -56,12 +56,12 @@
                   [class.slide__code-pill--active]="activeVariant() === key"
                   [class.slide__code-pill--copied]="copiedVariant() === key"
                   [attr.aria-pressed]="activeVariant() === key"
-                  [attr.aria-label]="copiedVariant() === key ? 'Variante ' + promptVariants[key].label + ' copiada' : 'Copiar variante ' + promptVariants[key].label"
+                  [attr.aria-label]="chrome().copyVariantAria(promptVariants[key].label, copiedVariant() === key)"
                   (click)="copyVariant(key)"
                 >
                   @if (copiedVariant() === key) {
                     <span aria-hidden="true">✓</span>
-                    <span>Copiado</span>
+                    <span>{{ chrome().copied }}</span>
                   } @else {
                     <span aria-hidden="true">⧉</span>
                     <span>{{ promptVariants[key].label }}</span>
@@ -76,41 +76,34 @@
         <figure class="slide__code">
           <figcaption class="slide__code-header">
             <span class="slide__code-label">design-mastercard.md</span>
-            <div class="slide__code-pills" role="group" aria-label="Acciones del design.md">
+            <div class="slide__code-pills" role="group" [attr.aria-label]="chrome().designMdActionsAriaLabel">
               <button
                 type="button"
                 class="slide__code-pill"
                 [class.slide__code-pill--copied]="designMdCopied()"
-                [attr.aria-label]="designMdCopied() ? 'Design.md copiado al portapapeles' : 'Copiar design.md al portapapeles'"
+                [attr.aria-label]="chrome().designMdCopyAria(designMdCopied())"
                 (click)="copyDesignMd()"
               >
                 @if (designMdCopied()) {
                   <span aria-hidden="true">✓</span>
-                  <span>Copiado</span>
+                  <span>{{ chrome().copied }}</span>
                 } @else {
                   <span aria-hidden="true">⧉</span>
-                  <span>Copiar</span>
+                  <span>{{ chrome().copy }}</span>
                 }
               </button>
               <a
                 class="slide__code-pill"
                 [href]="designMdDownloadHref"
                 download="design-mastercard.md"
-                aria-label="Descargar design-mastercard.md"
+                [attr.aria-label]="chrome().designMdAria"
               >
                 <span aria-hidden="true">↓</span>
-                <span>Descargar</span>
+                <span>{{ chrome().download }}</span>
               </a>
             </div>
           </figcaption>
           <pre class="slide__code-body"><code>{{ designMdContent() }}</code></pre>
-        </figure>
-      } @else if (current().code) {
-        <figure class="slide__code">
-          <figcaption class="slide__code-header">
-            <span class="slide__code-label">{{ current().code!.label }}</span>
-          </figcaption>
-          <pre class="slide__code-body"><code>{{ current().code!.body }}</code></pre>
         </figure>
       }
 
@@ -152,24 +145,24 @@
     </article>
   </main>
 
-  <nav class="talk__nav" aria-label="Navegación de diapositivas">
+  <nav class="talk__nav" [attr.aria-label]="chrome().navAriaLabel">
     <afi-button
       variant="secondary"
       size="md"
       [disabled]="isFirst()"
-      ariaLabel="Diapositiva anterior"
+      [ariaLabel]="chrome().previousAria"
       (clicked)="prev()"
     >
-      ← Anterior
+      {{ chrome().previous }}
     </afi-button>
     <afi-button
       variant="primary"
       size="md"
       [disabled]="isLast()"
-      ariaLabel="Siguiente diapositiva"
+      [ariaLabel]="chrome().nextAria"
       (clicked)="next()"
     >
-      Siguiente →
+      {{ chrome().next }}
     </afi-button>
   </nav>
 </div>

@@ -1,14 +1,12 @@
 <section class="blog-landing">
   <header class="blog-landing__header">
-    <p class="blog-landing__eyebrow">BLOG</p>
-    <h1 class="blog-landing__title">Notas del DS</h1>
-    <p class="blog-landing__intro">
-      Decisiones de diseño y arquitectura escritas al momento del envío. Los casos de estudio por demo viven dentro de su /demos/&hellip; correspondiente.
-    </p>
+    <p class="blog-landing__eyebrow">{{ headerCopy().eyebrow }}</p>
+    <h1 class="blog-landing__title">{{ headerCopy().title }}</h1>
+    <p class="blog-landing__intro">{{ headerCopy().intro }}</p>
   </header>
 
   <ul class="blog-landing__list">
-    @for (post of posts; track post.slug) {
+    @for (post of posts(); track post.slug) {
       <li class="blog-landing__item">
         <a class="blog-landing__card" [routerLink]="post.to || ('/blog/' + post.slug)">
           <div class="blog-landing__card-thumb blog-landing__card-thumb--{{ post.thumb }}" aria-hidden="true">
@@ -19,17 +17,6 @@
                 <span class="thumb-wl__stripe thumb-wl__stripe--2"></span>
                 <span class="thumb-wl__stripe thumb-wl__stripe--3"></span>
                 <span class="thumb-wl__stripe thumb-wl__stripe--4"></span>
-              </div>
-            }
-            <!-- Proceso: 5 stacked phase dots with a connecting line -->
-            @if (post.thumb === 'proceso') {
-              <div class="thumb-proceso">
-                <span class="thumb-proceso__line"></span>
-                <span class="thumb-proceso__dot thumb-proceso__dot--1"></span>
-                <span class="thumb-proceso__dot thumb-proceso__dot--2"></span>
-                <span class="thumb-proceso__dot thumb-proceso__dot--3"></span>
-                <span class="thumb-proceso__dot thumb-proceso__dot--4"></span>
-                <span class="thumb-proceso__dot thumb-proceso__dot--5"></span>
               </div>
             }
             <!-- Talk: 3 mini slide cards that shift right on hover (suggests arrow navigation) -->

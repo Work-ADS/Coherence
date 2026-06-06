@@ -19,10 +19,13 @@ const DEMOS: DemoCard[] = [
     slug: 'wealth-planner-2026',
     title: 'Wealth Planner 2026',
     intro:
-      'Rediseño completo — patrimonio, evolución, simulación. Caso de estudio + demo interactivo.',
+      'Rediseño completo — patrimonio, evolución, simulación. Entra por el listado de planificaciones del cliente.',
     team: 'digital-solutions',
     status: 'En curso',
-    overviewRoute: '/demos/wealth-planner-2026',
+    // Card now lands on the listado (the per-cliente hub). The overview
+    // (case study + bitácora + documento funcional + tokens) is still
+    // reachable at /demos/wealth-planner-2026 for direct links.
+    overviewRoute: '/listado-planificaciones',
   },
   {
     slug: 'laboral-kutxa-sarevi',

@@ -37,6 +37,12 @@ export class RadioCardGroupComponent {
   readonly value = input<string>('');
   readonly ariaLabel = input<string>('');
   readonly name = input<string>('');
+  /**
+   * When true, cards size to their content (inline-flex layout). Useful
+   * for short-label questions like Sí/No so the cards don't stretch
+   * across a wide row. Default false → full-width grid columns.
+   */
+  readonly compact = input<boolean>(false);
 
   readonly valueChange = output<string>();
 

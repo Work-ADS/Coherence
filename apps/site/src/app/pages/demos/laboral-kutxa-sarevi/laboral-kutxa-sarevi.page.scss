@@ -1520,5 +1520,41 @@
       grid-template-columns: 1fr;
     }
   }
+
+  // ─── Per-route H1 hidden on BC (shared hero handles the page title) ───────
+  // The Figma datos / medidas / resumen pages keep one constant page title at
+  // the top ("Simulador de eficiencia energética"); the stepper indicates the
+  // current step. Per-route .surface-header H1 ("Datos de la vivienda" etc.)
+  // is redundant for BC and is hidden — the card section titles below carry
+  // the route-specific labels.
+  .surface > .surface-header {
+    display: none;
+  }
+}
+
+// ─── BC shared page header ────────────────────────────────────────────────────
+// Lives inside the .lk-shell BC scope. Verde-cooperativo title with the same
+// hero styling as the welcome page so the simulator reads as one product.
+.lk-sarevi--banco-cooperativo .bc-page-header {
+  padding-block: var(--dimension-8) var(--dimension-4);
+  text-align: start;
+
+  &__title {
+    margin: 0;
+    color: var(--color-banco-cooperativo-ink-default);
+    font-family: var(--font-brand-display);
+    font-weight: 700;
+    font-size: var(--dimension-9);
+    line-height: 1.1;
+    letter-spacing: -0.012em;
+  }
+
+  &__subtitle {
+    margin: var(--dimension-2) 0 0 0;
+    color: var(--color-banco-cooperativo-ink-soft);
+    font-family: var(--font-brand-text);
+    font-size: var(--dimension-4);
+    line-height: 1.45;
+  }
 }
 

@@ -1,5 +1,6 @@
 <div
   class="radio-card-group"
+  [class.radio-card-group--compact]="compact()"
   role="radiogroup"
   [attr.aria-label]="ariaLabel() || null"
 >
@@ -15,9 +16,7 @@
       (click)="select(option)"
     >
       <span class="radio-card__label">{{ option.label }}</span>
-      <span class="radio-card__dot" aria-hidden="true">
-        <span class="radio-card__dot-inner"></span>
-      </span>
+      <span class="radio-card__dot" aria-hidden="true"></span>
     </button>
   }
 </div>

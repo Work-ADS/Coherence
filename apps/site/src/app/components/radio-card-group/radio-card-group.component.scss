@@ -25,6 +25,18 @@
     grid-auto-flow: row;
     grid-auto-columns: minmax(0, 1fr);
   }
+
+  // Compact: cards size to content (label width + padding + dot) instead of
+  // stretching across the row. Used for short-label questions like Sí/No.
+  &--compact {
+    display: inline-flex;
+    flex-wrap: wrap;
+
+    .radio-card {
+      inline-size: auto;
+      min-inline-size: var(--dimension-26);
+    }
+  }
 }
 
 .radio-card {
@@ -75,9 +87,11 @@
   white-space: nowrap;
 }
 
-// Outer ring stays neutral; the inner dot is what colors in on selection.
-// On hover (non-selected), the ring picks up the soft active color to
-// preview the click — Figma node 4:6245 shows this as the third state.
+// Per Figma node 3:5975 + 4:6245 the selected radio dot is a solid
+// colored disc — no inner white ring. Default empty card shows a neutral
+// outline circle; hover (non-selected) tints the outline to preview the
+// click; selected fills the whole disc with --control-background-active
+// (AFI: gray ramp; BC: amarillo-suave).
 .radio-card__dot {
   flex: 0 0 auto;
   inline-size: var(--dimension-5);
@@ -85,46 +99,24 @@
   border-radius: var(--radius-full);
   background: var(--surface-default);
   border: var(--border-width-thick) solid var(--border-hairline);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   transition:
     background-color var(--duration-fast) var(--easing-enter),
-    border-color var(--duration-fast) var(--easing-enter);
+    border-color var(--duration-fast) var(--easing-enter),
+    transform var(--duration-fast) var(--easing-enter);
 }
 
 .radio-card:hover:not(:disabled):not(.radio-card--selected) .radio-card__dot {
   border-color: var(--control-background-active);
 }
 
-.radio-card__dot-inner {
-  inline-size: var(--dimension-3);
-  block-size: var(--dimension-3);
-  border-radius: var(--radius-full);
-  background: transparent;
-  transform: scale(0);
-  transition:
-    transform var(--duration-fast) var(--easing-enter),
-    background-color var(--duration-fast) var(--easing-enter);
-}
-
 .radio-card--selected .radio-card__dot {
-  // Selected dot uses --control-background-active. AFI maps that to the
-  // gray ramp; BC maps it to amarillo-suave (Figma secondary). The outer
-  // ring picks up the same color so the dot reads as one filled disc.
   border-color: var(--control-background-active);
   background: var(--control-background-active);
 }
 
-.radio-card--selected .radio-card__dot-inner {
-  background: var(--surface-default);
-  transform: scale(1);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .radio-card,
-  .radio-card__dot,
-  .radio-card__dot-inner {
+  .radio-card__dot {
     transition-duration: 0ms;
   }
 }

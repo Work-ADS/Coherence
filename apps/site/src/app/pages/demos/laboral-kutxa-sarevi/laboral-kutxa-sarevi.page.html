@@ -72,6 +72,16 @@
   <!-- ─── Main shell ─────────────────────────────────────────────── -->
   <div class="lk-shell" role="main" aria-label="Simulador Sarevi 360">
 
+    @if (brand() === 'banco-cooperativo' && route() !== 'welcome') {
+      <!-- Shared BC hero — Figma datos node 3:5975. The page title +
+           subtitle stay constant across datos / medidas / resumen; the
+           stepper below indicates the current step. -->
+      <header class="bc-page-header">
+        <h1 class="bc-page-header__title">Simulador de eficiencia energética</h1>
+        <p class="bc-page-header__subtitle">Selecciona el tipo de simulación que deseas realizar</p>
+      </header>
+    }
+
     <!-- ─── Welcome ───────────────────────────────────────────── -->
     @if (route() === 'welcome') {
       @if (brand() === 'banco-cooperativo') {
@@ -231,6 +241,7 @@
                   [value]="data().buscarDir"
                   (valueChange)="setBuscarDir($event)"
                   ariaLabel="Buscar dirección"
+                  [compact]="true"
                 />
               </div>
 
@@ -297,6 +308,7 @@
                 [value]="data().certificado"
                 (valueChange)="setCertificado($event)"
                 ariaLabel="Certificado de eficiencia"
+                [compact]="true"
               />
             } @else {
               <afi-segmented-control

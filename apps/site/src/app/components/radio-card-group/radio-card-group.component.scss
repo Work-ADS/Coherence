@@ -76,6 +76,8 @@
 }
 
 // Outer ring stays neutral; the inner dot is what colors in on selection.
+// On hover (non-selected), the ring picks up the soft active color to
+// preview the click — Figma node 4:6245 shows this as the third state.
 .radio-card__dot {
   flex: 0 0 auto;
   inline-size: var(--dimension-5);
@@ -89,6 +91,10 @@
   transition:
     background-color var(--duration-fast) var(--easing-enter),
     border-color var(--duration-fast) var(--easing-enter);
+}
+
+.radio-card:hover:not(:disabled):not(.radio-card--selected) .radio-card__dot {
+  border-color: var(--control-background-active);
 }
 
 .radio-card__dot-inner {

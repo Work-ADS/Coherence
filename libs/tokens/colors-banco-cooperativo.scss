@@ -17,9 +17,16 @@
 // specific step if it disagrees with the Figma token panel.
 //
 // Activation: <html data-brand="banco-cooperativo"> or any scoped wrapper.
+// The body:has() clause bridges these primitives to portalled afi-select
+// panels + backdrops, which afi-select moves to document.body when open —
+// the panel sits outside the BC simulator wrapper, so the cascade would
+// otherwise drop back to the AFI defaults (Roboto Serif). :has() lets us
+// re-apply BC's color + font primitives to those portalled nodes whenever
+// a BC simulator is anywhere in the document.
 // =============================================================================
 
-[data-brand="banco-cooperativo"] {
+[data-brand="banco-cooperativo"],
+body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__backdrop) {
   // ===========================================================================
   // verde-oscuro — deep cooperative teal (PRIMARY)
   // Role: main brand chrome — top bar, footer, primary CTA, branded headings.

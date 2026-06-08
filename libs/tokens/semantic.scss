@@ -685,7 +685,15 @@
 // use it for KPI badges and brand illustration tints, NOT for actions
 // (per the existing convention "severity only means severity, brand colors
 // for brand chrome").
-[data-brand="banco-cooperativo"] {
+// The `body:has(.lk-sarevi--banco-cooperativo) :is(...)` clause bridges BC
+// tokens to portalled afi-select panels + backdrops. afi-select moves its
+// panel to document.body when it opens, which puts it OUTSIDE the BC
+// simulator wrapper's [data-brand] scope — without the bridge the dropdown
+// falls back to AFI's Roboto Serif default. :has() lets us re-apply the
+// whole BC block to those portalled nodes whenever a BC simulator is in
+// the document. Same pattern can extend to other portalled primitives.
+[data-brand="banco-cooperativo"],
+body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__backdrop) {
   // 2026-06-08: re-bound to match the official Figma (file rw0MpBWVyKNmLZIkLJ9oyS).
   // Primary chrome = verde-cooperativo (#007a5d) — Figma's "Primary/primary-color".
   // Verde-oscuro (#1D4A3B) stays in the palette as the dark-accent helper

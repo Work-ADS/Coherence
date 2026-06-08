@@ -717,9 +717,12 @@
   --foreground-brand-active:  var(--color-banco-cooperativo-verde-oscuro-700);
 
   // Control surfaces — neutral-50 default + verde-cooperativo foreground so
-  // active states read on white.
+  // active states read on white. --control-background-active maps to
+  // amarillo-suave per the Figma (Primary/secondary-color = #febd53 drives
+  // radio-card dots, switch thumbs, segmented active backgrounds).
   --control-background-default:  var(--color-banco-cooperativo-neutral-50);
   --control-background-hover:    var(--color-banco-cooperativo-neutral-100);
+  --control-background-active:   var(--color-banco-cooperativo-amarillo-suave-500);
   --control-background-selected: var(--color-banco-cooperativo-neutral-200);
   --control-foreground-default:  var(--color-banco-cooperativo-verde-cooperativo-500);
   --control-foreground-hover:    var(--color-banco-cooperativo-verde-cooperativo-600);

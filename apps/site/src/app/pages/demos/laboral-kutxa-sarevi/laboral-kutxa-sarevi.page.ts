@@ -26,6 +26,7 @@ import {
 } from '@coherence/ui';
 
 import { BcFooterComponent } from '../../../components/bc-footer';
+import { RadioCardGroupComponent } from '../../../components/radio-card-group';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { MUNICIPIOS_ES } from './municipios-es';
 
@@ -175,6 +176,7 @@ const BRAND_CONFIG: Record<SareviBrand, {
     StepperComponent,
     DemoShellComponent,
     BcFooterComponent,
+    RadioCardGroupComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './laboral-kutxa-sarevi.page.html',

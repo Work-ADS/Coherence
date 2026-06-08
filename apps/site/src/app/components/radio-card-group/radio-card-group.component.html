@@ -1,0 +1,23 @@
+<div
+  class="radio-card-group"
+  role="radiogroup"
+  [attr.aria-label]="ariaLabel() || null"
+>
+  @for (option of options(); track option.value) {
+    <button
+      type="button"
+      role="radio"
+      class="radio-card"
+      [class.radio-card--selected]="isSelected(option)"
+      [class.radio-card--disabled]="option.disabled"
+      [disabled]="option.disabled"
+      [attr.aria-checked]="isSelected(option)"
+      (click)="select(option)"
+    >
+      <span class="radio-card__label">{{ option.label }}</span>
+      <span class="radio-card__dot" aria-hidden="true">
+        <span class="radio-card__dot-inner"></span>
+      </span>
+    </button>
+  }
+</div>

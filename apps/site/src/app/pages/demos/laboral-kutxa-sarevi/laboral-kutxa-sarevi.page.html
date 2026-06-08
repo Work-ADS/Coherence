@@ -178,13 +178,22 @@
 
           <div>
             <label class="field-label">¿De qué tipo es tu vivienda?</label>
-            <afi-segmented-control
-              [options]="tipoOptions"
-              [value]="data().tipoVivienda"
-              (valueChange)="setTipoVivienda($event)"
-              ariaLabel="Tipo de vivienda"
-              size="md"
-            />
+            @if (brand() === 'banco-cooperativo') {
+              <site-radio-card-group
+                [options]="tipoOptions"
+                [value]="data().tipoVivienda"
+                (valueChange)="setTipoVivienda($event)"
+                ariaLabel="Tipo de vivienda"
+              />
+            } @else {
+              <afi-segmented-control
+                [options]="tipoOptions"
+                [value]="data().tipoVivienda"
+                (valueChange)="setTipoVivienda($event)"
+                ariaLabel="Tipo de vivienda"
+                size="md"
+              />
+            }
           </div>
 
           @if (brand() === 'unicaja') {
@@ -217,13 +226,11 @@
             <div class="form-stack">
               <div>
                 <label class="field-label">¿Buscar dirección automáticamente?</label>
-                <afi-segmented-control
-                  class="sarevi-radio-inline"
+                <site-radio-card-group
                   [options]="siNoOptions"
                   [value]="data().buscarDir"
                   (valueChange)="setBuscarDir($event)"
                   ariaLabel="Buscar dirección"
-                  size="md"
                 />
               </div>
 
@@ -284,14 +291,23 @@
           </h2>
           <div>
             <label class="field-label">¿Tienes certificado de eficiencia energética?</label>
-            <afi-segmented-control
-              class="seg-control--sm-bool"
-              [options]="siNoOptions"
-              [value]="data().certificado"
-              (valueChange)="setCertificado($event)"
-              ariaLabel="Certificado de eficiencia"
-              size="md"
-            />
+            @if (brand() === 'banco-cooperativo') {
+              <site-radio-card-group
+                [options]="siNoOptions"
+                [value]="data().certificado"
+                (valueChange)="setCertificado($event)"
+                ariaLabel="Certificado de eficiencia"
+              />
+            } @else {
+              <afi-segmented-control
+                class="seg-control--sm-bool"
+                [options]="siNoOptions"
+                [value]="data().certificado"
+                (valueChange)="setCertificado($event)"
+                ariaLabel="Certificado de eficiencia"
+                size="md"
+              />
+            }
             @if (data().certificado === 'Sí') {
               <div class="energy-range">
                 @for (g of energyGrades; track g) {

@@ -13,6 +13,10 @@
 //   action ramp via `libs/tokens/_mixins.scss`).
 // - Muted connector → `--border-subtle`
 // - Todo badge → `--surface-default` + inset `--border-subtle`
+// - Optional current-step accent stripe under the label →
+//   `--stepper-current-accent-thickness` + `--stepper-current-accent-color`,
+//   both transparent by default. Brand themes opt in (e.g. BC sets these
+//   to render an amarillo-suave brushstroke under the active label).
 // =============================================================================
 
 :host {
@@ -142,6 +146,20 @@
     .afi-stepper__label {
       color: var(--foreground-primary-default);
       font: var(--type-body-md-500);
+      position: relative;
+      padding-block-end: var(--stepper-current-accent-thickness, 0);
+
+      // Optional accent stripe under the active label — brand themes set
+      // --stepper-current-accent-* on a wrapping element to opt in.
+      &::after {
+        content: '';
+        position: absolute;
+        inset-inline: var(--space-xs);
+        inset-block-end: 0;
+        block-size: var(--stepper-current-accent-thickness, 0);
+        background: var(--stepper-current-accent-color, transparent);
+        border-radius: var(--radius-full);
+      }
     }
   }
 

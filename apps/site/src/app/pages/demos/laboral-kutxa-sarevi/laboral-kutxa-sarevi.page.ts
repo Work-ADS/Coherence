@@ -15,12 +15,14 @@ import {
   ModalComponent,
   SegmentedControlComponent,
   SelectComponent,
+  StepperComponent,
   SwitchComponent,
   TabItemComponent,
   TabsComponent,
   type ChartColumn,
   type SegmentedOption,
   type SelectOption,
+  type StepperItem,
 } from '@coherence/ui';
 
 import { BcFooterComponent } from '../../../components/bc-footer';
@@ -163,6 +165,7 @@ const BRAND_CONFIG: Record<SareviBrand, {
     SwitchComponent,
     TabsComponent,
     TabItemComponent,
+    StepperComponent,
     DemoShellComponent,
     BcFooterComponent,
   ],
@@ -225,6 +228,21 @@ export class LaboralKutxaSareviPage {
     { key: 'medidas', number: '02', label: 'Medidas' },
     { key: 'resumen', number: '03', label: 'Resumen' },
   ];
+
+  /** afi-stepper consumes {key, label}; the legacy custom .steps consumes `number`. */
+  readonly stepperItems: StepperItem[] = this.steps.map(({ key, label }) => ({ key, label }));
+
+  /** 1-based index of the current route within the 3-step flow. Falls back to 1
+   *  on `welcome` so the primitive can render off-screen without crashing. */
+  readonly currentStepIndex = computed(() => {
+    const r = this.route();
+    const idx = this.steps.findIndex((s) => s.key === r);
+    return idx >= 0 ? idx + 1 : 1;
+  });
+
+  onStepperClicked(payload: { key: string }): void {
+    this.goTo(payload.key as Route);
+  }
 
   // Bar-chart shown on the medidas screen — live preview of the reduction
   // percentages that the currently-selected measures would produce. Same

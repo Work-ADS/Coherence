@@ -1454,5 +1454,62 @@
       letter-spacing: -0.005em;
     }
   }
+
+  // ─── Datos page chrome (Figma node 3:5975) ────────────────────────────────
+  // The afi-stepper primitive sits below the surface header; section card
+  // titles (h2) get a soft amarillo brushstroke; the alert panel goes neutral
+  // gray to match the Figma. The "Datos actuales estimados" metric cards at
+  // the bottom of the page are intentionally untouched per the user's
+  // request — they inherit BC tokens.
+
+  .bc-stepper {
+    display: block;
+    max-width: var(--dimension-150);
+    width: 100%;
+    margin: var(--dimension-6) auto var(--dimension-8);
+
+    // Token overrides cascade into the encapsulated afi-stepper primitive.
+    // Connector lines + todo outlines pick up verde-cooperativo via --border-subtle;
+    // todo numbers pick it up via --foreground-tertiary-default. The current-label
+    // accent stripe opts into the primitive's --stepper-current-accent-* slot.
+    --border-subtle: var(--color-banco-cooperativo-verde-cooperativo-500);
+    --foreground-tertiary-default: var(--color-banco-cooperativo-verde-cooperativo-500);
+    --stepper-current-accent-thickness: var(--dimension-0-75);
+    --stepper-current-accent-color: var(--color-banco-cooperativo-amarillo-suave-500);
+  }
+
+  // ─── Card title (h2 inside .surface > .card) — amarillo-suave underline ───
+  // Section headers in BC chrome use mid-green with a short soft-yellow
+  // brushstroke. The page H1 (.surface-header__title) is left plain — the
+  // accent lives on the per-section h2 titles per Figma.
+  .card__title {
+    color: var(--color-banco-cooperativo-verde-cooperativo-700);
+    position: relative;
+    padding-block-end: var(--dimension-2);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-inline-start: 0;
+      inset-block-end: 0;
+      inline-size: var(--dimension-32);
+      block-size: var(--dimension-0-75);
+      background: var(--color-banco-cooperativo-amarillo-suave-500);
+      border-radius: var(--radius-full);
+    }
+  }
+
+  // ─── Alert (gray neutral panel per Figma) ─────────────────────────────────
+  // Figma uses a neutral gray callout (Alert/background/default in the Figma
+  // variables); ours is yellow by default. Override for BC.
+  .alert {
+    background: var(--color-banco-cooperativo-neutral-100);
+    border-color: var(--color-banco-cooperativo-neutral-variant-200);
+    color: var(--color-banco-cooperativo-ink-default);
+
+    strong {
+      color: var(--color-banco-cooperativo-ink-default);
+    }
+  }
 }
 

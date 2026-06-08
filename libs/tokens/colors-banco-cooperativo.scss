@@ -60,10 +60,32 @@
 
 
   // ===========================================================================
-  // amarillo-espiga — wheat-sheaf yellow (TERTIARY / DECORATIVE ACCENT)
-  // Role: brand accent — KPI badges, logo color, illustration highlights.
-  // The "espiga" (wheat ear) is the cooperative bank's heritage symbol.
-  // Anchor estimated from logo PNG — confirm with the Figma token panel.
+  // amarillo-suave — soft warm secondary (CHROME ACCENT)
+  // Source: official Figma file rw0MpBWVyKNmLZIkLJ9oyS,
+  //   variable Primary/secondary-color = #febd53.
+  // Role: chrome accent — section header underlines, input unit suffixes
+  // ("m²", "habitantes"), radio active fills, segmented active background.
+  // Distinct from amarillo-espiga (which is reserved for the LOGO ONLY).
+  // ===========================================================================
+  --color-banco-cooperativo-amarillo-suave-0:   #FFFFFF;
+  --color-banco-cooperativo-amarillo-suave-25:  #FFFBF0;
+  --color-banco-cooperativo-amarillo-suave-50:  #FFF7E0;
+  --color-banco-cooperativo-amarillo-suave-100: #FEEDB8;
+  --color-banco-cooperativo-amarillo-suave-200: #FEE08A;
+  --color-banco-cooperativo-amarillo-suave-300: #FED372;
+  --color-banco-cooperativo-amarillo-suave-400: #FECA62;
+  --color-banco-cooperativo-amarillo-suave-500: #FEBD53;
+  --color-banco-cooperativo-amarillo-suave-600: #E1A640;
+  --color-banco-cooperativo-amarillo-suave-700: #B68330;
+  --color-banco-cooperativo-amarillo-suave-800: #835D22;
+  --color-banco-cooperativo-amarillo-suave-900: #553B15;
+
+
+  // ===========================================================================
+  // amarillo-espiga — wheat-sheaf yellow (LOGO ONLY)
+  // Role: BC logo glyph color. The Figma confirms the LOGO uses this bright
+  // saturated yellow but CHROME accents use the softer amarillo-suave above.
+  // Do not introduce amarillo-espiga into form chrome — that's amarillo-suave.
   // ===========================================================================
   --color-banco-cooperativo-amarillo-espiga-0:   #FFFFFF;
   --color-banco-cooperativo-amarillo-espiga-25:  #FFFCEB;

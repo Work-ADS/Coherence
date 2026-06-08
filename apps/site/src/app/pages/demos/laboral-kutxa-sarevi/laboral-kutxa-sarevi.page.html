@@ -17,7 +17,7 @@
       <span class="lk-topbar__sub">Sarevi 360</span>
     </div>
 
-    @if (route() !== 'welcome') {
+    @if (route() !== 'welcome' && brand() !== 'banco-cooperativo') {
       <nav class="steps" aria-label="Progreso de la simulación">
         @for (s of steps; track s.key) {
           @let state = stepState(s);
@@ -157,6 +157,16 @@
           </h1>
           <div class="surface-header__subtitle">Calcula la eficiencia energética que podrías alcanzar en los proyectos de tu vivienda.</div>
         </div>
+
+        @if (brand() === 'banco-cooperativo') {
+          <afi-stepper
+            class="bc-stepper"
+            [steps]="stepperItems"
+            [current]="currentStepIndex()"
+            ariaLabel="Progreso de la simulación"
+            (stepClicked)="onStepperClicked($event)"
+          />
+        }
 
         <div class="datos-form-wrap">
         <!-- Caso de reformas -->

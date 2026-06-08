@@ -400,7 +400,7 @@
                 </span>
               </div>
               <span class="stat__value">1.567<span class="stat__unit">€</span></span>
-              <span class="stat__hint">coste estimado por vivienda · vs media</span>
+              <span class="stat__hint">coste estimado por vivienda · frente a la media</span>
             </div>
             <div class="metric-card">
               <div class="metric-card__head">
@@ -411,7 +411,7 @@
                 </span>
               </div>
               <span class="stat__value">612.423<span class="stat__unit">kWh</span></span>
-              <span class="stat__hint">energía usada al año · vs media</span>
+              <span class="stat__hint">energía usada al año · frente a la media</span>
             </div>
             <div class="metric-card">
               <div class="metric-card__head">
@@ -422,7 +422,7 @@
                 </span>
               </div>
               <span class="stat__value">44<span class="stat__unit">kg CO<sub>2</sub></span></span>
-              <span class="stat__hint">huella de CO₂ estimada · vs media</span>
+              <span class="stat__hint">huella de CO₂ estimada · frente a la media</span>
             </div>
           </div>
         </section>
@@ -434,7 +434,7 @@
           </span>
           <div>
             <strong>Alerta</strong><br/>
-            La herramienta realiza cálculos automáticos basados en hipótesis y proyectos de referencia. Costes, materiales y dificultades técnicas pueden variar considerablemente. La reducción del consumo energético depende de múltiples factores. Por ello, es esencial consultar un profesional cualificado para determinar costes y mejoras de eficiencia precisos.
+            El simulador estima costes a partir de hipótesis y proyectos de referencia. Los precios, materiales y la dificultad técnica varían en cada obra, y la reducción del consumo depende de muchos factores. Para obtener cifras precisas, consulta a un profesional del sector.
           </div>
         </div>
 
@@ -458,7 +458,7 @@
           <h1 id="medidas-title" class="surface-header__title">
             Medidas para mejorar tu vivienda
           </h1>
-          <div class="surface-header__subtitle">Marca todas las que desees incluir en el cálculo</div>
+          <div class="surface-header__subtitle">Selecciona las medidas que quieras incluir en el cálculo.</div>
         </div>
 
         @if (brand() === 'banco-cooperativo') {
@@ -519,7 +519,7 @@
               @if (checked && variant() === 'basica' && m.id === expandedId()) {
                 <div class="medida-detail">
                   <div class="medida-detail__switch-row">
-                    <strong>Modificar parámetros</strong>
+                    <strong>Editar valores</strong>
                     <div class="medida-detail__auto">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><rect x="8" y="6" width="8" height="3"/><path d="M9 13h.01M12 13h.01M15 13h.01M9 17h.01M12 17h.01M15 17h.01"/></svg>
                       <afi-switch
@@ -546,7 +546,7 @@
               @if (checked && variant() === 'basica' && m.id !== expandedId()) {
                 <div class="medida-row__expand-toggle">
                   <button type="button" class="ocultar-link ocultar-link--mag" (click)="toggleExpanded(m.id)">
-                    Modificar parámetros ▾
+                    Editar valores ▾
                   </button>
                 </div>
               }

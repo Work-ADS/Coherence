@@ -395,6 +395,16 @@
           <div class="surface-header__subtitle">Marca todas las que desees incluir en el cálculo</div>
         </div>
 
+        @if (brand() === 'banco-cooperativo') {
+          <afi-stepper
+            class="bc-stepper"
+            [steps]="stepperItems"
+            [current]="currentStepIndex()"
+            ariaLabel="Progreso de la simulación"
+            (stepClicked)="onStepperClicked($event)"
+          />
+        }
+
         <div class="medidas-layout">
           <section class="card medidas-layout__list" aria-labelledby="medidas-list-title">
             <h2 id="medidas-list-title" class="card__title">
@@ -662,6 +672,16 @@
             Evaluación de la eficiencia energética
           </h1>
         </div>
+
+        @if (brand() === 'banco-cooperativo') {
+          <afi-stepper
+            class="bc-stepper"
+            [steps]="stepperItems"
+            [current]="currentStepIndex()"
+            ariaLabel="Progreso de la simulación"
+            (stepClicked)="onStepperClicked($event)"
+          />
+        }
 
         <!-- Ahorro anual estimado — bento grid: hero + grade + chart -->
         <section class="card card--summary" aria-labelledby="resumen-ahorro-title">

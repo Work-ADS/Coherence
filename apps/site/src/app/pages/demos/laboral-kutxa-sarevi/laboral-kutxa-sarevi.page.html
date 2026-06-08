@@ -478,13 +478,22 @@
               Tipos de medidas
             </h2>
 
-            <afi-segmented-control
-              [options]="variantOptions()"
-              [value]="variant()"
-              (valueChange)="setVariant($event)"
-              ariaLabel="Tipo de reforma"
-              size="md"
-            />
+            @if (brand() === 'banco-cooperativo') {
+              <site-radio-card-group
+                [options]="variantOptions()"
+                [value]="variant()"
+                (valueChange)="setVariant($event)"
+                ariaLabel="Tipo de reforma"
+              />
+            } @else {
+              <afi-segmented-control
+                [options]="variantOptions()"
+                [value]="variant()"
+                (valueChange)="setVariant($event)"
+                ariaLabel="Tipo de reforma"
+                size="md"
+              />
+            }
 
             <div>
               @for (m of visibleMedidas(); track m.id) {
@@ -688,7 +697,7 @@
                 [columns]="medidasReductionColumns()"
                 [maxValue]="100"
                 size="md"
-                ariaLabel="Reducciones estimadas: ahorro económico 99 por ciento, consumo energético 99 por ciento, emisiones de CO2 14 por ciento."
+                ariaLabel="Reducciones estimadas: ahorras el 99 por ciento del gasto, reduces el 99 por ciento del consumo y el 14 por ciento de las emisiones de CO2."
               />
             </section>
 

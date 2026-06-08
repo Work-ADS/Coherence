@@ -1463,9 +1463,8 @@
 
   .bc-stepper {
     display: block;
-    max-width: var(--dimension-150);
     width: 100%;
-    margin: var(--dimension-6) auto var(--dimension-8);
+    margin: var(--dimension-6) 0 var(--dimension-8);
 
     // Token overrides cascade into the encapsulated afi-stepper primitive.
     // Connector lines + todo outlines pick up verde-cooperativo via --border-subtle;

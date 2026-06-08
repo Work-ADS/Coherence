@@ -8,6 +8,7 @@ import {
 
 import type {
   StepperItem,
+  StepperLayout,
   StepperOrientation,
   StepperState,
 } from './stepper.variants';
@@ -47,12 +48,18 @@ export class StepperComponent {
   /** 1-based index of the current step. Out-of-range values clamp at render time. */
   readonly current = input.required<number>();
   readonly orientation = input<StepperOrientation>('horizontal');
+  /**
+   * Per-item layout. `inline` (default) keeps badge + label on one line;
+   * `stacked` centers the badge above the label per step. The BC datos
+   * page uses `stacked` to match the official Sarevi Figma.
+   */
+  readonly layout = input<StepperLayout>('inline');
   readonly ariaLabel = input<string>('Pasos del flujo');
 
   readonly stepClicked = output<{ key: string; index: number }>();
 
   readonly rootClasses = computed(() =>
-    `afi-stepper afi-stepper--${this.orientation()}`,
+    `afi-stepper afi-stepper--${this.orientation()} afi-stepper--${this.layout()}`,
   );
 
   /** Per-item state. `index` is 1-based to match the user-facing labels. */

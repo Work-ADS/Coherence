@@ -1,0 +1,122 @@
+<div class="i5">
+  <!-- Breadcrumb top bar -->
+  <div class="i5__breadcrumb">
+    <a
+      routerLink="/blog"
+      class="i5__breadcrumb-back"
+      aria-label="Volver al blog"
+    >
+      <svg class="i5__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+    <span class="i5__breadcrumb-parent">Blog</span>
+    <span class="i5__breadcrumb-separator" aria-hidden="true">/</span>
+    <span class="i5__breadcrumb-current">Iteración 5</span>
+  </div>
+
+  <main class="i5__main">
+    <div class="i5__layout">
+      <div class="i5__content">
+        <afi-page-header
+          title="DS — Iteración 5"
+          subtitle="Rediseño visual del Banco Cooperativo. Banda doble en la cabecera, acento espiga en cada paso y cada sección, todo a través del set de tokens que ya teníamos. La estructura del Sarevi compartido no se toca — sólo cambia el look del recorrido BC."
+          [sticky]="false"
+          [scrollFade]="false"
+        >
+          <span slot="breadcrumb" class="i5__eyebrow">ITERACIÓN 5 · CERRADA</span>
+        </afi-page-header>
+
+        <!-- Summary -->
+        <section class="i5__summary">
+          <afi-section-header
+            eyebrow="Resumen"
+            title="Alcance de la iteración"
+            snippet="Un único brief — restyle visual sólo en la ruta BC. Cinco superficies tocadas: cabecera, stepper, cabeceras de sección, disciplina de tokens, validación whitelabel. Estructura del simulador compartido intacta; primitivas DS reutilizadas; tokens existentes ajustados sólo en valor."
+          />
+          <div class="i5__badges">
+            @if (totalTasks() === 0) {
+              <afi-badge size="sm" intent="neutral">1 · Brief por activar</afi-badge>
+            } @else {
+              @if (doneCount() > 0) {
+                <afi-badge size="sm" intent="success">{{ doneCount() }} · Hecho</afi-badge>
+              }
+              @if (enCursoCount() > 0) {
+                <afi-badge size="sm" intent="info">{{ enCursoCount() }} · En curso</afi-badge>
+              }
+              @if (pendingCount() > 0) {
+                <afi-badge size="sm" intent="neutral">{{ pendingCount() }} · Pendiente</afi-badge>
+              }
+            }
+          </div>
+        </section>
+
+        <!-- Surfaces -->
+        <div class="i5__surfaces">
+          @for (s of surfaces; track s.id) {
+            <article class="i5__surface" [id]="s.id">
+              <afi-section-header
+                [eyebrow]="s.eyebrow"
+                [title]="s.title"
+                [snippet]="s.snippet"
+              />
+
+              <ul class="i5__tasks">
+                @if (s.tasks.length === 0) {
+                  <li class="i5__task i5__task--empty">
+                    <p class="i5__task-text i5__task-text--empty">
+                      Brief pendiente · sin tareas registradas todavía.
+                    </p>
+                  </li>
+                } @else {
+                  @for (t of s.tasks; track t.text) {
+                    <li class="i5__task" [class.i5__task--done]="t.status === 'Hecho'">
+                      <p class="i5__task-text">
+                        <afi-badge
+                          class="i5__task-badge"
+                          size="sm"
+                          [intent]="
+                            t.status === 'Hecho'
+                              ? 'success'
+                              : t.status === 'En curso'
+                                ? 'info'
+                                : 'neutral'
+                          "
+                        >
+                          {{ t.status }}
+                        </afi-badge>
+                        <afi-badge class="i5__task-badge" size="sm" intent="neutral">
+                          {{ t.source }}
+                        </afi-badge>
+                        @if (t.href) {
+                          <a [routerLink]="t.href" class="i5__task-link">{{ t.text }}</a>
+                        } @else {
+                          {{ t.text }}
+                        }
+                      </p>
+                    </li>
+                  }
+                }
+              </ul>
+            </article>
+          }
+
+          <p class="i5__footnote">
+            El brief que ancla esta iteración vive en
+            <code class="i5__code"
+              >docs/session-briefs/2026-06-08-banco-cooperativo-redesign.md</code
+            >
+            y el rama es
+            <code class="i5__code">banco-cooperativo-redesign</code>.
+          </p>
+        </div>
+      </div>
+
+      <site-on-this-page class="i5__rail" [sections]="tocSections" />
+    </div>
+  </main>
+</div>

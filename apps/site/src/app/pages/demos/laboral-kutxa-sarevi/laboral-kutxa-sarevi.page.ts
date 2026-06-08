@@ -15,14 +15,18 @@ import {
   ModalComponent,
   SegmentedControlComponent,
   SelectComponent,
+  StepperComponent,
   SwitchComponent,
   TabItemComponent,
   TabsComponent,
   type ChartColumn,
   type SegmentedOption,
   type SelectOption,
+  type StepperItem,
 } from '@coherence/ui';
 
+import { BcFooterComponent } from '../../../components/bc-footer';
+import { RadioCardGroupComponent } from '../../../components/radio-card-group';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { MUNICIPIOS_ES } from './municipios-es';
 
@@ -50,6 +54,13 @@ interface DatosState {
   buscarDir: string;
   direccion: string;
   municipio: string;
+  /**
+   * Ciudad + codigoPostal are the BC-specific manual-address fields
+   * (3-input row when "No" is picked for ¿Buscar dirección automáticamente?).
+   * LK + Unicaja ignore these and use direccion / municipio instead.
+   */
+  ciudad: string;
+  codigoPostal: string;
   certificado: string;
   etiqueta: string;
   tamano: number;
@@ -59,16 +70,16 @@ interface DatosState {
 }
 
 const MEDIDAS: Medida[] = [
-  { id: 'sate',     name: '"SATE" - Sistema de aislamiento exterior',           impact: 'medio', cae: true,  basic: 38045,  full: 271885 },
+  { id: 'sate',     name: 'Sistema de aislamiento térmico por el exterior (SATE)', impact: 'medio', cae: true,  basic: 38045,  full: 271885 },
   { id: 'aisla',    name: 'Aislamiento de cámara interior (muros, buhardillas y tejados)', impact: 'bajo', cae: true,  basic: 14267,  full: 14267 },
-  { id: 'cubierta', name: 'Actuaciones en cubiertas',                            impact: 'medio', cae: true,  basic: 10313,  full: 14267 },
-  { id: 'solar',    name: 'Paneles solares térmicos para ACS',                   impact: 'bajo',  cae: true,  basic: 5100,   full: 4200 },
+  { id: 'cubierta', name: 'Mejora de cubiertas',                                  impact: 'medio', cae: true,  basic: 10313,  full: 14267 },
+  { id: 'solar',    name: 'Paneles solares térmicos para agua caliente sanitaria (ACS)', impact: 'bajo', cae: true, basic: 5100, full: 4200 },
   { id: 'aero',     name: 'Aerotermia',                                          impact: 'alto',  cae: true,  basic: 56892,  full: 56892 },
-  { id: 'suelo',    name: 'Suelo radiante/refrigerante',                         impact: 'medio', cae: false, basic: 52800,  full: 52800 },
-  { id: 'ilum',     name: 'Sustitución iluminación',                             impact: 'none',  cae: false, basic: 8580,   full: 46800 },
+  { id: 'suelo',    name: 'Suelo radiante y refrigerante',                       impact: 'medio', cae: false, basic: 52800,  full: 52800 },
+  { id: 'ilum',     name: 'Sustitución de la iluminación',                       impact: 'none',  cae: false, basic: 8580,   full: 46800 },
   { id: 'vent',     name: 'Sustitución de ventanas',                             impact: 'medio', cae: true,  basic: 69300,  full: 324000 },
   { id: 'caldera',  name: 'Sustitución y mejora de calderas centrales',         impact: 'bajo',  cae: true,  basic: null,   full: 70695 },
-  { id: 'fv',       name: 'Paneles solares fotovoltaicos - Autoconsumo',        impact: 'bajo',  cae: false, basic: 15135,  full: 20022 },
+  { id: 'fv',       name: 'Paneles solares fotovoltaicos para autoconsumo',     impact: 'bajo',  cae: false, basic: 15135,  full: 20022 },
   { id: 'reparti',  name: 'Repartidores de coste (calefacciones centrales)',     impact: 'alto',  cae: false, basic: null,   full: 25000 },
   { id: 'audit',    name: 'Auditoría energética',                                impact: 'bajo',  cae: false, basic: 900,    full: 900 },
   { id: 'ascensor', name: 'Renovación y mejora de ascensores',                   impact: 'alto',  cae: true,  basic: null,   full: 117500 },
@@ -162,7 +173,10 @@ const BRAND_CONFIG: Record<SareviBrand, {
     SwitchComponent,
     TabsComponent,
     TabItemComponent,
+    StepperComponent,
     DemoShellComponent,
+    BcFooterComponent,
+    RadioCardGroupComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './laboral-kutxa-sarevi.page.html',
@@ -192,8 +206,10 @@ export class LaboralKutxaSareviPage {
   readonly data = signal<DatosState>({
     tipoVivienda: 'Piso',
     buscarDir: 'No',
-    direccion: '',
+    direccion: '96 calle fuencaral',
     municipio: '',
+    ciudad: 'Madrid',
+    codigoPostal: '28012',
     certificado: '',
     etiqueta: 'E',
     tamano: 120,
@@ -224,29 +240,44 @@ export class LaboralKutxaSareviPage {
     { key: 'resumen', number: '03', label: 'Resumen' },
   ];
 
+  /** afi-stepper consumes {key, label}; the legacy custom .steps consumes `number`. */
+  readonly stepperItems: StepperItem[] = this.steps.map(({ key, label }) => ({ key, label }));
+
+  /** 1-based index of the current route within the 3-step flow. Falls back to 1
+   *  on `welcome` so the primitive can render off-screen without crashing. */
+  readonly currentStepIndex = computed(() => {
+    const r = this.route();
+    const idx = this.steps.findIndex((s) => s.key === r);
+    return idx >= 0 ? idx + 1 : 1;
+  });
+
+  onStepperClicked(payload: { key: string }): void {
+    this.goTo(payload.key as Route);
+  }
+
   // Bar-chart shown on the medidas screen — live preview of the reduction
   // percentages that the currently-selected measures would produce. Same
   // visual language as the resumen chart so both screens read as one story.
   readonly medidasReductionColumns = computed<ChartColumn[]>(() => [
     {
-      title: 'Ahorro económico',
+      title: 'Gasto al año',
       value: 320,
       appendString: ' €',
-      caption: '−99% gasto anual',
+      caption: '↓ 99%',
       color: this.brandConfig().chartPrimary,
     },
     {
-      title: 'Consumo energético',
+      title: 'Consumo al año',
       value: 1843,
       appendString: ' kWh',
-      caption: '−99% kWh/año',
+      caption: '↓ 99%',
       color: this.brandConfig().chartSecondary,
     },
     {
-      title: 'Emisiones CO₂',
+      title: 'Emisiones al año',
       value: 47,
       appendString: ' kg',
-      caption: '−14% CO₂/año',
+      caption: '↓ 14%',
       color: this.brandConfig().chartAccent,
     },
   ]);
@@ -364,7 +395,14 @@ export class LaboralKutxaSareviPage {
 
   readonly datosValid = computed(() => {
     const d = this.data();
-    return !!(d.tipoVivienda && d.municipio && d.certificado && d.calefaccion && d.refrigeracion);
+    // BC uses the 3-input address row (direccion / ciudad / codigoPostal)
+    // instead of the single municipio searchable select that LK + Unicaja
+    // still use. Pick the right gate per brand so Siguiente activates.
+    const addressOk =
+      this.brand() === 'banco-cooperativo'
+        ? !!(d.direccion && d.ciudad && d.codigoPostal)
+        : !!d.municipio;
+    return !!(d.tipoVivienda && addressOk && d.certificado && d.calefaccion && d.refrigeracion);
   });
 
   readonly afterGrade = computed(() => (this.selected().length >= 3 ? 'A' : 'B'));
@@ -421,6 +459,14 @@ export class LaboralKutxaSareviPage {
 
   setMunicipio(value: string | number | null): void {
     this.data.update((d) => ({ ...d, municipio: value == null ? '' : String(value) }));
+  }
+
+  setCiudad(value: string | number | null): void {
+    this.data.update((d) => ({ ...d, ciudad: value == null ? '' : String(value) }));
+  }
+
+  setCodigoPostal(value: string | number | null): void {
+    this.data.update((d) => ({ ...d, codigoPostal: value == null ? '' : String(value) }));
   }
 
   setCertificado(value: string): void {

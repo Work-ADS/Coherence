@@ -17,7 +17,7 @@
       <span class="lk-topbar__sub">Sarevi 360</span>
     </div>
 
-    @if (route() !== 'welcome') {
+    @if (route() !== 'welcome' && brand() !== 'banco-cooperativo') {
       <nav class="steps" aria-label="Progreso de la simulación">
         @for (s of steps; track s.key) {
           @let state = stepState(s);
@@ -72,39 +72,90 @@
   <!-- ─── Main shell ─────────────────────────────────────────────── -->
   <div class="lk-shell" role="main" aria-label="Simulador Sarevi 360">
 
+    @if (brand() === 'banco-cooperativo' && route() !== 'welcome') {
+      <!-- Shared BC hero — Figma datos node 3:5975. The page title +
+           subtitle stay constant across datos / medidas / resumen; the
+           stepper below indicates the current step. -->
+      <header class="bc-page-header">
+        <h1 class="bc-page-header__title">Simulador de eficiencia energética</h1>
+        <p class="bc-page-header__subtitle">Selecciona el tipo de simulación que deseas realizar</p>
+      </header>
+    }
+
     <!-- ─── Welcome ───────────────────────────────────────────── -->
     @if (route() === 'welcome') {
-      <section class="welcome-wrap" aria-labelledby="sarevi-welcome-title">
-        <span class="pill-tag">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 18c4 0 8-1 11-4 3-3 4-7 4-11-4 0-8 1-11 4-3 3-4 7-4 11Z"/><path d="M5 18c1-4 3-7 6-9"/></svg>
-          Sostenibilidad
-        </span>
-        <h1 id="sarevi-welcome-title" class="welcome-wrap__h1">Simulador de eficiencia energética</h1>
-        <p class="welcome-wrap__lead">Selecciona el tipo de simulación que deseas realizar</p>
-
-        <div class="welcome-wrap__cards">
-          <div class="welcome-grid">
-            <button type="button" class="choice-card" (click)="choose()">
-              <span class="choice-card__ico">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M15 9h2a2 2 0 0 1 2 2v10"/><path d="M3 21h18"/><path d="M8 8h2M8 12h2M8 16h2"/></svg>
-              </span>
-              <span class="choice-card__name">Edificio</span>
-              <span class="choice-card__desc">Para comunidades de propietarios y edificios completos</span>
-            </button>
-            <button type="button" class="choice-card" (click)="choose()">
-              <span class="choice-card__ico">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>
-              </span>
-              <span class="choice-card__name">Vivienda</span>
-              <span class="choice-card__desc">Para casas, apartamentos y pisos individuales</span>
-            </button>
+      @if (brand() === 'banco-cooperativo') {
+        <!-- BC welcome — Figma-aligned (file rw0MpBWVyKNmLZIkLJ9oyS, node 2:20973) -->
+        <section class="bc-welcome" aria-labelledby="sarevi-welcome-title">
+          <div class="bc-welcome__hero">
+            <div class="bc-welcome__hero-content">
+              <h1 id="sarevi-welcome-title" class="bc-welcome__h1">Simulador de eficiencia energética</h1>
+              <p class="bc-welcome__lead">Selecciona el tipo de simulación que deseas realizar</p>
+            </div>
           </div>
-        </div>
 
-        <button type="button" class="welcome-wrap__recover" (click)="openRecuperar()">
-          ¿Ya tienes un código de simulación? Recuperar simulación anterior
-        </button>
-      </section>
+          <div class="bc-welcome__choose">
+            <h2 class="bc-welcome__question">¿Qué necesitas?</h2>
+            <p class="bc-welcome__helper">Encuentra la opción más adecuada para conseguir la casa de tus sueños.</p>
+
+            <div class="bc-welcome__cards">
+              <button type="button" class="bc-choice-card" (click)="choose()">
+                <span class="bc-choice-card__icon" aria-hidden="true">
+                  <img
+                    class="bc-choice-card__img"
+                    src="assets/banco-cooperativo/icon-vivienda.svg"
+                    alt=""
+                  />
+                </span>
+                <span class="bc-choice-card__name">Vivienda</span>
+              </button>
+
+              <button type="button" class="bc-choice-card" (click)="choose()">
+                <span class="bc-choice-card__icon" aria-hidden="true">
+                  <img
+                    class="bc-choice-card__img"
+                    src="assets/banco-cooperativo/icon-edificio.svg"
+                    alt=""
+                  />
+                </span>
+                <span class="bc-choice-card__name">Edificio</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      } @else {
+        <section class="welcome-wrap" aria-labelledby="sarevi-welcome-title">
+          <span class="pill-tag">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 18c4 0 8-1 11-4 3-3 4-7 4-11-4 0-8 1-11 4-3 3-4 7-4 11Z"/><path d="M5 18c1-4 3-7 6-9"/></svg>
+            Sostenibilidad
+          </span>
+          <h1 id="sarevi-welcome-title" class="welcome-wrap__h1">Simulador de eficiencia energética</h1>
+          <p class="welcome-wrap__lead">Selecciona el tipo de simulación que deseas realizar</p>
+
+          <div class="welcome-wrap__cards">
+            <div class="welcome-grid">
+              <button type="button" class="choice-card" (click)="choose()">
+                <span class="choice-card__ico">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M15 9h2a2 2 0 0 1 2 2v10"/><path d="M3 21h18"/><path d="M8 8h2M8 12h2M8 16h2"/></svg>
+                </span>
+                <span class="choice-card__name">Edificio</span>
+                <span class="choice-card__desc">Para comunidades de propietarios y edificios completos</span>
+              </button>
+              <button type="button" class="choice-card" (click)="choose()">
+                <span class="choice-card__ico">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>
+                </span>
+                <span class="choice-card__name">Vivienda</span>
+                <span class="choice-card__desc">Para casas, apartamentos y pisos individuales</span>
+              </button>
+            </div>
+          </div>
+
+          <button type="button" class="welcome-wrap__recover" (click)="openRecuperar()">
+            ¿Ya tienes un código de simulación? Recuperar simulación anterior
+          </button>
+        </section>
+      }
     }
 
     <!-- ─── Datos ─────────────────────────────────────────────── -->
@@ -117,6 +168,17 @@
           <div class="surface-header__subtitle">Calcula la eficiencia energética que podrías alcanzar en los proyectos de tu vivienda.</div>
         </div>
 
+        @if (brand() === 'banco-cooperativo') {
+          <afi-stepper
+            class="bc-stepper"
+            [steps]="stepperItems"
+            [current]="currentStepIndex()"
+            layout="stacked"
+            ariaLabel="Progreso de la simulación"
+            (stepClicked)="onStepperClicked($event)"
+          />
+        }
+
         <div class="datos-form-wrap">
         <!-- Caso de reformas -->
         <section class="card" aria-labelledby="datos-caso-title">
@@ -126,13 +188,22 @@
 
           <div>
             <label class="field-label">¿De qué tipo es tu vivienda?</label>
-            <afi-segmented-control
-              [options]="tipoOptions"
-              [value]="data().tipoVivienda"
-              (valueChange)="setTipoVivienda($event)"
-              ariaLabel="Tipo de vivienda"
-              size="md"
-            />
+            @if (brand() === 'banco-cooperativo') {
+              <site-radio-card-group
+                [options]="tipoOptions"
+                [value]="data().tipoVivienda"
+                (valueChange)="setTipoVivienda($event)"
+                ariaLabel="Tipo de vivienda"
+              />
+            } @else {
+              <afi-segmented-control
+                [options]="tipoOptions"
+                [value]="data().tipoVivienda"
+                (valueChange)="setTipoVivienda($event)"
+                ariaLabel="Tipo de vivienda"
+                size="md"
+              />
+            }
           </div>
 
           @if (brand() === 'unicaja') {
@@ -160,6 +231,42 @@
                 emptyText="Sin municipios coincidentes"
                 (valueChange)="setMunicipio($event)"
               />
+            </div>
+          } @else if (brand() === 'banco-cooperativo') {
+            <div class="form-stack">
+              <div>
+                <label class="field-label">¿Buscar dirección automáticamente?</label>
+                <site-radio-card-group
+                  [options]="siNoOptions"
+                  [value]="data().buscarDir"
+                  (valueChange)="setBuscarDir($event)"
+                  ariaLabel="Buscar dirección"
+                  [compact]="true"
+                />
+              </div>
+
+              <div class="bc-address-row">
+                <afi-input
+                  label="Dirección"
+                  [value]="data().direccion"
+                  (valueChange)="setDireccion($event)"
+                />
+                <afi-select
+                  label="Ciudad"
+                  placeholder="Selecciona una opción"
+                  [options]="municipioOptions"
+                  [value]="data().ciudad"
+                  [searchable]="true"
+                  searchPlaceholder="Buscar ciudad…"
+                  emptyText="Sin ciudades coincidentes"
+                  (valueChange)="setCiudad($event)"
+                />
+                <afi-input
+                  label="Código postal"
+                  [value]="data().codigoPostal"
+                  (valueChange)="setCodigoPostal($event)"
+                />
+              </div>
             </div>
           } @else {
             <div class="form-stack">
@@ -195,14 +302,24 @@
           </h2>
           <div>
             <label class="field-label">¿Tienes certificado de eficiencia energética?</label>
-            <afi-segmented-control
-              class="seg-control--sm-bool"
-              [options]="siNoOptions"
-              [value]="data().certificado"
-              (valueChange)="setCertificado($event)"
-              ariaLabel="Certificado de eficiencia"
-              size="md"
-            />
+            @if (brand() === 'banco-cooperativo') {
+              <site-radio-card-group
+                [options]="siNoOptions"
+                [value]="data().certificado"
+                (valueChange)="setCertificado($event)"
+                ariaLabel="Certificado de eficiencia"
+                [compact]="true"
+              />
+            } @else {
+              <afi-segmented-control
+                class="seg-control--sm-bool"
+                [options]="siNoOptions"
+                [value]="data().certificado"
+                (valueChange)="setCertificado($event)"
+                ariaLabel="Certificado de eficiencia"
+                size="md"
+              />
+            }
             @if (data().certificado === 'Sí') {
               <div class="energy-range">
                 @for (g of energyGrades; track g) {
@@ -283,7 +400,7 @@
                 </span>
               </div>
               <span class="stat__value">1.567<span class="stat__unit">€</span></span>
-              <span class="stat__hint">coste estimado por vivienda · vs media</span>
+              <span class="stat__hint">coste estimado por vivienda · frente a la media</span>
             </div>
             <div class="metric-card">
               <div class="metric-card__head">
@@ -294,7 +411,7 @@
                 </span>
               </div>
               <span class="stat__value">612.423<span class="stat__unit">kWh</span></span>
-              <span class="stat__hint">energía usada al año · vs media</span>
+              <span class="stat__hint">energía usada al año · frente a la media</span>
             </div>
             <div class="metric-card">
               <div class="metric-card__head">
@@ -305,7 +422,7 @@
                 </span>
               </div>
               <span class="stat__value">44<span class="stat__unit">kg CO<sub>2</sub></span></span>
-              <span class="stat__hint">huella de CO₂ estimada · vs media</span>
+              <span class="stat__hint">huella de CO₂ estimada · frente a la media</span>
             </div>
           </div>
         </section>
@@ -317,7 +434,7 @@
           </span>
           <div>
             <strong>Alerta</strong><br/>
-            La herramienta realiza cálculos automáticos basados en hipótesis y proyectos de referencia. Costes, materiales y dificultades técnicas pueden variar considerablemente. La reducción del consumo energético depende de múltiples factores. Por ello, es esencial consultar un profesional cualificado para determinar costes y mejoras de eficiencia precisos.
+            El simulador estima costes a partir de hipótesis y proyectos de referencia. Los precios, materiales y la dificultad técnica varían en cada obra, y la reducción del consumo depende de muchos factores. Para obtener cifras precisas, consulta a un profesional del sector.
           </div>
         </div>
 
@@ -341,8 +458,19 @@
           <h1 id="medidas-title" class="surface-header__title">
             Medidas para mejorar tu vivienda
           </h1>
-          <div class="surface-header__subtitle">Marca todas las que desees incluir en el cálculo</div>
+          <div class="surface-header__subtitle">Selecciona las medidas que quieras incluir en el cálculo.</div>
         </div>
+
+        @if (brand() === 'banco-cooperativo') {
+          <afi-stepper
+            class="bc-stepper"
+            [steps]="stepperItems"
+            [current]="currentStepIndex()"
+            layout="stacked"
+            ariaLabel="Progreso de la simulación"
+            (stepClicked)="onStepperClicked($event)"
+          />
+        }
 
         <div class="medidas-layout">
           <section class="card medidas-layout__list" aria-labelledby="medidas-list-title">
@@ -350,13 +478,22 @@
               Tipos de medidas
             </h2>
 
-            <afi-segmented-control
-              [options]="variantOptions()"
-              [value]="variant()"
-              (valueChange)="setVariant($event)"
-              ariaLabel="Tipo de reforma"
-              size="md"
-            />
+            @if (brand() === 'banco-cooperativo') {
+              <site-radio-card-group
+                [options]="variantOptions()"
+                [value]="variant()"
+                (valueChange)="setVariant($event)"
+                ariaLabel="Tipo de reforma"
+              />
+            } @else {
+              <afi-segmented-control
+                [options]="variantOptions()"
+                [value]="variant()"
+                (valueChange)="setVariant($event)"
+                ariaLabel="Tipo de reforma"
+                size="md"
+              />
+            }
 
             <div>
               @for (m of visibleMedidas(); track m.id) {
@@ -391,7 +528,7 @@
               @if (checked && variant() === 'basica' && m.id === expandedId()) {
                 <div class="medida-detail">
                   <div class="medida-detail__switch-row">
-                    <strong>Modificar parámetros</strong>
+                    <strong>Editar valores</strong>
                     <div class="medida-detail__auto">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><rect x="8" y="6" width="8" height="3"/><path d="M9 13h.01M12 13h.01M15 13h.01M9 17h.01M12 17h.01M15 17h.01"/></svg>
                       <afi-switch
@@ -418,7 +555,7 @@
               @if (checked && variant() === 'basica' && m.id !== expandedId()) {
                 <div class="medida-row__expand-toggle">
                   <button type="button" class="ocultar-link ocultar-link--mag" (click)="toggleExpanded(m.id)">
-                    Modificar parámetros ▾
+                    Editar valores ▾
                   </button>
                 </div>
               }
@@ -560,7 +697,7 @@
                 [columns]="medidasReductionColumns()"
                 [maxValue]="100"
                 size="md"
-                ariaLabel="Reducciones estimadas: ahorro económico 99 por ciento, consumo energético 99 por ciento, emisiones de CO2 14 por ciento."
+                ariaLabel="Reducciones estimadas al año: gasto baja un 99 por ciento, consumo baja un 99 por ciento, emisiones de CO2 bajan un 14 por ciento."
               />
             </section>
 
@@ -611,6 +748,17 @@
             Evaluación de la eficiencia energética
           </h1>
         </div>
+
+        @if (brand() === 'banco-cooperativo') {
+          <afi-stepper
+            class="bc-stepper"
+            [steps]="stepperItems"
+            [current]="currentStepIndex()"
+            layout="stacked"
+            ariaLabel="Progreso de la simulación"
+            (stepClicked)="onStepperClicked($event)"
+          />
+        }
 
         <!-- Ahorro anual estimado — bento grid: hero + grade + chart -->
         <section class="card card--summary" aria-labelledby="resumen-ahorro-title">
@@ -977,6 +1125,10 @@
       <afi-button variant="primary" (clicked)="infoOpen.set(false)">Cerrar</afi-button>
     </ng-container>
   </afi-modal>
+
+  @if (brand() === 'banco-cooperativo') {
+    <site-bc-footer />
+  }
 
 </div>
 </site-demo-shell>

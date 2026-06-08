@@ -70,16 +70,16 @@ interface DatosState {
 }
 
 const MEDIDAS: Medida[] = [
-  { id: 'sate',     name: '"SATE" - Sistema de aislamiento exterior',           impact: 'medio', cae: true,  basic: 38045,  full: 271885 },
+  { id: 'sate',     name: 'Sistema de aislamiento térmico por el exterior (SATE)', impact: 'medio', cae: true,  basic: 38045,  full: 271885 },
   { id: 'aisla',    name: 'Aislamiento de cámara interior (muros, buhardillas y tejados)', impact: 'bajo', cae: true,  basic: 14267,  full: 14267 },
-  { id: 'cubierta', name: 'Actuaciones en cubiertas',                            impact: 'medio', cae: true,  basic: 10313,  full: 14267 },
-  { id: 'solar',    name: 'Paneles solares térmicos para ACS',                   impact: 'bajo',  cae: true,  basic: 5100,   full: 4200 },
+  { id: 'cubierta', name: 'Mejora de cubiertas',                                  impact: 'medio', cae: true,  basic: 10313,  full: 14267 },
+  { id: 'solar',    name: 'Paneles solares térmicos para agua caliente sanitaria (ACS)', impact: 'bajo', cae: true, basic: 5100, full: 4200 },
   { id: 'aero',     name: 'Aerotermia',                                          impact: 'alto',  cae: true,  basic: 56892,  full: 56892 },
-  { id: 'suelo',    name: 'Suelo radiante/refrigerante',                         impact: 'medio', cae: false, basic: 52800,  full: 52800 },
-  { id: 'ilum',     name: 'Sustitución iluminación',                             impact: 'none',  cae: false, basic: 8580,   full: 46800 },
+  { id: 'suelo',    name: 'Suelo radiante y refrigerante',                       impact: 'medio', cae: false, basic: 52800,  full: 52800 },
+  { id: 'ilum',     name: 'Sustitución de la iluminación',                       impact: 'none',  cae: false, basic: 8580,   full: 46800 },
   { id: 'vent',     name: 'Sustitución de ventanas',                             impact: 'medio', cae: true,  basic: 69300,  full: 324000 },
   { id: 'caldera',  name: 'Sustitución y mejora de calderas centrales',         impact: 'bajo',  cae: true,  basic: null,   full: 70695 },
-  { id: 'fv',       name: 'Paneles solares fotovoltaicos - Autoconsumo',        impact: 'bajo',  cae: false, basic: 15135,  full: 20022 },
+  { id: 'fv',       name: 'Paneles solares fotovoltaicos para autoconsumo',     impact: 'bajo',  cae: false, basic: 15135,  full: 20022 },
   { id: 'reparti',  name: 'Repartidores de coste (calefacciones centrales)',     impact: 'alto',  cae: false, basic: null,   full: 25000 },
   { id: 'audit',    name: 'Auditoría energética',                                impact: 'bajo',  cae: false, basic: 900,    full: 900 },
   { id: 'ascensor', name: 'Renovación y mejora de ascensores',                   impact: 'alto',  cae: true,  basic: null,   full: 117500 },
@@ -260,24 +260,24 @@ export class LaboralKutxaSareviPage {
   // visual language as the resumen chart so both screens read as one story.
   readonly medidasReductionColumns = computed<ChartColumn[]>(() => [
     {
-      title: 'Ahorro económico',
+      title: 'Gasto al año',
       value: 320,
       appendString: ' €',
-      caption: '−99% gasto anual',
+      caption: '↓ 99%',
       color: this.brandConfig().chartPrimary,
     },
     {
-      title: 'Consumo energético',
+      title: 'Consumo al año',
       value: 1843,
       appendString: ' kWh',
-      caption: '−99% kWh/año',
+      caption: '↓ 99%',
       color: this.brandConfig().chartSecondary,
     },
     {
-      title: 'Emisiones CO₂',
+      title: 'Emisiones al año',
       value: 47,
       appendString: ' kg',
-      caption: '−14% CO₂/año',
+      caption: '↓ 14%',
       color: this.brandConfig().chartAccent,
     },
   ]);

@@ -777,6 +777,18 @@
     padding: var(--dimension-0-75) var(--dimension-2);
     border-radius: var(--dimension-1);
   }
+}
+
+// 2026-06-08 — BC scope override for .cae-badge.
+// The base .cae-badge (around line 80) hardcodes --color-laboral-kutxa-verde-*
+// tokens, which don't resolve in BC scope so the chip renders transparent on
+// the BC route. Bind to verde-cooperativo here so the CAE chip reads as the
+// brand's sustainability green.
+.lk-sarevi--banco-cooperativo {
+  .cae-badge {
+    background: var(--color-banco-cooperativo-verde-cooperativo-100);
+    color: var(--color-banco-cooperativo-verde-cooperativo-700);
+  }
 
   // Stacked Realizando-la-reforma + Costes (replaces the LK bento). The two
   // comparison cards (before / after) sit on top, and the Costes table card

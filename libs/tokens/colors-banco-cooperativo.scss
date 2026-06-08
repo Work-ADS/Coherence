@@ -67,6 +67,28 @@ body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__bac
 
 
   // ===========================================================================
+  // rojo-suave — soft warm warning (IMPACT BAJO / FEEDBACK)
+  // Role: traffic-light "bajo / poor" tier on impact tags and any feedback
+  // surface that needs a soft red. Pairs with amarillo-suave (medio) +
+  // verde-cooperativo (alto) so the impact chips read logically:
+  //   alto = green (good), medio = yellow (caution), bajo = red (poor),
+  //   none = neutral. Anchor 500 = #E07B6F (soft brick red, not aggressive).
+  // ===========================================================================
+  --color-banco-cooperativo-rojo-suave-0:   #FFFFFF;
+  --color-banco-cooperativo-rojo-suave-25:  #FDF5F4;
+  --color-banco-cooperativo-rojo-suave-50:  #FBEAE7;
+  --color-banco-cooperativo-rojo-suave-100: #F6CEC8;
+  --color-banco-cooperativo-rojo-suave-200: #EFAEA4;
+  --color-banco-cooperativo-rojo-suave-300: #E89A8E;
+  --color-banco-cooperativo-rojo-suave-400: #E48879;
+  --color-banco-cooperativo-rojo-suave-500: #E07B6F;
+  --color-banco-cooperativo-rojo-suave-600: #C46659;
+  --color-banco-cooperativo-rojo-suave-700: #9E4D41;
+  --color-banco-cooperativo-rojo-suave-800: #743429;
+  --color-banco-cooperativo-rojo-suave-900: #4A1F17;
+
+
+  // ===========================================================================
   // amarillo-suave — soft warm secondary (CHROME ACCENT)
   // Source: official Figma file rw0MpBWVyKNmLZIkLJ9oyS,
   //   variable Primary/secondary-color = #febd53.

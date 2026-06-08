@@ -195,14 +195,18 @@
   --text-soft:   var(--color-banco-cooperativo-ink-soft);
   --text-muted:  var(--color-banco-cooperativo-ink-muted);
 
-  --warn-bg: var(--color-banco-cooperativo-amarillo-espiga-100);
-  --warn-fg: var(--color-banco-cooperativo-amarillo-espiga-800);
-  --low-bg:  var(--color-banco-cooperativo-neutral-100);
-  --low-fg:  var(--color-banco-cooperativo-ink-soft);
-  --mid-bg:  var(--color-banco-cooperativo-verde-cooperativo-50);
-  --mid-fg:  var(--color-banco-cooperativo-verde-cooperativo-700);
-  --high-bg: var(--color-banco-cooperativo-amarillo-espiga-100);
-  --high-fg: var(--color-banco-cooperativo-amarillo-espiga-800);
+  // 2026-06-08 — impact tags follow traffic-light logic per user direction:
+  //   alto = light green (good outcome), medio = light yellow (caution),
+  //   bajo = light red (poor / weak outcome), none = neutral.
+  //   warn keeps the soft yellow for generic warnings.
+  --warn-bg: var(--color-banco-cooperativo-amarillo-suave-100);
+  --warn-fg: var(--color-banco-cooperativo-amarillo-suave-800);
+  --low-bg:  var(--color-banco-cooperativo-rojo-suave-100);
+  --low-fg:  var(--color-banco-cooperativo-rojo-suave-800);
+  --mid-bg:  var(--color-banco-cooperativo-amarillo-suave-100);
+  --mid-fg:  var(--color-banco-cooperativo-amarillo-suave-800);
+  --high-bg: var(--color-banco-cooperativo-verde-cooperativo-50);
+  --high-fg: var(--color-banco-cooperativo-verde-cooperativo-700);
   --none-bg: var(--color-banco-cooperativo-neutral-100);
   --none-fg: var(--color-banco-cooperativo-neutral-700);
 
@@ -1459,9 +1463,8 @@
 
   .bc-stepper {
     display: block;
-    max-width: var(--dimension-150);
     width: 100%;
-    margin: var(--dimension-6) auto var(--dimension-8);
+    margin: var(--dimension-6) 0 var(--dimension-8);
 
     // Token overrides cascade into the encapsulated afi-stepper primitive.
     // Connector lines + todo outlines pick up verde-cooperativo via --border-subtle;

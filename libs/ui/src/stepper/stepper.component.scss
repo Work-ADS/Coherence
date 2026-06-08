@@ -194,6 +194,40 @@
       align-self: center;
     }
   }
+
+  // ─── Stacked layout — badge above label per step ───────────────────────
+  // Horizontal orientation keeps the row of badges + connectors; each
+  // step's label drops below its badge. Connectors run between the badges
+  // at the badge's vertical midline (matched via align-self + transform on
+  // the connector row).
+  &--stacked {
+    .afi-stepper__list {
+      align-items: flex-start;
+    }
+
+    .afi-stepper__button {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2xs);
+      padding-inline: 0;
+      text-align: center;
+    }
+
+    .afi-stepper__label {
+      text-align: center;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    .afi-stepper__connector {
+      // Align connector with the badge's vertical center (badge height /2).
+      // `align-self: flex-start` + a top margin gets us there without
+      // knowing the consumer's label height.
+      align-self: flex-start;
+      margin-block-start: calc(var(--dimension-7) / 2);
+    }
+  }
 }
 
 // Wrap at narrow widths — the steps stack instead of overflowing.

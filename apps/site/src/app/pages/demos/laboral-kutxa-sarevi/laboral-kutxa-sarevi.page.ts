@@ -53,6 +53,13 @@ interface DatosState {
   buscarDir: string;
   direccion: string;
   municipio: string;
+  /**
+   * Ciudad + codigoPostal are the BC-specific manual-address fields
+   * (3-input row when "No" is picked for ¿Buscar dirección automáticamente?).
+   * LK + Unicaja ignore these and use direccion / municipio instead.
+   */
+  ciudad: string;
+  codigoPostal: string;
   certificado: string;
   etiqueta: string;
   tamano: number;
@@ -197,8 +204,10 @@ export class LaboralKutxaSareviPage {
   readonly data = signal<DatosState>({
     tipoVivienda: 'Piso',
     buscarDir: 'No',
-    direccion: '',
+    direccion: '96 calle fuencaral',
     municipio: '',
+    ciudad: 'Madrid',
+    codigoPostal: '28012',
     certificado: '',
     etiqueta: 'E',
     tamano: 120,
@@ -441,6 +450,14 @@ export class LaboralKutxaSareviPage {
 
   setMunicipio(value: string | number | null): void {
     this.data.update((d) => ({ ...d, municipio: value == null ? '' : String(value) }));
+  }
+
+  setCiudad(value: string | number | null): void {
+    this.data.update((d) => ({ ...d, ciudad: value == null ? '' : String(value) }));
+  }
+
+  setCodigoPostal(value: string | number | null): void {
+    this.data.update((d) => ({ ...d, codigoPostal: value == null ? '' : String(value) }));
   }
 
   setCertificado(value: string): void {

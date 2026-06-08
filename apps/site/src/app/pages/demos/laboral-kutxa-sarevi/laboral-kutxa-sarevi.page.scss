@@ -1506,5 +1506,19 @@
       color: var(--color-banco-cooperativo-ink-default);
     }
   }
+
+  // ─── Manual address row (Dirección · Ciudad · Código postal) ──────────────
+  // Per Figma the three address fields share one row at desktop and collapse
+  // to a single column on narrow viewports. Gap matches the form-stack gap
+  // for consistency with the rest of the section.
+  .bc-address-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--dimension-4);
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
 }
 

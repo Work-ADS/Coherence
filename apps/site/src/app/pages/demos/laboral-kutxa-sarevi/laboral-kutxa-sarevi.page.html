@@ -163,6 +163,7 @@
             class="bc-stepper"
             [steps]="stepperItems"
             [current]="currentStepIndex()"
+            layout="stacked"
             ariaLabel="Progreso de la simulación"
             (stepClicked)="onStepperClicked($event)"
           />
@@ -211,6 +212,43 @@
                 emptyText="Sin municipios coincidentes"
                 (valueChange)="setMunicipio($event)"
               />
+            </div>
+          } @else if (brand() === 'banco-cooperativo') {
+            <div class="form-stack">
+              <div>
+                <label class="field-label">¿Buscar dirección automáticamente?</label>
+                <afi-segmented-control
+                  class="sarevi-radio-inline"
+                  [options]="siNoOptions"
+                  [value]="data().buscarDir"
+                  (valueChange)="setBuscarDir($event)"
+                  ariaLabel="Buscar dirección"
+                  size="md"
+                />
+              </div>
+
+              <div class="bc-address-row">
+                <afi-input
+                  label="Dirección"
+                  [value]="data().direccion"
+                  (valueChange)="setDireccion($event)"
+                />
+                <afi-select
+                  label="Ciudad"
+                  placeholder="Selecciona una opción"
+                  [options]="municipioOptions"
+                  [value]="data().ciudad"
+                  [searchable]="true"
+                  searchPlaceholder="Buscar ciudad…"
+                  emptyText="Sin ciudades coincidentes"
+                  (valueChange)="setCiudad($event)"
+                />
+                <afi-input
+                  label="Código postal"
+                  [value]="data().codigoPostal"
+                  (valueChange)="setCodigoPostal($event)"
+                />
+              </div>
             </div>
           } @else {
             <div class="form-stack">
@@ -400,6 +438,7 @@
             class="bc-stepper"
             [steps]="stepperItems"
             [current]="currentStepIndex()"
+            layout="stacked"
             ariaLabel="Progreso de la simulación"
             (stepClicked)="onStepperClicked($event)"
           />
@@ -678,6 +717,7 @@
             class="bc-stepper"
             [steps]="stepperItems"
             [current]="currentStepIndex()"
+            layout="stacked"
             ariaLabel="Progreso de la simulación"
             (stepClicked)="onStepperClicked($event)"
           />

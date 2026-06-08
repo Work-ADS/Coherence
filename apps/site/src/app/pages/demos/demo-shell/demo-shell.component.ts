@@ -587,6 +587,27 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   async downloadScreenshot(): Promise<void> {
     const node = this.demoArea?.nativeElement;
     if (!node) return;
+
+    // Body-level portalled overlays (open afi-select panels + their
+    // backdrops) sit outside demoArea, so toPng misses them. Briefly
+    // reparent them into demoArea so the screenshot captures the actual
+    // visible STATE — open dropdowns, focused inputs, etc. The panels
+    // use `position: fixed` so they stay visually anchored after the
+    // reparent; restored to body afterward.
+    const overlaySelectors = [
+      '.afi-select__panel',
+      '.afi-select__backdrop',
+    ];
+    const reparented: Array<{ el: HTMLElement; parent: Node; next: Node | null }> = [];
+    for (const selector of overlaySelectors) {
+      document.body.querySelectorAll<HTMLElement>(`:scope > ${selector}`).forEach((el) => {
+        const parent = el.parentElement;
+        if (!parent) return;
+        reparented.push({ el, parent, next: el.nextSibling });
+        node.appendChild(el);
+      });
+    }
+
     try {
       const dataUrl = await toPng(node, {
         pixelRatio: 2,
@@ -601,6 +622,15 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
       a.remove();
     } catch (err) {
       console.error('[demo-shell] screenshot failed', err);
+    } finally {
+      // Restore overlays to their original parent in original order.
+      for (const { el, parent, next } of reparented) {
+        if (next && next.parentNode === parent) {
+          parent.insertBefore(el, next);
+        } else {
+          parent.appendChild(el);
+        }
+      }
     }
   }
 

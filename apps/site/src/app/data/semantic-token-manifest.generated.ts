@@ -740,6 +740,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "length"
   },
   {
+    "name": "--section-padding-inline",
+    "kind": "length"
+  },
+  {
     "name": "--section-padding-block",
     "kind": "length"
   },
@@ -901,10 +905,6 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--canvas-padding-block",
-    "kind": "length"
-  },
-  {
-    "name": "--section-padding-inline",
     "kind": "length"
   },
   {

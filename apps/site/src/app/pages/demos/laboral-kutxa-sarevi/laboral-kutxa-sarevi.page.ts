@@ -395,7 +395,14 @@ export class LaboralKutxaSareviPage {
 
   readonly datosValid = computed(() => {
     const d = this.data();
-    return !!(d.tipoVivienda && d.municipio && d.certificado && d.calefaccion && d.refrigeracion);
+    // BC uses the 3-input address row (direccion / ciudad / codigoPostal)
+    // instead of the single municipio searchable select that LK + Unicaja
+    // still use. Pick the right gate per brand so Siguiente activates.
+    const addressOk =
+      this.brand() === 'banco-cooperativo'
+        ? !!(d.direccion && d.ciudad && d.codigoPostal)
+        : !!d.municipio;
+    return !!(d.tipoVivienda && addressOk && d.certificado && d.calefaccion && d.refrigeracion);
   });
 
   readonly afterGrade = computed(() => (this.selected().length >= 3 ? 'A' : 'B'));

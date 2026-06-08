@@ -87,11 +87,10 @@
   white-space: nowrap;
 }
 
-// Per Figma node 3:5975 + 4:6245 the selected radio dot is a solid
-// colored disc — no inner white ring. Default empty card shows a neutral
-// outline circle; hover (non-selected) tints the outline to preview the
-// click; selected fills the whole disc with --control-background-active
-// (AFI: gray ramp; BC: amarillo-suave).
+// Per Figma node 3:5975 + 4:6245 the selected radio is a white disc with
+// a smaller filled dot inside (BC: amarillo-suave; AFI: action gray).
+// Outer ring stays white throughout; the inner dot scales in on selection.
+// Hover (non-selected) tints the outer ring to preview the click.
 .radio-card__dot {
   flex: 0 0 auto;
   inline-size: var(--dimension-5);
@@ -99,10 +98,21 @@
   border-radius: var(--radius-full);
   background: var(--surface-default);
   border: var(--border-width-thick) solid var(--border-hairline);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition:
     background-color var(--duration-fast) var(--easing-enter),
-    border-color var(--duration-fast) var(--easing-enter),
-    transform var(--duration-fast) var(--easing-enter);
+    border-color var(--duration-fast) var(--easing-enter);
+}
+
+.radio-card__dot-inner {
+  inline-size: var(--dimension-3);
+  block-size: var(--dimension-3);
+  border-radius: var(--radius-full);
+  background: var(--control-background-active);
+  transform: scale(0);
+  transition: transform var(--duration-fast) var(--easing-enter);
 }
 
 .radio-card:hover:not(:disabled):not(.radio-card--selected) .radio-card__dot {
@@ -111,12 +121,16 @@
 
 .radio-card--selected .radio-card__dot {
   border-color: var(--control-background-active);
-  background: var(--control-background-active);
+}
+
+.radio-card--selected .radio-card__dot-inner {
+  transform: scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .radio-card,
-  .radio-card__dot {
+  .radio-card__dot,
+  .radio-card__dot-inner {
     transition-duration: 0ms;
   }
 }

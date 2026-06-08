@@ -260,24 +260,24 @@ export class LaboralKutxaSareviPage {
   // visual language as the resumen chart so both screens read as one story.
   readonly medidasReductionColumns = computed<ChartColumn[]>(() => [
     {
-      title: 'Ahorras al año',
+      title: 'Gasto al año',
       value: 320,
       appendString: ' €',
-      caption: 'El 99% del gasto actual',
+      caption: '↓ 99%',
       color: this.brandConfig().chartPrimary,
     },
     {
-      title: 'Reduces consumo',
+      title: 'Consumo al año',
       value: 1843,
       appendString: ' kWh',
-      caption: 'El 99% del consumo actual',
+      caption: '↓ 99%',
       color: this.brandConfig().chartSecondary,
     },
     {
-      title: 'Reduces emisiones',
+      title: 'Emisiones al año',
       value: 47,
       appendString: ' kg',
-      caption: 'El 14% menos de CO₂',
+      caption: '↓ 14%',
       color: this.brandConfig().chartAccent,
     },
   ]);

@@ -585,8 +585,14 @@ export class DemoShellComponent implements AfterViewInit, OnDestroy {
   }
 
   async downloadScreenshot(): Promise<void> {
-    const node = this.demoArea?.nativeElement;
-    if (!node) return;
+    // Capture the entire body so portalled overlays (open afi-select
+    // panels + backdrops, CDK modals, tooltips, etc.) appear in the
+    // shot. The previous demoArea-only capture missed them because
+    // afi-select moves its panel to document.body whenever it opens.
+    // Side-effect: the demo-shell toolbar ends up in the screenshot too
+    // — it's the price of getting the actual visible state captured
+    // without a reparent that fights afi-select's own portal cycle.
+    const node = document.body;
     try {
       const dataUrl = await toPng(node, {
         pixelRatio: 2,

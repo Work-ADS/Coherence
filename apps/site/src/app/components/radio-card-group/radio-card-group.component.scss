@@ -1,0 +1,136 @@
+// =============================================================================
+// site-radio-card-group — full-width cards with corner radio dot
+// =============================================================================
+//
+// Horizontal grid where each option is a clickable card with the label on
+// the left and a circular dot on the right. Selecting fills the dot with
+// the action color. Token-driven so every brand picks up its own action /
+// secondary palette via the semantic cascade.
+//
+// Reference: Figma file rw0MpBWVyKNmLZIkLJ9oyS, datos node 3:5975.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.radio-card-group {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: var(--space-md);
+
+  // Wrap to single column on narrow viewports.
+  @media (max-width: 640px) {
+    grid-auto-flow: row;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+
+  // Compact: cards size to content (label width + padding + dot) instead of
+  // stretching across the row. Used for short-label questions like Sí/No.
+  &--compact {
+    display: inline-flex;
+    flex-wrap: wrap;
+
+    .radio-card {
+      inline-size: auto;
+      min-inline-size: var(--dimension-26);
+    }
+  }
+}
+
+.radio-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  inline-size: 100%;
+  min-block-size: var(--dimension-12);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--surface-default);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font: var(--type-body-md-400);
+  color: var(--canvas-fg);
+  text-align: start;
+  appearance: none;
+  transition:
+    border-color var(--duration-fast) var(--easing-enter),
+    box-shadow var(--duration-fast) var(--easing-enter);
+
+  &:hover:not(:disabled) {
+    border-color: var(--brand-secondary-background-default);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+
+  &--selected {
+    border-color: var(--brand-secondary-background-default);
+  }
+
+  &--disabled,
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+.radio-card__label {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Per Figma node 3:5975 + 4:6245 the selected radio is a white disc with
+// a smaller filled dot inside (BC: amarillo-suave; AFI: action gray).
+// Outer ring stays white throughout; the inner dot scales in on selection.
+// Hover (non-selected) tints the outer ring to preview the click.
+.radio-card__dot {
+  flex: 0 0 auto;
+  inline-size: var(--dimension-5);
+  block-size: var(--dimension-5);
+  border-radius: var(--radius-full);
+  background: var(--surface-default);
+  border: var(--border-width-thick) solid var(--border-hairline);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+}
+
+.radio-card__dot-inner {
+  inline-size: var(--dimension-3);
+  block-size: var(--dimension-3);
+  border-radius: var(--radius-full);
+  background: var(--control-background-active);
+  transform: scale(0);
+  transition: transform var(--duration-fast) var(--easing-enter);
+}
+
+.radio-card:hover:not(:disabled):not(.radio-card--selected) .radio-card__dot {
+  border-color: var(--control-background-active);
+}
+
+.radio-card--selected .radio-card__dot {
+  border-color: var(--control-background-active);
+}
+
+.radio-card--selected .radio-card__dot-inner {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radio-card,
+  .radio-card__dot,
+  .radio-card__dot-inner {
+    transition-duration: 0ms;
+  }
+}

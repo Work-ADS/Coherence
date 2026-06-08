@@ -9,9 +9,18 @@
   flex-direction: column;
   height: 100%;
   position: relative;
+  // Reserve space for the fixed toolbar — it sits above the demo-shell's
+  // own stacking context so CDK Overlay (selects, modals, tooltips) can't
+  // occlude the feedback controls (download PNG, mode picker, viewport).
+  padding-top: var(--dimension-11);
 }
 
 // ─── Toolbar ───────────────────────────────────────────────────────────────────
+// Position: fixed at the viewport top, z-index above CDK Overlay (which uses
+// 1000 by default). This guarantees the download / mode / breakpoint controls
+// stay interactive whenever ANY overlay is open inside the demo — a municipio
+// select dropdown, an info modal, a tooltip. Clicks on the toolbar fire the
+// toolbar handler without dismissing the open overlay.
 .toolbar {
   display: flex;
   align-items: center;
@@ -22,8 +31,10 @@
   border-bottom: var(--border-width-hairline) solid var(--border-hairline);
   background: var(--surface-quiet);
   flex-shrink: 0;
-  z-index: 20;
-  position: relative;
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 1050;
 }
 
 .toolbar__left,

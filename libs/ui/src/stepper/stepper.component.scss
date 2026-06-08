@@ -13,6 +13,10 @@
 //   action ramp via `libs/tokens/_mixins.scss`).
 // - Muted connector → `--border-subtle`
 // - Todo badge → `--surface-default` + inset `--border-subtle`
+// - Optional current-step accent stripe under the label →
+//   `--stepper-current-accent-thickness` + `--stepper-current-accent-color`,
+//   both transparent by default. Brand themes opt in (e.g. BC sets these
+//   to render an amarillo-suave brushstroke under the active label).
 // =============================================================================
 
 :host {
@@ -142,6 +146,20 @@
     .afi-stepper__label {
       color: var(--foreground-primary-default);
       font: var(--type-body-md-500);
+      position: relative;
+      padding-block-end: var(--stepper-current-accent-thickness, 0);
+
+      // Optional accent stripe under the active label — brand themes set
+      // --stepper-current-accent-* on a wrapping element to opt in.
+      &::after {
+        content: '';
+        position: absolute;
+        inset-inline: var(--space-xs);
+        inset-block-end: 0;
+        block-size: var(--stepper-current-accent-thickness, 0);
+        background: var(--stepper-current-accent-color, transparent);
+        border-radius: var(--radius-full);
+      }
     }
   }
 
@@ -174,6 +192,40 @@
       height: var(--dimension-6);
       min-width: 0;
       align-self: center;
+    }
+  }
+
+  // ─── Stacked layout — badge above label per step ───────────────────────
+  // Horizontal orientation keeps the row of badges + connectors; each
+  // step's label drops below its badge. Connectors run between the badges
+  // at the badge's vertical midline (matched via align-self + transform on
+  // the connector row).
+  &--stacked {
+    .afi-stepper__list {
+      align-items: flex-start;
+    }
+
+    .afi-stepper__button {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2xs);
+      padding-inline: 0;
+      text-align: center;
+    }
+
+    .afi-stepper__label {
+      text-align: center;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    .afi-stepper__connector {
+      // Align connector with the badge's vertical center (badge height /2).
+      // `align-self: flex-start` + a top margin gets us there without
+      // knowing the consumer's label height.
+      align-self: flex-start;
+      margin-block-start: calc(var(--dimension-7) / 2);
     }
   }
 }

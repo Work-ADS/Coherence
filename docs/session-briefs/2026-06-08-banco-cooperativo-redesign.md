@@ -1,9 +1,9 @@
 # Banco Cooperativo — Demo visual redesign
 
-**Status:** parked — awaits activation
+**Status:** superseded 2026-06-08
+**Superseded by:** [`2026-06-08-banco-cooperativo-welcome-figma-align.md`](2026-06-08-banco-cooperativo-welcome-figma-align.md) — the team handed over the official Sarevi Figma after this brief shipped. The chrome inferred here (dark verde-oscuro band + espiga-yellow underlines) was reverted on the same branch and rebuilt to match the Figma.
 **Branch:** `banco-cooperativo-redesign` (cut from `main` at `0b89996`, pushed to `github` 2026-06-08)
 **Created:** 2026-06-08
-**Activates:** when the user says go
 **Plan reference:** [`/Users/richardgriner/.claude/plans/this-is-a-different-nested-rain.md`](../../.claude/plans/this-is-a-different-nested-rain.md)
 
 ---

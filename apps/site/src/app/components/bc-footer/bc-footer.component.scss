@@ -1,0 +1,114 @@
+// =============================================================================
+// bc-footer — Banco Cooperativo Español site footer
+// =============================================================================
+//
+// Verde-cooperativo band with BC wordmark left, link list center, Ruralvía
+// right; copyright row below. Token-only — every color, dimension, and
+// font reads through a CSS custom property scoped to the BC brand block.
+// Reference: Figma file rw0MpBWVyKNmLZIkLJ9oyS, welcome node 2:20973.
+// =============================================================================
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.bc-footer {
+  background: var(--color-banco-cooperativo-verde-cooperativo-500);
+  color: var(--color-base-white);
+  font-family: var(--font-brand-text);
+  padding: var(--dimension-5) var(--dimension-14);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dimension-3);
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--dimension-6);
+    width: 100%;
+  }
+
+  &__brand {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &__brand-mark {
+    height: var(--dimension-8);
+    width: auto;
+    display: block;
+  }
+
+  &__nav {
+    justify-self: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--dimension-5);
+  }
+
+  &__link {
+    color: var(--color-base-white);
+    font-size: var(--dimension-3-5);
+    line-height: 1.4;
+    text-decoration: none;
+    transition: opacity var(--duration-fast) var(--easing-enter);
+
+    &:hover {
+      opacity: 0.78;
+      text-decoration: underline;
+      text-underline-offset: var(--dimension-0-75);
+    }
+
+    &:focus-visible {
+      outline: var(--dimension-0-5) solid var(--color-base-white);
+      outline-offset: var(--dimension-0-5);
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  &__partner {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--dimension-2);
+    color: var(--color-base-white);
+    text-decoration: none;
+    transition: opacity var(--duration-fast) var(--easing-enter);
+
+    &:hover { opacity: 0.85; }
+
+    &:focus-visible {
+      outline: var(--dimension-0-5) solid var(--color-base-white);
+      outline-offset: var(--dimension-0-5);
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  &__partner-mark {
+    width: var(--dimension-6);
+    height: var(--dimension-6);
+    display: block;
+  }
+
+  &__partner-name {
+    font-family: var(--font-brand-display);
+    font-size: var(--dimension-4-5);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+
+  &__copy {
+    margin: 0;
+    text-align: center;
+    font-size: var(--dimension-3-25);
+    color: var(--color-base-white);
+    opacity: 0.92;
+    letter-spacing: 0.01em;
+  }
+}

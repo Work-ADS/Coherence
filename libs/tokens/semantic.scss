@@ -686,9 +686,13 @@
 // (per the existing convention "severity only means severity, brand colors
 // for brand chrome").
 [data-brand="banco-cooperativo"] {
+  // 2026-06-08: re-bound to match the official Figma (file rw0MpBWVyKNmLZIkLJ9oyS).
+  // Primary chrome = verde-cooperativo (#007a5d) — Figma's "Primary/primary-color".
+  // Verde-oscuro (#1D4A3B) stays in the palette as the dark-accent helper
+  // (footer hover, deep contrast); it is NO LONGER the main brand band.
   @include coherence-brand-bind(
     $brand: 'banco-cooperativo',
-    $accent: 'verde-oscuro',
+    $accent: 'verde-cooperativo',
     $neutral: 'neutral',
     $ink-default: var(--color-banco-cooperativo-ink-default),
     $ink-soft:    var(--color-banco-cooperativo-ink-soft),
@@ -703,42 +707,41 @@
   --surface-default:  var(--color-base-white);
   --surface-subtle:   var(--color-banco-cooperativo-neutral-50);
   --surface-raised:   var(--color-base-white);
-  --surface-selected: var(--color-banco-cooperativo-verde-oscuro-50);
+  --surface-selected: var(--color-banco-cooperativo-verde-cooperativo-50);
 
-  // Mid-green secondary slot — verde-cooperativo carries the accent role
-  // separate from the deep verde-oscuro used for CTAs / chrome.
-  --foreground-brand-default: var(--color-banco-cooperativo-verde-cooperativo-500);
-  --foreground-brand-hover:   var(--color-banco-cooperativo-verde-cooperativo-600);
-  --foreground-brand-active:  var(--color-banco-cooperativo-verde-cooperativo-700);
+  // Deep verde-oscuro stays accessible as a foreground accent for places that
+  // need extra contrast against the mid-green chrome (rare — most uses now
+  // go through brand-secondary/* which the mixin bound to verde-cooperativo).
+  --foreground-brand-default: var(--color-banco-cooperativo-verde-oscuro-500);
+  --foreground-brand-hover:   var(--color-banco-cooperativo-verde-oscuro-600);
+  --foreground-brand-active:  var(--color-banco-cooperativo-verde-oscuro-700);
 
-  // Control surfaces — mirror the AFI default pattern (neutral-50 default,
-  // neutral-100 hover, neutral-200 selected) so the active state actually
-  // reads against the white surface. Foreground = brand-secondary-active
-  // (verde-oscuro-700) like the AFI rule binds it.
+  // Control surfaces — neutral-50 default + verde-cooperativo foreground so
+  // active states read on white.
   --control-background-default:  var(--color-banco-cooperativo-neutral-50);
   --control-background-hover:    var(--color-banco-cooperativo-neutral-100);
   --control-background-selected: var(--color-banco-cooperativo-neutral-200);
-  --control-foreground-default:  var(--color-banco-cooperativo-verde-oscuro-500);
-  --control-foreground-hover:    var(--color-banco-cooperativo-verde-oscuro-600);
-  --control-foreground-selected: var(--color-banco-cooperativo-verde-oscuro-700);
+  --control-foreground-default:  var(--color-banco-cooperativo-verde-cooperativo-500);
+  --control-foreground-hover:    var(--color-banco-cooperativo-verde-cooperativo-600);
+  --control-foreground-selected: var(--color-banco-cooperativo-verde-cooperativo-700);
   --control-border-default:      var(--color-banco-cooperativo-neutral-variant-200);
-  --control-border-hover:        var(--color-banco-cooperativo-verde-oscuro-300);
+  --control-border-hover:        var(--color-banco-cooperativo-verde-cooperativo-300);
 
-  // Borders — neutral subtle by default, verde-oscuro for focus/strong.
+  // Borders — neutral subtle by default, verde-cooperativo for focus/strong.
   // --border-hairline is an alias of --border-subtle in aliases.scss but the
   // alias is set at :root and doesn't pick up brand-scoped --border-subtle, so
   // re-declare it explicitly here. Input/control default borders read it.
   --border-subtle:   var(--color-banco-cooperativo-neutral-variant-100);
   --border-hairline: var(--color-banco-cooperativo-neutral-variant-100);
-  --border-default:  var(--color-banco-cooperativo-verde-oscuro-500);
-  --border-focus:    var(--color-banco-cooperativo-verde-oscuro-500);
+  --border-default:  var(--color-banco-cooperativo-verde-cooperativo-500);
+  --border-focus:    var(--color-banco-cooperativo-verde-cooperativo-500);
 
   // Inputs (text fields) — slight neutral tint so they read as recessed wells
   // ON the white surface (otherwise white-on-white = inputs disappear). The
   // border stays the contrast cue; the bg tint is the supporting differentiator.
   --input-background-default: var(--color-banco-cooperativo-neutral-50);
   --input-border-default:     var(--color-banco-cooperativo-neutral-variant-200);
-  --input-border-hover:       var(--color-banco-cooperativo-verde-oscuro-300);
+  --input-border-hover:       var(--color-banco-cooperativo-verde-cooperativo-300);
 
   --brand-mark-symbol: var(--color-banco-cooperativo-amarillo-espiga-500);
 }

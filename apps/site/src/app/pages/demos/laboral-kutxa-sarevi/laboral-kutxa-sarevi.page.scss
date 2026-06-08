@@ -169,23 +169,27 @@
 //   - Beige is replaced with cool neutrals (slate-50-ish) — BC's brand uses
 //     a cleaner data-product surface, not the warm paper of LK.
 .lk-sarevi--banco-cooperativo {
-  --bere:        var(--color-banco-cooperativo-verde-oscuro-500);
-  --bere-700:    var(--color-banco-cooperativo-verde-oscuro-700);
-  --bere-500:    var(--color-banco-cooperativo-verde-oscuro-500);
-  --bere-300:    var(--color-banco-cooperativo-verde-oscuro-300);
+  // 2026-06-08 alias remap — verde-cooperativo is now the brand primary per
+  // the official Figma. The --bere / --mag local aliases (LK legacy "magenta"
+  // slots) point at it. verde-oscuro stays available as -700/dark steps for
+  // accents that need extra contrast.
+  --bere:        var(--color-banco-cooperativo-verde-cooperativo-500);
+  --bere-700:    var(--color-banco-cooperativo-verde-cooperativo-700);
+  --bere-500:    var(--color-banco-cooperativo-verde-cooperativo-500);
+  --bere-300:    var(--color-banco-cooperativo-verde-cooperativo-300);
   --green:       var(--color-banco-cooperativo-verde-cooperativo-500);
   --green-700:   var(--color-banco-cooperativo-verde-cooperativo-700);
   --green-100:   var(--color-banco-cooperativo-verde-cooperativo-100);
   --green-50:    var(--color-banco-cooperativo-verde-cooperativo-50);
-  --mag:         var(--color-banco-cooperativo-verde-oscuro-500);
-  --mag-100:     var(--color-banco-cooperativo-verde-oscuro-100);
+  --mag:         var(--color-banco-cooperativo-verde-cooperativo-500);
+  --mag-100:     var(--color-banco-cooperativo-verde-cooperativo-100);
 
   --beige:       var(--color-base-white);
   --beige-deep:  transparent;
   --cream:       var(--color-banco-cooperativo-neutral-50);
   --card-soft:   var(--color-banco-cooperativo-neutral-50);
   --card:        var(--color-base-white);
-  --line:        var(--color-banco-cooperativo-verde-oscuro-100);
+  --line:        var(--color-banco-cooperativo-verde-cooperativo-100);
   --line-soft:   var(--color-banco-cooperativo-neutral-variant-100);
   --text:        var(--color-banco-cooperativo-ink-default);
   --text-soft:   var(--color-banco-cooperativo-ink-soft);
@@ -214,34 +218,11 @@
   --brand-secondary-foreground-disabled: var(--color-banco-cooperativo-ink-muted);
   --brand-secondary-border-disabled: var(--color-banco-cooperativo-neutral-variant-200);
 
-  // ----- BC decorative touches (green hover + footer band) -----
-  // (Tried espiga yellow accents on cards / pill / link — looked terrible,
-  // removed. Yellow stays reserved for the logo only.)
-
+  // ----- BC decorative touches ---------------------------------------------
   // Green tinted hover lift on choice cards — brand-aware via semantic token.
   .choice-card:hover {
     box-shadow: 0 var(--dimension-2) var(--dimension-6)
       color-mix(in srgb, var(--brand-secondary-background-default) 18%, transparent);
-  }
-
-  // Stepper accessibility on the dark-green topbar.
-  // - Inactive ("todo"): base uses --color-white-a74 — washes out on
-  //   verde-oscuro. Bump to white-a90 + thicker outline so it reads.
-  // - Active ("current"): base puts dark-green text on a white badge sitting
-  //   ON the green topbar — three surfaces of green/white competing. Invert:
-  //   verde-oscuro badge + white number reads as one unified token.
-  .step {
-    &--todo .step__badge {
-      color: var(--color-white-a90);
-      box-shadow: inset 0 0 0 var(--dimension-0-25) var(--color-white-a55);
-    }
-    &--todo .step__label {
-      color: var(--color-white-a90);
-    }
-    &--current .step__badge {
-      background: var(--bere);
-      color: var(--brand-secondary-foreground-default);
-    }
   }
 
   // CAE in costes-aproximados shows a NEGATIVE value (-9049 €) but it's a
@@ -249,22 +230,6 @@
   // we swap it to verde-cooperativo so the savings read as positive feedback.
   .lk-table__neg {
     color: var(--color-banco-cooperativo-verde-cooperativo-700);
-  }
-
-  // BC site-style footer band — sits at the bottom of the simulator viewport
-  // (the .lk-sarevi host is min-height:100vh + flex-column, so the pseudo
-  // element pushes to the bottom via margin-top:auto). Verde-oscuro background
-  // mirrors bancocooperativo.es footer treatment.
-  &::after {
-    content: "© Banco Cooperativo Español 2026 · Aviso legal · Política de cookies · Protección de datos";
-    margin-top: auto;
-    display: block;
-    padding: var(--dimension-5) var(--dimension-14);
-    background: var(--brand-secondary-background-default);
-    color: var(--brand-secondary-foreground-default);
-    text-align: center;
-    font: var(--type-body-sm-400);
-    letter-spacing: 0.02em;
   }
 }
 
@@ -1300,241 +1265,194 @@
 }
 
 // =============================================================================
-// Banco Cooperativo — live-product visual restyle (2026-06-08)
-// Brief: docs/session-briefs/2026-06-08-banco-cooperativo-redesign.md
+// Banco Cooperativo — welcome page (Figma-aligned)
+// =============================================================================
 //
-// Scope: BC route ONLY (LK + Unicaja chrome untouched). Sarevi screens, fields,
-// flow, and DS primitives are unchanged — this block only restyles the chrome
-// to match the live BC mortgage product (verde-oscuro brand band + light steps
-// band + espiga-yellow accent stripes under section heads + active step label).
-// All values flow through BC color tokens — no raw hex, rgba, or px.
+// Source of truth: Figma file rw0MpBWVyKNmLZIkLJ9oyS, node 2:20973 (welcome).
+// Brief: docs/session-briefs/2026-06-08-banco-cooperativo-welcome-figma-align.md
+//
+// Composition: slim verde-cooperativo topbar (centered BC logo) → full-width
+// hero band with `assets/banco-cooperativo/hero-welcome.png` background +
+// white left-aligned title/subtitle → centered question block → two large
+// illustrated choice cards (Vivienda + Edificio) → BC site footer.
+//
+// All values flow through BC color tokens — no raw hex / rgb / px.
+// Scoped to .lk-sarevi--banco-cooperativo so LK + Unicaja are untouched.
 // =============================================================================
 .lk-sarevi--banco-cooperativo {
-  // ─── Topbar: two visual bands via CSS grid ────────────────────────────────
-  // Live BC product splits the chrome into a dark brand band (logo centered)
-  // sitting above a light stepper band. The Sarevi HTML keeps brand, steps,
-  // and right-rail as flex siblings — grid placement re-flows them into the
-  // two-band layout WITHOUT any markup edit.
+  // ─── Topbar: solid verde-cooperativo, centered BC logo ────────────────────
+  // Figma shows a single slim mid-green band with the BC wordmark centered.
+  // The base .lk-topbar gradient is overridden to a flat brand-secondary fill
+  // (now resolves to verde-cooperativo via the 2026-06-08 token re-bind).
   .lk-topbar {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    grid-template-areas:
-      "brand-l brand   brand-r"
-      "steps   steps   steps";
-    align-items: center;
-    padding: 0;
-    gap: 0;
-    background: var(--color-banco-cooperativo-neutral-50);
-    isolation: isolate;
-
-    // Dark verde-oscuro band painted behind row 1 only.
-    // Placed as a grid item that spans all 3 columns of row 1, sits at z-index 0
-    // so the brand + right-rail render on top of it. `align-self: stretch` is
-    // required because the topbar's `align-items: center` would otherwise leave
-    // the pseudo at its intrinsic 0 height.
-    &::before {
-      content: '';
-      grid-column: 1 / -1;
-      grid-row: 1 / 2;
-      align-self: stretch;
-      justify-self: stretch;
-      background: var(--color-banco-cooperativo-verde-oscuro-500);
-      z-index: 0;
-    }
+    background: var(--brand-secondary-background-default);
+    padding: var(--dimension-4) var(--dimension-14);
 
     &__brand {
-      grid-area: brand;
-      justify-self: center;
-      align-self: center;
-      padding: var(--dimension-5) 0;
-      min-height: var(--dimension-20);
-      z-index: 1;
+      flex: 1 1 0;
+      justify-content: center;
+      gap: var(--dimension-2-5);
     }
 
-    &__sub {
-      // Quiet 'Sarevi 360' sublabel sitting beside the BC wordmark on the dark band.
-      color: var(--color-base-white);
-      opacity: 0.88;
-      font-weight: 400;
-      letter-spacing: 0.005em;
-    }
-
+    &__sub,
     &__sep {
-      display: none;  // BC live brand row uses no inline separator
+      display: none;  // Figma: no 'Sarevi 360' sublabel, no separator pipe
     }
 
     &__right {
-      grid-area: brand-r;
-      justify-self: end;
-      align-self: center;
-      padding: var(--dimension-5) var(--dimension-14) var(--dimension-5) 0;
-      color: var(--color-base-white);
-      z-index: 1;
-    }
-
-    &__ref-label,
-    &__ref-code {
-      color: var(--color-white-a75);
-    }
-
-    .topbar-download {
-      // Stay on the dark band — bright fg, glass hover.
-      --foreground-secondary-default: var(--color-base-white);
-      --surface-subtle: var(--color-white-a14);
-      --brand-tertiary-background-hover: var(--color-white-a14);
-      --brand-tertiary-foreground-hover: var(--color-base-white);
+      min-width: 0;  // collapse to content width; ref code is right-aligned
     }
   }
 
-  // ─── Stepper: restyled for the light band ─────────────────────────────────
-  // Override the topbar-on-dark stepper rules from `.step` (lines 423-477) and
-  // the `.lk-sarevi--banco-cooperativo .step` rules earlier in this file. The
-  // light band needs verde-cooperativo circles + an espiga underline that
-  // sits under the CURRENT step's label (the BC trademark visual cue).
-  .steps {
-    grid-area: steps;
-    padding: var(--dimension-5) var(--dimension-14);
-    background: transparent;
-    justify-content: center;
-    border-block-start: var(--dimension-0-25) solid var(--color-banco-cooperativo-neutral-variant-100);
-    gap: 0;
+  // ─── Welcome route: strip .lk-shell constraints so the hero is edge-to-edge
+  // The shell normally caps content at --dimension-270. The BC welcome hero
+  // spans the full viewport width; :has() targets only the BC welcome route
+  // so other routes (datos / medidas / resumen) keep the standard shell.
+  &:has(.bc-welcome) .lk-shell {
+    max-width: 100%;
+    padding: 0;
   }
 
-  .step {
-    background: transparent;
-    border-color: transparent;
-    border-radius: 0;
-    color: var(--color-banco-cooperativo-neutral-700);
-    padding: var(--dimension-1-5) var(--dimension-5);
+  // ─── BC welcome layout ────────────────────────────────────────────────────
+  .bc-welcome {
+    display: flex;
     flex-direction: column;
-    gap: var(--dimension-2);
-    position: relative;
+    background: var(--color-banco-cooperativo-neutral-50);
+
+    &__hero {
+      position: relative;
+      min-height: var(--dimension-72);
+      background-image: url('/assets/banco-cooperativo/hero-welcome.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      align-items: center;
+      padding: var(--dimension-12) var(--dimension-14);
+    }
+
+    &__hero-content {
+      position: relative;
+      max-width: var(--dimension-160);
+    }
+
+    &__h1 {
+      color: var(--color-base-white);
+      font-family: var(--font-brand-display);
+      font-weight: 700;
+      font-size: var(--dimension-12);
+      line-height: 1.08;
+      letter-spacing: -0.015em;
+      margin: 0;
+    }
+
+    &__lead {
+      color: var(--color-base-white);
+      font-family: var(--font-brand-text);
+      font-size: var(--dimension-4-25);
+      line-height: 1.4;
+      margin: var(--dimension-3) 0 0 0;
+      opacity: 0.94;
+    }
+
+    &__choose {
+      padding: var(--dimension-12) var(--dimension-6) var(--dimension-14);
+      max-width: var(--dimension-200);
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--dimension-2);
+    }
+
+    &__question {
+      color: var(--color-banco-cooperativo-verde-cooperativo-700);
+      font-family: var(--font-brand-display);
+      font-weight: 700;
+      font-size: var(--dimension-7);
+      line-height: 1.15;
+      margin: 0;
+      text-align: center;
+    }
+
+    &__helper {
+      color: var(--color-banco-cooperativo-ink-soft);
+      font-family: var(--font-brand-text);
+      font-size: var(--dimension-4);
+      line-height: 1.5;
+      margin: 0;
+      text-align: center;
+    }
+
+    &__cards {
+      margin-top: var(--dimension-8);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(var(--dimension-70), 1fr));
+      gap: var(--dimension-6);
+      width: 100%;
+      max-width: var(--dimension-150);
+    }
+  }
+
+  // ─── BC choice card (large, illustrated, label-only) ──────────────────────
+  .bc-choice-card {
+    background: var(--color-base-white);
+    border: var(--dimension-0-25) solid var(--color-banco-cooperativo-neutral-variant-200);
+    border-radius: var(--radius-xl);
+    padding: var(--dimension-8) var(--dimension-6) var(--dimension-6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--dimension-4);
+    cursor: pointer;
+    font: inherit;
+    transition:
+      transform var(--duration-fast) var(--easing-enter),
+      border-color var(--duration-fast) var(--easing-enter),
+      box-shadow var(--duration-fast) var(--easing-enter);
 
     &:hover {
-      background: transparent;
-      border-color: transparent;
+      transform: translateY(calc(-1 * var(--dimension-0-5)));
+      border-color: var(--color-banco-cooperativo-verde-cooperativo-400);
+      box-shadow: 0 var(--dimension-2) var(--dimension-6)
+        color-mix(in srgb, var(--color-banco-cooperativo-verde-cooperativo-500) 14%, transparent);
     }
 
     &:focus-visible {
-      outline-color: var(--color-banco-cooperativo-verde-cooperativo-500);
+      outline: var(--dimension-0-5) solid var(--color-banco-cooperativo-verde-cooperativo-500);
+      outline-offset: var(--dimension-0-5);
     }
 
-    // Connecting line between badges (drawn via the step's own ::before).
-    // First step omits the leading line — handled with :first-of-type.
-    &::before {
-      content: '';
-      position: absolute;
-      inset-block-start: var(--dimension-3-5);  // aligns to circle center
-      inset-inline-start: 0;
-      inset-inline-end: 50%;
-      block-size: var(--dimension-0-25);
-      background: var(--color-banco-cooperativo-verde-cooperativo-300);
-      z-index: 0;
+    &__icon {
+      width: var(--dimension-24);
+      height: var(--dimension-24);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      inset-block-start: var(--dimension-3-5);
-      inset-inline-start: 50%;
-      inset-inline-end: 0;
-      block-size: var(--dimension-0-25);
-      background: var(--color-banco-cooperativo-verde-cooperativo-300);
-      z-index: 0;
+    &__svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
-    &:first-of-type::before {
-      background: transparent;
+    &__svg-fill {
+      fill: var(--color-banco-cooperativo-verde-cooperativo-200);
     }
 
-    &:last-of-type::after {
-      background: transparent;
-    }
-
-    &__badge {
-      width: var(--dimension-7);
-      height: var(--dimension-7);
-      font-family: var(--font-text);
-      font-size: var(--dimension-3-25);
-      font-weight: 600;
-      z-index: 1;
-      position: relative;
-    }
-
-    &__label {
-      font-family: var(--font-text);
-      font-size: var(--dimension-3-25);
-      font-weight: 500;
-      color: var(--color-banco-cooperativo-neutral-700);
-      position: relative;
-    }
-
-    // Done — solid mid-green circle, dimmed label
-    &--done .step__badge {
-      background: var(--color-banco-cooperativo-verde-cooperativo-500);
-      color: var(--color-base-white);
-      box-shadow: none;
-    }
-    &--done .step__label {
-      color: var(--color-banco-cooperativo-neutral-500);
-    }
-
-    // Current — solid mid-green circle + espiga-yellow underline under label
-    &--current .step__badge {
-      background: var(--color-banco-cooperativo-verde-cooperativo-500);
-      color: var(--color-base-white);
-      box-shadow: none;
-    }
-    &--current {
-      background: transparent;
-      border-color: transparent;
-    }
-    &--current .step__label {
+    &__svg-line {
       color: var(--color-banco-cooperativo-verde-cooperativo-700);
+    }
+
+    &__name {
+      color: var(--color-banco-cooperativo-ink-default);
+      font-family: var(--font-brand-text);
+      font-size: var(--dimension-4-25);
       font-weight: 600;
-      padding-block-end: var(--dimension-1-5);
-
-      &::after {
-        content: '';
-        position: absolute;
-        inset-inline: var(--dimension-1);
-        inset-block-end: 0;
-        block-size: var(--dimension-0-75);
-        background: var(--color-banco-cooperativo-amarillo-espiga-500);
-        border-radius: var(--radius-full);
-      }
-    }
-
-    // Todo — outline circle, muted label
-    &--todo .step__badge {
-      background: var(--color-base-white);
-      color: var(--color-banco-cooperativo-verde-cooperativo-500);
-      box-shadow: inset 0 0 0 var(--dimension-0-25) var(--color-banco-cooperativo-verde-cooperativo-300);
-    }
-    &--todo .step__label {
-      color: var(--color-banco-cooperativo-neutral-500);
-    }
-  }
-
-  // ─── Section header: BC trademark espiga underline ────────────────────────
-  // Short amarillo-espiga brushstroke under `.surface-header__title`. The live
-  // BC product uses this on every panel head ("Información del cliente",
-  // "Resultados", etc.). Keep H1 (welcome-wrap__h1) untouched — that's the
-  // page hero, not a section head.
-  .surface-header__title {
-    color: var(--color-banco-cooperativo-verde-cooperativo-700);
-    position: relative;
-    padding-block-end: var(--dimension-3);
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset-inline-start: 0;
-      inset-block-end: 0;
-      inline-size: var(--dimension-32);
-      block-size: var(--dimension-0-75);
-      background: var(--color-banco-cooperativo-amarillo-espiga-500);
-      border-radius: var(--radius-full);
+      letter-spacing: -0.005em;
     }
   }
 }
+

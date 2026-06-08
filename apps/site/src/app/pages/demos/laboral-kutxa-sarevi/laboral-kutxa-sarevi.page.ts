@@ -23,6 +23,7 @@ import {
   type SelectOption,
 } from '@coherence/ui';
 
+import { BcFooterComponent } from '../../../components/bc-footer';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { MUNICIPIOS_ES } from './municipios-es';
 
@@ -163,6 +164,7 @@ const BRAND_CONFIG: Record<SareviBrand, {
     TabsComponent,
     TabItemComponent,
     DemoShellComponent,
+    BcFooterComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './laboral-kutxa-sarevi.page.html',

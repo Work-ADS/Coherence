@@ -1432,18 +1432,13 @@
       justify-content: center;
     }
 
-    &__svg {
+    // Brand-authored SVG illustrations from
+    // Afi brand/Banco Cooperativo example screens/Banco cooperativo/assets/.
+    // Figma colors (verde-cooperativo primary + mint) are baked into the SVG.
+    &__img {
       width: 100%;
       height: 100%;
       display: block;
-    }
-
-    &__svg-fill {
-      fill: var(--color-banco-cooperativo-verde-cooperativo-200);
-    }
-
-    &__svg-line {
-      color: var(--color-banco-cooperativo-verde-cooperativo-700);
     }
 
     &__name {

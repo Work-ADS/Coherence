@@ -1298,3 +1298,243 @@
     padding-top: var(--dimension-3);
   }
 }
+
+// =============================================================================
+// Banco Cooperativo — live-product visual restyle (2026-06-08)
+// Brief: docs/session-briefs/2026-06-08-banco-cooperativo-redesign.md
+//
+// Scope: BC route ONLY (LK + Unicaja chrome untouched). Sarevi screens, fields,
+// flow, and DS primitives are unchanged — this block only restyles the chrome
+// to match the live BC mortgage product (verde-oscuro brand band + light steps
+// band + espiga-yellow accent stripes under section heads + active step label).
+// All values flow through BC color tokens — no raw hex, rgba, or px.
+// =============================================================================
+.lk-sarevi--banco-cooperativo {
+  // ─── Topbar: two visual bands via CSS grid ────────────────────────────────
+  // Live BC product splits the chrome into a dark brand band (logo centered)
+  // sitting above a light stepper band. The Sarevi HTML keeps brand, steps,
+  // and right-rail as flex siblings — grid placement re-flows them into the
+  // two-band layout WITHOUT any markup edit.
+  .lk-topbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas:
+      "brand-l brand   brand-r"
+      "steps   steps   steps";
+    align-items: center;
+    padding: 0;
+    gap: 0;
+    background: var(--color-banco-cooperativo-neutral-50);
+    isolation: isolate;
+
+    // Dark verde-oscuro band painted behind row 1 only.
+    // Placed as a grid item that spans all 3 columns of row 1, sits at z-index 0
+    // so the brand + right-rail render on top of it. `align-self: stretch` is
+    // required because the topbar's `align-items: center` would otherwise leave
+    // the pseudo at its intrinsic 0 height.
+    &::before {
+      content: '';
+      grid-column: 1 / -1;
+      grid-row: 1 / 2;
+      align-self: stretch;
+      justify-self: stretch;
+      background: var(--color-banco-cooperativo-verde-oscuro-500);
+      z-index: 0;
+    }
+
+    &__brand {
+      grid-area: brand;
+      justify-self: center;
+      align-self: center;
+      padding: var(--dimension-5) 0;
+      min-height: var(--dimension-20);
+      z-index: 1;
+    }
+
+    &__sub {
+      // Quiet 'Sarevi 360' sublabel sitting beside the BC wordmark on the dark band.
+      color: var(--color-base-white);
+      opacity: 0.88;
+      font-weight: 400;
+      letter-spacing: 0.005em;
+    }
+
+    &__sep {
+      display: none;  // BC live brand row uses no inline separator
+    }
+
+    &__right {
+      grid-area: brand-r;
+      justify-self: end;
+      align-self: center;
+      padding: var(--dimension-5) var(--dimension-14) var(--dimension-5) 0;
+      color: var(--color-base-white);
+      z-index: 1;
+    }
+
+    &__ref-label,
+    &__ref-code {
+      color: var(--color-white-a75);
+    }
+
+    .topbar-download {
+      // Stay on the dark band — bright fg, glass hover.
+      --foreground-secondary-default: var(--color-base-white);
+      --surface-subtle: var(--color-white-a14);
+      --brand-tertiary-background-hover: var(--color-white-a14);
+      --brand-tertiary-foreground-hover: var(--color-base-white);
+    }
+  }
+
+  // ─── Stepper: restyled for the light band ─────────────────────────────────
+  // Override the topbar-on-dark stepper rules from `.step` (lines 423-477) and
+  // the `.lk-sarevi--banco-cooperativo .step` rules earlier in this file. The
+  // light band needs verde-cooperativo circles + an espiga underline that
+  // sits under the CURRENT step's label (the BC trademark visual cue).
+  .steps {
+    grid-area: steps;
+    padding: var(--dimension-5) var(--dimension-14);
+    background: transparent;
+    justify-content: center;
+    border-block-start: var(--dimension-0-25) solid var(--color-banco-cooperativo-neutral-variant-100);
+    gap: 0;
+  }
+
+  .step {
+    background: transparent;
+    border-color: transparent;
+    border-radius: 0;
+    color: var(--color-banco-cooperativo-neutral-700);
+    padding: var(--dimension-1-5) var(--dimension-5);
+    flex-direction: column;
+    gap: var(--dimension-2);
+    position: relative;
+
+    &:hover {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    &:focus-visible {
+      outline-color: var(--color-banco-cooperativo-verde-cooperativo-500);
+    }
+
+    // Connecting line between badges (drawn via the step's own ::before).
+    // First step omits the leading line — handled with :first-of-type.
+    &::before {
+      content: '';
+      position: absolute;
+      inset-block-start: var(--dimension-3-5);  // aligns to circle center
+      inset-inline-start: 0;
+      inset-inline-end: 50%;
+      block-size: var(--dimension-0-25);
+      background: var(--color-banco-cooperativo-verde-cooperativo-300);
+      z-index: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block-start: var(--dimension-3-5);
+      inset-inline-start: 50%;
+      inset-inline-end: 0;
+      block-size: var(--dimension-0-25);
+      background: var(--color-banco-cooperativo-verde-cooperativo-300);
+      z-index: 0;
+    }
+
+    &:first-of-type::before {
+      background: transparent;
+    }
+
+    &:last-of-type::after {
+      background: transparent;
+    }
+
+    &__badge {
+      width: var(--dimension-7);
+      height: var(--dimension-7);
+      font-family: var(--font-text);
+      font-size: var(--dimension-3-25);
+      font-weight: 600;
+      z-index: 1;
+      position: relative;
+    }
+
+    &__label {
+      font-family: var(--font-text);
+      font-size: var(--dimension-3-25);
+      font-weight: 500;
+      color: var(--color-banco-cooperativo-neutral-700);
+      position: relative;
+    }
+
+    // Done — solid mid-green circle, dimmed label
+    &--done .step__badge {
+      background: var(--color-banco-cooperativo-verde-cooperativo-500);
+      color: var(--color-base-white);
+      box-shadow: none;
+    }
+    &--done .step__label {
+      color: var(--color-banco-cooperativo-neutral-500);
+    }
+
+    // Current — solid mid-green circle + espiga-yellow underline under label
+    &--current .step__badge {
+      background: var(--color-banco-cooperativo-verde-cooperativo-500);
+      color: var(--color-base-white);
+      box-shadow: none;
+    }
+    &--current {
+      background: transparent;
+      border-color: transparent;
+    }
+    &--current .step__label {
+      color: var(--color-banco-cooperativo-verde-cooperativo-700);
+      font-weight: 600;
+      padding-block-end: var(--dimension-1-5);
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset-inline: var(--dimension-1);
+        inset-block-end: 0;
+        block-size: var(--dimension-0-75);
+        background: var(--color-banco-cooperativo-amarillo-espiga-500);
+        border-radius: var(--radius-full);
+      }
+    }
+
+    // Todo — outline circle, muted label
+    &--todo .step__badge {
+      background: var(--color-base-white);
+      color: var(--color-banco-cooperativo-verde-cooperativo-500);
+      box-shadow: inset 0 0 0 var(--dimension-0-25) var(--color-banco-cooperativo-verde-cooperativo-300);
+    }
+    &--todo .step__label {
+      color: var(--color-banco-cooperativo-neutral-500);
+    }
+  }
+
+  // ─── Section header: BC trademark espiga underline ────────────────────────
+  // Short amarillo-espiga brushstroke under `.surface-header__title`. The live
+  // BC product uses this on every panel head ("Información del cliente",
+  // "Resultados", etc.). Keep H1 (welcome-wrap__h1) untouched — that's the
+  // page hero, not a section head.
+  .surface-header__title {
+    color: var(--color-banco-cooperativo-verde-cooperativo-700);
+    position: relative;
+    padding-block-end: var(--dimension-3);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-inline-start: 0;
+      inset-block-end: 0;
+      inline-size: var(--dimension-32);
+      block-size: var(--dimension-0-75);
+      background: var(--color-banco-cooperativo-amarillo-espiga-500);
+      border-radius: var(--radius-full);
+    }
+  }
+}

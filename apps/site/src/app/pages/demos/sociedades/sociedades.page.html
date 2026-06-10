@@ -25,11 +25,6 @@
             [sticky]="false"
             [scrollFade]="false"
           >
-            <span
-              slot="breadcrumb"
-              class="uppercase tracking-wider text-action-700"
-              >SITUACIÓN ACTUAL</span
-            >
             <afi-button
               slot="actions"
               variant="primary"
@@ -84,7 +79,6 @@
               [rows]="sociedadRows()"
               [rowActions]="sociedadActions"
               trackByKey="id"
-              density="comfortable"
               (rowClicked)="onSociedadRowClick($event)"
               (rowActionClicked)="onSociedadAction($event)"
             />

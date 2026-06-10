@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { PageHeaderComponent } from '@coherence/ui';
 import { TeaserTileComponent } from '../../components/teaser-tile/teaser-tile.component';
-import { SectionHeaderComponent } from '../../components/section-header';
 
 @Component({
   selector: 'ai-insights-landing',
   standalone: true,
-  imports: [RouterLink, TeaserTileComponent, SectionHeaderComponent],
+  imports: [RouterLink, TeaserTileComponent, PageHeaderComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-[920px] mx-auto px-space-10 py-space-10">
@@ -19,13 +19,15 @@ import { SectionHeaderComponent } from '../../components/section-header';
       </p>
 
       <!-- ========== Ejemplos ========== -->
-      <afi-section-header
-        eyebrow="Ejemplos"
+      <afi-page-header
         title="Pantallas propuestas"
-        snippet="Cada pagina muestra una alternativa al diseno actual en Webflow."
-      />
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-space-4 mb-space-12">
+        subtitle="Cada pagina muestra una alternativa al diseno actual en Webflow."
+        level="section"
+        [sticky]="false"
+        [scrollFade]="false"
+        class="mb-space-12"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-4">
         <site-teaser-tile
           title="Home"
           href="/afi-insights/home"
@@ -106,16 +108,18 @@ import { SectionHeaderComponent } from '../../components/section-header';
             </div>
           </div>
         </site-teaser-tile>
-      </div>
+        </div>
+      </afi-page-header>
 
       <!-- ========== Caso de estudio ========== -->
-      <afi-section-header
-        eyebrow="Analisis"
+      <afi-page-header
         title="Caso de estudio"
-        snippet="El razonamiento detras de cada decision de diseno."
-      />
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-space-4">
+        subtitle="El razonamiento detras de cada decision de diseno."
+        level="section"
+        [sticky]="false"
+        [scrollFade]="false"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-4">
         <site-teaser-tile
           title="Caso de estudio — AFI Insights"
           href="/afi-insights/caso-de-estudio"
@@ -130,7 +134,8 @@ import { SectionHeaderComponent } from '../../components/section-header';
             </div>
           </div>
         </site-teaser-tile>
-      </div>
+        </div>
+      </afi-page-header>
     </div>
   `,
 })

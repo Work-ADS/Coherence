@@ -1,0 +1,143 @@
+// =============================================================================
+// cabeceras-ejemplo — composed demo of the page-patterns 3-level scaffold.
+// BEM block + design tokens only. No raw hex/rgba/px.
+// =============================================================================
+
+.cabeceras-ejemplo {
+  max-width: 72.5rem; // matches Figma frame
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+  padding-block: var(--space-md);
+
+  &__kicker {
+    font: var(--type-body-sm-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--foreground-action-700, var(--foreground-action-default));
+    margin-block-end: var(--space-sm);
+  }
+
+  &__tabs {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+  }
+
+  &__tab {
+    font: var(--type-body-sm-500);
+    color: var(--foreground-secondary-default);
+    padding-block-end: var(--space-xs);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--easing-enter);
+
+    &:hover {
+      color: var(--foreground-primary-default);
+    }
+
+    &--active {
+      color: var(--foreground-action-default);
+      border-bottom: var(--border-width-thick) solid var(--foreground-action-default);
+      font-weight: 500;
+    }
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  &__filter-label {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-sm);
+    width: 100%;
+  }
+
+  &__kpi-label {
+    font: var(--type-body-sm-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--foreground-tertiary-default, var(--foreground-secondary-default));
+    margin: 0 0 var(--space-xs);
+  }
+
+  &__kpi-value {
+    font: var(--type-section);
+    font-weight: 500;
+    color: var(--foreground-primary-default);
+    font-variant-numeric: tabular-nums;
+    margin: 0;
+
+    &--positive {
+      color: var(--foreground-success-default, var(--system-success-fg));
+    }
+  }
+
+  &__kpi-trend {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+    margin: var(--space-xs) 0 0;
+
+    &--up {
+      color: var(--foreground-success-default, var(--system-success-fg));
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-block-start: var(--space-md);
+  }
+
+  &__subsections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-block-start: var(--space-md);
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font: var(--type-body-sm-400);
+    margin-block-start: var(--space-sm);
+
+    th,
+    td {
+      padding: var(--space-xs) var(--space-sm);
+      border-bottom: var(--separator-thickness) solid var(--border-hairline);
+      text-align: left;
+    }
+
+    th {
+      font: var(--type-body-sm-500);
+      color: var(--foreground-secondary-default);
+      font-weight: 500;
+    }
+
+    td {
+      color: var(--foreground-primary-default);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  &__num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+
+    &--positive {
+      color: var(--foreground-success-default, var(--system-success-fg));
+    }
+  }
+}

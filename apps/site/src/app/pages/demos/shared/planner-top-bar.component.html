@@ -96,7 +96,7 @@
       </afi-dropdown-panel>
     </div>
 
-    <!-- Identity: client name + label + inline-edit simId -->
+    <!-- Identity: client name + label + inline-edit simId + nested path -->
     <div class="ptb__identity">
       <span class="ptb__client">{{ clientName() }} planificación:</span>
       <afi-inline-edit
@@ -104,6 +104,16 @@
         ariaLabel="nombre de la planificación"
         (committed)="onRename($event)"
       />
+
+      <!-- Scalable nested-page breadcrumb. Renders nothing when currentPath is empty. -->
+      @for (step of currentPath(); track step.label; let last = $last) {
+        <span class="ptb__path-sep" aria-hidden="true">/</span>
+        @if (step.route && !last) {
+          <a [routerLink]="step.route" class="ptb__path-step ptb__path-step--link">{{ step.label }}</a>
+        } @else {
+          <span class="ptb__path-step ptb__path-step--current" aria-current="page">{{ step.label }}</span>
+        }
+      }
     </div>
 
     <!-- State chip + dropdown -->

@@ -62,6 +62,7 @@ export class CabeceraDePaginaPage {
   readonly showCards = signal(true);
   readonly showFilters = signal(true);
   readonly showTabs = signal(true);
+  readonly showTabActions = signal(false);
   readonly contentType = signal<ContentType>('graph');
 
   readonly tokenRows = TOKEN_ROWS;
@@ -100,5 +101,9 @@ export class CabeceraDePaginaPage {
 
   toggleTabs(): void {
     this.showTabs.set(!this.showTabs());
+  }
+
+  toggleTabActions(): void {
+    this.showTabActions.set(!this.showTabActions());
   }
 }

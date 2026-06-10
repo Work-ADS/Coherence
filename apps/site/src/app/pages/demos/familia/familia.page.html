@@ -17,34 +17,25 @@
 
     <main class="flex-1 min-w-0 overflow-y-auto">
       <div class="max-w-[1180px] mx-auto py-space-8 px-space-6">
-        <!-- Page header — Familia. Version toggle pinned top-right so seniors
-             can compare layout variants across reviews (v1 = current; v2/v3
-             reserved). -->
-        <div class="relative">
-          <afi-page-header
-            title="Familia"
-            subtitle="Proporciona la información básica del cliente para comenzar la planificación financiera. Esta información inicial será utilizada para identificar y organizar el resto de los datos del cliente."
-            [sticky]="false"
-            [scrollFade]="false"
-          >
-            <span
-              slot="breadcrumb"
-              class="uppercase tracking-wider text-action-700"
-              >SITUACIÓN ACTUAL</span
-            >
-          </afi-page-header>
-          <div class="absolute top-0 right-space-8">
-            <site-version-toggle
-              [versions]="versions"
-              [value]="version()"
-              ariaLabel="Versión del layout de Familia"
-              (valueChange)="setVersion($event)"
-            />
-          </div>
-        </div>
+        <!-- Page header — Familia. Tabs + version toggle projected as slots
+             so they live inside the page-header per the page-patterns scaffold
+             (see /patrones/cabeceras). Version toggle in slot=actions; tabs +
+             tab content in the default body slot. -->
+        <afi-page-header
+          title="Familia"
+          subtitle="Proporciona la información básica del cliente para comenzar la planificación financiera. Esta información inicial será utilizada para identificar y organizar el resto de los datos del cliente."
+          [sticky]="false"
+          [scrollFade]="false"
+        >
+          <site-version-toggle
+            slot="actions"
+            [versions]="versions"
+            [value]="version()"
+            ariaLabel="Versión del layout de Familia"
+            (valueChange)="setVersion($event)"
+          />
 
-        <!-- ─── Tabs: Información básica · Miembros de la familia ───────── -->
-        <div class="mt-space-6">
+          <!-- ─── Tabs: Información básica · Miembros de la familia ───────── -->
           <afi-tabs
             [activeIndex]="activeTab()"
             (activeChange)="activeTab.set($event)"
@@ -55,8 +46,15 @@
             <!-- ═══════════════════════════════════════════════════════════ -->
             <afi-tab-item label="Información básica">
               <div class="familia-stack">
-                <!-- Card 1 · Información general (cliente) -->
-                <afi-section title="Información general">
+                <!-- Card 1 · Información general (cliente) — uses afi-page-header
+                     level=section per the page-patterns scaffold (see
+                     /patrones/cabeceras). -->
+                <afi-page-header
+                  level="section"
+                  title="Información general"
+                  [sticky]="false"
+                  [scrollFade]="false"
+                >
                   <div class="familia-grid familia-grid--3">
                     <afi-input
                       label="Alias del cliente"
@@ -91,10 +89,15 @@
                       (valueChange)="setClienteGradoDiscapacidad($event)"
                     />
                   </div>
-                </afi-section>
+                </afi-page-header>
 
-                <!-- Card 2 · Situación laboral -->
-                <afi-section title="Situación laboral">
+                <!-- Card 2 · Situación laboral — same scaffold pattern -->
+                <afi-page-header
+                  level="section"
+                  title="Situación laboral"
+                  [sticky]="false"
+                  [scrollFade]="false"
+                >
                   <afi-radio-group legend="Tipo de actividad" [required]="true">
                     @for (opt of tipoActividadOptions; track opt.value) {
                       <afi-radio-group-item
@@ -163,7 +166,7 @@
                       />
                     </div>
                   }
-                </afi-section>
+                </afi-page-header>
               </div>
             </afi-tab-item>
 
@@ -172,15 +175,19 @@
             <!-- ═══════════════════════════════════════════════════════════ -->
             <afi-tab-item label="Miembros de la familia">
               <div class="familia-stack">
-                <!-- ─── Card · Cónyuge ─────────────────────────────────── -->
-                <afi-section
+                <!-- ─── Card · Cónyuge ─── afi-page-header level=section,
+                     collapsible (ported from afi-section). -->
+                <afi-page-header
+                  level="section"
                   title="Cónyuge"
-                  variant="collapsible"
+                  [collapsible]="true"
                   [expanded]="expanded().conyuge"
                   (expandedChange)="setExpanded('conyuge', $event)"
                   [count]="conyugeCount()"
                   [complete]="conyugeAnswered()"
                   ariaLabel="Mostrar u ocultar la información del cónyuge"
+                  [sticky]="false"
+                  [scrollFade]="false"
                 >
                   <div class="familia-conyuge-binary">
                     <afi-radio-group legend="¿Tiene cónyuge?">
@@ -302,16 +309,19 @@
                       }
                     </div>
                   }
-                </afi-section>
+                </afi-page-header>
 
-                <!-- ─── Card · Hijos ───────────────────────────────────── -->
-                <afi-section
+                <!-- ─── Card · Hijos ─── -->
+                <afi-page-header
+                  level="section"
                   title="Hijos"
-                  variant="collapsible"
+                  [collapsible]="true"
                   [expanded]="expanded().hijos"
                   (expandedChange)="setExpanded('hijos', $event)"
                   [count]="hijosCount()"
                   ariaLabel="Mostrar u ocultar la información de hijos"
+                  [sticky]="false"
+                  [scrollFade]="false"
                 >
                   @if (store.hijos().length === 0) {
                     <div class="familia-empty">
@@ -418,16 +428,19 @@
                       </afi-button>
                     </div>
                   }
-                </afi-section>
+                </afi-page-header>
 
-                <!-- ─── Card · Ascendientes ────────────────────────────── -->
-                <afi-section
+                <!-- ─── Card · Ascendientes ─── -->
+                <afi-page-header
+                  level="section"
                   title="Ascendientes"
-                  variant="collapsible"
+                  [collapsible]="true"
                   [expanded]="expanded().ascendientes"
                   (expandedChange)="setExpanded('ascendientes', $event)"
                   [count]="ascendientesCount()"
                   ariaLabel="Mostrar u ocultar la información de ascendientes"
+                  [sticky]="false"
+                  [scrollFade]="false"
                 >
                   @if (store.ascendientes().length === 0) {
                     <div class="familia-empty">
@@ -548,11 +561,11 @@
                       </afi-button>
                     </div>
                   }
-                </afi-section>
+                </afi-page-header>
               </div>
             </afi-tab-item>
           </afi-tabs>
-        </div>
+        </afi-page-header>
       </div>
     </main>
   </div>

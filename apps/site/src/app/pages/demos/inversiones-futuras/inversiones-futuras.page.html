@@ -12,9 +12,6 @@
     [sticky]="false"
     [scrollFade]="false"
   >
-    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
-      OBJETIVOS
-    </span>
     @if (store.inversionesFuturas().length > 0) {
       <afi-button
         slot="actions"
@@ -48,17 +45,21 @@
         </div>
       </div>
     } @else {
-      <afi-section title="Inversiones registradas">
+      <afi-page-header
+        level="section"
+        title="Inversiones registradas"
+        [sticky]="false"
+        [scrollFade]="false"
+      >
         <afi-table
           [columns]="tableColumns"
           [rows]="tableRows()"
           [rowActions]="tableActions"
           trackByKey="id"
-          density="comfortable"
           (rowClicked)="onTableRowClick($event)"
           (rowActionClicked)="onTableAction($event)"
         />
-      </afi-section>
+      </afi-page-header>
     }
   </div>
 </site-objetivos-page-shell>

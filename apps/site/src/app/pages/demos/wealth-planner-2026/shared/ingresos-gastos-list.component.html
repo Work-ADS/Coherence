@@ -16,7 +16,8 @@
 
       <main class="flex-1 min-w-0 overflow-y-auto">
         <div class="ig-page">
-          <!-- Page header -->
+          <!-- Page header — body content (empty state / table) projected INSIDE
+               via default <ng-content/> so it lives in the same enclosed area. -->
           <div class="relative">
             <afi-page-header
               [title]="title()"
@@ -24,9 +25,6 @@
               [sticky]="false"
               [scrollFade]="false"
             >
-              <span slot="breadcrumb" class="uppercase tracking-wider text-action-700"
-                >SITUACIÓN ACTUAL</span
-              >
               <afi-button
                 slot="actions"
                 variant="primary"
@@ -36,6 +34,32 @@
               >
                 {{ addLabel() }}
               </afi-button>
+
+              @if (rows().length === 0) {
+                <div class="ig-empty">
+                  <h2 class="ig-empty__title">{{ emptyLabel() }}</h2>
+                  <div class="ig-empty__action">
+                    <afi-button
+                      variant="primary"
+                      size="md"
+                      (clicked)="openAdd()"
+                      [ariaLabel]="addLabel()"
+                    >
+                      {{ addLabel() }}
+                    </afi-button>
+                  </div>
+                </div>
+              } @else {
+                <afi-table
+                  [columns]="tableColumns"
+                  [rows]="tableRows()"
+                  [rowActions]="tableActions"
+                  trackByKey="id"
+                  [emptyText]="emptyLabel()"
+                  (rowClicked)="onTableRowClicked($event)"
+                  (rowActionClicked)="onTableActionClicked($event)"
+                />
+              }
             </afi-page-header>
             <div class="absolute top-0 right-space-8">
               <site-version-toggle
@@ -45,36 +69,6 @@
                 (valueChange)="setVersion($event)"
               />
             </div>
-          </div>
-
-          <!-- Body -->
-          <div class="mt-space-6">
-            @if (rows().length === 0) {
-              <div class="ig-empty">
-                <h2 class="ig-empty__title">{{ emptyLabel() }}</h2>
-                <div class="ig-empty__action">
-                  <afi-button
-                    variant="primary"
-                    size="md"
-                    (clicked)="openAdd()"
-                    [ariaLabel]="addLabel()"
-                  >
-                    {{ addLabel() }}
-                  </afi-button>
-                </div>
-              </div>
-            } @else {
-              <afi-table
-                [columns]="tableColumns"
-                [rows]="tableRows()"
-                [rowActions]="tableActions"
-                trackByKey="id"
-                density="comfortable"
-                [emptyText]="emptyLabel()"
-                (rowClicked)="onTableRowClicked($event)"
-                (rowActionClicked)="onTableActionClicked($event)"
-              />
-            }
           </div>
         </div>
       </main>

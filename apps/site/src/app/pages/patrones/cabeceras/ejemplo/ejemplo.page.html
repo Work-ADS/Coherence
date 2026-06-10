@@ -1,0 +1,180 @@
+<div class="cabeceras-ejemplo">
+  <p class="cabeceras-ejemplo__kicker">PATRONES / CABECERAS / EJEMPLO</p>
+
+  <!--
+    NOTA: este ejemplo no usa [slot=breadcrumb] del afi-page-header. La
+    navegación contextual (incluido el patrón "back + nombre editable" de las
+    simulaciones) vive en la barra superior de la app, no en este scaffold.
+  -->
+  <afi-page-header
+    title="Patrimonio"
+    subtitle="Gestiona y visualiza todos tus activos y pasivos. Aquí puedes agregar, modificar y analizar tus inversiones, inmuebles, cuentas bancarias y más, para tener una visión completa de tu patrimonio financiero."
+    level="page"
+    [sticky]="false"
+    [scrollFade]="false"
+  >
+    <afi-badge slot="extraInfo" intent="info" size="sm">Actualizado hoy</afi-badge>
+
+    <afi-button slot="actions" variant="secondary" size="sm">Compartir</afi-button>
+    <afi-button slot="actions" variant="secondary" size="sm">Exportar</afi-button>
+    <afi-button slot="actions" variant="primary" size="sm">+ Añadir activo</afi-button>
+
+    <nav slot="tabs" class="cabeceras-ejemplo__tabs" aria-label="Vistas de Patrimonio">
+      <a href="#resumen" class="cabeceras-ejemplo__tab cabeceras-ejemplo__tab--active"
+        >Resumen</a
+      >
+      <a href="#activos" class="cabeceras-ejemplo__tab">Activos</a>
+      <a href="#pasivos" class="cabeceras-ejemplo__tab">Pasivos</a>
+      <a href="#evolucion" class="cabeceras-ejemplo__tab">Evolución</a>
+    </nav>
+
+    <afi-button slot="tabActions" variant="ghost" size="sm">Personalizar columnas</afi-button>
+
+    <div slot="filters" class="cabeceras-ejemplo__filters">
+      <span class="cabeceras-ejemplo__filter-label">Periodo:</span>
+      <afi-button variant="secondary" size="sm">Últimos 12 meses ▾</afi-button>
+      <span class="cabeceras-ejemplo__filter-label">Moneda:</span>
+      <afi-button variant="secondary" size="sm">EUR ▾</afi-button>
+    </div>
+
+    <div slot="cards" class="cabeceras-ejemplo__cards">
+      <afi-card variant="default" padding="md">
+        <p class="cabeceras-ejemplo__kpi-label">Patrimonio total</p>
+        <p class="cabeceras-ejemplo__kpi-value">1.350.000 €</p>
+        <p class="cabeceras-ejemplo__kpi-trend cabeceras-ejemplo__kpi-trend--up">+ 4,2 % YoY</p>
+      </afi-card>
+      <afi-card variant="default" padding="md">
+        <p class="cabeceras-ejemplo__kpi-label">Activos</p>
+        <p class="cabeceras-ejemplo__kpi-value">1.530.000 €</p>
+        <p class="cabeceras-ejemplo__kpi-trend">7 posiciones</p>
+      </afi-card>
+      <afi-card variant="default" padding="md">
+        <p class="cabeceras-ejemplo__kpi-label">Pasivos</p>
+        <p class="cabeceras-ejemplo__kpi-value">180.000 €</p>
+        <p class="cabeceras-ejemplo__kpi-trend">2 hipotecas</p>
+      </afi-card>
+      <afi-card variant="default" padding="md">
+        <p class="cabeceras-ejemplo__kpi-label">Rentabilidad</p>
+        <p class="cabeceras-ejemplo__kpi-value cabeceras-ejemplo__kpi-value--positive">+ 5,8 %</p>
+        <p class="cabeceras-ejemplo__kpi-trend">YTD</p>
+      </afi-card>
+    </div>
+
+    <!-- Cuerpo: dos SECCIONES + sub-secciones anidadas -->
+    <div class="cabeceras-ejemplo__body">
+      <afi-page-header
+        title="Activos de inversión"
+        subtitle="780 K € · 4 posiciones · gestión activa + delegada."
+        level="section"
+        [sticky]="false"
+        [scrollFade]="false"
+      >
+        <afi-button slot="actions" variant="secondary" size="sm">Rebalancear</afi-button>
+        <afi-button slot="actions" variant="primary" size="sm">+ Posición</afi-button>
+
+        <div slot="filters" class="cabeceras-ejemplo__filters">
+          <afi-button variant="secondary" size="sm">Por clase de activo ▾</afi-button>
+        </div>
+
+        <div class="cabeceras-ejemplo__subsections">
+          <afi-page-header
+            title="Renta variable"
+            subtitle="540 K € · 2 fondos"
+            level="subsection"
+            [sticky]="false"
+            [scrollFade]="false"
+          >
+            <afi-badge slot="extraInfo" intent="success" size="sm">+ 7,2 %</afi-badge>
+            <afi-button slot="actions" variant="ghost" size="sm">Detalle</afi-button>
+
+            <table class="cabeceras-ejemplo__table">
+              <thead>
+                <tr>
+                  <th>Fondo</th>
+                  <th class="cabeceras-ejemplo__num">Valor</th>
+                  <th class="cabeceras-ejemplo__num">Rentab.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cobas Selección</td>
+                  <td class="cabeceras-ejemplo__num">340.000 €</td>
+                  <td class="cabeceras-ejemplo__num cabeceras-ejemplo__num--positive">+ 8,4 %</td>
+                </tr>
+                <tr>
+                  <td>Bestinver Internacional</td>
+                  <td class="cabeceras-ejemplo__num">200.000 €</td>
+                  <td class="cabeceras-ejemplo__num cabeceras-ejemplo__num--positive">+ 5,6 %</td>
+                </tr>
+              </tbody>
+            </table>
+          </afi-page-header>
+
+          <afi-page-header
+            title="Renta fija"
+            subtitle="240 K € · 2 fondos"
+            level="subsection"
+            [sticky]="false"
+            [scrollFade]="false"
+          >
+            <afi-badge slot="extraInfo" intent="neutral" size="sm">+ 1,8 %</afi-badge>
+
+            <table class="cabeceras-ejemplo__table">
+              <thead>
+                <tr>
+                  <th>Fondo</th>
+                  <th class="cabeceras-ejemplo__num">Valor</th>
+                  <th class="cabeceras-ejemplo__num">Rentab.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Renta 4 Bonos</td>
+                  <td class="cabeceras-ejemplo__num">240.000 €</td>
+                  <td class="cabeceras-ejemplo__num">+ 1,8 %</td>
+                </tr>
+              </tbody>
+            </table>
+          </afi-page-header>
+        </div>
+      </afi-page-header>
+
+      <afi-page-header
+        title="Patrimonio inmobiliario"
+        subtitle="750 K € · 3 propiedades"
+        level="section"
+        [sticky]="false"
+        [scrollFade]="false"
+      >
+        <afi-button slot="actions" variant="primary" size="sm">+ Propiedad</afi-button>
+
+        <table class="cabeceras-ejemplo__table">
+          <thead>
+            <tr>
+              <th>Propiedad</th>
+              <th class="cabeceras-ejemplo__num">Valor</th>
+              <th class="cabeceras-ejemplo__num">m²</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Vivienda habitual · Madrid</td>
+              <td class="cabeceras-ejemplo__num">420.000 €</td>
+              <td class="cabeceras-ejemplo__num">110</td>
+            </tr>
+            <tr>
+              <td>Segunda residencia · Cádiz</td>
+              <td class="cabeceras-ejemplo__num">220.000 €</td>
+              <td class="cabeceras-ejemplo__num">95</td>
+            </tr>
+            <tr>
+              <td>Local comercial · Valencia</td>
+              <td class="cabeceras-ejemplo__num">110.000 €</td>
+              <td class="cabeceras-ejemplo__num">60</td>
+            </tr>
+          </tbody>
+        </table>
+      </afi-page-header>
+    </div>
+  </afi-page-header>
+</div>

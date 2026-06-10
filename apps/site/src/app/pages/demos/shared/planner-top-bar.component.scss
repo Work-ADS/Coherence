@@ -71,6 +71,39 @@
   white-space: nowrap;
 }
 
+// Scalable nested-page breadcrumb appended after the simId.
+.ptb__path-sep {
+  color: var(--foreground-tertiary-default);
+  margin-inline: var(--space-2xs);
+  user-select: none;
+}
+
+.ptb__path-step {
+  white-space: nowrap;
+  font: var(--type-body-sm-400);
+
+  &--link {
+    color: var(--foreground-secondary-default);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-fast) var(--easing-enter);
+
+    &:hover {
+      color: var(--foreground-primary-default);
+    }
+
+    &:focus-visible {
+      outline: var(--border-width-thick) solid var(--border-focus);
+      outline-offset: var(--space-3xs);
+    }
+  }
+
+  &--current {
+    color: var(--foreground-primary-default);
+    font-weight: 500;
+  }
+}
+
 // ─── Plan switcher dropdown body ───────────────────────────────────────────
 .ptb__plans {
   display: flex;

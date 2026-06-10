@@ -46,6 +46,25 @@ export class PlannerTopBarComponent {
   readonly clientName = input<string>('Ricardo Vázquez Pérez');
 
   /**
+   * Nested-page breadcrumb path appended after the simulation name. Each step
+   * renders as a slash-separated segment; intermediate steps with a `route`
+   * become RouterLinks, the last step is the current page (plain text).
+   *
+   * Empty by default — consumers opt in per nested page:
+   *
+   *   <site-planner-top-bar
+   *     [clientName]="..."
+   *     [currentPath]="[
+   *       { label: 'Patrimonio', route: '/demos/wealth-planner-2026/patrimonial' },
+   *       { label: 'Cuenta de inversión' }
+   *     ]" />
+   *
+   * Existing actions (plan switcher, status chip, notes, settings, hamburger,
+   * toast) are unaffected.
+   */
+  readonly currentPath = input<{ label: string; route?: string }[]>([]);
+
+  /**
    * When true, the plan-switcher dropdown morphs into a client-picker
    * preview: heading reads "Clientes recientes", the "Ir al listado" link
    * is hidden (you're already on it), and the items come from

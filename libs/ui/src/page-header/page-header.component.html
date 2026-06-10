@@ -1,40 +1,112 @@
-<!-- Breadcrumb row -->
-<div class="page-header__breadcrumb">
-  <ng-content select="[slot=breadcrumb]" />
-  <div class="page-header__global-actions">
-    <ng-content select="[slot=globalActions]" />
-  </div>
-</div>
+<!--
+  Main row: left (title stack) + right (actions / decorations).
 
-<!-- Main row: left (title stack) + right (actions) -->
-<div class="page-header__main">
+  When `collapsible` is on, the ENTIRE row is the click target so clicking
+  the title text, the count chip, the complete icon, or the chevron all
+  toggle. The actions slot uses `(click)="$event.stopPropagation()"` so
+  clicking action buttons inside doesn't trigger a toggle.
+
+  Implementation uses a div + role=button + tabindex pattern (not a native
+  <button>) because the header may contain other interactive elements
+  (action buttons in [slot=actions]) — putting a <button> around buttons
+  is invalid HTML.
+-->
+<div
+  class="page-header__main"
+  [class.page-header__main--collapsible]="collapsible()"
+  [attr.role]="collapsible() ? 'button' : null"
+  [attr.tabindex]="collapsible() ? 0 : null"
+  [attr.aria-expanded]="collapsible() ? expanded() : null"
+  [attr.aria-controls]="collapsible() ? bodyId : null"
+  [attr.aria-label]="collapsible() ? ariaLabel() : null"
+  (click)="onToggle()"
+  (keydown.enter)="onToggle(); $event.preventDefault()"
+  (keydown.space)="onToggle(); $event.preventDefault()"
+>
   <div class="page-header__left">
-    @switch (level()) {
-      @case ('page') { <h1 class="page-header__title">{{ title() }}</h1> }
-      @case ('section') { <h2 class="page-header__title">{{ title() }}</h2> }
-      @case ('subsection') { <h3 class="page-header__title">{{ title() }}</h3> }
-    }
-    @if (estado()) {
-      <afi-status-chip [estado]="estado()!" size="sm" />
-    }
+    <div class="page-header__title-row">
+      @switch (level()) {
+        @case ('page') { <h1 class="page-header__title">{{ title() }}</h1> }
+        @case ('section') { <h2 class="page-header__title">{{ title() }}</h2> }
+        @case ('subsection') { <h3 class="page-header__title">{{ title() }}</h3> }
+      }
+      @if (estado()) {
+        <afi-status-chip [estado]="estado()!" size="sm" />
+      }
+      <ng-content select="[slot=extraInfo]" />
+    </div>
     @if (subtitle()) {
       <p class="page-header__subtitle">{{ subtitle() }}</p>
     }
   </div>
-  <div class="page-header__actions">
+
+  <!-- Right side: complete + count + actions + chevron. -->
+  @if (complete()) {
+    <span class="page-header__complete" aria-label="Sección completa">
+      <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+        <path
+          d="M3.5 8.5l3 3 6-7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+  }
+  @if (hasCount()) {
+    <span class="page-header__count">{{ count() }}</span>
+  }
+  <div
+    class="page-header__actions"
+    #actionsWrapper
+    (click)="$event.stopPropagation()"
+  >
     <ng-content select="[slot=actions],[slot=primaryAction]" />
   </div>
+  @if (collapsible()) {
+    <span class="page-header__chevron" aria-hidden="true">
+      <svg viewBox="0 0 12 12" width="12" height="12">
+        <path
+          d="M3 4.5l3 3 3-3"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+  }
 </div>
 
-<!-- Stacked slots: cards → filters → tabs -->
-<div class="page-header__slot page-header__slot--cards">
-  <ng-content select="[slot=cards]" />
+<!-- Stacked slots (Figma order): tabs → filters → cards → body. -->
+<!-- Tabs row also hosts [slot=tabActions] on its right side. -->
+<div class="page-header__slot page-header__slot--tabs">
+  <ng-content select="[slot=tabs]" />
+  <ng-content select="[slot=tabActions]" />
 </div>
 
 <div class="page-header__slot page-header__slot--filters">
   <ng-content select="[slot=filters]" />
 </div>
 
-<div class="page-header__slot page-header__slot--tabs">
-  <ng-content select="[slot=tabs]" />
+<div class="page-header__slot page-header__slot--cards">
+  <ng-content select="[slot=cards]" />
+</div>
+
+<!--
+  Default body content slot — what level=section / level=subsection wrap,
+  what level=page renders beneath its chrome.
+
+  When collapsible, the body hides via [attr.hidden] so it's removed from
+  the accessibility tree AND the visual layout.
+-->
+<div
+  [id]="bodyId"
+  class="page-header__body"
+  [attr.hidden]="collapsible() && !expanded() ? '' : null"
+>
+  <ng-content />
 </div>

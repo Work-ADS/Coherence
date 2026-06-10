@@ -42,31 +42,19 @@
 }
 
 // ---------------------------------------------------------------------------
-// Breadcrumb row
+// Boxed surface treatment — section / subsection only (Figma: Headers/Section,
+// Headers/Sub section). The page level remains chromeless.
 // ---------------------------------------------------------------------------
-.page-header__breadcrumb {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
-  min-height: var(--dimension-7);
-  font: var(--type-body-sm-400);
-  color: var(--foreground-secondary-default);
-
-  &:empty {
-    display: none;
-  }
+:host(.page-header--section),
+:host(.page-header--subsection) {
+  background: transparent;
+  border: var(--separator-thickness) solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
 }
 
-.page-header__global-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-
-  &:empty {
-    display: none;
-  }
-}
+// (No internal title-block divider for section or subsection — per Figma the
+// hairline border around the whole box is the only divider.)
 
 // ---------------------------------------------------------------------------
 // Main row: title+subtitle left, actions right (Figma auto-layout)
@@ -83,6 +71,30 @@
   flex-direction: column;
   gap: var(--space-xs);
   min-width: 0;
+  flex: 1 1 auto;
+}
+
+// When the section is collapsible, the whole main row becomes the click /
+// focus target. Tightens chrome reset so it doesn't look like a button.
+.page-header__main--collapsible {
+  cursor: pointer;
+  user-select: none;
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--space-2xs);
+    border-radius: var(--radius-sm);
+  }
+}
+
+// Title row — title + estado chip + extraInfo slot, horizontal.
+// Wraps if extraInfo gets long so tags don't push the actions column off-screen.
+.page-header__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .page-header__title {
@@ -93,18 +105,21 @@
   text-overflow: ellipsis;
 }
 
-// Level-based typography via host class
+// Level-based typography via host class — matches Figma spec:
+//   page       h1 → 500 24/32 (--type-subtitle)
+//   section    h2 → 500 20/24 (--type-section)
+//   subsection h3 → 500 16/24 (--type-body-lg-500)
 :host(.page-header--page) .page-header__title {
-  font: var(--type-title);
+  font: var(--type-subtitle);
   letter-spacing: var(--tracking-snug);
 }
 
 :host(.page-header--section) .page-header__title {
-  font: var(--type-subtitle);
+  font: var(--type-section);
 }
 
 :host(.page-header--subsection) .page-header__title {
-  font: var(--type-section);
+  font: var(--type-body-lg-500);
 }
 
 .page-header__subtitle {
@@ -136,10 +151,90 @@
 }
 
 // ---------------------------------------------------------------------------
-// Stacked slots (cards, filters, tabs) — consistent spacing
+// Right-side decorations — count chip + complete check + chevron.
+// Ported from afi-section so the collapsible scaffold matches visually.
+// ---------------------------------------------------------------------------
+.page-header__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--dimension-5);
+  padding-inline: var(--space-sm);
+  padding-block: var(--space-2xs);
+  background: var(--color-afi-azul-25);
+  color: var(--color-afi-azul-900);
+  border-radius: var(--radius-pill);
+  font: var(--type-body-xs-500, var(--type-body-sm-500));
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.page-header__complete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--feedback-success-foreground, var(--brand-primary-foreground-default));
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.page-header__chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground-secondary-default);
+  flex-shrink: 0;
+  align-self: center;
+  transition: transform var(--duration-fast) var(--easing-enter);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// Rotate chevron when expanded.
+:host([data-collapsible][data-expanded='true']) .page-header__chevron {
+  transform: rotate(180deg);
+}
+
+// Tighten title-row spacing inside the collapsible button (no double gap).
+.page-header__left--button .page-header__title-row {
+  gap: var(--space-sm);
+}
+
+// ---------------------------------------------------------------------------
+// Stacked slots — gap matches Figma's section/gap/element-to-element token.
+// Title → tabs → filters → cards → body, all spaced equally.
 // ---------------------------------------------------------------------------
 .page-header__slot {
-  margin-top: var(--space-md);
+  margin-top: var(--space-sm);
+
+  &:empty {
+    display: none;
+    margin: 0;
+  }
+}
+
+// Tabs slot also hosts [slot=tabActions] on its right — flex row.
+.page-header__slot--tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+
+  > [slot='tabActions'] {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Body — default <ng-content/> slot. Lives inside the section/subsection
+// box (or beneath the page-level chrome) so the table/graph/form renders as
+// part of the same enclosed area, not floating outside.
+// ---------------------------------------------------------------------------
+.page-header__body {
+  margin-top: var(--space-sm);
 
   &:empty {
     display: none;

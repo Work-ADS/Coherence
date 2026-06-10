@@ -12,9 +12,6 @@
     [sticky]="false"
     [scrollFade]="false"
   >
-    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
-      OBJETIVOS
-    </span>
     @if (store.desinversiones().length > 0) {
       <afi-button
         slot="actions"
@@ -56,7 +53,6 @@
       [rows]="tableRows()"
       [rowActions]="tableActions"
       trackByKey="id"
-      density="comfortable"
       (rowClicked)="onTableRowClick($event)"
       (rowActionClicked)="onTableAction($event)"
     />

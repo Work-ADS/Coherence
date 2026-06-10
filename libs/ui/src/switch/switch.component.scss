@@ -20,19 +20,29 @@
 }
 
 // ─── Track ────────────────────────────────────────────────────────────────
+// Off state uses a stronger control gray (control-300) so the track is
+// actually visible at rest — the previous control-50 was so close to the
+// page background it disappeared. On state uses azul-profundo-700 for a
+// clear, deep blue.
 .afi-switch__track {
   position: relative;
   display: inline-flex;
   align-items: center;
   border: 0;
   border-radius: var(--radius-pill);
-  background: var(--control-background-default);
+  background: var(--color-afi-control-300);
   cursor: inherit;
-  padding: 0;
+  // 2 px inset all around so the thumb breathes inside the track instead of
+  // touching the rounded edge (shadcn switch convention).
+  padding-inline: var(--space-3xs);
   transition: background-color var(--duration-fast) var(--easing-enter);
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--color-afi-control-400, var(--color-afi-control-300));
   }
 
   &:focus-visible {
@@ -46,7 +56,11 @@
   }
 
   &--on {
-    background: var(--brand-primary-background-default);
+    background: var(--color-afi-azul-profundo-700);
+
+    &:hover:not(:disabled) {
+      background: var(--color-afi-azul-profundo-800);
+    }
   }
 
   &--sm {
@@ -61,33 +75,38 @@
 }
 
 // ─── Thumb ────────────────────────────────────────────────────────────────
+// Sits inside the track's 2 px padding on every side. Off state = at left
+// padding (translateX(0)); on state = shifted by (track_w − thumb_w − padding*2)
+// so it lands at the right padding.
 .afi-switch__thumb {
   display: inline-block;
   border-radius: var(--radius-pill);
   background: var(--surface-default);
   box-shadow: var(--elevation-sm);
-  transform: translateX(var(--border-width-thick));
+  transform: translateX(0);
   transition: transform var(--duration-fast) var(--easing-enter);
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
 
+  // sm: track 32 × 20, thumb 16 × 16, on-translate = 32 − 16 − 4 = 12 px.
   &--sm {
     width: var(--dimension-4);
     height: var(--dimension-4);
 
     &.afi-switch__thumb--on {
-      transform: translateX(var(--dimension-4));
+      transform: translateX(var(--dimension-3));
     }
   }
 
+  // md: track 40 × 24, thumb 20 × 20, on-translate = 40 − 20 − 4 = 16 px.
   &--md {
     width: var(--dimension-5);
     height: var(--dimension-5);
 
     &.afi-switch__thumb--on {
-      transform: translateX(var(--dimension-5));
+      transform: translateX(var(--dimension-4));
     }
   }
 }

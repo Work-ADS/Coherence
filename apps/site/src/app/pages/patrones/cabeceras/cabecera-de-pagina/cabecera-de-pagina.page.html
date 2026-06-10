@@ -3,13 +3,6 @@
   overline="PATTERNS"
   description="Un componente, tres niveles. Controla la escala tipográfica con [level] y enciende slots según necesidad. Action bar y data cards se enchufan como slots — serán patrones/componentes propios."
 >
-  <!-- Breadcrumb -->
-  <span slot="breadcrumb">
-    <a href="/patrones">Patterns</a>
-    <span class="breadcrumb-sep">/</span>
-    <span>Headers</span>
-  </span>
-
   <!-- Controls -->
   <div slot="controls" class="controls">
     <!-- Level -->
@@ -55,6 +48,14 @@
           (click)="toggleTabs()">
           Tabs
         </button>
+        <button
+          type="button"
+          class="toggle-chip"
+          [class.toggle-chip--active]="showTabActions()"
+          [disabled]="!showTabs()"
+          (click)="toggleTabActions()">
+          Tab actions
+        </button>
       </div>
     </div>
 
@@ -79,10 +80,6 @@
       [sticky]="false"
       [scrollFade]="false"
     >
-      <span slot="breadcrumb" class="preview-breadcrumb">
-        Planificación / Situación actual
-      </span>
-
       @if (showActions()) {
         <div slot="actions" class="slot-placeholder slot-placeholder--actions">
           <span class="slot-placeholder__label">actions</span>
@@ -131,57 +128,64 @@
           </afi-tabs>
         </div>
       }
-    </afi-page-header>
 
-    <!-- Content area below header -->
-    @if (contentType() !== 'none') {
-      <div class="content-area">
-        @if (contentType() === 'graph') {
-          <div class="mock-content mock-content--graph">
-            <div class="mock-graph">
-              <div class="mock-graph__bar" style="height: 60%"></div>
-              <div class="mock-graph__bar" style="height: 80%"></div>
-              <div class="mock-graph__bar" style="height: 45%"></div>
-              <div class="mock-graph__bar" style="height: 90%"></div>
-              <div class="mock-graph__bar" style="height: 70%"></div>
-              <div class="mock-graph__bar" style="height: 55%"></div>
-            </div>
-            <span class="mock-content__label">Graph content area</span>
+      @if (showTabs() && showTabActions()) {
+        <div slot="tabActions" class="slot-placeholder slot-placeholder--tab-actions">
+          <span class="slot-placeholder__label">tabActions</span>
+          <span class="slot-placeholder__hint">Acciones específicas de la pestaña activa</span>
+        </div>
+      }
+
+      <!--
+        Default content slot — projected INSIDE the page-header. At level=section
+        and level=subsection this puts the graph/table inside the same box as
+        the title/tabs/filters/cards, not floating below it.
+      -->
+      @if (contentType() === 'graph') {
+        <div class="mock-content mock-content--graph">
+          <div class="mock-graph">
+            <div class="mock-graph__bar" style="height: 60%"></div>
+            <div class="mock-graph__bar" style="height: 80%"></div>
+            <div class="mock-graph__bar" style="height: 45%"></div>
+            <div class="mock-graph__bar" style="height: 90%"></div>
+            <div class="mock-graph__bar" style="height: 70%"></div>
+            <div class="mock-graph__bar" style="height: 55%"></div>
           </div>
-        }
-        @if (contentType() === 'table') {
-          <div class="mock-content mock-content--table">
-            <div class="mock-table">
-              <div class="mock-table__header">
-                <span>Nombre</span>
-                <span>Tipo</span>
-                <span>Valor</span>
-                <span>Renta.</span>
-              </div>
-              <div class="mock-table__row">
-                <span>Fondo Global</span>
-                <span>FI</span>
-                <span>240.000 €</span>
-                <span>6,2%</span>
-              </div>
-              <div class="mock-table__row">
-                <span>Cartera mixta</span>
-                <span>PP</span>
-                <span>180.000 €</span>
-                <span>4,8%</span>
-              </div>
-              <div class="mock-table__row">
-                <span>Inmueble BCN</span>
-                <span>INM</span>
-                <span>520.000 €</span>
-                <span>3,1%</span>
-              </div>
+          <span class="mock-content__label">Graph content area</span>
+        </div>
+      }
+      @if (contentType() === 'table') {
+        <div class="mock-content mock-content--table">
+          <div class="mock-table">
+            <div class="mock-table__header">
+              <span>Nombre</span>
+              <span>Tipo</span>
+              <span>Valor</span>
+              <span>Renta.</span>
             </div>
-            <span class="mock-content__label">Table content area</span>
+            <div class="mock-table__row">
+              <span>Fondo Global</span>
+              <span>FI</span>
+              <span>240.000 €</span>
+              <span>6,2%</span>
+            </div>
+            <div class="mock-table__row">
+              <span>Cartera mixta</span>
+              <span>PP</span>
+              <span>180.000 €</span>
+              <span>4,8%</span>
+            </div>
+            <div class="mock-table__row">
+              <span>Inmueble BCN</span>
+              <span>INM</span>
+              <span>520.000 €</span>
+              <span>3,1%</span>
+            </div>
           </div>
-        }
-      </div>
-    }
+          <span class="mock-content__label">Table content area</span>
+        </div>
+      }
+    </afi-page-header>
   </div>
 
   <!-- Tokens table -->

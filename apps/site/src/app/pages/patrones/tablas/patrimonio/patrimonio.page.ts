@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { PageHeaderComponent, TabsComponent, TabItemComponent } from '@coherence/ui';
 
-import { SectionHeaderComponent } from '../../../../components/section-header';
-
 /**
  * Tabla de Patrimonio — pattern showcase.
  *
@@ -11,11 +9,14 @@ import { SectionHeaderComponent } from '../../../../components/section-header';
  * the table readable). The full live example lives in
  * `/demos/wealth-planner-2026/patrimonial` — this page documents *why* it looks the way
  * it does, so future contributors don't undo earlier decisions.
+ *
+ * Migrated 2026-06-09: section dividers now use `<afi-page-header level="section">`
+ * instead of the legacy `<afi-section-header>` row component.
  */
 @Component({
   selector: 'site-tabla-patrimonio-page',
   standalone: true,
-  imports: [PageHeaderComponent, TabsComponent, TabItemComponent, SectionHeaderComponent],
+  imports: [PageHeaderComponent, TabsComponent, TabItemComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-[1080px] mx-auto px-space-10 py-space-10">
@@ -35,8 +36,13 @@ import { SectionHeaderComponent } from '../../../../components/section-header';
           <!-- ==================== EJEMPLO ==================== -->
           <afi-tab-item label="Ejemplo">
             <div class="py-space-6 flex flex-col gap-space-12">
-              <section>
-                <afi-section-header title="Activos de inversión" snippet="450 K € · 4 activos" />
+              <afi-page-header
+                title="Activos de inversión"
+                subtitle="450 K € · 4 activos"
+                level="section"
+                [sticky]="false"
+                [scrollFade]="false"
+              >
                 <div class="text-body-sm">
                   <div
                     class="grid grid-cols-[1fr_120px_120px_36px] gap-space-3 border-b border-border-hairline pb-space-2 font-medium"
@@ -63,13 +69,15 @@ import { SectionHeaderComponent } from '../../../../components/section-header';
                     <span class="text-neutral-400">⋮</span>
                   </div>
                 </div>
-              </section>
+              </afi-page-header>
 
-              <section>
-                <afi-section-header
-                  title="Patrimonio inmobiliario"
-                  snippet="720 K € · 3 propiedades"
-                />
+              <afi-page-header
+                title="Patrimonio inmobiliario"
+                subtitle="720 K € · 3 propiedades"
+                level="section"
+                [sticky]="false"
+                [scrollFade]="false"
+              >
                 <div class="text-body-sm">
                   <div
                     class="grid grid-cols-[1fr_120px_120px_36px] gap-space-3 border-b border-border-hairline pb-space-2 font-medium"
@@ -88,7 +96,7 @@ import { SectionHeaderComponent } from '../../../../components/section-header';
                     <span class="text-neutral-400">⋮</span>
                   </div>
                 </div>
-              </section>
+              </afi-page-header>
 
               <p class="text-body-sm text-neutral-500">
                 Versión completa con filtros, tabs por sección y diálogo de añadir activo:

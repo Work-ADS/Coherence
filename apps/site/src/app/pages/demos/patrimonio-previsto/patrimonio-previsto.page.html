@@ -6,32 +6,22 @@
   versionAriaLabel="Versión del layout de Patrimonio previsto"
   [showBanner]="store.legadoRetiroEstablished()"
 >
+  <!--
+    Page-level scaffold:
+      - [slot=filters]  →  Escenario select (page-wide filter)
+      - [slot=cards]    →  4 KPI summary tiles
+      - body            →  hero chart + per-scenario table + secondary chart,
+                           each wrapped in level="section" so the box treatment
+                           comes from the scaffold, not bespoke layout.
+  -->
   <afi-page-header
     title="Patrimonio previsto"
     subtitle="Proyección del patrimonio bajo cuatro escenarios. Marca cobertura vital y legado por escenario."
     [sticky]="false"
     [scrollFade]="false"
   >
-    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
-      DIAGNÓSTICO
-    </span>
-  </afi-page-header>
-
-  <!-- ─── KPI data-cards — top summary, mirrors Patrimonio layout ─────── -->
-  <div class="mx-space-8 mt-space-6 grid grid-cols-4 gap-space-6">
-    @for (kpi of kpis(); track kpi.label) {
-      <div>
-        <p class="text-body-sm text-neutral-500 mb-space-1">{{ kpi.label }}</p>
-        <p class="text-section text-canvas-fg">{{ kpi.value }}</p>
-        <p class="text-body-sm text-neutral-500 mt-space-1">{{ kpi.caption }}</p>
-      </div>
-    }
-  </div>
-
-  <!-- ─── Hero chart — Evolución patrimonial prevista ────────────────── -->
-  <div class="mx-space-8 mt-space-8 pt-space-6 border-t border-border-hairline">
-    <!-- Filter strip — single Escenario selector. Drives KPIs above + chart below. -->
-    <div class="flex items-center gap-space-2 flex-wrap mb-space-6">
+    <!-- Page filter -->
+    <div slot="filters" class="flex items-center gap-space-2 flex-wrap">
       <afi-select
         class="block w-[210px]"
         size="sm"
@@ -42,71 +32,92 @@
       />
     </div>
 
-    <afi-graph-card-header
-      label="Evolución patrimonial prevista"
-      [headline]="headline()"
-      [comparison]="comparison()"
-      [tooltip]="tooltipText"
-    />
-
-    <div class="mt-space-6">
-      <afi-evolucion-bar-chart
-        vista="actual"
-        [escenario]="chartEscenario()"
-        detalle="agregada"
-        [mostrarHitos]="false"
-        [incluirInmobiliario]="true"
-        [mostrarObjetivos]="false"
-        palette="v1"
-        legendPlacement="bottom"
-      />
+    <!-- KPI cards -->
+    <div slot="cards" class="grid grid-cols-4 gap-space-6 w-full">
+      @for (kpi of kpis(); track kpi.label) {
+        <div>
+          <p class="text-body-sm text-neutral-500 mb-space-1">{{ kpi.label }}</p>
+          <p class="text-section text-canvas-fg">{{ kpi.value }}</p>
+          <p class="text-body-sm text-neutral-500 mt-space-1">{{ kpi.caption }}</p>
+        </div>
+      }
     </div>
 
-    <!-- Explainer copy — mirrors Evolución patrimonial's explainer style -->
-    <p class="mt-space-6 text-body-sm text-neutral-500 border-t border-border-hairline pt-space-4 leading-relaxed max-w-[720px]">
-      Proyección año a año del patrimonio bajo el {{ scenarioLabelLong(escenarioSeleccionado()) }}.
-      Los datos numéricos por escenario se muestran en la tabla inferior; el gráfico superpone los
-      tres escenarios económicos (optimista / medio / pesimista) sobre el escenario objetivo de la
-      familia.
-    </p>
-  </div>
+    <!-- Body — three boxed sections stacked, all using the same scaffold. -->
+    <div class="flex flex-col gap-space-6">
+      <!--
+        Section 1 · Hero chart.
+        Headline value goes in subtitle (it's the dynamic readout). The detailed
+        breakdown (legados + tooltip) was a graph-card-header affordance; in
+        the scaffold it lives as the subtitle so the chart owns the body.
+      -->
+      <afi-page-header
+        level="section"
+        title="Evolución patrimonial prevista"
+        [subtitle]="headline() + ' · ' + comparison()"
+        [sticky]="false"
+        [scrollFade]="false"
+      >
+        <afi-evolucion-bar-chart
+          vista="actual"
+          [escenario]="chartEscenario()"
+          detalle="agregada"
+          [mostrarHitos]="false"
+          [incluirInmobiliario]="true"
+          [mostrarObjetivos]="false"
+          palette="v1"
+          legendPlacement="bottom"
+        />
 
-  <!-- ─── Scenario read-out table — 4×3 ─────────────────────────────── -->
-  <div class="mx-space-8 mt-space-10">
-    <header class="mb-space-4">
-      <h2 class="text-section text-canvas-fg">Por escenario</h2>
-      <p class="text-body-sm text-neutral-500 mt-space-1">
-        Cobertura vital, legado inmobiliario y legado financiero a la edad de seguridad
-        ({{ store.legadoRetiro().edadSeguridad }} años) en cada uno de los cuatro escenarios.
-      </p>
-    </header>
-    <!-- 2026-05-28 — migrated from bespoke `<table class="pp-table">` to
-         `<afi-table>`. No row actions: clicking a row sets the active
-         scenario via the existing `setEscenario` channel; the active row
-         renders via the primitive's `highlightedRowKey` input. -->
-    <afi-table
-      [columns]="scenarioColumns"
-      [rows]="scenarioRows()"
-      [highlightedRowKey]="escenarioSeleccionado()"
-      trackByKey="id"
-      density="comfortable"
-      (rowClicked)="onScenarioRowClick($event)"
-    />
-  </div>
+        <p
+          class="mt-space-6 text-body-sm text-neutral-500 border-t border-border-hairline pt-space-4 leading-relaxed max-w-[720px]"
+        >
+          Proyección año a año del patrimonio bajo el
+          {{ scenarioLabelLong(escenarioSeleccionado()) }}. Los datos numéricos por escenario se
+          muestran en la tabla inferior; el gráfico superpone los tres escenarios económicos
+          (optimista / medio / pesimista) sobre el escenario objetivo de la familia.
+        </p>
+      </afi-page-header>
 
-  <!-- ─── Evolución de ingresos y gastos — secondary chart ─────────── -->
-  <div class="mx-space-8 mt-space-10 pt-space-6 border-t border-border-hairline">
-    <header class="mb-space-4">
-      <h2 class="text-section text-canvas-fg">Evolución de ingresos y gastos</h2>
-      <p class="text-body-sm text-neutral-500 mt-space-1">
-        Cashflow neto anual proyectado sobre el horizonte de planificación
-        (versión simplificada · v1).
-      </p>
-    </header>
-    <afi-chart-bar
-      [data]="cashflowSeries()"
-      title=""
-      ariaLabel="Evolución anual del cashflow neto"
-    />
-  </div>
+      <!-- Section 2 · Per-scenario read-out table. -->
+      <afi-page-header
+        level="section"
+        title="Por escenario"
+        [subtitle]="
+          'Cobertura vital, legado inmobiliario y legado financiero a la edad de seguridad (' +
+          store.legadoRetiro().edadSeguridad +
+          ' años) en cada uno de los cuatro escenarios.'
+        "
+        [sticky]="false"
+        [scrollFade]="false"
+      >
+        <!-- 2026-05-28 — migrated from bespoke `<table class="pp-table">` to
+             `<afi-table>`. No row actions: clicking a row sets the active
+             scenario via the existing `setEscenario` channel; the active row
+             renders via the primitive's `highlightedRowKey` input. -->
+        <afi-table
+          [columns]="scenarioColumns"
+          [rows]="scenarioRows()"
+          [highlightedRowKey]="escenarioSeleccionado()"
+          trackByKey="id"
+          (rowClicked)="onScenarioRowClick($event)"
+        />
+      </afi-page-header>
+
+      <!-- Section 3 · Cashflow chart. -->
+      <afi-page-header
+        level="section"
+        title="Evolución de ingresos y gastos"
+        subtitle="Cashflow neto anual proyectado sobre el horizonte de planificación (versión simplificada · v1)."
+        [sticky]="false"
+        [scrollFade]="false"
+      >
+        <afi-chart-bar
+          [data]="cashflowSeries()"
+          title=""
+          ariaLabel="Evolución anual del cashflow neto"
+        />
+      </afi-page-header>
+    </div>
+  </afi-page-header>
 </site-objetivos-page-shell>

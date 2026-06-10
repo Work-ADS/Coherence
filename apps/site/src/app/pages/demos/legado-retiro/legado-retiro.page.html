@@ -12,9 +12,6 @@
     [sticky]="false"
     [scrollFade]="false"
   >
-    <span slot="breadcrumb" class="uppercase tracking-wider text-action-700">
-      OBJETIVOS
-    </span>
   </afi-page-header>
 
   <section class="lr-gate">
@@ -28,7 +25,12 @@
 
   @if (store.legadoRetiroEstablished()) {
     <div class="lr-stack">
-    <afi-section title="Datos generales">
+    <afi-page-header
+      level="section"
+      title="Datos generales"
+      [sticky]="false"
+      [scrollFade]="false"
+    >
       <div class="lr-grid lr-grid--compact">
         <afi-input
           label="Edad de seguridad"
@@ -64,10 +66,15 @@
           />
         </div>
       }
-    </afi-section>
+    </afi-page-header>
 
     @if (showsManualLegado()) {
-      <afi-section title="Activos a conservar">
+      <afi-page-header
+        level="section"
+        title="Activos a conservar"
+        [sticky]="false"
+        [scrollFade]="false"
+      >
         @if (store.patrimonio().length === 0) {
           <p class="lr-empty">Aún no hay activos registrados.</p>
         } @else {
@@ -98,7 +105,7 @@
             (valueChange)="setPatrimonioFinancieroAdicional($event)"
           />
         </div>
-      </afi-section>
+      </afi-page-header>
     }
     </div>
   }

@@ -8,7 +8,6 @@ import {
 } from '@coherence/ui';
 import type { BarDatum, SelectOption, TableColumn } from '@coherence/ui';
 
-import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patrimonial/graph-card-header.component';
 import {
   EvolucionBarChartComponent,
   type Escenario,
@@ -43,7 +42,6 @@ import type { Scenario, ScenarioRow } from '../wealth-planner-2026/store';
     PageHeaderComponent,
     SelectComponent,
     TableComponent,
-    GraphCardHeaderComponent,
     EvolucionBarChartComponent,
     ObjetivosPageShellComponent,
   ],

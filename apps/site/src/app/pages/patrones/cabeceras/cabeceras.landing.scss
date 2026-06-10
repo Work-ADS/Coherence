@@ -1,0 +1,191 @@
+// =============================================================================
+// cabeceras-landing — unified landing for the page-patterns family.
+// BEM block + design tokens only.
+// =============================================================================
+
+.cabeceras-landing {
+  max-width: 57.5rem;
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+  padding-block: var(--space-lg);
+
+  &__kicker {
+    font: var(--type-body-sm-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--foreground-action-700, var(--foreground-action-default));
+    margin: 0 0 var(--space-xs);
+  }
+
+  &__title {
+    font: var(--type-subtitle);
+    color: var(--foreground-primary-default);
+    margin: 0 0 var(--space-sm);
+  }
+
+  &__lede {
+    max-width: 40rem;
+    font: var(--type-body);
+    color: var(--foreground-secondary-default);
+    margin: 0 0 var(--space-lg);
+
+    code {
+      font-family: var(--font-family-mono, monospace);
+      font-size: 0.9em;
+      color: var(--foreground-action-default);
+    }
+  }
+
+  &__tiles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+    margin-block-end: var(--space-xl);
+  }
+
+  &__section {
+    margin-block-end: var(--space-xl);
+  }
+
+  &__section-kicker {
+    font: var(--type-body-sm-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--foreground-action-700, var(--foreground-action-default));
+    margin: 0 0 var(--space-xs);
+  }
+
+  &__section-title {
+    font: var(--type-section);
+    color: var(--foreground-primary-default);
+    margin: 0 0 var(--space-sm);
+  }
+
+  &__section-lede {
+    max-width: 42.5rem;
+    font: var(--type-body);
+    color: var(--foreground-secondary-default);
+    margin: 0 0 var(--space-md);
+
+    code {
+      font-family: var(--font-family-mono, monospace);
+      font-size: 0.9em;
+      color: var(--foreground-action-default);
+    }
+  }
+
+  &__matrix-wrapper {
+    overflow-x: auto;
+    margin-block-end: var(--space-md);
+  }
+
+  &__matrix {
+    width: 100%;
+    border-collapse: collapse;
+    border: var(--separator-thickness) solid var(--border-hairline);
+    border-radius: var(--radius-md);
+    font: var(--type-body-sm-400);
+
+    thead {
+      background: var(--surface-quiet, var(--surface-100));
+    }
+
+    th {
+      text-align: left;
+      padding: var(--space-xs) var(--space-sm);
+      font-weight: 500;
+      color: var(--foreground-primary-default);
+    }
+
+    td {
+      padding: var(--space-sm);
+      border-top: var(--separator-thickness) solid var(--border-hairline);
+      vertical-align: top;
+      color: var(--foreground-secondary-default);
+
+      p {
+        margin: var(--space-xxs) 0 0;
+        color: var(--foreground-tertiary-default, var(--foreground-secondary-default));
+      }
+
+      strong {
+        color: var(--foreground-primary-default);
+      }
+
+      code {
+        font-family: var(--font-family-mono, monospace);
+        font-size: 0.9em;
+        color: var(--foreground-action-default);
+      }
+    }
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__card {
+    border: var(--separator-thickness) solid var(--border-hairline);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+
+    p,
+    ul {
+      font: var(--type-body-sm-400);
+      color: var(--foreground-secondary-default);
+      margin: 0 0 var(--space-xs);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      strong {
+        color: var(--foreground-primary-default);
+      }
+
+      code {
+        font-family: var(--font-family-mono, monospace);
+        font-size: 0.9em;
+        color: var(--foreground-action-default);
+      }
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xxs);
+    }
+  }
+
+  &__card-title {
+    font: var(--type-body-lg-600);
+    color: var(--foreground-primary-default);
+    margin: 0 0 var(--space-xs);
+  }
+
+  &__card-deprecated {
+    color: var(--foreground-tertiary-default, var(--foreground-secondary-default));
+  }
+
+  &__footer {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default, var(--foreground-secondary-default));
+
+    a {
+      color: var(--foreground-action-default);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

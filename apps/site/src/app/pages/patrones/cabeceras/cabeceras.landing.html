@@ -1,0 +1,227 @@
+<div class="cabeceras-landing">
+  <p class="cabeceras-landing__kicker">PATTERNS / HEADERS</p>
+  <h1 class="cabeceras-landing__title">Cabeceras</h1>
+  <p class="cabeceras-landing__lede">
+    Un solo <code>&lt;afi-page-header&gt;</code>, tres niveles. La misma anatomía — fila de título,
+    acciones, pestañas, filtros, tarjetas de datos, contenido — escala desde la página completa
+    hasta una sub-sección dentro de una sección. El nivel se controla con
+    <code>[level]</code> y determina tipografía y caja.
+  </p>
+
+  <div class="cabeceras-landing__tiles">
+    @for (p of patterns; track p.slug) {
+      <site-teaser-tile
+        [title]="p.name"
+        [href]="'/patrones/cabeceras/' + p.slug"
+        [description]="p.description"
+      />
+    }
+  </div>
+
+  <!-- ============ Reglas de información arquitectónica ============ -->
+  <section class="cabeceras-landing__section">
+    <p class="cabeceras-landing__section-kicker">REGLAS DE IA</p>
+    <h2 class="cabeceras-landing__section-title">Cuándo escalar y cuándo quedarse plano</h2>
+    <p class="cabeceras-landing__section-lede">
+      La regla principal:
+      <strong>no busques un nivel más profundo del que tu IA realmente tiene</strong>. Cada nivel
+      es opcional. Una página plana es una sola línea con
+      <code>&lt;afi-page-header level="page"&gt;</code>; las secciones aparecen sólo cuando un
+      grupo de contenido necesita sus propias acciones, filtros o pestañas; las sub-secciones
+      aparecen sólo cuando una sección se sub-divide. Una jerarquía vacía es peor que ninguna
+      jerarquía.
+    </p>
+
+    <div class="cabeceras-landing__matrix-wrapper">
+      <table class="cabeceras-landing__matrix">
+        <thead>
+          <tr>
+            <th>Forma de la página</th>
+            <th>Composición</th>
+            <th>Ejemplo real</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>Contenido único, sin cortes</strong>
+              <p>Una sola tabla, un solo gráfico, un solo formulario.</p>
+            </td>
+            <td>
+              Sólo <code>&lt;afi-page-header level="page"&gt;</code> con el cuerpo proyectado. No
+              envuelvas el cuerpo en una sección. No inventes sub-secciones que no existen.
+            </td>
+            <td>Páginas de un solo listado o formulario.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Área conceptual, múltiples bloques hermanos</strong>
+              <p>
+                Tablas apiladas que pertenecen al mismo tema pero cada una necesita sus propias
+                acciones o filtros.
+              </p>
+            </td>
+            <td>
+              Página + <strong>N <code>level="section"</code></strong> en el cuerpo. Cada sección
+              lleva sus acciones, filtros y tarjetas de datos.
+            </td>
+            <td>Patrimonial (tablas apiladas).</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Una sección que se sub-divide</strong>
+              <p>La sección tiene áreas internas (Activos / Pasivos).</p>
+            </td>
+            <td>
+              Página + sección + N <code>level="subsection"</code> dentro de la sección. Tres
+              niveles sólo cuando la IA realmente los pide.
+            </td>
+            <td>Situación actual.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Múltiples vistas vía pestañas</strong>
+              <p>
+                El mismo cromo, distintos cortes del mismo dato. Las pestañas evitan repetir el
+                mismo título página tras página.
+              </p>
+            </td>
+            <td>
+              Una sola <code>level="page"</code> con <code>[slot=tabs]</code>; cada pestaña
+              intercambia el cuerpo. No repitas el título por pestaña.
+            </td>
+            <td>Patrimonio (4+ pestañas).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ Reglas de acciones ============ -->
+  <section class="cabeceras-landing__section">
+    <p class="cabeceras-landing__section-kicker">REGLAS DE ACCIONES</p>
+    <h2 class="cabeceras-landing__section-title">Alcance y desbordamiento</h2>
+
+    <div class="cabeceras-landing__cards">
+      <article class="cabeceras-landing__card">
+        <h3 class="cabeceras-landing__card-title">El alcance manda</h3>
+        <p>
+          Acciones del nivel <strong>página</strong> afectan a la página. Acciones del nivel
+          <strong>sección</strong> afectan a la sección. Acciones del nivel
+          <strong>sub-sección</strong> afectan únicamente a esa tabla o gráfico.
+        </p>
+        <p>
+          Igual con los filtros: los filtros de página filtran la página entera; los filtros de
+          sección filtran sólo esa sección. Cada fila de <code>[slot=filters]</code> tiene el
+          mismo alcance que el header al que pertenece.
+        </p>
+      </article>
+
+      <article class="cabeceras-landing__card">
+        <h3 class="cabeceras-landing__card-title">Regla de las 3 acciones</h3>
+        <p>
+          Por defecto, máximo <strong>3 acciones inline</strong> en <code>[slot=actions]</code>
+          antes de envolver el resto en un menú de desbordamiento (botón <strong>…</strong>).
+        </p>
+        <p>
+          El componente avisa por consola en modo dev cuando se supera el límite. Es una regla
+          <em>por defecto</em>, se puede romper conscientemente vía
+          <code>[maxInlineActions]="N"</code>.
+        </p>
+      </article>
+
+      <article class="cabeceras-landing__card">
+        <h3 class="cabeceras-landing__card-title">Pestañas, no títulos repetidos</h3>
+        <p>
+          Si vas a tener 4 páginas con el mismo título y distinto cuerpo, son
+          <strong>pestañas dentro de una página</strong>, no páginas hermanas.
+          <code>[slot=tabs]</code> resuelve esto sin repetir el cromo.
+        </p>
+        <p>
+          Las acciones específicas de una pestaña viven en <code>[slot=tabActions]</code> — a la
+          derecha de la fila de pestañas, separadas de las acciones de página.
+        </p>
+      </article>
+
+      <article class="cabeceras-landing__card">
+        <h3 class="cabeceras-landing__card-title">Slots disponibles</h3>
+        <ul>
+          <li><code>[slot=extraInfo]</code> — inline con el título, para chips o tooltips.</li>
+          <li><code>[slot=actions]</code> — derecha de la fila de título (regla de las 3).</li>
+          <li>
+            <code>[slot=tabs]</code> + <code>[slot=tabActions]</code> — fila de pestañas.
+          </li>
+          <li>
+            <code>[slot=filters]</code> + <code>[slot=cards]</code> — filtros y tarjetas de KPI.
+          </li>
+          <li>
+            <code>&lt;ng-content/&gt;</code> (default) — cuerpo de contenido (tabla, gráfico,
+            formulario).
+          </li>
+          <li class="cabeceras-landing__card-deprecated">
+            <code>[slot=breadcrumb]</code> + <code>[slot=globalActions]</code> —
+            <em>obsoletos en páginas nuevas.</em> El breadcrumb vive en la barra superior. Ver
+            tarjeta de abajo.
+          </li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ Decisión de IA: breadcrumb vive en el top nav ============ -->
+  <section class="cabeceras-landing__section">
+    <p class="cabeceras-landing__section-kicker">DECISIÓN DE IA</p>
+    <h2 class="cabeceras-landing__section-title">El breadcrumb vive en la barra superior</h2>
+
+    <div class="cabeceras-landing__cards">
+      <article class="cabeceras-landing__card">
+        <h3 class="cabeceras-landing__card-title">Una única superficie de navegación</h3>
+        <p>
+          La navegación contextual ("¿dónde estoy?, ¿de dónde vengo?") vive en la
+          <strong>barra superior</strong> — la fila justo encima del contenido, con la flecha de
+          vuelta a la izquierda. El cromo de página se queda con su trabajo real: título,
+          acciones, pestañas y filtros relevantes.
+        </p>
+        <p>Esto es lo que hacen Linear, Notion, Stripe, Vercel. Misma decisión.</p>
+      </article>
+
+      <article class="cabeceras-landing__card">
+        <h3 class="cabeceras-landing__card-title">El "eyebrow" muere con el breadcrumb</h3>
+        <p>
+          El eyebrow ("<em>DIAGNÓSTICO</em>" encima del título) y el breadcrumb dicen lo mismo
+          dos veces. Si el breadcrumb vive arriba, el eyebrow es ruido. La Figma del scaffold de
+          cabeceras ya no lo incluye — el título identifica la sección por sí solo.
+        </p>
+        <p>
+          Excepción: chips inline (estado, tipo de recurso) van en
+          <code>[slot=extraInfo]</code>, no como eyebrow.
+        </p>
+      </article>
+
+      <article class="cabeceras-landing__card">
+        <h3 class="cabeceras-landing__card-title">La cabecera de recurso es otro patrón</h3>
+        <p>
+          El patrón "<strong>flecha atrás + nombre editable + chip de estado</strong>" (típico de
+          una simulación: <em>← Listado / Simulación de Juan · Borrador</em>) es una
+          <strong>cabecera de recurso</strong>, no una variante de
+          <code>afi-page-header</code>.
+        </p>
+        <p>Implementación queda fuera de este branch — se documentará y construirá aparte.</p>
+      </article>
+
+      <article class="cabeceras-landing__card">
+        <h3 class="cabeceras-landing__card-title">¿Y los slots viejos?</h3>
+        <p>
+          <code>[slot=breadcrumb]</code> y <code>[slot=globalActions]</code> siguen funcionando en
+          <code>afi-page-header</code> por compatibilidad — hay ~20 páginas de documentación que
+          los usan. Pero <strong>las páginas nuevas no los usan</strong>.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <p class="cabeceras-landing__footer">
+    ¿Quieres verlo todo compuesto? Mira el ejemplo "Patrimonio" en
+    <a href="/patrones/cabeceras/ejemplo">/patrones/cabeceras/ejemplo</a>.
+  </p>
+</div>

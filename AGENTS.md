@@ -37,6 +37,39 @@ npx tsc -p apps/site/tsconfig.app.json --noEmit
 npm run build
 ```
 
+## Reuse before building (LOCKED)
+
+Before writing new UI code, search for existing primitives, composed patterns, and reference screens. Reuse them unless the brief explicitly says they are insufficient.
+
+Required searches:
+- `libs/ui/src/` for DS primitives
+- `apps/site/src/app/pages/demos/shared/` for reusable demo/product chrome
+- `apps/site/src/app/pages/demos/` for composed product reference screens
+- `apps/site/src/app/pages/componentes/` and `apps/site/src/app/pages/patrones/` for docs examples
+
+Do not hand-roll these in page code:
+- tables
+- charts / graphs
+- cards / section containers
+- modals / dialogs
+- drawers
+- page headers
+- top bars / sidebars
+- form fields
+- tabs / filter bars
+
+If a similar implementation exists, copy the composition pattern and adapt data/labels only. If the existing primitive cannot support the use case, document the gap before building new UI.
+
+## Wealth Planner references
+
+For Wealth Planner / AWM demo work, use these reference implementations:
+
+- **Tables:** reuse `libs/ui/src/table/` and mirror the Patrimonial table composition in `apps/site/src/app/pages/demos/patrimonial/patrimonial-proposal.page.html`.
+- **Section containers:** use `afi-page-header` section/subsection patterns from `libs/ui/src/page-header/`.
+- **Top bar / sidebar:** reuse `apps/site/src/app/pages/demos/shared/planner-top-bar.component.*` and `planner-sidebar.component.*`.
+- **Add/edit dialogs:** reuse the modal/form composition in `apps/site/src/app/pages/demos/patrimonial/patrimonio-add-modal/` and shared dialog components in `apps/site/src/app/pages/demos/shared/`.
+- **Charts / graphs:** use chart primitives or existing chart pattern pages. Do not create ad hoc SVG/HTML charts in page code.
+
 ## 3-file rule (LOCKED)
 
 **Every Angular component, pattern, template, or page in this repo MUST use 3 separate files:**

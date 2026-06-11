@@ -35,11 +35,25 @@ No marketing voice. No emoji. The code ships; the brief carries the note.
 
 1. **Preview at every green checkpoint.** Run `ng serve` and load the primitive in the showcase route before opening a PR. No "it compiles" merges.
 2. **Ask instead of guess.** If the build prompt is silent on a behavior, the skill wins. If both are silent, escalate to Planner — do not invent.
-3. **Base primitives are co-defined in strategy first.** Do not add a new token, a new variant, or a new output event without Planner sign-off. Update the brief and wait.
-4. **Re-run `_pre-flight.md` every time.** Every primitive, every PR. No skipped boxes. No "I'll fix it in the follow-up."
-5. **Respect the clean-code hook.** Never commit with `--no-verify`. If the hook blocks, fix the cause.
-6. **Skill wins over build prompt.** If the prompt contradicts `component-skill.md`, `token-skill.md`, `accessibility.md`, or `copy-skill.md`, the skill is right. Flag the drift in the brief.
-7. **Update the plan as reality pushes back.** When a primitive takes longer, reveals a missing token, or needs a new composition, edit `docs/strategy/plan.md` in the same PR. Don't carry invisible debt.
+3. **Reuse before building.** Search `libs/ui/src/`, shared demo components, and existing demo/reference pages before writing UI. If a similar primitive or composition exists, reuse it and adapt data/labels only. Do not create bespoke tables, charts, cards, dialogs, drawers, headers, form fields, tabs, or filter bars in page code.
+4. **Base primitives are co-defined in strategy first.** Do not add a new token, a new variant, or a new output event without Planner sign-off. Update the brief and wait.
+5. **Re-run `_pre-flight.md` every time.** Every primitive, every PR. No skipped boxes. No "I'll fix it in the follow-up."
+6. **Respect the clean-code hook.** Never commit with `--no-verify`. If the hook blocks, fix the cause.
+7. **Skill wins over build prompt.** If the prompt contradicts `component-skill.md`, `token-skill.md`, `accessibility.md`, or `copy-skill.md`, the skill is right. Flag the drift in the brief.
+8. **Update the plan as reality pushes back.** When a primitive takes longer, reveals a missing token, or needs a new composition, edit `docs/strategy/plan.md` in the same PR. Don't carry invisible debt.
+
+## Reuse map — Wealth Planner / AWM
+
+When building Wealth Planner / AWM demo surfaces:
+
+- **Tables:** compose `libs/ui/src/table/`; mirror `apps/site/src/app/pages/demos/patrimonial/patrimonial-proposal.page.html` before inventing a new table layout.
+- **Charts / graphs:** use chart primitives or pattern pages. No ad hoc page-local SVG/HTML chart unless a chart primitive gap is documented.
+- **Section containers:** use `afi-page-header` section/subsection patterns from `libs/ui/src/page-header/`.
+- **Top bar / sidebar:** reuse `apps/site/src/app/pages/demos/shared/planner-top-bar.component.*` and `planner-sidebar.component.*`.
+- **Dialogs:** reuse the Patrimonial add-modal composition and shared dialog components under `apps/site/src/app/pages/demos/shared/`.
+- **Forms:** use existing `afi-input`, `afi-select`, filter chips, segmented controls, and shared modal form patterns.
+
+If a reference cannot support the needed behavior, write an escalation note naming the missing API/variant/token. Do not silently fork the UI.
 
 ---
 
@@ -54,12 +68,13 @@ Matches `docs/strategy/manifesto.md` — operator tone, no salesiness, no emoji.
 ## Build loop (per primitive)
 
 1. Read the build prompt + the four skills referenced above.
-2. Scaffold the library folder per the file-structure block in the prompt.
-3. Implement the component in dependency order: types → variants → template → styles → spec.
-4. Run `scripts/clean-code-check.sh` locally. Fix until green.
-5. Run the primitive in the showcase route. Keyboard-walk it. Screen-reader it. Toggle reduced-motion.
-6. Close every box in `_pre-flight.md`. If a box can't close, escalate — don't merge.
-7. Open PR. Tag Token Guardian if tokens touched. Hand to Tester when green.
+2. Search for existing primitives/compositions that already cover the surface.
+3. Scaffold only the missing library folder per the file-structure block in the prompt.
+4. Implement the component in dependency order: types → variants → template → styles → spec.
+5. Run `scripts/clean-code-check.sh` locally. Fix until green.
+6. Run the primitive in the showcase route. Keyboard-walk it. Screen-reader it. Toggle reduced-motion.
+7. Close every box in `_pre-flight.md`. If a box can't close, escalate — don't merge.
+8. Open PR. Tag Token Guardian if tokens touched. Hand to Tester when green.
 
 ---
 

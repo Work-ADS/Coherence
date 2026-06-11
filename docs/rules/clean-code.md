@@ -79,6 +79,8 @@
 
 15. **Barrels stay intentional.** `libs/ui/src/{primitive}/index.ts` exports that primitive and its public types. Shared library barrels may re-export primitives only when they are already part of the public package API; do not create grab-bag exports for convenience.
 
+16. **No bespoke DS primitives in page code.** Pages compose existing primitives and patterns. Before adding local table/grid/chart/dialog/card/header/form markup, search `libs/ui/src/` and existing demo/pattern pages. If a reusable primitive or composition exists, use it. If it does not fit, document the missing API/variant/token before building a new one.
+
 ## Pre-flight checklist (runs as grep at commit)
 
 - [ ] No hex, rgba, or raw px outside `libs/tokens/`
@@ -89,6 +91,7 @@
 - [ ] No TODO / FIXME strings
 - [ ] Imports sorted external → internal → relative
 - [ ] SCSS is focused on one component's concerns and uses BEM + CSS custom properties
+- [ ] Existing DS primitives/patterns were searched before adding page-local UI
 - [ ] Spec file exists and runs
 
 ## Anti-patterns (seen in wild, don't)
@@ -96,6 +99,7 @@
 - `*ngIf="a; else b"` nested 3+ deep → extract to a `computed()`, template binds a single boolean
 - `[ngStyle]="{ color: '#333' }"` with string literals → Tailwind class + token
 - Tooltip that only works on mouse hover → add focus/click/keyboard access or a visible/data-table fallback
+- Page-local table/chart/dialog markup that duplicates `libs/ui` or a demo shared pattern → reuse the primitive/composition
 - Component owns both presentation AND data fetching → split; primitives don't fetch
 - `this.cdr.detectChanges()` sprinkled in → you've bypassed OnPush; fix the root cause
 - `Subscription` member field → switch to `takeUntilDestroyed()` or `async` pipe

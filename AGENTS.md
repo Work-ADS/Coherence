@@ -1,11 +1,89 @@
-This is the Coherence DS repo. First read docs/strategy/plan.md. Agent lineup in docs/agents/ — **Planner is live** (session harness over docs/workflow/brief-template.md; invoke when starting or activating a brief). Skills in docs/rules/component-skill.md (build), docs/rules/component-design-skill.md (design — upstream of build), docs/rules/motion-skill.md (named motion patterns + tokens), and docs/rules/token-skill.md.
+This is the Coherence DS repo. First read `docs/strategy/plan.md`.
+
+Agent lineup lives in `docs/agents/`:
+- **Planner is live**: `docs/agents/planner.md` is the session harness over `docs/workflow/brief-template.md`; invoke it when starting or activating a brief.
+- **Builder**: `docs/agents/builder.md` is the implementation harness; invoke it only after scope is locked or a build prompt is green-lit.
+- **Tester**: `docs/agents/tester.md` verifies completed work against the brief, pre-flight, a11y, copy, and clean-code rules.
+- **Token Guardian**: `docs/agents/ds-token-guardian.md` reviews token additions/references.
+
+Skills live in `docs/rules/`: `component-skill.md` (build), `component-design-skill.md` (design — upstream of build), `motion-skill.md` (named motion patterns + tokens), `token-skill.md`, `clean-code.md`, `accessibility.md`, and `copy-skill.md`.
+
+## Required read order
+
+Before any coding work, read in order:
+
+1. `docs/agents/builder.md`
+2. `docs/workflow/build-kickoff.md`
+3. `docs/rules/clean-code.md`
+4. `docs/rules/accessibility.md`
+5. `docs/rules/copy-skill.md`
+6. `docs/rules/component-skill.md`
+7. `docs/rules/token-skill.md`
+8. `docs/rules/motion-skill.md`
+9. `docs/build-prompts/_pre-flight.md`
+
+If those files conflict, use this precedence:
+
+1. `component-skill.md` wins for Angular component structure and file layout.
+2. `token-skill.md` wins for token naming/layering.
+3. `clean-code.md` wins for commit-hook and pre-flight constraints.
+4. The specific build prompt wins only inside its scoped surface and only when it does not contradict a skill.
+
+Before committing implementation work, run the relevant checks:
+
+```bash
+bash scripts/clean-code-check.sh <changed files>
+npx tsc -p apps/site/tsconfig.app.json --noEmit
+npm run build
+```
+
+## Reuse before building (LOCKED)
+
+Before writing new UI code, search for existing primitives, composed patterns, and reference screens. Reuse them unless the brief explicitly says they are insufficient.
+
+Required searches:
+- `libs/ui/src/` for DS primitives
+- `apps/site/src/app/pages/demos/shared/` for reusable demo/product chrome
+- `apps/site/src/app/pages/demos/` for composed product reference screens
+- `apps/site/src/app/pages/componentes/` and `apps/site/src/app/pages/patrones/` for docs examples
+
+Do not hand-roll these in page code:
+- tables
+- charts / graphs
+- cards / section containers
+- modals / dialogs
+- drawers
+- page headers
+- top bars / sidebars
+- form fields
+- tabs / filter bars
+
+If a similar implementation exists, copy the composition pattern and adapt data/labels only. If the existing primitive cannot support the use case, document the gap before building new UI.
+
+## Wealth Planner references
+
+For Wealth Planner / AWM demo work, use these reference implementations:
+
+- **Tables:** reuse `libs/ui/src/table/` and mirror the Patrimonial table composition in `apps/site/src/app/pages/demos/patrimonial/patrimonial-proposal.page.html`.
+- **Section containers:** use `afi-page-header` section/subsection patterns from `libs/ui/src/page-header/`.
+- **Top bar / sidebar:** reuse `apps/site/src/app/pages/demos/shared/planner-top-bar.component.*` and `planner-sidebar.component.*`.
+- **Add/edit dialogs:** reuse the modal/form composition in `apps/site/src/app/pages/demos/patrimonial/patrimonio-add-modal/` and shared dialog components in `apps/site/src/app/pages/demos/shared/`.
+- **Charts / graphs:** use chart primitives or existing chart pattern pages. Do not create ad hoc SVG/HTML charts in page code.
+
+## Persistent label alignment (LOCKED)
+
+For section/table reveal actions such as `Ver datos`, align the always-visible trigger label/icon with the surrounding section text. The resting state is the alignment source of truth.
+
+- The visible label/icon must line up with the section heading, table text, and other persistent content.
+- Hover/focus/expanded containers may grow or offset around that anchor; their temporary box alignment is secondary.
+- Do not indent the resting trigger just to center or balance a hidden hover panel.
 
 ## 3-file rule (LOCKED)
 
 **Every Angular component, pattern, template, or page in this repo MUST use 3 separate files:**
 
 ```
-{name}.component.ts    — class only, uses templateUrl + styleUrl
+{name}.component.ts    — class only, uses templateUrl + styleUrl/styleUrls
 {name}.component.html  — external template (NEVER inline template:)
 {name}.component.scss  — external styles with BEM + CSS custom properties (NEVER inline styles:)
 ```

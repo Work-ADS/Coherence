@@ -31,6 +31,8 @@
 
 10. **Forms announce errors.** `aria-invalid="true"` + `aria-describedby` pointing to the error text. Error appears on blur, not on keystroke — exception: password-strength meters.
 
+11. **Hover is enhancement, not the only path.** Hover tooltips, chart crosshairs, row reveals, and icon affordances may exist, but the same information or action must also be reachable by keyboard focus, click/tap, visible text, or a data-table/details fallback. Pointer-only disclosure fails.
+
 ## Per-primitive quick checklist
 
 **Button**
@@ -82,6 +84,13 @@
 - [ ] Auto-dismiss at 5s for info; manual-only for errors
 - [ ] Action button (e.g., Undo) reachable before auto-dismiss fires
 
+**Tooltip / Hovercard**
+- [ ] Trigger is keyboard-focusable when the tooltip contains useful information
+- [ ] Opens on focus as well as hover, or the information also appears elsewhere
+- [ ] `Esc` dismisses when tooltip is interactive or persistent
+- [ ] Tooltip content is not the only place critical data appears
+- [ ] Touch users have a click/tap path or visible fallback
+
 **Inline-edit row panel** (DS-specific — AWM Import pattern)
 - [ ] Expansion announced via `aria-expanded` on the row
 - [ ] Editor panel has `role="region"` + `aria-label`
@@ -106,6 +115,7 @@
 - `outline: none` without a focus-visible replacement → fails immediately
 - Animation that can't be disabled by `prefers-reduced-motion` → ships broken for vestibular disorders
 - Icon-only button with no `aria-label` → SR announces "button" and nothing else
+- Hover-only tooltip with no focus/tap/data fallback → keyboard and touch users never receive the information
 - Error text rendered but not associated via `aria-describedby` → SR users never hear it
 - Modal that closes but doesn't return focus → user lands at `<body>`, lost
 

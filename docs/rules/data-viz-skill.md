@@ -111,6 +111,16 @@ Adopted verbatim from Visa. Populated in RAE Spanish. These feed a screen-reader
 
 A "Keyboard instructions" button is required on every chart and opens a `<afi-modal>` with the map.
 
+### Tooltip interaction
+
+Chart tooltips are allowed and expected. They may open from pointer hover / pointermove for desktop exploration, but they must not be pointer-only.
+
+- Pointer path: hover or pointermove updates tooltip state through Angular signals/component state.
+- Keyboard path: focused datum/series opens the same tooltip content; `Esc` dismisses it.
+- Touch path: tap selects or pins the datum, or the visible data-table/details fallback exposes the same value.
+- Implementation path: no imperative DOM mutation. Use event coordinates, SVG/data indices, signals, and template bindings. Do not use `document.querySelector` or `nativeElement.style`.
+- Content rule: tooltip-only critical data is banned. If a number matters, label it on-chart or include it in the data-table fallback.
+
 ### Data-table fallback
 
 Every chart exposes a `dataTableOpen` signal + toggle button that reveals a screen-reader-accessible `<table>` equivalent of the chart's data. Required on bar / line / dumbbell; optional on heatmap.

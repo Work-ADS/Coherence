@@ -36,6 +36,8 @@
 
 7. **No direct DOM access** unless unavoidable. `ElementRef` / `Renderer2` only when Angular CDK can't cover it — and comment the reason. No `document.querySelector`. Ever.
 
+   **Allowed pointer interactions:** hover, pointermove, and focus-driven affordances are allowed when implemented through Angular template events + signals/classes. Examples: row hover states, icon reveal on hover, chart tooltip coordinates, and legend hover emphasis. The rule forbids imperative DOM reads/writes (`querySelector`, `nativeElement.style`, manual mutation), not interaction itself.
+
 8. **SCSS over Tailwind.** Templates use semantic classes styled in the component's `.scss` file with design tokens — not inline utility classes. Every visual property (color, spacing, radius, font) reads from a CSS var. SCSS files have no arbitrary line-count limit but should remain focused on one component's concerns.
 
 9. **File structure per primitive:**
@@ -93,6 +95,7 @@
 
 - `*ngIf="a; else b"` nested 3+ deep → extract to a `computed()`, template binds a single boolean
 - `[ngStyle]="{ color: '#333' }"` with string literals → Tailwind class + token
+- Tooltip that only works on mouse hover → add focus/click/keyboard access or a visible/data-table fallback
 - Component owns both presentation AND data fetching → split; primitives don't fetch
 - `this.cdr.detectChanges()` sprinkled in → you've bypassed OnPush; fix the root cause
 - `Subscription` member field → switch to `takeUntilDestroyed()` or `async` pipe

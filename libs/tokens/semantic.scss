@@ -50,10 +50,12 @@
 
   --surface-default:  var(--color-afi-white-25);
   // Role: default surface — cards, panels, basic containers.
-  --surface-subtle:   var(--color-afi-white-50);
+  --surface-subtle:   var(--color-afi-gris-50);
   // Role: subtle tinted surface — secondary panels, filter rails.
-  --surface-raised:   var(--color-afi-white-0);
+  --surface-raised:   var(--color-afi-gris-0);
   // Role: elevated surface — modals, popovers (combine with elevation shadow).
+  --surface-hover: var(--color-afi-control-50);
+  // Role: hovered surface
   --surface-selected: var(--color-afi-azul-profundo-25);
   // Role: currently-selected surface — selected row in a table, active nav item bg.
 

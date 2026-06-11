@@ -1,0 +1,80 @@
+:host {
+  display: block;
+}
+
+.titulares-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.titulares-block__label {
+  font: var(--type-body-md-500);
+  color: var(--foreground-secondary);
+  margin: 0;
+}
+
+.titulares-block__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-3);
+}
+
+.titulares-block__titular,
+.titulares-block__porcentaje {
+  min-width: 0;
+}
+
+// Trash icon-button sits at the row's baseline. When a row carries its
+// own label (first row), the icon needs to clear the label height — push
+// down by the typographic equivalent of one label line.
+.titulares-block__delete {
+  padding-bottom: var(--border-width-thick);
+}
+
+.titulares-block__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-1);
+}
+
+.titulares-block__total {
+  font: var(--type-body-sm-500);
+  font-variant-numeric: tabular-nums;
+
+  &--ok {
+    color: var(--system-success-fg, var(--feedback-success-foreground));
+  }
+  &--error {
+    color: var(--system-error-fg, var(--feedback-error-foreground));
+  }
+}
+
+.titulares-block__add {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: var(--type-body-sm-500);
+  color: var(--foreground-brand-default);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+
+  &:hover {
+    text-decoration: underline;
+  }
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--foreground-brand-default);
+    outline-offset: var(--border-width-thick);
+    border-radius: var(--radius-sm);
+  }
+}
+
+.titulares-block__add-icon {
+  font-size: 1.05em;
+  line-height: 1;
+}

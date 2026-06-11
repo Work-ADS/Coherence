@@ -140,6 +140,12 @@
   margin-inline: auto;
   background: var(--surface-base);
   position: relative;
+  // Container queries — child components use the tablet breakpoint
+  // to switch breakpoints based on this rendered area's width, not the
+  // browser window. Required so the toolbar's 375 / 768 / 1280 / Full
+  // buttons actually trigger mobile chrome (hamburger, overflow, drawer).
+  container-type: inline-size;
+  container-name: viewport;
 
   .viewport-frame--constrained & {
     border: var(--border-width-hairline) solid var(--border-hairline);

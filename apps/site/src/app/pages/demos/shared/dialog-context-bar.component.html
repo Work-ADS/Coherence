@@ -1,0 +1,29 @@
+<div class="context-bar">
+  <div class="context-bar__head">
+    <span class="context-bar__title">{{ title() }}</span>
+    <span class="context-bar__total">{{ totalLabel() }}</span>
+  </div>
+
+  <div
+    class="context-bar__track"
+    role="img"
+    [attr.aria-label]="title() + ' ' + totalLabel()"
+  >
+    @for (seg of normalizedSegments(); track seg.key) {
+      <span
+        class="context-bar__segment"
+        [class.context-bar__segment--highlight]="seg.highlight"
+        [style.flex-grow]="seg.pct"
+        [attr.title]="seg.label + ' · ' + formatPct(seg.pct)"
+      ></span>
+    }
+  </div>
+
+  @if (highlightedSegment(); as h) {
+    <div class="context-bar__legend">
+      <span class="context-bar__legend-swatch" aria-hidden="true"></span>
+      <span class="context-bar__legend-label">{{ h.label }}</span>
+      <span class="context-bar__legend-pct">{{ formatPct(h.pct) }}</span>
+    </div>
+  }
+</div>

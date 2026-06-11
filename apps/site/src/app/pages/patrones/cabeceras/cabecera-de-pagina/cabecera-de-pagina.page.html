@@ -287,5 +287,35 @@
         </p>
       </div>
     </article>
+
+    <article class="decision-card">
+      <header class="decision-card__header">
+        <span class="decision-card__status decision-card__status--done">Decidido</span>
+        <h3 class="decision-card__title">Section / subsection — fondo sutil y cuerpo flush</h3>
+      </header>
+      <div class="decision-card__body">
+        <p>
+          <strong>Fondo <code>--surface-subtle</code>.</strong> Las cabeceras
+          <code>level="section"</code> y <code>level="subsection"</code> se renderizan como tarjetas
+          con fondo <code>--surface-subtle</code> (AFI Gris 25). Es la tinta más sutil de la rampa —
+          diferencia la tarjeta del lienzo de página sin competir con el contenido. El nivel
+          <code>page</code> sigue siendo chromeless.
+        </p>
+        <p>
+          <strong>Cuerpo flush con tablas (automático).</strong> Cuando el slot por defecto
+          contiene un <code>&lt;afi-table&gt;</code>, el cuerpo bleed-ea hasta los bordes del cuadro
+          (se elimina el padding <code>--space-lg</code> por debajo y a los lados). El borde
+          inferior de la última fila coincide con el borde del cuadro. No requiere prop — está
+          activado vía <code>:has(afi-table)</code> en el SCSS del componente.
+        </p>
+        <p>
+          <strong>Override explícito <code>[bodyFlush]="true"</code>.</strong> Para otro contenido a
+          ancho completo (cuadrículas custom, listas, gráficos), pasa <code>[bodyFlush]="true"</code>
+          y obtendrás el mismo bleed. <code>overflow: hidden</code> sobre el host recorta a las
+          esquinas redondeadas — no apliques este patrón si el cuerpo necesita proyectar
+          tooltips o menús fuera del cuadro.
+        </p>
+      </div>
+    </article>
   </section>
 </site-doc-page-shell>

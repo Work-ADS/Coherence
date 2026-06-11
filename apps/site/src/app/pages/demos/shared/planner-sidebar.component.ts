@@ -10,7 +10,12 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { LogoComponent, NavItemComponent, SidebarComponent } from '@coherence/ui';
+import {
+  InlineEditComponent,
+  LogoComponent,
+  NavItemComponent,
+  SidebarComponent,
+} from '@coherence/ui';
 
 import { MobileDrawerService } from '../../../services/mobile-drawer.service';
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
@@ -55,7 +60,13 @@ export type NavSection = {
 @Component({
   selector: 'site-planner-sidebar',
   standalone: true,
-  imports: [RouterLink, LogoComponent, SidebarComponent, NavItemComponent],
+  imports: [
+    RouterLink,
+    InlineEditComponent,
+    LogoComponent,
+    SidebarComponent,
+    NavItemComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './planner-sidebar.component.html',
   styleUrls: ['./planner-sidebar.component.scss'],
@@ -74,6 +85,16 @@ export class PlannerSidebarComponent {
   readonly gestorName = input<string>('Elena Torres');
   readonly gestorRole = input<string>('Gestora');
   readonly gestorInitials = input<string>('ET');
+
+  /**
+   * Identity (client name + simulation ID) surfaced inside the drawer on
+   * mobile. Hidden on desktop where the planner-top-bar already shows the
+   * same identity inline. The inline-edit is wired so renaming inside the
+   * drawer commits exactly like the top-bar version.
+   */
+  readonly clientName = input<string>('Ricardo Vázquez Pérez');
+  readonly simId = input<string>('SIM-2025-0011');
+  readonly simRenamed = output<string>();
   readonly expandedChange = output<boolean>();
 
   readonly expanded = signal(true);

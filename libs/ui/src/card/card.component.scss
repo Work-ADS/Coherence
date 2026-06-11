@@ -1,0 +1,99 @@
+// =============================================================================
+// card.component.scss — Card primitive · BEM + token-only
+// =============================================================================
+//
+// Surface-only treatment per Richard 2026-06-10 — no border, no internal
+// divider lines; the surface tint alone differentiates the card from the
+// page canvas. The hairline border that the legacy Tailwind-class variant
+// carried is gone.
+//
+// Variants:
+//   • default  — `--surface-subtle` (AFI Gris 25). The canonical card.
+//   • elevated — `--surface-raised` + `--elevation-sm` shadow. For modals
+//     and floating containers that need visual lift.
+//   • quiet    — `--surface-default` (page canvas). Reads as a structural
+//     grouper without surface contrast — useful when nested inside a
+//     stronger container.
+//
+// Padding scale lives on the body region only; header/footer keep a fixed
+// inset since they're optional chrome.
+// -----------------------------------------------------------------------------
+
+:host {
+  display: block;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-subtle);
+  transition:
+    background-color var(--duration-fast) var(--easing-enter),
+    box-shadow var(--duration-fast) var(--easing-enter);
+}
+
+// ─── Variants ────────────────────────────────────────────────────────────────
+:host(.afi-card--default) {
+  background: var(--surface-subtle);
+}
+
+:host(.afi-card--elevated) {
+  background: var(--surface-raised);
+  box-shadow: var(--elevation-sm);
+}
+
+:host(.afi-card--quiet) {
+  background: var(--surface-default);
+}
+
+// ─── Interactive ─────────────────────────────────────────────────────────────
+// Hover / focus only fire when `[interactive]` is on — otherwise the card
+// is a passive container and shouldn't suggest affordance.
+:host(.afi-card--interactive) {
+  cursor: pointer;
+}
+
+:host(.afi-card--interactive):hover {
+  box-shadow: var(--elevation-md);
+}
+
+:host(.afi-card--interactive):focus-visible {
+  outline: var(--border-width-thick) solid var(--border-focus);
+  outline-offset: var(--space-2xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    transition: none;
+  }
+}
+
+// ─── Regions ────────────────────────────────────────────────────────────────
+.afi-card__header,
+.afi-card__footer {
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+}
+
+.afi-card__body {
+  padding: var(--space-md);
+}
+
+// Padding modifiers — apply to the body only.
+:host(.afi-card--padding-none) .afi-card__body {
+  padding: 0;
+}
+
+:host(.afi-card--padding-sm) .afi-card__body {
+  padding: var(--space-sm);
+}
+
+:host(.afi-card--padding-lg) .afi-card__body {
+  padding: var(--space-lg);
+}
+
+// ─── Empty-slot suppression ─────────────────────────────────────────────────
+// `:has(*)` requires at least one element child. Empty <ng-content/> projects
+// no DOM nodes, so unfilled header / footer regions collapse — consumers
+// don't have to manually toggle them.
+.afi-card__header:not(:has(*)),
+.afi-card__footer:not(:has(*)) {
+  display: none;
+}

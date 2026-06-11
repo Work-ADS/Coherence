@@ -5,6 +5,7 @@ import {
   DropdownPanelComponent,
   IconButtonComponent,
   InlineEditComponent,
+  LogoComponent,
   MenuDividerComponent,
   MenuItemComponent,
   StatusChipComponent,
@@ -26,6 +27,7 @@ import { SettingsDropdownComponent, SimulationSettings } from './settings-dropdo
     DropdownPanelComponent,
     IconButtonComponent,
     InlineEditComponent,
+    LogoComponent,
     MenuDividerComponent,
     MenuItemComponent,
     StatusChipComponent,
@@ -80,6 +82,36 @@ export class PlannerTopBarComponent {
   readonly stateOpen = signal(false);
   readonly notesOpen = signal(false);
   readonly configOpen = signal(false);
+  /**
+   * Mobile-only overflow menu below the tablet breakpoint that holds the notes + settings entry
+   * points. On desktop the two icon buttons sit directly in `.ptb__end`;
+   * on mobile they collapse into a single `⋮` trigger that opens this drop-
+   * down sheet, which then routes to the existing notes / settings panels.
+   */
+  readonly overflowOpen = signal(false);
+
+  toggleOverflow(payload: { event: MouseEvent }): void {
+    // The dropdown-panel listens to document:click and would treat this
+    // trigger click as an outside-click — stop propagation so the open
+    // signal flip survives.
+    payload.event.stopPropagation();
+    this.overflowOpen.update((v) => !v);
+  }
+
+  openNotesFromOverflow(): void {
+    this.overflowOpen.set(false);
+    this.notesOpen.set(true);
+  }
+
+  openSettingsFromOverflow(): void {
+    this.overflowOpen.set(false);
+    this.configOpen.set(true);
+  }
+
+  changeEstadoFromOverflow(value: Estado): void {
+    this.overflowOpen.set(false);
+    this.onEstadoChange(value);
+  }
 
   readonly notes = signal<PlanNote[]>([
     { id: '1', text: 'Cliente prefiere enfoque conservador para los próximos 3 años.', timestamp: new Date('2025-05-15T10:30:00') },

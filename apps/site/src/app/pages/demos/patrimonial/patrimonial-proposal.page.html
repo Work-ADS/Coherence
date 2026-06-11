@@ -5,8 +5,12 @@
   homeRoute="/listado-planificaciones"
   homeLabel="Volver al listado"
 >
-    <div class="h-screen flex bg-canvas-base overflow-hidden">
-      <site-planner-sidebar activeKey="patrimonio" />
+    <div class="h-screen flex bg-canvas-base overflow-hidden relative">
+      <site-planner-sidebar
+        activeKey="patrimonio"
+        clientName="Ricardo Vázquez Pérez"
+        simId="SIM-2025-0011"
+      />
 
       <!-- Main column: top bar + content -->
       <div class="flex-1 flex flex-col min-w-0">
@@ -16,135 +20,99 @@
         />
 
         <main class="flex-1 min-w-0 overflow-y-auto">
-          <div class="max-w-[1180px] mx-auto py-space-8 px-space-6">
-            <!-- Page header — Patrimonio. Versión toggle pinned to the top-right
-                 lets seniors compare layout variants across reviews; V1 is the
-                 current implementation, V2/V3 are stubs ready for future
-                 explorations (e.g. grouped vs. flat list, sticky totals row). -->
-            <div class="relative">
+          <!-- Outer page wrapper — matches the canonical ops__page treatment
+               (max-inline-size var(--content-xl), centered, vertical padding).
+               Horizontal padding is intentionally absent here because the
+               afi-page-header primitive already pads its inline edges via
+               --space-lg — so the page-header, its slots, and its body all
+               share the same left/right anchor. -->
+          <div class="patrimonial-page__wrap">
+            <!-- Page header — Patrimonio. Migrated 2026-06-10 to the canonical
+                 afi-page-header slot pattern (cards · tabs · filters · actions ·
+                 default body). Per-section bodies use level="section" wrappers
+                 below. -->
               <afi-page-header
                 title="Patrimonio"
                 subtitle="Gestiona y visualiza todos tus activos y pasivos. Aquí puedes agregar, modificar y analizar tus inversiones, inmuebles, cuentas bancarias y más, para tener una visión completa de tu patrimonio financiero."
+                level="page"
                 [sticky]="false"
                 [scrollFade]="false"
               >
-              </afi-page-header>
-              <div class="absolute top-0 right-space-8">
-                <site-version-toggle
-                  [versions]="versions"
-                  [value]="version()"
-                  ariaLabel="Versión del layout de Patrimonio"
-                  (valueChange)="setVersion($event)"
-                />
-              </div>
-            </div>
+                <!-- Note: inline site-version-toggle is globally hidden in
+                     styles.scss — the floating design-review widget (from
+                     index.html) handles V1/V2/V3 switching now. version()
+                     signal is still bridged through `bridgeDesignReviewVersion`
+                     in the constructor. -->
 
-            <!-- Data cards — whole-patrimonio summary, unaffected by filters. Sits above the
-                 filter strip so the stable "identity" context is always visible up top. -->
-            <div class="mx-space-8 mt-space-6 grid grid-cols-3 gap-space-6">
-              <div>
-                <p class="text-body-sm text-neutral-500 mb-space-1">Patrimonio neto</p>
-                <p class="text-section text-canvas-fg">1.240.000 €</p>
-                <p class="text-body-sm text-neutral-500 mt-space-1">Activos menos deudas</p>
-              </div>
-              <div>
-                <p class="text-body-sm text-neutral-500 mb-space-1">Liquidez disponible</p>
-                <p class="text-section text-canvas-fg">65.200 €</p>
-                <p class="text-body-sm text-neutral-500 mt-space-1">Disponible a corto plazo</p>
-              </div>
-              <div>
-                <p class="text-body-sm text-neutral-500 mb-space-1">Patrimonio invertido</p>
-                <p class="text-section text-canvas-fg">539.600 €</p>
-                <p class="text-body-sm text-neutral-500 mt-space-1">
-                  Inversión, pensiones y private equity
-                </p>
-              </div>
-            </div>
-
-            <!-- Tabs — macro view switch (which section). Hairline above separates the
-                 session-level summary (data cards) from the filterable area below. -->
-            <div class="mx-space-8 mt-space-6 pt-space-5 border-t border-border-hairline relative">
-              <div
-                #tabsScroll
-                (scroll)="onTabsScroll($event)"
-                class="tabs-scroll relative flex items-end gap-space-5 border-b border-border-hairline overflow-x-auto"
-              >
-                @for (t of tabs(); track t.key) {
-                  <button
-                    #tabBtn
-                    type="button"
-                    (click)="setActiveTab(t.key)"
-                    class="inline-flex items-center gap-space-2 pb-space-2 text-body-sm whitespace-nowrap transition-colors"
-                    [class.text-action]="activeTab() === t.key"
-                    [class.font-medium]="activeTab() === t.key"
-                    [class.text-neutral-500]="activeTab() !== t.key"
-                    [class.hover:text-canvas-fg]="activeTab() !== t.key"
-                  >
-                    <span>{{ t.label }}</span>
-                    <span
-                      class="inline-flex items-center justify-center px-1.5 min-w-[22px] h-5 rounded-full border border-border-hairline text-caption text-neutral-500"
-                      >{{ t.count }}</span
-                    >
-                  </button>
-                }
-                <!-- Sliding indicator — bottom edge, animated via CSS transition -->
-                <span
-                  class="tab-indicator"
-                  [style.left]="indicatorStyle()['left']"
-                  [style.width]="indicatorStyle()['width']"
-                  [style.opacity]="indicatorStyle()['opacity']"
-                  aria-hidden="true"
-                ></span>
-              </div>
-              <!-- Left-edge chevron: only shows once the user has scrolled past the start. -->
-              @if (canScrollLeft()) {
-                <div
-                  class="absolute left-0 bottom-0 top-[20px] flex items-center pointer-events-none pr-space-6"
-                  style="background: linear-gradient(to left, rgba(255,255,255,0), var(--canvas-base) 60%);"
+                <!-- Primary action — moved out of the filter strip per the
+                     canonical pattern. Cmd/Ctrl+A keyboard shortcut wired via
+                     the siteKeyShortcut directive. -->
+                <afi-button
+                  slot="actions"
+                  variant="primary"
+                  size="sm"
+                  siteKeyShortcut="a"
+                  ariaLabel="Añadir patrimonio"
+                  (clicked)="addDialogOpen.set(true)"
                 >
-                  <button
-                    type="button"
-                    (click)="scrollTabs(-1)"
-                    class="pointer-events-auto inline-flex items-center justify-center w-6 h-6 rounded text-neutral-500 hover:text-canvas-fg hover:bg-surface-muted"
-                    aria-label="Pestañas anteriores"
-                  >
-                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path
-                        fill-rule="evenodd"
-                        d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              }
-              <!-- Right-edge chevron: hides once the user has scrolled to the end. -->
-              @if (canScrollRight()) {
-                <div
-                  class="absolute right-0 bottom-0 top-[20px] flex items-center pointer-events-none pl-space-6"
-                  style="background: linear-gradient(to right, rgba(255,255,255,0), var(--canvas-base) 60%);"
-                >
-                  <button
-                    type="button"
-                    (click)="scrollTabs(1)"
-                    class="pointer-events-auto inline-flex items-center justify-center w-6 h-6 rounded text-neutral-500 hover:text-canvas-fg hover:bg-surface-muted"
-                    aria-label="Más pestañas"
-                  >
-                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              }
-            </div>
+                  + Añadir patrimonio
+                  <afi-kbd [keys]="addShortcut" size="sm" />
+                </afi-button>
 
-            <!-- Filter strip — narrows the current tab's view. Sits just above the tables
-                 (below the tabs) because filters are within-view refinements. -->
-            <div class="mx-space-8 mt-space-4 flex items-center gap-space-4 min-w-0">
+                <!-- KPI cards — migrated 2026-06-10 from inline divs to
+                     <afi-card padding="lg">. The primitive now collapses empty header/footer
+                     slots via :has(*) and renders surface-subtle (Gris 25) with
+                     no border, matching the section-card treatment. Text colors
+                     use semantic foreground tokens. -->
+                <div
+                  slot="cards"
+                  class="patrimonial-kpi-grid w-full"
+                >
+                  <afi-card padding="lg">
+                    <p class="text-body-sm text-foreground-secondary mb-space-1">
+                      Patrimonio neto
+                    </p>
+                    <p class="text-section text-foreground-primary">1.240.000 €</p>
+                    <p class="text-body-sm text-foreground-secondary mt-space-1">
+                      Activos menos deudas
+                    </p>
+                  </afi-card>
+                  <afi-card padding="lg">
+                    <p class="text-body-sm text-foreground-secondary mb-space-1">
+                      Liquidez disponible
+                    </p>
+                    <p class="text-section text-foreground-primary">65.200 €</p>
+                    <p class="text-body-sm text-foreground-secondary mt-space-1">
+                      Disponible a corto plazo
+                    </p>
+                  </afi-card>
+                  <afi-card padding="lg">
+                    <p class="text-body-sm text-foreground-secondary mb-space-1">
+                      Patrimonio invertido
+                    </p>
+                    <p class="text-section text-foreground-primary">539.600 €</p>
+                    <p class="text-body-sm text-foreground-secondary mt-space-1">
+                      Inversión, pensiones y private equity
+                    </p>
+                  </afi-card>
+                </div>
+
+            <!-- Tabs removed 2026-06-10 — replaced by the multi-select Tipo
+                 filter chip in the filters slot below. The Tipo chip handles
+                 both inclusion AND ordering (drag-to-reorder), which the old
+                 tabs couldn't express. See `tipoOrder` + `selectedTipos` in
+                 patrimonial-proposal.page.ts. -->
+
+
+            <!-- Filter strip — narrows the current tab's view. Page-header
+                 filters slot handles outer rhythm. Wraps on narrow viewports
+                 so chips stack instead of overflowing. -->
+            <!-- Filters wrapper — no longer `w-full` so a sibling
+                 [slot=filterActions] (e.g. the bulk-delete bar) can pin
+                 to the right via the page-header's flex+margin-left:auto
+                 rule. Filters take the space they need; actions take
+                 the rest. -->
+            <div slot="filters" class="flex flex-wrap items-center gap-space-3 min-w-0">
               <!-- Zone 1: search + live suggestions -->
               <div class="relative w-[260px] shrink-0">
                 <svg
@@ -247,11 +215,192 @@
                 }
               </div>
 
-              <!-- Zone 2: filter chips (Entidad / Min / Max).
+              <!-- Zone 2: filter chips (Tipo / Entidad / Min / Max).
                    No overflow — chip values are compactified (100M €) so a single line fits.
                    Overflow-x:auto clipped the dropdowns (any overflow on an ancestor clips
                    absolute-positioned children on BOTH axes per CSS spec). -->
               <div class="flex items-center gap-space-2 flex-wrap">
+                <!-- Tipo multiselect + drag-to-reorder (Richard 2026-06-10).
+                     Replaces the legacy tab strip. Dropdown rows have:
+                       • grab handle (left)  → HTML5 native drag reorders
+                       • checkbox (toggle)   → adds/removes from selectedTipos
+                       • count badge         → mirrors the old tab count
+                     Order in dropdown drives section render order on the page. -->
+                <div class="relative shrink-0">
+                  <div
+                    class="inline-flex items-center h-8 border rounded-full text-body-sm transition-colors"
+                    [class.border-border-hairline]="!tipoChipActive()"
+                    [class.border-action-700]="tipoChipActive()"
+                    [class.bg-surface]="!tipoChipActive()"
+                    [class.bg-action-700/5]="tipoChipActive()"
+                  >
+                    @if (tipoChipActive()) {
+                      <button
+                        type="button"
+                        (click)="clearTipos(); $event.stopPropagation()"
+                        class="inline-flex items-center justify-center h-full pl-space-2 pr-1 text-foreground-secondary hover:text-foreground-primary transition-colors rounded-l-full"
+                        aria-label="Restaurar tipos por defecto"
+                      >
+                        <svg
+                          class="w-3.5 h-3.5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="m15 9-6 6" />
+                          <path d="m9 9 6 6" />
+                        </svg>
+                      </button>
+                    }
+                    <button
+                      type="button"
+                      (click)="tipoMenuOpen.set(!tipoMenuOpen())"
+                      class="inline-flex items-center gap-space-2 h-full pr-space-2"
+                      [class.pl-space-3]="!tipoChipActive()"
+                      [class.pl-space-2]="tipoChipActive()"
+                      aria-haspopup="menu"
+                      [attr.aria-expanded]="tipoMenuOpen()"
+                    >
+                      <span class="text-foreground-primary font-medium">Tipo</span>
+                      @if (tipoChipLabel(); as label) {
+                        <span class="w-px h-4 bg-neutral-300" aria-hidden="true"></span>
+                        <span class="font-medium text-action-700">{{ label }}</span>
+                      }
+                      <svg
+                        class="w-3 h-3 text-foreground-secondary"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  @if (tipoMenuOpen()) {
+                    <div
+                      class="fixed inset-0 z-40"
+                      (click)="tipoMenuOpen.set(false)"
+                      aria-hidden="true"
+                    ></div>
+                    <div
+                      role="menu"
+                      aria-label="Filtrar y ordenar tipos"
+                      class="absolute left-0 top-full mt-1 z-50 min-w-[280px] p-space-2 bg-surface-elevated border border-border-hairline rounded-md shadow-lg"
+                    >
+                      <!-- Todos toggle -->
+                      <button
+                        type="button"
+                        role="menuitemcheckbox"
+                        [attr.aria-checked]="isAllTiposSelected()"
+                        (click)="toggleAllTipos()"
+                        class="w-full flex items-center gap-space-2 text-left px-space-2 py-space-2 rounded hover:bg-surface-muted text-body-sm text-foreground-primary"
+                      >
+                        <span
+                          class="inline-flex items-center justify-center w-4 h-4 rounded border"
+                          [class.border-border-hairline]="!isAllTiposSelected()"
+                          [class.bg-action-700]="isAllTiposSelected()"
+                          [class.border-action-700]="isAllTiposSelected()"
+                        >
+                          @if (isAllTiposSelected()) {
+                            <svg
+                              class="w-3 h-3 text-white"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="3"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              aria-hidden="true"
+                            >
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          }
+                        </span>
+                        <span class="flex-1 font-medium">Todos</span>
+                      </button>
+                      <div class="h-px bg-border-hairline my-space-1 -mx-space-2"></div>
+                      <!-- Reorderable rows. Each row IS the drop zone — the
+                           drag handle covers the full left edge so a slow
+                           mouse can grab anywhere on it. -->
+                      @for (key of tipoOrder(); track key; let i = $index) {
+                        <div
+                          draggable="true"
+                          (dragstart)="onTipoDragStart(i, $event)"
+                          (dragover)="onTipoDragOver(i, $event)"
+                          (dragleave)="onTipoDragLeave()"
+                          (drop)="onTipoDrop(i, $event)"
+                          (dragend)="onTipoDragEnd()"
+                          class="flex items-center gap-space-2 px-space-2 py-space-2 rounded hover:bg-surface-muted text-body-sm text-foreground-primary"
+                          [class.bg-surface-muted]="tipoDragFromIndex() === i"
+                          [class.opacity-60]="tipoDragFromIndex() === i"
+                          [class.border-t-2]="tipoDragOverIndex() === i && tipoDragFromIndex() !== i"
+                          [class.border-action-700]="tipoDragOverIndex() === i && tipoDragFromIndex() !== i"
+                        >
+                          <!-- Grab handle (decorative; whole row is draggable) -->
+                          <svg
+                            class="w-4 h-4 text-foreground-secondary cursor-grab shrink-0"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
+                          >
+                            <circle cx="7" cy="5" r="1.4" />
+                            <circle cx="13" cy="5" r="1.4" />
+                            <circle cx="7" cy="10" r="1.4" />
+                            <circle cx="13" cy="10" r="1.4" />
+                            <circle cx="7" cy="15" r="1.4" />
+                            <circle cx="13" cy="15" r="1.4" />
+                          </svg>
+                          <!-- Toggle button — fills the rest of the row so the
+                               click target is generous. -->
+                          <button
+                            type="button"
+                            role="menuitemcheckbox"
+                            [attr.aria-checked]="isTipoSelected(key)"
+                            (click)="toggleTipo(key)"
+                            class="flex-1 flex items-center gap-space-2 text-left"
+                          >
+                            <span
+                              class="inline-flex items-center justify-center w-4 h-4 rounded border shrink-0"
+                              [class.border-border-hairline]="!isTipoSelected(key)"
+                              [class.bg-action-700]="isTipoSelected(key)"
+                              [class.border-action-700]="isTipoSelected(key)"
+                            >
+                              @if (isTipoSelected(key)) {
+                                <svg
+                                  class="w-3 h-3 text-white"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  stroke-width="3"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  aria-hidden="true"
+                                >
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                              }
+                            </span>
+                            <span class="flex-1">{{ tipoLabel(key) }}</span>
+                            <span
+                              class="inline-flex items-center justify-center px-1.5 min-w-[22px] h-5 rounded-full border border-border-hairline text-caption text-foreground-secondary"
+                              >{{ tipoCount(key) }}</span
+                            >
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+
                 <!-- Entidad multiselect -->
                 <div class="relative shrink-0">
                   <div
@@ -645,99 +794,120 @@
                 }
               </div>
 
-              <span class="w-px h-5 bg-border-hairline shrink-0 ml-auto" aria-hidden="true"></span>
-              <afi-button
-                variant="primary"
-                size="sm"
-                iconStart="plus"
-                ariaLabel="Añadir patrimonio"
-                (clicked)="addDialogOpen.set(true)"
-              >
-                <svg
-                  slot="iconStart"
-                  class="w-4 h-4"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                  />
-                </svg>
-                Añadir patrimonio
-                <kbd
-                  class="inline-flex items-center justify-center h-5 min-w-5 px-1 rounded-sm text-[11px] font-mono bg-white/20 text-white border border-white/25"
-                  >A</kbd
-                >
-              </afi-button>
+              <!-- + Añadir patrimonio button moved to slot="actions" on the
+                   page-header (canonical pattern, 2026-06-10). -->
             </div>
+
+            <!-- Bulk-action affordance — pinned to the right of the filter
+                 row via the page-header's [slot=filterActions] hook (added
+                 2026-06-11). Surfaces only when one or more rows are
+                 selected via row-click in the section tables. -->
+            @if (bulkSelectedCount() > 0) {
+              <div slot="filterActions" class="flex items-center gap-space-2 ml-auto">
+                <span class="text-body-sm text-foreground-secondary">
+                  {{ bulkSelectedCount() }} seleccionado{{ bulkSelectedCount() === 1 ? '' : 's' }}
+                </span>
+                <button
+                  type="button"
+                  (click)="clearAssetSelection()"
+                  class="inline-flex items-center h-8 px-space-3 rounded-full border border-border-hairline bg-surface text-body-sm text-foreground-primary hover:bg-surface-subtle transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  (click)="openBulkDeleteConfirm()"
+                  class="inline-flex items-center gap-space-2 h-8 px-space-3 rounded-full bg-system-error-bg border border-system-error-base text-body-sm font-medium text-system-error-fg hover:opacity-90 transition-opacity"
+                >
+                  <svg
+                    class="w-3.5 h-3.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 6h18" />
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                  </svg>
+                  Borrar
+                </button>
+              </div>
+            }
 
             <!-- Table sections — each renders with its own column schema
                  (dynamic CSS grid built from section.columns widths).
-                 Track key includes activeTab() so panels re-mount on tab change and
-                 re-play the .tab-panel entrance animation. -->
+                 2026-06-10 — dropped `mx-space-8` from the pre-migration
+                 bespoke layout. The page-header's own --space-lg padding
+                 anchors the sections to the same left/right edges as the
+                 title, tabs, filters, and cards.
+                 Spacing rhythm (Richard 2026-06-10): cards-to-first-table and
+                 table-to-table both = 12px (`--space-sm`), matching the
+                 page-header__body's intrinsic margin-top so the whole stack
+                 reads as one consistent vertical cadence. v1 keeps the older
+                 wider rhythm for back-compat. -->
             <div
-              class="mx-space-8 mt-space-6 flex flex-col pb-space-10"
+              class="flex flex-col pb-space-10"
               [class.gap-space-12]="version() === 'v1'"
-              [class.gap-space-8]="version() !== 'v1'"
+              [class.gap-space-3]="version() !== 'v1'"
             >
-              @for (s of visibleSections(); track s.key + '::' + activeTab()) {
+              @for (s of visibleSections(); track s.key) {
                 @if (filteredRows(s); as rows) {
                   @if (rows.length > 0) {
-                    <section
-                      class="tab-panel"
-                      [class.border-t]="version() !== 'v1'"
-                      [class.border-border-hairline]="version() !== 'v1'"
-                      [class.pt-space-4]="version() !== 'v1'"
-                      [class.tab-panel--backward]="tabDirection() === 'backward'"
-                    >
-                      @if (version() === 'v1') {
-                        <!-- V1 keeps the original patrimonial table setup: roomy sections
-                             and a floating graph-style header. -->
-                        <div class="mb-space-4 max-w-[760px]">
-                          <afi-graph-card-header
-                            [label]="s.title"
-                            [headline]="s.description"
-                            [comparison]="tableHeaderMeta(s, rows.length)"
-                          />
-                        </div>
-                      } @else {
-                        <!-- V2/V3 keep the newer compact feedback version for comparison. -->
-                        <div class="flex flex-col mb-space-4">
-                          <div class="flex items-baseline gap-space-2">
-                            <p class="text-body-md-600 text-canvas-fg">{{ s.title }}</p>
-                            <span class="text-body-sm text-neutral-500 tabular-nums">
-                              @if (anyFilterActive() && rows.length !== s.rows.length) {
-                                · {{ rows.length }} de {{ sectionRowCount(s) }}
-                              } @else {
-                                · {{ sectionRowCount(s) }}
-                                {{ sectionRowCount(s) === 1 ? 'activo' : 'activos' }}
-                              }
-                            </span>
-                          </div>
-                          <h2 class="text-section text-canvas-fg">{{ s.total }}</h2>
-                        </div>
-                      }
-                      <!-- 2026-05-28 — migrated from bespoke `<div class="grid">`
-                           per-section rendering to `<afi-table>` using the
-                           new `rowActivation='expand'` variant. Children are
-                           passed through via the table's reserved `children`
-                           magic key (mapped in `tableRowsFor`). Per-section
-                           column schemas come from `tableColumnsFor`. Reveal
-                           inherits the locked `'hover'` default. Trade-offs
-                           documented on the helpers in the .ts file (lose
-                           subtitle/nameTags/Nuevo-badge until follow-up). -->
-                      <afi-table
-                        [columns]="tableColumnsFor(s)"
-                        [rows]="tableRowsFor(s, rows)"
-                        [rowActions]="assetTableActions"
-                        [expandedKeys]="expandedKeysFor(s.key)"
-                        (expandedKeysChange)="onSectionExpandedChange(s.key, $event)"
-                        trackByKey="id"
-                        density="compact"
-                        (rowClicked)="onSectionRowClicked($event)"
-                        (rowActionClicked)="onSectionAction($event)"
-                      />
+                    <!-- `tab-panel` class kept for the existing entrance
+                         animation; tab-direction tracking dropped along with
+                         the tabs (Richard 2026-06-10). -->
+                    <section class="tab-panel">
+                      <!-- 2026-06-10 — migrated per-section header from the
+                           bespoke v1/v2 split (graph-card-header vs compact)
+                           to the canonical <afi-page-header level="section">.
+                           Title · total · activo count all sit inline on the
+                           title row via slot="extraInfo" with mid-dot
+                           separators (U+00B7). No subtitle row — keeps the
+                           section chrome to a single line. -->
+                      <!-- bodyFlush is implicit when the body contains an
+                           <afi-table> (per page-header.component.scss, see the
+                           :has(afi-table) selector). No explicit prop needed. -->
+                      <afi-page-header
+                        level="section"
+                        [title]="s.title"
+                        [sticky]="false"
+                        [scrollFade]="false"
+                      >
+                        <!-- Semantic foreground tokens (Richard 2026-06-10) —
+                             title inherits `--foreground-primary-default` from
+                             the page-header; total picks up the same ramp via
+                             `text-foreground-primary` and the count drops to
+                             `text-foreground-secondary` (carried by the wrapper
+                             so the · separators inherit it too). No more raw
+                             neutral / canvas-fg utilities here. -->
+                        <span
+                          slot="extraInfo"
+                          class="inline-flex items-baseline gap-space-2 text-body-sm text-foreground-secondary tabular-nums"
+                        >
+                          <span aria-hidden="true">·</span>
+                          <span class="text-foreground-primary font-medium">{{ s.total }}</span>
+                          <span aria-hidden="true">·</span>
+                          <span>{{ tableHeaderMeta(s, rows.length) }}</span>
+                        </span>
+                        <afi-table
+                          [columns]="tableColumnsFor(s)"
+                          [rows]="tableRowsFor(s, rows)"
+                          [rowActions]="assetTableActions"
+                          [selectable]="true"
+                          [selected]="selectedAssetRows()"
+                          (selectedChange)="onAssetSelectionChange($event)"
+                          [expandedKeys]="expandedKeysFor(s.key)"
+                          (expandedKeysChange)="onSectionExpandedChange(s.key, $event)"
+                          trackByKey="id"
+                          density="compact"
+                          (rowClicked)="onSectionRowClicked($event)"
+                          (rowActionClicked)="onSectionAction($event)"
+                        />
+                      </afi-page-header>
                     </section>
                   }
                 }
@@ -780,11 +950,28 @@
                 <code class="font-mono">afi-table</code>.
               </p>
             </div>
+              </afi-page-header>
           </div>
         </main>
       </div>
 
-      <!-- "+ Añadir" dialog — Stripe-style: form on the left, live preview chart on the right -->
+      <!-- v3 add dialog — two-step Tipo de patrimonio + per-branch forms +
+           Tesler-law context bar at top. Encapsulated in
+           <site-patrimonio-add-modal> so the page doesn't grow further.
+           Figma reference: Wealth manager screens 2026/Dialogs for patrimonio. -->
+      @if (version() === 'v3') {
+        <site-patrimonio-add-modal
+          [open]="addDialogOpen()"
+          [patrimonioSegments]="v3PatrimonioSegments()"
+          [patrimonioTotal]="v3PatrimonioTotal()"
+          [titularOptions]="v3TitularOptions()"
+          [activosFinanciables]="v3ActivosFinanciables()"
+          (openChange)="addDialogOpen.set($event)"
+          (save)="onV3Save($event)"
+        />
+      }
+
+      <!-- v1/v2 add dialog — Stripe-style: form on the left, live preview chart on the right -->
       <!-- 2026-05-28 — migrated from bespoke `<div class="fixed inset-0 ...">`
            to `<afi-modal size="xxl">`. The 2-pane layout (form left, live
            preview right) stays as the modal's projected body; cancel + save
@@ -793,11 +980,237 @@
       <afi-modal
         size="xxl"
         title="Añadir activo"
-        [open]="addDialogOpen()"
+        [open]="version() !== 'v3' && addDialogOpen()"
         [closeOnEsc]="true"
         [closeOnBackdrop]="true"
         (openChange)="addDialogOpen.set($event)"
       >
+        <!-- v2: Simple / Avanzado mode toggle (Brief C · Borja 2026-05-25).
+             Lives above whatever body branch renders next. Hidden on v1 so the
+             original dialog stays visually identical. -->
+        @if (version() === 'v2') {
+          <div
+            class="patrimonial-add__mode-toggle flex justify-center px-space-6 pt-space-5 pb-space-3 border-b border-border-hairline"
+          >
+            <afi-segmented-control
+              size="sm"
+              [options]="addModeOptions"
+              [value]="addMode()"
+              (valueChange)="setAddMode($event)"
+            />
+          </div>
+        }
+
+        @if (version() === 'v2' && addMode() === 'simple') {
+          <!-- ─── v2 Simple body — single column, focused form ──────────── -->
+          <div
+            class="patrimonial-add__body-v2 flex-1 overflow-y-auto px-space-6 py-space-6"
+          >
+            <div class="mx-auto w-full max-w-[520px] flex flex-col gap-space-4">
+              <!-- 1. Tipo de activo — listbox (no buscador per Brief C #4) -->
+              <afi-select
+                label="Tipo de activo"
+                [options]="addTipoV2Options"
+                [value]="addTipoV2()"
+                (valueChange)="setAddTipoV2($event)"
+              />
+
+              <!-- 2. Per-tipo subfield matrix (Brief C, PDF p.2-3) -->
+              @if (showsRentabilidadRiesgo()) {
+                <afi-select
+                  label="Rentabilidad-riesgo"
+                  [options]="addRentabilidadRiesgoOptions"
+                  [value]="addRentabilidadRiesgo()"
+                  (valueChange)="setAddRentabilidadRiesgo($event)"
+                />
+              }
+
+              @if (showsDividendoAnual()) {
+                <afi-input
+                  label="Dividendo anual"
+                  type="number"
+                  suffix="%"
+                  [value]="addDividendoAnual()"
+                  (valueChange)="setAddDividendoAnual($event)"
+                />
+              }
+
+              @if (showsInmobiliarioBlock()) {
+                <!-- Brief C #6: "Revalorización esperada", not "Rentabilidad
+                     esperada". No automático/manual radio. -->
+                <afi-input
+                  label="Revalorización esperada"
+                  type="number"
+                  suffix="%"
+                  [value]="addRevalorizacion()"
+                  (valueChange)="setAddRevalorizacion($event)"
+                />
+                <afi-select
+                  label="Nivel de riesgo"
+                  [options]="addNivelRiesgoOptions"
+                  [value]="addNivelRiesgo()"
+                  (valueChange)="setAddNivelRiesgo($event)"
+                />
+                <afi-select
+                  label="Uso"
+                  [options]="addUsoOptions"
+                  [value]="addUso()"
+                  (valueChange)="setAddUso($event)"
+                />
+                @if (showsInmobiliarioIngresos()) {
+                  <afi-input
+                    label="Ingresos netos anuales"
+                    type="number"
+                    suffix="%"
+                    [value]="addIngresosNetos()"
+                    (valueChange)="setAddIngresosNetos($event)"
+                  />
+                }
+              }
+
+              @if (showsOtrosIngresos()) {
+                <afi-input
+                  label="Ingresos netos anuales"
+                  type="number"
+                  suffix="%"
+                  [value]="addIngresosNetos()"
+                  (valueChange)="setAddIngresosNetos($event)"
+                />
+              }
+
+              @if (showsDeudasBlock()) {
+                <afi-input
+                  label="Tipo de interés"
+                  type="number"
+                  suffix="%"
+                  [value]="addTipoInteres()"
+                  (valueChange)="setAddTipoInteres($event)"
+                />
+                <afi-input
+                  label="Plazo medio pendiente"
+                  type="number"
+                  suffix="años"
+                  [value]="addPlazoMedio()"
+                  (valueChange)="setAddPlazoMedio($event)"
+                />
+                <afi-select
+                  label="Activo financiado"
+                  [options]="addActivoFinanciadoOptions()"
+                  [value]="addActivoFinanciado()"
+                  (valueChange)="setAddActivoFinanciado($event)"
+                />
+              }
+
+              <!-- 3. ¿Patrimonio futuro? — universal branch (PDF p.1).
+                   Sits BEFORE titulares per Borja. -->
+              <div
+                class="flex flex-col gap-space-4 border-t border-border-hairline pt-space-4"
+              >
+                <afi-switch
+                  label="¿Patrimonio futuro?"
+                  [checked]="addIsPatrimonioFuturo()"
+                  (checkedChange)="addIsPatrimonioFuturo.set($event)"
+                />
+
+                @if (addIsPatrimonioFuturo()) {
+                  <afi-input
+                    label="Año en que se espera obtener el activo"
+                    type="number"
+                    placeholder="2030"
+                    [value]="addAnoObtencion()"
+                    (valueChange)="setAddAnoObtencion($event)"
+                  />
+
+                  <afi-switch
+                    label="¿Generará ingresos?"
+                    [checked]="addGeneraIngresos()"
+                    (checkedChange)="addGeneraIngresos.set($event)"
+                  />
+
+                  @if (addGeneraIngresos()) {
+                    <afi-select
+                      label="Frecuencia"
+                      [options]="addFrecuenciaOptions"
+                      [value]="addFrecuencia()"
+                      (valueChange)="setAddFrecuencia($event)"
+                    />
+
+                    <afi-select
+                      label="Tipo de generación"
+                      [options]="addTipoGeneracionOptions"
+                      [value]="addTipoGeneracion()"
+                      (valueChange)="setAddTipoGeneracion($event)"
+                    />
+
+                    @if (addTipoGeneracion() === 'importe') {
+                      <afi-input
+                        label="Importe"
+                        type="number"
+                        suffix="€"
+                        [value]="addGeneracionValor()"
+                        (valueChange)="setAddGeneracionValor($event)"
+                      />
+                    } @else {
+                      <afi-input
+                        label="Porcentaje"
+                        type="number"
+                        suffix="%"
+                        [value]="addGeneracionValor()"
+                        (valueChange)="setAddGeneracionValor($event)"
+                      />
+                    }
+
+                    <!-- Crecimiento estimado: IPC option dropped per Borja
+                         2026-02-27 ("En cualquier sitio que tienes IPC,
+                         quitarlo"). Final list: El mismo / Manual. -->
+                    <afi-select
+                      label="Crecimiento estimado"
+                      [options]="addCrecimientoModeOptions"
+                      [value]="addCrecimientoMode()"
+                      (valueChange)="setAddCrecimientoMode($event)"
+                    />
+
+                    @if (addCrecimientoMode() === 'manual') {
+                      <afi-input
+                        label="Crecimiento manual"
+                        type="number"
+                        suffix="%"
+                        [value]="addCrecimientoManual()"
+                        (valueChange)="setAddCrecimientoManual($event)"
+                      />
+                    }
+                  }
+                }
+              </div>
+
+              <!-- 4. Common fields — Nombre · Valor actual · Titular -->
+              <div
+                class="flex flex-col gap-space-4 border-t border-border-hairline pt-space-4"
+              >
+                <afi-input
+                  label="Nombre"
+                  type="text"
+                  [value]="addNombreV2()"
+                  (valueChange)="setAddNombreV2($event)"
+                />
+                <afi-input
+                  label="Valor actual"
+                  type="number"
+                  suffix="€"
+                  [value]="addValorV2()"
+                  (valueChange)="setAddValorV2($event)"
+                />
+                <afi-select
+                  label="Titular"
+                  [options]="addTitularV2Options"
+                  [value]="addTitularV2()"
+                  (valueChange)="setAddTitularV2($event)"
+                />
+              </div>
+            </div>
+          </div>
+        } @else {
+        <!-- ─── v1 body (also used for v2 Avanzado per Brief C lock) ──── -->
         <!-- Body: form left · live resumen right -->
         <div class="patrimonial-add__body flex overflow-hidden">
               <!-- Left: form -->
@@ -1130,8 +1543,10 @@
                 </div>
               </div>
             </div>
+        }
 
-        <!-- Footer actions — projected into the modal's footer slot -->
+        <!-- Footer actions — projected into the modal's footer slot.
+             Save button routes to the active mode's handler. -->
         <ng-container slot="footer">
           <p
             class="text-caption text-neutral-500 inline-flex items-center gap-space-1 mr-space-1"
@@ -1141,9 +1556,83 @@
           <afi-button variant="ghost" size="sm" (clicked)="addDialogOpen.set(false)"
             >Cancelar</afi-button
           >
-          <afi-button variant="primary" size="sm" (clicked)="saveNewActivo()"
-            >Guardar activo</afi-button
+          @if (version() === 'v2' && addMode() === 'simple') {
+            <afi-button variant="primary" size="sm" (clicked)="saveSimpleAsset()"
+              >Guardar activo</afi-button
+            >
+          } @else {
+            <afi-button variant="primary" size="sm" (clicked)="saveNewActivo()"
+              >Guardar activo</afi-button
+            >
+          }
+        </ng-container>
+      </afi-modal>
+
+      <!-- ─── Confirmation modals (Richard 2026-06-11) ──────────────────
+           Two flavors gating the soft-delete pipeline so a misclick on
+           the trash icon or the bulk-Borrar button can't silently wipe
+           data. Both use `afi-modal size="sm"` with title + body text +
+           Cancelar / Borrar footer actions. -->
+
+      <!-- Bulk delete confirmation — fired by the filter-actions Borrar
+           button when 1+ rows are selected. -->
+      <afi-modal
+        size="sm"
+        title="Borrar activos seleccionados"
+        [open]="confirmBulkDeleteOpen()"
+        [closeOnEsc]="true"
+        [closeOnBackdrop]="true"
+        (openChange)="confirmBulkDeleteOpen.set($event)"
+      >
+        <div class="px-space-6 py-space-5 text-body-md text-foreground-primary">
+          <p>
+            Vas a borrar
+            <strong>{{ bulkSelectedCount() }} activo{{ bulkSelectedCount() === 1 ? '' : 's' }}</strong>
+            del patrimonio. Esta acción no se puede deshacer.
+          </p>
+        </div>
+        <ng-container slot="footer">
+          <afi-button
+            variant="ghost"
+            size="sm"
+            (clicked)="confirmBulkDeleteOpen.set(false)"
           >
+            Cancelar
+          </afi-button>
+          <afi-button variant="danger" size="sm" (clicked)="confirmBulkDelete()">
+            Borrar {{ bulkSelectedCount() }} activo{{ bulkSelectedCount() === 1 ? '' : 's' }}
+          </afi-button>
+        </ng-container>
+      </afi-modal>
+
+      <!-- Single-row delete confirmation — fired by the row's trash
+           icon action. Copy names the specific activo. -->
+      <afi-modal
+        size="sm"
+        title="Borrar activo"
+        [open]="confirmRowDelete() !== null"
+        [closeOnEsc]="true"
+        [closeOnBackdrop]="true"
+        (openChange)="$event ? null : confirmRowDelete.set(null)"
+      >
+        <div class="px-space-6 py-space-5 text-body-md text-foreground-primary">
+          <p>
+            ¿Seguro que quieres borrar
+            <strong>"{{ confirmRowDelete()?.name }}"</strong>?
+            Esta acción no se puede deshacer.
+          </p>
+        </div>
+        <ng-container slot="footer">
+          <afi-button
+            variant="ghost"
+            size="sm"
+            (clicked)="confirmRowDelete.set(null)"
+          >
+            Cancelar
+          </afi-button>
+          <afi-button variant="danger" size="sm" (clicked)="confirmRowDeleteApply()">
+            Borrar activo
+          </afi-button>
         </ng-container>
       </afi-modal>
 
@@ -1154,6 +1643,20 @@
         undoLabel="Cerrar"
         (undo)="savedToastVisible.set(false)"
         (dismissed)="savedToastVisible.set(false)"
+      />
+
+      <!-- Delete confirmation toast (Richard 2026-06-11) — fires after the
+           user OKs a single-row trash or bulk Borrar. The undo button +
+           ⌘ Z global shortcut both route to `undoLastDelete()`, which pulls
+           `lastDeletedIds` out of the soft-deleted set. 8s auto-dismiss
+           inside `showDeleteToast`. -->
+      <site-action-toast
+        [visible]="deleteToastVisible()"
+        [message]="deleteToastMessage()"
+        undoLabel="Deshacer"
+        [shortcut]="undoShortcut"
+        (undo)="undoLastDelete()"
+        (dismissed)="deleteToastVisible.set(false)"
       />
     </div>
 </site-demo-shell>

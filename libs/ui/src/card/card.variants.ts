@@ -1,33 +1,30 @@
 /**
- * Card variant class maps.
- * All colors reference Tailwind tokens (no hex/rgba).
+ * Card variants — semantic intent only. The visual mapping (token, shadow,
+ * padding) lives in card.component.scss as BEM modifier classes. Consumers
+ * pass the variant name; the host class emits `afi-card--<variant>` for the
+ * SCSS to pick up.
+ *
+ * Refactored 2026-06-10 (Richard): legacy Tailwind class map removed,
+ * default variant now uses `--surface-subtle` (AFI Gris 25), no border.
  */
 
-export const variantClasses = {
-  default: 'bg-surface-100 border border-border-hairline',
-  elevated: 'bg-surface-elevated shadow-sm',
-  quiet: 'bg-surface-quiet',
-} as const;
-
-export const paddingClasses = {
-  none: '',
-  sm: 'p-space-3',
-  md: 'p-space-4',
-  lg: 'p-space-6',
-} as const;
-
-export type CardVariant = keyof typeof variantClasses;
-export type CardPadding = keyof typeof paddingClasses;
+export type CardVariant = 'default' | 'elevated' | 'quiet';
+export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
 
 export const tokenUsage = [
-  { property: 'Fondo (default)', token: 'var(--surface-100)' },
-  { property: 'Fondo (elevated)', token: 'var(--surface-elevated)' },
-  { property: 'Fondo (quiet)', token: 'var(--surface-quiet)' },
-  { property: 'Borde', token: 'var(--border-hairline)' },
-  { property: 'Sombra (elevated)', token: 'shadow-sm' },
-  { property: 'Sombra hover (interactive)', token: 'shadow-md' },
-  { property: 'Foco', token: 'var(--border-focus)', note: '2px offset' },
-  { property: 'Radio', token: 'rounded-md (6px)' },
-  { property: 'Padding (sm/md/lg)', token: 'space-3 / space-4 / space-6' },
-  { property: 'Transición (interactive)', token: 'var(--duration-fast) ease-out' },
+  { property: 'Fondo (default)', token: 'var(--surface-subtle)' },
+  { property: 'Fondo (elevated)', token: 'var(--surface-raised)' },
+  { property: 'Fondo (quiet)', token: 'var(--surface-default)' },
+  { property: 'Sombra (elevated)', token: 'var(--elevation-sm)' },
+  { property: 'Sombra hover (interactive)', token: 'var(--elevation-md)' },
+  { property: 'Foco', token: 'var(--border-focus)', note: '--space-2xs offset' },
+  { property: 'Radio', token: 'var(--radius-md)' },
+  {
+    property: 'Padding (sm/md/lg)',
+    token: 'var(--space-sm) / var(--space-md) / var(--space-lg)',
+  },
+  {
+    property: 'Transición',
+    token: 'var(--duration-fast) var(--easing-enter)',
+  },
 ];

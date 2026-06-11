@@ -17,29 +17,58 @@
 }
 
 // ─── Narrow viewport (drawer mode) ────────────────────────────────────────
-// At <768 the sidebar becomes an off-canvas drawer. Open/close toggled by
-// the host class `.drawer-open` (bound from MobileDrawerService).
-@media (max-width: 768px) {
+// At the tablet breakpoint the sidebar becomes an off-canvas drawer.
+//
+// Layout model (matches Material drawer / Vaadin app-shell pattern):
+// • `:host` spans the WHOLE preview area (absolute, inset 0), so both the
+//   backdrop and the drawer live in the same positioned context.
+// • `pointer-events: none` on the host lets clicks pass through to page
+//   content when the drawer is closed; flipped to `auto` on the backdrop +
+//   drawer themselves so they remain interactive.
+// • The backdrop covers the host (= whole preview).
+// • The drawer (afi-sidebar inside the host) is its own absolute child,
+//   slides in from inset-inline-start: 0 via translateX.
+//
+// `position: absolute` (not fixed) keeps the drawer + backdrop INSIDE the
+// nearest positioned ancestor — `.demo-content` in the demo-shell preview,
+// or the page-shell flex container in production.
+@container viewport (max-width: 48rem) {
   :host {
     display: block;
-    position: fixed;
-    inset-block: 0;
-    inset-inline-start: 0;
+    position: absolute;
+    inset: 0;
     z-index: 50;
-    inline-size: min(var(--dimension-72, 18rem), 80vw);
-    transform: translateX(-100%);
-    transition: transform var(--duration-fast) var(--easing-enter);
+    pointer-events: none;
   }
 
-  :host(.drawer-open) {
+  // The afi-sidebar inside the host IS the slide-in drawer. Sized to
+  // 80% of the preview's inline size (or 18rem max, whichever is smaller).
+  //
+  // z-index note: backdrop and afi-sidebar are siblings inside `:host`. The
+  // host itself owns the outward stacking (z-index: 50 against the page).
+  // Inside, the drawer must outrank the backdrop or the dim overlay paints
+  // ON TOP OF the menu items. backdrop = 1, drawer = 2.
+  afi-sidebar {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    block-size: 100%;
+    inline-size: min(var(--dimension-72, 18rem), 80cqi);
+    z-index: 2;
+    transform: translateX(-100%);
+    transition: transform var(--duration-fast) var(--easing-enter);
+    pointer-events: auto;
+  }
+
+  :host(.drawer-open) afi-sidebar {
     transform: translateX(0);
   }
 
   .planner-sidebar__backdrop {
-    position: fixed;
+    position: absolute;
     inset: 0;
-    background: var(--surface-overlay);
-    z-index: 49;
+    background: var(--overlay-blanket);
+    z-index: 1;
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--duration-fast) var(--easing-enter);
@@ -58,6 +87,65 @@
   align-items: center;
   gap: var(--space-xs);
   width: 100%;
+}
+
+// ─── Identity row (mobile-only) ───────────────────────────────────────────
+// Surfaces the client name + editable simulation ID inside the drawer when
+// the top-bar's .ptb__identity hides at the tablet breakpoint. Hidden on desktop so we
+// don't duplicate identity in two places.
+.planner-sidebar__identity {
+  display: none;
+}
+
+@container viewport (max-width: 48rem) {
+  .planner-sidebar__identity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding: var(--space-md) var(--space-sm);
+    // Inherits from the .sidebar--secondary-azul color context.
+    color: inherit;
+    border-block-end: var(--border-width-hairline) solid
+      var(--foreground-inverse-tertiary);
+  }
+
+  .planner-sidebar__identity-client {
+    font: var(--type-body-md-500);
+    color: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .planner-sidebar__identity-label {
+    font: var(--type-body-sm-400);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    // Secondary-azul remaps --foreground-tertiary-default to the inverse
+    // ramp so it lands on the right brightness against the dark sidebar.
+    color: var(--foreground-tertiary-default);
+  }
+
+  .planner-sidebar__identity-edit {
+    font: var(--type-body-sm-500);
+    color: inherit;
+    // <afi-inline-edit> hard-codes `color: var(--foreground-primary-default)`
+    // on its label/input. Inside the secondary-azul sidebar that resolves to
+    // the dark navy text and reads as nearly-black. Locally remap the token
+    // to the inverse ramp so the SIM ID stays readable on the dark drawer.
+    --foreground-primary-default: var(--foreground-inverse-default);
+    --foreground-secondary-default: var(--foreground-inverse-secondary);
+
+    // Edit-mode (input + ✓ / × actions). The default tokens render a white
+    // input with a hairline border, which reads as a giant white block on
+    // the dark drawer. Remap the input chrome to the inverse ramp so the
+    // edit state stays consistent with the dark surface.
+    --inline-edit-input-bg: transparent;
+    --inline-edit-input-border: var(--foreground-inverse-tertiary);
+    --inline-edit-input-focus-ring: var(--foreground-inverse-default);
+    --inline-edit-trigger-bg-hover: var(--brand-secondary-background-hover);
+    --inline-edit-icon-color: var(--foreground-inverse-secondary);
+  }
 }
 
 .planner-sidebar__brand-label {

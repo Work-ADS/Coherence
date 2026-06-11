@@ -1,0 +1,20 @@
+<!--
+  Card primitive — three projection slots: header, default body, footer.
+
+  Header and footer regions are conditionally hidden via the `:has(*)` rule
+  in card.component.scss when no content is projected, so consumers only pay
+  for the regions they fill. The host element IS the visible card surface
+  (no extra wrapper div) — variant + padding classes live on the host so
+  consumers can compose `class="…"` from outside without nesting selectors.
+-->
+<div class="afi-card__header">
+  <ng-content select="[slot=header]" />
+</div>
+
+<div class="afi-card__body">
+  <ng-content />
+</div>
+
+<div class="afi-card__footer">
+  <ng-content select="[slot=footer]" />
+</div>

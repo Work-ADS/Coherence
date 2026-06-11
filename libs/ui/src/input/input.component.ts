@@ -39,6 +39,8 @@ export class InputComponent implements OnInit {
   readonly required = input<boolean>(false);
   readonly autocomplete = input<string | null>(null);
   readonly iconStart = input<string | null>(null);
+  readonly prefix = input<string | null>(null);
+  readonly suffix = input<string | null>(null);
   readonly ariaLabel = input<string | null>(null);
 
   readonly valueChange = output<string | number | null>();
@@ -49,6 +51,10 @@ export class InputComponent implements OnInit {
   readonly hintId = `${this.inputId}-hint`;
   readonly errorId = `${this.inputId}-error`;
 
+  readonly hasAdornment = computed(
+    () => (this.prefix() !== null || this.suffix() !== null) && this.type() !== 'textarea',
+  );
+
   readonly fieldClasses = computed(() => {
     const parts = [
       'afi-input__field',
@@ -56,6 +62,15 @@ export class InputComponent implements OnInit {
     ];
     if (this.type() === 'textarea') parts.push('afi-input__field--textarea');
     if (this.error()) parts.push('afi-input__field--error');
+    if (this.hasAdornment()) parts.push('afi-input__field--bare');
+    return parts.join(' ');
+  });
+
+  readonly shellClasses = computed(() => {
+    const parts = ['afi-input__shell', `afi-input__shell--${this.size()}`];
+    if (this.error()) parts.push('afi-input__shell--error');
+    if (this.disabled()) parts.push('afi-input__shell--disabled');
+    if (this.readonly()) parts.push('afi-input__shell--readonly');
     return parts.join(' ');
   });
 

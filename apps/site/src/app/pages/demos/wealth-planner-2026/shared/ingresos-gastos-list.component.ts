@@ -2,12 +2,14 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 
 import {
   ButtonComponent,
+  KbdComponent,
   PageHeaderComponent,
   TableComponent,
   type TableColumn,
   type TableRowAction,
 } from '@coherence/ui';
 
+import { KeyShortcutDirective } from '../../../../directives/key-shortcut.directive';
 import { DemoShellComponent } from '../../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../../shared/planner-top-bar.component';
@@ -34,6 +36,7 @@ import {
   standalone: true,
   imports: [
     ButtonComponent,
+    KbdComponent,
     PageHeaderComponent,
     TableComponent,
     DemoShellComponent,
@@ -41,6 +44,7 @@ import {
     PlannerTopBarComponent,
     VersionToggleComponent,
     IngresoGastoFormModalComponent,
+    KeyShortcutDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ingresos-gastos-list.component.html',
@@ -48,6 +52,9 @@ import {
 })
 export class IngresosGastosListComponent {
   readonly store = inject(WealthPlannerStore);
+
+  /** Cmd/Ctrl + A — bound via `siteKeyShortcut="a"` on the primary CTA. */
+  readonly addShortcut: string[] = ['⌘', 'A'];
 
   /** Which section we're rendering — drives copy + which store slice we read. */
   readonly mode = input.required<IngresoGastoMode>();

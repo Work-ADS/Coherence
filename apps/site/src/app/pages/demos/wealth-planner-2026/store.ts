@@ -116,19 +116,156 @@ export interface IngresoGastoRow {
 }
 
 // ── Patrimonio (Brief C seed for Objetivos consumers) ──────────────────────
+//
+// v1 tipos kept for cross-Brief compatibility (legado-retiro, desinversiones-
+// futuras read these). v2 adds Borja's locked taxonomy (PDF p.2, Granola
+// 2026-03-05) — `fondos`, `acciones-cotizadas`, `participaciones-empresariales`,
+// `otros`, `deudas`. v1 modal still writes the legacy slugs; v2 Simple-mode
+// modal writes the new ones. Single source of truth → one signal.
 export type PatrimonioTipo =
+  // v1 tipos
   | 'liquidez'
   | 'inversion'
   | 'inmobiliario'
   | 'pension'
   | 'participacion'
-  | 'otro';
+  | 'otro'
+  // v2 tipos (Brief C — Borja's 7-tipo set)
+  | 'fondos'
+  | 'acciones-cotizadas'
+  | 'participaciones-empresariales'
+  | 'otros'
+  | 'deudas';
+
+// v2 enums (Brief C — Borja's per-tipo subfields, PDF p.2-3)
+export type RentabilidadRiesgo = 'bajo' | 'medio' | 'alto';
+export type NivelRiesgo = 'nulo' | 'bajo' | 'medio' | 'alto';
+export type InmobiliarioUso = 'vivienda-principal' | 'uso-propio' | 'inversion';
+export type TipoGeneracion = 'importe' | 'porcentaje';
+export type CrecimientoMode = 'mismo-activo' | 'manual';
+
+// v3 — patrimonio dialog two-step taxonomy (Figma 2026-06-10, Wealth manager
+// screens 2026/Dialogs for patrimonio). Step 1: TipoPatrimonioTop chooses one
+// of 7 top-level categories. Step 2: only Inversión carries a TipoInversion
+// sub-select PLUS a Simple/Avanzado discriminator. Other top-level branches
+// render a single-pane per-tipo form.
+export type TipoPatrimonioTop =
+  | 'liquidez'
+  | 'inversion'
+  | 'plan-pensiones'
+  | 'private-equity'
+  | 'inmobiliario'
+  | 'participaciones'
+  | 'deudas';
+
+export type TipoInversion =
+  | 'fondos'
+  | 'acciones-cotizadas'
+  | 'seguros-ahorro'
+  | 'renta-fija'
+  | 'etf'
+  | 'cartera'
+  | 'otros';
+
+/** PPI / PPE / EPSV — radio shown only when tipoTop === 'plan-pensiones'. */
+export type PlanPensionesTipo = 'ppi' | 'ppe' | 'epsv';
+
+/** Picked by the host on the Inversión branch only. Other branches don't
+ *  carry a mode discriminator — the per-tipo form is the whole surface. */
+export type PatrimonioAddMode = 'simple' | 'avanzado';
+
+/** Single titular split. Mirrors apps/site/src/app/pages/demos/shared/
+ *  titulares-block TitularRow shape — kept in store-flavored form so we
+ *  can persist alongside the asset. */
+export interface PatrimonioTitular {
+  id: string;
+  titularId: string;
+  porcentaje: number;
+}
 
 export interface PatrimonioAsset {
   id: string;
   nombre: string;
   tipo: PatrimonioTipo;
   valor: number;
+
+  // ── v2 universal fields (Brief C — apply across tipos) ────────────────
+  titular?: string;
+  /** ¿Patrimonio futuro? — PDF p.1 universal branch. */
+  patrimonioFuturo?: boolean;
+  /** Año en que se espera obtener el activo (when patrimonioFuturo === true). */
+  anoObtencion?: number;
+  /** ¿Generará ingresos? (only meaningful when patrimonioFuturo === true). */
+  generaIngresos?: boolean;
+  frecuencia?: Frecuencia;
+  tipoGeneracion?: TipoGeneracion;
+  /** Value paired with tipoGeneracion (€ if importe, % if porcentaje). */
+  generacionValor?: number;
+  /** No IPC option per Borja 2026-02-27. */
+  crecimientoMode?: CrecimientoMode;
+  /** Manual growth % when crecimientoMode === 'manual'. */
+  crecimientoManual?: number;
+
+  // ── v2 tipo-specific fields (Brief C — per-tipo subfield matrix) ──────
+  rentabilidadRiesgo?: RentabilidadRiesgo;
+  /** Dividend yield % (Acciones cotizadas, Participaciones empresariales). */
+  dividendoAnual?: number;
+  /** Revalorización esperada % — Inmobiliario only, default 2%. */
+  revalorizacion?: number;
+  /** Inmobiliario regulatory risk grade. */
+  nivelRiesgo?: NivelRiesgo;
+  /** Inmobiliario use. */
+  uso?: InmobiliarioUso;
+  /** Net rental income % — Inmobiliario when uso === 'inversion', or Otros activos. */
+  ingresosNetos?: number;
+  /** Deudas annual interest rate %. */
+  tipoInteres?: number;
+  /** Deudas average remaining term, years. */
+  plazoMedio?: number;
+  /** Deudas — id of the patrimonio asset this debt finances, or 'ninguno'. */
+  activoFinanciado?: string;
+
+  // ── v3 two-step dialog (Figma 2026-06-10) ─────────────────────────────
+  // Additive: existing v1/v2 modals keep writing `tipo` only; the v3 modal
+  // writes BOTH the legacy `tipo` (best-effort match for downstream readers
+  // like desinversiones-futuras) AND `tipoTop` + optionally `tipoInversion`
+  // for round-tripping the new shape.
+  tipoTop?: TipoPatrimonioTop;
+  /** Only set when tipoTop === 'inversion'. */
+  tipoInversion?: TipoInversion;
+  /** Inversión branch only. Other top-level tipos are single-pane (no toggle). */
+  addMode?: PatrimonioAddMode;
+  /** Plan de pensiones radio (PPI / PPE / EPSV). */
+  planPensionesTipo?: PlanPensionesTipo;
+  /** Multi-row Titulares replaces the v2 single `titular`. v3 modals write this;
+   *  legacy readers fall back to `titular`. */
+  titulares?: PatrimonioTitular[];
+  /** ¿Hay financiación asociada? — shown on every branch except Deudas. */
+  financiacionAsociada?: boolean;
+  /** Plan de pensiones · Derechos consolidados (€). */
+  derechosConsolidados?: number;
+  /** Plan de pensiones · Derechos consolidados previos a 2007 (€).
+   *  Hard rule from Figma: must be ≤ derechosConsolidados. */
+  derechosConsolidadosPrevios2007?: number;
+  /** Inversión Avanzado section 1 — nombre del activo (search-select). */
+  nombreActivo?: string;
+  /** Inversión Avanzado section 1 — cartera (search-select). */
+  cartera?: string;
+  /** Inversión Avanzado section 1 — entidad (search-select).
+   *  Also surfaced on Plan de pensiones, Liquidez (per-Figma). */
+  entidad?: string;
+  /** Inversión Avanzado section 1 — valor de compra (€). */
+  valorCompra?: number;
+  /** Inversión Avanzado section 2 — aportación periódica anual estimada (€). */
+  aportacionPeriodicaAnual?: number;
+  /** IPC vs Manual for aportación growth rate. */
+  tipoTasaCrecimientoAportacion?: 'ipc' | 'manual';
+  /** Tasa de crecimiento de la aportación (%) when tipo === 'manual'. */
+  tasaCrecimientoAportacion?: number;
+  /** Inversión Avanzado · Revalorización esperada mode. */
+  tipoRevalorizacionEsperada?: 'automatica' | 'perfil-riesgo' | 'manual';
+  /** Rentabilidad anual (%) when tipoRevalorizacionEsperada === 'manual'. */
+  rentabilidadAnualManual?: number;
 }
 
 // ── Objetivos · Legado y retiro (Brief E) ──────────────────────────────────
@@ -804,6 +941,20 @@ export class WealthPlannerStore {
   readonly patrimonioState = computed<SectionState>(() =>
     this.patrimonio().length === 0 ? 'empty' : 'complete',
   );
+
+  addAsset(asset: PatrimonioAsset): void {
+    this.patrimonio.update((arr) => [...arr, asset]);
+  }
+
+  updateAsset(id: string, partial: Partial<PatrimonioAsset>): void {
+    this.patrimonio.update((arr) =>
+      arr.map((a) => (a.id === id ? { ...a, ...partial } : a)),
+    );
+  }
+
+  removeAsset(id: string): void {
+    this.patrimonio.update((arr) => arr.filter((a) => a.id !== id));
+  }
 
   // ──────────────────────────────────────────────────────────────────────
   // Objetivos · Legado y retiro (Brief E)

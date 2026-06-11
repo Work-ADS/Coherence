@@ -9,6 +9,7 @@ import {
 import {
   ButtonComponent,
   InputComponent,
+  KbdComponent,
   ModalComponent,
   PageHeaderComponent,
   RadioGroupComponent,
@@ -19,6 +20,7 @@ import {
 } from '@coherence/ui';
 import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
+import { KeyShortcutDirective } from '../../../directives/key-shortcut.directive';
 import { ObjetivosPageShellComponent } from '../wealth-planner-2026/shared/objetivos-page-shell.component';
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
 import type {
@@ -45,6 +47,7 @@ import type {
   imports: [
     ButtonComponent,
     InputComponent,
+    KbdComponent,
     ModalComponent,
     PageHeaderComponent,
     RadioGroupComponent,
@@ -53,6 +56,7 @@ import type {
     SelectComponent,
     TableComponent,
     ObjetivosPageShellComponent,
+    KeyShortcutDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './inversiones-futuras.page.html',
@@ -60,6 +64,9 @@ import type {
 })
 export class InversionesFuturasPage {
   readonly store = inject(WealthPlannerStore);
+
+  /** Cmd/Ctrl + A — bound via `siteKeyShortcut="a"` on the primary CTA. */
+  readonly addShortcut: string[] = ['⌘', 'A'];
 
   // ── Tipo options (Figma V2: 8 tipos) ──────────────────────────────────
   readonly tipoOptions: SelectOption[] = [

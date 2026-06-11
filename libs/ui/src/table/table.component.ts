@@ -125,9 +125,27 @@ export class TableComponent {
    * Row actions split by `overflow` flag. Inline actions render as buttons
    * in the trailing cell; overflow actions live inside the `⋯` menu.
    * Computed so a re-shuffle of the input array doesn't desync the two.
+   *
+   * Design rule (Richard 2026-06-10): a 1- or 2-action set is ALWAYS
+   * rendered inline — collapsing two icons into a `⋯` menu is friction
+   * with no payoff. Consumers can still pass `overflow: true` on
+   * individual actions; the flag is honored only once the total action
+   * count crosses 3. `resolveActions()` normalizes this before any
+   * inline/overflow split.
    */
-  readonly inlineActions = computed(() => this.rowActions().filter((a) => !a.overflow));
-  readonly overflowActions = computed(() => this.rowActions().filter((a) => !!a.overflow));
+  private resolveActions(actions: TableRowAction[]): TableRowAction[] {
+    if (actions.length <= 2) {
+      return actions.map((a) => (a.overflow ? { ...a, overflow: false } : a));
+    }
+    return actions;
+  }
+
+  readonly inlineActions = computed(() =>
+    this.resolveActions(this.rowActions()).filter((a) => !a.overflow),
+  );
+  readonly overflowActions = computed(() =>
+    this.resolveActions(this.rowActions()).filter((a) => !!a.overflow),
+  );
   readonly hasOverflowActions = computed(() => this.overflowActions().length > 0);
 
   /**
@@ -236,8 +254,10 @@ export class TableComponent {
    */
   actionsFor(row: Record<string, unknown>): TableRowAction[] {
     const own = row['actions'];
-    if (Array.isArray(own)) return own as TableRowAction[];
-    return this.rowActions();
+    const raw = Array.isArray(own) ? (own as TableRowAction[]) : this.rowActions();
+    // Apply the ≤2-actions-always-inline rule per-row too, so a row-level
+    // override behaves identically to the table-level input.
+    return this.resolveActions(raw);
   }
 
   inlineActionsFor(row: Record<string, unknown>): TableRowAction[] {

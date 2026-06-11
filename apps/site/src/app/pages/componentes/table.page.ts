@@ -21,17 +21,18 @@ const SAMPLE_ROWS: Record<string, unknown>[] = [
   { id: 4, nombre: 'Operación Delta', estado: 'Activo', monto: '$3,200' },
 ];
 
-// Mirrors the locked WP action pattern (2026-05-28): 1 primary inline +
-// the rest in the `⋯` overflow menu. Keeps the docs demo in lockstep with
-// the real product surfaces so the team sees the same shape everywhere.
+// Canonical 2-action pattern (Richard 2026-06-10): Editar + Borrar, both
+// inline as icon buttons. With ≤ 2 actions the primitive auto-promotes
+// everything to inline regardless of the `overflow` flag — a 3-dot menu
+// for 1-2 items is friction. From 3 actions up, the flag is honored.
+// Duplicar dropped as out-of-scope for the default sample.
 const SAMPLE_ROW_ACTIONS: TableRowAction[] = [
   { key: 'edit', label: 'Editar', icon: 'edit', ariaLabel: 'Editar operación' },
-  { key: 'duplicate', label: 'Duplicar', overflow: true },
   {
     key: 'delete',
     label: 'Borrar',
+    icon: 'delete',
     ariaLabel: 'Borrar operación',
-    overflow: true,
     variant: 'danger',
   },
 ];

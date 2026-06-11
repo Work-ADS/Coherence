@@ -24,6 +24,34 @@
     (focus)="focused.emit($event)"
     (blur)="blurred.emit($event)"
   ></textarea>
+} @else if (hasAdornment()) {
+  <div [class]="shellClasses()">
+    @if (prefix()) {
+      <span class="afi-input__prefix" aria-hidden="true">{{ prefix() }}</span>
+    }
+    <input
+      [id]="inputId"
+      [type]="type()"
+      [class]="fieldClasses()"
+      [attr.data-type]="type()"
+      [placeholder]="placeholder() ?? ''"
+      [disabled]="disabled()"
+      [readOnly]="readonly()"
+      [attr.aria-required]="required() ? 'true' : null"
+      [attr.aria-invalid]="error() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.autocomplete]="autocomplete()"
+      [value]="value() ?? ''"
+      (input)="onInput($event)"
+      (keydown)="onKeydown($event)"
+      (focus)="focused.emit($event)"
+      (blur)="blurred.emit($event)"
+    />
+    @if (suffix()) {
+      <span class="afi-input__suffix" aria-hidden="true">{{ suffix() }}</span>
+    }
+  </div>
 } @else {
   <input
     [id]="inputId"

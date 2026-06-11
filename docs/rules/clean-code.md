@@ -13,9 +13,9 @@
 
 ## Non-negotiables
 
-1. **Token-only styling.** No hex, rgba, or raw px in templates or styles. Every color / spacing / radius / font-size reads from a CSS var defined in `libs/tokens/`. Exceptions: 1px hairlines and the 2px focus ring — both locked as tokens already. Grep guard: `/#[0-9a-f]{3,6}|rgba?\(|\d+px/i` must not match outside `libs/tokens/`.
+1. **Token-only styling.** No hex, `rgb()`, `rgba()`, or raw integer `px` in component templates or styles. Every color / spacing / radius / font-size reads from a CSS custom property defined in `libs/tokens/`. Hairlines, focus rings, radii, shadows, and spacing all have token names. The pre-commit hook uses `scripts/clean-code-check.sh`; it also scans comments, so avoid writing raw pixel values in explanatory comments. Breakpoint lines in `@media (...)` and plain `@container (...)` are exempt; named container queries should use `rem` values or tokenized Sass helpers when available.
 
-2. **One file per primitive.** `button.component.ts`, not `button-primary.component.ts` + `button-secondary.component.ts`. Variants are `@Input()` props driving class bindings. See `component-skill.md`.
+2. **One primitive folder, variants inside it.** `button.component.ts`, not `button-primary.component.ts` + `button-secondary.component.ts`. Variants are signal inputs driving BEM class modifiers. See `component-skill.md`.
 
 3. **Standalone + OnPush by default.** Every component:
    ```ts
@@ -40,12 +40,12 @@
 
 9. **File structure per primitive:**
    ```
-    libs/ui/button/
-    ├── button.component.ts       # class only (no inline template)
-    ├── button.component.html     # template (always extracted)
-    ├── button.component.scss     # styles using design tokens
-    ├── button.component.spec.ts  # behavior tests
-    ├── button.types.ts           # Variant, Size, Intent types
+    libs/ui/src/button/
+    ├── button.component.ts       # class only; decorator uses templateUrl + styleUrls
+    ├── button.component.html     # template, always external
+    ├── button.component.scss     # BEM styles using CSS custom property tokens
+    ├── button.variants.ts        # public variant/size/intent types only
+    ├── button.component.spec.ts  # behavior tests when helpful
     └── index.ts                  # public exports only
    ```
 
@@ -75,7 +75,7 @@
 
 14. **Accessibility is in markup, not a follow-up.** `aria-*`, `role`, focus management, keyboard handlers — present in the first template commit. See `accessibility.md` for the per-primitive checklist.
 
-15. **No barrel re-exports beyond the primitive.** `libs/ui/button/index.ts` exports the component + its public types, nothing else. No `libs/ui/index.ts` giant re-export barrel — it breaks tree-shaking.
+15. **Barrels stay intentional.** `libs/ui/src/{primitive}/index.ts` exports that primitive and its public types. Shared library barrels may re-export primitives only when they are already part of the public package API; do not create grab-bag exports for convenience.
 
 ## Pre-flight checklist (runs as grep at commit)
 
@@ -86,7 +86,7 @@
 - [ ] No `console.log` / `debugger`
 - [ ] No TODO / FIXME strings
 - [ ] Imports sorted external → internal → relative
-- [ ] SCSS, if present, is under 20 lines
+- [ ] SCSS is focused on one component's concerns and uses BEM + CSS custom properties
 - [ ] Spec file exists and runs
 
 ## Anti-patterns (seen in wild, don't)

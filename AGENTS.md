@@ -70,6 +70,14 @@ For Wealth Planner / AWM demo work, use these reference implementations:
 - **Add/edit dialogs:** reuse the modal/form composition in `apps/site/src/app/pages/demos/patrimonial/patrimonio-add-modal/` and shared dialog components in `apps/site/src/app/pages/demos/shared/`.
 - **Charts / graphs:** use chart primitives or existing chart pattern pages. Do not create ad hoc SVG/HTML charts in page code.
 
+## Persistent label alignment (LOCKED)
+
+For section/table reveal actions such as `Ver datos`, align the always-visible trigger label/icon with the surrounding section text. The resting state is the alignment source of truth.
+
+- The visible label/icon must line up with the section heading, table text, and other persistent content.
+- Hover/focus/expanded containers may grow or offset around that anchor; their temporary box alignment is secondary.
+- Do not indent the resting trigger just to center or balance a hidden hover panel.
+
 ## 3-file rule (LOCKED)
 
 **Every Angular component, pattern, template, or page in this repo MUST use 3 separate files:**

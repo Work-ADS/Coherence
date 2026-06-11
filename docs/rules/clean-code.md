@@ -81,6 +81,8 @@
 
 16. **No bespoke DS primitives in page code.** Pages compose existing primitives and patterns. Before adding local table/grid/chart/dialog/card/header/form markup, search `libs/ui/src/` and existing demo/pattern pages. If a reusable primitive or composition exists, use it. If it does not fit, document the missing API/variant/token before building a new one.
 
+17. **Persistent trigger alignment wins.** For reveal actions such as `Ver datos`, align the always-visible label/icon with surrounding text and table rhythm. Hover/focus containers may offset from that anchor; do not indent the resting trigger to make a hidden expanded state look centered.
+
 ## Pre-flight checklist (runs as grep at commit)
 
 - [ ] No hex, rgba, or raw px outside `libs/tokens/`
@@ -92,6 +94,7 @@
 - [ ] Imports sorted external → internal → relative
 - [ ] SCSS is focused on one component's concerns and uses BEM + CSS custom properties
 - [ ] Existing DS primitives/patterns were searched before adding page-local UI
+- [ ] Resting trigger labels/icons align with persistent surrounding content, not hidden hover containers
 - [ ] Spec file exists and runs
 
 ## Anti-patterns (seen in wild, don't)
@@ -100,6 +103,7 @@
 - `[ngStyle]="{ color: '#333' }"` with string literals → Tailwind class + token
 - Tooltip that only works on mouse hover → add focus/click/keyboard access or a visible/data-table fallback
 - Page-local table/chart/dialog markup that duplicates `libs/ui` or a demo shared pattern → reuse the primitive/composition
+- Resting `Ver datos` / reveal trigger indented to center an expanded hover container → align the visible trigger with the surrounding text
 - Component owns both presentation AND data fetching → split; primitives don't fetch
 - `this.cdr.detectChanges()` sprinkled in → you've bypassed OnPush; fix the root cause
 - `Subscription` member field → switch to `takeUntilDestroyed()` or `async` pipe

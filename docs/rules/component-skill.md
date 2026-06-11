@@ -75,6 +75,14 @@ Hover states are allowed and expected for interactive components. The rule is no
 - Any useful hover-only information must also be reachable through focus, click/tap, visible text, or a data-table/details fallback.
 - Do not mutate DOM styles imperatively to create hover effects. Use class bindings, CSS custom properties, and template bindings.
 
+### Persistent trigger alignment
+
+For section/table reveal actions such as `Ver datos`, the always-visible trigger is the alignment anchor.
+
+- Align the resting label/icon with the surrounding text rhythm: section headings, body text, table columns, and persistent controls.
+- If hover/focus reveals a larger container, menu, tooltip, or data panel, that expanded container may be offset relative to the trigger.
+- Do not indent the resting trigger to center a hidden hover panel. The UI should look aligned before the user interacts with it.
+
 ### Multi-client theming (whitelabel) — the foundation rule
 - **Brand swap = token-layer swap, not component-layer swap.** Brand overrides live at `libs/tokens/brand/{client}.ts`; style-dictionary builds a brand-specific `tokens.css`. Components stay brand-agnostic — they reference only semantic CSS custom properties (`var(--action-primary)`, `var(--surface-quiet)`, `var(--canvas-fg)`, etc.).
 - The logo is brand-specific but lives at `libs/ui/src/logo/` and swaps via brand config — not via per-brand component duplication.

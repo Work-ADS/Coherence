@@ -1,14 +1,21 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { KbdComponent } from '@coherence/ui';
 
 /**
  * Dark pill toast shown after an action — rename, estado change, plan switch.
  * Visual inspired by the Figma "Return to instance" pattern: undo action on the
  * left, message in the middle, close on the right. Auto-dismiss is owned by
  * the parent (keeps this component stateless).
+ *
+ * 2026-06-11 (Richard): added optional `[shortcut]` input so destructive
+ * confirmations can surface the keyboard hint inline (e.g. ⌘ Z). The hint
+ * lives next to the Deshacer label; the keyboard binding itself stays in
+ * the parent — the toast is presentational.
  */
 @Component({
   selector: 'site-action-toast',
   standalone: true,
+  imports: [KbdComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
@@ -63,6 +70,9 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
               <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11" />
             </svg>
             <span class="text-body-sm font-medium">{{ undoLabel() }}</span>
+            @if (shortcut().length > 0) {
+              <afi-kbd [keys]="shortcut()" size="sm" />
+            }
           </button>
           <span class="w-px h-5 bg-white/20" aria-hidden="true"></span>
           <!-- Message -->
@@ -97,6 +107,10 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 export class ActionToastComponent {
   readonly message = input<string>('');
   readonly undoLabel = input<string>('Deshacer');
+  /** Optional keyboard hint chips rendered next to the undo label
+   *  (e.g. `['⌘', 'Z']`). Empty array = no kbd shown. The actual key
+   *  binding is owned by the parent. */
+  readonly shortcut = input<string[]>([]);
   readonly visible = input<boolean>(false);
 
   readonly undo = output<void>();

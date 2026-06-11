@@ -26,6 +26,16 @@ module.exports = {
           'fg-muted':     'var(--canvas-fg-muted)',
           'fg-on-action': 'var(--canvas-fg-on-action)',
         },
+        // Semantic foreground tokens — use these for typography color
+        // (titles, body, captions, meta) instead of `canvas.fg` (which is a
+        // surface-level utility) or `neutral.*` (which is a raw ramp).
+        // Added 2026-06-10 (Richard) so `text-foreground-primary` /
+        // `text-foreground-secondary` Tailwind classes are available.
+        foreground: {
+          primary:   'var(--foreground-primary-default)',
+          secondary: 'var(--foreground-secondary-default)',
+          tertiary:  'var(--foreground-tertiary-default)',
+        },
         surface: {
           DEFAULT:  'var(--surface-base)',
           base:     'var(--surface-base)',

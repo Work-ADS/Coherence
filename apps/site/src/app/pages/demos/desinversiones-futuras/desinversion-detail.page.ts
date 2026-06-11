@@ -46,6 +46,12 @@ const TIPO_LABEL: Record<PatrimonioAsset['tipo'], string> = {
   pension: 'Pensión',
   participacion: 'Participación',
   otro: 'Otro',
+  // v2 tipos (Brief C)
+  fondos: 'Fondos',
+  'acciones-cotizadas': 'Acciones cotizadas',
+  'participaciones-empresariales': 'Participaciones empresariales',
+  otros: 'Otros activos',
+  deudas: 'Deudas',
 };
 
 const CUENTA_LABEL: Record<PatrimonioAsset['tipo'], string> = {
@@ -55,6 +61,12 @@ const CUENTA_LABEL: Record<PatrimonioAsset['tipo'], string> = {
   pension: 'Plan de pensiones',
   participacion: 'Sociedad familiar',
   otro: 'Cuenta personal',
+  // v2 tipos (Brief C)
+  fondos: 'Cuenta valores',
+  'acciones-cotizadas': 'Cuenta valores',
+  'participaciones-empresariales': 'Sociedad familiar',
+  otros: 'Cuenta personal',
+  deudas: 'Pasivo',
 };
 
 /**

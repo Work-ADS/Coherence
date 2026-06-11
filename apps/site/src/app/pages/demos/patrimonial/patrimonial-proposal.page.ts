@@ -5,6 +5,7 @@ import {
   HostListener,
   afterNextRender,
   computed,
+  effect,
   inject,
   signal,
   viewChild,
@@ -14,23 +15,43 @@ import {
 
 import {
   ButtonComponent,
+  CardComponent,
   InputComponent,
   KbdComponent,
   ModalComponent,
   PageHeaderComponent,
+  SegmentedControlComponent,
   SelectComponent,
+  SwitchComponent,
   TableComponent,
 } from '@coherence/ui';
-import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
+import type { SegmentedOption, SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
-import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patrimonial/graph-card-header.component';
+// GraphCardHeaderComponent removed 2026-06-10 — per-section headers now use
+// <afi-page-header level="section"> per the canonical migration.
+import { KeyShortcutDirective } from '../../../directives/key-shortcut.directive';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
+import type {
+  CrecimientoMode,
+  Frecuencia,
+  InmobiliarioUso,
+  NivelRiesgo,
+  PatrimonioAsset,
+  PatrimonioTipo,
+  RentabilidadRiesgo,
+  TipoGeneracion,
+} from '../wealth-planner-2026/store';
 import { ActionToastComponent } from '../shared/action-toast.component';
 import { bridgeDesignReviewVersion } from '../shared/design-review-bridge';
+import type { ContextBarSegment } from '../shared/dialog-context-bar.component';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
-import { VersionToggleComponent, type VersionOption } from '../shared/version-toggle.component';
+import { PatrimonioAddModalComponent } from './patrimonio-add-modal/patrimonio-add-modal.component';
+// VersionToggleComponent removed from imports 2026-06-10 — inline pill is
+// globally hidden in styles.scss; floating design-review widget handles the
+// V1/V2/V3 selector via `bridgeDesignReviewVersion`.
+import type { VersionOption } from '../shared/version-toggle.component';
 
 type LayoutVersion = 'v1' | 'v2' | 'v3';
 
@@ -80,18 +101,21 @@ type AddedAsset = {
   standalone: true,
   imports: [
     ButtonComponent,
+    CardComponent,
     InputComponent,
     KbdComponent,
     ModalComponent,
     PageHeaderComponent,
+    SegmentedControlComponent,
     SelectComponent,
+    SwitchComponent,
     TableComponent,
     DemoShellComponent,
-    GraphCardHeaderComponent,
     ActionToastComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
-    VersionToggleComponent,
+    KeyShortcutDirective,
+    PatrimonioAddModalComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './patrimonial-proposal.page.html',
@@ -116,11 +140,10 @@ export class PatrimonialProposalPage {
   readonly addDescripcion = signal<string>('');
   readonly escShortcut: string[] = ['Esc'];
 
-  /** Page-level layout version. V1 is the current implementation with the
-   *  senior-feedback fixes from this round. V2 / V3 are stubs ready to host
-   *  future explorations — variants are kept side-by-side so seniors can
-   *  compare across reviews instead of overwriting prior work. */
-  readonly version = signal<LayoutVersion>('v1');
+  /** Page-level layout version. V2 (Brief C, Borja 2026-05-25) is the new
+   *  Simple/Avanzado modal default per the brief's open-decision lock; V1 is
+   *  preserved unchanged so seniors can compare; V3 stays as a stub. */
+  readonly version = signal<LayoutVersion>('v2');
   readonly versions: VersionOption[] = [
     { key: 'v1', label: 'Versión 1' },
     { key: 'v2', label: 'Versión 2' },
@@ -128,6 +151,78 @@ export class PatrimonialProposalPage {
   ];
   setVersion(v: string): void {
     if (v === 'v1' || v === 'v2' || v === 'v3') this.version.set(v);
+  }
+
+  // ── v3 dialog wiring (two-step Tipo de patrimonio + per-branch forms) ──
+  // The v3 dialog is rendered by <site-patrimonio-add-modal>. The page only
+  // supplies the data it needs (context-bar segments, titular options,
+  // financiable-asset options) and handles the save event.
+
+  /** Top-level breakdown for the Tesler-law context bar.
+   *  Aggregates current patrimonio into the dialog's 7 top-level buckets. */
+  readonly v3PatrimonioSegments = computed<ContextBarSegment[]>(() => {
+    const assets = this.store.patrimonio();
+    const buckets: Record<string, { label: string; value: number }> = {
+      liquidez: { label: 'Liquidez', value: 0 },
+      inversion: { label: 'Inversión', value: 0 },
+      'plan-pensiones': { label: 'Plan de pensiones', value: 0 },
+      inmobiliario: { label: 'Inmobiliario', value: 0 },
+      participaciones: { label: 'Participaciones', value: 0 },
+      'private-equity': { label: 'Private equity', value: 0 },
+      deudas: { label: 'Deudas', value: 0 },
+    };
+    for (const a of assets) {
+      const k =
+        a.tipoTop ??
+        // Map legacy `tipo` slugs to v3 top-level buckets so seeded data
+        // (pre-v3) still renders in the context bar.
+        (a.tipo === 'pension' ? 'plan-pensiones' :
+         a.tipo === 'inmobiliario' ? 'inmobiliario' :
+         a.tipo === 'liquidez' ? 'liquidez' :
+         a.tipo === 'deudas' ? 'deudas' :
+         a.tipo === 'participaciones-empresariales' || a.tipo === 'participacion' ? 'participaciones' :
+         'inversion');
+      buckets[k].value += a.valor;
+    }
+    return Object.entries(buckets).map(([key, b]) => ({
+      key,
+      label: b.label,
+      value: b.value,
+      highlight: false,
+    }));
+  });
+
+  readonly v3PatrimonioTotal = computed(() =>
+    this.store.patrimonio().reduce((sum, a) => sum + a.valor, 0),
+  );
+
+  /** Titular options — built from cliente + cónyuge + hijos. */
+  readonly v3TitularOptions = computed<SelectOption[]>(() => {
+    const opts: SelectOption[] = [{ value: 'cliente', label: 'Cliente' }];
+    if (this.store.conyugeStatus() === 'yes' && this.store.conyuge()) {
+      opts.push({ value: 'conyuge', label: 'Cónyuge' });
+    }
+    for (const h of this.store.hijos()) {
+      opts.push({ value: h.id, label: h.alias || `Hijo ${h.id}` });
+    }
+    return opts;
+  });
+
+  /** Activo financiado options for the Deudas branch — current patrimonio
+   *  assets the user could be financing. */
+  readonly v3ActivosFinanciables = computed<SelectOption[]>(() => {
+    const opts: SelectOption[] = [{ value: 'ninguno', label: 'Ninguno' }];
+    for (const a of this.store.patrimonio()) {
+      opts.push({ value: a.id, label: a.nombre });
+    }
+    return opts;
+  });
+
+  onV3Save(asset: PatrimonioAsset): void {
+    this.store.addAsset(asset);
+    this.savedToastMessage.set(`Activo «${asset.nombre}» añadido`);
+    this.savedToastVisible.set(true);
+    window.setTimeout(() => this.savedToastVisible.set(false), 3500);
   }
 
   readonly addTipoOptions: SelectOption[] = [
@@ -276,8 +371,17 @@ export class PatrimonialProposalPage {
       );
     }
 
-    // Switch to the target tab so the user can see where the activo landed
-    this.setActiveTab(newAsset.sectionKey);
+    // Ensure the target tipo is included in the active filter so the user
+    // can actually see where the activo landed. With the multi-select Tipo
+    // filter (2026-06-10) the legacy single-tab focus no longer applies —
+    // we just add the section's key to the visible set if it's not already
+    // there.
+    const sel = this.selectedTipos();
+    if (!sel.has(newAsset.sectionKey)) {
+      const next = new Set(sel);
+      next.add(newAsset.sectionKey);
+      this.selectedTipos.set(next);
+    }
     setTimeout(() => this.scrollLatestAddedIntoView(), 0);
 
     // Close dialog + reset form (keep addTipo so consecutive adds of the same type are fast)
@@ -480,7 +584,10 @@ export class PatrimonialProposalPage {
     return false;
   }
 
-  readonly addShortcut: string[] = ['A'];
+  /** Cmd/Ctrl + A — bound via `[siteKeyShortcut]="'a'"` on the primary CTA.
+   *  Display chip uses the ⌘ glyph (kbd primitive maps it to "Comando" via
+   *  its Spanish key glossary for SR users). */
+  readonly addShortcut: string[] = ['⌘', 'A'];
 
   // ---- Section data model ----
   // Each section defines its own columns so tables can have different schemas
@@ -905,17 +1012,34 @@ export class PatrimonialProposalPage {
     this.measureTabs();
   }
 
-  /** Sections actually shown on the page — tab-filtered. "todos" shows everything. */
+  /** Sections actually shown on the page — driven by the Tipo multi-select
+   * filter (replaces the old tab-based `activeTab` behavior 2026-06-10).
+   * Render order follows `tipoOrder()`, filtered by `selectedTipos()`. */
   readonly visibleSections = computed(() => {
-    const t = this.activeTab();
-    return t === 'todos' ? this.sections : this.sections.filter((s) => s.key === t);
+    const sel = this.selectedTipos();
+    const order = this.tipoOrder();
+    const byKey = new Map(this.sections.map((s) => [s.key, s]));
+    return order
+      .filter((k) => sel.has(k))
+      .map((k) => byKey.get(k))
+      .filter((s): s is AssetSection => s !== undefined);
   });
 
   private rowsForSection(section: AssetSection): AssetRow[] {
     const added = this.addedAssets()
       .filter((item) => item.sectionKey === section.key)
       .map((item) => item.row);
-    return added.concat(section.rows);
+    const all = added.concat(section.rows);
+    const deleted = this.deletedAssetIds();
+    if (deleted.size === 0) return all;
+    // Soft-delete: drop any row whose stable key landed in `deletedAssetIds`
+    // via the bulk-delete affordance. Same key derivation as
+    // `rowSelectionKey` (= `r.id ?? r.name`) so the selection → deletion
+    // → table-render pipeline stays consistent.
+    return all.filter((r) => {
+      const key = r.id ?? r.name ?? null;
+      return !key || !deleted.has(key);
+    });
   }
 
   isLatestAdded(row: AssetRow): boolean {
@@ -937,14 +1061,17 @@ export class PatrimonialProposalPage {
   }
 
   tableHeaderMeta(section: AssetSection, visibleRows: number): string {
+    // 2026-06-10 — dropped "Columnas: ..." trailer when this fn started
+    // feeding the canonical `<afi-page-header level="section">` subtitle.
+    // Keep just the row-count meta; the description (s.description) renders
+    // separately above via the page-header title chrome if needed.
     const total = this.sectionRowCount(section);
     const count =
       this.anyFilterActive() && visibleRows !== section.rows.length
         ? `${visibleRows} de ${total}`
         : `${total}`;
     const noun = total === 1 ? 'activo' : 'activos';
-    const columns = section.columns.map((c) => c.label).join(', ');
-    return `${count} ${noun} · Columnas: ${columns}`;
+    return `${count} ${noun}`;
   }
 
   tableExplainer(): string {
@@ -994,14 +1121,20 @@ export class PatrimonialProposalPage {
   //     (leadingActions axis pending Phase 2).
 
   /** Table-level action set. Per-row overrides not used here (all asset
-   *  rows + their children get the same set). */
+   *  rows + their children get the same set).
+   *
+   *  Pattern (Richard 2026-06-10): two actions only — Editar + Borrar —
+   *  rendered inline as icon buttons. The 3-dot overflow menu is reserved
+   *  for tables with 3+ actions; with two, the buttons themselves are the
+   *  full surface (no friction from a menu trigger). Duplicar was dropped
+   *  as out-of-scope for v2. */
   readonly assetTableActions: TableRowAction[] = [
     { key: 'edit', label: 'Editar', icon: 'edit', ariaLabel: 'Editar activo' },
-    { key: 'duplicate', label: 'Duplicar', overflow: true },
     {
       key: 'delete',
       label: 'Borrar',
-      overflow: true,
+      icon: 'delete',
+      ariaLabel: 'Borrar activo',
       variant: 'danger',
     },
   ];
@@ -1065,20 +1198,193 @@ export class PatrimonialProposalPage {
   }
 
   /**
-   * Row-click handler from `<afi-table>` — no-op for now (patrimonial
-   * doesn't open a detail page on row click, only on action click).
-   * Wired so the table doesn't complain about the missing handler.
+   * Row-click handler from `<afi-table>` — no-op. Selection is driven
+   * by the per-row checkbox (visible in the hover-extend area thanks to
+   * `[selectable]="true"` + the section page-header's CSS overrides),
+   * NOT by clicking the row body. Leaves the row body free for future
+   * navigation (open detail) without conflicting with selection toggle.
    */
   onSectionRowClicked(_event: { row: Record<string, unknown>; event: MouseEvent }): void {
     /* intentional no-op */
   }
 
-  /** Row-action dispatcher. All three actions are placeholders pending
-   *  real implementations from the store; closes the toast on each. */
+  /**
+   * Selection-change handler from `<afi-table (selectedChange)="..."/>`.
+   * The primitive emits the full new selection array (including rows
+   * across other sections that were already selected) whenever a checkbox
+   * is toggled, so we just rebuild `selectedAssetIds` from the array.
+   */
+  onAssetSelectionChange(rows: Record<string, unknown>[]): void {
+    const ids = new Set<string>();
+    for (const r of rows) {
+      const key = this.rowSelectionKey(r);
+      if (key) ids.add(key);
+    }
+    this.selectedAssetIds.set(ids);
+  }
+
+  /** Stable selection key per row. Matches `toTableRow`'s id derivation
+   *  (`row.id ?? row.name`) so the same key resolves whether we're handed
+   *  the original AssetRow or the transformed Record<string, unknown>
+   *  that <afi-table> emits from `(rowClicked)`. */
+  private rowSelectionKey(row: Record<string, unknown>): string | null {
+    const id = row['id'];
+    if (typeof id === 'string' && id) return id;
+    const name = row['name'];
+    if (typeof name === 'string' && name) return name;
+    return null;
+  }
+
+  // ─── Bulk selection / delete ─────────────────────────────────────────
+  // Selected rows + soft-deleted rows tracked as id sets. The table reads
+  // selection via `[selected]` (we feed it the live row OBJECTS so
+  // afi-table's --selected class lands). Deletion moves selected ids to
+  // `deletedAssetIds`, which `rowsForSection` filters out — the table
+  // never sees deleted rows again.
+  readonly selectedAssetIds = signal<Set<string>>(new Set<string>());
+  readonly deletedAssetIds = signal<Set<string>>(new Set<string>());
+
+  /** Lightweight stubs for `<afi-table [selected]="..."/>`. The primitive
+   *  only checks `selectedRow[trackByKey] === renderedRow[trackByKey]`
+   *  (trackByKey = 'id'), so we hand it an object literal whose `id`
+   *  exactly matches the rendered row's `id` (= `r.id ?? r.name` per
+   *  `toTableRow`). Cheap to recompute on every selection change. */
+  readonly selectedAssetRows = computed<Record<string, unknown>[]>(() => {
+    const ids = this.selectedAssetIds();
+    if (ids.size === 0) return [];
+    return [...ids].map((id) => ({ id }));
+  });
+
+  readonly bulkSelectedCount = computed(() => this.selectedAssetIds().size);
+
+  clearAssetSelection(): void {
+    this.selectedAssetIds.set(new Set());
+  }
+
+  // ─── Confirmation dialogs ────────────────────────────────────────────
+  // Two flavors:
+  //   • Bulk delete — fires after the "Borrar" button in the filter
+  //     actions; copy reads "Borrar X activos seleccionados".
+  //   • Single-row delete — fires from the row's trash icon; copy reads
+  //     "Borrar [activo name]" so the user knows exactly what disappears.
+  // Both block actual mutation until the user confirms; cancel restores
+  // the prior state without touching `deletedAssetIds`.
+  readonly confirmBulkDeleteOpen = signal<boolean>(false);
+  readonly confirmRowDelete = signal<{ key: string; name: string } | null>(null);
+
+  /** Called by the "Borrar" button in the filter-actions slot. */
+  openBulkDeleteConfirm(): void {
+    if (this.bulkSelectedCount() === 0) return;
+    this.confirmBulkDeleteOpen.set(true);
+  }
+
+  /** User confirmed the bulk delete — soft-delete all selected ids, then
+   *  close the dialog and clear the selection. Snapshots the affected ids
+   *  into `lastDeletedIds` so the Cmd+Z / toast Deshacer can restore. */
+  confirmBulkDelete(): void {
+    const sel = this.selectedAssetIds();
+    if (sel.size === 0) {
+      this.confirmBulkDeleteOpen.set(false);
+      return;
+    }
+    const next = new Set(this.deletedAssetIds());
+    for (const k of sel) next.add(k);
+    this.deletedAssetIds.set(next);
+    const count = sel.size;
+    this.lastDeletedIds.set([...sel]);
+    this.clearAssetSelection();
+    this.confirmBulkDeleteOpen.set(false);
+    this.showDeleteToast(`${count} activo${count === 1 ? '' : 's'} borrado${count === 1 ? '' : 's'}`);
+  }
+
+  /** Called by the per-row trash icon (the canonical Borrar action key). */
+  openRowDeleteConfirm(row: Record<string, unknown>): void {
+    const key = this.rowSelectionKey(row);
+    if (!key) return;
+    const name = typeof row['name'] === 'string' ? row['name'] : key;
+    this.confirmRowDelete.set({ key, name });
+  }
+
+  /** User confirmed the single-row delete — soft-delete just that row.
+   *  Snapshots the single id into `lastDeletedIds` for the undo path. */
+  confirmRowDeleteApply(): void {
+    const target = this.confirmRowDelete();
+    if (!target) return;
+    const next = new Set(this.deletedAssetIds());
+    next.add(target.key);
+    this.deletedAssetIds.set(next);
+    // Also drop it from the selection if it happened to be selected.
+    const sel = new Set(this.selectedAssetIds());
+    sel.delete(target.key);
+    this.selectedAssetIds.set(sel);
+    this.lastDeletedIds.set([target.key]);
+    this.confirmRowDelete.set(null);
+    this.showDeleteToast(`Activo "${target.name}" borrado`);
+  }
+
+  // ─── Delete toast + undo ─────────────────────────────────────────────
+  // After every confirmed delete (bulk or single), a dark pill toast
+  // surfaces at the bottom with an undo button + a `⌘ Z` kbd hint. The
+  // shortcut is bound globally via @HostListener and routes to the same
+  // `undoLastDelete()` handler the toast button calls.
+  readonly lastDeletedIds = signal<string[]>([]);
+  readonly deleteToastVisible = signal<boolean>(false);
+  readonly deleteToastMessage = signal<string>('');
+  readonly undoShortcut: string[] = ['⌘', 'Z'];
+  private deleteToastTimer: ReturnType<typeof setTimeout> | null = null;
+
+  private showDeleteToast(message: string): void {
+    this.deleteToastMessage.set(message);
+    this.deleteToastVisible.set(true);
+    if (this.deleteToastTimer) clearTimeout(this.deleteToastTimer);
+    // 8 seconds is the canonical undo window — long enough to react,
+    // short enough not to be in the way.
+    this.deleteToastTimer = setTimeout(() => {
+      this.deleteToastVisible.set(false);
+      this.lastDeletedIds.set([]);
+    }, 8000);
+  }
+
+  /** Restore the most recent batch of soft-deleted assets. Triggered by
+   *  the toast's Deshacer button OR Cmd/Ctrl + Z. No-op once
+   *  `lastDeletedIds` is cleared (auto-dismiss timer fired). */
+  undoLastDelete(): void {
+    const ids = this.lastDeletedIds();
+    if (ids.length === 0) return;
+    const next = new Set(this.deletedAssetIds());
+    for (const k of ids) next.delete(k);
+    this.deletedAssetIds.set(next);
+    this.lastDeletedIds.set([]);
+    this.deleteToastVisible.set(false);
+    if (this.deleteToastTimer) {
+      clearTimeout(this.deleteToastTimer);
+      this.deleteToastTimer = null;
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onUndoKeydown(event: KeyboardEvent): void {
+    // Only fire when there's actually something to undo and the focus
+    // isn't inside a form input (avoid stomping native undo).
+    if (!this.deleteToastVisible() || this.lastDeletedIds().length === 0) return;
+    const isUndo = (event.key === 'z' || event.key === 'Z') && (event.metaKey || event.ctrlKey) && !event.shiftKey;
+    if (!isUndo) return;
+    const tag = (event.target as HTMLElement | null)?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    event.preventDefault();
+    this.undoLastDelete();
+  }
+
+  /** Row-action dispatcher. `delete` opens the single-row confirmation
+   *  modal (asks "Borrar [name]?"); `edit` is still a placeholder pending
+   *  store wiring. */
   onSectionAction(event: { action: TableRowAction; row: Record<string, unknown> }): void {
-    // TODO(2026-05-28): wire to the patrimonial store once edit/duplicate/
-    // delete persist. For now the actions just dismiss the row-actions menu.
-    void event;
+    if (event.action.key === 'delete') {
+      this.openRowDeleteConfirm(event.row);
+      return;
+    }
+    // TODO(2026-05-28): wire Editar to the patrimonial store once the
+    // detail drawer / edit dialog lands.
   }
 
   // ---- Filter state ----
@@ -1091,6 +1397,26 @@ export class PatrimonialProposalPage {
   readonly entidadMenuOpen = signal(false);
   readonly minMenuOpen = signal(false);
   readonly maxMenuOpen = signal(false);
+
+  // ---- Tipo multi-select filter (replaces the old activeTab tabs) ----
+  // Two signals model both inclusion AND order so the user can pick which
+  // tipos to show AND drag-reorder them in the dropdown. Section render order
+  // on the page follows `tipoOrder()`, filtered by `selectedTipos()`.
+  //
+  // Defaults: every tipo selected, in the page's canonical order. The chip
+  // reads "Tipo" while in the default state; once the user deselects any
+  // or reorders, the chip surfaces the diff (count + reorder hint).
+  readonly selectedTipos = signal<Set<string>>(
+    new Set<string>(this.sections.map((s) => s.key)),
+  );
+  readonly tipoOrder = signal<string[]>(this.sections.map((s) => s.key));
+  readonly tipoMenuOpen = signal(false);
+
+  // Drag-and-drop state for reordering rows inside the Tipo dropdown.
+  // `dragFromIndex` is the source row being dragged; `dragOverIndex` is the
+  // hovered row index that gets a top-border indicator. Both reset on drop.
+  readonly tipoDragFromIndex = signal<number | null>(null);
+  readonly tipoDragOverIndex = signal<number | null>(null);
 
   /** Autocomplete suggestions — flattened matches across every section's rows
    * (including expandable children), filtered by the current search query. */
@@ -1207,6 +1533,122 @@ export class PatrimonialProposalPage {
       this.selectedEntidades.set(new Set(this.availableEntidades()));
     }
   }
+
+  // ─── Tipo filter — multi-select with drag-to-reorder ──────────────────
+  // Mirror of the Entidad chip API for predictability, plus the reorder
+  // bits (`moveTipo`, drag handlers). Replaces the legacy `activeTab` /
+  // `setActiveTab` tabs UI which only allowed single-tipo + fixed order.
+
+  /** Section-key → human label, looked up via the canonical `sections`
+   * array. Used by the chip label + dropdown rows. */
+  tipoLabel(key: string): string {
+    return this.sections.find((s) => s.key === key)?.title ?? key;
+  }
+
+  /** Count for a given tipo key (raw row total, not filtered). Mirrors the
+   * old tab badge count. */
+  tipoCount(key: string): number {
+    const sec = this.sections.find((s) => s.key === key);
+    return sec ? this.sectionRowCount(sec) : 0;
+  }
+
+  isTipoSelected(key: string): boolean {
+    return this.selectedTipos().has(key);
+  }
+  toggleTipo(key: string): void {
+    const s = new Set(this.selectedTipos());
+    if (s.has(key)) s.delete(key);
+    else s.add(key);
+    this.selectedTipos.set(s);
+  }
+  isAllTiposSelected(): boolean {
+    return this.selectedTipos().size === this.sections.length;
+  }
+  toggleAllTipos(): void {
+    if (this.isAllTiposSelected()) {
+      this.selectedTipos.set(new Set());
+    } else {
+      this.selectedTipos.set(new Set(this.sections.map((s) => s.key)));
+    }
+  }
+  /** Reset to default: every tipo selected, canonical order. */
+  clearTipos(): void {
+    this.selectedTipos.set(new Set(this.sections.map((s) => s.key)));
+    this.tipoOrder.set(this.sections.map((s) => s.key));
+  }
+
+  /** True when the user has reordered tipos away from the canonical order. */
+  readonly tipoOrderChanged = computed(() => {
+    const canon = this.sections.map((s) => s.key);
+    const cur = this.tipoOrder();
+    if (canon.length !== cur.length) return true;
+    return canon.some((k, i) => cur[i] !== k);
+  });
+
+  /** Chip label — surfaces the filter state at a glance.
+   *   • All selected, default order  →  null (chip shows just "Tipo")
+   *   • Reordered, all selected     →  "Reordenado"
+   *   • Subset selected             →  "X seleccionadas" (or single label)
+   */
+  readonly tipoChipLabel = computed<string | null>(() => {
+    const n = this.selectedTipos().size;
+    const total = this.sections.length;
+    if (n === total) return this.tipoOrderChanged() ? 'Reordenado' : null;
+    if (n === 0) return 'Ninguno';
+    if (n === 1) {
+      const only = [...this.selectedTipos()][0];
+      return only ? this.tipoLabel(only) : null;
+    }
+    return `${n} seleccionados`;
+  });
+
+  /** True when the Tipo chip is in a non-default state (subset selected
+   * OR reordered). Drives the chip's active styling. */
+  readonly tipoChipActive = computed(
+    () => !this.isAllTiposSelected() || this.tipoOrderChanged(),
+  );
+
+  // ── Reorder ─────────────────────────────────────────────────────────
+  /** Move a tipo from one position in `tipoOrder` to another. Splices the
+   * array in-place semantically; emits a fresh array so signals re-fire. */
+  moveTipo(fromIdx: number, toIdx: number): void {
+    if (fromIdx === toIdx) return;
+    const next = [...this.tipoOrder()];
+    if (fromIdx < 0 || fromIdx >= next.length) return;
+    if (toIdx < 0 || toIdx >= next.length) return;
+    const [item] = next.splice(fromIdx, 1);
+    if (item === undefined) return;
+    next.splice(toIdx, 0, item);
+    this.tipoOrder.set(next);
+  }
+
+  onTipoDragStart(idx: number, ev: DragEvent): void {
+    this.tipoDragFromIndex.set(idx);
+    if (ev.dataTransfer) {
+      ev.dataTransfer.effectAllowed = 'move';
+      // Required for Firefox to start the drag at all.
+      ev.dataTransfer.setData('text/plain', String(idx));
+    }
+  }
+  onTipoDragOver(idx: number, ev: DragEvent): void {
+    ev.preventDefault();
+    if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'move';
+    if (this.tipoDragOverIndex() !== idx) this.tipoDragOverIndex.set(idx);
+  }
+  onTipoDragLeave(): void {
+    this.tipoDragOverIndex.set(null);
+  }
+  onTipoDrop(idx: number, ev: DragEvent): void {
+    ev.preventDefault();
+    const from = this.tipoDragFromIndex();
+    if (from !== null) this.moveTipo(from, idx);
+    this.tipoDragFromIndex.set(null);
+    this.tipoDragOverIndex.set(null);
+  }
+  onTipoDragEnd(): void {
+    this.tipoDragFromIndex.set(null);
+    this.tipoDragOverIndex.set(null);
+  }
   clearMin(): void {
     this.filterMin.set(null);
     this.minMenuOpen.set(false);
@@ -1265,7 +1707,8 @@ export class PatrimonialProposalPage {
       this.searchQuery().trim() !== '' ||
       this.selectedEntidades().size > 0 ||
       this.filterMin() !== null ||
-      this.filterMax() !== null,
+      this.filterMax() !== null ||
+      this.tipoChipActive(),
   );
 
   clearAllFilters(): void {
@@ -1273,5 +1716,329 @@ export class PatrimonialProposalPage {
     this.selectedEntidades.set(new Set());
     this.filterMin.set(null);
     this.filterMax.set(null);
+    this.clearTipos();
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
+  // v2 modal — Simple / Avanzado (Brief C · Borja 2026-05-25)
+  //
+  // Layered alongside v1. The v1 dialog markup is untouched; v2 is its own
+  // template branch driven by `version() === 'v2' && addMode() === 'simple'`.
+  // Avanzado mode falls back to the v1 dialog content per the brief.
+  //
+  // No IPC anywhere — Crecimiento estimado collapses to "El mismo que el
+  // activo" / "Manual" per Borja 2026-02-27.
+  // ══════════════════════════════════════════════════════════════════════
+
+  readonly addMode = signal<'simple' | 'avanzado'>('simple');
+  readonly addModeOptions: SegmentedOption[] = [
+    { value: 'simple', label: 'Simple' },
+    { value: 'avanzado', label: 'Avanzado' },
+  ];
+  setAddMode(v: string | number): void {
+    if (v === 'simple' || v === 'avanzado') this.addMode.set(v);
+  }
+
+  // Borja's 7 tipos (PDF p.2). Distinct from `addTipo` (v1's 6 legacy slugs).
+  readonly addTipoV2 = signal<PatrimonioTipo>('liquidez');
+  readonly addTipoV2Options: SelectOption[] = [
+    { value: 'liquidez', label: 'Liquidez' },
+    { value: 'fondos', label: 'Fondos' },
+    { value: 'acciones-cotizadas', label: 'Acciones cotizadas' },
+    { value: 'participaciones-empresariales', label: 'Participaciones empresariales' },
+    { value: 'inmobiliario', label: 'Inmobiliario' },
+    { value: 'otros', label: 'Otros activos' },
+    { value: 'deudas', label: 'Deudas' },
+  ];
+  setAddTipoV2(v: string | number | null): void {
+    if (typeof v !== 'string') return;
+    if (
+      v === 'liquidez' ||
+      v === 'fondos' ||
+      v === 'acciones-cotizadas' ||
+      v === 'participaciones-empresariales' ||
+      v === 'inmobiliario' ||
+      v === 'otros' ||
+      v === 'deudas'
+    ) {
+      this.addTipoV2.set(v);
+    }
+  }
+
+  /** Looks up the v2 tipo label for prefill + preview. */
+  addTipoV2Label(): string {
+    return this.addTipoV2Options.find((o) => o.value === this.addTipoV2())?.label ?? '';
+  }
+
+  // ── Common v2 fields ───────────────────────────────────────────────────
+  readonly addNombreV2 = signal<string>('Liquidez');
+  /** Tracks whether the user has typed in Nombre. While `false`, the field
+   * auto-prefills to the tipo label so Borja's "Simple-mode Nombre default"
+   * rule (Brief C #8) lands without an explicit reset on every tipo change. */
+  readonly addNombreV2Touched = signal<boolean>(false);
+  setAddNombreV2(v: string | number | null): void {
+    this.addNombreV2.set(v !== null ? String(v) : '');
+    this.addNombreV2Touched.set(true);
+  }
+
+  readonly addValorV2 = signal<number | null>(null);
+  setAddValorV2(v: string | number | null): void {
+    this.addValorV2.set(typeof v === 'number' ? v : null);
+  }
+
+  readonly addTitularV2 = signal<string>('cliente');
+  readonly addTitularV2Options: SelectOption[] = [
+    { value: 'cliente', label: 'Cliente' },
+    { value: 'conyuge', label: 'Cónyuge' },
+    { value: 'ambos', label: 'Ambos' },
+  ];
+  setAddTitularV2(v: string | number | null): void {
+    this.addTitularV2.set(v !== null ? String(v) : 'cliente');
+  }
+
+  // ── ¿Patrimonio futuro? — universal branch (PDF p.1) ───────────────────
+  readonly addIsPatrimonioFuturo = signal<boolean>(false);
+  readonly addAnoObtencion = signal<number | null>(null);
+  setAddAnoObtencion(v: string | number | null): void {
+    this.addAnoObtencion.set(typeof v === 'number' ? v : null);
+  }
+
+  readonly addGeneraIngresos = signal<boolean>(false);
+
+  readonly addFrecuencia = signal<Frecuencia>('anual');
+  readonly addFrecuenciaOptions: SelectOption[] = [
+    { value: 'mensual', label: 'Mensual' },
+    { value: 'trimestral', label: 'Trimestral' },
+    { value: 'semestral', label: 'Semestral' },
+    { value: 'anual', label: 'Anual' },
+  ];
+  setAddFrecuencia(v: string | number | null): void {
+    if (v === 'mensual' || v === 'trimestral' || v === 'semestral' || v === 'anual') {
+      this.addFrecuencia.set(v);
+    }
+  }
+
+  readonly addTipoGeneracion = signal<TipoGeneracion>('importe');
+  readonly addTipoGeneracionOptions: SelectOption[] = [
+    { value: 'importe', label: 'Importe' },
+    { value: 'porcentaje', label: 'Porcentaje' },
+  ];
+  setAddTipoGeneracion(v: string | number | null): void {
+    if (v === 'importe' || v === 'porcentaje') this.addTipoGeneracion.set(v);
+  }
+
+  readonly addGeneracionValor = signal<number | null>(null);
+  setAddGeneracionValor(v: string | number | null): void {
+    this.addGeneracionValor.set(typeof v === 'number' ? v : null);
+  }
+
+  /** Crecimiento estimado — IPC option dropped per Borja 2026-02-27. */
+  readonly addCrecimientoMode = signal<CrecimientoMode>('mismo-activo');
+  readonly addCrecimientoModeOptions: SelectOption[] = [
+    { value: 'mismo-activo', label: 'El mismo que el activo' },
+    { value: 'manual', label: 'Manual' },
+  ];
+  setAddCrecimientoMode(v: string | number | null): void {
+    if (v === 'mismo-activo' || v === 'manual') this.addCrecimientoMode.set(v);
+  }
+
+  readonly addCrecimientoManual = signal<number | null>(null);
+  setAddCrecimientoManual(v: string | number | null): void {
+    this.addCrecimientoManual.set(typeof v === 'number' ? v : null);
+  }
+
+  // ── Tipo-specific fields ───────────────────────────────────────────────
+  readonly addRentabilidadRiesgo = signal<RentabilidadRiesgo>('medio');
+  readonly addRentabilidadRiesgoOptions: SelectOption[] = [
+    { value: 'bajo', label: 'Bajo' },
+    { value: 'medio', label: 'Medio' },
+    { value: 'alto', label: 'Alto' },
+  ];
+  setAddRentabilidadRiesgo(v: string | number | null): void {
+    if (v === 'bajo' || v === 'medio' || v === 'alto') this.addRentabilidadRiesgo.set(v);
+  }
+
+  readonly addDividendoAnual = signal<number | null>(null);
+  setAddDividendoAnual(v: string | number | null): void {
+    this.addDividendoAnual.set(typeof v === 'number' ? v : null);
+  }
+
+  /** Inmobiliario default 2% per PDF screenshot. */
+  readonly addRevalorizacion = signal<number>(2);
+  setAddRevalorizacion(v: string | number | null): void {
+    this.addRevalorizacion.set(typeof v === 'number' ? v : 0);
+  }
+
+  readonly addNivelRiesgo = signal<NivelRiesgo>('nulo');
+  readonly addNivelRiesgoOptions: SelectOption[] = [
+    { value: 'nulo', label: 'Nulo' },
+    { value: 'bajo', label: 'Bajo' },
+    { value: 'medio', label: 'Medio' },
+    { value: 'alto', label: 'Alto' },
+  ];
+  setAddNivelRiesgo(v: string | number | null): void {
+    if (v === 'nulo' || v === 'bajo' || v === 'medio' || v === 'alto') {
+      this.addNivelRiesgo.set(v);
+    }
+  }
+
+  readonly addUso = signal<InmobiliarioUso>('vivienda-principal');
+  readonly addUsoOptions: SelectOption[] = [
+    { value: 'vivienda-principal', label: 'Vivienda principal' },
+    { value: 'uso-propio', label: 'Vivienda en uso propio' },
+    { value: 'inversion', label: 'Inversión' },
+  ];
+  setAddUso(v: string | number | null): void {
+    if (v === 'vivienda-principal' || v === 'uso-propio' || v === 'inversion') {
+      this.addUso.set(v);
+    }
+  }
+
+  readonly addIngresosNetos = signal<number | null>(null);
+  setAddIngresosNetos(v: string | number | null): void {
+    this.addIngresosNetos.set(typeof v === 'number' ? v : null);
+  }
+
+  readonly addTipoInteres = signal<number | null>(null);
+  setAddTipoInteres(v: string | number | null): void {
+    this.addTipoInteres.set(typeof v === 'number' ? v : null);
+  }
+
+  readonly addPlazoMedio = signal<number | null>(null);
+  setAddPlazoMedio(v: string | number | null): void {
+    this.addPlazoMedio.set(typeof v === 'number' ? v : null);
+  }
+
+  /** Deudas: list of patrimonio assets this debt finances. `ninguno` first. */
+  readonly addActivoFinanciado = signal<string>('ninguno');
+  readonly addActivoFinanciadoOptions = computed<SelectOption[]>(() => [
+    { value: 'ninguno', label: 'Ninguno' },
+    ...this.store
+      .patrimonio()
+      .filter((a) => a.tipo !== 'deudas')
+      .map<SelectOption>((a) => ({
+        value: a.id,
+        label: `${a.nombre} – ${this.formatEuro(a.valor)}`,
+      })),
+  ]);
+  setAddActivoFinanciado(v: string | number | null): void {
+    this.addActivoFinanciado.set(v !== null ? String(v) : 'ninguno');
+  }
+
+  // ── Show/hide helpers per tipo ─────────────────────────────────────────
+  readonly showsRentabilidadRiesgo = computed(() => {
+    const t = this.addTipoV2();
+    return t === 'fondos' || t === 'participaciones-empresariales' || t === 'otros';
+  });
+  readonly showsDividendoAnual = computed(() => {
+    const t = this.addTipoV2();
+    return t === 'acciones-cotizadas' || t === 'participaciones-empresariales';
+  });
+  readonly showsInmobiliarioBlock = computed(() => this.addTipoV2() === 'inmobiliario');
+  readonly showsInmobiliarioIngresos = computed(
+    () => this.showsInmobiliarioBlock() && this.addUso() === 'inversion',
+  );
+  readonly showsOtrosIngresos = computed(() => this.addTipoV2() === 'otros');
+  readonly showsDeudasBlock = computed(() => this.addTipoV2() === 'deudas');
+
+  // ── Nombre auto-prefill effect ─────────────────────────────────────────
+  // Keeps Nombre = tipo label while the user hasn't touched it. Resetting
+  // `addNombreV2Touched` to false (e.g. on dialog close) re-arms the prefill.
+  private readonly nombrePrefill = effect(() => {
+    const label = this.addTipoV2Label();
+    if (!this.addNombreV2Touched()) {
+      this.addNombreV2.set(label);
+    }
+  });
+
+  // ── Save (Simple mode) ─────────────────────────────────────────────────
+  saveSimpleAsset(): void {
+    const tipo = this.addTipoV2();
+    const valor = this.addValorV2() ?? 0;
+    const asset: PatrimonioAsset = {
+      id: `new-${Date.now()}`,
+      nombre: this.addNombreV2().trim() || this.addTipoV2Label(),
+      tipo,
+      valor,
+      titular: this.addTitularV2(),
+
+      // Universal branch
+      patrimonioFuturo: this.addIsPatrimonioFuturo() || undefined,
+      anoObtencion: this.addIsPatrimonioFuturo()
+        ? (this.addAnoObtencion() ?? undefined)
+        : undefined,
+      generaIngresos:
+        this.addIsPatrimonioFuturo() && this.addGeneraIngresos() ? true : undefined,
+      frecuencia:
+        this.addIsPatrimonioFuturo() && this.addGeneraIngresos()
+          ? this.addFrecuencia()
+          : undefined,
+      tipoGeneracion:
+        this.addIsPatrimonioFuturo() && this.addGeneraIngresos()
+          ? this.addTipoGeneracion()
+          : undefined,
+      generacionValor:
+        this.addIsPatrimonioFuturo() && this.addGeneraIngresos()
+          ? (this.addGeneracionValor() ?? undefined)
+          : undefined,
+      crecimientoMode:
+        this.addIsPatrimonioFuturo() && this.addGeneraIngresos()
+          ? this.addCrecimientoMode()
+          : undefined,
+      crecimientoManual:
+        this.addIsPatrimonioFuturo() &&
+        this.addGeneraIngresos() &&
+        this.addCrecimientoMode() === 'manual'
+          ? (this.addCrecimientoManual() ?? undefined)
+          : undefined,
+
+      // Tipo-specific
+      rentabilidadRiesgo: this.showsRentabilidadRiesgo()
+        ? this.addRentabilidadRiesgo()
+        : undefined,
+      dividendoAnual: this.showsDividendoAnual()
+        ? (this.addDividendoAnual() ?? undefined)
+        : undefined,
+      revalorizacion: this.showsInmobiliarioBlock() ? this.addRevalorizacion() : undefined,
+      nivelRiesgo: this.showsInmobiliarioBlock() ? this.addNivelRiesgo() : undefined,
+      uso: this.showsInmobiliarioBlock() ? this.addUso() : undefined,
+      ingresosNetos:
+        this.showsInmobiliarioIngresos() || this.showsOtrosIngresos()
+          ? (this.addIngresosNetos() ?? undefined)
+          : undefined,
+      tipoInteres: this.showsDeudasBlock() ? (this.addTipoInteres() ?? undefined) : undefined,
+      plazoMedio: this.showsDeudasBlock() ? (this.addPlazoMedio() ?? undefined) : undefined,
+      activoFinanciado: this.showsDeudasBlock() ? this.addActivoFinanciado() : undefined,
+    };
+
+    this.store.addAsset(asset);
+
+    // Reset form state for next add; close the dialog.
+    this.resetV2Form();
+    this.addDialogOpen.set(false);
+
+    // Reuse the v1 toast channel so the confirmation lands in the same place.
+    const msg = `Activo «${asset.nombre}» añadido a ${this.addTipoV2Label()}`;
+    this.savedToastMessage.set(msg);
+    this.savedToastVisible.set(true);
+    clearTimeout(this.savedToastTimer);
+    this.savedToastTimer = setTimeout(() => this.savedToastVisible.set(false), 5000);
+  }
+
+  private resetV2Form(): void {
+    this.addNombreV2Touched.set(false);
+    this.addValorV2.set(null);
+    this.addIsPatrimonioFuturo.set(false);
+    this.addAnoObtencion.set(null);
+    this.addGeneraIngresos.set(false);
+    this.addGeneracionValor.set(null);
+    this.addCrecimientoMode.set('mismo-activo');
+    this.addCrecimientoManual.set(null);
+    this.addDividendoAnual.set(null);
+    this.addIngresosNetos.set(null);
+    this.addTipoInteres.set(null);
+    this.addPlazoMedio.set(null);
+    this.addActivoFinanciado.set('ninguno');
+    // Tipo + Revalorización keep their defaults so consecutive adds are fast.
   }
 }

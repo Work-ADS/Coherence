@@ -61,6 +61,14 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
   /** Renders a success-coloured check icon next to the title. */
   readonly complete = input<boolean>(false);
 
+  /**
+   * Body bleeds to the box's inline + bottom edges instead of being inset
+   * by the host's --space-lg padding. Use when the projected body is a
+   * full-width data surface (typically <afi-table>) so the last row sits
+   * flush with the box border. Only affects section / subsection levels.
+   */
+  readonly bodyFlush = input<boolean>(false);
+
   readonly stickyChange = output<boolean>();
   readonly toggled = output<boolean>();
 
@@ -99,6 +107,12 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
     }
     if (this.sticky() && this.scrollFade() && this.#isScrolled() && this.level() === 'page') {
       parts.push('page-header--scrolled');
+    }
+    // Body-flush bleed (table inside section/subsection) — page level never
+    // carries box chrome so the modifier is a no-op there; we still emit the
+    // class so DOM inspection is consistent.
+    if (this.bodyFlush() && this.level() !== 'page') {
+      parts.push('page-header--body-flush');
     }
     return parts.join(' ');
   });

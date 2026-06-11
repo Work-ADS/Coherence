@@ -12,6 +12,8 @@
   border-bottom: var(--border-width-hairline) solid var(--border-hairline);
   background: var(--surface-default);
   flex-shrink: 0;
+  // Positioning context for the mobile-centered brand mark.
+  position: relative;
 }
 
 .ptb__start {
@@ -21,12 +23,12 @@
   min-width: 0;
 }
 
-// Hamburger only renders at <768; collapses the planner-sidebar drawer.
+// Hamburger only renders below the tablet breakpoint; collapses the planner-sidebar drawer.
 .ptb__hamburger {
   display: none;
 }
 
-@media (max-width: 768px) {
+@container viewport (max-width: 48rem) {
   .ptb__hamburger {
     display: inline-flex;
   }
@@ -36,6 +38,111 @@
   display: flex;
   align-items: center;
   gap: var(--space-2xs);
+}
+
+// ─── Responsive overflow (right cluster) ──────────────────────────────────
+// Desktop: notes + settings icon buttons render directly; the ⋮ overflow
+// trigger is hidden. Mobile: both icon buttons hide and the
+// overflow trigger appears, opening a dropdown sheet with the same actions
+// as menu items. Standard responsive overflow pattern.
+// Specificity note: `.ptb__anchor` (declared further down) also sets
+// `display: inline-flex` and would win by source order for elements that
+// have both classes (the state anchor). The doubled-class selectors
+// below outrank it.
+.ptb__overflow-anchor {
+  position: relative;
+  display: none;
+}
+
+.ptb__desktop-trigger,
+.ptb__anchor.ptb__desktop-trigger,
+.ptb__identity.ptb__desktop-trigger {
+  display: inline-flex;
+}
+
+@container viewport (max-width: 48rem) {
+  .ptb__overflow-anchor {
+    display: inline-flex;
+  }
+
+  .ptb__desktop-trigger,
+  .ptb__anchor.ptb__desktop-trigger,
+  .ptb__identity.ptb__desktop-trigger {
+    display: none;
+  }
+}
+
+.ptb__overflow-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+// ─── Mobile centered brand ───────────────────────────────────────────────
+// AFI Wealth Planner mark + label sits absolute over the header row so it
+// stays centered regardless of the start/end cluster widths. Hidden on
+// desktop. Falls back to logo-only when there's no room for the label.
+.ptb__mobile-brand {
+  display: none;
+}
+
+@container viewport (max-width: 48rem) {
+  .ptb__mobile-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    position: absolute;
+    inset-inline-start: 50%;
+    inset-block-start: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--foreground-primary-default);
+    text-decoration: none;
+    white-space: nowrap;
+    max-inline-size: 60vw;
+    overflow: hidden;
+  }
+
+  .ptb__mobile-brand-label {
+    font: var(--type-body-sm-500);
+    letter-spacing: var(--tracking-wide);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // Below very narrow viewports the label drops; logo stays centered.
+  @media (max-width: 360px) {
+    .ptb__mobile-brand-label {
+      display: none;
+    }
+  }
+}
+
+// ─── Notes/Settings panels on mobile ─────────────────────────────────────
+// The trigger buttons inside <site-notes-dropdown> / <site-settings-dropdown>
+// are hidden on mobile (the overflow menu drives them), but the dropdown
+// PANELS need to keep rendering so that openNotesFromOverflow() actually
+// shows something. We hide just the projected triggers, not the wrapper.
+@container viewport (max-width: 48rem) {
+  site-notes-dropdown.ptb__desktop-trigger > afi-tooltip,
+  site-settings-dropdown.ptb__desktop-trigger > afi-tooltip {
+    display: none;
+  }
+
+  site-notes-dropdown.ptb__desktop-trigger,
+  site-settings-dropdown.ptb__desktop-trigger {
+    display: block;
+  }
+}
+
+// Section heading inside the overflow menu (matches the existing
+// `.ptb__plans-heading` look so the menu reads as a single language).
+.ptb__overflow-heading {
+  margin: 0;
+  padding: var(--space-2xs) var(--space-xs);
+  font: var(--type-body-sm-400);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--foreground-tertiary-default);
 }
 
 // Positioning context so afi-dropdown-panel anchors below the trigger.

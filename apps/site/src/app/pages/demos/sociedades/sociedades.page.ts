@@ -9,6 +9,7 @@ import {
 import {
   ButtonComponent,
   InputComponent,
+  KbdComponent,
   ModalComponent,
   PageHeaderComponent,
   SelectComponent,
@@ -16,6 +17,7 @@ import {
 } from '@coherence/ui';
 import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
+import { KeyShortcutDirective } from '../../../directives/key-shortcut.directive';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
@@ -44,6 +46,7 @@ import type { Sociedad, Tributacion } from '../wealth-planner-2026/store';
   imports: [
     ButtonComponent,
     InputComponent,
+    KbdComponent,
     ModalComponent,
     PageHeaderComponent,
     SelectComponent,
@@ -52,6 +55,7 @@ import type { Sociedad, Tributacion } from '../wealth-planner-2026/store';
     PlannerSidebarComponent,
     PlannerTopBarComponent,
     VersionToggleComponent,
+    KeyShortcutDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './sociedades.page.html',
@@ -59,6 +63,9 @@ import type { Sociedad, Tributacion } from '../wealth-planner-2026/store';
 })
 export class SociedadesPage {
   readonly store = inject(WealthPlannerStore);
+
+  /** Cmd/Ctrl + A — bound via `siteKeyShortcut="a"` on the primary CTA. */
+  readonly addShortcut: string[] = ['⌘', 'A'];
 
   // ── Tributación options (confirmed Mar 5 with Borja) ──────────────────
   readonly tributacionOptions: SelectOption[] = [

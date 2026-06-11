@@ -30,40 +30,127 @@
 
 // ---------------------------------------------------------------------------
 // Block — density
+//
+// The density classes live on the HOST element, so they must be matched with
+// `:host(.page-header--default)` — bare `.page-header--default` is rewritten
+// by Angular's emulated view encapsulation to `.page-header--default[_ngcontent-...]`,
+// which never matches a host element (hosts carry `_nghost-...`, not `_ngcontent-...`).
+// Without the :host() wrapper these padding rules silently never applied and
+// every consumer got 0 padding from Tailwind preflight.
 // ---------------------------------------------------------------------------
-.page-header--default {
+:host(.page-header--default) {
   padding-inline: var(--space-lg);
   padding-block: var(--space-sm);
 }
 
-.page-header--compact {
+:host(.page-header--compact) {
   padding-inline: var(--space-lg);
   padding-block: var(--space-xs);
 }
 
 // ---------------------------------------------------------------------------
-// Boxed surface treatment — section / subsection only (Figma: Headers/Section,
+// Boxed treatment — section / subsection only (Figma: Headers/Section,
 // Headers/Sub section). The page level remains chromeless.
+//
+// Per Richard 2026-06-10: outline-only treatment — no surface tint, just a
+// `--border-subtle` outline + canonical --space-lg padding. The table inside
+// reads its first-cell padding from `--afi-table-first-cell-pad` (overridden
+// to 0 here) so the column-1 text + row separators line up with the title
+// instead of being doubly inset by the cell's own padding.
 // ---------------------------------------------------------------------------
 :host(.page-header--section),
 :host(.page-header--subsection) {
   background: transparent;
-  border: var(--separator-thickness) solid var(--border-hairline);
+  border: var(--border-width-hairline) solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
+  --afi-table-first-cell-pad: 0;
 }
 
-// (No internal title-block divider for section or subsection — per Figma the
-// hairline border around the whole box is the only divider.)
+// (No internal title-block divider for section or subsection — the
+// surface tint alone differentiates the card from the page canvas.)
 
 // ---------------------------------------------------------------------------
-// Main row: title+subtitle left, actions right (Figma auto-layout)
+// Table-bearing sections (Richard 2026-06-10 — experiment): keep the section's
+// canonical --space-lg padding intact (so the last row's hover state has the same
+// breathing room as the rest of the rows) and just hide the last row's
+// own hairline so the section's outline alone defines the bottom edge.
+// No doubled line, no squished hover.
+// ---------------------------------------------------------------------------
+:host(.page-header--section):has(afi-table),
+:host(.page-header--subsection):has(afi-table) {
+  // Hide the table's last-row hairline — the section's own bottom edge
+  // already defines the closing line, so a second one would double up.
+  --afi-table-last-row-border: 0;
+  // Extend the row hover bg outward (left only) so the colored band
+  // breathes around the column-1 text + the bulk-select checkbox —
+  // Notion-style. Capped at `--space-lg`, which is the section's
+  // own `padding-inline`, so the band's left edge lands exactly on the
+  // section's inner border without crossing it. Anything larger pokes
+  // outside the section card and reads as a layout bug.
+  --afi-table-row-hover-extend: var(--space-lg);
+  // Let the hover band + checkbox render past the scroll wrapper's
+  // edges (default `overflow: auto` clips). Tables inside sections never
+  // need horizontal scrolling; the section already constrains width.
+  --afi-table-scroll-overflow: visible;
+
+  // Collapse the [selectable]="true" select column to 0 width and pin
+  // its inner <afi-checkbox> absolutely in the hover-extend area on the
+  // left. Result: zero layout shift (text + dividers stay aligned with
+  // the section title), Notion-style hover reveal, real interactive
+  // checkboxes (not pseudos) so clicking selects the row.
+  --afi-table-select-cell-width: 0;
+  --afi-table-select-cell-padding: 0;
+  --afi-table-select-checkbox-position: absolute;
+  // Checkbox sits inside the hover band with a --space-2xs breather between its
+  // left edge and the band's left edge. Anchored to `--space-lg` (matches
+  // the band width) + `--space-2xs` so the gap survives token re-tuning.
+  --afi-table-select-checkbox-left: calc((var(--space-lg) * -1) + var(--space-2xs));
+  --afi-table-select-checkbox-top: 50%;
+  --afi-table-select-checkbox-transform: translateY(-50%);
+  --afi-table-select-checkbox-rest-opacity: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Body-flush override — kept for explicit consumers (`[bodyFlush]="true"`)
+// who want full-bleed body content (inline + bottom). Independent from the
+// table-aware rule above.
+// ---------------------------------------------------------------------------
+:host(.page-header--body-flush) {
+  overflow: hidden;
+}
+
+:host(.page-header--body-flush) .page-header__body {
+  margin-inline: calc(var(--space-lg) * -1);
+  margin-bottom: calc(var(--space-lg) * -1);
+}
+
+// ---------------------------------------------------------------------------
+// Main row: title+subtitle left, actions right (Figma auto-layout).
+// On narrow viewports (<sm) the row stacks so the actions wrap below the
+// title block instead of being squeezed off-screen. Above sm, the canonical
+// inline layout is preserved.
 // ---------------------------------------------------------------------------
 .page-header__main {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-lg);
+
+  // Both queries are intentional: `@media` handles production where the
+  // browser window is the breakpoint source; `@container viewport` lets
+  // the demo-shell's preview area (375 / 768 / 1280 buttons) trigger the
+  // same behavior without resizing the actual window. The named
+  // `viewport` container is set on `.demo-content` in demo-shell.scss.
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  @container viewport (max-width: 40rem) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .page-header__left {
@@ -223,6 +310,21 @@
   gap: var(--space-md);
 
   > [slot='tabActions'] {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+}
+
+// Filters slot can host [slot=filterActions] on its right (e.g. a
+// bulk-delete button that appears when rows are selected). Same flex row
+// pattern as tabs — actions pinned to the right with margin-left: auto.
+.page-header__slot--filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+
+  > [slot='filterActions'] {
     flex-shrink: 0;
     margin-left: auto;
   }

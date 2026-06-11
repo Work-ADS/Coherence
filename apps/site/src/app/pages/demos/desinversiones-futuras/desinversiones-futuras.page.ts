@@ -1,9 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ButtonComponent, PageHeaderComponent, TableComponent } from '@coherence/ui';
+import {
+  ButtonComponent,
+  KbdComponent,
+  PageHeaderComponent,
+  TableComponent,
+} from '@coherence/ui';
 import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
+import { KeyShortcutDirective } from '../../../directives/key-shortcut.directive';
 import { ObjetivosPageShellComponent } from '../wealth-planner-2026/shared/objetivos-page-shell.component';
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
 import type { DesinversionObjetivo } from '../wealth-planner-2026/store';
@@ -23,9 +29,11 @@ import type { DesinversionObjetivo } from '../wealth-planner-2026/store';
   standalone: true,
   imports: [
     ButtonComponent,
+    KbdComponent,
     PageHeaderComponent,
     TableComponent,
     ObjetivosPageShellComponent,
+    KeyShortcutDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './desinversiones-futuras.page.html',
@@ -34,6 +42,9 @@ import type { DesinversionObjetivo } from '../wealth-planner-2026/store';
 export class DesinversionesFuturasPage {
   readonly store = inject(WealthPlannerStore);
   private readonly router = inject(Router);
+
+  /** Cmd/Ctrl + A — bound via `siteKeyShortcut="a"` on the primary CTA. */
+  readonly addShortcut: string[] = ['⌘', 'A'];
 
   // ── Objetivo labels (mirrors the detail-page options) ────────────────
   private readonly objetivoOptions: SelectOption[] = [

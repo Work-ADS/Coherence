@@ -4,6 +4,51 @@
 // clean-code hook (no hex / rgb / bare px outside libs/tokens/).
 // =============================================================================
 
+// Outer page wrapper. Matches the canonical objetivos-page-shell __page block
+// (max-inline-size content-xl, centered, vertical padding). The afi-page-header
+// primitive provides its own --space-lg padding on desktop; on mobile we add
+// a small inline gutter so KPI card borders don't kiss the viewport edge.
+// KPI cards grid — driven exclusively by `@container viewport`. An earlier
+// pass mirrored the rule under the tablet breakpoint thinking that
+// was a safe production fallback, but the window is the demo-shell's own
+// window (often desktop-wide even when previewing a mobile slice), so the
+// media query forced 3 columns inside the constrained preview. The
+// container query alone answers the right question: "is the rendered area
+// at least tablet-wide?".
+.patrimonial-kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  // `--space-xs` — kept consistent across stacked (mobile) and 3-up
+  // (desktop) layouts so the rhythm doesn't change with the breakpoint.
+  // Earlier this used `var(--space-4)` which doesn't exist in our token set
+  // (we name semantically: 3xs/2xs/xs/sm/md/lg/xl), so gap fell back to 0.
+  gap: var(--space-xs);
+}
+
+@container viewport (min-width: 48rem) {
+  .patrimonial-kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.patrimonial-page__wrap {
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-xl);
+
+  // Dual @media + @container so the page responds both in production
+  // (window width) and in the demo-shell preview (rendered area width).
+  @media (max-width: 640px) {
+    padding-block: var(--space-md);
+    padding-inline: var(--space-md);
+  }
+
+  @container viewport (max-width: 40rem) {
+    padding-block: var(--space-md);
+    padding-inline: var(--space-md);
+  }
+}
+
 .tabs-scroll::-webkit-scrollbar {
   display: none;
 }
@@ -52,19 +97,18 @@
     transform: translateX(0);
   }
 }
+// .tab-panel entrance animation removed 2026-06-11 — the tabs UI was
+// replaced by the Tipo multi-select filter (see patrimonial-proposal.page.ts)
+// so panels never re-mount, and the keyframe was leaving the section host
+// translated by --space-lg to the right (mid-animation freeze), misaligning the
+// table column-1 with the KPI cards above. Class kept for any in-flight
+// reference but is now a no-op.
 .tab-panel {
-  animation: tabPanelEnterForward var(--duration-base) var(--easing-standard);
-  will-change: transform, opacity;
-}
-.tab-panel.tab-panel--backward {
-  animation-name: tabPanelEnterBackward;
+  // intentional no-op — previously animated for tab transitions
 }
 @media (prefers-reduced-motion: reduce) {
   .tab-indicator {
     transition: none;
-  }
-  .tab-panel {
-    animation: none;
   }
 }
 

@@ -17,6 +17,20 @@
     <span class="planner-sidebar__brand-label">Wealth Planner</span>
   </div>
 
+  <!-- Identity row — client name + editable simulation id. Only rendered
+       below the tablet breakpoint; on desktop the planner-top-bar's `.ptb__identity`
+       holds this. CSS toggles visibility. -->
+  <div class="planner-sidebar__identity">
+    <span class="planner-sidebar__identity-client">{{ clientName() }}</span>
+    <span class="planner-sidebar__identity-label">planificación</span>
+    <afi-inline-edit
+      class="planner-sidebar__identity-edit"
+      [value]="simId()"
+      ariaLabel="nombre de la planificación"
+      (committed)="simRenamed.emit($event)"
+    />
+  </div>
+
   <!-- Editorial nav: section labels are non-clickable separators (h3 with a
        leading Lucide icon); items below render as plain rows. Same pattern
        as the Editorial variant of /patrones/sidebar-ia-comparison. -->

@@ -42,13 +42,18 @@ export interface TableRowAction {
   /**
    * When true, the action does NOT render as an inline button. Instead it
    * appears inside the overflow `⋯` menu (rendered via `<afi-menu>`) at
-   * the trailing edge of the row. The team-locked pattern is:
-   *   - 1 inline action = the primary verb (e.g. "Editar")
-   *   - everything else = `overflow: true`
+   * the trailing edge of the row.
+   *
+   * Threshold rule (Richard 2026-06-10): when the action set has 1 or 2
+   * entries, the `overflow` flag is IGNORED and both render inline — a
+   * 3-dot menu for ≤ 2 items is friction with no payoff. The flag only
+   * starts taking effect at 3+ actions.
+   *
+   * Canonical patterns:
+   *   - 2 actions  → Edit (default icon) + Delete (danger icon), both inline
+   *   - 3+ actions → primary inline; the rest with `overflow: true`
    * Danger actions placed in the overflow menu automatically get a divider
-   * above them (matching the patrimonial reference). Multiple inline
-   * actions are still allowed (no enforced limit) — the rule is a
-   * convention, not a constraint baked into the primitive.
+   * above them (matching the patrimonial reference).
    */
   overflow?: boolean;
 }

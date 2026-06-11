@@ -1,4 +1,12 @@
 <div class="ptb">
+  <!-- Mobile-only centered AFI Wealth Planner brand. Sits absolute over the
+       row so it doesn't push the start/end clusters off center; only renders
+       below the tablet breakpoint. -->
+  <a class="ptb__mobile-brand" [routerLink]="listadoRoute()" aria-label="AFI Wealth Planner">
+    <coherence-logo variant="monochrome" size="sm" />
+    <span class="ptb__mobile-brand-label">Wealth Planner</span>
+  </a>
+
   <!-- Left cluster: hamburger (narrow) · plan switcher · identity · state -->
   <div class="ptb__start">
     <!-- Hamburger trigger — only visible at <768; opens the sidebar drawer. -->
@@ -19,8 +27,11 @@
       </afi-icon-button>
     </afi-tooltip>
 
-    <!-- Plan switcher: tooltip + dual-icon button + dropdown panel -->
-    <div class="ptb__anchor">
+    <!-- Plan switcher: tooltip + dual-icon button + dropdown panel.
+         Hidden on mobile — the hamburger is the only chrome trigger
+         on the left, and "Volver al listado" + plan switching live inside
+         the planner-sidebar drawer instead of beside the hamburger. -->
+    <div class="ptb__anchor ptb__desktop-trigger">
       <afi-tooltip text="Cambiar planificación" position="bottom">
         <afi-icon-button
           ariaLabel="Cambiar planificación"
@@ -96,8 +107,10 @@
       </afi-dropdown-panel>
     </div>
 
-    <!-- Identity: client name + label + inline-edit simId + nested path -->
-    <div class="ptb__identity">
+    <!-- Identity: client name + label + inline-edit simId + nested path.
+         Hidden on mobile — moves into the planner-sidebar drawer
+         (identity is context, not an action; drawer owns context on mobile). -->
+    <div class="ptb__identity ptb__desktop-trigger">
       <span class="ptb__client">{{ clientName() }} planificación:</span>
       <afi-inline-edit
         [value]="simId()"
@@ -116,8 +129,10 @@
       }
     </div>
 
-    <!-- State chip + dropdown -->
-    <div class="ptb__anchor">
+    <!-- State chip + dropdown. Hidden on mobile — the "Estado"
+         section of the right-cluster overflow menu replaces this inline
+         trigger, calling `onEstadoChange()` directly. -->
+    <div class="ptb__anchor ptb__desktop-trigger">
       <afi-status-chip
         [estado]="estado()"
         [interactive]="true"
@@ -150,9 +165,122 @@
     </div>
   </div>
 
-  <!-- Right cluster: notes + settings -->
+  <!-- Right cluster: notes + settings. On mobile both icon buttons
+       collapse into a single ⋮ overflow trigger (`.ptb__overflow-anchor`) that
+       opens a dropdown sheet with Notas + Ajustes menu items. -->
   <div class="ptb__end">
+    <!-- Mobile overflow trigger — visible below the tablet breakpoint. -->
+    <div class="ptb__overflow-anchor">
+      <afi-icon-button
+        ariaLabel="Más acciones"
+        variant="ghost"
+        size="md"
+        [expanded]="overflowOpen()"
+        (clicked)="toggleOverflow($event)"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="5" r="1" />
+          <circle cx="12" cy="12" r="1" />
+          <circle cx="12" cy="19" r="1" />
+        </svg>
+      </afi-icon-button>
+
+      <afi-dropdown-panel
+        [open]="overflowOpen()"
+        ariaLabel="Más acciones"
+        [width]="220"
+        placement="end"
+        (closed)="overflowOpen.set(false)"
+      >
+        <div slot="body" class="ptb__overflow-menu">
+          <!-- Estado section — only visible on mobile via the overflow. Each
+               item directly calls `onEstadoChange()`; the current estado has
+               a check trailing it (same pattern as the desktop dropdown). -->
+          <p class="ptb__overflow-heading">Estado</p>
+          @for (s of estados; track s.value) {
+            <afi-menu-item
+              [ariaLabel]="'Cambiar estado a ' + s.label"
+              (clicked)="changeEstadoFromOverflow(s.value)"
+            >
+              <afi-status-chip slot="label" [estado]="s.value" size="sm" />
+              @if (s.value === estado()) {
+                <svg
+                  slot="trailing"
+                  class="ptb__plans-check"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              }
+            </afi-menu-item>
+          }
+
+          <afi-menu-divider />
+
+          <afi-menu-item ariaLabel="Notas" (clicked)="openNotesFromOverflow()">
+            <span slot="leading" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="16"
+                height="16"
+              >
+                <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z" />
+                <path d="M15 3v5h5" />
+                <path d="M8 13h8" />
+                <path d="M8 17h5" />
+              </svg>
+            </span>
+            <span slot="label">Notas</span>
+          </afi-menu-item>
+          <afi-menu-item
+            ariaLabel="Ajustes de la simulación"
+            (clicked)="openSettingsFromOverflow()"
+          >
+            <span slot="leading" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="16"
+                height="16"
+              >
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </span>
+            <span slot="label">Ajustes</span>
+          </afi-menu-item>
+        </div>
+      </afi-dropdown-panel>
+    </div>
+
+    <!-- Direct notes trigger — hidden on mobile; replaced by the overflow
+         menu above. Stays mounted so the dropdown panel still anchors here
+         when `notesOpen()` is set via `openNotesFromOverflow()`. -->
     <site-notes-dropdown
+      class="ptb__desktop-trigger"
       [open]="notesOpen()"
       [notes]="notes()"
       (closed)="notesOpen.set(false)"
@@ -178,6 +306,7 @@
     </site-notes-dropdown>
 
     <site-settings-dropdown
+      class="ptb__desktop-trigger"
       [open]="configOpen()"
       [settings]="simulationSettings()"
       (closed)="configOpen.set(false)"

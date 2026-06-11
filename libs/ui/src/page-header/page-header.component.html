@@ -81,19 +81,25 @@
   }
 </div>
 
-<!-- Stacked slots (Figma order): tabs → filters → cards → body. -->
+<!-- Stacked slots (Richard 2026-06-11): cards → tabs → filters → body.
+     Cards summarize the page-level data, so they sit ABOVE filters that
+     scope the body content. Was Figma's original order (tabs → filters →
+     cards → body); revised per the patrimonio v2 review. -->
+<div class="page-header__slot page-header__slot--cards">
+  <ng-content select="[slot=cards]" />
+</div>
+
 <!-- Tabs row also hosts [slot=tabActions] on its right side. -->
 <div class="page-header__slot page-header__slot--tabs">
   <ng-content select="[slot=tabs]" />
   <ng-content select="[slot=tabActions]" />
 </div>
 
+<!-- Filters row also hosts [slot=filterActions] on its right side
+     (e.g. bulk-delete button when rows are selected). -->
 <div class="page-header__slot page-header__slot--filters">
   <ng-content select="[slot=filters]" />
-</div>
-
-<div class="page-header__slot page-header__slot--cards">
-  <ng-content select="[slot=cards]" />
+  <ng-content select="[slot=filterActions]" />
 </div>
 
 <!--

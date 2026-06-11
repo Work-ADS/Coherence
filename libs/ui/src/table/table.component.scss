@@ -7,8 +7,14 @@
   display: block;
 }
 
+// Default `overflow: auto` so wide tables can scroll horizontally inside
+// their container. A host context (e.g. page-header section) can switch to
+// `visible` via `--afi-table-scroll-overflow` so the hover-band extension
+// and the bulk-select checkbox affordance render outside the scroll
+// wrapper without getting clipped. The browser forces overflow-x and
+// overflow-y to match (per CSS spec), so we set the shorthand.
 .afi-table__scroll {
-  overflow-x: auto;
+  overflow: var(--afi-table-scroll-overflow, auto);
 }
 
 .afi-table {
@@ -75,9 +81,17 @@
 .afi-table__th {
   padding-block: var(--space-sm);
   padding-inline: var(--space-md);
-  font: var(--type-body-sm-600);
-  color: var(--foreground-primary-default);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-tertiary-default);
   vertical-align: middle;
+
+  // First-column header gets its inline-start padding from a CSS custom
+  // property so a host context (e.g. page-header section) can drop it to
+  // 0 and align the column-1 text with the section title. Default falls
+  // back to the canonical --space-md.
+  &:first-child {
+    padding-inline-start: var(--afi-table-first-cell-pad, var(--space-md));
+  }
 
   &--start {
     text-align: start;
@@ -94,9 +108,42 @@
   }
 }
 
-.afi-table__th-select {
-  width: var(--dimension-12);
-  padding-inline: var(--space-xs);
+// Select-cell sizing + checkbox positioning are exposed via CSS vars so
+// host contexts can switch between two modes:
+//   • Default (consumers without overrides): natural --dimension-12 wide
+//     cell + inline checkbox. Stable across browsers and screen widths.
+//   • Collapsed/hover-reveal (e.g. page-header section): width 0 +
+//     absolutely-positioned checkbox in the row's hover-extend area on
+//     the LEFT, opacity 0 at rest, opacity 1 on row hover or when the row
+//     is already selected (so the user can see what they've picked even
+//     after the cursor moves away).
+.afi-table__th-select,
+.afi-table__td-select {
+  width: var(--afi-table-select-cell-width, var(--dimension-12));
+  padding-inline: var(--afi-table-select-cell-padding, var(--space-xs));
+  position: relative;
+  // Above the hover/selected pseudo on the adjacent data cell. The data
+  // cell creates its own stacking context at `z-index: 0` (for the
+  // rounded inset pseudo to sit at -1 behind the cell text) which would
+  // otherwise paint OVER the select cell and hide the checkbox.
+  z-index: 1;
+}
+
+.afi-table__td-select > afi-checkbox,
+.afi-table__th-select > afi-checkbox {
+  position: var(--afi-table-select-checkbox-position, static);
+  left: var(--afi-table-select-checkbox-left, auto);
+  top: var(--afi-table-select-checkbox-top, auto);
+  transform: var(--afi-table-select-checkbox-transform, none);
+  opacity: var(--afi-table-select-checkbox-rest-opacity, 1);
+  transition: opacity var(--duration-fast) var(--easing-enter);
+  pointer-events: auto;
+}
+
+.afi-table__row--hoverable:hover .afi-table__td-select > afi-checkbox,
+.afi-table__row--selected .afi-table__td-select > afi-checkbox,
+.afi-table__head-row:hover .afi-table__th-select > afi-checkbox {
+  opacity: 1;
 }
 
 .afi-table__th-actions {
@@ -117,18 +164,43 @@
 }
 
 // ─── Body rows ────────────────────────────────────────────────────────────
+// Last row's bottom border is configurable via `--afi-table-last-row-border`
+// so a flush-section page-header can drop it (see page-header.component.scss
+// :has(afi-table) rules) and avoid a doubled hairline against the section
+// edge. Default falls back to the canonical inter-row separator.
+//
+// `position: relative` lets the optional bulk-select checkbox pseudo
+// position itself relative to the row (in the hover-extend area on the
+// left). Tr-level relative positioning works across modern browsers
+// despite the spec being fuzzy.
 .afi-table__row {
+  position: relative;
   border-block-end: var(--border-width-hairline) solid var(--border-hairline);
   transition: background-color var(--duration-fast) var(--easing-enter);
 
-  &--hoverable:hover {
-    background: var(--surface-subtle);
+  &:last-child {
+    border-block-end: var(
+      --afi-table-last-row-border,
+      var(--border-width-hairline) solid var(--border-hairline)
+    );
   }
 
-  &--selected {
-    background: var(--surface-subtle);
-    border-inline-start: var(--border-width-thick) solid var(--brand-primary-background-default);
-  }
+  // Hover background. Default is flush with the row's content edges; a
+  // host context (e.g. page-header section) can extend the hover area
+  // outward via `--afi-table-row-hover-extend` so the colored band has
+  // breathing room on the LEFT side around the column-1 text — the right
+  // side already breathes via the actions column.
+  //
+  // The base background sits on the row, but the LEFT-side extension and
+  // the checkbox pseudo are pinned to the FIRST CELL (see rules further
+  // down) because `<tr>` doesn't render box-shadow / ::after reliably
+  // across browsers — table-row is a non-standard CSS box.
+  // Row-level hover/selected backgrounds are intentionally OFF so the
+  // per-cell `::before` pseudo can paint a rounded container inset from
+  // the row's top/bottom edges (Granola-style). See the
+  // `.afi-table__row--hoverable:hover .afi-table__td::before` rule below.
+  // Brand-primary left border on selected was removed 2026-06-11 — the
+  // checkbox check state is now the primary "selected" indicator.
 
   // Transient highlight — driven by [highlightedRowKey]. Used by doc-pages
   // to surface the row that matches the most recent inspect-click on the
@@ -145,11 +217,98 @@
   100% { background: transparent; }
 }
 
+// ─── Hover / selected container (Granola-style rounded pill) ───────────────
+// 2026-06-11 (Richard): replaced the box-shadow extension with a per-cell
+// `::before` pseudo so the hover/selected band reads as a discrete rounded
+// container — --space-2xs inset from the row's top + bottom edges, rounded corners
+// on the first + last cells, and (in section context) extending LEFT into
+// the hover area where the bulk-select checkbox lives.
+//
+// Pseudos paint behind cell content via natural DOM order (no negative
+// z-index needed). `<td>` is one of the few elements where positioning +
+// pseudo render reliably across browsers, which is why everything is
+// anchored here rather than on `<tr>`.
+//
+// The row-level `background` declarations above are deliberately left
+// transparent for hover/selected so the inset container shows through
+// the --space-2xs top/bottom gap (= breathing room toward the divider lines).
+// `position: relative` + `z-index: 0` on the cell creates a stacking
+// context so the absolutely-positioned ::before pseudo can sit at
+// z-index: -1 (behind the cell's text/children) without being clipped
+// by the cell's own background. Without z-index: 0 on the parent, the
+// pseudo at -1 falls behind ancestor backgrounds and disappears.
+.afi-table__row--hoverable:hover .afi-table__td,
+.afi-table__row--hoverable:hover .afi-table__td-actions,
+.afi-table__row--selected .afi-table__td,
+.afi-table__row--selected .afi-table__td-actions {
+  position: relative;
+  z-index: 0;
+}
+
+.afi-table__row--hoverable:hover .afi-table__td::before,
+.afi-table__row--hoverable:hover .afi-table__td-actions::before {
+  content: '';
+  position: absolute;
+  top: var(--afi-table-row-hover-inset, var(--space-2xs));
+  bottom: var(--afi-table-row-hover-inset, var(--space-2xs));
+  left: 0;
+  right: 0;
+  background: var(--surface-hover);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.afi-table__row--selected .afi-table__td::before,
+.afi-table__row--selected .afi-table__td-actions::before {
+  content: '';
+  position: absolute;
+  top: var(--afi-table-row-hover-inset, var(--space-2xs));
+  bottom: var(--afi-table-row-hover-inset, var(--space-2xs));
+  left: 0;
+  right: 0;
+  background: var(--surface-selected);
+  pointer-events: none;
+  z-index: -1;
+}
+
+// FIRST DATA cell — rounded left + extends LEFT into the hover area.
+// Two selectors cover both shapes:
+//   • `selectable: false` → first data cell is `:first-child` of <tr>
+//   • `selectable: true`  → first data cell sits after `.afi-table__td-select`
+.afi-table__row--hoverable:hover .afi-table__td:first-child::before,
+.afi-table__row--hoverable:hover .afi-table__td-select + .afi-table__td::before,
+.afi-table__row--selected .afi-table__td:first-child::before,
+.afi-table__row--selected .afi-table__td-select + .afi-table__td::before {
+  left: calc(var(--afi-table-row-hover-extend, 0) * -1);
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
+}
+
+// LAST cell — rounded right. Matches whichever td is last (data cell or
+// actions cell, depending on whether [rowActions] is set).
+.afi-table__row--hoverable:hover > td:last-child::before,
+.afi-table__row--selected > td:last-child::before {
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+}
+
 .afi-table__td {
   padding-block: var(--space-sm);
   padding-inline: var(--space-md);
   color: var(--foreground-primary-default);
   vertical-align: middle;
+
+  // Mirror the th first-child rule so column-1 cells align with the
+  // column-1 header (and, in a section context, with the section title).
+  //
+  // `position: relative` and the hover-state rules below let this cell
+  // host the LEFT-side hover-band extension (box-shadow) and the
+  // bulk-select checkbox pseudo — neither of which renders reliably on
+  // `<tr>` due to table-row's non-CSS-box nature.
+  &:first-child {
+    padding-inline-start: var(--afi-table-first-cell-pad, var(--space-md));
+    position: relative;
+  }
 
   &--start {
     text-align: start;
@@ -176,9 +335,22 @@
   }
 }
 
-.afi-table__td-select {
-  padding-inline: var(--space-xs);
+// Compact density — tighter block padding than the default (Richard
+// 2026-06-11). Rows drop from `--space-sm` to `--space-xs`
+// per cell on top + bottom, trimming one --space-xs from the row height. Tables
+// in dashboards / patrimonio listings feel snappier without the text
+// touching the row dividers.
+.afi-table__row--compact {
+  .afi-table__td,
+  .afi-table__td-actions,
+  .afi-table__td-select {
+    padding-block: var(--space-xs);
+  }
 }
+
+// (Removed 2026-06-11: padding-inline now controlled by the
+// `--afi-table-select-cell-padding` CSS var at the combined
+// `.afi-table__th-select, .afi-table__td-select` rule above.)
 
 .afi-table__td-actions {
   padding-block: var(--space-sm);

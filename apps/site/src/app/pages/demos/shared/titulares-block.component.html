@@ -1,0 +1,50 @@
+<div class="titulares-block">
+  <p class="titulares-block__label">{{ label() }}</p>
+
+  @for (row of rows(); track row.id; let isFirst = $first) {
+    <div class="titulares-block__row">
+      <afi-select
+        class="titulares-block__titular"
+        [label]="isFirst ? 'Titular*' : null"
+        [options]="titularOptions()"
+        [value]="row.titularId"
+        (valueChange)="setTitular(row.id, $event)"
+      />
+      <afi-input
+        class="titulares-block__porcentaje"
+        [label]="isFirst ? 'Porcentaje*' : null"
+        type="number"
+        suffix="%"
+        [value]="row.porcentaje"
+        (valueChange)="setPorcentaje(row.id, $event)"
+      />
+      <afi-icon-button
+        class="titulares-block__delete"
+        variant="ghost"
+        size="md"
+        ariaLabel="Eliminar titular"
+        (clicked)="removeRow(row.id)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true">
+          <path d="M3 6h18" />
+          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+        </svg>
+      </afi-icon-button>
+    </div>
+  }
+
+  <div class="titulares-block__footer">
+    <span
+      class="titulares-block__total"
+      [class.titulares-block__total--ok]="isValid()"
+      [class.titulares-block__total--error]="!isValid()"
+    >
+      Total: {{ total() }} %
+    </span>
+    <button type="button" class="titulares-block__add" (click)="addRow()">
+      <span aria-hidden="true" class="titulares-block__add-icon">⊕</span>
+      Añadir
+    </button>
+  </div>
+</div>

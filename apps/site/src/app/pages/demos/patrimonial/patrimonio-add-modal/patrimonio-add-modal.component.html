@@ -1,0 +1,290 @@
+<afi-modal
+  size="md"
+  [title]="modalTitle()"
+  [open]="open()"
+  [closeOnEsc]="true"
+  [closeOnBackdrop]="true"
+  (openChange)="openChange.emit($event)"
+>
+  <div class="patrimonio-add">
+    <!-- Tesler-law context tag — always on top, anchors the user in the
+         full Patrimonio while they fill the form. -->
+    <site-dialog-context-bar
+      title="Patrimonio total"
+      [total]="patrimonioTotal()"
+      [segments]="patrimonioSegments()"
+    />
+
+    <!-- Step 1: Tipo de patrimonio. -->
+    <afi-select
+      label="Tipo de patrimonio*"
+      [options]="tipoTopOptions"
+      [value]="tipoTop()"
+      (valueChange)="setTipoTop($event)"
+    />
+
+    <!-- Step 2a: Inversión branch — second select + Simple/Avanzado. -->
+    @if (showsInversionBranch()) {
+      <afi-select
+        label="Tipo de inversión*"
+        [options]="tipoInversionOptions"
+        [value]="tipoInversion()"
+        (valueChange)="setTipoInversion($event)"
+      />
+      <div class="patrimonio-add__mode">
+        <afi-segmented-control
+          size="sm"
+          [options]="addModeOptions"
+          [value]="addMode()"
+          (valueChange)="setAddMode($event)"
+        />
+      </div>
+    }
+
+    <!-- Step 2b: Plan de pensiones. -->
+    @if (tipoTop() === 'plan-pensiones') {
+      <afi-radio-group
+        legend="Tipo de inversión*"
+        [value]="planPensionesTipo()"
+        (valueChange)="setPlanTipo($event)"
+      >
+        <afi-radio-group-item value="ppi" label="PPI" [selected]="planPensionesTipo() === 'ppi'" (selectedChange)="setPlanTipo($event)" />
+        <afi-radio-group-item value="ppe" label="PPE" [selected]="planPensionesTipo() === 'ppe'" (selectedChange)="setPlanTipo($event)" />
+        <afi-radio-group-item value="epsv" label="EPSV" [selected]="planPensionesTipo() === 'epsv'" (selectedChange)="setPlanTipo($event)" />
+      </afi-radio-group>
+
+      <afi-input
+        label="Derechos consolidados*"
+        type="number"
+        suffix="€"
+        [value]="derechosConsolidados()"
+        (valueChange)="setNumber('derechosConsolidados', $event)"
+      />
+      <afi-input
+        label="Derechos consolidados previos a 2007"
+        type="number"
+        suffix="€"
+        [value]="derechosConsolidadosPrevios2007()"
+        (valueChange)="setNumber('derechosConsolidadosPrevios2007', $event)"
+      />
+      @if (derechosConsolidadosPrevios2007() > derechosConsolidados()) {
+        <p class="patrimonio-add__validation-error">
+          Este número no puede ser mayor que los derechos consolidados
+        </p>
+      }
+      <afi-input
+        label="Aportación periódica anual estimada"
+        type="number"
+        suffix="€"
+        [value]="aportacionPeriodicaAnual()"
+        (valueChange)="setNumber('aportacionPeriodicaAnual', $event)"
+      />
+      <afi-radio-group
+        legend="Tipo de tasa de crecimiento de la aportación periódica*"
+        [value]="tipoTasaCrecimientoAportacion()"
+        (valueChange)="setCrecimientoTipo($event)"
+      >
+        <afi-radio-group-item value="ipc" label="IPC" [selected]="tipoTasaCrecimientoAportacion() === 'ipc'" (selectedChange)="setCrecimientoTipo($event)" />
+        <afi-radio-group-item value="manual" label="Manual" [selected]="tipoTasaCrecimientoAportacion() === 'manual'" (selectedChange)="setCrecimientoTipo($event)" />
+      </afi-radio-group>
+      @if (showsManualGrowthRate()) {
+        <afi-input
+          label="Tasa de crecimiento de la aportación periódica*"
+          type="number"
+          suffix="%"
+          [value]="tasaCrecimientoAportacion()"
+          (valueChange)="setNumber('tasaCrecimientoAportacion', $event)"
+        />
+      }
+    }
+
+    <!-- Step 2c: Private equity. -->
+    @if (tipoTop() === 'private-equity') {
+      <afi-input
+        label="Compromiso de pago*"
+        type="number"
+        suffix="€"
+        [value]="compromisoPago()"
+        (valueChange)="setNumber('compromisoPago', $event)"
+      />
+      <afi-input
+        label="Desembolso realizado*"
+        type="number"
+        suffix="€"
+        [value]="desembolsoRealizado()"
+        (valueChange)="setNumber('desembolsoRealizado', $event)"
+      />
+      <afi-input
+        label="Año fin de desembolsos*"
+        type="number"
+        [value]="anioFinDesembolsos()"
+        (valueChange)="setNumber('anioFinDesembolsos', $event)"
+      />
+      <afi-input
+        label="Año inicio de distribuciones*"
+        type="number"
+        [value]="anioInicioDistribuciones()"
+        (valueChange)="setNumber('anioInicioDistribuciones', $event)"
+      />
+      <afi-input
+        label="Año fin de distribuciones*"
+        type="number"
+        [value]="anioFinDistribuciones()"
+        (valueChange)="setNumber('anioFinDistribuciones', $event)"
+      />
+      <afi-select
+        label="Rentabilidad-riesgo*"
+        [options]="rentabilidadRiesgoOptions"
+        [value]="rentabilidadRiesgo()"
+        (valueChange)="setRentabilidadRiesgo($event)"
+      />
+    }
+
+    <!-- Step 2d: Inmobiliario. -->
+    @if (tipoTop() === 'inmobiliario') {
+      <p class="patrimonio-add__section-title">Revalorización esperada</p>
+      <div class="patrimonio-add__row-2">
+        <afi-input
+          label="Revalorización esperada"
+          type="number"
+          suffix="%"
+          [value]="revalorizacionEsperada()"
+          (valueChange)="setNumber('revalorizacionEsperada', $event)"
+        />
+        <afi-select
+          label="Nivel de riesgo*"
+          [options]="nivelRiesgoOptions"
+          [value]="nivelRiesgo()"
+          (valueChange)="setNivelRiesgo($event)"
+        />
+      </div>
+      <afi-select
+        label="Uso de la vivienda*"
+        [options]="inmobiliarioUsoOptions"
+        [value]="inmobiliarioUso()"
+        (valueChange)="setInmobiliarioUso($event)"
+      />
+      @if (showsIngresosNetosInmobiliario()) {
+        <afi-input
+          label="Ingresos netos anuales (%)"
+          type="number"
+          suffix="%"
+          [value]="ingresosNetosAnuales()"
+          (valueChange)="setNumber('ingresosNetosAnuales', $event)"
+        />
+      }
+    }
+
+    <!-- Step 2e: Participaciones empresariales. -->
+    @if (tipoTop() === 'participaciones') {
+      <afi-select
+        label="Rentabilidad-riesgo*"
+        [options]="rentabilidadRiesgoOptions"
+        [value]="rentabilidadRiesgo()"
+        (valueChange)="setRentabilidadRiesgo($event)"
+      />
+      <afi-input
+        label="Dividendo anual (%)"
+        type="number"
+        suffix="%"
+        [value]="dividendoAnual()"
+        (valueChange)="setNumber('dividendoAnual', $event)"
+      />
+    }
+
+    <!-- Step 2f: Deudas. -->
+    @if (tipoTop() === 'deudas') {
+      <afi-input
+        label="Tipo de interés*"
+        type="number"
+        suffix="%"
+        [value]="tipoInteres()"
+        (valueChange)="setNumber('tipoInteres', $event)"
+      />
+      <afi-input
+        label="Plazo medio pendiente*"
+        type="number"
+        suffix="años"
+        [value]="plazoMedio()"
+        (valueChange)="setNumber('plazoMedio', $event)"
+      />
+      <afi-select
+        label="Activo financiado"
+        [options]="activosFinanciables()"
+        [value]="activoFinanciado()"
+        (valueChange)="setActivoFinanciado($event)"
+      />
+    }
+
+    <!-- Step 2g: Inversión per-subtype simple fields. -->
+    @if (showsInversionBranch() && addMode() === 'simple') {
+      @if (showsRentabilidadRiesgo()) {
+        <afi-select
+          label="Rentabilidad-riesgo*"
+          [options]="rentabilidadRiesgoOptions"
+          [value]="rentabilidadRiesgo()"
+          (valueChange)="setRentabilidadRiesgo($event)"
+        />
+      }
+      @if (showsDividendoAnual()) {
+        <afi-input
+          label="Dividendo anual (%)"
+          type="number"
+          suffix="%"
+          [value]="dividendoAnual()"
+          (valueChange)="setNumber('dividendoAnual', $event)"
+        />
+      }
+    }
+    @if (showsInversionBranch() && addMode() === 'avanzado') {
+      <p class="patrimonio-add__notice">
+        Modo Avanzado próximamente — Identificación / Aportaciones / Revalorización esperada
+      </p>
+    }
+
+    <!-- Universal footer: Nombre + Valor actual + Titulares + Financiación. -->
+    <div class="patrimonio-add__footer-fields">
+      <afi-input
+        label="Nombre"
+        [value]="nombre()"
+        (valueChange)="setNombre($event)"
+      />
+      <afi-input
+        label="Valor actual*"
+        type="number"
+        suffix="€"
+        [value]="valorActual()"
+        (valueChange)="setNumber('valorActual', $event)"
+      />
+
+      <site-titulares-block
+        [rows]="titulares()"
+        [titularOptions]="titularOptions()"
+        (rowsChange)="setTitulares($event)"
+      />
+
+      @if (showsFinanciacionAsociada()) {
+        <afi-radio-group
+          legend="¿Hay financiación asociada?"
+          [value]="financiacionAsociada() ? 'si' : 'no'"
+          (valueChange)="setFinanciacionAsociada($event)"
+        >
+          <afi-radio-group-item value="si" label="Sí" [selected]="financiacionAsociada()" (selectedChange)="setFinanciacionAsociada($event)" />
+          <afi-radio-group-item value="no" label="No" [selected]="!financiacionAsociada()" (selectedChange)="setFinanciacionAsociada($event)" />
+        </afi-radio-group>
+      }
+    </div>
+  </div>
+
+  <ng-container slot="footer">
+    <afi-button variant="ghost" size="sm" (clicked)="cancel()">Cancelar</afi-button>
+    <afi-button
+      variant="primary"
+      size="sm"
+      [disabled]="!canSave()"
+      (clicked)="accept()"
+    >
+      Aceptar
+    </afi-button>
+  </ng-container>
+</afi-modal>

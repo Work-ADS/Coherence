@@ -27,6 +27,8 @@ import {
 } from '@coherence/ui';
 import type { SegmentedOption, SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
+import { DialogSummaryCardComponent } from '../shared/dialog-summary-card.component';
+
 // GraphCardHeaderComponent removed 2026-06-10 — per-section headers now use
 // <afi-page-header level="section"> per the canonical migration.
 import { KeyShortcutDirective } from '../../../directives/key-shortcut.directive';
@@ -44,10 +46,8 @@ import type {
 } from '../wealth-planner-2026/store';
 import { ActionToastComponent } from '../shared/action-toast.component';
 import { bridgeDesignReviewVersion } from '../shared/design-review-bridge';
-import type { ContextBarSegment } from '../shared/dialog-context-bar.component';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
-import { PatrimonioAddModalComponent } from './patrimonio-add-modal/patrimonio-add-modal.component';
 // VersionToggleComponent removed from imports 2026-06-10 — inline pill is
 // globally hidden in styles.scss; floating design-review widget handles the
 // V1/V2/V3 selector via `bridgeDesignReviewVersion`.
@@ -112,10 +112,10 @@ type AddedAsset = {
     TableComponent,
     DemoShellComponent,
     ActionToastComponent,
+    DialogSummaryCardComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
     KeyShortcutDirective,
-    PatrimonioAddModalComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './patrimonial-proposal.page.html',
@@ -153,54 +153,23 @@ export class PatrimonialProposalPage {
     if (v === 'v1' || v === 'v2' || v === 'v3') this.version.set(v);
   }
 
-  // ── v3 dialog wiring (two-step Tipo de patrimonio + per-branch forms) ──
-  // The v3 dialog is rendered by <site-patrimonio-add-modal>. The page only
-  // supplies the data it needs (context-bar segments, titular options,
-  // financiable-asset options) and handles the save event.
+  // ── Dialog wiring (inline afi-modal, type="form") ─────────────────────
+  // The "Añadir" dialog now uses afi-modal directly (type="form"),
+  // projecting body content with site-dialog-summary-card + collapsible
+  // afi-page-header subsections. This replaces the old encapsulated
+  // <site-patrimonio-add-modal> component so the modal template is
+  // centralised in afi-modal itself.
 
-  /** Top-level breakdown for the Tesler-law context bar.
-   *  Aggregates current patrimonio into the dialog's 7 top-level buckets. */
-  readonly v3PatrimonioSegments = computed<ContextBarSegment[]>(() => {
-    const assets = this.store.patrimonio();
-    const buckets: Record<string, { label: string; value: number }> = {
-      liquidez: { label: 'Liquidez', value: 0 },
-      inversion: { label: 'Inversión', value: 0 },
-      'plan-pensiones': { label: 'Plan de pensiones', value: 0 },
-      inmobiliario: { label: 'Inmobiliario', value: 0 },
-      participaciones: { label: 'Participaciones', value: 0 },
-      'private-equity': { label: 'Private equity', value: 0 },
-      deudas: { label: 'Deudas', value: 0 },
-    };
-    for (const a of assets) {
-      const k =
-        a.tipoTop ??
-        // Map legacy `tipo` slugs to v3 top-level buckets so seeded data
-        // (pre-v3) still renders in the context bar.
-        (a.tipo === 'pension' ? 'plan-pensiones' :
-         a.tipo === 'inmobiliario' ? 'inmobiliario' :
-         a.tipo === 'liquidez' ? 'liquidez' :
-         a.tipo === 'deudas' ? 'deudas' :
-         a.tipo === 'participaciones-empresariales' || a.tipo === 'participacion' ? 'participaciones' :
-         'inversion');
-      const bucket = buckets[k];
-      if (bucket) {
-        bucket.value += a.valor;
-      }
-    }
-    return Object.entries(buckets).map(([key, b]) => ({
-      key,
-      label: b.label,
-      value: b.value,
-      highlight: false,
-    }));
-  });
-
-  readonly v3PatrimonioTotal = computed(() =>
+  /** Total patrimonios currently in the store. */
+  readonly dialogContextTotal = computed(() =>
     this.store.patrimonio().reduce((sum, a) => sum + a.valor, 0),
   );
 
+  /** Human label for the dialog summary card. */
+  readonly dialogContextLabel = signal<string>('Patrimonio total');
+
   /** Titular options — built from cliente + cónyuge + hijos. */
-  readonly v3TitularOptions = computed<SelectOption[]>(() => {
+  readonly dialogTitularOptions = computed<SelectOption[]>(() => {
     const opts: SelectOption[] = [{ value: 'cliente', label: 'Cliente' }];
     if (this.store.conyugeStatus() === 'yes' && this.store.conyuge()) {
       opts.push({ value: 'conyuge', label: 'Cónyuge' });
@@ -213,7 +182,7 @@ export class PatrimonialProposalPage {
 
   /** Activo financiado options for the Deudas branch — current patrimonio
    *  assets the user could be financing. */
-  readonly v3ActivosFinanciables = computed<SelectOption[]>(() => {
+  readonly dialogActivosFinanciables = computed<SelectOption[]>(() => {
     const opts: SelectOption[] = [{ value: 'ninguno', label: 'Ninguno' }];
     for (const a of this.store.patrimonio()) {
       opts.push({ value: a.id, label: a.nombre });
@@ -221,7 +190,7 @@ export class PatrimonialProposalPage {
     return opts;
   });
 
-  onV3Save(asset: PatrimonioAsset): void {
+  onDialogSave(asset: PatrimonioAsset): void {
     this.store.addAsset(asset);
     this.savedToastMessage.set(`Activo «${asset.nombre}» añadido`);
     this.savedToastVisible.set(true);

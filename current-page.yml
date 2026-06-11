@@ -1,0 +1,64 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - banner [ref=e6]:
+      - generic [ref=e8]:
+        - radiogroup "Language" [ref=e11]:
+          - radio "ES" [checked] [ref=e12] [cursor=pointer]
+          - radio "EN" [ref=e13] [cursor=pointer]
+        - button "Cambiar a modo oscuro" [ref=e16] [cursor=pointer]:
+          - img [ref=e17]
+    - main [ref=e19]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - img "AFI" [ref=e26]
+            - generic [ref=e30]: Coherence
+          - heading "Sistema de diseño" [level=1] [ref=e31]
+          - paragraph [ref=e32]: Aquí encontrarás los proyectos de diseño activos, novedades, recursos y procesos. En resumen, este es el cuartel general del diseño.
+          - generic [ref=e33]:
+            - link "Ver demos" [ref=e34] [cursor=pointer]:
+              - /url: /demos
+              - button "Ver demos" [ref=e36]
+            - link "Ver componentes" [ref=e37] [cursor=pointer]:
+              - /url: /componentes
+              - button "Ver componentes" [ref=e39]
+        - generic [ref=e40]:
+          - heading "Trabajos recientes" [level=2] [ref=e43]
+          - generic [ref=e45]:
+            - link "REUNIÓN DE ÁREA · IA Stitch vs Claude para conceptos de cliente Mismo prompt, cinco escenarios de marca y una recomendación. Slide-show navegable con flechas y design.md descargable." [ref=e46] [cursor=pointer]:
+              - /url: /talks/stitch-vs-claude
+              - img [ref=e49]
+              - generic [ref=e54]:
+                - generic [ref=e55]: REUNIÓN DE ÁREA · IA
+                - generic [ref=e56]: Stitch vs Claude para conceptos de cliente
+                - generic [ref=e57]: Mismo prompt, cinco escenarios de marca y una recomendación. Slide-show navegable con flechas y design.md descargable.
+            - link "DEMO · DIGITAL SOLUTIONS Wealth Planner 2026 Rediseño completo — patrimonio, evolución y simulación. Cinco iteraciones con seniors." [ref=e58] [cursor=pointer]:
+              - /url: /demos/wealth-planner-2026
+              - img [ref=e61]
+              - generic [ref=e68]:
+                - generic [ref=e69]: DEMO · DIGITAL SOLUTIONS
+                - generic [ref=e70]: Wealth Planner 2026
+                - generic [ref=e71]: Rediseño completo — patrimonio, evolución y simulación. Cinco iteraciones con seniors.
+            - link "DEMO · WHITE-LABEL Laboral Kutxa Sarevi Simulador de eficiencia energética sobre Coherence DS aplicando la paleta magenta + berenjena + verde de LK." [ref=e72] [cursor=pointer]:
+              - /url: /demos/laboral-kutxa-sarevi
+              - img [ref=e75]
+              - generic [ref=e80]:
+                - generic [ref=e81]: DEMO · WHITE-LABEL
+                - generic [ref=e82]: Laboral Kutxa Sarevi
+                - generic [ref=e83]: Simulador de eficiencia energética sobre Coherence DS aplicando la paleta magenta + berenjena + verde de LK.
+            - link "BLOG · TOKENS White-label en una línea Cómo el mixin coherence-brand-bind colapsa 90 líneas de mapeo por marca en un @include de 8." [ref=e84] [cursor=pointer]:
+              - /url: /blog/mixin-brand-bind
+              - img [ref=e87]
+              - generic [ref=e95]:
+                - generic [ref=e96]: BLOG · TOKENS
+                - generic [ref=e97]: White-label en una línea
+                - generic [ref=e98]: Cómo el mixin coherence-brand-bind colapsa 90 líneas de mapeo por marca en un @include de 8.
+        - generic [ref=e99]:
+          - heading "Para desarrolladores" [level=2] [ref=e102]
+          - paragraph [ref=e104]:
+            - text: Descarga la capa semántica de la marca activa como un único archivo CSS plano — valores hex/px ya resueltos, sin
+            - code [ref=e105]: var()
+            - text: ni prefijos de marca. Listo para integrarse en tu proyecto.
+          - button "Descargar CSS semántico" [ref=e108] [cursor=pointer]
+  - button "Abrir comentarios de feedback" [ref=e111] [cursor=pointer]:
+    - img [ref=e112]

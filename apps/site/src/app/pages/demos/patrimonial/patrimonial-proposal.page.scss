@@ -165,3 +165,24 @@
     transform: none;
   }
 }
+
+// ── v3 "Añadir" dialog body spacing ─────────────────────────────────────────
+// The dialog uses afi-modal directly (type="form") so the body fills the
+// available height and scrolls. We add a soft vertical rhythm inside so
+// subsections don't feel crushed.
+.patrimonio-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  // Placeholder paragraphs for fields not yet implemented
+  &__placeholder {
+    font: var(--type-body-md-400);
+    color: var(--foreground-tertiary);
+    margin: 0;
+    padding: var(--space-4) var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--surface-subtle);
+    text-align: center;
+  }
+}

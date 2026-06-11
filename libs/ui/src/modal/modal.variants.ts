@@ -17,6 +17,17 @@
  */
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
+/**
+ * Layout type of the modal.
+ *
+ * - `confirm` — simple yes/no or message+action. Body is compact, non-scrollable,
+ *   footer actions are centred. Title + description are enough; consumers
+ *   project optional body content beneath them.
+ * - `form` — full form dialog. Body grows, scrolls independently, footer pins
+ *   to the bottom. This is the default for all data-entry dialogs.
+ */
+export type ModalType = 'confirm' | 'form';
+
 export const tokenUsage = [
   { property: 'Fondo panel', token: 'var(--surface-raised)' },
   { property: 'Backdrop', token: 'var(--surface-overlay)' },

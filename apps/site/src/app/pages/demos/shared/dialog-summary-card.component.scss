@@ -1,0 +1,57 @@
+:host {
+  display: block;
+}
+
+.summary-card {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+}
+
+.summary-card__title {
+  font: var(--type-body-sm-500);
+  color: var(--foreground-secondary);
+}
+
+.summary-card__total {
+  font: var(--type-body-lg-600);
+  color: var(--foreground-primary);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+
+.summary-card__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font: var(--type-body-sm-500);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-pill);
+
+  &--up {
+    color: var(--feedback-success-foreground);
+    background: var(--feedback-success-background);
+  }
+
+  &--down {
+    color: var(--feedback-error-foreground);
+    background: var(--feedback-error-background);
+  }
+
+  &--neutral {
+    color: var(--foreground-secondary);
+    background: transparent;
+  }
+}
+
+.summary-card__delta-icon {
+  font-size: 0.85em;
+  line-height: 1;
+}

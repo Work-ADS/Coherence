@@ -18,6 +18,7 @@ import {
 import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
 import { KeyShortcutDirective } from '../../../directives/key-shortcut.directive';
+import { DialogSummaryCardComponent } from '../shared/dialog-summary-card.component';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
@@ -52,6 +53,7 @@ import type { Sociedad, Tributacion } from '../wealth-planner-2026/store';
     SelectComponent,
     TableComponent,
     DemoShellComponent,
+    DialogSummaryCardComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
     VersionToggleComponent,
@@ -131,6 +133,9 @@ export class SociedadesPage {
     if (s === null) return 0;
     return s.participantes.reduce((sum, p) => sum + p.porcentaje, 0);
   });
+
+  /** Summary-card total for the dialog footer zone. */
+  readonly dialogContextTotal = computed<number>(() => this.editingTotalParticipacion());
 
   // ── Version-toggle (v1 only for now; v2/v3 reserved) ──────────────────
   readonly version = signal<string>('v1');

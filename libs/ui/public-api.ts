@@ -22,7 +22,7 @@ export type { CardVariant, CardPadding } from './src/card';
 export { SectionComponent } from './src/section';
 export type { SectionVariant } from './src/section';
 export { ModalComponent } from './src/modal';
-export type { ModalSize } from './src/modal';
+export type { ModalSize, ModalType } from './src/modal';
 export { TabsComponent, TabItemComponent } from './src/tabs';
 export type { TabsSize } from './src/tabs';
 export { TableComponent } from './src/table';

@@ -7,7 +7,12 @@
   (close)="onNativeClose()"
   (click)="onBackdropClick($event)"
 >
-  <div class="afi-modal__panel" (click)="$event.stopPropagation()">
+  <div
+    class="afi-modal__panel"
+    [class.afi-modal__panel--confirm]="type() === 'confirm'"
+    [class.afi-modal__panel--form]="type() === 'form'"
+    (click)="$event.stopPropagation()"
+  >
     <!-- Close button -->
     <button
       type="button"

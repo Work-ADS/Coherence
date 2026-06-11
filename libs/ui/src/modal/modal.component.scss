@@ -72,6 +72,34 @@
   max-height: 100%;
 }
 
+// ─── Type: confirm ────────────────────────────────────────────────────────
+// Compact, non-scrollable. Body grows only as large as its content;
+// the whole panel is vertically centred because there is no scrollable
+// body to absorb space.
+.afi-modal__panel--confirm {
+  .afi-modal__body {
+    flex: 0 0 auto;
+    overflow-y: visible;
+    padding-block: var(--space-sm);
+  }
+
+  .afi-modal__footer {
+    justify-content: flex-end;
+    border-block-start: var(--border-width-hairline) solid var(--border-subtle);
+  }
+}
+
+// ─── Type: form ───────────────────────────────────────────────────────────
+// The default. Body scrolls independently so header + footer stay
+// pinned while the user scrolls through long forms.
+.afi-modal__panel--form {
+  .afi-modal__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+}
+
 // ─── Close button ─────────────────────────────────────────────────────────
 .afi-modal__close {
   position: absolute;
@@ -125,12 +153,6 @@
 .afi-modal__body {
   padding-block: var(--space-md);
   padding-inline: var(--space-lg);
-
-  // Allow the body to absorb the modal's available height and scroll
-  // independently when content overflows. Keeps header / footer pinned.
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
 }
 
 // ─── Footer ───────────────────────────────────────────────────────────────

@@ -67,6 +67,27 @@
   --afi-table-first-cell-pad: 0;
 }
 
+// Borderless variant — removes the box outline so the header sits cleanly
+// inside dialogs or other already-bordered surfaces. Keeps vertical padding
+// so the title row and body content don't feel crushed.
+:host(.page-header--borderless) {
+  border: none;
+  border-radius: 0;
+  padding: var(--space-3) 0;
+}
+
+// When borderless, increase the gap between the title row and the body
+// so the collapsed/expanded transition doesn't look hairline-tight.
+:host(.page-header--borderless) .page-header__body {
+  margin-top: var(--space-3);
+}
+
+// Subtle hairline separator between adjacent borderless subsections so
+// they don't melt into one another.
+:host(.page-header--borderless) + :host(.page-header--borderless) {
+  border-block-start: var(--border-width-hairline) solid var(--border-hairline);
+}
+
 // (No internal title-block divider for section or subsection — the
 // surface tint alone differentiates the card from the page canvas.)
 

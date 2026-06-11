@@ -955,20 +955,82 @@
         </main>
       </div>
 
-      <!-- v3 add dialog — two-step Tipo de patrimonio + per-branch forms +
-           Tesler-law context bar at top. Encapsulated in
-           <site-patrimonio-add-modal> so the page doesn't grow further.
-           Figma reference: Wealth manager screens 2026/Dialogs for patrimonio. -->
+      <!-- ─── v3 "Añadir" dialog — uses afi-modal directly (type="form") ───
+           Template shell: summary card + collapsible subsections.
+           Per-branch fields, titulares, and the Simple/Avanzado toggle will
+           be defined as we build each modal variant. -->
       @if (version() === 'v3') {
-        <site-patrimonio-add-modal
+        <afi-modal
+          size="md"
+          type="form"
+          title="Añadir activo"
           [open]="addDialogOpen()"
-          [patrimonioSegments]="v3PatrimonioSegments()"
-          [patrimonioTotal]="v3PatrimonioTotal()"
-          [titularOptions]="v3TitularOptions()"
-          [activosFinanciables]="v3ActivosFinanciables()"
+          [closeOnEsc]="true"
+          [closeOnBackdrop]="true"
           (openChange)="addDialogOpen.set($event)"
-          (save)="onV3Save($event)"
-        />
+        >
+          <div class="patrimonio-dialog-body">
+            <!-- Context summary (dynamic total + delta placeholder) -->
+            <site-dialog-summary-card
+              [title]="dialogContextLabel()"
+              [total]="dialogContextTotal()"
+            />
+
+            <!-- Collapsible subsections template -->
+            <afi-page-header
+              level="subsection"
+              title="Tipo de activo"
+              [collapsible]="true"
+              [borderless]="true"
+            >
+              <p class="patrimonio-dialog-body__placeholder">
+                Tipo de patrimonio select + Simple/Avanzado toggle
+              </p>
+            </afi-page-header>
+
+            <afi-page-header
+              level="subsection"
+              title="Detalles"
+              [collapsible]="true"
+              [borderless]="true"
+            >
+              <p class="patrimonio-dialog-body__placeholder">
+                Branch-specific fields
+              </p>
+            </afi-page-header>
+
+            <afi-page-header
+              level="subsection"
+              title="Valoración"
+              [collapsible]="true"
+              [borderless]="true"
+            >
+              <p class="patrimonio-dialog-body__placeholder">
+                Nombre + Valor actual
+              </p>
+            </afi-page-header>
+
+            <afi-page-header
+              level="subsection"
+              title="Titulares"
+              [collapsible]="true"
+              [borderless]="true"
+            >
+              <p class="patrimonio-dialog-body__placeholder">
+                Titulares block
+              </p>
+            </afi-page-header>
+          </div>
+
+          <ng-container slot="footer">
+            <afi-button variant="ghost" size="sm" (clicked)="addDialogOpen.set(false)">
+              Cancelar
+            </afi-button>
+            <afi-button variant="primary" size="sm" (clicked)="addDialogOpen.set(false)">
+              Aceptar
+            </afi-button>
+          </ng-container>
+        </afi-modal>
       }
 
       <!-- v1/v2 add dialog — Stripe-style: form on the left, live preview chart on the right -->

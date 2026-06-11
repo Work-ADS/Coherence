@@ -62,6 +62,13 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
   readonly complete = input<boolean>(false);
 
   /**
+   * When true, removes the border outline for section / subsection levels.
+   * Useful inside dialogs where the surrounding modal panel already defines
+   * the visual boundary — the extra box border feels heavy.
+   */
+  readonly borderless = input<boolean>(false);
+
+  /**
    * Body bleeds to the box's inline + bottom edges instead of being inset
    * by the host's --space-lg padding. Use when the projected body is a
    * full-width data surface (typically <afi-table>) so the last row sits
@@ -113,6 +120,9 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
     // class so DOM inspection is consistent.
     if (this.bodyFlush() && this.level() !== 'page') {
       parts.push('page-header--body-flush');
+    }
+    if (this.borderless() && this.level() !== 'page') {
+      parts.push('page-header--borderless');
     }
     return parts.join(' ');
   });

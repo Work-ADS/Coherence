@@ -1,0 +1,14 @@
+<div class="summary-card">
+  <span class="summary-card__title">{{ title() }}</span>
+
+  <span class="summary-card__total">{{ totalLabel() }}</span>
+
+  @if (deltaLabel(); as dl) {
+    <span class="summary-card__delta" [class]="trendClass()">
+      @if (trendIcon(); as icon) {
+        <span class="summary-card__delta-icon" aria-hidden="true">{{ icon }}</span>
+      }
+      {{ dl }}
+    </span>
+  }
+</div>

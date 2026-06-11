@@ -10,7 +10,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import type { ModalSize } from './modal.variants';
+import type { ModalSize, ModalType } from './modal.variants';
 
 let nextId = 0;
 
@@ -33,6 +33,7 @@ let nextId = 0;
 export class ModalComponent implements OnDestroy {
   readonly open = input<boolean>(false);
   readonly size = input<ModalSize>('md');
+  readonly type = input<ModalType>('form');
   readonly title = input<string | null>(null);
   readonly description = input<string | null>(null);
   readonly closeOnEsc = input<boolean>(true);
@@ -49,7 +50,7 @@ export class ModalComponent implements OnDestroy {
   readonly descriptionId = `afi-modal-desc-${this.id}`;
 
   readonly dialogClasses = computed(() =>
-    ['afi-modal__dialog', `afi-modal__dialog--${this.size()}`].join(' '),
+    ['afi-modal__dialog', `afi-modal__dialog--${this.size()}`, `afi-modal__dialog--${this.type()}`].join(' '),
   );
 
   private triggerElement: Element | null = null;

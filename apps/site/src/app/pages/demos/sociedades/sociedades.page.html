@@ -102,6 +102,13 @@
 >
   @if (editing(); as s) {
     <div class="sociedad-form">
+      <!-- Context summary — total participation across family members -->
+      <site-dialog-summary-card
+        title="Participación total"
+        [total]="dialogContextTotal()"
+        suffix="%"
+      />
+
       <afi-input
         label="Nombre"
         placeholder="Inversiones Siglo XXI, SL"

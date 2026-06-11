@@ -182,7 +182,10 @@ export class PatrimonialProposalPage {
          a.tipo === 'deudas' ? 'deudas' :
          a.tipo === 'participaciones-empresariales' || a.tipo === 'participacion' ? 'participaciones' :
          'inversion');
-      buckets[k].value += a.valor;
+      const bucket = buckets[k];
+      if (bucket) {
+        bucket.value += a.valor;
+      }
     }
     return Object.entries(buckets).map(([key, b]) => ({
       key,

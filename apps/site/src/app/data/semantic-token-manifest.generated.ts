@@ -36,6 +36,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "color"
   },
   {
+    "name": "--surface-hover",
+    "kind": "color"
+  },
+  {
     "name": "--surface-selected",
     "kind": "color"
   },

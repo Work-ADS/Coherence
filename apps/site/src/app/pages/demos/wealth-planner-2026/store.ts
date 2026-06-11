@@ -112,6 +112,10 @@ export interface IngresoGastoRow {
   frecuencia: Frecuencia;
   /** IPC retired per Borja 2026-02-27. Manual increment only. 0 = no incremento. */
   incrementoManualPct: number;
+  /** V2: whether this row grows with the system's IPC rate (default true).
+   *  When true, the projection uses the system IPC rate.
+   *  When false, incrementoManualPct is applied instead. */
+  incrementaIPC: boolean;
   valor: number;
 }
 
@@ -836,6 +840,7 @@ export class WealthPlannerStore {
       finalizacion: { kind: 'indefinido', hijoId: null, value: null },
       frecuencia: 'anual',
       incrementoManualPct: 0,
+      incrementaIPC: true,
       valor: 150000,
     },
   ]);
@@ -849,6 +854,7 @@ export class WealthPlannerStore {
       finalizacion: { kind: 'indefinido', hijoId: null, value: null },
       frecuencia: 'anual',
       incrementoManualPct: 3,
+      incrementaIPC: true,
       valor: 50000,
     },
     {
@@ -859,6 +865,7 @@ export class WealthPlannerStore {
       finalizacion: { kind: 'ano', hijoId: null, value: 2050 },
       frecuencia: 'anual',
       incrementoManualPct: 3,
+      incrementaIPC: true,
       valor: 60000,
     },
   ]);

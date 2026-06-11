@@ -12,8 +12,9 @@ import {
   ButtonComponent,
   InputComponent,
   ModalComponent,
+  RadioGroupComponent,
+  RadioGroupItemComponent,
   SelectComponent,
-  SwitchComponent,
 } from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
 
@@ -31,12 +32,13 @@ export type IngresoGastoMode = 'ingreso' | 'gasto';
  * Add/edit form modal shared by Ingresos + Gastos pages.
  *
  * One component, two pages: distinct only by `mode` input + the seed copy.
- * Form structure (PDF p.3-4, Granola 2026-02-26 / 2026-03-05, IPC retired
- * 2026-02-27):
+ * Form structure (V2 Figma, 888lN7vbJSc4gLYt7nP3DW):
  *   - Concepto
- *   - Es un ingreso/gasto futuro? → Inicio (4 kinds) when Sí
- *   - Finalización (5 kinds) — always visible
- *   - Frecuencia · Incremento manual % · Valor €
+ *   - Importe €
+ *   - Frecuencia
+ *   - Es un ingreso/gasto futuro? → Radio Sí/No → Inicio when Sí
+ *   - Finalización
+ *   - Incrementa con IPC? → Radio Sí/No → Manual % when No
  */
 @Component({
   selector: 'site-ingreso-gasto-form-modal',
@@ -45,8 +47,9 @@ export type IngresoGastoMode = 'ingreso' | 'gasto';
     ButtonComponent,
     InputComponent,
     ModalComponent,
+    RadioGroupComponent,
+    RadioGroupItemComponent,
     SelectComponent,
-    SwitchComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ingreso-gasto-form-modal.component.html',
@@ -74,6 +77,7 @@ export class IngresoGastoFormModalComponent {
   readonly finalizacionHijoId = signal<string | null>(null);
   readonly finalizacionValue = signal<number | null>(null);
   readonly frecuencia = signal<Frecuencia>('anual');
+  readonly incrementaIPC = signal<boolean>(true);
   readonly incrementoManualPct = signal<number>(0);
   readonly valor = signal<number>(0);
 
@@ -171,6 +175,7 @@ export class IngresoGastoFormModalComponent {
     this.finalizacionHijoId.set(null);
     this.finalizacionValue.set(null);
     this.frecuencia.set('anual');
+    this.incrementaIPC.set(true);
     this.incrementoManualPct.set(0);
     this.valor.set(0);
   }
@@ -189,6 +194,7 @@ export class IngresoGastoFormModalComponent {
     this.finalizacionHijoId.set(row.finalizacion.hijoId);
     this.finalizacionValue.set(row.finalizacion.value);
     this.frecuencia.set(row.frecuencia);
+    this.incrementaIPC.set(row.incrementaIPC ?? true);
     this.incrementoManualPct.set(row.incrementoManualPct);
     this.valor.set(row.valor);
   }
@@ -213,6 +219,17 @@ export class IngresoGastoFormModalComponent {
   }
   setIsFuturo(checked: boolean): void {
     this.isFuturo.set(checked);
+    if (!checked) {
+      // Reset inicio when switching to "No"
+      this.inicioKind.set('retiro');
+      this.inicioValue.set(null);
+    }
+  }
+  setIncrementaIPC(checked: boolean): void {
+    this.incrementaIPC.set(checked);
+    if (checked) {
+      this.incrementoManualPct.set(0);
+    }
   }
   setInicioKind(v: string | number | null): void {
     this.inicioKind.set((v as InicioKind | null) ?? 'retiro');
@@ -259,6 +276,7 @@ export class IngresoGastoFormModalComponent {
         value: this.finalizacionValue(),
       },
       frecuencia: this.frecuencia(),
+      incrementaIPC: this.incrementaIPC(),
       incrementoManualPct: this.incrementoManualPct(),
       valor: this.valor(),
     });

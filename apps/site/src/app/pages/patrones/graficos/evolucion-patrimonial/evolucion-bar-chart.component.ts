@@ -13,6 +13,13 @@ export type Detalle = 'agregada' | 'activo' | 'objetivo';
 export type ChartPalette = 'v1' | 'v2' | 'v3' | 'a' | 'b' | 'c';
 export type LegendPlacement = 'top' | 'bottom';
 
+/** External data point — when [data] is bound, the chart switches to single-
+ *  bar mode driven entirely by the consumer's series. */
+export interface EvolucionDataPoint {
+  age: number;
+  value: number;
+}
+
 /** Universal deuda token — applied to any negative value regardless of asset
  *  class or palette. "Debt is debt" — the seniors' rule. */
 const DEUDA_COLOR = 'var(--chart-deuda)';
@@ -24,11 +31,16 @@ interface AssetClass {
   ratio: number;
 }
 
-/** Life event — used when Detalle = "Por tipo de objetivo". */
-interface LifeEvent {
+/** Life event — pinned at a given age along the x-axis. Renders as an icon
+ *  bubble at the top of the column + a dashed guide line down to the
+ *  baseline. Hover shows the label. Per data-viz-skill: paired position +
+ *  shape so the highlight isn't color-only. */
+export type LifeEventIcon = 'briefcase' | 'gift' | 'home' | 'now';
+
+export interface LifeEvent {
   age: number;
   label: string;
-  iconKey: 'briefcase' | 'gift' | 'home';
+  iconKey: LifeEventIcon;
 }
 
 const ASSET_CLASSES: AssetClass[] = [
@@ -41,13 +53,6 @@ const ASSET_CLASSES: AssetClass[] = [
   { key: 'otro', label: 'Otro', ratio: 0.04 },
 ];
 
-/** Per-version palettes for the asset-class stack and the single-bar base.
- *  V1 = original azul navy ramp (low contrast, very calm).
- *  V2 = same hue family but spaced wider — bigger steps between adjacent
- *       activos so a gestor can tell them apart at a glance.
- *  V3 = brand-accented mix — keeps the navy spine and sprinkles afi-azul,
- *       afi-verde and warm amber on smaller classes for max distinguishability
- *       without abandoning the brand. */
 const PALETTES: Record<ChartPalette, Record<string, string> & { base: string; barOnly: string }> = {
   v1: {
     inmobiliario:    'var(--chart-legacy-v1-1)',
@@ -82,7 +87,6 @@ const PALETTES: Record<ChartPalette, Record<string, string> & { base: string; ba
     base: 'var(--action-700)',
     barOnly: 'var(--action-700)',
   },
-  // === 2026-Q2 candidates — see /patrones/graficos/palette-comparison ===
   a: {
     inmobiliario:    'var(--chart-palette-a-1)',
     inversiones:     'var(--chart-palette-a-2)',
@@ -124,8 +128,6 @@ const LIFE_EVENTS: LifeEvent[] = [
   { age: 70, label: 'Emancipación hijo 1', iconKey: 'home' },
 ];
 
-/** Financial objetivos — milestones pinned at specific (age, value) points on the chart.
- * Distinct from hitos vitales: hitos are *when*, objetivos are *how much to have by then*. */
 interface FinancialObjetivo {
   age: number;
   value: number;
@@ -139,7 +141,6 @@ const OBJETIVOS: FinancialObjetivo[] = [
   { age: 72, value: 1_100_000, label: 'Herencia mínima · 400.000 €', iconKey: 'target' },
 ];
 
-/** Factors applied to the base trajectory when a specific scenario is selected. */
 const ESCENARIO_FACTOR: Record<Escenario, number> = {
   medio: 1.0,
   optimista: 1.15,
@@ -147,7 +148,6 @@ const ESCENARIO_FACTOR: Record<Escenario, number> = {
   todos: 1.0,
 };
 
-/** Three scenario lines rendered in the "todos" mode. */
 interface TodosSerie {
   key: string;
   label: string;
@@ -162,19 +162,24 @@ const TODOS_SERIES: TodosSerie[] = [
   { key: 'optimista', label: 'Optimista', color: 'var(--chart-legacy-v1-4)', factor: 1.15, marker: 'circle' },
 ];
 
+const PATRIMONIO_XMIN = 55;
+const PATRIMONIO_XMAX = 90;
+const PATRIMONIO_YMIN = -500_000;
+const PATRIMONIO_YMAX = 1_800_000;
+const PATRIMONIO_YTICKS = [-500_000, 0, 500_000, 1_000_000, 1_500_000];
+const PATRIMONIO_XTICKS = [55, 60, 65, 70, 75, 80, 85, 90];
+
 /**
- * Evolución patrimonial — chart body.
+ * Evolución bar chart — the AWP "main" projection chart.
  *
- * Monochromatic Azul palette. Reactive to Vista + Escenario + Detalle.
- *
- * Render modes (picked from the three filters):
- *   - lines-comparada: 2 lines (Actual grey, Simulada Azul) with markers
- *   - lines-todos:     3 lines (Pesimista/Medio/Optimista), Azul ramp + shape markers
- *   - stacked:         stacked bars by asset class (Detalle=activo), interactive legend
- *   - single:          single bar per year; dips below zero in muted grey
- *
- * Hover affordances: ghost ceiling rect (Jira-style) on column hover.
- * Life-event markers pinned above bars when Detalle=objetivo.
+ * Two modes:
+ *   1. **Patrimonio mode (default).** No `[data]` input. Renders the bespoke
+ *      Luis-Santander patrimonio curves, reactive to vista/escenario/detalle,
+ *      with life-event hitos + financial objetivos.
+ *   2. **Data mode.** Bind `[data]` to an `EvolucionDataPoint[]` series. The
+ *      chart switches to single-bar mode driven by the consumer's data, with
+ *      x and y domains derived from the input. Patrimonio-specific toggles
+ *      (hitos / objetivos / scenarios / asset stacks) are suppressed.
  */
 @Component({
   selector: 'afi-evolucion-bar-chart',
@@ -183,8 +188,7 @@ const TODOS_SERIES: TodosSerie[] = [
   styleUrls: ['./evolucion-bar-chart.component.scss'],
   template: `
     <div class="relative flex flex-col gap-space-3">
-      <!-- Legend (shapes + labels) + inline hover summary on the right edge.
-           Summary shows: age + optional event + aggregate (or Patrimonio neto). -->
+      <!-- Legend (shapes + labels) -->
       <div
         class="flex flex-wrap items-center gap-space-3 gap-y-space-1 min-h-6 text-body-sm"
         [class.justify-end]="legendPlacement() === 'top'"
@@ -234,7 +238,6 @@ const TODOS_SERIES: TodosSerie[] = [
                   </span>
                 }
                 @case ('band') {
-                  <!-- Two-tier band chip mirroring the chart: wider outer + narrower inner -->
                   <span class="relative inline-block w-7 h-4 overflow-hidden rounded-sm">
                     <span
                       class="absolute inset-0"
@@ -288,9 +291,14 @@ const TODOS_SERIES: TodosSerie[] = [
         role="img"
         [attr.aria-label]="ariaLabel()"
       >
-        <!-- Grid + Y-axis labels -->
+        <!-- Grid + Y-axis labels — labels sit ABOVE the gridline,
+             text-anchor="start" so the leading digit ("1" / "5" / "0")
+             lines up with the chart's left edge. Per component-skill
+             §"Persistent trigger alignment": the always-visible trigger
+             is the alignment anchor — the Ver-datos toggle below the
+             chart shares this same left edge. -->
         <g>
-          @for (t of yTicks; track t) {
+          @for (t of yTicks(); track t) {
             <line
               [attr.x1]="padLeft"
               [attr.x2]="960 - padRight"
@@ -300,9 +308,9 @@ const TODOS_SERIES: TodosSerie[] = [
               stroke-dasharray="2,3"
             />
             <text
-              [attr.x]="padLeft - 8"
-              [attr.y]="yFor(t) + 4"
-              text-anchor="end"
+              [attr.x]="padLeft"
+              [attr.y]="yFor(t) - 6"
+              text-anchor="start"
               class="chart-text-axis"
             >
               {{ formatY(t) }}
@@ -310,13 +318,12 @@ const TODOS_SERIES: TodosSerie[] = [
           }
         </g>
 
-        <!-- Soft column highlight (lighter ghost ceiling) — works with the
-             brightened hovered bar below as the primary affordance. -->
+        <!-- Soft column highlight on hover -->
         @if (hoveredAge() !== null) {
           <rect
             [attr.x]="columnX(hoveredAge()!)"
             [attr.y]="padTop"
-            [attr.width]="columnWidth"
+            [attr.width]="columnWidth()"
             [attr.height]="chartHeight"
             fill="var(--color-neutral-100)"
             opacity="0.5"
@@ -324,14 +331,14 @@ const TODOS_SERIES: TodosSerie[] = [
           />
         }
 
-        <!-- Life-event markers — global Ajustes setting: shown on ALL render modes
-             (single / stacked / lines-comparada / lines-todos) when toggled on. -->
-        @if (mostrarHitos()) {
-          @for (e of events; track e.age) {
-            <!-- Dashed guide down from the icon to the zero line -->
+        <!-- Life-event markers — visible whenever events are present and
+             the toggle is on. Patrimonio mode defaults to LIFE_EVENTS;
+             data mode opts in by binding [events]. -->
+        @if (mostrarHitos() && events().length > 0) {
+          @for (e of events(); track e.age) {
             <line
-              [attr.x1]="columnX(e.age) + columnWidth / 2"
-              [attr.x2]="columnX(e.age) + columnWidth / 2"
+              [attr.x1]="columnX(e.age) + columnWidth() / 2"
+              [attr.x2]="columnX(e.age) + columnWidth() / 2"
               [attr.y1]="padTop + 22"
               [attr.y2]="yFor(0)"
               stroke="var(--color-neutral-300)"
@@ -339,11 +346,9 @@ const TODOS_SERIES: TodosSerie[] = [
               stroke-width="1"
               pointer-events="none"
             />
-
-            <!-- Icon bubble (with hover tooltip via <title>) -->
             <g
               [attr.transform]="
-                'translate(' + (columnX(e.age) + columnWidth / 2) + ', ' + (padTop + 11) + ')'
+                'translate(' + (columnX(e.age) + columnWidth() / 2) + ', ' + (padTop + 11) + ')'
               "
               class="cursor-help"
             >
@@ -380,21 +385,22 @@ const TODOS_SERIES: TodosSerie[] = [
                     <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                   }
+                  @case ('now') {
+                    <path d="M20 10c0 7-8 13-8 13s-8-6-8-13a8 8 0 0 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  }
                 }
               </g>
             </g>
           }
         }
 
-        <!-- Financial objetivos — pinned at their (age, value) points on the chart.
-             Distinct from hitos vitales: these are "target milestones" (fondo emergencia,
-             vivienda, herencia) rather than life events (retiro, jubilación). -->
-        @if (mostrarObjetivos()) {
+        <!-- Financial objetivos — patrimonio mode only -->
+        @if (mostrarObjetivos() && !isDataMode()) {
           @for (o of objetivos; track o.age) {
-            <!-- Soft connector from the marker to the x-axis baseline -->
             <line
-              [attr.x1]="columnX(o.age) + columnWidth / 2"
-              [attr.x2]="columnX(o.age) + columnWidth / 2"
+              [attr.x1]="columnX(o.age) + columnWidth() / 2"
+              [attr.x2]="columnX(o.age) + columnWidth() / 2"
               [attr.y1]="yFor(o.value) + 10"
               [attr.y2]="yFor(0)"
               stroke="var(--color-neutral-300)"
@@ -402,11 +408,9 @@ const TODOS_SERIES: TodosSerie[] = [
               stroke-width="1"
               pointer-events="none"
             />
-
-            <!-- Diamond marker + Lucide-style icon (neutral so it doesn't steal from the primary line) -->
             <g
               [attr.transform]="
-                'translate(' + (columnX(o.age) + columnWidth / 2) + ', ' + yFor(o.value) + ')'
+                'translate(' + (columnX(o.age) + columnWidth() / 2) + ', ' + yFor(o.value) + ')'
               "
               class="cursor-help"
             >
@@ -454,12 +458,12 @@ const TODOS_SERIES: TodosSerie[] = [
           }
         }
 
-        <!-- Column hover zones (invisible, full chart height) -->
-        @for (age of xRange; track age) {
+        <!-- Column hover zones -->
+        @for (age of xRange(); track age) {
           <rect
             [attr.x]="columnX(age)"
             [attr.y]="padTop"
-            [attr.width]="columnWidth"
+            [attr.width]="columnWidth()"
             [attr.height]="chartHeight"
             fill="transparent"
             style="pointer-events: all;"
@@ -470,9 +474,7 @@ const TODOS_SERIES: TodosSerie[] = [
 
         <!-- ====== RENDER MODE ====== -->
         @switch (renderMode()) {
-          <!-- ---- LINES: Comparada — Actual (dashed grey) + Simulada (solid Azul + 2-tier confidence band) ---- -->
           @case ('lines-comparada') {
-            <!-- Outer band (±30%, "rango posible") -->
             <path
               [attr.d]="areaPathFor(comparadaBand().outerTop, comparadaBand().outerBottom)"
               fill="var(--chart-band-fill)"
@@ -480,7 +482,6 @@ const TODOS_SERIES: TodosSerie[] = [
               stroke="none"
               pointer-events="none"
             />
-            <!-- Inner band (±15%, "rango probable") -->
             <path
               [attr.d]="areaPathFor(comparadaBand().innerTop, comparadaBand().innerBottom)"
               fill="var(--chart-band-fill)"
@@ -488,7 +489,6 @@ const TODOS_SERIES: TodosSerie[] = [
               stroke="none"
               pointer-events="none"
             />
-            <!-- Actual line — muted, dashed, no markers so it reads as "reference" -->
             <path
               [attr.d]="pathFor(actualSeries())"
               stroke="var(--color-neutral-500)"
@@ -497,7 +497,6 @@ const TODOS_SERIES: TodosSerie[] = [
               fill="none"
               pointer-events="none"
             />
-            <!-- Simulada line — primary Azul, 2.5px -->
             <path
               [attr.d]="pathFor(simuladaSeries())"
               stroke="var(--action-700)"
@@ -507,10 +506,9 @@ const TODOS_SERIES: TodosSerie[] = [
               fill="none"
               pointer-events="none"
             />
-            <!-- Endpoint rings (Simulada start + end) -->
             @if (simuladaSeries()[0]; as p0) {
               <circle
-                [attr.cx]="columnX(p0.age) + columnWidth / 2"
+                [attr.cx]="columnX(p0.age) + columnWidth() / 2"
                 [attr.cy]="yFor(p0.value)"
                 r="5"
                 fill="var(--chart-marker-fill)"
@@ -521,7 +519,7 @@ const TODOS_SERIES: TodosSerie[] = [
             }
             @if (simuladaSeries()[simuladaSeries().length - 1]; as pN) {
               <circle
-                [attr.cx]="columnX(pN.age) + columnWidth / 2"
+                [attr.cx]="columnX(pN.age) + columnWidth() / 2"
                 [attr.cy]="yFor(pN.value)"
                 r="5"
                 fill="var(--chart-marker-fill)"
@@ -529,11 +527,10 @@ const TODOS_SERIES: TodosSerie[] = [
                 stroke-width="2"
                 pointer-events="none"
               />
-              <!-- Endpoint value badge -->
               <g
                 [attr.transform]="
                   'translate(' +
-                  (columnX(pN.age) + columnWidth / 2) +
+                  (columnX(pN.age) + columnWidth() / 2) +
                   ', ' +
                   (yFor(pN.value) - 12) +
                   ')'
@@ -553,9 +550,7 @@ const TODOS_SERIES: TodosSerie[] = [
             }
           }
 
-          <!-- ---- LINES: Todos escenarios — Medio (primary) + 2-tier confidence band ---- -->
           @case ('lines-todos') {
-            <!-- Outer band (±30% around Medio, "rango posible") -->
             <path
               [attr.d]="areaPathFor(todosBand().outerTop, todosBand().outerBottom)"
               fill="var(--chart-band-fill)"
@@ -563,7 +558,6 @@ const TODOS_SERIES: TodosSerie[] = [
               stroke="none"
               pointer-events="none"
             />
-            <!-- Inner band (Pesimista / Optimista, "rango probable") -->
             <path
               [attr.d]="areaPathFor(todosBand().innerTop, todosBand().innerBottom)"
               fill="var(--chart-band-fill)"
@@ -571,7 +565,6 @@ const TODOS_SERIES: TodosSerie[] = [
               stroke="none"
               pointer-events="none"
             />
-            <!-- Medio — primary Azul solid line -->
             <path
               [attr.d]="pathFor(todosBand().medio)"
               stroke="var(--action-700)"
@@ -581,10 +574,9 @@ const TODOS_SERIES: TodosSerie[] = [
               fill="none"
               pointer-events="none"
             />
-            <!-- Endpoint rings on Medio -->
             @if (todosBand().medio[0]; as p0) {
               <circle
-                [attr.cx]="columnX(p0.age) + columnWidth / 2"
+                [attr.cx]="columnX(p0.age) + columnWidth() / 2"
                 [attr.cy]="yFor(p0.value)"
                 r="5"
                 fill="var(--chart-marker-fill)"
@@ -595,7 +587,7 @@ const TODOS_SERIES: TodosSerie[] = [
             }
             @if (todosBand().medio[todosBand().medio.length - 1]; as pN) {
               <circle
-                [attr.cx]="columnX(pN.age) + columnWidth / 2"
+                [attr.cx]="columnX(pN.age) + columnWidth() / 2"
                 [attr.cy]="yFor(pN.value)"
                 r="5"
                 fill="var(--chart-marker-fill)"
@@ -606,7 +598,7 @@ const TODOS_SERIES: TodosSerie[] = [
               <g
                 [attr.transform]="
                   'translate(' +
-                  (columnX(pN.age) + columnWidth / 2) +
+                  (columnX(pN.age) + columnWidth() / 2) +
                   ', ' +
                   (yFor(pN.value) - 12) +
                   ')'
@@ -626,15 +618,14 @@ const TODOS_SERIES: TodosSerie[] = [
             }
           }
 
-          <!-- ---- STACKED BARS: Detalle = Tipo de activo ---- -->
           @case ('stacked') {
             @for (d of chartData(); track d.age) {
               <g [attr.opacity]="columnOpacity(d.age)" class="bar-transition" pointer-events="none">
                 @for (seg of stackedSegments(d); track seg.key) {
                   <rect
-                    [attr.x]="columnX(d.age) + (columnWidth - barWidth) / 2"
+                    [attr.x]="columnX(d.age) + (columnWidth() - barWidth()) / 2"
                     [attr.y]="seg.y"
-                    [attr.width]="barWidth"
+                    [attr.width]="barWidth()"
                     [attr.height]="seg.h"
                     [attr.fill]="seg.color"
                   >
@@ -645,16 +636,13 @@ const TODOS_SERIES: TodosSerie[] = [
             }
           }
 
-          <!-- ---- SINGLE BARS: Agregada / Objetivo, supports negative.
-                 Hovered bar brightens to AFI Azul 500 — brand color
-                 lights up on interaction against the dark navy base. -->
           @default {
             @for (d of chartData(); track d.age) {
               <rect
                 class="bar-transition"
-                [attr.x]="columnX(d.age) + (columnWidth - barWidth) / 2"
+                [attr.x]="columnX(d.age) + (columnWidth() - barWidth()) / 2"
                 [attr.y]="barY(d.value)"
-                [attr.width]="barWidth"
+                [attr.width]="barWidth()"
                 [attr.height]="barH(d.value)"
                 [attr.fill]="barFillFor(d)"
                 [attr.opacity]="barOpacityFor(d)"
@@ -666,7 +654,7 @@ const TODOS_SERIES: TodosSerie[] = [
           }
         }
 
-        <!-- Zero baseline (drawn last so it sits over bars/lines at y=0) -->
+        <!-- Zero baseline -->
         <line
           [attr.x1]="padLeft"
           [attr.x2]="960 - padRight"
@@ -677,11 +665,11 @@ const TODOS_SERIES: TodosSerie[] = [
           pointer-events="none"
         />
 
-        <!-- X-axis age labels every 5 years -->
+        <!-- X-axis age labels -->
         <g>
-          @for (age of xTicks; track age) {
+          @for (age of xTicks(); track age) {
             <text
-              [attr.x]="columnX(age) + columnWidth / 2"
+              [attr.x]="columnX(age) + columnWidth() / 2"
               [attr.y]="320 - 8"
               text-anchor="middle"
               class="chart-text-axis"
@@ -692,7 +680,7 @@ const TODOS_SERIES: TodosSerie[] = [
         </g>
       </svg>
 
-      <!-- Floating hover tooltip — Figma-style white card -->
+      <!-- Floating hover tooltip -->
       @if (tooltipData(); as tt) {
         @if (tooltipAnchor(); as anchor) {
           <div
@@ -706,7 +694,12 @@ const TODOS_SERIES: TodosSerie[] = [
             role="tooltip"
             aria-live="polite"
           >
-            <p class="chart-tooltip__title">{{ tt.age }} años de edad</p>
+            <div class="chart-tooltip__header">
+              <p class="chart-tooltip__title">{{ tt.age }} años de edad</p>
+              @if (tt.eventLabel) {
+                <span class="chart-tooltip__tag">{{ tt.eventLabel }}</span>
+              }
+            </div>
             @if (tt.rows.length > 0) {
               <div class="chart-tooltip__rows">
                 @for (r of tt.rows; track r.label) {
@@ -760,6 +753,7 @@ const TODOS_SERIES: TodosSerie[] = [
           </div>
         }
       }
+
     </div>
   `,
 })
@@ -767,21 +761,31 @@ export class EvolucionBarChartComponent {
   readonly vista = input<Vista>('actual');
   readonly escenario = input<Escenario>('medio');
   readonly detalle = input<Detalle>('agregada');
-  /** Toggle via Ajustes. When false, life-event icons hide even in Detalle=objetivo. */
   readonly mostrarHitos = input<boolean>(true);
-  /** Toggle via Ajustes. When false, Inmobiliario category is excluded from stacked bars. */
   readonly incluirInmobiliario = input<boolean>(true);
-  /** Toggle via Ajustes. When true, financial objetivos are pinned at their (age, value) points. */
   readonly mostrarObjetivos = input<boolean>(false);
   readonly palette = input<ChartPalette>('a');
   readonly legendPlacement = input<LegendPlacement>('top');
 
+  /** External data series. When bound, the chart switches to single-bar mode
+   *  driven entirely by this input — patrimonio-specific toggles are
+   *  suppressed and x/y domains derive from the data. */
+  readonly data = input<EvolucionDataPoint[] | null>(null);
+  /** Legend label used in data mode. Defaults to "Serie". */
+  readonly seriesLabel = input<string>('Serie');
+  /** Compact y-axis tick label in data mode — true uses K€ / M€ shorthand
+   *  (default); false uses full euro formatting. */
+  readonly compactYAxis = input<boolean>(true);
+  /** Override the default LIFE_EVENTS hitos. When null (and mostrarHitos is
+   *  true), patrimonio mode falls back to the built-in life events; data
+   *  mode renders no markers unless the consumer passes its own. */
+  readonly eventsInput = input<LifeEvent[] | null>(null, { alias: 'events' });
+
   readonly hoveredAge = signal<number | null>(null);
   readonly hiddenSeries = signal<Set<string>>(new Set());
 
-  /** Compact summary shown inline at the end of the legend row on hover.
-   * Uses aggregateForHover when defined (stacked / comparada), otherwise
-   * falls back to Patrimonio neto (single) or Medio (todos). */
+  readonly isDataMode = computed(() => this.data() !== null);
+
   readonly hoverSummary = computed<{ label: string; value: string } | null>(() => {
     const age = this.hoveredAge();
     if (age === null) return null;
@@ -793,16 +797,15 @@ export class EvolucionBarChartComponent {
       const p = medio?.points.find((x) => x.age === age);
       return p ? { label: 'Medio', value: this.formatFull(p.value) } : null;
     }
-    // single
     const d = this.chartData().find((x) => x.age === age);
-    return d ? { label: 'Patrimonio neto', value: this.formatFull(d.value) } : null;
+    if (!d) return null;
+    const label = this.isDataMode() ? this.seriesLabel() : 'Patrimonio neto';
+    return { label, value: this.formatFull(d.value) };
   });
 
-  /** Floating tooltip rows for the hovered column — shape matches the Figma design.
-   * Varies by renderMode: stacked shows asset breakdown with parent row, line modes
-   * show the series values, single mode collapses to a Patrimonio neto footer. */
   readonly tooltipData = computed<{
     age: number;
+    eventLabel: string | null;
     rows: {
       label: string;
       value: string;
@@ -815,6 +818,7 @@ export class EvolucionBarChartComponent {
     const age = this.hoveredAge();
     if (age === null) return null;
     const mode = this.renderMode();
+    const eventLabel = this.events().find((e) => e.age === age)?.label ?? null;
     const rows: {
       label: string;
       value: string;
@@ -864,50 +868,123 @@ export class EvolucionBarChartComponent {
       if (pes) rows.push({ label: 'Pesimista', value: this.formatFull(pes.value), muted: true });
     } else {
       const d = this.chartData().find((x) => x.age === age);
-      if (d) total = { label: 'Patrimonio neto', value: this.formatFull(d.value) };
+      if (d) {
+        const label = this.isDataMode() ? this.seriesLabel() : 'Patrimonio neto';
+        total = { label, value: this.formatFull(d.value) };
+      }
     }
 
-    return { age, rows, total };
+    return { age, eventLabel, rows, total };
   });
 
-  /** Anchor info for positioning the floating tooltip next to the hovered column. */
   readonly tooltipAnchor = computed<{ pct: number; anchorRight: boolean } | null>(() => {
     const age = this.hoveredAge();
     if (age === null) return null;
-    const xCenter = this.columnX(age) + this.columnWidth / 2;
+    const xCenter = this.columnX(age) + this.columnWidth() / 2;
     const pct = (xCenter / this.width) * 100;
     return { pct, anchorRight: pct > 55 };
   });
 
-  // Geometry
-  readonly padLeft = 70;
+  // ── Fixed geometry ──────────────────────────────────────────────────────
+  // padLeft was 70 (room for right-aligned axis labels). Dropped to 0 once
+  // labels moved above the gridlines + left-aligned, so the leading digit
+  // of every Y label, the first column's pin / bar, and the Ver-datos
+  // trigger below the chart all share the section's content-left edge
+  // (component-skill §"Persistent trigger alignment"). padTop bumped to
+  // clear the floating Y label above the topmost gridline.
+  readonly padLeft = 0;
   readonly padRight = 20;
-  readonly padTop = 24;
+  readonly padTop = 32;
   readonly padBottom = 32;
   readonly width = 960;
   readonly height = 320;
   readonly chartWidth = this.width - this.padLeft - this.padRight;
   readonly chartHeight = this.height - this.padTop - this.padBottom;
-  readonly columnWidth = this.chartWidth / 36;
-  readonly barWidth = this.columnWidth * 0.7;
 
-  // Y domain supports negatives — Actual dips below zero near age 90
-  readonly yMin = -500_000;
-  readonly yMax = 1_800_000;
-  readonly yTicks = [-500_000, 0, 500_000, 1_000_000, 1_500_000];
-  readonly xTicks = [55, 60, 65, 70, 75, 80, 85, 90];
-  readonly xRange = Array.from({ length: 36 }, (_, i) => 55 + i);
-  readonly events = LIFE_EVENTS;
+  // ── Derived x/y domains — switch between patrimonio defaults and data ───
+  readonly xMin = computed(() => {
+    const d = this.data();
+    if (d && d.length > 0) return d[0]!.age;
+    return PATRIMONIO_XMIN;
+  });
+
+  readonly xMax = computed(() => {
+    const d = this.data();
+    if (d && d.length > 0) return d[d.length - 1]!.age;
+    return PATRIMONIO_XMAX;
+  });
+
+  readonly columnCount = computed(() => this.xMax() - this.xMin() + 1);
+  readonly columnWidth = computed(() => this.chartWidth / this.columnCount());
+  readonly barWidth = computed(() => this.columnWidth() * 0.7);
+
+  readonly xRange = computed(() => {
+    const min = this.xMin();
+    return Array.from({ length: this.columnCount() }, (_, i) => min + i);
+  });
+
+  readonly xTicks = computed(() => {
+    if (!this.isDataMode()) return PATRIMONIO_XTICKS;
+    const min = this.xMin();
+    const max = this.xMax();
+    const ticks: number[] = [];
+    let t = min % 5 === 0 ? min : min + (5 - (min % 5));
+    while (t <= max) {
+      ticks.push(t);
+      t += 5;
+    }
+    if (ticks[0] !== min) ticks.unshift(min);
+    if (ticks[ticks.length - 1] !== max) ticks.push(max);
+    return ticks;
+  });
+
+  readonly yMin = computed(() => {
+    const d = this.data();
+    if (!d) return PATRIMONIO_YMIN;
+    const minVal = Math.min(0, ...d.map((p) => p.value));
+    return minVal === 0 ? 0 : niceFloor(minVal);
+  });
+
+  readonly yMax = computed(() => {
+    const d = this.data();
+    if (!d) return PATRIMONIO_YMAX;
+    const maxVal = Math.max(0, ...d.map((p) => p.value));
+    return maxVal === 0 ? 1 : niceCeil(maxVal);
+  });
+
+  readonly yTicks = computed(() => {
+    if (!this.isDataMode()) return PATRIMONIO_YTICKS;
+    const min = this.yMin();
+    const max = this.yMax();
+    const span = max - min;
+    if (span === 0) return [0];
+    const stepCount = 4;
+    const rawStep = span / stepCount;
+    const step = niceCeil(rawStep);
+    const ticks: number[] = [];
+    for (let v = Math.ceil(min / step) * step; v <= max + 1e-9; v += step) {
+      ticks.push(v);
+    }
+    return ticks;
+  });
+
+  readonly events = computed<LifeEvent[]>(() => {
+    const ext = this.eventsInput();
+    if (ext) return ext;
+    return this.isDataMode() ? [] : LIFE_EVENTS;
+  });
   readonly objetivos = OBJETIVOS;
 
-  // --- Scales ---
+  // ── Scales ──────────────────────────────────────────────────────────────
   yFor(value: number): number {
-    const clamped = Math.max(this.yMin, Math.min(this.yMax, value));
-    const t = (clamped - this.yMin) / (this.yMax - this.yMin);
+    const min = this.yMin();
+    const max = this.yMax();
+    const clamped = Math.max(min, Math.min(max, value));
+    const t = (clamped - min) / (max - min || 1);
     return this.padTop + (1 - t) * this.chartHeight;
   }
   columnX(age: number): number {
-    return this.padLeft + (age - 55) * this.columnWidth;
+    return this.padLeft + (age - this.xMin()) * this.columnWidth();
   }
   barY(value: number): number {
     return value >= 0 ? this.yFor(value) : this.yFor(0);
@@ -919,9 +996,12 @@ export class EvolucionBarChartComponent {
     if (v === 0) return '0 €';
     const abs = Math.abs(v);
     const sign = v < 0 ? '-' : '';
+    if (this.isDataMode() && !this.compactYAxis()) {
+      return `${sign}${abs.toLocaleString('es-ES')} €`;
+    }
     if (abs >= 1_000_000)
       return `${sign}${(abs / 1_000_000).toFixed(abs % 1_000_000 === 0 ? 0 : 1)}M €`;
-    if (abs >= 1_000) return `${sign}${abs / 1_000}K €`;
+    if (abs >= 1_000) return `${sign}${Math.round(abs / 1_000)}K €`;
     return `${v} €`;
   }
   formatFull(v: number): string {
@@ -932,9 +1012,8 @@ export class EvolucionBarChartComponent {
     });
   }
 
-  // --- Base data (Luis, Santander middle-manager) ---
+  // ── Patrimonio base data (Luis, Santander middle-manager) ───────────────
   private actualValue(age: number): number {
-    // Ramp 780k → 1.28M by age 63, then decline to -50k by age 90 (goes negative near the end)
     if (age <= 63) {
       const t = (age - 55) / 8;
       return Math.round(780_000 + t * (1_280_000 - 780_000));
@@ -943,7 +1022,6 @@ export class EvolucionBarChartComponent {
     return Math.round(1_280_000 + t * (-50_000 - 1_280_000));
   }
   private simuladaValue(age: number): number {
-    // Ramp 780k → 1.4M by age 64, then decline to 120k by age 90 (stays positive)
     if (age <= 64) {
       const t = (age - 55) / 9;
       return Math.round(780_000 + t * (1_400_000 - 780_000));
@@ -952,74 +1030,70 @@ export class EvolucionBarChartComponent {
     return Math.round(1_400_000 + t * (120_000 - 1_400_000));
   }
 
-  // --- Render mode ---
+  // ── Render mode ─────────────────────────────────────────────────────────
   readonly renderMode = computed<'lines-comparada' | 'lines-todos' | 'stacked' | 'single'>(() => {
+    if (this.isDataMode()) return 'single';
     if (this.vista() === 'comparada') return 'lines-comparada';
     if (this.escenario() === 'todos') return 'lines-todos';
     if (this.detalle() === 'activo') return 'stacked';
     return 'single';
   });
 
-  // --- Chart data ---
-  readonly chartData = computed(() => {
+  // ── Chart data ──────────────────────────────────────────────────────────
+  readonly chartData = computed<EvolucionDataPoint[]>(() => {
+    const ext = this.data();
+    if (ext) return ext;
     const f = ESCENARIO_FACTOR[this.escenario()];
     const useSim = this.vista() === 'simulada';
-    const out = [] as { age: number; value: number }[];
-    for (let age = 55; age <= 90; age++) {
+    const out: EvolucionDataPoint[] = [];
+    for (let age = PATRIMONIO_XMIN; age <= PATRIMONIO_XMAX; age++) {
       const base = useSim ? this.simuladaValue(age) : this.actualValue(age);
       out.push({ age, value: base * f });
     }
     return out;
   });
 
-  /** Points for the Actual line in Comparada. Not scaled by escenario (factor fixed at 1). */
   readonly actualSeries = computed(() => {
-    const out = [] as { age: number; value: number }[];
-    for (let age = 55; age <= 90; age++) out.push({ age, value: this.actualValue(age) });
+    const out: EvolucionDataPoint[] = [];
+    for (let age = PATRIMONIO_XMIN; age <= PATRIMONIO_XMAX; age++)
+      out.push({ age, value: this.actualValue(age) });
     return out;
   });
 
-  /** Points for the Simulada line in Comparada. */
   readonly simuladaSeries = computed(() => {
-    const out = [] as { age: number; value: number }[];
-    for (let age = 55; age <= 90; age++) out.push({ age, value: this.simuladaValue(age) });
+    const out: EvolucionDataPoint[] = [];
+    for (let age = PATRIMONIO_XMIN; age <= PATRIMONIO_XMAX; age++)
+      out.push({ age, value: this.simuladaValue(age) });
     return out;
   });
 
-  /** Three scenario series for Todos mode — all based on currently-selected Vista's base trajectory, scaled. */
   readonly todosSeriesData = computed(() => {
     const useSim = this.vista() === 'simulada';
     return TODOS_SERIES.map((s) => ({
       ...s,
-      points: Array.from({ length: 36 }, (_, i) => {
-        const age = 55 + i;
+      points: Array.from({ length: PATRIMONIO_XMAX - PATRIMONIO_XMIN + 1 }, (_, i) => {
+        const age = PATRIMONIO_XMIN + i;
         const base = useSim ? this.simuladaValue(age) : this.actualValue(age);
         return { age, value: base * s.factor };
       }),
     }));
   });
 
-  /** SVG path string from a series of (age, value) points. */
-  pathFor(points: { age: number; value: number }[]): string {
+  pathFor(points: EvolucionDataPoint[]): string {
     if (!points.length) return '';
     return points
       .map((p, i) => {
-        const x = this.columnX(p.age) + this.columnWidth / 2;
+        const x = this.columnX(p.age) + this.columnWidth() / 2;
         const y = this.yFor(p.value);
         return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
       })
       .join(' ');
   }
 
-  /** Closed-area path between two (same-length, same-age) series — top goes left→right,
-   * bottom goes right→left, then close. Used for the confidence band in the line variants. */
-  areaPathFor(
-    top: { age: number; value: number }[],
-    bottom: { age: number; value: number }[],
-  ): string {
+  areaPathFor(top: EvolucionDataPoint[], bottom: EvolucionDataPoint[]): string {
     if (!top.length || !bottom.length) return '';
-    const xy = (p: { age: number; value: number }) => {
-      const x = this.columnX(p.age) + this.columnWidth / 2;
+    const xy = (p: EvolucionDataPoint) => {
+      const x = this.columnX(p.age) + this.columnWidth() / 2;
       const y = this.yFor(p.value);
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     };
@@ -1031,7 +1105,6 @@ export class EvolucionBarChartComponent {
     return `${tops} ${bots} Z`;
   }
 
-  /** Short-form euro label for endpoint badges: "€ 2.34M" / "€ 245K" / "€ 850". */
   formatBadge(v: number): string {
     const abs = Math.abs(v);
     const sign = v < 0 ? '-' : '';
@@ -1040,8 +1113,6 @@ export class EvolucionBarChartComponent {
     return `${sign}€ ${Math.round(abs)}`;
   }
 
-  /** Two-tier confidence band for the Comparada view — inner ±15% (likely),
-   * outer ±30% (possible). Both centered on the Simulada projection. */
   readonly comparadaBand = computed(() => {
     const center = this.simuladaSeries();
     return {
@@ -1052,8 +1123,6 @@ export class EvolucionBarChartComponent {
     };
   });
 
-  /** Two-tier confidence band for the Todos view — inner = Optimista/Pesimista,
-   * outer = ±30% around Medio. Medio drawn as the primary line. */
   readonly todosBand = computed(() => {
     const series = this.todosSeriesData();
     const optimista = series.find((s) => s.key === 'optimista')?.points ?? [];
@@ -1068,14 +1137,14 @@ export class EvolucionBarChartComponent {
     };
   });
 
-  // --- Stacked segments (Detalle = Tipo de activo) ---
-  // Negative totals (deuda) collapse to a single red segment — debt is debt
-  // regardless of asset class, and seeing it monochromatic red makes it
-  // unmistakable against the colored stack above the zero line.
-  stackedSegments(d: {
-    age: number;
+  stackedSegments(d: EvolucionDataPoint): {
+    key: string;
+    label: string;
+    color: string;
     value: number;
-  }): { key: string; label: string; color: string; value: number; y: number; h: number }[] {
+    y: number;
+    h: number;
+  }[] {
     if (d.value < 0) {
       const yBottom = this.yFor(0);
       const yTop = this.yFor(d.value);
@@ -1104,10 +1173,6 @@ export class EvolucionBarChartComponent {
       const segValue = d.value * (a.ratio / totalRatio);
       const yBottom = this.yFor(running);
       const yTop = this.yFor(running + segValue);
-      // One-pixel canvas-tinted gap between adjacent segments (skip the
-      // bottommost so it still meets the baseline). The exposed strip of
-      // canvas above each non-bottom segment adapts to light/dark theme
-      // for free.
       const gapPx = i === 0 ? 0 : 1;
       out.push({
         key: a.key,
@@ -1122,7 +1187,6 @@ export class EvolucionBarChartComponent {
     return out;
   }
 
-  // --- Legend series ---
   readonly legendSeries = computed<
     {
       key: string;
@@ -1133,6 +1197,27 @@ export class EvolucionBarChartComponent {
       tooltip?: string;
     }[]
   >(() => {
+    if (this.isDataMode()) {
+      const series = [
+        {
+          key: 'data',
+          label: this.seriesLabel(),
+          color: 'var(--action-700)',
+          interactive: false,
+          mark: 'dot' as const,
+        },
+      ];
+      if (this.chartData().some((d) => d.value < 0)) {
+        series.push({
+          key: 'deuda',
+          label: 'Negativo',
+          color: DEUDA_COLOR,
+          interactive: false,
+          mark: 'dot',
+        });
+      }
+      return series;
+    }
     const mode = this.renderMode();
     if (mode === 'lines-comparada') {
       return [
@@ -1238,24 +1323,18 @@ export class EvolucionBarChartComponent {
   }
 
   readonly ariaLabel = computed(() => {
-    return `Evolución patrimonial — vista ${this.vista()}, escenario ${this.escenario()}, detalle ${this.detalle()}. Edades 55 a 90.`;
+    if (this.isDataMode()) {
+      return `${this.seriesLabel()} — edades ${this.xMin()} a ${this.xMax()}.`;
+    }
+    return `Evolución patrimonial — vista ${this.vista()}, escenario ${this.escenario()}, detalle ${this.detalle()}. Edades ${this.xMin()} a ${this.xMax()}.`;
   });
 
-  // --- Hover helpers (legend rows show their values inline on hover) ---
-
-  /** Life event at the currently-hovered age, when Detalle = objetivo. */
   readonly hoveredEvent = computed<LifeEvent | null>(() => {
     const age = this.hoveredAge();
     if (age === null || this.detalle() !== 'objetivo') return null;
-    return LIFE_EVENTS.find((e) => e.age === age) ?? null;
+    return this.events().find((e) => e.age === age) ?? null;
   });
 
-  /**
-   * Extra aggregate row shown on hover when the sum of legend values doesn't
-   * already tell the full story: Diferencia in Comparada, Patrimonio neto in
-   * stacked mode (sum of the visible asset classes). No aggregate for single
-   * or Todos modes.
-   */
   readonly aggregateForHover = computed<{ label: string; value: string } | null>(() => {
     const age = this.hoveredAge();
     if (age === null) return null;
@@ -1278,7 +1357,6 @@ export class EvolucionBarChartComponent {
     return null;
   });
 
-  /** Current value for a legend series key at the hovered age, or null when no hover / no match. */
   valueForSeries(key: string): string | null {
     const age = this.hoveredAge();
     if (age === null) return null;
@@ -1305,36 +1383,48 @@ export class EvolucionBarChartComponent {
       return seg ? this.formatFull(seg.value) : null;
     }
 
-    // single mode — only one series (the "patrimonio" entry)
-    if (key === 'patrimonio') {
+    if (key === 'patrimonio' || key === 'data') {
       const d = this.chartData().find((x) => x.age === age);
       return d ? this.formatFull(d.value) : null;
     }
     return null;
   }
 
-  /** Fill for a single bar. Base colors only — dimming of non-hovered bars
-   * is done with opacity (see barOpacityFor) so the effect stays soft, matching
-   * the Tipo de activo stacked mode. Negative values always render red — debt
-   * is debt, regardless of palette or hover state. */
-  barFillFor(d: { age: number; value: number }): string {
+  barFillFor(d: EvolucionDataPoint): string {
     if (d.value < 0) return DEUDA_COLOR;
     if (d.age === this.hoveredAge()) return 'var(--color-afi-azul-500)';
     return PALETTES[this.palette()].barOnly;
   }
 
-  /** Opacity for a single bar. Full on hover / at rest, dimmed (0.35) when
-   * another column is hovered — same treatment as stacked columns. */
   barOpacityFor(d: { age: number }): number {
     const h = this.hoveredAge();
     if (h === null || h === d.age) return 1;
     return 0.35;
   }
 
-  /** Opacity for a column's group in stacked mode — dims siblings when something is hovered. */
   columnOpacity(age: number): number {
     const h = this.hoveredAge();
     if (h === null) return 1;
     return h === age ? 1 : 0.35;
   }
+}
+
+// ── Nice-number axis helpers ───────────────────────────────────────────────
+function niceCeil(v: number): number {
+  if (v === 0) return 0;
+  const abs = Math.abs(v);
+  const log = Math.floor(Math.log10(abs));
+  const base = Math.pow(10, log);
+  const norm = abs / base;
+  let nice: number;
+  if (norm <= 1) nice = 1;
+  else if (norm <= 2) nice = 2;
+  else if (norm <= 5) nice = 5;
+  else nice = 10;
+  return Math.sign(v || 1) * nice * base;
+}
+
+function niceFloor(v: number): number {
+  if (v === 0) return 0;
+  return -niceCeil(-v);
 }

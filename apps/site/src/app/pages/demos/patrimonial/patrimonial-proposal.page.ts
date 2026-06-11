@@ -16,6 +16,7 @@ import {
 import {
   ButtonComponent,
   CardComponent,
+  IconButtonComponent,
   InputComponent,
   KbdComponent,
   ModalComponent,
@@ -102,6 +103,7 @@ type AddedAsset = {
   imports: [
     ButtonComponent,
     CardComponent,
+    IconButtonComponent,
     InputComponent,
     KbdComponent,
     ModalComponent,
@@ -1630,16 +1632,74 @@ export class PatrimonialProposalPage {
     this.maxMenuOpen.set(false);
   }
 
+  /** Ceiling for the Min/Max stepper — the largest single-asset value in
+   *  the patrimonio (deepest child included). Defaults to a sensible 100K
+   *  when there's no data so the stepper still has a usable range. */
+  readonly maxAvailableValue = computed<number>(() => {
+    let max = 0;
+    for (const s of this.sections) {
+      for (const r of this.rowsForSection(s)) {
+        if (r.valorNum > max) max = r.valorNum;
+        for (const c of r.children ?? []) {
+          if (c.valorNum > max) max = c.valorNum;
+        }
+      }
+    }
+    return max > 0 ? max : 100_000;
+  });
+
+  /** Step size for the Min/Max stepper — 1/20 of the ceiling, rounded to
+   *  a 1·2·5·10 base so click counts stay reasonable across magnitudes
+   *  (450K → 25K steps; 1M → 50K; 100K → 5K). */
+  readonly filterStep = computed<number>(() => {
+    const raw = Math.max(1, this.maxAvailableValue() / 20);
+    return niceStep(raw);
+  });
+
+  stepMin(delta: 1 | -1): void {
+    const max = this.maxAvailableValue();
+    const step = this.filterStep();
+    const current = this.filterMin() ?? 0;
+    const next = Math.max(0, Math.min(max, current + delta * step));
+    this.filterMin.set(next);
+  }
+
+  stepMax(delta: 1 | -1): void {
+    const max = this.maxAvailableValue();
+    const step = this.filterStep();
+    const current = this.filterMax() ?? max;
+    const next = Math.max(0, Math.min(max, current + delta * step));
+    this.filterMax.set(next);
+  }
+
+  /** Placeholder for the Max input when no value is set — shows the
+   *  ceiling so the user knows the cap before they touch the stepper. */
+  readonly filterMaxPlaceholder = computed<string>(
+    () => `Máx. ${this.formatEuroCompact(this.maxAvailableValue())}`,
+  );
+
   onSearchInput(e: Event): void {
     this.searchQuery.set((e.target as HTMLInputElement).value);
   }
   onMinInput(e: Event): void {
     const v = (e.target as HTMLInputElement).value.trim();
-    this.filterMin.set(v === '' ? null : Number(v));
+    if (v === '') {
+      this.filterMin.set(null);
+      return;
+    }
+    const n = Number(v);
+    if (Number.isNaN(n)) return;
+    this.filterMin.set(Math.max(0, Math.min(this.maxAvailableValue(), n)));
   }
   onMaxInput(e: Event): void {
     const v = (e.target as HTMLInputElement).value.trim();
-    this.filterMax.set(v === '' ? null : Number(v));
+    if (v === '') {
+      this.filterMax.set(null);
+      return;
+    }
+    const n = Number(v);
+    if (Number.isNaN(n)) return;
+    this.filterMax.set(Math.max(0, Math.min(this.maxAvailableValue(), n)));
   }
 
   /** Returns the rows of a section that pass the search + entidad + min/max filters.
@@ -2013,4 +2073,19 @@ export class PatrimonialProposalPage {
     this.addActivoFinanciado.set('ninguno');
     // Tipo + Revalorización keep their defaults so consecutive adds are fast.
   }
+}
+
+/** Round to the nearest 1/2/5/10·10ⁿ step so a +/- stepper feels natural
+ *  across magnitudes. 5_000 → 5_000, 23_000 → 20_000, 87_000 → 100_000. */
+function niceStep(v: number): number {
+  if (v <= 0) return 1;
+  const log = Math.floor(Math.log10(v));
+  const base = Math.pow(10, log);
+  const norm = v / base;
+  let mult: number;
+  if (norm <= 1) mult = 1;
+  else if (norm <= 2) mult = 2;
+  else if (norm <= 5) mult = 5;
+  else mult = 10;
+  return mult * base;
 }

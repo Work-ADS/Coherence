@@ -45,18 +45,15 @@
                      in the constructor. -->
 
                 <!-- Primary action — moved out of the filter strip per the
-                     canonical pattern. Cmd/Ctrl+A keyboard shortcut wired via
-                     the siteKeyShortcut directive. -->
+                     canonical pattern. -->
                 <afi-button
                   slot="actions"
                   variant="primary"
                   size="sm"
-                  siteKeyShortcut="a"
                   ariaLabel="Añadir patrimonio"
                   (clicked)="addDialogOpen.set(true)"
                 >
                   + Añadir patrimonio
-                  <afi-kbd [keys]="addShortcut" size="sm" />
                 </afi-button>
 
                 <!-- KPI cards — migrated 2026-06-10 from inline divs to
@@ -616,23 +613,67 @@
                       <p class="text-caption uppercase tracking-wider text-neutral-500 mb-space-2">
                         Valor mínimo
                       </p>
-                      <div class="relative">
-                        <input
-                          type="number"
-                          min="0"
-                          step="1000"
-                          placeholder="0"
-                          inputmode="numeric"
-                          [value]="filterMin() ?? ''"
-                          (input)="onMinInput($event)"
-                          (keydown.enter)="minMenuOpen.set(false)"
-                          class="h-9 w-full pl-3 pr-8 text-body-sm tabular-nums rounded-md border border-border-hairline bg-canvas-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
-                          aria-label="Valor mínimo en euros"
-                        />
-                        <span
-                          class="absolute right-3 top-1/2 -translate-y-1/2 text-body-sm text-neutral-500 pointer-events-none"
-                          >€</span
+                      <div class="flex items-stretch gap-space-2">
+                        <afi-icon-button
+                          variant="ghost"
+                          size="sm"
+                          ariaLabel="Restar valor mínimo"
+                          (clicked)="stepMin(-1)"
                         >
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                          </svg>
+                        </afi-icon-button>
+                        <div class="relative flex-1">
+                          <input
+                            type="number"
+                            min="0"
+                            [attr.max]="maxAvailableValue()"
+                            [attr.step]="filterStep()"
+                            placeholder="0"
+                            inputmode="numeric"
+                            [value]="filterMin() ?? ''"
+                            (input)="onMinInput($event)"
+                            (keydown.enter)="minMenuOpen.set(false)"
+                            class="h-9 w-full pl-3 pr-8 text-body-sm text-center tabular-nums rounded-md border border-border-hairline bg-canvas-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+                            aria-label="Valor mínimo en euros"
+                          />
+                          <span
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-body-sm text-neutral-500 pointer-events-none"
+                            >€</span
+                          >
+                        </div>
+                        <afi-icon-button
+                          variant="ghost"
+                          size="sm"
+                          ariaLabel="Aumentar valor mínimo"
+                          (clicked)="stepMin(1)"
+                        >
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                          </svg>
+                        </afi-icon-button>
                       </div>
                       <div class="mt-space-3 flex items-center justify-between">
                         <button
@@ -731,23 +772,67 @@
                       <p class="text-caption uppercase tracking-wider text-neutral-500 mb-space-2">
                         Valor máximo
                       </p>
-                      <div class="relative">
-                        <input
-                          type="number"
-                          min="0"
-                          step="1000"
-                          placeholder="sin límite"
-                          inputmode="numeric"
-                          [value]="filterMax() ?? ''"
-                          (input)="onMaxInput($event)"
-                          (keydown.enter)="maxMenuOpen.set(false)"
-                          class="h-9 w-full pl-3 pr-8 text-body-sm tabular-nums rounded-md border border-border-hairline bg-canvas-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
-                          aria-label="Valor máximo en euros"
-                        />
-                        <span
-                          class="absolute right-3 top-1/2 -translate-y-1/2 text-body-sm text-neutral-500 pointer-events-none"
-                          >€</span
+                      <div class="flex items-stretch gap-space-2">
+                        <afi-icon-button
+                          variant="ghost"
+                          size="sm"
+                          ariaLabel="Restar valor máximo"
+                          (clicked)="stepMax(-1)"
                         >
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                          </svg>
+                        </afi-icon-button>
+                        <div class="relative flex-1">
+                          <input
+                            type="number"
+                            min="0"
+                            [attr.max]="maxAvailableValue()"
+                            [attr.step]="filterStep()"
+                            [placeholder]="filterMaxPlaceholder()"
+                            inputmode="numeric"
+                            [value]="filterMax() ?? ''"
+                            (input)="onMaxInput($event)"
+                            (keydown.enter)="maxMenuOpen.set(false)"
+                            class="h-9 w-full pl-3 pr-8 text-body-sm text-center tabular-nums rounded-md border border-border-hairline bg-canvas-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+                            aria-label="Valor máximo en euros"
+                          />
+                          <span
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-body-sm text-neutral-500 pointer-events-none"
+                            >€</span
+                          >
+                        </div>
+                        <afi-icon-button
+                          variant="ghost"
+                          size="sm"
+                          ariaLabel="Aumentar valor máximo"
+                          (clicked)="stepMax(1)"
+                        >
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                          </svg>
+                        </afi-icon-button>
                       </div>
                       <div class="mt-space-3 flex items-center justify-between">
                         <button
@@ -807,34 +892,22 @@
                 <span class="text-body-sm text-foreground-secondary">
                   {{ bulkSelectedCount() }} seleccionado{{ bulkSelectedCount() === 1 ? '' : 's' }}
                 </span>
-                <button
-                  type="button"
-                  (click)="clearAssetSelection()"
-                  class="inline-flex items-center h-8 px-space-3 rounded-full border border-border-hairline bg-surface text-body-sm text-foreground-primary hover:bg-surface-subtle transition-colors"
+                <afi-button
+                  variant="ghost"
+                  size="sm"
+                  (clicked)="clearAssetSelection()"
+                  ariaLabel="Cancelar selección"
                 >
                   Cancelar
-                </button>
-                <button
-                  type="button"
-                  (click)="openBulkDeleteConfirm()"
-                  class="inline-flex items-center gap-space-2 h-8 px-space-3 rounded-full bg-system-error-bg border border-system-error-base text-body-sm font-medium text-system-error-fg hover:opacity-90 transition-opacity"
+                </afi-button>
+                <afi-button
+                  variant="danger-ghost"
+                  size="sm"
+                  (clicked)="openBulkDeleteConfirm()"
+                  ariaLabel="Borrar activos seleccionados"
                 >
-                  <svg
-                    class="w-3.5 h-3.5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M3 6h18" />
-                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                  </svg>
                   Borrar
-                </button>
+                </afi-button>
               </div>
             }
 

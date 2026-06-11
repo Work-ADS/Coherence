@@ -1,4 +1,28 @@
-// No page-level styles — all styling lives in the shared list-body.
+// =============================================================================
+// Gastos page. Layout chrome comes from <site-objetivos-page-shell> and
+// <afi-page-header>; this file only carries the empty-state copy block.
+// =============================================================================
+
 :host {
   display: block;
+}
+
+.gastos-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  text-align: center;
+}
+
+.gastos-empty__hint {
+  font: var(--type-body-md-400);
+  color: var(--foreground-tertiary-default);
+  max-width: var(--dimension-120);
+}
+
+.gastos-empty__action {
+  margin-block-start: var(--space-sm);
 }

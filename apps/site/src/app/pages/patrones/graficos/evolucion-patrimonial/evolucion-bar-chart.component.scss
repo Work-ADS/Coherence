@@ -66,11 +66,31 @@
   font: var(--type-body-sm-400);
 }
 
+.chart-tooltip__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-sm);
+}
+
 .chart-tooltip__title {
   font: var(--type-subtitle-body);
   font-weight: 600;
   color: var(--chart-tooltip-foreground);
-  margin-bottom: var(--space-sm);
+  margin: 0;
+}
+
+.chart-tooltip__tag {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--space-xs);
+  padding-block: var(--space-3xs);
+  border-radius: var(--radius-full);
+  background: var(--action-100, var(--surface-hover));
+  color: var(--action-700);
+  font: var(--type-body-sm-500);
+  white-space: nowrap;
 }
 
 .chart-tooltip__rows {

@@ -29,12 +29,10 @@
                 slot="actions"
                 variant="primary"
                 size="sm"
-                siteKeyShortcut="a"
                 (clicked)="openAdd()"
                 [ariaLabel]="addLabel()"
               >
                 {{ addLabel() }}
-                <afi-kbd [keys]="addShortcut" size="sm" />
               </afi-button>
 
               @if (rows().length === 0) {

@@ -15,89 +15,115 @@
       (valueChange)="setConcepto($event)"
     />
 
-    <!-- Es futuro? -->
-    <afi-switch
-      [label]="futuroLabel()"
-      hint="Activa si comienza en el futuro (jubilación, etc.)."
-      [checked]="isFuturo()"
-      (checkedChange)="setIsFuturo($event)"
+    <!-- Importe -->
+    <afi-input
+      label="Importe"
+      type="number"
+      suffix="€"
+      [value]="valor()"
+      (valueChange)="setValor($event)"
     />
+
+    <!-- Frecuencia -->
+    <afi-select
+      label="Frecuencia"
+      [options]="frecuenciaOptions"
+      [value]="frecuencia()"
+      (valueChange)="setFrecuencia($event)"
+    />
+
+    <!-- Es futuro? -->
+    <div class="ig-form__field">
+      <label class="ig-form__label">{{ futuroLabel() }}</label>
+      <afi-radio-group [ariaLabel]="futuroLabel()">
+        <afi-radio-group-item
+          value="si"
+          label="Sí"
+          [selected]="isFuturo()"
+          (selectedChange)="setIsFuturo(true)"
+        />
+        <afi-radio-group-item
+          value="no"
+          label="No"
+          [selected]="!isFuturo()"
+          (selectedChange)="setIsFuturo(false)"
+        />
+      </afi-radio-group>
+    </div>
 
     <!-- Inicio (only when futuro) -->
     @if (isFuturo()) {
-      <div class="ig-form__group">
-        <afi-select
-          label="Inicio"
-          [options]="inicioOptions"
-          [value]="inicioKind()"
-          (valueChange)="setInicioKind($event)"
+      <afi-select
+        label="Inicio"
+        [options]="inicioOptions"
+        [value]="inicioKind()"
+        (valueChange)="setInicioKind($event)"
+      />
+      @if (showsInicioValueInput()) {
+        <afi-input
+          [label]="inicioValueLabel()"
+          type="number"
+          [value]="inicioValue() ?? ''"
+          (valueChange)="setInicioValue($event)"
         />
-        @if (showsInicioValueInput()) {
-          <afi-input
-            [label]="inicioValueLabel()"
-            type="number"
-            [value]="inicioValue() ?? ''"
-            (valueChange)="setInicioValue($event)"
-          />
-        }
-      </div>
+      }
     }
 
-    <!-- Finalización (always visible) -->
-    <div class="ig-form__group">
+    <!-- Finalización -->
+    <afi-select
+      label="Finalización"
+      [options]="finalizacionOptions"
+      [value]="finalizacionKind()"
+      (valueChange)="setFinalizacionKind($event)"
+    />
+    @if (showsFinalizacionHijo()) {
       <afi-select
-        label="Finalización"
-        [options]="finalizacionOptions"
-        [value]="finalizacionKind()"
-        (valueChange)="setFinalizacionKind($event)"
+        label="Hijo"
+        placeholder="Selecciona"
+        [options]="hijoOptions()"
+        [value]="finalizacionHijoId()"
+        (valueChange)="setFinalizacionHijo($event)"
       />
-      @if (showsFinalizacionHijo()) {
-        <afi-select
-          label="Hijo"
-          placeholder="Selecciona"
-          [options]="hijoOptions()"
-          [value]="finalizacionHijoId()"
-          (valueChange)="setFinalizacionHijo($event)"
+    }
+    @if (showsFinalizacionValue()) {
+      <afi-input
+        [label]="finalizacionValueLabel()"
+        type="number"
+        [value]="finalizacionValue() ?? ''"
+        (valueChange)="setFinalizacionValue($event)"
+      />
+    }
+
+    <!-- Incrementa con IPC? -->
+    <div class="ig-form__field">
+      <label class="ig-form__label">¿Incrementa con IPC?</label>
+      <afi-radio-group ariaLabel="¿Incrementa con IPC?">
+        <afi-radio-group-item
+          value="si"
+          label="Sí"
+          [selected]="incrementaIPC()"
+          (selectedChange)="setIncrementaIPC(true)"
         />
-      }
-      @if (showsFinalizacionValue()) {
-        <afi-input
-          [label]="finalizacionValueLabel()"
-          type="number"
-          [value]="finalizacionValue() ?? ''"
-          (valueChange)="setFinalizacionValue($event)"
+        <afi-radio-group-item
+          value="no"
+          label="No"
+          [selected]="!incrementaIPC()"
+          (selectedChange)="setIncrementaIPC(false)"
         />
-      }
+      </afi-radio-group>
     </div>
 
-    <!-- Frecuencia + Incremento + Valor -->
-    <div class="ig-form__row">
-      <afi-select
-        label="Frecuencia"
-        [options]="frecuenciaOptions"
-        [value]="frecuencia()"
-        (valueChange)="setFrecuencia($event)"
+    <!-- Incremento manual (only when IPC = No) -->
+    @if (!incrementaIPC()) {
+      <afi-input
+        label="Incremento manual"
+        type="number"
+        suffix="%"
+        hint="Porcentaje de crecimiento anual"
+        [value]="incrementoManualPct()"
+        (valueChange)="setIncremento($event)"
       />
-      <div class="ig-form__input-with-unit">
-        <afi-input
-          label="Incremento manual"
-          type="number"
-          hint="0 si no aplica. IPC retirado — manual siempre."
-          [value]="incrementoManualPct()"
-          (valueChange)="setIncremento($event)"
-        />
-        <span class="ig-form__unit">%</span>
-      </div>
-      <div class="ig-form__input-with-unit">
-        <afi-input
-          label="Valor"
-          type="number"
-          [value]="valor()"
-          (valueChange)="setValor($event)"
-        />
-        <span class="ig-form__unit">€</span>
-      </div>
-    </div>
+    }
   </div>
 
   <ng-container slot="footer">

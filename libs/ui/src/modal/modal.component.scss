@@ -65,11 +65,18 @@
   box-shadow: var(--elevation-lg);
 
   // Flex column so the body can scroll when the modal hits its
-  // `max-height` cap (set on `.afi-modal__dialog`). Header / footer
-  // stay pinned; only the body scrolls.
+  // `max-height` cap. Header / footer stay pinned; only the body scrolls.
+  //
+  // The panel needs its own viewport-relative max-height (matching the
+  // dialog's) rather than `max-height: 100%` — `<dialog>` has only
+  // `max-height` (no definite `height`), so a percentage on the panel
+  // would resolve to `auto` and the body's flex chain would never trip
+  // overflow. Result without this: tall forms push the footer outside
+  // the dialog's overflow:hidden clip and Guardar/Cancelar become
+  // unreachable.
   display: flex;
   flex-direction: column;
-  max-height: 100%;
+  max-height: calc(100vh - var(--space-2xl));
 }
 
 // ─── Type: confirm ────────────────────────────────────────────────────────

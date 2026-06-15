@@ -123,13 +123,15 @@
   --afi-table-select-cell-width: 0;
   --afi-table-select-cell-padding: 0;
   --afi-table-select-checkbox-position: absolute;
-  // Checkbox is anchored so its 44pt touch area's RIGHT edge sits AT the
-  // table border. That keeps the (invisible) touch area out of the cell
-  // text and parks the visible checkmark in the section's --space-lg
-  // padding gutter — Notion-style. The touch area extends a little past
+  // Checkbox is anchored so its 44pt touch area's RIGHT edge sits just
+  // past the table border. That keeps the (invisible) touch area mostly
+  // out of the cell text while shifting the visible checkmark slightly
+  // right of the section padding gutter — so it reads as "centered
+  // between the table's left line and the first letter of the leading
+  // cell" rather than "stuck on the line". The touch area extends past
   // the section card on the LEFT; that's intentional and visible only
   // because the row is hovered.
-  --afi-table-select-checkbox-left: calc(var(--dimension-11) * -1);
+  --afi-table-select-checkbox-left: calc(var(--dimension-11) * -1 + var(--space-sm));
   --afi-table-select-checkbox-top: 50%;
   --afi-table-select-checkbox-transform: translateY(-50%);
   --afi-table-select-checkbox-rest-opacity: 0;

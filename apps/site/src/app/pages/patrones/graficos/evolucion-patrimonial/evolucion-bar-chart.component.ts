@@ -157,9 +157,13 @@ interface TodosSerie {
 }
 
 const TODOS_SERIES: TodosSerie[] = [
-  { key: 'pesimista', label: 'Pesimista', color: 'var(--chart-legacy-v1-6)', factor: 0.85, marker: 'diamond' },
-  { key: 'medio',     label: 'Medio',     color: 'var(--chart-legacy-v1-1)', factor: 1.0,  marker: 'square' },
-  { key: 'optimista', label: 'Optimista', color: 'var(--chart-legacy-v1-4)', factor: 1.15, marker: 'circle' },
+  // Canonical --chart-stacked-* palette (LOCKED 2026-05-28, charts.scss).
+  // Mapping preserves perceptual hierarchy: medio = anchor (deepest),
+  // optimista = mid azul, pesimista = lightest azul. Marker shape paired
+  // with color per data-viz-skill (color is never the only cue).
+  { key: 'pesimista', label: 'Pesimista', color: 'var(--chart-stacked-5)', factor: 0.85, marker: 'diamond' },
+  { key: 'medio',     label: 'Medio',     color: 'var(--chart-stacked-1)', factor: 1.0,  marker: 'square'  },
+  { key: 'optimista', label: 'Optimista', color: 'var(--chart-stacked-3)', factor: 1.15, marker: 'circle'  },
 ];
 
 const PATRIMONIO_XMIN = 55;
@@ -291,12 +295,10 @@ const PATRIMONIO_XTICKS = [55, 60, 65, 70, 75, 80, 85, 90];
         role="img"
         [attr.aria-label]="ariaLabel()"
       >
-        <!-- Grid + Y-axis labels — labels sit ABOVE the gridline,
-             text-anchor="start" so the leading digit ("1" / "5" / "0")
-             lines up with the chart's left edge. Per component-skill
-             §"Persistent trigger alignment": the always-visible trigger
-             is the alignment anchor — the Ver-datos toggle below the
-             chart shares this same left edge. -->
+        <!-- Grid + Y-axis labels — labels sit to the LEFT of the gridline,
+             vertically centered with it, text-anchor="end". The bars'
+             leftmost column (xMin) starts at x=padLeft so it can never
+             overlap the label area. -->
         <g>
           @for (t of yTicks(); track t) {
             <line
@@ -308,9 +310,9 @@ const PATRIMONIO_XTICKS = [55, 60, 65, 70, 75, 80, 85, 90];
               stroke-dasharray="2,3"
             />
             <text
-              [attr.x]="padLeft"
-              [attr.y]="yFor(t) - 6"
-              text-anchor="start"
+              [attr.x]="padLeft - 8"
+              [attr.y]="yFor(t) + 4"
+              text-anchor="end"
               class="chart-text-axis"
             >
               {{ formatY(t) }}
@@ -395,13 +397,17 @@ const PATRIMONIO_XTICKS = [55, 60, 65, 70, 75, 80, 85, 90];
           }
         }
 
-        <!-- Financial objetivos — patrimonio mode only -->
+        <!-- Financial objetivos — patrimonio mode only.
+             Same visual treatment as life-event hitos above (circle bubble
+             at top of column + dashed guide down to the baseline). Icons
+             distinguish them; the user reads "milestone" from the shape
+             and "what kind" from the glyph. -->
         @if (mostrarObjetivos() && !isDataMode()) {
           @for (o of objetivos; track o.age) {
             <line
               [attr.x1]="columnX(o.age) + columnWidth() / 2"
               [attr.x2]="columnX(o.age) + columnWidth() / 2"
-              [attr.y1]="yFor(o.value) + 10"
+              [attr.y1]="padTop + 22"
               [attr.y2]="yFor(0)"
               stroke="var(--color-neutral-300)"
               stroke-dasharray="2,3"
@@ -410,25 +416,22 @@ const PATRIMONIO_XTICKS = [55, 60, 65, 70, 75, 80, 85, 90];
             />
             <g
               [attr.transform]="
-                'translate(' + (columnX(o.age) + columnWidth() / 2) + ', ' + yFor(o.value) + ')'
+                'translate(' + (columnX(o.age) + columnWidth() / 2) + ', ' + (padTop + 11) + ')'
               "
               class="cursor-help"
             >
               <title>{{ o.age }} años — {{ o.label }}</title>
-              <rect
-                x="-9"
-                y="-9"
-                width="18"
-                height="18"
-                rx="2"
-                fill="var(--chart-marker-fill)"
-                stroke="var(--color-neutral-700)"
-                stroke-width="1.25"
-                transform="rotate(45)"
+              <circle
+                cx="0"
+                cy="0"
+                r="11"
+                fill="var(--surface-elevated)"
+                stroke="var(--action-700)"
+                stroke-width="1.5"
               />
               <g
-                transform="translate(-5, -5) scale(0.42)"
-                stroke="var(--color-neutral-700)"
+                transform="translate(-6, -6) scale(0.5)"
+                stroke="var(--action-700)"
                 stroke-width="2.5"
                 fill="none"
                 stroke-linecap="round"
@@ -708,36 +711,6 @@ const PATRIMONIO_XTICKS = [55, 60, 65, 70, 75, 80, 85, 90];
                     [class.tt-row--muted]="r.muted"
                     [class.tt-row--indent]="r.indent"
                   >
-                    @switch (r.icon) {
-                      @case ('up') {
-                        <svg
-                          class="tt-chev"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.75"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true"
-                        >
-                          <polyline points="3 7.5 6 4.5 9 7.5" />
-                        </svg>
-                      }
-                      @case ('down') {
-                        <svg
-                          class="tt-chev"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.75"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true"
-                        >
-                          <polyline points="3 4.5 6 7.5 9 4.5" />
-                        </svg>
-                      }
-                    }
                     <span class="tt-label">{{ r.label }}</span>
                     <span class="tt-value">{{ r.value }}</span>
                   </div>
@@ -824,7 +797,6 @@ export class EvolucionBarChartComponent {
       value: string;
       muted?: boolean;
       indent?: boolean;
-      icon?: 'up' | 'down' | '';
     }[] = [];
     let total: { label: string; value: string; delta?: 'up' | 'down' | '' } | null = null;
 
@@ -833,14 +805,13 @@ export class EvolucionBarChartComponent {
       if (!d) return null;
       const segs = this.stackedSegments(d);
       const activosSum = segs.reduce((s, seg) => s + seg.value, 0);
-      rows.push({ label: 'Activos', value: this.formatFull(activosSum), icon: 'up' });
+      rows.push({ label: 'Activos', value: this.formatFull(activosSum) });
       for (const seg of segs) {
         rows.push({
           label: seg.label,
           value: this.formatFull(seg.value),
           muted: true,
           indent: true,
-          icon: 'down',
         });
       }
       total = { label: 'Patrimonio neto', value: this.formatFull(d.value) };
@@ -886,13 +857,13 @@ export class EvolucionBarChartComponent {
   });
 
   // ── Fixed geometry ──────────────────────────────────────────────────────
-  // padLeft was 70 (room for right-aligned axis labels). Dropped to 0 once
-  // labels moved above the gridlines + left-aligned, so the leading digit
-  // of every Y label, the first column's pin / bar, and the Ver-datos
-  // trigger below the chart all share the section's content-left edge
-  // (component-skill §"Persistent trigger alignment"). padTop bumped to
-  // clear the floating Y label above the topmost gridline.
-  readonly padLeft = 0;
+  // padLeft = 56: room for the widest Y-axis label ("-500K €") plus a small
+  // gap before the gridline. Y labels render with text-anchor="end" at
+  // x = padLeft - 8, vertically centered on each gridline. The bars'
+  // leftmost column starts at x = padLeft, so a tall first-age bar never
+  // overlaps the label area. padTop kept to host hover crosshair plus
+  // life-event icons above the top gridline.
+  readonly padLeft = 56;
   readonly padRight = 20;
   readonly padTop = 32;
   readonly padBottom = 32;

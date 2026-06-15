@@ -4,55 +4,63 @@ import {
   computed,
   inject,
   signal,
-  type WritableSignal,
 } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
 
 import {
-  ButtonComponent,
+  DropdownPanelComponent,
+  IconButtonComponent,
+  MenuComponent,
+  MenuItemComponent,
   PageHeaderComponent,
-  SelectComponent,
   SwitchComponent,
 } from '@coherence/ui';
-import type { SelectOption } from '@coherence/ui';
 
-import { GraphCardHeaderComponent } from '../../patrones/graficos/evolucion-patrimonial/graph-card-header.component';
 import {
   EvolucionBarChartComponent,
   type Vista,
   type Escenario,
   type Detalle,
 } from '../../patrones/graficos/evolucion-patrimonial/evolucion-bar-chart.component';
-import { bridgeDesignReviewVersion } from '../shared/design-review-bridge';
-import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
-import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
-import { VersionToggleComponent, type VersionOption } from '../shared/version-toggle.component';
+import { ObjetivosPageShellComponent } from '../wealth-planner-2026/shared/objetivos-page-shell.component';
 import { WealthPlannerStore } from '../wealth-planner-2026/store';
 
-type LayoutVersion = 'v1' | 'v2' | 'v3';
+/**
+ * Filter option — local shape for the chip-dropdown menus. Mirrors the
+ * shape patrimonio uses for its Tipo / Entidad chips: a value/label pair.
+ */
+interface FilterOption<V extends string> {
+  value: V;
+  label: string;
+}
 
 /**
- * Propuesta — Evolución Patrimonial.
+ * Propuesta — Evolución comparada (Conclusiones §5.a).
  *
- * Composición completa de la página del Wealth Planner: top bar con el contexto
- * de simulación, barra lateral con la navegación real del producto, cabecera de
- * página y el gráfico de Evolución Patrimonial (todas las piezas ya validadas
- * como patrones).
+ * Page-structure-skill compliance:
+ *   - slot="actions"  → ONE page-wide action: download as HTML table.
+ *   - slot="filters"  → Vista / Escenario / Detalle as chip-dropdowns
+ *                       (the patrimonio pattern — chip-shaped trigger that
+ *                       opens an `<afi-menu>` with the options) + Ajustes
+ *                       (3 chart switches inside `<afi-dropdown-panel>`).
+ *   - body (default)  → just the chart + (optional) band note + explainer.
+ *                       The page is single-section; no intermediate graph
+ *                       header — the page-header IS the title.
+ *
+ * Chart palette is locked to canonical `'a'` (--chart-stacked-{1..7}, LOCKED
+ * 2026-05-28).
  */
 @Component({
   selector: 'site-evolucion-patrimonial-proposal-page',
   standalone: true,
   imports: [
-    NgTemplateOutlet,
-    ButtonComponent,
-    PageHeaderComponent,
-    SelectComponent,
-    SwitchComponent,
-    GraphCardHeaderComponent,
+    DropdownPanelComponent,
     EvolucionBarChartComponent,
-    PlannerSidebarComponent,
-    PlannerTopBarComponent,
-    VersionToggleComponent,
+    IconButtonComponent,
+    MenuComponent,
+    MenuItemComponent,
+    ObjetivosPageShellComponent,
+    PageHeaderComponent,
+    SwitchComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './evolucion-patrimonial-proposal.page.html',
@@ -65,34 +73,40 @@ export class EvolucionPatrimonialProposalPage {
   readonly escenario = signal<Escenario>('medio');
   readonly detalle = signal<Detalle>('agregada');
 
-  constructor() {
-    bridgeDesignReviewVersion(this.version as unknown as WritableSignal<string>);
-  }
-
-  /** Page-level layout version. V1 = filtros arriba (current),
-   *  V2 = filtros a la derecha del header, V3 = filtros debajo del gráfico.
-   *  Variants are kept side-by-side so seniors can compare across reviews —
-   *  delete losers only after a winner is named. */
-  readonly version = signal<LayoutVersion>('v1');
-  readonly versions: VersionOption[] = [
-    { key: 'v1', label: 'Versión 1' },
-    { key: 'v2', label: 'Versión 2' },
-    { key: 'v3', label: 'Versión 3' },
-  ];
+  readonly vistaMenuOpen = signal(false);
+  readonly escenarioMenuOpen = signal(false);
+  readonly detalleMenuOpen = signal(false);
 
   readonly ajustesOpen = signal(false);
   readonly ajusteObjetivos = signal(false);
   readonly ajusteInmobiliario = signal(true);
   readonly ajusteHitos = signal(false);
-  readonly accesibilidadOpen = signal(false);
 
   /** The chart only shades when the active vista has a probability band
-   *  to render — currently 'comparada' or escenario === 'todos'. The legend
-   *  follows the same rule so it's only visible when there's something to
-   *  explain. */
+   *  to render — currently 'comparada' or escenario === 'todos'. The band
+   *  note follows the same rule so it's only visible when there's
+   *  something to explain. */
   readonly showScenarioLegend = computed(
     () => this.vista() === 'comparada' || this.escenario() === 'todos',
   );
+
+  /**
+   * Audit of inputs vs the chart's `renderMode` (see
+   * `evolucion-bar-chart.component.ts:1038-1042`):
+   *   - `vista === 'comparada'`      → renderMode = lines-comparada (detalle ignored)
+   *   - `escenario === 'todos'`      → renderMode = lines-todos      (detalle ignored)
+   *   - `detalle === 'activo'`       → renderMode = stacked          (incluirInmobiliario applies)
+   *   - otherwise                    → renderMode = single
+   *
+   * Disable any control whose change wouldn't move a pixel on the chart so
+   * the user doesn't toggle a filter that does nothing.
+   */
+  readonly detalleDisabled = computed(
+    () => this.vista() === 'comparada' || this.escenario() === 'todos',
+  );
+
+  /** `incluirInmobiliario` is only read by the stacked render branch. */
+  readonly ajusteInmobiliarioDisabled = computed(() => this.detalle() !== 'activo');
 
   private readonly escenarioFactor: Record<Escenario, number> = {
     medio: 1.0,
@@ -100,47 +114,6 @@ export class EvolucionPatrimonialProposalPage {
     pesimista: 0.85,
     todos: 1.0,
   };
-
-  private formatEuro(v: number): string {
-    if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(2).replace('.', ',')} M €`;
-    return `${Math.round(v).toLocaleString('es-ES')} €`;
-  }
-
-  readonly headline = computed(() => {
-    const v = this.vista();
-    const f = this.escenarioFactor[this.escenario()];
-    if (v === 'comparada') return `Simulada +${this.formatEuro(170_000 * f)} vs Actual`;
-    if (v === 'simulada') return `${this.formatEuro(1_400_000 * f)}  a los 64 años`;
-    return `${this.formatEuro(1_280_000 * f)}  a los 63 años`;
-  });
-
-  readonly comparison = computed(() => {
-    const v = this.vista();
-    const f = this.escenarioFactor[this.escenario()];
-    if (v === 'comparada') return 'Al final del plan, a los 90 años';
-    if (v === 'simulada') return `Cae a ${this.formatEuro(520_000 * f)} a los 90`;
-    return `Cae a ${this.formatEuro(350_000 * f)} a los 90`;
-  });
-
-  readonly tag = computed<string | undefined>(() => {
-    if (this.escenario() !== 'medio') return undefined;
-    if (this.detalle() !== 'agregada') return undefined;
-    if (this.vista() === 'actual') return 'Retiro esperado';
-    if (this.vista() === 'simulada') return 'Jubilación simulada';
-    return undefined;
-  });
-
-  readonly tooltipText = computed(() => {
-    if (this.vista() === 'comparada')
-      return 'Diferencia calculada al último año del plan. El signo indica qué escenario acaba más alto.';
-    if (this.detalle() === 'activo')
-      return 'Patrimonio desglosado por tipo de activo. Puedes ocultar categorías haciendo clic en la leyenda.';
-    if (this.detalle() === 'objetivo')
-      return 'Trayectoria con los hitos vitales planificados superpuestos (retiro, jubilación, emancipación).';
-    if (this.escenario() === 'todos')
-      return 'Tres escenarios superpuestos para comparar su impacto.';
-    return 'Pico calculado al año de máximo patrimonio neto; caída estimada al fin del plan.';
-  });
 
   readonly viewExplainer = computed(() => {
     const v = this.vista();
@@ -195,36 +168,111 @@ export class EvolucionPatrimonialProposalPage {
     return `${base}${detalleStr}, ${escenarioStr}.`;
   });
 
-  readonly vistaOptions: SelectOption[] = [
-    { value: 'actual', label: 'Situación actual' },
-    { value: 'simulada', label: 'Situación simulada' },
+  readonly vistaOptions: FilterOption<Vista>[] = [
+    { value: 'actual', label: 'Actual' },
+    { value: 'simulada', label: 'Simulada' },
     { value: 'comparada', label: 'Comparada' },
   ];
 
-  readonly escenarioOptions: SelectOption[] = [
-    { value: 'medio', label: 'Escenario medio' },
-    { value: 'optimista', label: 'Escenario optimista' },
-    { value: 'pesimista', label: 'Escenario pesimista' },
-    { value: 'todos', label: 'Todos los escenarios' },
+  readonly escenarioOptions: FilterOption<Escenario>[] = [
+    { value: 'medio', label: 'Medio' },
+    { value: 'optimista', label: 'Optimista' },
+    { value: 'pesimista', label: 'Pesimista' },
+    { value: 'todos', label: 'Todos' },
   ];
 
-  readonly detalleOptions: SelectOption[] = [
+  readonly detalleOptions: FilterOption<Detalle>[] = [
     { value: 'agregada', label: 'Agregada' },
-    { value: 'activo', label: 'Por tipo de activo' },
-    { value: 'objetivo', label: 'Por tipo de objetivo' },
+    { value: 'activo', label: 'Por activo' },
+    { value: 'objetivo', label: 'Por objetivo' },
   ];
 
-  setVista(v: string | number | null): void {
-    if (v === 'actual' || v === 'simulada' || v === 'comparada') this.vista.set(v);
+  readonly vistaLabel = computed(
+    () => this.vistaOptions.find((o) => o.value === this.vista())?.label ?? '',
+  );
+  readonly escenarioLabel = computed(
+    () => this.escenarioOptions.find((o) => o.value === this.escenario())?.label ?? '',
+  );
+  readonly detalleLabel = computed(
+    () => this.detalleOptions.find((o) => o.value === this.detalle())?.label ?? '',
+  );
+
+  selectVista(v: Vista): void {
+    this.vista.set(v);
+    this.vistaMenuOpen.set(false);
   }
-  setEscenario(v: string | number | null): void {
-    if (v === 'medio' || v === 'optimista' || v === 'pesimista' || v === 'todos')
-      this.escenario.set(v);
+  selectEscenario(v: Escenario): void {
+    this.escenario.set(v);
+    this.escenarioMenuOpen.set(false);
   }
-  setDetalle(v: string | number | null): void {
-    if (v === 'agregada' || v === 'activo' || v === 'objetivo') this.detalle.set(v);
+  selectDetalle(v: Detalle): void {
+    this.detalle.set(v);
+    this.detalleMenuOpen.set(false);
   }
-  setVersion(v: string): void {
-    if (v === 'v1' || v === 'v2' || v === 'v3') this.version.set(v);
+
+  toggleDetalleMenu(): void {
+    if (this.detalleDisabled()) return;
+    this.detalleMenuOpen.set(!this.detalleMenuOpen());
+  }
+
+  toggleAjustes(): void {
+    this.ajustesOpen.set(!this.ajustesOpen());
+  }
+  closeAjustes(): void {
+    this.ajustesOpen.set(false);
+  }
+
+  /**
+   * Generate an HTML table snapshot of the chart's current view and trigger
+   * a browser download. The page builds the table from a stub data series
+   * shaped like the patrimonio curve (ages 55–90, escenario factor applied).
+   * Live chart-data exposure would require a chart-primitive API change —
+   * out of scope for this brief.
+   */
+  onDownloadHtmlTable(): void {
+    const factor = this.escenarioFactor[this.escenario()];
+    const ages = Array.from({ length: 36 }, (_, i) => 55 + i);
+    const baseValues = ages.map((age) => {
+      const peak = age <= 63 ? (age - 55) / 8 : Math.max(0, (90 - age) / 27);
+      return Math.round(1_500_000 * peak * factor);
+    });
+
+    const rows = ages
+      .map(
+        (age, i) =>
+          `      <tr><td>${age}</td><td>${(baseValues[i] ?? 0).toLocaleString('es-ES')} €</td></tr>`,
+      )
+      .join('\n');
+
+    const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Evolución comparada — ${this.vista()} · ${this.escenario()} · ${this.detalle()}</title>
+</head>
+<body>
+  <h1>Evolución comparada</h1>
+  <p>Vista: ${this.vista()} · Escenario: ${this.escenario()} · Detalle: ${this.detalle()}</p>
+  <table>
+    <thead>
+      <tr><th>Edad</th><th>Patrimonio</th></tr>
+    </thead>
+    <tbody>
+${rows}
+    </tbody>
+  </table>
+</body>
+</html>
+`;
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `evolucion-comparada-${this.vista()}-${this.escenario()}-${this.detalle()}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 }

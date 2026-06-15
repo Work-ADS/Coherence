@@ -196,7 +196,7 @@ export class PlannerSidebarComponent {
         {
           key: 'evolucion-comparada',
           label: 'Evolución comparada',
-          state: 'empty',
+          state: this.store.evolucionComparadaState(),
           route: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
         {

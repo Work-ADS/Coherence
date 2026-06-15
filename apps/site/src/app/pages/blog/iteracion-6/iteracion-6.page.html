@@ -1,0 +1,122 @@
+<div class="i6">
+  <!-- Breadcrumb top bar -->
+  <div class="i6__breadcrumb">
+    <a
+      routerLink="/blog"
+      class="i6__breadcrumb-back"
+      aria-label="Volver al blog"
+    >
+      <svg class="i6__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+    <span class="i6__breadcrumb-parent">Blog</span>
+    <span class="i6__breadcrumb-separator" aria-hidden="true">/</span>
+    <span class="i6__breadcrumb-current">Iteración 6</span>
+  </div>
+
+  <main class="i6__main">
+    <div class="i6__layout">
+      <div class="i6__content">
+        <afi-page-header
+          title="DS — Iteración 6"
+          subtitle="Wave 1 paso 3 del Wealth Planner 2026 — Evolución comparada. La página ya existía con el gráfico funcionando; esta iteración alinea el chrome a las reglas que page-structure-skill y clean-code lockearon en junio: shell compartido, paleta canónica del stacked-bar, popups con primitivas DS, wrapper único, tokens en lugar de utilidades Tailwind."
+          [sticky]="false"
+          [scrollFade]="false"
+        >
+          <span slot="breadcrumb" class="i6__eyebrow">ITERACIÓN 6 · CERRADA</span>
+        </afi-page-header>
+
+        <!-- Summary -->
+        <section class="i6__summary">
+          <afi-section-header
+            eyebrow="Resumen"
+            title="Alcance de la iteración"
+            snippet="Refactor de Evolución comparada, no rebuild — el gráfico, los selectores (Vista / Escenario / Detalle), los switches de Ajustes y las acciones de Accesibilidad se conservan idénticos. Lo que cambia es el chrome: shell, paleta, popups, estructura, tokens."
+          />
+          <div class="i6__badges">
+            @if (totalTasks() === 0) {
+              <afi-badge size="sm" intent="neutral">1 · Brief por activar</afi-badge>
+            } @else {
+              @if (doneCount() > 0) {
+                <afi-badge size="sm" intent="success">{{ doneCount() }} · Hecho</afi-badge>
+              }
+              @if (enCursoCount() > 0) {
+                <afi-badge size="sm" intent="info">{{ enCursoCount() }} · En curso</afi-badge>
+              }
+              @if (pendingCount() > 0) {
+                <afi-badge size="sm" intent="neutral">{{ pendingCount() }} · Pendiente</afi-badge>
+              }
+            }
+          </div>
+        </section>
+
+        <!-- Surfaces -->
+        <div class="i6__surfaces">
+          @for (s of surfaces; track s.id) {
+            <article class="i6__surface" [id]="s.id">
+              <afi-section-header
+                [eyebrow]="s.eyebrow"
+                [title]="s.title"
+                [snippet]="s.snippet"
+              />
+
+              <ul class="i6__tasks">
+                @if (s.tasks.length === 0) {
+                  <li class="i6__task i6__task--empty">
+                    <p class="i6__task-text i6__task-text--empty">
+                      Brief pendiente · sin tareas registradas todavía.
+                    </p>
+                  </li>
+                } @else {
+                  @for (t of s.tasks; track t.text) {
+                    <li class="i6__task" [class.i6__task--done]="t.status === 'Hecho'">
+                      <p class="i6__task-text">
+                        <afi-badge
+                          class="i6__task-badge"
+                          size="sm"
+                          [intent]="
+                            t.status === 'Hecho'
+                              ? 'success'
+                              : t.status === 'En curso'
+                                ? 'info'
+                                : 'neutral'
+                          "
+                        >
+                          {{ t.status }}
+                        </afi-badge>
+                        <afi-badge class="i6__task-badge" size="sm" intent="neutral">
+                          {{ t.source }}
+                        </afi-badge>
+                        @if (t.href) {
+                          <a [routerLink]="t.href" class="i6__task-link">{{ t.text }}</a>
+                        } @else {
+                          {{ t.text }}
+                        }
+                      </p>
+                    </li>
+                  }
+                }
+              </ul>
+            </article>
+          }
+
+          <p class="i6__footnote">
+            El brief que ancla esta iteración vive en
+            <code class="i6__code"
+              >~/.claude/plans/okay-now-we-are-graceful-puppy.md</code
+            >
+            y la rama es
+            <code class="i6__code">feat/evolucion-comparada-shell</code>.
+          </p>
+        </div>
+      </div>
+
+      <site-on-this-page class="i6__rail" [sections]="tocSections" />
+    </div>
+  </main>
+</div>

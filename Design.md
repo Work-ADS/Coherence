@@ -65,6 +65,7 @@ Six craft rules that show up across every skill and every primitive. Each is a o
 - **Container-first motion** — animate the object, not its contents. Fewest properties (transform + opacity by default). Match duration to weight. Respect reduced-motion as respect, not disable. See [docs/rules/motion-skill.md](docs/rules/motion-skill.md).
 - **Persistent alignment is the anchor** — the resting label/title is the alignment source of truth. Hover/expanded containers grow around the anchor; they don't redefine it. Locked in [AGENTS.md § Persistent label alignment](AGENTS.md); generalized for pages in [docs/rules/page-structure-skill.md § 13](docs/rules/page-structure-skill.md).
 - **Container queries over `@media` for layout** — pages and components respond to their rendered area, not the window. See [docs/rules/page-structure-skill.md § 11](docs/rules/page-structure-skill.md).
+- **Destructive actions confirm** — every delete / archive / discard requires an explicit `<afi-modal size="sm">` confirmation with a danger-variant primary button, the consequence stated in one sentence (`Esta acción no se puede deshacer.`), and the safe default (Cancelar) holding focus. No silent deletes, no `window.confirm()`. See [docs/rules/destructive-actions.md](docs/rules/destructive-actions.md).
 
 ---
 

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  HostListener,
   inject,
   signal,
 } from '@angular/core';
@@ -14,11 +15,11 @@ import {
   PageHeaderComponent,
   SelectComponent,
   TableComponent,
+  ToastComponent,
 } from '@coherence/ui';
 import type { SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
 import { KeyShortcutDirective } from '../../../directives/key-shortcut.directive';
-import { DialogSummaryCardComponent } from '../shared/dialog-summary-card.component';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 import { PlannerSidebarComponent } from '../shared/planner-sidebar.component';
 import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
@@ -52,8 +53,8 @@ import type { Sociedad, Tributacion } from '../wealth-planner-2026/store';
     PageHeaderComponent,
     SelectComponent,
     TableComponent,
+    ToastComponent,
     DemoShellComponent,
-    DialogSummaryCardComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
     VersionToggleComponent,
@@ -83,20 +84,17 @@ export class SociedadesPage {
   ];
 
   /**
-   * Row-actions pattern (2026-05-28, team-locked): 1 primary inline + the
-   * rest in the `⋯` overflow menu. Matches the patrimonial reference.
-   *   - Editar → inline (most-used action; visible on hover via the
-   *     primitive's `actionsReveal` setting)
-   *   - Duplicar → overflow
-   *   - Borrar → overflow + danger variant (auto-divider above it)
+   * Row-actions: 2 inline icon buttons — Editar (default) + Borrar (danger).
+   * Per `TableRowAction.overflow` JSDoc, the primitive renders both inline
+   * when the action set has ≤ 2 entries (no overflow menu).
    */
   readonly sociedadActions: TableRowAction[] = [
     { key: 'edit', label: 'Editar', ariaLabel: 'Editar sociedad', icon: 'edit' },
-    { key: 'duplicate', label: 'Duplicar', overflow: true },
     {
       key: 'delete',
       label: 'Borrar',
-      overflow: true,
+      ariaLabel: 'Borrar sociedad',
+      icon: 'delete',
       variant: 'danger',
     },
   ];
@@ -118,7 +116,47 @@ export class SociedadesPage {
   // ── Dialog state ──────────────────────────────────────────────────────
   /** id of the sociedad being edited; null when dialog is closed. */
   readonly editingId = signal<string | null>(null);
+  /**
+   * id of a sociedad created by `openAdd()` that hasn't been confirmed yet.
+   * Tracks "Cancelar should discard a new row, but never an existing one."
+   * Edit-flow keeps this null.
+   */
+  readonly pendingAddId = signal<string | null>(null);
   readonly dialogOpen = computed(() => this.editingId() !== null);
+
+  /**
+   * id of a sociedad the user has clicked Borrar on, awaiting confirmation.
+   * Drives the destructive-confirm modal per `docs/rules/destructive-actions.md`.
+   */
+  readonly pendingDeleteId = signal<string | null>(null);
+  readonly confirmDeleteOpen = computed(() => this.pendingDeleteId() !== null);
+  readonly pendingDeleteRow = computed<Sociedad | null>(() => {
+    const id = this.pendingDeleteId();
+    if (id === null) return null;
+    return this.store.sociedades().find((s) => s.id === id) ?? null;
+  });
+
+  // ── Action toast — `<afi-toast>` per `destructive-actions.md` § 6. ────
+  // One toast covers both Add (receipt for Guardar) and Delete (receipt for
+  // confirm). Undo routes by `lastAction.kind`. ⌘Z is wired below via a
+  // HostListener so the shortcut works while the toast is alive.
+  readonly actionToastVisible = signal<boolean>(false);
+  readonly actionToastMessage = signal<string>('');
+  readonly undoShortcut: string[] = ['⌘', 'Z'];
+
+  /**
+   * Snapshot of the most recent undoable action, used to route the toast's
+   * Deshacer / ⌘Z. Set whenever Add or Delete commits; cleared on undo,
+   * dismiss, or auto-timeout.
+   */
+  private lastAction = signal<
+    | { kind: 'add'; addedId: string }
+    | { kind: 'delete'; snapshot: Sociedad }
+    | null
+  >(null);
+
+  /** Active dismiss timer; cleared if a new action fires before this one ends. */
+  private actionToastTimer: ReturnType<typeof setTimeout> | null = null;
 
   /** Reactive view of the sociedad in the dialog (or null when closed). */
   readonly editing = computed<Sociedad | null>(() => {
@@ -133,9 +171,6 @@ export class SociedadesPage {
     if (s === null) return 0;
     return s.participantes.reduce((sum, p) => sum + p.porcentaje, 0);
   });
-
-  /** Summary-card total for the dialog footer zone. */
-  readonly dialogContextTotal = computed<number>(() => this.editingTotalParticipacion());
 
   // ── Version-toggle (v1 only for now; v2/v3 reserved) ──────────────────
   readonly version = signal<string>('v1');
@@ -157,36 +192,143 @@ export class SociedadesPage {
   openAdd(): void {
     const next = this.store.addSociedad();
     this.editingId.set(next.id);
+    this.pendingAddId.set(next.id);
   }
 
   openEdit(id: string): void {
     this.editingId.set(id);
-  }
-
-  closeDialog(): void {
-    this.editingId.set(null);
-  }
-
-  removeSociedad(id: string, event?: Event): void {
-    event?.stopPropagation();
-    this.store.removeSociedad(id);
+    this.pendingAddId.set(null);
   }
 
   /**
-   * Duplicar: minimum-viable demo flow. Creates a new sociedad with the
-   * shape of the source (nombre + tributación copied; participantes left
-   * empty in this MVP — would need a store-level deep-clone helper).
-   * Opens the modal on the new row so the user can adjust.
+   * Guardar: data is already persisted via the reactive setters as the
+   * user types. Confirm the new row (clear pending flag) and close. When
+   * this dialog session created a new sociedad, fire the action toast
+   * with undo (removes the just-added row).
    */
-  duplicateSociedad(id: string): void {
-    const source = this.store.sociedades().find((s) => s.id === id);
-    if (!source) return;
-    const next = this.store.addSociedad();
-    this.store.updateSociedad(next.id, {
-      nombre: source.nombre ? `${source.nombre} (copia)` : '',
-      tributacion: source.tributacion,
-    });
-    this.editingId.set(next.id);
+  saveDialog(): void {
+    const newlyAddedId = this.pendingAddId();
+    this.pendingAddId.set(null);
+    this.editingId.set(null);
+    if (newlyAddedId !== null) {
+      const added = this.store.sociedades().find((s) => s.id === newlyAddedId);
+      const nombre = added?.nombre?.trim() || 'Sociedad sin nombre';
+      this.lastAction.set({ kind: 'add', addedId: newlyAddedId });
+      this.showActionToast(`${nombre} añadida`);
+    }
+  }
+
+  /**
+   * Cancelar: if this dialog session created a new row, drop it so it
+   * never shows up in the table. Edit-flow just closes (existing row
+   * stays as-is).
+   */
+  cancelDialog(): void {
+    const pending = this.pendingAddId();
+    if (pending !== null) {
+      this.store.removeSociedad(pending);
+    }
+    this.pendingAddId.set(null);
+    this.editingId.set(null);
+  }
+
+  /**
+   * Step 1 of the destructive-confirm flow — stage the row for deletion
+   * and open the confirm modal. The actual store mutation only happens
+   * after `confirmDelete()`.
+   */
+  askDelete(id: string, event?: Event): void {
+    event?.stopPropagation();
+    this.pendingDeleteId.set(id);
+  }
+
+  cancelDelete(): void {
+    this.pendingDeleteId.set(null);
+  }
+
+  confirmDelete(): void {
+    const id = this.pendingDeleteId();
+    if (id !== null) {
+      const target = this.store.sociedades().find((s) => s.id === id);
+      if (target) {
+        const nombre = target.nombre?.trim() || 'Sociedad sin nombre';
+        // Deep snapshot so the participantes array doesn't share refs with
+        // the live store (the user could edit them, undo, and the snapshot
+        // would be polluted). Cheap for the realistic 0-2 sociedad case.
+        const snapshot: Sociedad = {
+          ...target,
+          participantes: target.participantes.map((p) => ({ ...p })),
+        };
+        this.store.removeSociedad(id);
+        this.lastAction.set({ kind: 'delete', snapshot });
+        this.showActionToast(`${nombre} borrada`);
+      }
+    }
+    this.pendingDeleteId.set(null);
+  }
+
+  // ── Action toast lifecycle ────────────────────────────────────────────
+  private showActionToast(message: string): void {
+    if (this.actionToastTimer !== null) {
+      clearTimeout(this.actionToastTimer);
+    }
+    this.actionToastMessage.set(message);
+    this.actionToastVisible.set(true);
+    this.actionToastTimer = setTimeout(() => {
+      this.actionToastVisible.set(false);
+      this.lastAction.set(null);
+      this.actionToastTimer = null;
+    }, 5000);
+  }
+
+  dismissActionToast(): void {
+    if (this.actionToastTimer !== null) {
+      clearTimeout(this.actionToastTimer);
+      this.actionToastTimer = null;
+    }
+    this.actionToastVisible.set(false);
+    this.lastAction.set(null);
+  }
+
+  /**
+   * Toast Deshacer / ⌘Z handler. Routes by `lastAction.kind`:
+   *  - add    → removes the just-added row.
+   *  - delete → re-creates the row from the snapshot. The store mints a
+   *             fresh id (no insertAt API), but the user-visible fields
+   *             (nombre, tributación, participantes %) are preserved.
+   */
+  undoLastAction(): void {
+    const last = this.lastAction();
+    if (last === null) return;
+    if (last.kind === 'add') {
+      this.store.removeSociedad(last.addedId);
+    } else {
+      const next = this.store.addSociedad();
+      this.store.updateSociedad(next.id, {
+        nombre: last.snapshot.nombre,
+        tributacion: last.snapshot.tributacion,
+      });
+      for (const p of last.snapshot.participantes) {
+        this.store.updateParticipante(next.id, p.id, p.porcentaje);
+      }
+    }
+    this.dismissActionToast();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onUndoKeydown(event: KeyboardEvent): void {
+    if (!this.actionToastVisible() || this.lastAction() === null) return;
+    const isUndo =
+      (event.key === 'z' || event.key === 'Z') &&
+      (event.metaKey || event.ctrlKey) &&
+      !event.shiftKey;
+    if (!isUndo) return;
+    // Don't steal ⌘Z away from text inputs (native undo inside a field
+    // should still win, even with our toast up).
+    const tag = (event.target as HTMLElement | null)?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    event.preventDefault();
+    this.undoLastAction();
   }
 
   /**
@@ -212,11 +354,8 @@ export class SociedadesPage {
       case 'edit':
         this.openEdit(id);
         break;
-      case 'duplicate':
-        this.duplicateSociedad(id);
-        break;
       case 'delete':
-        this.removeSociedad(id);
+        this.askDelete(id);
         break;
     }
   }

@@ -69,6 +69,16 @@
   font: var(--type-body-sm-500);
 }
 
+// Tunnel the dark-pill palette into the embedded `<afi-kbd>` so the keycaps
+// read light-on-dark instead of inheriting the page's light styling. Uses
+// the same neutral-700/800 + base-white that the toast pill itself draws
+// from, so the chip stays in palette under brand mode swaps.
+.toast__shortcut {
+  --kbd-fg: var(--color-base-white);
+  --kbd-bg: var(--color-neutral-800);
+  --kbd-border: var(--color-neutral-700);
+}
+
 // ─── Message ─────────────────────────────────────────────────────────────────
 .toast__message {
   font: var(--type-body-sm);

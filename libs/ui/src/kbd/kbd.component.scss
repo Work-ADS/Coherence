@@ -13,14 +13,17 @@
   font-family: var(--font-mono, ui-monospace, monospace);
 }
 
+// `--kbd-bg`, `--kbd-fg`, `--kbd-border` are the primitive's public theming
+// API. Default to canonical light-surface tokens; a host context can
+// override (e.g. the dark toast pill, which tunnels light-on-dark values).
 .kbd__key {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--surface-muted);
-  border: var(--border-width-hairline) solid var(--border-hairline);
+  background: var(--kbd-bg, var(--surface-muted));
+  border: var(--border-width-hairline) solid var(--kbd-border, var(--border-hairline));
   border-radius: var(--radius-sm);
-  color: var(--foreground-primary-default);
+  color: var(--kbd-fg, var(--foreground-primary-default));
   font-family: inherit;
 }
 

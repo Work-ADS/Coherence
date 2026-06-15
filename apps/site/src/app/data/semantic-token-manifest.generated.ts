@@ -760,6 +760,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "length"
   },
   {
+    "name": "--gap-card-to-card",
+    "kind": "length"
+  },
+  {
     "name": "--gap-content-to-content",
     "kind": "length"
   },

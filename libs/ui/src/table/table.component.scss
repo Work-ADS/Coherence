@@ -78,6 +78,28 @@
   border-block-end: var(--border-width-hairline) solid var(--border-hairline);
 }
 
+// Optional group-header row (rendered when any column has `group`).
+// Typography-only treatment — no fills, no vertical dividers. The brand
+// register (Design.md § 4) is "horizontal-rules-over-boxes" and
+// "color-sparingly"; the group label reads as a quiet kicker above its
+// columns, separated from the column-name row by the existing hairline.
+.afi-table__head-group-row {
+  border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+}
+
+.afi-table__th-group {
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  font: var(--type-body-sm-500);
+  color: var(--foreground-tertiary-default);
+  vertical-align: middle;
+  text-align: start;
+}
+
+.afi-table__th-group-label {
+  display: inline-block;
+}
+
 .afi-table__th {
   padding-block: var(--space-sm);
   padding-inline: var(--space-md);
@@ -338,6 +360,32 @@
     font: var(--type-body-sm-600);
     color: var(--foreground-primary-default);
   }
+
+  // Per-cell status tone (driven by TableColumn.toneKey reading a value
+  // from row data). Maps verde/naranja/rojo and a dim neutral to the
+  // feedback foreground tokens; placed AFTER --emphasis so the tone wins
+  // when both are present on the same cell.
+  &--tone-success {
+    color: var(--feedback-success-foreground);
+  }
+  &--tone-warning {
+    color: var(--feedback-warning-foreground);
+  }
+  &--tone-danger {
+    color: var(--feedback-error-foreground);
+  }
+  &--tone-neutral {
+    color: var(--foreground-secondary-default);
+  }
+}
+
+// Muted row — reference / baseline rows that should not draw the eye
+// (e.g. the "Objetivo" target row in Consecución de objetivos). Italic
+// + tertiary foreground; tone modifiers on individual cells still win
+// because their selector matches the more specific `__td--tone-*` class.
+.afi-table__row--muted > .afi-table__td {
+  font-style: italic;
+  color: var(--foreground-tertiary-default);
 }
 
 .afi-table__row--comfortable {

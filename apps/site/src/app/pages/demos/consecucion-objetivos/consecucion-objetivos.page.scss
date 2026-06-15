@@ -1,0 +1,11 @@
+// =============================================================================
+// Consecución de objetivos — Conclusiones page.
+// Layout comes entirely from `<site-objetivos-page-shell>` + `<afi-page-header>`;
+// no per-page chrome is required. This file exists to satisfy the 3-file
+// rule and to host future page-local overrides if the layout ever needs
+// them (e.g. column width pinning when the spec gains more metrics).
+// =============================================================================
+
+:host {
+  display: block;
+}

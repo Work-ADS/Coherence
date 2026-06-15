@@ -1243,6 +1243,15 @@ export class WealthPlannerStore {
   readonly patrimonioPrevistoState = computed<SectionState>(() => 'complete');
 
   // ──────────────────────────────────────────────────────────────────────
+  // Conclusiones · Consecución de objetivos (PDF §5.b)
+  // ──────────────────────────────────────────────────────────────────────
+  //
+  // Read-only Conclusiones output. The page itself owns the row data
+  // because it's static + page-local; only the sidebar chip-state lives
+  // here so other components don't reach across the page boundary.
+  readonly consecucionObjetivosState = computed<SectionState>(() => 'complete');
+
+  // ──────────────────────────────────────────────────────────────────────
   // Listado · Planificaciones per cliente (Brief Listado)
   // ──────────────────────────────────────────────────────────────────────
   //

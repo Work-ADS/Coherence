@@ -2,6 +2,14 @@ import type { BadgeIntent } from '../badge';
 
 export type TableCellKind = 'text' | 'badge';
 
+/**
+ * Per-cell tone for scorecard tables (e.g. Consecución de objetivos —
+ * verde / naranja / rojo). Resolves to a `--feedback-*-foreground` token
+ * via the `afi-table__td--tone-{value}` modifier; `neutral` falls back to
+ * the secondary foreground for "dim" cells.
+ */
+export type TableCellTone = 'success' | 'warning' | 'danger' | 'neutral';
+
 export type TableRowActionVariant = 'default' | 'danger';
 
 /**
@@ -25,6 +33,26 @@ export interface TableColumn {
   emphasis?: boolean;
   kind?: TableCellKind;
   badgeIntent?: BadgeIntent;
+  /**
+   * When set, the cell reads `row[toneKey]` as a `TableCellTone` and
+   * applies `afi-table__td--tone-{value}` so the cell renders with a
+   * status foreground. Skipped when the row key is missing or not a
+   * valid tone. Used for scorecard tables where individual cells carry
+   * verde / naranja / rojo independent of the column.
+   */
+  toneKey?: string;
+  /**
+   * Group key for two-row scorecard headers. Consecutive columns with
+   * the SAME `group` are colspan-joined under one group header in a
+   * second `<thead>` row. The first column in each run also carries the
+   * group's display label via `groupLabel`. When no column declares a
+   * group, the table renders a flat single-row header (no behavior
+   * change). Used by Consecución de objetivos to render "Antes / Después
+   * del plan de acción" over three metric columns each.
+   */
+  group?: string;
+  /** Display label for the group header. Read from the first column in the run. */
+  groupLabel?: string;
 }
 
 export interface TableRowAction {
@@ -76,5 +104,9 @@ export interface TableSortState {
  * - `actions` — per-row override of the table-level `[rowActions]` input.
  *   Pass `actions: []` to hide all actions on that row; pass a custom
  *   array to swap the action set entirely.
+ * - `muted` — when truthy, the row renders italic + tertiary foreground
+ *   (BEM modifier `afi-table__row--muted`). Use for reference / baseline
+ *   rows that should not draw the eye (e.g. the "Objetivo" target row
+ *   in Consecución de objetivos).
  */
-export type TableReservedKey = 'children' | 'actions';
+export type TableReservedKey = 'children' | 'actions' | 'muted';

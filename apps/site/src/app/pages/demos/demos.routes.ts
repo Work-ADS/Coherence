@@ -96,6 +96,14 @@ export const demos_routes: Routes = [
         (m) => m.PatrimonioPrevistoPage,
       ),
   },
+  // Conclusiones — §5.b
+  {
+    path: 'wealth-planner-2026/consecucion-objetivos',
+    loadComponent: () =>
+      import('./consecucion-objetivos/consecucion-objetivos.page').then(
+        (m) => m.ConsecucionObjetivosPage,
+      ),
+  },
   // Laboral Kutxa — Sarevi 360 overview (3-tab demo shell)
   {
     path: 'laboral-kutxa-sarevi',

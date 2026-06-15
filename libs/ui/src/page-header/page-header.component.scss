@@ -116,17 +116,20 @@
   --afi-table-scroll-overflow: visible;
 
   // Collapse the [selectable]="true" select column to 0 width and pin
-  // its inner <afi-checkbox> absolutely in the hover-extend area on the
-  // left. Result: zero layout shift (text + dividers stay aligned with
-  // the section title), Notion-style hover reveal, real interactive
+  // its inner <afi-checkbox> absolutely in the section's padding gutter
+  // on the LEFT. Result: zero layout shift (text + dividers stay aligned
+  // with the section title), Notion-style hover reveal, real interactive
   // checkboxes (not pseudos) so clicking selects the row.
   --afi-table-select-cell-width: 0;
   --afi-table-select-cell-padding: 0;
   --afi-table-select-checkbox-position: absolute;
-  // Checkbox sits inside the hover band with a --space-2xs breather between its
-  // left edge and the band's left edge. Anchored to `--space-lg` (matches
-  // the band width) + `--space-2xs` so the gap survives token re-tuning.
-  --afi-table-select-checkbox-left: calc((var(--space-lg) * -1) + var(--space-2xs));
+  // Checkbox is anchored so its 44pt touch area's RIGHT edge sits AT the
+  // table border. That keeps the (invisible) touch area out of the cell
+  // text and parks the visible checkmark in the section's --space-lg
+  // padding gutter — Notion-style. The touch area extends a little past
+  // the section card on the LEFT; that's intentional and visible only
+  // because the row is hovered.
+  --afi-table-select-checkbox-left: calc(var(--dimension-11) * -1);
   --afi-table-select-checkbox-top: 50%;
   --afi-table-select-checkbox-transform: translateY(-50%);
   --afi-table-select-checkbox-rest-opacity: 0;

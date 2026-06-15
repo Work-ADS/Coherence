@@ -17,7 +17,12 @@
 
     <main class="flex-1 min-w-0 overflow-y-auto">
       <div class="max-w-[1180px] mx-auto py-space-8 px-space-6">
-        <!-- Page header — Sociedades. -->
+        <!-- Page header + body in one composition so title + table border
+             + first-column text share the same left edge (the page-header's
+             `padding-inline: --space-lg`). The table primitive's default of
+             `--afi-table-first-cell-pad: 0` makes the first-letter flush
+             with the table border. Version-toggle stays absolutely
+             positioned to keep its top-right anchor. -->
         <div class="relative">
           <afi-page-header
             title="Sociedades"
@@ -34,6 +39,40 @@
             >
               + Añadir sociedad
             </afi-button>
+
+            @if (store.sociedades().length === 0) {
+              <div class="sociedades-empty">
+                <h2 class="sociedades-empty__title">
+                  Aún no hay sociedades registradas.
+                </h2>
+                <p class="sociedades-empty__hint">
+                  Si la familia invierte a través de una sociedad patrimonial,
+                  holding o SOCIMI, regístrala aquí. Es opcional — déjalo en
+                  blanco si no aplica.
+                </p>
+                <div class="sociedades-empty__action">
+                  <afi-button
+                    variant="primary"
+                    size="md"
+                    (clicked)="openAdd()"
+                    ariaLabel="Añadir primera sociedad"
+                  >
+                    + Añadir sociedad
+                  </afi-button>
+                </div>
+              </div>
+            } @else {
+              <!-- Action set is 2 — Editar + Borrar — both render inline
+                   per `TableRowAction` threshold rule (≤2 = no overflow). -->
+              <afi-table
+                [columns]="sociedadColumns"
+                [rows]="sociedadRows()"
+                [rowActions]="sociedadActions"
+                trackByKey="id"
+                (rowClicked)="onSociedadRowClick($event)"
+                (rowActionClicked)="onSociedadAction($event)"
+              />
+            }
           </afi-page-header>
           <div class="absolute top-0 right-space-8">
             <site-version-toggle
@@ -43,46 +82,6 @@
               (valueChange)="setVersion($event)"
             />
           </div>
-        </div>
-
-        <!-- ─── Body: empty state or table ───────────────────────────── -->
-        <div class="mt-space-6">
-          @if (store.sociedades().length === 0) {
-            <div class="sociedades-empty">
-              <h2 class="sociedades-empty__title">
-                Aún no hay sociedades registradas.
-              </h2>
-              <p class="sociedades-empty__hint">
-                Si la familia invierte a través de una sociedad patrimonial,
-                holding o SOCIMI, regístrala aquí. Es opcional — déjalo en
-                blanco si no aplica.
-              </p>
-              <div class="sociedades-empty__action">
-                <afi-button
-                  variant="primary"
-                  size="md"
-                  (clicked)="openAdd()"
-                  ariaLabel="Añadir primera sociedad"
-                >
-                  + Añadir sociedad
-                </afi-button>
-              </div>
-            </div>
-          } @else {
-            <!-- 2026-05-28 — migrated from bespoke `<table class="sociedades-table">`
-                 to `<afi-table>`. Preset = Propuesta (modal flavor). Actions:
-                 1 inline primary (Editar) + ⋯ overflow menu (Duplicar +
-                 Borrar). `actionsReveal` inherits the primitive default
-                 (`'hover'` — locked 2026-05-28); no explicit binding needed. -->
-            <afi-table
-              [columns]="sociedadColumns"
-              [rows]="sociedadRows()"
-              [rowActions]="sociedadActions"
-              trackByKey="id"
-              (rowClicked)="onSociedadRowClick($event)"
-              (rowActionClicked)="onSociedadAction($event)"
-            />
-          }
         </div>
       </div>
     </main>
@@ -96,17 +95,13 @@
   size="md"
   [closeOnEsc]="true"
   [closeOnBackdrop]="false"
-  (openChange)="$event ? null : closeDialog()"
+  (openChange)="$event ? null : cancelDialog()"
 >
   @if (editing(); as s) {
-    <div class="sociedad-form">
-      <!-- Context summary — total participation across family members -->
-      <site-dialog-summary-card
-        title="Participación total"
-        [total]="dialogContextTotal()"
-        suffix="%"
-      />
-
+    <!-- Enter saves the dialog (standard form behavior). The (keydown.enter)
+         fires from anywhere inside the form — including the Nombre input,
+         the Tributación select, and the participación % inputs. -->
+    <div class="sociedad-form" (keydown.enter)="saveDialog()">
       <afi-input
         label="Nombre"
         placeholder="Inversiones Siglo XXI, SL"
@@ -158,7 +153,7 @@
     <afi-button
       variant="ghost"
       size="md"
-      (clicked)="closeDialog()"
+      (clicked)="cancelDialog()"
       ariaLabel="Cancelar"
     >
       Cancelar
@@ -166,11 +161,59 @@
     <afi-button
       variant="primary"
       size="md"
-      (clicked)="closeDialog()"
+      (clicked)="saveDialog()"
       ariaLabel="Guardar sociedad"
     >
       Guardar
     </afi-button>
   </ng-container>
 </afi-modal>
+
+<!-- ─── Destructive-confirm modal — per docs/rules/destructive-actions.md ── -->
+<afi-modal
+  [open]="confirmDeleteOpen()"
+  [title]="'¿Borrar ' + (pendingDeleteRow()?.nombre || 'sociedad sin nombre') + '?'"
+  size="sm"
+  [closeOnEsc]="true"
+  [closeOnBackdrop]="false"
+  (openChange)="$event ? null : cancelDelete()"
+>
+  <div (keydown.enter)="confirmDelete()">
+    <p class="text-body-md-400 text-foreground-secondary">
+      Esta acción no se puede deshacer.
+    </p>
+  </div>
+
+  <ng-container slot="footer">
+    <afi-button
+      variant="ghost"
+      size="md"
+      (clicked)="cancelDelete()"
+      ariaLabel="Cancelar borrado"
+    >
+      Cancelar
+    </afi-button>
+    <afi-button
+      variant="danger"
+      size="md"
+      (clicked)="confirmDelete()"
+      ariaLabel="Borrar sociedad"
+    >
+      Borrar
+    </afi-button>
+  </ng-container>
+</afi-modal>
+
+<!-- ─── Action toast — per destructive-actions.md § 6. ────────────────────
+     Fires after Add (receipt for Guardar) and after Delete (receipt for
+     confirm). Deshacer / ⌘Z route through `undoLastAction()`. -->
+<afi-toast
+  [visible]="actionToastVisible()"
+  [message]="actionToastMessage()"
+  [showUndo]="true"
+  [shortcut]="undoShortcut"
+  undoLabel="Deshacer"
+  (undo)="undoLastAction()"
+  (dismissed)="dismissActionToast()"
+/>
 </site-demo-shell>

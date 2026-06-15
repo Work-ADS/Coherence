@@ -86,11 +86,17 @@
   vertical-align: middle;
 
   // First-column header gets its inline-start padding from a CSS custom
-  // property so a host context (e.g. page-header section) can drop it to
-  // 0 and align the column-1 text with the section title. Default falls
-  // back to the canonical --space-md.
-  &:first-child {
-    padding-inline-start: var(--afi-table-first-cell-pad, var(--space-md));
+  // property. Default is 0 so the first letter aligns with the table's
+  // left border (and, by composition, with any sibling page title sharing
+  // the same x-coord). A host context can override via
+  // `--afi-table-first-cell-pad` if it needs visible inset.
+  //
+  // Two selectors cover both table shapes:
+  //   • non-selectable → first DATA th is `:first-child`
+  //   • selectable     → first DATA th sits AFTER `.afi-table__th-select`
+  &:first-child,
+  .afi-table__th-select + & {
+    padding-inline-start: var(--afi-table-first-cell-pad, 0);
   }
 
   &--start {
@@ -299,14 +305,21 @@
   vertical-align: middle;
 
   // Mirror the th first-child rule so column-1 cells align with the
-  // column-1 header (and, in a section context, with the section title).
+  // column-1 header (and, by composition, with any sibling page title).
+  // Default of 0 makes the first letter flush with the table's left
+  // border; a host context can override via `--afi-table-first-cell-pad`.
   //
   // `position: relative` and the hover-state rules below let this cell
   // host the LEFT-side hover-band extension (box-shadow) and the
   // bulk-select checkbox pseudo — neither of which renders reliably on
   // `<tr>` due to table-row's non-CSS-box nature.
-  &:first-child {
-    padding-inline-start: var(--afi-table-first-cell-pad, var(--space-md));
+  //
+  // Two selectors cover both table shapes:
+  //   • non-selectable → first DATA td is `:first-child`
+  //   • selectable     → first DATA td sits AFTER `.afi-table__td-select`
+  &:first-child,
+  .afi-table__td-select + & {
+    padding-inline-start: var(--afi-table-first-cell-pad, 0);
     position: relative;
   }
 

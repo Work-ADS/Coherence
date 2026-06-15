@@ -1,3 +1,151 @@
-// Evolución Patrimonial — page-specific styles.
-// Currently empty: all styling lives in Tailwind utility classes on .html
-// (deferred Tailwind→BEM cleanup). File present to satisfy the 3-file rule.
+// =============================================================================
+// Evolución comparada — page-specific styles.
+// BEM under `.evcomp` plus the shared `.page__wrap` (page-structure-skill §4).
+// Token-only, no Tailwind. Layout adapts via @container viewport — the page
+// renders inside the demo-shell preview's viewport sizer, so @media would
+// fail at the mobile preset (page-structure-skill §11).
+// =============================================================================
+
+:host { display: block; }
+
+// ─── Canonical page wrapper (page-structure-skill §4) ─────────────────────
+.page__wrap {
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-xl);
+
+  @container viewport (max-width: 40rem) {
+    padding-block: var(--space-md);
+    padding-inline: var(--space-md);
+  }
+}
+
+// ─── Filters row (page-structure-skill §9) ────────────────────────────────
+// Three chip-dropdowns (Vista / Escenario / Detalle) + Ajustes trigger.
+.evcomp__filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+// ─── Chip-dropdown pattern (mirrors patrimonio's Tipo/Entidad chips) ─────
+// Pill-shaped trigger that opens an <afi-menu> with selectable options.
+.evcomp__chip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.evcomp__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  height: var(--control-h-sm);
+  padding: 0 var(--space-sm);
+  border: thin solid var(--border-hairline);
+  border-radius: var(--radius-full);
+  background: var(--surface-base);
+  color: var(--canvas-fg);
+  font: var(--type-body-sm-500);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-muted);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 0.125rem var(--border-focus);
+  }
+
+  &[aria-expanded='true'] {
+    border-color: var(--color-action-700);
+    background: var(--surface-muted);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background: var(--surface-base);
+    border-color: var(--border-hairline);
+    opacity: 0.5;
+
+    &:hover {
+      background: var(--surface-base);
+    }
+  }
+}
+
+.evcomp__chip-label {
+  color: var(--canvas-fg);
+}
+
+.evcomp__chip-divider {
+  display: inline-block;
+  inline-size: 0.0625rem;
+  block-size: var(--space-md);
+  background: var(--border-hairline);
+}
+
+.evcomp__chip-value {
+  color: var(--color-action-700);
+}
+
+.evcomp__chip-caret {
+  inline-size: var(--space-sm);
+  block-size: var(--space-sm);
+  color: var(--foreground-secondary-default);
+}
+
+// ─── Ajustes popup (icon-button trigger + dropdown-panel) ────────────────
+.evcomp__popup-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.evcomp__trigger-icon {
+  inline-size: var(--space-md);
+  block-size:  var(--space-md);
+}
+
+.evcomp__ajustes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+}
+
+.evcomp__ajustes-title {
+  font: var(--type-body-md-500);
+  color: var(--canvas-fg);
+  margin: 0 0 var(--space-xs);
+}
+
+// ─── Page body — chart + (optional) band note + explainer ────────────────
+.evcomp__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-block-start: var(--space-lg);
+}
+
+.evcomp__chart {
+  display: block;
+}
+
+.evcomp__band-note {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+  margin: 0;
+}
+
+.evcomp__explainer {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+  margin: 0;
+  padding-block-start: var(--space-md);
+  border-block-start: thin solid var(--border-hairline);
+  max-inline-size: 45rem;
+}

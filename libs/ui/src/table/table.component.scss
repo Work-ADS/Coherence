@@ -307,7 +307,15 @@
 .afi-table__row--hoverable:hover .afi-table__td-select + .afi-table__td::before,
 .afi-table__row--selected .afi-table__td:first-child::before,
 .afi-table__row--selected .afi-table__td-select + .afi-table__td::before {
-  left: calc(var(--afi-table-row-hover-extend, 0) * -1);
+  // Fallback MUST carry a unit (length or percentage), not a unitless
+  // zero. Without a unit `calc(0 * -1)` resolves to an invalid length →
+  // `left` falls back to `auto`, and with `right: 0` the pseudo ends up
+  // at 100% of the cell width = offscreen. That left the first cell
+  // visually un-hovered (the rest of the row was fine because they use
+  // the generic `left: 0` rule from the parent selector). `0%` evaluates
+  // to 0 on a left length context and is safer than introducing a raw
+  // length literal here.
+  left: calc(var(--afi-table-row-hover-extend, 0em) * -1);
   border-top-left-radius: var(--radius-md);
   border-bottom-left-radius: var(--radius-md);
 }

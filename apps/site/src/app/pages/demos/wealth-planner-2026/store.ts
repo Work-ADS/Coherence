@@ -1252,6 +1252,16 @@ export class WealthPlannerStore {
   readonly consecucionObjetivosState = computed<SectionState>(() => 'complete');
 
   // ──────────────────────────────────────────────────────────────────────
+  // Conclusiones · Evolución comparada (PDF §5.a)
+  // ──────────────────────────────────────────────────────────────────────
+  //
+  // Read-only Conclusiones output (the patrimonio projection chart). All
+  // data lives in `evolucion-bar-chart.component.ts`; this signal only
+  // exposes the sidebar chip-state so consumers don't reach across the
+  // page boundary.
+  readonly evolucionComparadaState = computed<SectionState>(() => 'complete');
+
+  // ──────────────────────────────────────────────────────────────────────
   // Listado · Planificaciones per cliente (Brief Listado)
   // ──────────────────────────────────────────────────────────────────────
   //

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
 import {
+  CardComponent,
   ChartBarComponent,
   PageHeaderComponent,
   SelectComponent,
@@ -38,6 +39,7 @@ import type { Scenario, ScenarioRow } from '../wealth-planner-2026/store';
   selector: 'site-patrimonio-previsto-page',
   standalone: true,
   imports: [
+    CardComponent,
     ChartBarComponent,
     PageHeaderComponent,
     SelectComponent,

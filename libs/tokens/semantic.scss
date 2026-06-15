@@ -468,6 +468,7 @@
   // -----------------------------------------------------------------------
   // GAP — semantic spacing-between roles.
   // -----------------------------------------------------------------------
+  --gap-card-to-card:       var(--dimension-2);  // 8 px  — KPI / metric cards in a row
   --gap-content-to-content: var(--dimension-4);
   @include responsive-token(--gap-section-to-section, (
     base: var(--dimension-8),    // 32 px

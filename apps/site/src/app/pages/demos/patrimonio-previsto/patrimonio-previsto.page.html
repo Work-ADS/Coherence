@@ -32,14 +32,16 @@
       />
     </div>
 
-    <!-- KPI cards -->
-    <div slot="cards" class="grid grid-cols-4 gap-space-6 w-full">
+    <!-- KPI cards — <afi-card padding="lg"> mirroring the patrimonio main
+         idiom (surface-subtle, no border, lg padding). Row gap uses the DS
+         alias --gap-card-to-card (see /patrones/tarjetas/metrica). -->
+    <div slot="cards" class="patrimonio-previsto__kpi-grid w-full">
       @for (kpi of kpis(); track kpi.label) {
-        <div>
-          <p class="text-body-sm text-neutral-500 mb-space-1">{{ kpi.label }}</p>
-          <p class="text-section text-canvas-fg">{{ kpi.value }}</p>
-          <p class="text-body-sm text-neutral-500 mt-space-1">{{ kpi.caption }}</p>
-        </div>
+        <afi-card padding="lg">
+          <p class="text-body-sm text-foreground-secondary mb-space-1">{{ kpi.label }}</p>
+          <p class="text-section text-foreground-primary">{{ kpi.value }}</p>
+          <p class="text-body-sm text-foreground-secondary mt-space-1">{{ kpi.caption }}</p>
+        </afi-card>
       }
     </div>
 

@@ -18,11 +18,11 @@
 .patrimonial-kpi-grid {
   display: grid;
   grid-template-columns: 1fr;
-  // `--space-xs` — kept consistent across stacked (mobile) and 3-up
-  // (desktop) layouts so the rhythm doesn't change with the breakpoint.
-  // Earlier this used `var(--space-4)` which doesn't exist in our token set
-  // (we name semantically: 3xs/2xs/xs/sm/md/lg/xl), so gap fell back to 0.
-  gap: var(--space-xs);
+  // Canonical KPI-row gap — `--gap-card-to-card` (8 px) is the DS semantic
+  // alias for adjacent metric cards. Same value across stacked (mobile) and
+  // 3-up (desktop) layouts so the rhythm doesn't change with the breakpoint.
+  // See /patrones/tarjetas/metrica for the row-composition rule.
+  gap: var(--gap-card-to-card);
 }
 
 @container viewport (min-width: 48rem) {

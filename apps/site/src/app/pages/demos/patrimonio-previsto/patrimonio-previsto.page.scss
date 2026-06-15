@@ -3,7 +3,14 @@
 // 2026-05-28: Bespoke `.pp-table*` styles removed when this page migrated
 // to `<afi-table>`. The scenario-active row visual now comes from the
 // primitive's `highlightedRowKey` mechanism (`afi-table__row--highlighted`).
-// Most page layout is Tailwind utilities in the template — this file is
-// intentionally empty (kept so the build prompt for the future "summaryRow"
-// addition has a place to land if/when needed).
+// Most page layout is Tailwind utilities in the template.
 // =============================================================================
+
+// KPI-row layout — 4-up grid for the metric cards. Gap consumes the DS
+// alias `--gap-card-to-card` (8 px) so the rhythm matches every other KPI
+// row in the wealth planner. Canonical rule lives in /patrones/tarjetas/metrica.
+.patrimonio-previsto__kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap-card-to-card);
+}

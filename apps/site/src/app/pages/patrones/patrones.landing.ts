@@ -57,5 +57,11 @@ export class PatronesLandingPage {
       description:
         'Contenedor con título en mayúsculas, opcionalmente colapsable, con contador y check de completado.',
     },
+    {
+      slug: 'tarjetas',
+      name: 'Tarjetas',
+      description:
+        '10 variantes de contenido sobre el primitivo Card — métrica, gráfico, fila de lista, acción, entidad y más.',
+    },
   ];
 }

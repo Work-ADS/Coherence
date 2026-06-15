@@ -29,6 +29,7 @@ export { TableComponent } from './src/table';
 export type {
   TableActionsReveal,
   TableCellKind,
+  TableCellTone,
   TableColumn,
   TableReservedKey,
   TableRowAction,

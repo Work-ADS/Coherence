@@ -1,6 +1,27 @@
 <div class="afi-table__scroll">
   <table [class]="tableClasses()">
     <thead>
+      @if (hasHeaderGroups()) {
+        <tr class="afi-table__head-group-row">
+          @if (selectable()) {
+            <th scope="col" class="afi-table__th-select afi-table__th-group"></th>
+          }
+          @for (g of headerGroups(); track $index) {
+            <th
+              scope="colgroup"
+              class="afi-table__th-group"
+              [attr.colspan]="g.span"
+            >
+              @if (g.label) {
+                <span class="afi-table__th-group-label">{{ g.label }}</span>
+              }
+            </th>
+          }
+          @if (hasRowActions()) {
+            <th scope="col" class="afi-table__th-actions afi-table__th-group"></th>
+          }
+        </tr>
+      }
       <tr class="afi-table__head-row">
         @if (selectable()) {
           <th scope="col" class="afi-table__th-select">
@@ -81,7 +102,7 @@
              and the first cell gets indented via CSS. -->
         <ng-template #rowTpl let-row let-isChild="isChild">
           <tr
-            [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild)"
+            [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild, isMuted(row))"
             [attr.data-row-key]="row[trackByKey()]"
             (click)="onRowClick(row, $event)"
           >
@@ -96,7 +117,7 @@
               </td>
             }
             @for (col of visibleColumns(); track col.key; let isFirstCol = $first) {
-              <td [class]="cellClasses(col)">
+              <td [class]="cellClasses(col, row)">
                 @if (isFirstCol && !isChild && hasExpansion(row)) {
                   <button
                     type="button"

@@ -199,7 +199,12 @@ export class PlannerSidebarComponent {
           state: 'empty',
           route: '/demos/wealth-planner-2026/evolucion-patrimonial',
         },
-        { key: 'consecucion-objetivos', label: 'Consecución de objetivos', state: 'empty' },
+        {
+          key: 'consecucion-objetivos',
+          label: 'Consecución de objetivos',
+          state: this.store.consecucionObjetivosState(),
+          route: '/demos/wealth-planner-2026/consecucion-objetivos',
+        },
       ],
     },
     {

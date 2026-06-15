@@ -14,7 +14,7 @@ import { CheckboxComponent } from '../checkbox';
 import { MenuComponent } from '../menu/menu.component';
 import { MenuDividerComponent } from '../menu/menu-divider.component';
 import { MenuItemComponent } from '../menu/menu-item.component';
-import type { TableColumn, TableRowAction, TableSortState } from './table.types';
+import type { TableCellTone, TableColumn, TableRowAction, TableSortState } from './table.types';
 import type { TableActionsReveal, TableDensity } from './table.variants';
 
 /**
@@ -185,13 +185,56 @@ export class TableComponent {
 
   /**
    * Class string on the `<table>` element. Picks up the actions-reveal
-   * modifier (`afi-table--actions-hover` / `--actions-soft`) so the SCSS
-   * can scope the opacity rules without touching individual cells.
+   * modifier (`afi-table--actions-hover` / `--actions-soft`) and the
+   * grouped-header modifier (`afi-table--with-groups`) so the SCSS can
+   * scope tint + divider rules without touching individual cells.
    */
   readonly tableClasses = computed(() => {
     const reveal = this.actionsReveal();
-    return reveal === 'always' ? 'afi-table' : `afi-table afi-table--actions-${reveal}`;
+    const parts = ['afi-table'];
+    if (reveal !== 'always') parts.push(`afi-table--actions-${reveal}`);
+    if (this.hasHeaderGroups()) parts.push('afi-table--with-groups');
+    return parts.join(' ');
   });
+
+  /**
+   * Runs of consecutive columns that share the same `group` key. Used to
+   * render the optional second `<thead>` row of group labels. Columns
+   * without a `group` produce a placeholder run with `label === null`
+   * (no visible label, but the colspan keeps cell alignment).
+   *
+   * The first column in each run owns the `groupLabel`; subsequent
+   * columns in the same group can omit it.
+   */
+  readonly headerGroups = computed(() => {
+    const cols = this.visibleColumns();
+    if (!cols.some((c) => c.group)) return [] as { label: string | null; span: number }[];
+    const runs: { label: string | null; span: number }[] = [];
+    let currentKey: string | null | undefined = undefined;
+    let currentLabel: string | null = null;
+    let currentSpan = 0;
+    for (const c of cols) {
+      const key = c.group ?? null;
+      if (currentKey === undefined) {
+        currentKey = key;
+        currentLabel = c.groupLabel ?? null;
+        currentSpan = 1;
+        continue;
+      }
+      if (key === currentKey) {
+        currentSpan++;
+      } else {
+        runs.push({ label: currentLabel, span: currentSpan });
+        currentKey = key;
+        currentLabel = c.groupLabel ?? null;
+        currentSpan = 1;
+      }
+    }
+    if (currentKey !== undefined) runs.push({ label: currentLabel, span: currentSpan });
+    return runs;
+  });
+
+  readonly hasHeaderGroups = computed(() => this.headerGroups().length > 0);
 
   readonly totalColumns = computed(
     () =>
@@ -308,16 +351,29 @@ export class TableComponent {
       .join(' ');
   }
 
-  cellClasses(col: TableColumn): string {
+  cellClasses(col: TableColumn, row: Record<string, unknown> | null = null): string {
     const align =
       col.align === 'end'
         ? 'afi-table__td--end'
         : col.align === 'center'
           ? 'afi-table__td--center'
           : 'afi-table__td--start';
-    return ['afi-table__td', align, col.emphasis ? 'afi-table__td--emphasis' : '']
+    const tone = this.toneFor(col, row);
+    return [
+      'afi-table__td',
+      align,
+      col.emphasis ? 'afi-table__td--emphasis' : '',
+      tone ? `afi-table__td--tone-${tone}` : '',
+    ]
       .filter(Boolean)
       .join(' ');
+  }
+
+  private toneFor(col: TableColumn, row: Record<string, unknown> | null): TableCellTone | null {
+    if (!col.toneKey || !row) return null;
+    const v = row[col.toneKey];
+    if (v === 'success' || v === 'warning' || v === 'danger' || v === 'neutral') return v;
+    return null;
   }
 
   actionClasses(action: TableRowAction): string {
@@ -330,7 +386,12 @@ export class TableComponent {
       .join(' ');
   }
 
-  rowClasses(selected: boolean, highlighted: boolean, isChild = false): string {
+  rowClasses(
+    selected: boolean,
+    highlighted: boolean,
+    isChild = false,
+    muted = false,
+  ): string {
     return [
       'afi-table__row',
       `afi-table__row--${this.density()}`,
@@ -338,9 +399,14 @@ export class TableComponent {
       selected ? 'afi-table__row--selected' : '',
       highlighted ? 'afi-table__row--highlighted' : '',
       isChild ? 'afi-table__row--child' : '',
+      muted ? 'afi-table__row--muted' : '',
     ]
       .filter(Boolean)
       .join(' ');
+  }
+
+  isMuted(row: Record<string, unknown>): boolean {
+    return row['muted'] === true;
   }
 
   isHighlighted(row: Record<string, unknown>): boolean {

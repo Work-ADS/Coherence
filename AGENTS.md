@@ -6,28 +6,33 @@ Agent lineup lives in `docs/agents/`:
 - **Tester**: `docs/agents/tester.md` verifies completed work against the brief, pre-flight, a11y, copy, and clean-code rules.
 - **Token Guardian**: `docs/agents/ds-token-guardian.md` reviews token additions/references.
 
-Skills live in `docs/rules/`: `component-skill.md` (build), `component-design-skill.md` (design — upstream of build), `motion-skill.md` (named motion patterns + tokens), `token-skill.md`, `clean-code.md`, `accessibility.md`, and `copy-skill.md`.
+`Design.md` at the repo root is the entry-point overview — what Coherence is, brand soul, principles, foundations index. It points at the deep skills; it never duplicates them. Deep rules live in `docs/rules/`: `page-structure-skill.md` (page composition — anatomy, wrapper, slots, responsive baseline, empty state), `component-skill.md` (build), `component-design-skill.md` (design — upstream of build), `motion-skill.md` (named motion patterns + tokens), `token-skill.md`, `clean-code.md`, `accessibility.md`, and `copy-skill.md`.
 
 ## Required read order
 
 Before any coding work, read in order:
 
-1. `docs/agents/builder.md`
-2. `docs/workflow/build-kickoff.md`
-3. `docs/rules/clean-code.md`
-4. `docs/rules/accessibility.md`
-5. `docs/rules/copy-skill.md`
-6. `docs/rules/component-skill.md`
-7. `docs/rules/token-skill.md`
-8. `docs/rules/motion-skill.md`
-9. `docs/build-prompts/_pre-flight.md`
+1. `Design.md` — entry-point overview (principles, brand, foundations index)
+2. `docs/agents/builder.md`
+3. `docs/workflow/build-kickoff.md`
+4. `docs/rules/clean-code.md`
+5. `docs/rules/accessibility.md`
+6. `docs/rules/copy-skill.md`
+7. `docs/rules/component-skill.md`
+8. `docs/rules/token-skill.md`
+9. `docs/rules/motion-skill.md`
+10. `docs/rules/page-structure-skill.md` — page composition (anatomy, sections, wrapper, responsive baseline, empty state)
+11. `docs/build-prompts/_pre-flight.md`
 
 If those files conflict, use this precedence:
 
-1. `component-skill.md` wins for Angular component structure and file layout.
-2. `token-skill.md` wins for token naming/layering.
-3. `clean-code.md` wins for commit-hook and pre-flight constraints.
-4. The specific build prompt wins only inside its scoped surface and only when it does not contradict a skill.
+1. `page-structure-skill.md` wins for page-level composition (anatomy, section nesting, slot placement, responsive baseline) even over `component-skill.md` when they conflict on slot placement within a page.
+2. `component-skill.md` wins for Angular component structure and file layout.
+3. `token-skill.md` wins for token naming/layering.
+4. `clean-code.md` wins for commit-hook and pre-flight constraints.
+5. The specific build prompt wins only inside its scoped surface and only when it does not contradict a skill.
+
+`Design.md` is the overview; it does not arbitrate conflicts. When in doubt, the deep skill wins over the overview.
 
 Before committing implementation work, run the relevant checks:
 

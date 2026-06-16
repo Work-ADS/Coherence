@@ -22,7 +22,15 @@
   <input
     #inputEl
     type="search"
-    role="searchbox"
+    [attr.role]="hasSuggestions() ? 'combobox' : 'searchbox'"
+    [attr.aria-autocomplete]="hasSuggestions() ? 'list' : null"
+    [attr.aria-expanded]="hasSuggestions() ? comboboxExpanded() : null"
+    [attr.aria-controls]="hasSuggestions() ? suggestionsId : null"
+    [attr.aria-activedescendant]="
+      showSuggestions() && activeIndex() >= 0
+        ? suggestionsId + '-' + activeIndex()
+        : null
+    "
     [id]="inputId"
     class="afi-search__field"
     [placeholder]="placeholder()"
@@ -32,6 +40,8 @@
     [attr.aria-labelledby]="label() ? labelId : null"
     (input)="onInput($event)"
     (keydown)="onKeydown($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
   />
 
   @if (hasValue() && !disabled()) {
@@ -39,6 +49,7 @@
       type="button"
       class="afi-search__clear"
       aria-label="Borrar búsqueda"
+      (mousedown)="$event.preventDefault()"
       (click)="clear()"
     >
       <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -51,3 +62,62 @@
     </button>
   }
 </div>
+
+@if (showSuggestions()) {
+  <div
+    [id]="suggestionsId"
+    role="listbox"
+    class="afi-search__suggestions"
+  >
+    @for (
+      suggestion of suggestions();
+      let i = $index;
+      track suggestionKey(i, suggestion)
+    ) {
+      <button
+        type="button"
+        role="option"
+        [id]="suggestionsId + '-' + i"
+        [attr.aria-selected]="i === activeIndex()"
+        [class]="
+          'afi-search__suggestion' +
+          (i === activeIndex() ? ' afi-search__suggestion--active' : '')
+        "
+        (mousedown)="$event.preventDefault()"
+        (mouseenter)="activeIndex.set(i)"
+        (click)="onPick(suggestion)"
+      >
+        <svg
+          class="afi-search__suggestion-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <span class="afi-search__suggestion-text">
+          <span class="afi-search__suggestion-label">{{ suggestion.label }}</span>
+          @if (suggestion.description) {
+            <span class="afi-search__suggestion-description">
+              {{ suggestion.description }}
+            </span>
+          }
+        </span>
+        @if (suggestion.trailing) {
+          <span class="afi-search__suggestion-trailing">
+            {{ suggestion.trailing }}
+          </span>
+        }
+      </button>
+    }
+  </div>
+} @else if (showEmptyMessage()) {
+  <div class="afi-search__suggestions afi-search__suggestions--empty">
+    {{ emptyMessage() }}
+  </div>
+}

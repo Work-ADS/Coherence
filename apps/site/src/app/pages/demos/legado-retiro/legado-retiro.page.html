@@ -4,7 +4,6 @@
   demoRoute="/demos/wealth-planner-2026/legado-retiro"
   activeKey="legado-retiro"
   versionAriaLabel="Versión del layout de Legado y retiro"
-  [showBanner]="store.legadoRetiroEstablished()"
 >
   <afi-page-header
     title="Legado y retiro"
@@ -12,101 +11,152 @@
     [sticky]="false"
     [scrollFade]="false"
   >
-  </afi-page-header>
-
-  <section class="lr-gate">
     <afi-switch
+      slot="actions"
       label="¿Has establecido legado y retiro?"
       hint="Activa para definir los objetivos del cliente."
       [checked]="store.legadoRetiroEstablished()"
       (checkedChange)="setLegadoRetiroEstablished($event)"
     />
-  </section>
 
-  @if (store.legadoRetiroEstablished()) {
-    <div class="lr-stack">
-    <afi-page-header
-      level="section"
-      title="Datos generales"
-      [sticky]="false"
-      [scrollFade]="false"
-    >
-      <div class="lr-grid lr-grid--compact">
-        <afi-input
-          label="Edad de seguridad"
-          type="number"
-          hint="Edad hasta la que debe durar el patrimonio."
-          [value]="store.legadoRetiro().edadSeguridad"
-          (valueChange)="setEdadSeguridad($event)"
-        />
-
-        <afi-select
-          label="Edad de jubilación o retiro"
-          placeholder="Selecciona"
-          [options]="edadJubilacionOptions"
-          [value]="store.legadoRetiro().edadRetiro"
-          (valueChange)="setEdadRetiro($event)"
-        />
-
-        <afi-select
-          label="Legado objetivo"
-          placeholder="Selecciona"
-          [options]="legadoObjetivoOptions"
-          [value]="store.legadoRetiro().legadoObjetivo"
-          (valueChange)="setLegadoObjetivo($event)"
-        />
-      </div>
-
-      @if (isRetiroKind()) {
-        <div class="lr-follow-up">
-          <afi-checkbox
-            label="Continuar cotizaciones hasta jubilación (recomendado)"
-            [checked]="store.legadoRetiro().continuarCotizaciones"
-            (checkedChange)="setContinuarCotizaciones($event)"
-          />
-        </div>
-      }
-    </afi-page-header>
-
-    @if (showsManualLegado()) {
+    @if (store.legadoRetiroEstablished()) {
+      <div class="lr-stack">
       <afi-page-header
         level="section"
-        title="Activos a conservar"
+        title="Datos generales"
         [sticky]="false"
         [scrollFade]="false"
       >
-        @if (store.patrimonio().length === 0) {
-          <p class="lr-empty">Aún no hay activos registrados.</p>
-        } @else {
-          <ul class="lr-asset-list">
-            @for (asset of store.patrimonio(); track asset.id) {
-              <li class="lr-asset-list__row">
-                <afi-checkbox
-                  [label]="asset.nombre + ' - ' + formatEuro(asset.valor)"
-                  [checked]="isAssetSelected(asset.id)"
-                  (checkedChange)="toggleAsset(asset.id, $event)"
-                />
-              </li>
-            }
-          </ul>
-        }
-
-        <p class="lr-total">
-          Total seleccionado:
-          <strong>{{ totalSelected() }}</strong>
-        </p>
-
-        <div class="lr-grid">
+        <div class="lr-datos-grid">
           <afi-input
-            label="Patrimonio financiero adicional"
+            label="Edad de seguridad"
             type="number"
-            hint="Importe adicional que debe preservarse junto con los activos seleccionados."
-            [value]="store.legadoRetiro().patrimonioFinancieroAdicional"
-            (valueChange)="setPatrimonioFinancieroAdicional($event)"
+            hint="Edad hasta la que debe durar el patrimonio."
+            [value]="store.legadoRetiro().edadSeguridad"
+            (valueChange)="setEdadSeguridad($event)"
+          />
+
+          <afi-select
+            label="Edad de jubilación o retiro"
+            placeholder="Selecciona"
+            [options]="edadJubilacionOptions"
+            [value]="store.legadoRetiro().edadRetiro"
+            (valueChange)="setEdadRetiro($event)"
+          />
+
+          <afi-select
+            label="Legado objetivo"
+            placeholder="Selecciona"
+            [options]="legadoObjetivoOptions"
+            [value]="store.legadoRetiro().legadoObjetivo"
+            (valueChange)="setLegadoObjetivo($event)"
           />
         </div>
+
+        @if (isRetiroKind()) {
+          <div class="lr-follow-up">
+            <afi-checkbox
+              label="Continuar cotizaciones hasta jubilación (recomendado)"
+              [compact]="true"
+              [checked]="store.legadoRetiro().continuarCotizaciones"
+              (checkedChange)="setContinuarCotizaciones($event)"
+            />
+          </div>
+        }
       </afi-page-header>
+
+      @if (showsManualLegado()) {
+        <afi-page-header
+          level="section"
+          title="Activos a conservar"
+          [sticky]="false"
+          [scrollFade]="false"
+        >
+          <afi-search
+            slot="filters"
+            class="block w-[260px]"
+            ariaLabel="Buscar activo por nombre"
+            placeholder="Buscar activo"
+            [value]="assetSearchTerm()"
+            [suggestions]="assetSuggestions()"
+            emptyMessage="Sin coincidencias en tu patrimonio."
+            (valueChange)="assetSearchTerm.set($event)"
+            (suggestionPicked)="pickAssetSuggestion($event)"
+          />
+          <afi-filter-chip
+            slot="filters"
+            label="Tipo"
+            mode="dropdown"
+            dropdownAriaLabel="Filtrar activos por tipo"
+            [options]="assetTipoOptions()"
+            [selectedValues]="selectedTipos()"
+            [selectionLabel]="tipoChipLabel()"
+            (selectedValuesChange)="selectedTipos.set($event)"
+          />
+
+          @if (store.patrimonio().length === 0) {
+            <p class="lr-asset-empty">Aún no hay activos registrados en Patrimonio.</p>
+          } @else if (filteredAssets().length === 0) {
+            <p class="lr-asset-empty">Ningún activo coincide con la búsqueda.</p>
+          } @else {
+            <ul class="lr-asset-list">
+              @for (asset of filteredAssets(); track asset.id) {
+                <li class="lr-asset-list__row">
+                  <afi-checkbox
+                    [label]="asset.nombre + ' - ' + formatEuro(asset.valor)"
+                    [compact]="true"
+                    [checked]="isAssetSelected(asset.id)"
+                    (checkedChange)="toggleAsset(asset.id, $event)"
+                  />
+                </li>
+              }
+            </ul>
+          }
+
+          <p class="lr-total">
+            Total seleccionado:
+            <strong>{{ totalSelected() }}</strong>
+          </p>
+
+          <div class="lr-datos-grid">
+            <afi-input
+              label="Patrimonio financiero adicional"
+              type="number"
+              hint="Importe adicional que debe preservarse junto con los activos seleccionados."
+              [value]="store.legadoRetiro().patrimonioFinancieroAdicional"
+              (valueChange)="setPatrimonioFinancieroAdicional($event)"
+            />
+          </div>
+        </afi-page-header>
+      }
+      </div>
+    } @else {
+      <div class="lr-empty">
+        <h2 class="lr-empty__title">Aún no se ha establecido legado y retiro.</h2>
+        <p class="lr-empty__hint">
+          Es un apartado obligatorio. Activa la sección para definir la edad de
+          retiro, el legado a preservar y los activos a conservar del cliente.
+        </p>
+        <div class="lr-empty__action">
+          <afi-button
+            variant="primary"
+            size="md"
+            (clicked)="setLegadoRetiroEstablished(true)"
+            ariaLabel="Activar legado y retiro"
+          >
+            Activar legado y retiro
+          </afi-button>
+        </div>
+      </div>
     }
-    </div>
-  }
+  </afi-page-header>
+
+  <site-action-toast
+    [visible]="datosToastVisible()"
+    message="Cambios guardados en Datos generales"
+    [shortcut]="undoShortcut"
+    undoLabel="Deshacer"
+    (undo)="undoDatosGenerales()"
+    (dismissed)="dismissDatosToast()"
+  />
 </site-objetivos-page-shell>

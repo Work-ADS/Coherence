@@ -1,19 +1,28 @@
 // =============================================================================
-// afi-filter-chip — pill-shaped toggle chip for filter UIs.
+// afi-filter-chip — pill-shaped filter control. Two modes:
+//   - toggle   (legacy)  — single on/off pill
+//   - dropdown (new)     — pill that opens a multi-select panel
 // BEM classes, DS tokens via CSS custom properties only.
 // =============================================================================
 
 :host {
   display: inline-block;
+  position: relative;
 }
 
 .afi-chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2xs);
+  // --space-xs between label / divider / count / caret matches the
+  // Patrimonio convention; --space-2xs felt cramped once the chip
+  // carries a textual selectionLabel rather than a bare number.
+  gap: var(--space-xs);
   border: var(--border-width-hairline) solid var(--border-hairline);
   border-radius: var(--filter-chip-radius, var(--radius-pill));
-  background: var(--surface-default);
+  // Resting surface = `bg-surface` Tailwind on the Patrimonio bespoke
+  // chip. --surface-default sits a step lower on AFI and looks muddy
+  // next to a real card.
+  background: var(--surface-base);
   color: var(--foreground-secondary-default);
   cursor: pointer;
   transition:
@@ -52,20 +61,45 @@
 
   &--sm {
     height: var(--dimension-6);
-    padding-inline: var(--space-sm);
+    padding-inline: var(--space-xs);
     font: var(--type-body-sm-400);
   }
 
   &--md {
     height: var(--dimension-8);
-    padding-inline: var(--space-md);
-    font: var(--type-body-md-400);
+    // Asymmetric padding so the caret on the right sits tucked
+    // (--space-xs) while the label keeps --space-sm breathing room on
+    // the left — matches the Patrimonio bespoke trigger button.
+    padding-inline-start: var(--space-sm);
+    padding-inline-end: var(--space-xs);
+    // Stay on body-sm — body-md reads as a button, not a filter chip,
+    // once the chip sits at chip-height.
+    font: var(--type-body-sm-400);
+  }
+
+  // Dropdown mode keeps the same chrome but uses an action-tinted active
+  // state instead of the brand background (Patrimonio convention — the
+  // pill stays neutral on the page, the dropdown carries the action).
+  // `--surface-selected` is the lightest action tint and `--control-border-active`
+  // is the action-tinted border, so both follow the brand-secondary action
+  // alias documented in [[project_afi_secondary_is_action]].
+  &--mode-dropdown.afi-chip--selected {
+    background: var(--surface-selected);
+    border-color: var(--control-border-active);
+    color: var(--foreground-primary-default);
+
+    &:hover:not(.afi-chip--disabled) {
+      background: var(--surface-selected);
+      border-color: var(--control-border-active);
+      color: var(--foreground-primary-default);
+    }
   }
 }
 
 .afi-chip__label {
   display: inline-block;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .afi-chip__count {
@@ -98,9 +132,7 @@
   opacity: 0.7;
   transition: opacity var(--duration-fast) var(--easing-enter);
 
-  &:hover {
-    opacity: 1;
-  }
+  &:hover { opacity: 1; }
 
   &:focus-visible {
     outline: none;
@@ -111,5 +143,172 @@
   svg {
     width: var(--dimension-3);
     height: var(--dimension-3);
+  }
+}
+
+// ─── Dropdown-mode trigger affordances ─────────────────────────────────────
+.afi-chip__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dimension-4);
+  height: var(--dimension-4);
+  border-radius: var(--radius-pill);
+  color: var(--foreground-secondary-default);
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity var(--duration-fast) var(--easing-enter);
+
+  &:hover { opacity: 1; }
+
+  &:focus-visible {
+    outline: none;
+    opacity: 1;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+
+  svg {
+    width: var(--dimension-3);
+    height: var(--dimension-3);
+  }
+}
+
+.afi-chip__divider {
+  display: inline-block;
+  width: var(--border-width-hairline);
+  height: var(--dimension-4);
+  background: var(--border-hairline);
+}
+
+.afi-chip__selection {
+  font-weight: 600;
+  // Pick up the action color (brand-secondary on AFI) so the count/label
+  // pops against the subtle tinted background — matches Patrimonio.
+  color: var(--control-foreground-active);
+  font-variant-numeric: tabular-nums;
+}
+
+.afi-chip__caret {
+  width: var(--dimension-3);
+  height: var(--dimension-3);
+  color: var(--foreground-secondary-default);
+  flex-shrink: 0;
+}
+
+// ─── Dropdown menu panel ──────────────────────────────────────────────────
+// Sizing + spacing tuned against the Patrimonio bespoke menu:
+//   - --space-xs panel padding, --space-xs row padding-block (rows breathe)
+//   - active checkbox fills with action-700 (the same accent the chip border
+//     uses when the dropdown has a selection)
+//   - count badges render as hairline pills, not plain text
+.afi-chip__menu {
+  position: absolute;
+  inset-block-start: calc(100% + var(--space-2xs));
+  inset-inline-start: 0;
+  z-index: 50;
+  min-inline-size: 17.5rem;
+  padding: var(--space-xs);
+  background: var(--surface-elevated);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-lg);
+}
+
+.afi-chip__menu-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--space-xs);
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-xs);
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  text-align: start;
+  color: var(--foreground-primary-default);
+  font: var(--type-body-sm-400);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-enter);
+
+  &:hover { background: var(--surface-muted); }
+
+  &:focus-visible {
+    outline: none;
+    background: var(--surface-muted);
+    box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+
+  &--all .afi-chip__menu-label { font-weight: 500; }
+}
+
+.afi-chip__menu-divider {
+  block-size: var(--border-width-hairline);
+  background: var(--border-hairline);
+  margin-block: var(--space-2xs);
+  // Full-bleed against the panel padding so the divider stretches edge to
+  // edge. Tracks --space-xs (the panel padding above).
+  margin-inline: calc(-1 * var(--space-xs));
+}
+
+.afi-chip__menu-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--dimension-4);
+  block-size: var(--dimension-4);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--surface-default);
+  flex-shrink: 0;
+  transition:
+    background-color var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+
+  // Filled state uses the action-700 accent (same role Patrimonio uses for
+  // the active filter affordance). --brand-primary-background-default would
+  // render the lighter brand-blue and read as a different control type.
+  &--on {
+    background: var(--control-foreground-active);
+    border-color: var(--control-foreground-active);
+    color: var(--brand-secondary-foreground-default);
+  }
+
+  svg {
+    width: var(--dimension-3);
+    height: var(--dimension-3);
+  }
+}
+
+.afi-chip__menu-label {
+  flex: 1;
+  min-inline-size: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.afi-chip__menu-count {
+  // Hairline pill badge, mirrors the Patrimonio dropdown count.
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  block-size: var(--dimension-5);
+  min-inline-size: var(--dimension-5);
+  padding-inline: var(--space-2xs);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-pill);
+  font: var(--type-caption-400);
+  color: var(--foreground-secondary-default);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afi-chip,
+  .afi-chip__dismiss,
+  .afi-chip__clear,
+  .afi-chip__menu-row,
+  .afi-chip__menu-check {
+    transition-duration: 0ms !important;
   }
 }

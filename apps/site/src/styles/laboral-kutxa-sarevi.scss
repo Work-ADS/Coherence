@@ -790,6 +790,21 @@
     color: var(--color-banco-cooperativo-verde-cooperativo-700);
   }
 
+  // Energy grade picker — 7 single-letter cards in one row. The default
+  // radio-card layout (label-left, dot-right, ellipsised text) crops the
+  // letter when the row is divided into 7 cells. Center the content and
+  // disable the ellipsis so each letter stays visible.
+  .energy-range site-radio-card-group .radio-card {
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-xs);
+  }
+  .energy-range site-radio-card-group .radio-card__label {
+    flex: 0 0 auto;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
   // Stacked Realizando-la-reforma + Costes (replaces the LK bento). The two
   // comparison cards (before / after) sit on top, and the Costes table card
   // sits below, both full-width across the .medidas-layout grid.

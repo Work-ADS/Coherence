@@ -54,17 +54,12 @@ interface DatosState {
   buscarDir: string;
   direccion: string;
   municipio: string;
-  /**
-   * Ciudad + codigoPostal are the BC-specific manual-address fields
-   * (3-input row when "No" is picked for ¿Buscar dirección automáticamente?).
-   * LK + Unicaja ignore these and use direccion / municipio instead.
-   */
-  ciudad: string;
-  codigoPostal: string;
+  anoConstruccion: string;
   certificado: string;
   etiqueta: string;
   tamano: number;
   habitantes: number;
+  plantas: number;
   calefaccion: string;
   refrigeracion: string;
 }
@@ -84,6 +79,24 @@ const MEDIDAS: Medida[] = [
   { id: 'audit',    name: 'Auditoría energética',                                impact: 'bajo',  cae: false, basic: 900,    full: 900 },
   { id: 'ascensor', name: 'Renovación y mejora de ascensores',                   impact: 'alto',  cae: true,  basic: null,   full: 117500 },
 ];
+
+interface ParamDef {
+  id: string;
+  label: string;
+  unit: string;
+  defaultValue: number;
+}
+
+const MEDIDA_PARAMS: Record<string, readonly ParamDef[]> = {
+  ilum: [
+    { id: 'count',    label: 'Número de luminarias a sustituir', unit: 'luminarias', defaultValue: 10 },
+    { id: 'unitCost', label: 'Coste por luminaria',              unit: '€',          defaultValue: 65 },
+  ],
+  vent: [
+    { id: 'unitCost', label: 'Precio por nueva ventana',         unit: '€',          defaultValue: 700 },
+    { id: 'count',    label: 'Número de ventanas a sustituir',   unit: 'ventanas',   defaultValue: 30 },
+  ],
+};
 
 const IMPACT_LABEL: Record<NonNullable<Medida['impact']>, string> = {
   alto: 'Impacto alto',
@@ -208,21 +221,26 @@ export class LaboralKutxaSareviPage {
     buscarDir: 'No',
     direccion: '96 calle fuencaral',
     municipio: '',
-    ciudad: 'Madrid',
-    codigoPostal: '28012',
+    anoConstruccion: '',
     certificado: '',
     etiqueta: 'E',
     tamano: 120,
     habitantes: 2,
+    plantas: 2,
     calefaccion: '',
     refrigeracion: '',
   });
 
   readonly selected = signal<string[]>(['aero', 'fv']);
   readonly variant = signal<Variant>('basica');
-  readonly expandedId = signal<string | null>(null);
-  readonly autoCalc = signal(false);
-  readonly customImporte = signal(36043);
+  readonly medidaParams = MEDIDA_PARAMS;
+
+  /** Per-medida `Cálculo automático` toggle (defaults ON). */
+  private readonly autoCalcMap = signal<Record<string, boolean>>({});
+  /** Per-medida override importe (when auto-calc is OFF). */
+  private readonly importeMap = signal<Record<string, number>>({});
+  /** Per-medida + per-param value overrides. */
+  private readonly paramMap = signal<Record<string, Record<string, number>>>({});
 
   readonly importeFinanciar = signal(81432);
   readonly plazo = signal(7);
@@ -316,6 +334,11 @@ export class LaboralKutxaSareviPage {
     { value: 'Chalet independiente', label: 'Chalet independiente' },
   ];
 
+  readonly etiquetaOptions: SegmentedOption[] = ENERGY_GRADES.map((g) => ({
+    value: g,
+    label: g,
+  }));
+
   readonly siNoOptions: SegmentedOption[] = [
     { value: 'Sí', label: 'Sí' },
     { value: 'No', label: 'No' },
@@ -325,6 +348,14 @@ export class LaboralKutxaSareviPage {
     value: v,
     label: v,
   }));
+
+  readonly anoConstruccionOptions: SelectOption[] = [
+    'Anterior al 2000',
+    'De 2000 a 2006',
+    'De 2006 a 2013',
+    'De 2013 a 2019',
+    'Del 2019 a actualidad',
+  ].map((v) => ({ value: v, label: v }));
 
   readonly calefaccionOptions: SelectOption[] = [
     'Caldera de gas natural',
@@ -346,9 +377,9 @@ export class LaboralKutxaSareviPage {
     // middle "completa" tier so the tab strip lines up with the simulator
     // surface the brand team approved.
     const base: SegmentedOption[] = [
-      { value: 'basica', label: 'Reforma básica' },
-      { value: 'completa', label: 'Reforma completa' },
-      { value: 'personalizada', label: 'Reforma personalizada' },
+      { value: 'basica', label: 'Básica' },
+      { value: 'completa', label: 'Completa' },
+      { value: 'personalizada', label: 'Personalizada' },
     ];
     return this.brand() === 'unicaja'
       ? base.filter((o) => o.value !== 'completa')
@@ -395,12 +426,9 @@ export class LaboralKutxaSareviPage {
 
   readonly datosValid = computed(() => {
     const d = this.data();
-    // BC uses the 3-input address row (direccion / ciudad / codigoPostal)
-    // instead of the single municipio searchable select that LK + Unicaja
-    // still use. Pick the right gate per brand so Siguiente activates.
     const addressOk =
       this.brand() === 'banco-cooperativo'
-        ? !!(d.direccion && d.ciudad && d.codigoPostal)
+        ? !!(d.municipio && d.anoConstruccion)
         : !!d.municipio;
     return !!(d.tipoVivienda && addressOk && d.certificado && d.calefaccion && d.refrigeracion);
   });
@@ -461,12 +489,8 @@ export class LaboralKutxaSareviPage {
     this.data.update((d) => ({ ...d, municipio: value == null ? '' : String(value) }));
   }
 
-  setCiudad(value: string | number | null): void {
-    this.data.update((d) => ({ ...d, ciudad: value == null ? '' : String(value) }));
-  }
-
-  setCodigoPostal(value: string | number | null): void {
-    this.data.update((d) => ({ ...d, codigoPostal: value == null ? '' : String(value) }));
+  setAnoConstruccion(value: string | number | null): void {
+    this.data.update((d) => ({ ...d, anoConstruccion: value == null ? '' : String(value) }));
   }
 
   setCertificado(value: string): void {
@@ -487,6 +511,12 @@ export class LaboralKutxaSareviPage {
     const raw = value == null ? '' : String(value);
     const n = parseInt(raw.replace(/\D/g, ''), 10) || 0;
     this.data.update((d) => ({ ...d, habitantes: n }));
+  }
+
+  setPlantas(value: string | number | null): void {
+    const raw = value == null ? '' : String(value);
+    const n = parseInt(raw.replace(/\D/g, ''), 10) || 0;
+    this.data.update((d) => ({ ...d, plantas: n }));
   }
 
   setCalefaccion(value: string | number | null): void {
@@ -512,22 +542,37 @@ export class LaboralKutxaSareviPage {
     });
   }
 
-  toggleExpanded(id: string): void {
-    this.expandedId.update((cur) => (cur === id ? null : id));
+  medidaAutoCalc(id: string): boolean {
+    return this.autoCalcMap()[id] ?? true;
   }
 
-  collapseExpanded(): void {
-    this.expandedId.set(null);
+  medidaImporte(id: string): number {
+    const override = this.importeMap()[id];
+    if (override != null) return override;
+    return MEDIDAS.find((m) => m.id === id)?.basic ?? 0;
   }
 
-  setAutoCalc(value: boolean): void {
-    this.autoCalc.set(value);
+  medidaParam(medidaId: string, paramId: string): number {
+    const override = this.paramMap()[medidaId]?.[paramId];
+    if (override != null) return override;
+    const def = MEDIDA_PARAMS[medidaId]?.find((p) => p.id === paramId);
+    return def?.defaultValue ?? 0;
   }
 
-  setCustomImporte(value: string | number | null): void {
+  setMedidaAutoCalc(id: string, value: boolean): void {
+    this.autoCalcMap.update((m) => ({ ...m, [id]: value }));
+  }
+
+  setMedidaImporte(id: string, value: string | number | null): void {
     const raw = value == null ? '' : String(value);
     const n = parseInt(raw.replace(/\D/g, ''), 10) || 0;
-    this.customImporte.set(n);
+    this.importeMap.update((m) => ({ ...m, [id]: n }));
+  }
+
+  setMedidaParam(medidaId: string, paramId: string, value: string | number | null): void {
+    const raw = value == null ? '' : String(value);
+    const n = parseInt(raw.replace(/\D/g, ''), 10) || 0;
+    this.paramMap.update((m) => ({ ...m, [medidaId]: { ...m[medidaId], [paramId]: n } }));
   }
 
   openRecuperar(): void {

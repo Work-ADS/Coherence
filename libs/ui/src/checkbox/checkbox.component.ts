@@ -74,7 +74,7 @@ let nextId = 0;
     <label [for]="checkboxId"
            [class]="compact() ? 'inline-flex items-center gap-1.5 cursor-pointer' : 'inline-flex items-start gap-space-2 min-h-[var(--dimension-11)] min-w-[var(--dimension-11)] cursor-pointer'"
            [class.opacity-50]="disabled()" [class.cursor-not-allowed]="disabled()">
-      <span [class]="compact() ? 'relative flex items-center justify-center' : 'relative flex items-center justify-center min-h-[var(--dimension-11)] min-w-[var(--dimension-11)]'">
+      <span [class]="wrapperClasses()">
         <!-- Hidden native input for a11y -->
         <input
           #inputEl
@@ -163,6 +163,16 @@ export class CheckboxComponent implements OnInit {
   /** SVG icon size matches box size */
   readonly svgSizeClass = computed(() => {
     return this.size() === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5';
+  });
+
+  /** Outer span around the absolute-positioned box. Compact mode collapses
+   *  the 44×44 touch-target wrapper down to the box's own size so the
+   *  absolute box has a positioning anchor and the label sits flush. */
+  readonly wrapperClasses = computed(() => {
+    if (this.compact()) {
+      return `relative flex ${boxSizeClasses[this.size()]} shrink-0`;
+    }
+    return 'relative flex items-center justify-center min-h-[var(--dimension-11)] min-w-[var(--dimension-11)]';
   });
 
   readonly boxClasses = computed(() => {

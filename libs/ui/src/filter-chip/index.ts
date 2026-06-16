@@ -1,2 +1,6 @@
 export { FilterChipComponent } from './filter-chip.component';
-export type { FilterChipSize } from './filter-chip.variants';
+export type {
+  FilterChipMode,
+  FilterChipOption,
+  FilterChipSize,
+} from './filter-chip.variants';

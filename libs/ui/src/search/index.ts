@@ -1,2 +1,2 @@
 export { SearchComponent } from './search.component';
-export type { SearchSize } from './search.variants';
+export type { SearchSize, SearchSuggestion } from './search.variants';

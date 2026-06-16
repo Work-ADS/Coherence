@@ -1,30 +1,54 @@
 // =============================================================================
 // LegadoRetiro — Objetivos page.
-// Uses existing Coherence primitives; page-specific structure stays BEM + tokens.
+// Empty state follows the converged .{prefix}-empty BEM shape per
+// docs/rules/page-structure-skill.md §10 (placeholder until <afi-empty-state>
+// primitive ships). Datos generales + Activos a conservar are both
+// level="section" — multi-section page per §6.
 // =============================================================================
 
 @use '../../../../../../../libs/tokens/mixins' as t;
 
-.lr-gate {
+// ─── Empty state (matches sociedades-empty / if-empty / df-empty shape) ─────
+.lr-empty {
   margin-block-start: var(--space-xl);
-  padding-block: var(--space-lg);
-  border-block-start: var(--border-width-hairline) solid var(--border-subtle);
-  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  background: var(--surface-subtle);
+  border: var(--border-width-hairline) dashed var(--border-subtle);
+  border-radius: var(--radius-card);
+  text-align: center;
 }
 
+.lr-empty__title {
+  margin: 0;
+  font: var(--type-subtitle);
+  color: var(--foreground-primary-default);
+}
+
+.lr-empty__hint {
+  margin: var(--space-sm) auto 0;
+  max-inline-size: 56ch;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+.lr-empty__action {
+  margin-block-start: var(--space-lg);
+}
+
+// ─── Section stack — rhythm between sibling sections (§12) ─────────────────
+// Mirrors `.if-stack` (inversiones-futuras): space-xl from page-header to
+// first section, then space-lg between sections.
 .lr-stack {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
+  margin-block-start: var(--space-xl);
 }
 
-.lr-grid {
+// ─── Section body grids ─────────────────────────────────────────────────────
+.lr-datos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-72)), 1fr));
-  gap: var(--space-md) var(--space-lg);
-}
-
-.lr-grid--compact {
   grid-template-columns: 1fr;
   gap: var(--space-lg) var(--space-xl);
 
@@ -33,6 +57,11 @@
   }
 }
 
+.lr-follow-up {
+  margin-block-start: var(--space-lg);
+}
+
+// ─── Activos a conservar — asset list + status messages ────────────────────
 .lr-asset-list {
   display: flex;
   flex-direction: column;
@@ -47,6 +76,13 @@
   border-block-end: var(--border-width-hairline) solid var(--border-subtle);
 }
 
+.lr-asset-empty {
+  margin: 0;
+  padding-block: var(--space-lg);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
 .lr-total {
   margin-block: var(--space-md) var(--space-lg);
   font: var(--type-body-sm-400);
@@ -57,15 +93,4 @@
   color: var(--foreground-primary-default);
   font: var(--type-body-sm-600);
   font-variant-numeric: tabular-nums;
-}
-
-.lr-empty {
-  margin: 0;
-  padding-block: var(--space-lg);
-  font: var(--type-body-sm-400);
-  color: var(--foreground-tertiary-default);
-}
-
-.lr-follow-up {
-  margin-block-start: var(--space-lg);
 }

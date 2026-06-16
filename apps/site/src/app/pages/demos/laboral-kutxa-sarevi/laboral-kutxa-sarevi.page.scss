@@ -667,10 +667,10 @@
 // ─── Medida row (checklist) ───────────────────────────────────────────────
 .medida-row {
   display: grid;
-  grid-template-columns: var(--dimension-8) 1fr auto auto auto;
+  grid-template-columns: var(--dimension-8) minmax(0, 1fr) auto auto;
   align-items: center;
   gap: var(--dimension-3-5);
-  padding: var(--dimension-2) 0;
+  padding: var(--dimension-2) 0 0;
 
   &__name {
     font-size: 14.5px;
@@ -694,78 +694,44 @@
     font-weight: 500;
   }
 
-  &__details {
-    font-size: 13.5px;
-    color: var(--mag);
-    display: inline-flex;
-    gap: var(--dimension-1);
-    align-items: center;
-    background: none;
-    border: 0;
-    padding: 0;
-    cursor: pointer;
-    font-family: inherit;
-
-    &:hover { text-decoration: underline; text-underline-offset: var(--dimension-0-5); }
-  }
-
-  &__expand-toggle {
-    margin-left: var(--dimension-10-5);
-    margin-top: calc(-1 * var(--dimension-2));
-    margin-bottom: var(--dimension-2);
+  // Always-visible info trigger that sits directly under each row. Indented
+  // to line up with the name column so the action reads as scoped to the
+  // medida above it.
+  &__info {
+    padding: 0 0 var(--dimension-2) calc(var(--dimension-8) + var(--dimension-3-5));
   }
 }
 
-.medida-detail {
-  background: var(--cream);
-  border-radius: var(--dimension-2-5);
-  padding: var(--dimension-4) var(--dimension-4-5);
-  margin: var(--dimension-1) 0 var(--dimension-3) var(--dimension-10-5);
+// Inline importe input that sits in the price slot of the row when a medida
+// is selected. Sizes wide enough to hold the formatted euro string without
+// stretching the rest of the row.
+.medida-row__importe {
+  width: var(--dimension-40);
+  min-width: var(--dimension-30);
+}
+
+// Per-medida auxiliary block: optional parameter inputs + Cálculo automático
+// toggle. Sits directly under the row, indented past the checkbox so it
+// reads as scoped to the medida above.
+.medida-aux {
   display: flex;
   flex-direction: column;
   gap: var(--dimension-2-5);
+  margin: var(--dimension-1) 0 var(--dimension-2) calc(var(--dimension-8) + var(--dimension-3-5));
 
-  &__switch-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13.5px;
-    color: var(--text);
-
-    strong { color: var(--text); }
+  &__params {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dimension-50)), 1fr));
+    gap: var(--dimension-3);
   }
 
   &__auto {
     display: flex;
     align-items: center;
-    gap: var(--dimension-2-5);
+    gap: var(--dimension-2);
     font-size: var(--dimension-3-25);
+    color: var(--text);
   }
-
-  &__hint {
-    color: var(--text-soft);
-    font-size: var(--dimension-3-25);
-  }
-
-  &__foot {
-    display: flex;
-    justify-content: space-between;
-    margin-top: var(--dimension-1);
-  }
-}
-
-.ocultar-link {
-  background: none;
-  border: 0;
-  color: var(--bere);
-  font-size: var(--dimension-3-25);
-  cursor: pointer;
-  padding: 0;
-  font-family: inherit;
-
-  &:hover { text-decoration: underline; }
-
-  &--mag { color: var(--mag); }
 }
 
 .add-custom {
@@ -775,27 +741,7 @@
 }
 
 .energy-range {
-  display: flex;
-  gap: var(--dimension-1-5);
   padding-top: var(--dimension-2);
-  align-items: center;
-  flex-wrap: wrap;
-
-  &__pick {
-    background: none;
-    border: 0;
-    padding: 0;
-    cursor: pointer;
-    position: relative;
-
-    &--active::before {
-      content: "";
-      position: absolute;
-      inset: calc(-1 * var(--dimension-1)) calc(-1 * var(--dimension-0-5));
-      border-radius: var(--dimension-1-5);
-      box-shadow: 0 0 0 var(--dimension-0-5) var(--bere);
-    }
-  }
 
   &__labels {
     display: flex;
@@ -804,7 +750,6 @@
     color: var(--text-soft);
     margin-top: var(--dimension-0-5);
     padding-top: var(--dimension-1);
-    max-width: var(--dimension-67);
   }
 }
 
@@ -819,7 +764,10 @@
   width: 100%;
 
   @media (min-width: 1040px) {
-    grid-template-columns: minmax(0, 1.25fr) minmax(var(--dimension-80), 0.75fr);
+    // Medidas list absorbs all extra width; Realizando-la-reforma column
+    // stays a fixed band on the right so it lines up with the stepper's
+    // "Resumen" edge instead of growing with the viewport.
+    grid-template-columns: minmax(0, 1fr) minmax(var(--dimension-80), var(--dimension-90));
     align-items: start;
   }
 }
@@ -1507,20 +1455,6 @@
 
     strong {
       color: var(--color-banco-cooperativo-ink-default);
-    }
-  }
-
-  // ─── Manual address row (Dirección · Ciudad · Código postal) ──────────────
-  // Per Figma the three address fields share one row at desktop and collapse
-  // to a single column on narrow viewports. Gap matches the form-stack gap
-  // for consistency with the rest of the section.
-  .bc-address-row {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--dimension-4);
-
-    @media (max-width: 640px) {
-      grid-template-columns: 1fr;
     }
   }
 

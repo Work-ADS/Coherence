@@ -12,14 +12,14 @@ type ScenarioProjection = {
 };
 
 @Component({
-  selector: 'site-objetivos-banner',
+  selector: 'site-diagnostico-banner',
   standalone: true,
   imports: [BadgeComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './objetivos-banner.component.html',
-  styleUrls: ['./objetivos-banner.component.scss'],
+  templateUrl: './diagnostico-banner.component.html',
+  styleUrls: ['./diagnostico-banner.component.scss'],
 })
-export class ObjetivosBannerComponent {
+export class DiagnosticoBannerComponent {
   readonly store = inject(WealthPlannerStore);
 
   private readonly numberFormatter = new Intl.NumberFormat('es-ES', {

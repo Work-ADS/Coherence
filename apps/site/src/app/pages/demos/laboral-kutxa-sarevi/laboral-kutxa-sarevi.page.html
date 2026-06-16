@@ -233,40 +233,24 @@
               />
             </div>
           } @else if (brand() === 'banco-cooperativo') {
-            <div class="form-stack">
-              <div>
-                <label class="field-label">¿Buscar dirección automáticamente?</label>
-                <site-radio-card-group
-                  [options]="siNoOptions"
-                  [value]="data().buscarDir"
-                  (valueChange)="setBuscarDir($event)"
-                  ariaLabel="Buscar dirección"
-                  [compact]="true"
-                />
-              </div>
-
-              <div class="bc-address-row">
-                <afi-input
-                  label="Dirección"
-                  [value]="data().direccion"
-                  (valueChange)="setDireccion($event)"
-                />
-                <afi-select
-                  label="Ciudad"
-                  placeholder="Selecciona una opción"
-                  [options]="municipioOptions"
-                  [value]="data().ciudad"
-                  [searchable]="true"
-                  searchPlaceholder="Buscar ciudad…"
-                  emptyText="Sin ciudades coincidentes"
-                  (valueChange)="setCiudad($event)"
-                />
-                <afi-input
-                  label="Código postal"
-                  [value]="data().codigoPostal"
-                  (valueChange)="setCodigoPostal($event)"
-                />
-              </div>
+            <div class="grid-2">
+              <afi-select
+                label="¿En qué municipio se encuentra?"
+                placeholder="Selecciona una opción"
+                [options]="municipioOptions"
+                [value]="data().municipio"
+                [searchable]="true"
+                searchPlaceholder="Buscar municipio…"
+                emptyText="Sin municipios coincidentes"
+                (valueChange)="setMunicipio($event)"
+              />
+              <afi-select
+                label="Año de construcción"
+                placeholder="Selecciona una opción"
+                [options]="anoConstruccionOptions"
+                [value]="data().anoConstruccion"
+                (valueChange)="setAnoConstruccion($event)"
+              />
             </div>
           } @else {
             <div class="form-stack">
@@ -322,13 +306,21 @@
             }
             @if (data().certificado === 'Sí') {
               <div class="energy-range">
-                @for (g of energyGrades; track g) {
-                  <button type="button"
-                    class="energy-range__pick"
-                    [class.energy-range__pick--active]="data().etiqueta === g"
-                    (click)="setEtiqueta(g)">
-                    <span class="energy-label energy-label--sm energy-label--{{ g }}">{{ g }}</span>
-                  </button>
+                @if (brand() === 'banco-cooperativo') {
+                  <site-radio-card-group
+                    [options]="etiquetaOptions"
+                    [value]="data().etiqueta"
+                    (valueChange)="setEtiqueta($event)"
+                    ariaLabel="Etiqueta energética"
+                  />
+                } @else {
+                  <afi-segmented-control
+                    [options]="etiquetaOptions"
+                    [value]="data().etiqueta"
+                    (valueChange)="setEtiqueta($event)"
+                    ariaLabel="Etiqueta energética"
+                    size="md"
+                  />
                 }
               </div>
               <div class="energy-range__labels">
@@ -355,6 +347,13 @@
               [value]="data().habitantes + ' habitantes'"
               (valueChange)="setHabitantes($event)"
             />
+            @if (data().tipoVivienda === 'Chalet adosado' || data().tipoVivienda === 'Chalet independiente') {
+              <afi-input
+                label="¿Cuántas plantas tiene tu vivienda?"
+                [value]="data().plantas + ' plantas'"
+                (valueChange)="setPlantas($event)"
+              />
+            }
           </div>
         </section>
 
@@ -392,37 +391,19 @@
               <span class="stat__hint">situación actual</span>
             </div>
             <div class="metric-card">
-              <div class="metric-card__head">
-                <span class="stat__label">Gasto anual</span>
-                <span class="stat__delta stat__delta--up" title="por encima de la media de viviendas similares">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 12 8l7 7"/></svg>
-                  12 %
-                </span>
-              </div>
+              <span class="stat__label">Gasto anual</span>
               <span class="stat__value">1.567<span class="stat__unit">€</span></span>
-              <span class="stat__hint">coste estimado por vivienda · frente a la media</span>
+              <span class="stat__hint">coste estimado por vivienda</span>
             </div>
             <div class="metric-card">
-              <div class="metric-card__head">
-                <span class="stat__label">Consumo anual</span>
-                <span class="stat__delta stat__delta--up" title="por encima de la media de viviendas similares">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 12 8l7 7"/></svg>
-                  18 %
-                </span>
-              </div>
+              <span class="stat__label">Consumo anual</span>
               <span class="stat__value">612.423<span class="stat__unit">kWh</span></span>
-              <span class="stat__hint">energía usada al año · frente a la media</span>
+              <span class="stat__hint">energía usada al año</span>
             </div>
             <div class="metric-card">
-              <div class="metric-card__head">
-                <span class="stat__label">Emisiones anuales</span>
-                <span class="stat__delta stat__delta--up" title="por encima de la media de viviendas similares">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 12 8l7 7"/></svg>
-                  9 %
-                </span>
-              </div>
+              <span class="stat__label">Emisiones anuales</span>
               <span class="stat__value">44<span class="stat__unit">kg CO<sub>2</sub></span></span>
-              <span class="stat__hint">huella de CO₂ estimada · frente a la media</span>
+              <span class="stat__hint">huella de CO₂ estimada</span>
             </div>
           </div>
         </section>
@@ -475,31 +456,24 @@
         <div class="medidas-layout">
           <section class="card medidas-layout__list" aria-labelledby="medidas-list-title">
             <h2 id="medidas-list-title" class="card__title">
-              Tipos de medidas
+              Tipo de reformas
             </h2>
 
-            @if (brand() === 'banco-cooperativo') {
-              <site-radio-card-group
-                [options]="variantOptions()"
-                [value]="variant()"
-                (valueChange)="setVariant($event)"
-                ariaLabel="Tipo de reforma"
-              />
-            } @else {
-              <afi-segmented-control
-                [options]="variantOptions()"
-                [value]="variant()"
-                (valueChange)="setVariant($event)"
-                ariaLabel="Tipo de reforma"
-                size="md"
-              />
-            }
+            <afi-segmented-control
+              [options]="variantOptions()"
+              [value]="variant()"
+              (valueChange)="setVariant($event)"
+              ariaLabel="Tipo de reforma"
+              size="md"
+            />
 
             <div>
               @for (m of visibleMedidas(); track m.id) {
               @let p = price(m);
               @let checked = isSelected(m.id);
               @let locked = p == null;
+              @let auto = medidaAutoCalc(m.id);
+              @let params = medidaParams[m.id];
               <div class="medida-row"
                 [class.medida-row--checked]="checked"
                 [class.medida-row--locked]="locked">
@@ -518,47 +492,47 @@
                     <span class="cae-badge">CAE</span>
                   }
                 </div>
-                <div class="medida-row__price">{{ formatEuro(p) }}</div>
-                <button type="button" class="medida-row__details" (click)="openInfo(m)">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 1 1 4.37 16.96l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 4.37l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06A2 2 0 1 1 19.63 7.04l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.16.4.5.7.91.83H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
-                  Detalles
-                </button>
+                @if (checked && variant() === 'basica') {
+                  <afi-input class="medida-row__importe"
+                    ariaLabel="Importe de {{ m.name }}"
+                    [disabled]="auto"
+                    [value]="formatEuro(medidaImporte(m.id))"
+                    (valueChange)="setMedidaImporte(m.id, $event)"
+                  />
+                } @else {
+                  <div class="medida-row__price">{{ formatEuro(p) }}</div>
+                }
               </div>
 
-              @if (checked && variant() === 'basica' && m.id === expandedId()) {
-                <div class="medida-detail">
-                  <div class="medida-detail__switch-row">
-                    <strong>Editar valores</strong>
-                    <div class="medida-detail__auto">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><rect x="8" y="6" width="8" height="3"/><path d="M9 13h.01M12 13h.01M15 13h.01M9 17h.01M12 17h.01M15 17h.01"/></svg>
-                      <afi-switch
-                        label="Cálculo automático"
-                        [checked]="autoCalc()"
-                        (checkedChange)="setAutoCalc($event)"
-                      />
+              @if (checked && variant() === 'basica') {
+                <div class="medida-aux">
+                  @if (params) {
+                    <div class="medida-aux__params">
+                      @for (param of params; track param.id) {
+                        <afi-input
+                          [label]="param.label"
+                          [value]="medidaParam(m.id, param.id) + ' ' + param.unit"
+                          (valueChange)="setMedidaParam(m.id, param.id, $event)"
+                        />
+                      }
                     </div>
-                  </div>
-                  <div class="medida-detail__hint">
-                    Puedes modificar los parámetros para calcular tu cálculo automático para que se ajusten mejor a tu situación.
-                  </div>
-                  <afi-input
-                    label="Importe"
-                    [value]="formatEuro(customImporte())"
-                    (valueChange)="setCustomImporte($event)"
-                  />
-                  <div class="medida-detail__foot">
-                    <afi-button variant="secondary" size="sm">Más información</afi-button>
-                    <afi-button variant="ghost" size="sm" (clicked)="collapseExpanded()">^ Ocultar</afi-button>
+                  }
+                  <div class="medida-aux__auto">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><rect x="8" y="6" width="8" height="3"/><path d="M9 13h.01M12 13h.01M15 13h.01M9 17h.01M12 17h.01M15 17h.01"/></svg>
+                    <afi-switch
+                      label="Cálculo automático"
+                      [checked]="auto"
+                      (checkedChange)="setMedidaAutoCalc(m.id, $event)"
+                    />
                   </div>
                 </div>
               }
-              @if (checked && variant() === 'basica' && m.id !== expandedId()) {
-                <div class="medida-row__expand-toggle">
-                  <button type="button" class="ocultar-link ocultar-link--mag" (click)="toggleExpanded(m.id)">
-                    Editar valores ▾
-                  </button>
-                </div>
-              }
+
+              <div class="medida-row__info">
+                <afi-button variant="ghost" size="sm" (clicked)="openInfo(m)">
+                  ¿Qué es y cómo lo calculamos?
+                </afi-button>
+              </div>
               }
 
               <!-- Certificado energético — locked on -->
@@ -567,10 +541,11 @@
                 <div class="medida-row__name" title="Certificado energético">Certificado energético</div>
                 <div class="medida-row__tags"></div>
                 <div class="medida-row__price">900 €</div>
-                <button type="button" class="medida-row__details" (click)="openInfoByName('Certificado energético')">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/></svg>
-                  Detalles
-                </button>
+              </div>
+              <div class="medida-row__info">
+                <afi-button variant="ghost" size="sm" (clicked)="openInfoByName('Certificado energético')">
+                  ¿Qué es y cómo lo calculamos?
+                </afi-button>
               </div>
             </div>
 

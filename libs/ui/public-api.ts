@@ -6,9 +6,13 @@ export type { ButtonVariant, ButtonSize } from './src/button';
 export { InputComponent } from './src/input';
 export type { InputSize, InputType } from './src/input';
 export { SearchComponent } from './src/search';
-export type { SearchSize } from './src/search';
+export type { SearchSize, SearchSuggestion } from './src/search';
 export { FilterChipComponent } from './src/filter-chip';
-export type { FilterChipSize } from './src/filter-chip';
+export type {
+  FilterChipMode,
+  FilterChipOption,
+  FilterChipSize,
+} from './src/filter-chip';
 export { SelectComponent } from './src/select';
 export type { SelectOption, SelectMode, SelectSize } from './src/select';
 export { CheckboxComponent } from './src/checkbox';

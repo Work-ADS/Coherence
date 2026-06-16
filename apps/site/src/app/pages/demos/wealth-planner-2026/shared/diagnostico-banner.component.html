@@ -1,0 +1,30 @@
+<section class="diagnostico-banner" aria-label="Resumen de objetivos">
+  <div class="diagnostico-banner__summary">
+    <span class="diagnostico-banner__eyebrow">Objetivos</span>
+    <p class="diagnostico-banner__line">
+      <span class="diagnostico-banner__label">Edad de retiro:</span>
+      <strong>{{ edadRetiroLabel() }}</strong>
+    </p>
+    <p class="diagnostico-banner__line">
+      <span class="diagnostico-banner__label">Legado:</span>
+      <strong>{{ legadoLabel() }}</strong>
+    </p>
+  </div>
+
+  <div class="diagnostico-banner__projection">
+    <span class="diagnostico-banner__eyebrow">Legado estimado</span>
+    <ul class="diagnostico-banner__scenarios">
+      @for (scenario of scenarios(); track scenario.label) {
+        <li class="diagnostico-banner__scenario">
+          <afi-badge [intent]="scenario.intent" size="sm">
+            {{ scenario.label }}
+          </afi-badge>
+          <strong class="diagnostico-banner__value">{{ scenario.value }}</strong>
+          @if (scenario.note) {
+            <span class="diagnostico-banner__note">{{ scenario.note }}</span>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+</section>

@@ -1,5 +1,8 @@
 This is the Coherence DS repo. First read `docs/strategy/plan.md`.
 
+Address the user as **Richard** in conversational replies — natural openers and asides, not on every line, and never in code or file content.
+
+
 Agent lineup lives in `docs/agents/`:
 - **Planner is live**: `docs/agents/planner.md` is the session harness over `docs/workflow/brief-template.md`; invoke it when starting or activating a brief.
 - **Builder**: `docs/agents/builder.md` is the implementation harness; invoke it only after scope is locked or a build prompt is green-lit.

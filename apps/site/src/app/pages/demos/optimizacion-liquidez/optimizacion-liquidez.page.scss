@@ -1,0 +1,103 @@
+// =============================================================================
+// Optimización de la liquidez — Plan de acción §4.b. Empty state mirrors
+// `.lr-empty` (Legado y retiro) per page-structure-skill §10; section stack
+// mirrors `.lr-stack` rhythm (space-xl from page-header, space-lg between).
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+// ─── Section stack ──────────────────────────────────────────────────────────
+.ol-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-block-start: var(--space-xl);
+}
+
+// ─── Empty state (matches sociedades-empty / lr-empty / if-empty shape) ─────
+.ol-empty {
+  margin-block-start: var(--space-xl);
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  background: var(--surface-subtle);
+  border: var(--border-width-hairline) dashed var(--border-subtle);
+  border-radius: var(--radius-card);
+  text-align: center;
+}
+
+.ol-empty__title {
+  margin: 0;
+  font: var(--type-subtitle);
+  color: var(--foreground-primary-default);
+}
+
+.ol-empty__hint {
+  margin: var(--space-sm) auto 0;
+  max-inline-size: 56ch;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+.ol-empty__action {
+  margin-block-start: var(--space-lg);
+}
+
+// ─── Chip-dropdown pattern (mirrors evolucion-patrimonial Vista / Escenario) ─
+.ol-chip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.ol-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  height: var(--control-h-sm);
+  padding: 0 var(--space-sm);
+  border: thin solid var(--border-hairline);
+  border-radius: var(--radius-full);
+  background: var(--surface-base);
+  color: var(--canvas-fg);
+  font: var(--type-body-sm-500);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    background: var(--surface-muted);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 0.125rem var(--border-focus);
+  }
+
+  &[aria-expanded='true'] {
+    border-color: var(--color-action-700);
+    background: var(--surface-muted);
+  }
+}
+
+.ol-chip__label {
+  color: var(--canvas-fg);
+}
+
+.ol-chip__divider {
+  display: inline-block;
+  inline-size: 0.0625rem;
+  block-size: var(--space-md);
+  background: var(--border-hairline);
+}
+
+.ol-chip__value {
+  color: var(--color-action-700);
+}
+
+.ol-chip__caret {
+  inline-size: var(--space-sm);
+  block-size: var(--space-sm);
+  color: var(--foreground-secondary-default);
+}

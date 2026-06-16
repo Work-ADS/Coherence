@@ -102,6 +102,14 @@ export const demos_routes: Routes = [
     loadComponent: () =>
       import('./estrategias/estrategias.page').then((m) => m.EstrategiasPage),
   },
+  // Plan de acción — §4.b (Optimización de la liquidez)
+  {
+    path: 'wealth-planner-2026/optimizacion-liquidez',
+    loadComponent: () =>
+      import('./optimizacion-liquidez/optimizacion-liquidez.page').then(
+        (m) => m.OptimizacionLiquidezPage,
+      ),
+  },
   // Conclusiones — §5.b
   {
     path: 'wealth-planner-2026/consecucion-objetivos',

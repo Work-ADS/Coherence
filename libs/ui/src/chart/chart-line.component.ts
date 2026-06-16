@@ -18,6 +18,8 @@ import { buildA11yRegion, chartA11yId, chartTitleId } from './chart-a11y';
 let nextId = 0;
 
 const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
+const VIEWBOX_WIDTH = 960;
+const VIEWBOX_HEIGHT = 320;
 
 /**
  * Line chart primitive.
@@ -48,8 +50,8 @@ const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
     }
     .line-marker:hover, .line-marker:focus-visible { r: 5; }
     .line-marker:focus-visible {
-      outline: 2px solid var(--border-focus);
-      outline-offset: 2px;
+      outline: var(--border-width-thick) solid var(--border-focus);
+      outline-offset: var(--space-3xs);
     }
     @media (prefers-reduced-motion: reduce) {
       .line-path, .line-marker { transition-duration: 0ms; }
@@ -58,27 +60,31 @@ const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
   template: `
     <afi-loading-overlay variant="quiet-spinner" [visible]="loading()">
       <figure class="relative" role="figure" [attr.aria-labelledby]="titleElId">
-        <div class="flex items-start justify-between mb-space-3">
-          <div>
-            @if (title()) {
-              <figcaption [id]="titleElId" class="text-section text-canvas-fg">{{ title() }}</figcaption>
-            }
-            @if (subtitle()) {
-              <p class="text-body-sm text-neutral-500 mt-space-1">{{ subtitle() }}</p>
-            }
+        @if (!hideHeader()) {
+          <div class="flex items-start justify-between mb-space-3">
+            <div>
+              @if (title()) {
+                <figcaption [id]="titleElId" class="text-section text-canvas-fg">{{ title() }}</figcaption>
+              }
+              @if (subtitle()) {
+                <p class="text-body-sm text-neutral-500 mt-space-1">{{ subtitle() }}</p>
+              }
+            </div>
+            <div class="flex items-center gap-space-2">
+              <ng-content select="[slot=action]" />
+              @if (!hideInstructions()) {
+                <afi-chart-instructions (opened)="instructionsOpened.emit()" />
+              }
+            </div>
           </div>
-          <div class="flex items-center gap-space-2">
-            <ng-content select="[slot=action]" />
-            <afi-chart-instructions (opened)="instructionsOpened.emit()" />
-          </div>
-        </div>
+        }
 
         <div [id]="a11yId" class="sr-only">{{ a11yText() }}</div>
 
         @if (hasData()) {
-          <svg [attr.width]="'100%'" [attr.height]="height()" [attr.viewBox]="viewBox()"
+          <svg [attr.viewBox]="viewBox()"
                role="img" [attr.aria-labelledby]="titleElId" [attr.aria-describedby]="a11yId"
-               class="block">
+               class="block w-full h-auto" [style.max-height]="height()">
             <g [attr.transform]="'translate(' + margins.left + ',' + margins.top + ')'">
               <!-- Grid lines -->
               @for (tick of yTicks(); track tick) {
@@ -86,13 +92,23 @@ const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
                       [attr.y1]="scaleY(tick)" [attr.y2]="scaleY(tick)"
                       stroke="var(--border-hairline)" stroke-width="1" opacity="0.5" />
                 <text x="-8" [attr.y]="scaleY(tick)" dy="0.32em" text-anchor="end"
-                      class="fill-neutral-500" style="font-size: var(--font-size-body-sm, 12px)">
+                      class="fill-neutral-500" style="font-size: var(--font-size-body-sm, 12.0px)">
                   {{ fmtNum(tick) }}
                 </text>
               }
               <!-- X axis -->
               <line x1="0" [attr.x2]="plotWidth()" [attr.y1]="plotHeight()" [attr.y2]="plotHeight()"
                     stroke="var(--border-hairline)" stroke-width="1" />
+              <!-- X axis tick labels -->
+              @for (tick of xTicks(); track tick.value) {
+                <text
+                  [attr.x]="tick.cx"
+                  [attr.y]="plotHeight() + 20"
+                  text-anchor="middle"
+                  class="fill-neutral-500"
+                  style="font-size: var(--font-size-body-sm, 12.0px)"
+                >{{ tick.label }}</text>
+              }
               <!-- Lines + markers per series -->
               @for (series of renderedSeries(); track series.key; let si = $index) {
                 <path [attr.d]="series.path" class="line-path" [attr.stroke]="series.visual.color" />
@@ -116,19 +132,23 @@ const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
             </g>
           </svg>
 
-          <afi-chart-legend [items]="legendItems()" [hidden]="data().length <= 1" />
+          @if (!hideLegend()) {
+            <afi-chart-legend [items]="legendItems()" [hidden]="data().length <= 1" />
+          }
         } @else {
           <div class="flex items-center justify-center text-neutral-500 text-body-sm" [style.height]="height()" aria-live="polite">
             Sin datos para mostrar
           </div>
         }
 
-        <afi-chart-data-table
-          [columns]="tableColumns()"
-          [rows]="tableRows()"
-          trackByKey="key"
-          (toggled)="dataTableToggled.emit($event)"
-        />
+        @if (!hideDataTable()) {
+          <afi-chart-data-table
+            [columns]="tableColumns()"
+            [rows]="tableRows()"
+            trackByKey="key"
+            (toggled)="dataTableToggled.emit($event)"
+          />
+        }
 
         <ng-content select="[slot=footer]" />
       </figure>
@@ -145,10 +165,19 @@ export class ChartLineComponent {
   readonly contextExplanation = input('');
   readonly structureNotes = input('');
   readonly locale = input('es-ES');
-  readonly height = input('320px');
+  readonly height = input('20rem');
   readonly focus = input<number | string | null>(null);
   readonly baselineZero = input(false);
   readonly showMarkers = input(false);
+  /** Suppress the built-in `?` chart-instructions toggle. */
+  readonly hideInstructions = input(false);
+  /** Suppress the built-in auto-legend below the plot. */
+  readonly hideLegend = input(false);
+  /** Suppress the built-in expandable data-table footer. */
+  readonly hideDataTable = input(false);
+  /** Suppress the built-in title/subtitle/action row. Use when the surrounding
+   *  page-header section already provides title + action chrome. */
+  readonly hideHeader = input(false);
 
   readonly dataPointActivated = output<{ index: number; datum: unknown }>();
   readonly dataTableToggled = output<boolean>();
@@ -168,9 +197,9 @@ export class ChartLineComponent {
 
   readonly hasData = computed(() => this.data().some(s => s.points.length > 0));
 
-  readonly plotWidth = computed(() => 600 - MARGINS.left - MARGINS.right);
-  readonly plotHeight = computed(() => 280 - MARGINS.top - MARGINS.bottom);
-  readonly viewBox = computed(() => `0 0 600 280`);
+  readonly plotWidth = computed(() => VIEWBOX_WIDTH - MARGINS.left - MARGINS.right);
+  readonly plotHeight = computed(() => VIEWBOX_HEIGHT - MARGINS.top - MARGINS.bottom);
+  readonly viewBox = computed(() => `0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`);
 
   readonly allYValues = computed(() => {
     const values: number[] = [];
@@ -223,6 +252,35 @@ export class ChartLineComponent {
     return Array.from({ length: steps + 1 }, (_, i) => min + step * i);
   });
 
+  readonly xTicks = computed<Array<{ value: number; cx: number; label: string }>>(() => {
+    const series = this.data();
+    if (series.length === 0) return [];
+    const uniq = new Set<number>();
+    let firstX: number | Date | undefined;
+    for (const s of series) {
+      for (const p of s.points) {
+        uniq.add(p.x instanceof Date ? p.x.getTime() : p.x);
+        firstX ??= p.x;
+      }
+    }
+    if (uniq.size === 0) return [];
+    const sorted = [...uniq].sort((a, b) => a - b);
+    const target = 8;
+    const stride = Math.max(1, Math.ceil(sorted.length / target));
+    const picked: number[] = [];
+    for (let i = 0; i < sorted.length; i += stride) picked.push(sorted[i]!);
+    const last = sorted[sorted.length - 1]!;
+    if (picked[picked.length - 1] !== last) picked.push(last);
+    const isDate = firstX instanceof Date;
+    return picked.map((value) => ({
+      value,
+      cx: this.scaleX(value),
+      label: isDate
+        ? formatDate(new Date(value), this.locale())
+        : formatNumber(value, this.locale()),
+    }));
+  });
+
   scaleX(value: number | Date): number {
     const v = value instanceof Date ? value.getTime() : value;
     const range = this.xMax() - this.xMin();
@@ -238,7 +296,10 @@ export class ChartLineComponent {
 
   readonly renderedSeries = computed(() => {
     return this.data().map((series, si) => {
-      const visual = resolveSeriesVisual(si);
+      const baseVisual = resolveSeriesVisual(si);
+      const visual = series.color
+        ? { ...baseVisual, color: series.color }
+        : baseVisual;
       const points = series.points.map((p, idx) => ({
         idx,
         x: p.x,
@@ -269,10 +330,13 @@ export class ChartLineComponent {
   });
 
   readonly legendItems = computed(() =>
-    this.data().map((s, i) => ({
-      label: s.key,
-      visual: resolveSeriesVisual(i),
-    })),
+    this.data().map((s, i) => {
+      const baseVisual = resolveSeriesVisual(i);
+      return {
+        label: s.key,
+        visual: s.color ? { ...baseVisual, color: s.color } : baseVisual,
+      };
+    }),
   );
 
   readonly tableColumns = computed(() => {

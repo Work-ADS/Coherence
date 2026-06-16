@@ -372,7 +372,15 @@ export class TableComponent {
   private toneFor(col: TableColumn, row: Record<string, unknown> | null): TableCellTone | null {
     if (!col.toneKey || !row) return null;
     const v = row[col.toneKey];
-    if (v === 'success' || v === 'warning' || v === 'danger' || v === 'neutral') return v;
+    if (
+      v === 'success' ||
+      v === 'warning' ||
+      v === 'danger' ||
+      v === 'neutral' ||
+      v === 'info'
+    ) {
+      return v;
+    }
     return null;
   }
 

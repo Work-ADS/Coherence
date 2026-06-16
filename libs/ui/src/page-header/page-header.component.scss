@@ -152,42 +152,19 @@
 }
 
 // ---------------------------------------------------------------------------
-// Main row: title+subtitle left, actions right (Figma auto-layout).
-// On narrow viewports (<sm) the row stacks so the actions wrap below the
-// title block instead of being squeezed off-screen. Above sm, the canonical
-// inline layout is preserved.
+// Main column: title-row (title + actions inline) → subtitle full-width.
+// Per Richard 2026-06-16: actions sit beside the title so the subtitle can
+// span the full content width instead of being cropped by the actions column.
+// On narrow viewports the title-row stacks so actions wrap below the title
+// instead of being squeezed off-screen.
 // ---------------------------------------------------------------------------
 .page-header__main {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-lg);
-
-  // Both queries are intentional: `@media` handles production where the
-  // browser window is the breakpoint source; `@container viewport` lets
-  // the demo-shell's preview area (375 / 768 / 1280 buttons) trigger the
-  // same behavior without resizing the actual window. The named
-  // `viewport` container is set on `.demo-content` in demo-shell.scss.
-  @media (max-width: 640px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  @container viewport (max-width: 40rem) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-
-.page-header__left {
-  display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  min-width: 0;
-  flex: 1 1 auto;
 }
 
-// When the section is collapsible, the whole main row becomes the click /
+// When the section is collapsible, the whole header column becomes the click /
 // focus target. Tightens chrome reset so it doesn't look like a button.
 .page-header__main--collapsible {
   cursor: pointer;
@@ -200,12 +177,37 @@
   }
 }
 
-// Title row — title + estado chip + extraInfo slot, horizontal.
-// Wraps if extraInfo gets long so tags don't push the actions column off-screen.
+// Title row — title-leading (left) + decorations + actions (right), inline.
 .page-header__title-row {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  min-width: 0;
+
+  // Both queries are intentional: `@media` handles production where the
+  // browser window is the breakpoint source; `@container viewport` lets
+  // the demo-shell's preview area (375 / 768 / 1280 buttons) trigger the
+  // same behavior without resizing the actual window. The named
+  // `viewport` container is set on `.demo-content` in demo-shell.scss.
+  @media (max-width: 640px) {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  @container viewport (max-width: 40rem) {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+}
+
+// Leading group — title + estado chip + extraInfo slot. Grows to fill the
+// row so the trailing actions stay pinned right via `margin-left: auto` on
+// the first trailing sibling.
+.page-header__title-leading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1 1 auto;
   min-width: 0;
   flex-wrap: wrap;
 }
@@ -309,11 +311,6 @@
 // Rotate chevron when expanded.
 :host([data-collapsible][data-expanded='true']) .page-header__chevron {
   transform: rotate(180deg);
-}
-
-// Tighten title-row spacing inside the collapsible button (no double gap).
-.page-header__left--button .page-header__title-row {
-  gap: var(--space-sm);
 }
 
 // ---------------------------------------------------------------------------

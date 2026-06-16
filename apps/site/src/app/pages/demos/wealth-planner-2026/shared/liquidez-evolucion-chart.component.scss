@@ -1,0 +1,170 @@
+// =============================================================================
+// site-liquidez-evolucion-chart — wraps `afi-chart-line` with:
+//  - hidden built-in chrome (instructions toggle + auto legend + data-table)
+//  - custom 3-scenario legend below the plot (red/orange/green dots, matches
+//    proteccion-familiar-flujo pattern)
+//  - click-to-pin Año / Acumulado popover
+// Tokens only — no hex, no raw px outside named popover offsets.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.liq-chart {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+// ─── Custom legend (matches proteccion-familiar-flujo) ──────────────────────
+// The afi-chart-line primitive ships an instructions "?" button, an auto
+// legend, and a data-table footer — all suppressed via its hide* inputs from
+// the host page so this wrapper only draws what we want.
+.liq-legend {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.liq-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+}
+
+.liq-legend__dot {
+  inline-size: var(--space-sm);
+  block-size: var(--space-sm);
+  border-radius: var(--radius-full);
+}
+
+.liq-legend__item--pesimista .liq-legend__dot {
+  background: var(--feedback-error-foreground);
+}
+
+.liq-legend__item--medio .liq-legend__dot {
+  background: var(--color-action-500);
+}
+
+.liq-legend__item--optimista .liq-legend__dot {
+  background: var(--feedback-success-foreground);
+}
+
+// ─── Popover overlay ────────────────────────────────────────────────────────
+.liq-popover {
+  position: absolute;
+  inset-block-start: var(--space-md);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  inline-size: min(38rem, calc(100% - var(--space-2xl)));
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+  background: var(--surface-default, var(--surface-raised));
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--elevation-lg);
+  z-index: 10;
+}
+
+.liq-popover__head {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: var(--space-md);
+  align-items: center;
+  margin-block-end: var(--space-md);
+}
+
+.liq-popover__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.liq-popover__title {
+  margin: 0;
+  font: var(--type-subtitle);
+  color: var(--foreground-primary-default);
+}
+
+.liq-popover__mode {
+  justify-self: end;
+}
+
+// ─── Breakdown grid ─────────────────────────────────────────────────────────
+.liq-popover__legend,
+.liq-popover__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.liq-popover__legend {
+  padding-block: var(--space-xs);
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+.liq-popover__col-head {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  justify-content: end;
+  font: var(--type-body-sm-500);
+  color: var(--foreground-secondary-default);
+}
+
+.liq-popover__col-head--concepto {
+  justify-content: start;
+  color: var(--foreground-tertiary-default);
+}
+
+.liq-popover__dot {
+  display: inline-block;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.liq-popover__dot--pesimista {
+  background: var(--feedback-error-foreground);
+}
+
+.liq-popover__dot--medio {
+  background: var(--color-action-500);
+}
+
+.liq-popover__dot--optimista {
+  background: var(--feedback-success-foreground);
+}
+
+.liq-popover__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.liq-popover__row {
+  padding-block: var(--space-sm);
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+
+  &:last-child {
+    border-block-end: 0;
+  }
+}
+
+.liq-popover__concepto {
+  font: var(--type-body-md-500);
+  color: var(--foreground-primary-default);
+}
+
+.liq-popover__value {
+  font: var(--type-body-md-400);
+  font-variant-numeric: tabular-nums;
+  color: var(--foreground-primary-default);
+  text-align: end;
+}

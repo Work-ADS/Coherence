@@ -190,7 +190,12 @@ export class PlannerSidebarComponent {
       label: 'Plan de acción',
       icon: 'route',
       items: [
-        { key: 'optimizacion-liquidez', label: 'Optimización de la liquidez', state: 'empty' },
+        {
+          key: 'optimizacion-liquidez',
+          label: 'Optimización de la liquidez',
+          state: this.store.optimizacionLiquidezState(),
+          route: '/demos/wealth-planner-2026/optimizacion-liquidez',
+        },
         { key: 'optimizacion-asset', label: 'Optimización del asset allocation', state: 'empty' },
       ],
     },

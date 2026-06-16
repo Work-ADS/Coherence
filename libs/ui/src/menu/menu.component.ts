@@ -22,6 +22,7 @@ interface AnchoredCoords {
   left?: number;
   right?: number;
   bottom?: number;
+  minWidth?: number;
 }
 
 /**
@@ -67,6 +68,7 @@ interface AnchoredCoords {
         [style.left.px]="anchoredCoords()?.left ?? null"
         [style.right.px]="anchoredCoords()?.right ?? null"
         [style.bottom.px]="anchoredCoords()?.bottom ?? null"
+        [style.min-width.px]="anchoredCoords()?.minWidth ?? null"
         (keydown)="onKeydown($event)">
         <ng-content />
       </div>
@@ -84,6 +86,12 @@ export class MenuComponent {
    * reference variable (`#triggerRef`) → `[anchor]="triggerRef"`.
    */
   readonly anchor = input<HTMLElement | null>(null);
+  /**
+   * When true (and `anchor` is set), the panel's `min-width` is set to the
+   * anchor's measured width at open time. The menu can still grow wider for
+   * long item labels but never collapses narrower than the trigger.
+   */
+  readonly matchAnchorWidth = input<boolean>(false);
 
   readonly openChange = output<boolean>();
   readonly dismissed = output<'escape' | 'click-outside' | 'item-select'>();
@@ -106,25 +114,28 @@ export class MenuComponent {
     const rect = this.anchorRect();
     if (!rect) return null;
     const gap = 4; // matches the original `margin-top: --space-2xs`
+    const minWidth = this.matchAnchorWidth() ? rect.width : undefined;
     switch (this.placement()) {
       case 'bottom-end':
         return {
           top: rect.bottom + gap,
           right: window.innerWidth - rect.right,
+          minWidth,
         };
       case 'bottom-start':
-        return { top: rect.bottom + gap, left: rect.left };
+        return { top: rect.bottom + gap, left: rect.left, minWidth };
       case 'top-end':
         return {
           bottom: window.innerHeight - rect.top + gap,
           right: window.innerWidth - rect.right,
+          minWidth,
         };
       case 'top-start':
-        return { bottom: window.innerHeight - rect.top + gap, left: rect.left };
+        return { bottom: window.innerHeight - rect.top + gap, left: rect.left, minWidth };
       case 'right-start':
-        return { top: rect.top, left: rect.right + gap };
+        return { top: rect.top, left: rect.right + gap, minWidth };
       case 'left-start':
-        return { top: rect.top, right: window.innerWidth - rect.left + gap };
+        return { top: rect.top, right: window.innerWidth - rect.left + gap, minWidth };
     }
   });
 

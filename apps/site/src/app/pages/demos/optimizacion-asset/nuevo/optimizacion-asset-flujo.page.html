@@ -1,0 +1,229 @@
+<site-demo-shell
+  [views]="['Optimización del asset allocation · Flujo']"
+  [demoSlug]="demoSlug"
+  [demoRoute]="demoRoute"
+>
+  <div class="oaf">
+    <site-product-identity-bar
+      productLabel="Wealth Planner"
+      [breadcrumb]="identityBreadcrumb()"
+    />
+
+    <!-- ─── Page chrome ─────────────────────────────────────────────── -->
+    <header class="oaf-chrome">
+      <div class="oaf-chrome__inner">
+        <a
+          class="oaf-chrome__back"
+          [routerLink]="landingRoute"
+          aria-label="Volver a Optimización del asset allocation"
+        >
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M12.5 16l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+
+        <span class="oaf-chrome__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 4v6a4 4 0 0 0 4 4h4a4 4 0 0 1 4 4v2" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="6" cy="4" r="2" />
+            <circle cx="18" cy="20" r="2" />
+          </svg>
+        </span>
+
+        <div class="oaf-chrome__text">
+          <h1 class="oaf-chrome__title">Optimización del asset allocation</h1>
+          <p class="oaf-chrome__subtitle">
+            {{ editing()?.nombre ?? (nombre() || 'Nueva optimización') }}
+          </p>
+        </div>
+
+        <div class="oaf-chrome__actions">
+          <afi-button
+            variant="ghost"
+            size="md"
+            (clicked)="cancel()"
+            ariaLabel="Cancelar y volver"
+          >
+            Cancelar
+          </afi-button>
+          @if (currentStepKey() === 'resultados') {
+            <afi-button
+              variant="primary"
+              size="md"
+              (clicked)="guardar()"
+              ariaLabel="Guardar la optimización"
+            >
+              Guardar
+            </afi-button>
+          } @else {
+            <afi-button
+              variant="primary"
+              size="md"
+              [disabled]="!canAdvance()"
+              (clicked)="goNext()"
+              ariaLabel="Continuar al siguiente paso"
+            >
+              Siguiente
+            </afi-button>
+          }
+        </div>
+      </div>
+    </header>
+
+    <!-- ─── Stepper ─────────────────────────────────────────────────── -->
+    <div class="oaf-stepper">
+      <div class="oaf-stepper__inner">
+        <afi-stepper
+          [steps]="stepperItems"
+          [current]="currentStep()"
+          ariaLabel="Pasos del flujo de optimización del asset allocation"
+          (stepClicked)="onStepClicked($event)"
+        />
+      </div>
+    </div>
+
+    <hr class="oaf-divider" aria-hidden="true" />
+
+    <!-- ─── Step body ───────────────────────────────────────────────── -->
+    <main class="oaf-main">
+      <div class="oaf-main__inner">
+        @switch (currentStepKey()) {
+
+          @case ('definicion') {
+            <header class="oaf-page-head">
+              <h2 class="oaf-page-head__title">Definición</h2>
+              <p class="oaf-page-head__subtitle">
+                Asigna un nombre identificativo a la optimización. El perfil de riesgo se elegirá más adelante, al revisar los resultados.
+              </p>
+            </header>
+
+            <div class="oaf-form-grid">
+              <afi-input
+                label="Nombre"
+                placeholder="Optimización de asset allocation Pablo 5"
+                [value]="nombre()"
+                [required]="true"
+                (valueChange)="setNombre($event)"
+              />
+            </div>
+          }
+
+          @case ('patrimonio') {
+            <header class="oaf-page-head">
+              <h2 class="oaf-page-head__title">Patrimonio seleccionado</h2>
+              <p class="oaf-page-head__subtitle">
+                Selecciona los activos que entrarán en la optimización. La estructura es la misma que en Patrimonio. Por defecto se aplica el activo completo; desactiva el conmutador para indicar un porcentaje parcial.
+              </p>
+            </header>
+
+            <!-- Per-row "Usar todo el activo" cell. Projected into every
+                 category table via [cellTemplates]. The row id (from
+                 trackByKey="id") drives both the switch state and the
+                 conditional percentage input. -->
+            <ng-template #usarTodoCell let-row>
+              @if (selectedIds().has(row.id)) {
+                <div class="oaf-usar-todo">
+                  @if (!isWholeAsset(row.id)) {
+                    <afi-input
+                      type="number"
+                      size="sm"
+                      suffix="%"
+                      ariaLabel="Porcentaje del activo a incluir"
+                      [value]="percentageFor(row.id)"
+                      (valueChange)="setPercentage(row.id, $event)"
+                    />
+                  }
+                  <afi-switch
+                    size="sm"
+                    ariaLabel="Usar todo el activo"
+                    [checked]="isWholeAsset(row.id)"
+                    (checkedChange)="setWholeAsset(row.id, $event)"
+                  />
+                </div>
+              } @else {
+                <span class="oaf-usar-todo__placeholder" aria-hidden="true">—</span>
+              }
+            </ng-template>
+
+            <div class="oaf-categories">
+              @for (group of categoryGroups(); track group.key) {
+                <afi-page-header
+                  level="section"
+                  [title]="group.label"
+                  [sticky]="false"
+                  [scrollFade]="false"
+                >
+                  <!-- Title metadata — mirrors patrimonial-proposal §947-967.
+                       Total + activo count rendered inline with mid-dot separators. -->
+                  <span
+                    slot="extraInfo"
+                    class="inline-flex items-baseline gap-space-2 text-body-sm text-foreground-secondary tabular-nums"
+                  >
+                    <span aria-hidden="true">·</span>
+                    <span class="text-foreground-primary font-medium">{{ formatEuro(groupTotal(group.key)) }}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{{ groupActivosLabel(group.key) }}</span>
+                  </span>
+                  <afi-table
+                    [columns]="columnsFor(group.key)"
+                    [rows]="rowsFor(group.key)"
+                    [selectable]="true"
+                    [selected]="selectedRowsFor(group.key)"
+                    (selectedChange)="onGroupSelectionChange(group.key, $event)"
+                    [cellTemplates]="{ usarTodo: usarTodoCell }"
+                    trackByKey="id"
+                    density="compact"
+                  />
+                </afi-page-header>
+              }
+            </div>
+          }
+
+          @case ('resultados') {
+            <header class="oaf-page-head">
+              <h2 class="oaf-page-head__title">Evolución esperada</h2>
+              <p class="oaf-page-head__subtitle">
+                Compara la situación actual frente a la simulada en función del perfil de riesgo, el escenario y la vista.
+              </p>
+            </header>
+
+            <div class="oaf-filters">
+              <afi-select
+                label="Perfil de riesgo"
+                ariaLabel="Perfil de riesgo"
+                [options]="perfilOptions"
+                [value]="perfilRiesgo()"
+                (valueChange)="setPerfilRiesgo($event)"
+              />
+              <afi-select
+                label="Escenario"
+                ariaLabel="Escenario"
+                [options]="escenarioOptions"
+                [value]="escenario()"
+                [disabled]="escenarioDisabled()"
+                (valueChange)="setEscenario($event)"
+              />
+              <afi-select
+                label="Vista"
+                ariaLabel="Vista"
+                [options]="vistaOptions"
+                [value]="vista()"
+                (valueChange)="setVista($event)"
+              />
+            </div>
+
+            <site-asset-allocation-chart
+              [variant]="vista()"
+              [series]="chartSeries()"
+              [legendItems]="legendItems()"
+              [anoBreakdown]="anoBreakdown()"
+              [acumuladoBreakdown]="acumuladoBreakdown()"
+              [patrimonioBreakdown]="patrimonioBreakdown()"
+              [birthYear]="birthYear"
+            />
+          }
+        }
+      </div>
+    </main>
+  </div>
+</site-demo-shell>

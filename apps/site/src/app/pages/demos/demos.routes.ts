@@ -110,6 +110,22 @@ export const demos_routes: Routes = [
         (m) => m.OptimizacionLiquidezPage,
       ),
   },
+  // Plan de acción — §4.c (Optimización del asset allocation) — landing
+  {
+    path: 'wealth-planner-2026/optimizacion-asset',
+    loadComponent: () =>
+      import('./optimizacion-asset/optimizacion-asset.page').then(
+        (m) => m.OptimizacionAssetPage,
+      ),
+  },
+  // Plan de acción — §4.c (Optimización del asset allocation) — 3-step wizard
+  {
+    path: 'wealth-planner-2026/optimizacion-asset/nuevo',
+    loadComponent: () =>
+      import('./optimizacion-asset/nuevo/optimizacion-asset-flujo.page').then(
+        (m) => m.OptimizacionAssetFlujoPage,
+      ),
+  },
   // Conclusiones — §5.b
   {
     path: 'wealth-planner-2026/consecucion-objetivos',

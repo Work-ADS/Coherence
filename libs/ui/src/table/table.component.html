@@ -143,7 +143,11 @@
                     </svg>
                   </button>
                 }
-                @if (col.kind === 'badge') {
+                @if (cellTemplateFor(col); as tpl) {
+                  <ng-container
+                    *ngTemplateOutlet="tpl; context: { $implicit: row, row: row, col: col }"
+                  />
+                } @else if (col.kind === 'badge') {
                   @if (cellText(row, col)) {
                     <afi-badge [intent]="col.badgeIntent ?? 'neutral'" size="sm">
                       {{ cellText(row, col) }}

@@ -1,0 +1,221 @@
+<div class="aa-chart">
+  <afi-chart-line
+    [data]="series()"
+    [showMarkers]="true"
+    [hideHeader]="true"
+    [hideInstructions]="true"
+    [hideLegend]="true"
+    [hideDataTable]="true"
+    longDescription="Evolución esperada del patrimonio del cliente."
+    statisticalNotes="Proyección anual por edad del cliente."
+    structureNotes="Eje X: edad. Eje Y: patrimonio en euros."
+    (dataPointActivated)="handlePointActivated($event)"
+  />
+
+  <div class="aa-legend" aria-hidden="true">
+    @for (item of legendItems(); track item.label) {
+      <span class="aa-legend__item">
+        @if (item.shape === 'triangle') {
+          <span class="aa-legend__marker aa-legend__marker--triangle" [style.color]="item.color"></span>
+        } @else {
+          <span class="aa-legend__marker aa-legend__marker--dot" [style.background]="item.color"></span>
+        }
+        {{ item.label }}
+      </span>
+    }
+  </div>
+
+  @if (popoverOpen()) {
+    <div class="aa-popover" role="dialog" aria-modal="false">
+      <div class="aa-popover__head">
+        @if (variant() === 'patrimonio-seleccionado') {
+          <h3 class="aa-popover__title">Año {{ activeYear() }}</h3>
+        } @else {
+          <h3 class="aa-popover__title">
+            {{ activeAge() }} años de edad ({{ activeYear() }})
+          </h3>
+        }
+
+        @if (showModeToggle()) {
+          <afi-segmented-control
+            class="aa-popover__mode"
+            ariaLabel="Modo de visualización"
+            size="sm"
+            [options]="modeOptions"
+            [value]="popoverMode()"
+            (valueChange)="setPopoverMode($event)"
+          />
+        }
+        <div class="aa-popover__nav" role="group" aria-label="Navegar años">
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Año anterior"
+            [disabled]="!canPrevYear()"
+            (clicked)="prevYear()"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </afi-icon-button>
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Año siguiente"
+            [disabled]="!canNextYear()"
+            (clicked)="nextYear()"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </afi-icon-button>
+        </div>
+        <afi-icon-button
+          class="aa-popover__close"
+          variant="ghost"
+          size="sm"
+          ariaLabel="Cerrar"
+          (clicked)="closePopover()"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </afi-icon-button>
+      </div>
+
+      @if (variant() === 'patrimonio-seleccionado' && activeScenarioBreakdown()) {
+        <div class="aa-popover__legend aa-popover__legend--scenario" role="row">
+          <span class="aa-popover__col-head aa-popover__col-head--concepto" role="columnheader">
+            Concepto
+          </span>
+          <span class="aa-popover__col-head" role="columnheader">
+            <span class="aa-popover__dot aa-popover__dot--pesimista" aria-hidden="true"></span>
+            Pesimista
+          </span>
+          <span class="aa-popover__col-head" role="columnheader">
+            <span class="aa-popover__dot aa-popover__dot--medio" aria-hidden="true"></span>
+            Medio
+          </span>
+          <span class="aa-popover__col-head" role="columnheader">
+            <span class="aa-popover__dot aa-popover__dot--optimista" aria-hidden="true"></span>
+            Optimista
+          </span>
+        </div>
+
+        <ul class="aa-popover__rows" role="rowgroup">
+          @for (row of activeScenarioBreakdown()!.rows; track row.concepto) {
+            <li
+              class="aa-popover__row aa-popover__row--scenario"
+              [class.aa-popover__row--muted]="row.muted"
+              role="row"
+            >
+              <span class="aa-popover__concepto" role="cell">{{ row.concepto }}</span>
+              <span class="aa-popover__value" role="cell">{{ formatRow(row, 'pesimista') }}</span>
+              <span class="aa-popover__value" role="cell">{{ formatRow(row, 'medio') }}</span>
+              <span class="aa-popover__value" role="cell">{{ formatRow(row, 'optimista') }}</span>
+            </li>
+          }
+        </ul>
+      }
+
+      @if (variant() === 'todo-patrimonio' && activePatrimonioBreakdown()) {
+        <div class="aa-popover__legend aa-popover__legend--patrimonio" role="row">
+          <span class="aa-popover__col-head aa-popover__col-head--concepto" role="columnheader">
+            Concepto
+          </span>
+          <span class="aa-popover__col-head" role="columnheader">
+            <span class="aa-popover__marker aa-popover__marker--triangle" aria-hidden="true"></span>
+            Situación actual
+          </span>
+          <span class="aa-popover__col-head" role="columnheader">
+            <span class="aa-popover__dot aa-popover__dot--simulada" aria-hidden="true"></span>
+            Situación simulada
+          </span>
+        </div>
+
+        <ul class="aa-popover__rows" role="rowgroup">
+          @for (row of activePatrimonioBreakdown()!.rows; track row.concepto) {
+            <li
+              class="aa-popover__row aa-popover__row--patrimonio"
+              [class.aa-popover__row--total]="row.total"
+              role="row"
+            >
+              @if (row.children) {
+                <button
+                  type="button"
+                  class="aa-popover__concepto aa-popover__concepto--toggle"
+                  [attr.aria-expanded]="isCategoryOpen(row.concepto, row.defaultOpen)"
+                  (click)="toggleCategory(row.concepto, row.defaultOpen)"
+                >
+                  <svg
+                    class="aa-popover__chevron"
+                    [class.aa-popover__chevron--open]="isCategoryOpen(row.concepto, row.defaultOpen)"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  {{ row.concepto }}
+                </button>
+              } @else {
+                <span class="aa-popover__concepto" role="cell">{{ row.concepto }}</span>
+              }
+              <span class="aa-popover__value" role="cell">{{ formatPlain(row.actual) }}</span>
+              <span class="aa-popover__value" role="cell">{{ formatPlain(row.simulada) }}</span>
+            </li>
+
+            @if (row.children && isCategoryOpen(row.concepto, row.defaultOpen)) {
+              @for (child of row.children; track child.concepto) {
+                <li class="aa-popover__row aa-popover__row--child" role="row">
+                  <span class="aa-popover__concepto aa-popover__concepto--child" role="cell">
+                    {{ child.concepto }}
+                  </span>
+                  <span class="aa-popover__value" role="cell">{{ formatPlain(child.actual) }}</span>
+                  <span class="aa-popover__value" role="cell">{{ formatPlain(child.simulada) }}</span>
+                </li>
+              }
+            }
+          }
+        </ul>
+      }
+    </div>
+  }
+</div>

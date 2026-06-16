@@ -196,7 +196,12 @@ export class PlannerSidebarComponent {
           state: this.store.optimizacionLiquidezState(),
           route: '/demos/wealth-planner-2026/optimizacion-liquidez',
         },
-        { key: 'optimizacion-asset', label: 'Optimización del asset allocation', state: 'empty' },
+        {
+          key: 'optimizacion-asset',
+          label: 'Optimización del asset allocation',
+          state: this.store.optimizacionAssetState(),
+          route: '/demos/wealth-planner-2026/optimizacion-asset',
+        },
       ],
     },
     {

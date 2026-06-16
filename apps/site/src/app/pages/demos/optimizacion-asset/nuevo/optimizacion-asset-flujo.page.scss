@@ -1,0 +1,229 @@
+// =============================================================================
+// Optimización del asset allocation · Flujo (3-step wizard).
+// Layout mirrors proteccion-familiar/flujo — chrome + stepper + scrollable main
+// — but the body has only two layout modes:
+//   • Step 1 / 2 — page-head + form fields / categorized selection tables
+//   • Step 3 — filter row + chart wrapper
+// Tokens only — no hex, raw px reserved for chart popover offsets handled by
+// the shared asset-allocation-chart component.
+// =============================================================================
+
+.oaf {
+  display: flex;
+  flex-direction: column;
+  block-size: 100vh;
+  overflow: hidden;
+  background: var(--canvas-base);
+}
+
+// ─── Page chrome ─────────────────────────────────────────────────────────
+.oaf-chrome {
+  background: var(--surface-default);
+  border-block-end: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+.oaf-chrome__inner {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: var(--space-md);
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+}
+
+.oaf-chrome__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--dimension-9);
+  block-size: var(--dimension-9);
+  border-radius: var(--radius-full);
+  color: var(--foreground-primary-default);
+  text-decoration: none;
+
+  &:hover {
+    background: var(--surface-quiet);
+  }
+
+  svg {
+    inline-size: var(--dimension-5);
+    block-size: var(--dimension-5);
+  }
+}
+
+.oaf-chrome__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--dimension-9);
+  block-size: var(--dimension-9);
+  border-radius: var(--radius-full);
+  background: var(--surface-quiet);
+  color: var(--foreground-secondary-default);
+
+  svg {
+    inline-size: var(--dimension-6);
+    block-size: var(--dimension-6);
+  }
+}
+
+.oaf-chrome__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-inline-size: 0;
+}
+
+.oaf-chrome__title {
+  margin: 0;
+  font: var(--type-body-md-500);
+  color: var(--foreground-primary-default);
+}
+
+.oaf-chrome__subtitle {
+  margin: 0;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-secondary-default);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oaf-chrome__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+// ─── Stepper row ─────────────────────────────────────────────────────────
+.oaf-stepper {
+  background: var(--surface-default);
+}
+
+.oaf-stepper__inner {
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+}
+
+.oaf-divider {
+  margin: 0;
+  border: none;
+  block-size: var(--border-width-hairline);
+  background: var(--border-subtle);
+}
+
+// ─── Main step body (scroll area) ────────────────────────────────────────
+.oaf-main {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+}
+
+.oaf-main__inner {
+  max-inline-size: var(--content-xl);
+  margin-inline: auto;
+  padding-block: var(--space-xl) var(--space-3xl);
+  padding-inline: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+// ─── Page head (Step title + subtitle) ──────────────────────────────────
+.oaf-page-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.oaf-page-head__title {
+  margin: 0;
+  font: var(--type-display-sm, var(--type-heading-lg));
+  color: var(--foreground-primary-default);
+}
+
+.oaf-page-head__subtitle {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-inline-size: 80ch;
+}
+
+// ─── Step 1 form grid ───────────────────────────────────────────────────
+.oaf-form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-lg);
+  max-inline-size: var(--dimension-180, 45rem);
+}
+
+// ─── Step 2 — per-category section stack (afi-page-header + afi-table) ──
+// Tables are the canonical `<afi-table [selectable]="true">` composition
+// from patrimonial-proposal — chrome (card surface, borders, density) is
+// owned by the primitive. No bespoke table styling lives here.
+.oaf-categories {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+// "Usar todo el activo" cell — switch sits flush right; when OFF, the
+// percentage input slides in on its leading side. Cell content is
+// right-aligned to match `align: 'end'` on the column.
+.oaf-usar-todo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+  inline-size: 100%;
+
+  afi-input {
+    inline-size: var(--dimension-22, 5.5rem);
+  }
+}
+
+.oaf-usar-todo__placeholder {
+  color: var(--foreground-tertiary-default);
+  font: var(--type-body-sm-400);
+}
+
+// ─── Step 3 — filter row above the chart ────────────────────────────────
+.oaf-filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+  align-items: end;
+  max-inline-size: var(--dimension-220, 55rem);
+}
+
+// ─── Responsive ────────────────────────────────────────────────────────
+@media (max-width: 1024px) {
+  .oaf-form-grid,
+  .oaf-filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .oaf-chrome__inner,
+  .oaf-stepper__inner,
+  .oaf-main__inner {
+    padding-inline: var(--space-md);
+  }
+
+  .oaf-chrome__inner {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      'back text actions'
+      'icon icon icon';
+  }
+
+  .oaf-chrome__back { grid-area: back; }
+  .oaf-chrome__icon { display: none; }
+  .oaf-chrome__text { grid-area: text; }
+  .oaf-chrome__actions { grid-area: actions; }
+}

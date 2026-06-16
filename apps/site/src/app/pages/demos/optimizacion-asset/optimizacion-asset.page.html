@@ -1,0 +1,120 @@
+<site-objetivos-page-shell
+  [views]="['Optimización del asset allocation']"
+  demoSlug="optimizacion-asset"
+  demoRoute="/demos/wealth-planner-2026/optimizacion-asset"
+  activeKey="optimizacion-asset"
+  versionAriaLabel="Versión del layout de Optimización del asset allocation"
+>
+  <afi-page-header
+    title="Optimización del asset allocation"
+    subtitle="Crea propuestas de optimización del asset allocation aplicadas a una selección concreta del patrimonio. Cada propuesta puede explorarse según escenarios y vistas."
+    [sticky]="false"
+    [scrollFade]="false"
+  >
+    <afi-button
+      slot="actions"
+      variant="primary"
+      size="md"
+      (clicked)="goNueva()"
+      ariaLabel="Nueva optimización del asset allocation"
+    >
+      <svg
+        slot="iconStart"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+      Nueva optimización
+    </afi-button>
+
+    @if (hasOptimizaciones()) {
+      <div class="oa-stack">
+        <afi-table
+          [columns]="columns"
+          [rows]="rows()"
+          [rowActions]="rowActions"
+          density="compact"
+          trackByKey="id"
+          (rowClicked)="onRowClick($event)"
+          (rowActionClicked)="onAction($event)"
+        />
+      </div>
+    } @else {
+      <div class="oa-empty">
+        <h2 class="oa-empty__title">Optimización del asset allocation</h2>
+        <p class="oa-empty__hint">
+          Activa la optimización para visualizar cómo se verá tu evolución financiera.
+        </p>
+        <div class="oa-empty__action">
+          <afi-button
+            variant="primary"
+            size="md"
+            (clicked)="goNueva()"
+            ariaLabel="Nueva optimización del asset allocation"
+          >
+            <svg
+              slot="iconStart"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 2v10" />
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
+            </svg>
+            Nueva optimización
+          </afi-button>
+        </div>
+      </div>
+    }
+  </afi-page-header>
+
+  <!-- ─── Destructive-confirm modal — per docs/rules/destructive-actions.md ── -->
+  <afi-modal
+    [open]="confirmDeleteOpen()"
+    [title]="'¿Borrar ' + (pendingDeleteRow()?.nombre || 'esta optimización') + '?'"
+    size="sm"
+    [closeOnEsc]="true"
+    [closeOnBackdrop]="false"
+    (openChange)="$event ? null : cancelDelete()"
+  >
+    <div (keydown.enter)="confirmDelete()">
+      <p class="text-body-md-400 text-foreground-secondary">
+        Esta acción no se puede deshacer.
+      </p>
+    </div>
+
+    <ng-container slot="footer">
+      <afi-button
+        variant="ghost"
+        size="md"
+        (clicked)="cancelDelete()"
+        ariaLabel="Cancelar borrado"
+      >
+        Cancelar
+      </afi-button>
+      <afi-button
+        variant="danger"
+        size="md"
+        (clicked)="confirmDelete()"
+        ariaLabel="Borrar optimización"
+      >
+        Borrar
+      </afi-button>
+    </ng-container>
+  </afi-modal>
+</site-objetivos-page-shell>

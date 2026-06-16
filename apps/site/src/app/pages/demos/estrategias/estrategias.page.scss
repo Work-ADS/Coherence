@@ -1,0 +1,30 @@
+// =============================================================================
+// Estrategias page — Diagnóstico §3.c. Page-level styles for the per-tab
+// subtitle paragraph and the tab-body stack. Visualization lives in the
+// `site-rentabilidad-objetivo-chart` component; tables come from `afi-table`.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.estrategias__tab-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-block-start: var(--space-md);
+}
+
+.estrategias__subtitle-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.estrategias__subtitle {
+  margin: 0;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+  max-inline-size: 57.5rem;
+  line-height: 1.5;
+}

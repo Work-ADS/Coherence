@@ -4,7 +4,6 @@
   demoRoute="/demos/wealth-planner-2026/estrategias"
   activeKey="estrategias"
   versionAriaLabel="Versión del layout de Estrategias"
-  [showBanner]="store.legadoRetiroEstablished()"
 >
   <afi-page-header title="Estrategias" [sticky]="false" [scrollFade]="false">
     <afi-tabs
@@ -52,7 +51,7 @@
           <afi-table
             [columns]="gastoColumns"
             [rows]="gastoRows()"
-            density="comfortable"
+            density="compact"
             [rowHoverable]="false"
             trackByKey="id"
           />
@@ -71,7 +70,7 @@
           <afi-table
             [columns]="ingresoColumns"
             [rows]="ingresoRows()"
-            density="comfortable"
+            density="compact"
             [rowHoverable]="false"
             trackByKey="id"
           />
@@ -89,7 +88,7 @@
           <afi-table
             [columns]="edadColumns"
             [rows]="edadRows()"
-            density="comfortable"
+            density="compact"
             [rowHoverable]="false"
             trackByKey="id"
           />

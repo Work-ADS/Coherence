@@ -139,6 +139,15 @@
       font: var(--type-body-md-500);
     }
   }
+
+  // ─── Leading-tab alignment (LOCKED — applies to every afi-tabs instance) ───
+  // The first trigger's inline-start padding is removed so its text aligns
+  // with the page-header title above (and any persistent content below).
+  // The underline indicator follows automatically — it measures the
+  // trigger's bounding rect.
+  .tabs__trigger:first-of-type {
+    padding-inline-start: 0;
+  }
 }
 
 // ─── Keyframes: slide + blur ───

@@ -461,6 +461,47 @@ export interface ScenarioRow {
   legadoFinanciero: number;
 }
 
+/**
+ * Brief J (Estrategias) widens the union with `actual` — the Gasto anual
+ * máximo and Edad de retiro mínima tables include an "Actual" reference
+ * row alongside the standard three scenarios.
+ */
+export type ScenarioWithActual = Scenario | 'actual';
+
+export interface RentabilidadScenarioRow {
+  scenario: Exclude<Scenario, 'objetivo'>;
+  /** % — rentabilidad media anual considerada en este escenario. */
+  rentabilidadMedia: number;
+}
+
+export interface GastoAnualMaximoRow {
+  scenario: ScenarioWithActual;
+  /** € — gasto total anual. */
+  total: number;
+  /** € — gasto medio anual previo al retiro. */
+  previoRetiro: number;
+  /** € — gasto medio anual posterior al retiro. */
+  posteriorRetiro: number;
+}
+
+/** Single-row pivot — columns are scenarios. */
+export interface IngresoAnualMinimoRow {
+  /** € — ingreso anual actual declarado por el cliente. */
+  actual: number;
+  /** € — ingreso bruto anual mínimo necesario, escenario pesimista. */
+  pesimista: number;
+  /** € — ingreso bruto anual mínimo necesario, escenario medio. */
+  medio: number;
+  /** € — ingreso bruto anual mínimo necesario, escenario optimista. */
+  optimista: number;
+}
+
+export interface EdadRetiroMinimaRow {
+  scenario: ScenarioWithActual;
+  /** Años — edad de retiro mínima necesaria en este escenario. */
+  edad: number;
+}
+
 // ── Sociedades (Brief B) ─────────────────────────────────────────────────
 export type Tributacion = 'patrimonial' | 'holding' | 'socimi';
 
@@ -1241,6 +1282,57 @@ export class WealthPlannerStore {
 
   /** Sidebar chip — always `complete` because this is a derived read-only output. */
   readonly patrimonioPrevistoState = computed<SectionState>(() => 'complete');
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Diagnóstico · Estrategias (PDF §3.c — Brief J)
+  // ──────────────────────────────────────────────────────────────────────
+  //
+  // Read-only Diagnóstico output. Four lenses surfaced as tabs:
+  //   1. Rentabilidad objetivo  — bespoke gradient bar
+  //   2. Gasto anual máximo     — 4×4 table
+  //   3. Ingreso anual mínimo   — single-row pivot table
+  //   4. Edad de retiro mínima  — 4×2 table
+  //
+  // Numbers seeded from the PDF p.8 mock + the four Figma frames. Real
+  // projection engine arrives with Brief M; today these are static.
+
+  readonly rentabilidadScenarios = signal<RentabilidadScenarioRow[]>([
+    { scenario: 'optimista', rentabilidadMedia: 9.2 },
+    { scenario: 'medio', rentabilidadMedia: 6.3 },
+    { scenario: 'pesimista', rentabilidadMedia: 3.2 },
+  ]);
+
+  /** % — rentabilidad mínima necesaria para cubrir los objetivos. */
+  readonly rentabilidadMinima = signal<number>(4.2);
+
+  readonly gastoAnualMaximo = signal<GastoAnualMaximoRow[]>([
+    { scenario: 'actual', total: 125_000, previoRetiro: 135_000, posteriorRetiro: 154_000 },
+    { scenario: 'optimista', total: 154_000, previoRetiro: 172_000, posteriorRetiro: 140_000 },
+    { scenario: 'medio', total: 123_000, previoRetiro: 138_000, posteriorRetiro: 102_000 },
+    { scenario: 'pesimista', total: 97_000, previoRetiro: 125_000, posteriorRetiro: 67_000 },
+  ]);
+
+  /** € — gasto medio anual previo a retiro, declarado por el usuario. */
+  readonly gastoPrevioActual = signal<number>(135_000);
+  /** € — gasto medio anual posterior a retiro, estimado por el usuario. */
+  readonly gastoPosteriorEstimado = signal<number>(112_000);
+
+  readonly ingresoAnualMinimo = signal<IngresoAnualMinimoRow>({
+    actual: 225_000,
+    pesimista: 182_000,
+    medio: 202_000,
+    optimista: 140_000,
+  });
+
+  readonly edadRetiroMinima = signal<EdadRetiroMinimaRow[]>([
+    { scenario: 'actual', edad: 52 },
+    { scenario: 'optimista', edad: 48 },
+    { scenario: 'medio', edad: 54 },
+    { scenario: 'pesimista', edad: 64 },
+  ]);
+
+  /** Sidebar chip — derived read-only output, mirrors patrimonio-previsto. */
+  readonly estrategiasState = computed<SectionState>(() => 'complete');
 
   // ──────────────────────────────────────────────────────────────────────
   // Conclusiones · Consecución de objetivos (PDF §5.b)

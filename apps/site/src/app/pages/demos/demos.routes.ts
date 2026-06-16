@@ -96,6 +96,12 @@ export const demos_routes: Routes = [
         (m) => m.PatrimonioPrevistoPage,
       ),
   },
+  // Diagnóstico — Brief J (Estrategias)
+  {
+    path: 'wealth-planner-2026/estrategias',
+    loadComponent: () =>
+      import('./estrategias/estrategias.page').then((m) => m.EstrategiasPage),
+  },
   // Conclusiones — §5.b
   {
     path: 'wealth-planner-2026/consecucion-objetivos',

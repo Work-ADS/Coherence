@@ -1,0 +1,72 @@
+<figure class="rentabilidad-chart">
+  <div class="rentabilidad-chart__columns" aria-hidden="true">
+    <span class="rentabilidad-chart__column-label">{{ leftColumnLabel() }}</span>
+    <span class="rentabilidad-chart__column-label">{{ rightColumnLabel() }}</span>
+  </div>
+
+  <div
+    class="rentabilidad-chart__plot"
+    role="img"
+    [attr.aria-label]="ariaLabel()"
+  >
+    <div class="rentabilidad-chart__bar" aria-hidden="true">
+      @for (band of bands(); track band.fromPct) {
+        <div
+          class="rentabilidad-chart__band rentabilidad-chart__band--{{ band.intent }}"
+          [style.flex-grow]="band.toPct - band.fromPct"
+        >
+          <span class="rentabilidad-chart__band-label">{{ band.topLabel }}</span>
+        </div>
+      }
+      <span class="rentabilidad-chart__band-label rentabilidad-chart__band-label--base">
+        {{ baseLabel() }}
+      </span>
+    </div>
+
+    @for (scenario of scenarios(); track scenario.label) {
+      <div
+        class="rentabilidad-chart__pointer rentabilidad-chart__pointer--left"
+        [style.--rentabilidad-chart-value]="scenario.value"
+      >
+        <div class="rentabilidad-chart__pointer-text">
+          <span class="rentabilidad-chart__pointer-value">
+            {{ formatPct(scenario.value) }}
+          </span>
+          <span class="rentabilidad-chart__pointer-label">{{ scenario.label }}</span>
+        </div>
+        <span class="rentabilidad-chart__pointer-line" aria-hidden="true"></span>
+      </div>
+    }
+
+    <div
+      class="rentabilidad-chart__pointer rentabilidad-chart__pointer--right"
+      [style.--rentabilidad-chart-value]="minRequired().value"
+    >
+      <span class="rentabilidad-chart__pointer-line" aria-hidden="true"></span>
+      <div class="rentabilidad-chart__pointer-text">
+        <span class="rentabilidad-chart__pointer-value">
+          {{ formatPct(minRequired().value) }}
+        </span>
+        <span class="rentabilidad-chart__pointer-label">{{ minRequired().label }}</span>
+      </div>
+    </div>
+  </div>
+
+  <ul
+    class="rentabilidad-chart__legend"
+    aria-label="Probabilidad de obtener la rentabilidad"
+  >
+    <li class="rentabilidad-chart__legend-title">
+      Probabilidad de obtener la rentabilidad:
+    </li>
+    @for (entry of legendEntries(); track $index) {
+      <li class="rentabilidad-chart__legend-item">
+        <span
+          class="rentabilidad-chart__legend-dot rentabilidad-chart__legend-dot--{{ entry.intent }}"
+          aria-hidden="true"
+        ></span>
+        {{ entry.label }}
+      </li>
+    }
+  </ul>
+</figure>

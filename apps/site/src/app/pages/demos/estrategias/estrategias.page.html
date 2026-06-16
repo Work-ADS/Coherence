@@ -1,0 +1,99 @@
+<site-objetivos-page-shell
+  [views]="['Estrategias']"
+  demoSlug="estrategias"
+  demoRoute="/demos/wealth-planner-2026/estrategias"
+  activeKey="estrategias"
+  versionAriaLabel="Versión del layout de Estrategias"
+>
+  <afi-page-header title="Estrategias" [sticky]="false" [scrollFade]="false">
+    <afi-tabs
+      [activeIndex]="activeTab()"
+      (activeChange)="activeTab.set($event)"
+      ariaLabel="Estrategias"
+    >
+      <!-- ── Tab 1 · Rentabilidad objetivo ───────────────────────────────── -->
+      <afi-tab-item label="Rentabilidad objetivo">
+        <div class="estrategias__tab-body">
+          <p class="estrategias__subtitle">
+            La rentabilidad objetivo indica qué rentabilidad media anual debería
+            obtener el patrimonio financiero del cliente para cubrir los objetivos
+            establecidos. La columna izquierda muestra la rentabilidad media anual
+            que se está considerando en base a la tipología de activos que el
+            cliente posee actualmente.
+          </p>
+
+          <site-rentabilidad-objetivo-chart
+            [scenarios]="rentabilidadChartScenarios()"
+            [minRequired]="rentabilidadChartMinRequired()"
+          />
+        </div>
+      </afi-tab-item>
+
+      <!-- ── Tab 2 · Gasto anual máximo ──────────────────────────────────── -->
+      <afi-tab-item label="Gasto anual máximo">
+        <div class="estrategias__tab-body">
+          <div class="estrategias__subtitle-block">
+            <p class="estrategias__subtitle">
+              El máximo gasto anual es un cálculo que permite saber cuál es el
+              máximo gasto que se puede permitir el cliente para cubrir los
+              objetivos establecidos. El gasto es una media anual actualizada.
+            </p>
+            <p class="estrategias__subtitle">
+              El gasto previo a retiro supone que el gasto posterior a retiro
+              será el estimado por el usuario ({{ gastoPosteriorLabel() }}).
+            </p>
+            <p class="estrategias__subtitle">
+              El gasto posterior a retiro supone que el gasto anterior a retiro
+              es el actual declarado por el usuario ({{ gastoPrevioLabel() }}).
+            </p>
+          </div>
+
+          <afi-table
+            [columns]="gastoColumns"
+            [rows]="gastoRows()"
+            density="compact"
+            [rowHoverable]="false"
+            trackByKey="id"
+          />
+        </div>
+      </afi-tab-item>
+
+      <!-- ── Tab 3 · Ingreso anual mínimo ────────────────────────────────── -->
+      <afi-tab-item label="Ingreso anual mínimo">
+        <div class="estrategias__tab-body">
+          <p class="estrategias__subtitle">
+            El ingreso anual mínimo se expresa como salario bruto anual mínimo
+            (hasta el momento de retiro o jubilación) necesario para cubrir los
+            objetivos establecidos por el usuario.
+          </p>
+
+          <afi-table
+            [columns]="ingresoColumns"
+            [rows]="ingresoRows()"
+            density="compact"
+            [rowHoverable]="false"
+            trackByKey="id"
+          />
+        </div>
+      </afi-tab-item>
+
+      <!-- ── Tab 4 · Edad de retiro mínima ───────────────────────────────── -->
+      <afi-tab-item label="Edad de retiro mínima">
+        <div class="estrategias__tab-body">
+          <p class="estrategias__subtitle">
+            La edad de retiro mínima indica cuál es la edad a partir de la que el
+            cliente podría retirarse para cumplir con el resto de sus objetivos.
+          </p>
+
+          <afi-table
+            [columns]="edadColumns"
+            [rows]="edadRows()"
+            density="compact"
+            [rowHoverable]="false"
+            trackByKey="id"
+          />
+        </div>
+      </afi-tab-item>
+    </afi-tabs>
+  </afi-page-header>
+</site-objetivos-page-shell>

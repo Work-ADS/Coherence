@@ -178,7 +178,12 @@ export class PlannerSidebarComponent {
           state: this.store.patrimonioPrevistoState(),
           route: '/demos/wealth-planner-2026/patrimonio-previsto',
         },
-        { key: 'estrategias', label: 'Estrategias', state: 'empty' },
+        {
+          key: 'estrategias',
+          label: 'Estrategias',
+          state: this.store.estrategiasState(),
+          route: '/demos/wealth-planner-2026/estrategias',
+        },
       ],
     },
     {

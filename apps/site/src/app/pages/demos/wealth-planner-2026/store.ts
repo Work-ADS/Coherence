@@ -579,6 +579,38 @@ const SEEDED_HIJOS: HijoData[] = [
   },
 ];
 
+/** Risk profile used by Plan de acción optimizations (Liquidez + Asset). */
+export type PerfilRiesgo = 'conservador' | 'moderado' | 'dinamico';
+
+/**
+ * Saved asset-allocation optimization (Plan de acción §4.c). One row per
+ * named optimization in the landing table; expanded into the 3-step wizard
+ * when the user clicks Ver detalles or Nueva optimización.
+ */
+export interface AssetAllocationOptimization {
+  id: string;
+  nombre: string;
+  perfilRiesgo: PerfilRiesgo;
+  /** Annual return %, stored as decimal (e.g. 0.0713 → renders as "(7,13 %)"). */
+  perfilRentabilidad: number;
+  /** Sum of the selected assets' importes, in €. */
+  patrimonioAfectado: number;
+  /** Projection endpoint value, in €. Mock — populated at Guardar time. */
+  valorFinalOptimizado: number;
+  /** PatrimonioAsset ids selected in Step 2 (checkbox on). */
+  selectedAssetIds: string[];
+  /** Subset using the full asset (switch on for that row in Step 2). */
+  wholeAssetIds: string[];
+  /**
+   * Per-asset percentage of the activo to include when the row's
+   * "Usar todo el activo" switch is OFF. Keyed by `PatrimonioAsset.id`.
+   * Only meaningful for ids present in `selectedAssetIds` AND absent
+   * from `wholeAssetIds`. Stored as whole-number percent (50 = 50 %).
+   * Defaults to 50 when a partial id has no entry yet.
+   */
+  partialAssetPercentages?: Record<string, number>;
+}
+
 /**
  * Payload accepted by `activatePersona()`. Structural (not the Persona
  * type itself) so the store stays ignorant of the personas fixture.
@@ -610,6 +642,7 @@ let nextInversionFuturaId = 1;
 let nextDesinversionId = 1;
 let nextProductoId = 1;
 let nextPlanificacionId = 1;
+let nextOptAssetId = 3;
 
 // ── Listado · Planificaciones per cliente (Brief Listado) ─────────────────
 //
@@ -970,18 +1003,21 @@ export class WealthPlannerStore {
       id: 'patrimonio-cartera-renta-4',
       nombre: 'Cartera Renta 4',
       tipo: 'inversion',
+      entidad: 'Renta 4',
       valor: 62300,
     },
     {
       id: 'patrimonio-plan-pensiones',
       nombre: 'Plan de pensiones',
       tipo: 'pension',
+      entidad: 'VidaCaixa',
       valor: 120000,
     },
     {
       id: 'patrimonio-liquidez-santander',
       nombre: 'Cuenta Santander',
       tipo: 'liquidez',
+      entidad: 'Santander',
       valor: 45200,
     },
   ]);
@@ -1074,6 +1110,82 @@ export class WealthPlannerStore {
 
   setOptimizacionLiquidezEstablished(value: boolean): void {
     this.optimizacionLiquidezEstablished.set(value);
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Plan de acción · Optimización del asset allocation (Wave 3 §4.c)
+  // ──────────────────────────────────────────────────────────────────────
+  //
+  // Unlike Liquidez, this is a list-of-optimizations surface: the gestor
+  // creates named entries through a 3-step wizard (Definición → Patrimonio
+  // seleccionado → Resultados). Sidebar chip flips to `complete` as soon as
+  // one optimization has been saved. Seeded with two entries so the landing
+  // table is non-empty on first visit (mirrors the production planner shot).
+
+  readonly optimizacionesAsset = signal<AssetAllocationOptimization[]>([
+    {
+      id: 'opt-asset-borja-pfc',
+      nombre: 'Optimización de asset allocation Borja PFC',
+      perfilRiesgo: 'dinamico',
+      perfilRentabilidad: 0.0713,
+      patrimonioAfectado: 2_500_000,
+      valorFinalOptimizado: 10_328_359,
+      selectedAssetIds: [
+        'patrimonio-vivienda-principal',
+        'patrimonio-apartamento-cadiz',
+        'patrimonio-cartera-renta-4',
+        'patrimonio-plan-pensiones',
+        'patrimonio-liquidez-santander',
+      ],
+      wholeAssetIds: [
+        'patrimonio-cartera-renta-4',
+        'patrimonio-plan-pensiones',
+      ],
+    },
+    {
+      id: 'opt-asset-pablo-5',
+      nombre: 'Optimización de asset allocation Pablo 5',
+      perfilRiesgo: 'conservador',
+      perfilRentabilidad: 0.0261,
+      patrimonioAfectado: 300_000,
+      valorFinalOptimizado: 10_328_359,
+      selectedAssetIds: [
+        'patrimonio-cartera-renta-4',
+        'patrimonio-liquidez-santander',
+      ],
+      wholeAssetIds: [
+        'patrimonio-liquidez-santander',
+      ],
+    },
+  ]);
+
+  readonly optimizacionAssetState = computed<SectionState>(() =>
+    this.optimizacionesAsset().length > 0 ? 'complete' : 'empty',
+  );
+
+  /** Look up a single optimization by id, or null when absent. */
+  optimizacionAssetById(id: string | null | undefined): AssetAllocationOptimization | null {
+    if (!id) return null;
+    return this.optimizacionesAsset().find((o) => o.id === id) ?? null;
+  }
+
+  /** Create a fresh, never-saved optimization id (callers seed the form with it). */
+  nextOptimizacionAssetId(): string {
+    return `opt-asset-${nextOptAssetId++}`;
+  }
+
+  addOptimizacionAsset(opt: AssetAllocationOptimization): void {
+    this.optimizacionesAsset.update((arr) => [...arr, opt]);
+  }
+
+  updateOptimizacionAsset(id: string, partial: Partial<AssetAllocationOptimization>): void {
+    this.optimizacionesAsset.update((arr) =>
+      arr.map((o) => (o.id === id ? { ...o, ...partial } : o)),
+    );
+  }
+
+  removeOptimizacionAsset(id: string): void {
+    this.optimizacionesAsset.update((arr) => arr.filter((o) => o.id !== id));
   }
 
   // ──────────────────────────────────────────────────────────────────────

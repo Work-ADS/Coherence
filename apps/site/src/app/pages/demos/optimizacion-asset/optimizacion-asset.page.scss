@@ -1,0 +1,43 @@
+// =============================================================================
+// Optimización del asset allocation — Plan de acción §4.c (landing).
+// Empty state mirrors `.ol-empty` from Liquidez per page-structure-skill §10.
+// Table sits in a thin stack with the canonical xl gap from the page header.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.oa-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-block-start: var(--space-xl);
+}
+
+.oa-empty {
+  margin-block-start: var(--space-xl);
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  background: var(--surface-subtle);
+  border: var(--border-width-hairline) dashed var(--border-subtle);
+  border-radius: var(--radius-card);
+  text-align: center;
+}
+
+.oa-empty__title {
+  margin: 0;
+  font: var(--type-subtitle);
+  color: var(--foreground-primary-default);
+}
+
+.oa-empty__hint {
+  margin: var(--space-sm) auto 0;
+  max-inline-size: 56ch;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+.oa-empty__action {
+  margin-block-start: var(--space-lg);
+}

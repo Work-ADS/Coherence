@@ -1,6 +1,21 @@
+import type { TemplateRef } from '@angular/core';
+
 import type { BadgeIntent } from '../badge';
 
 export type TableCellKind = 'text' | 'badge';
+
+/**
+ * Context handed to a cell-template projection via the `cellTemplates`
+ * input. Consumers reference fields via `let-row` (the implicit) or via
+ * `let-col="col"` for column-specific behavior.
+ */
+export interface TableCellTplCtx {
+  $implicit: Record<string, unknown>;
+  row: Record<string, unknown>;
+  col: TableColumn;
+}
+
+export type TableCellTemplateMap = Record<string, TemplateRef<TableCellTplCtx>>;
 
 /**
  * Per-cell tone for scorecard tables (e.g. Consecución de objetivos —

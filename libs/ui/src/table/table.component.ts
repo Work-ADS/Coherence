@@ -14,7 +14,14 @@ import { CheckboxComponent } from '../checkbox';
 import { MenuComponent } from '../menu/menu.component';
 import { MenuDividerComponent } from '../menu/menu-divider.component';
 import { MenuItemComponent } from '../menu/menu-item.component';
-import type { TableCellTone, TableColumn, TableRowAction, TableSortState } from './table.types';
+import type {
+  TableCellTemplateMap,
+  TableCellTone,
+  TableCellTplCtx,
+  TableColumn,
+  TableRowAction,
+  TableSortState,
+} from './table.types';
 import type { TableActionsReveal, TableDensity } from './table.variants';
 
 /**
@@ -88,6 +95,20 @@ export class TableComponent {
   readonly expandDetailTpl = input<TemplateRef<{ $implicit: Record<string, unknown> }> | null>(
     null,
   );
+
+  /**
+   * Per-column custom cell templates, keyed by `TableColumn.key`. When a
+   * column's key has an entry here, the row cell renders the projected
+   * template instead of the default text / badge cell. Context: `$implicit`
+   * + named `row` + named `col` (so `let-row` / `let-col="col"` both work).
+   *
+   * Use case (Richard 2026-06-16, Optimización del asset allocation
+   * Step 2): inline `afi-switch` + conditional `afi-input` per row, so
+   * "Usar todo el activo" stays inside the table rhythm instead of forking
+   * to a bespoke list. Replaces the prior workaround of pre-formatting
+   * cell strings.
+   */
+  readonly cellTemplates = input<TableCellTemplateMap | null>(null);
 
   readonly selectedChange = output<Record<string, unknown>[]>();
   readonly sortChange = output<TableSortState | null>();
@@ -432,6 +453,11 @@ export class TableComponent {
   cellText(row: Record<string, unknown>, col: TableColumn): string {
     const value = row[col.key];
     return value === null || value === undefined ? '' : String(value);
+  }
+
+  cellTemplateFor(col: TableColumn): TemplateRef<TableCellTplCtx> | null {
+    const map = this.cellTemplates();
+    return map ? (map[col.key] ?? null) : null;
   }
 
   onSort(columnKey: string): void {

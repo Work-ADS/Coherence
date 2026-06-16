@@ -48,8 +48,8 @@ const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
     }
     .line-marker:hover, .line-marker:focus-visible { r: 5; }
     .line-marker:focus-visible {
-      outline: 2px solid var(--border-focus);
-      outline-offset: 2px;
+      outline: var(--border-width-thick) solid var(--border-focus);
+      outline-offset: var(--space-3xs);
     }
     @media (prefers-reduced-motion: reduce) {
       .line-path, .line-marker { transition-duration: 0ms; }
@@ -69,7 +69,9 @@ const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
           </div>
           <div class="flex items-center gap-space-2">
             <ng-content select="[slot=action]" />
-            <afi-chart-instructions (opened)="instructionsOpened.emit()" />
+            @if (!hideInstructions()) {
+              <afi-chart-instructions (opened)="instructionsOpened.emit()" />
+            }
           </div>
         </div>
 
@@ -86,7 +88,7 @@ const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
                       [attr.y1]="scaleY(tick)" [attr.y2]="scaleY(tick)"
                       stroke="var(--border-hairline)" stroke-width="1" opacity="0.5" />
                 <text x="-8" [attr.y]="scaleY(tick)" dy="0.32em" text-anchor="end"
-                      class="fill-neutral-500" style="font-size: var(--font-size-body-sm, 12px)">
+                      class="fill-neutral-500" style="font-size: var(--font-size-body-sm, 12.0px)">
                   {{ fmtNum(tick) }}
                 </text>
               }
@@ -116,19 +118,23 @@ const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
             </g>
           </svg>
 
-          <afi-chart-legend [items]="legendItems()" [hidden]="data().length <= 1" />
+          @if (!hideLegend()) {
+            <afi-chart-legend [items]="legendItems()" [hidden]="data().length <= 1" />
+          }
         } @else {
           <div class="flex items-center justify-center text-neutral-500 text-body-sm" [style.height]="height()" aria-live="polite">
             Sin datos para mostrar
           </div>
         }
 
-        <afi-chart-data-table
-          [columns]="tableColumns()"
-          [rows]="tableRows()"
-          trackByKey="key"
-          (toggled)="dataTableToggled.emit($event)"
-        />
+        @if (!hideDataTable()) {
+          <afi-chart-data-table
+            [columns]="tableColumns()"
+            [rows]="tableRows()"
+            trackByKey="key"
+            (toggled)="dataTableToggled.emit($event)"
+          />
+        }
 
         <ng-content select="[slot=footer]" />
       </figure>
@@ -145,10 +151,16 @@ export class ChartLineComponent {
   readonly contextExplanation = input('');
   readonly structureNotes = input('');
   readonly locale = input('es-ES');
-  readonly height = input('320px');
+  readonly height = input('20rem');
   readonly focus = input<number | string | null>(null);
   readonly baselineZero = input(false);
   readonly showMarkers = input(false);
+  /** Suppress the built-in `?` chart-instructions toggle. */
+  readonly hideInstructions = input(false);
+  /** Suppress the built-in auto-legend below the plot. */
+  readonly hideLegend = input(false);
+  /** Suppress the built-in expandable data-table footer. */
+  readonly hideDataTable = input(false);
 
   readonly dataPointActivated = output<{ index: number; datum: unknown }>();
   readonly dataTableToggled = output<boolean>();
@@ -238,7 +250,10 @@ export class ChartLineComponent {
 
   readonly renderedSeries = computed(() => {
     return this.data().map((series, si) => {
-      const visual = resolveSeriesVisual(si);
+      const baseVisual = resolveSeriesVisual(si);
+      const visual = series.color
+        ? { ...baseVisual, color: series.color }
+        : baseVisual;
       const points = series.points.map((p, idx) => ({
         idx,
         x: p.x,
@@ -269,10 +284,13 @@ export class ChartLineComponent {
   });
 
   readonly legendItems = computed(() =>
-    this.data().map((s, i) => ({
-      label: s.key,
-      visual: resolveSeriesVisual(i),
-    })),
+    this.data().map((s, i) => {
+      const baseVisual = resolveSeriesVisual(i);
+      return {
+        label: s.key,
+        visual: s.color ? { ...baseVisual, color: s.color } : baseVisual,
+      };
+    }),
   );
 
   readonly tableColumns = computed(() => {

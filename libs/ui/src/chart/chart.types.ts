@@ -18,6 +18,9 @@ export interface BarDatum {
 export interface LineSeries {
   key: string;
   points: Array<{ x: number | Date; y: number | null }>;
+  /** Optional stroke color override. CSS color string (token or hex).
+   *  When omitted the chart falls back to the default series palette. */
+  color?: string;
 }
 
 export interface HeatmapCell {

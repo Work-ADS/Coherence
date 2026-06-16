@@ -1063,6 +1063,20 @@ export class WealthPlannerStore {
   }
 
   // ──────────────────────────────────────────────────────────────────────
+  // Plan de acción · Optimización de la liquidez (Wave 3 §4.b)
+  // ──────────────────────────────────────────────────────────────────────
+
+  readonly optimizacionLiquidezEstablished = signal<boolean>(false);
+
+  readonly optimizacionLiquidezState = computed<SectionState>(() =>
+    this.optimizacionLiquidezEstablished() ? 'complete' : 'empty',
+  );
+
+  setOptimizacionLiquidezEstablished(value: boolean): void {
+    this.optimizacionLiquidezEstablished.set(value);
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
   // Objetivos · Inversiones futuras (Brief F)
   // ──────────────────────────────────────────────────────────────────────
 

@@ -1,0 +1,147 @@
+<div class="liq-chart">
+  <afi-chart-line
+    [data]="series()"
+    [showMarkers]="true"
+    [hideInstructions]="true"
+    [hideLegend]="true"
+    [hideDataTable]="true"
+    longDescription="Evolución del exceso de liquidez por escenario."
+    statisticalNotes="Tres escenarios — pesimista, medio y optimista — proyectados sobre la edad del cliente."
+    structureNotes="Eje X: edad. Eje Y: exceso de liquidez en euros."
+    (dataPointActivated)="handlePointActivated($event)"
+  />
+
+  <div class="liq-legend" aria-hidden="true">
+    <span class="liq-legend__item liq-legend__item--pesimista">
+      <span class="liq-legend__dot"></span> Escenario pesimista
+    </span>
+    <span class="liq-legend__item liq-legend__item--medio">
+      <span class="liq-legend__dot"></span> Escenario medio
+    </span>
+    <span class="liq-legend__item liq-legend__item--optimista">
+      <span class="liq-legend__dot"></span> Escenario optimista
+    </span>
+  </div>
+
+  @if (popoverOpen() && activeBreakdown()) {
+    <div
+      class="liq-popover"
+      role="dialog"
+      aria-modal="false"
+      [attr.aria-label]="activeBreakdown()!.age + ' años de edad'"
+    >
+      <div class="liq-popover__head">
+        <h3 class="liq-popover__title">{{ activeBreakdown()!.age }} años de edad</h3>
+        <afi-segmented-control
+          class="liq-popover__mode"
+          ariaLabel="Modo de visualización"
+          size="sm"
+          [options]="modeOptions"
+          [value]="popoverMode()"
+          (valueChange)="setPopoverMode($event)"
+        />
+        <div class="liq-popover__nav" role="group" aria-label="Navegar años">
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Año anterior"
+            [disabled]="!canPrevYear()"
+            (clicked)="prevYear()"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </afi-icon-button>
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Año siguiente"
+            [disabled]="!canNextYear()"
+            (clicked)="nextYear()"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </afi-icon-button>
+        </div>
+        <afi-icon-button
+          class="liq-popover__close"
+          variant="ghost"
+          size="sm"
+          ariaLabel="Cerrar"
+          (clicked)="closePopover()"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </afi-icon-button>
+      </div>
+
+      <div class="liq-popover__legend" role="row">
+        <span class="liq-popover__col-head liq-popover__col-head--concepto" role="columnheader">
+          Concepto
+        </span>
+        <span class="liq-popover__col-head" role="columnheader">
+          <span class="liq-popover__dot liq-popover__dot--pesimista" aria-hidden="true"></span>
+          Pesimista
+        </span>
+        <span class="liq-popover__col-head" role="columnheader">
+          <span class="liq-popover__dot liq-popover__dot--medio" aria-hidden="true"></span>
+          Medio
+        </span>
+        <span class="liq-popover__col-head" role="columnheader">
+          <span class="liq-popover__dot liq-popover__dot--optimista" aria-hidden="true"></span>
+          Optimista
+        </span>
+      </div>
+
+      <ul class="liq-popover__rows" role="rowgroup">
+        @for (row of activeBreakdown()!.rows; track row.concepto) {
+          <li class="liq-popover__row" role="row">
+            <span class="liq-popover__concepto" role="cell">{{ row.concepto }}</span>
+            <span class="liq-popover__value" role="cell">
+              {{ isSignedRow(row.concepto) ? formatSigned(row.pesimista) : formatPlain(row.pesimista) }}
+            </span>
+            <span class="liq-popover__value" role="cell">
+              {{ isSignedRow(row.concepto) ? formatSigned(row.medio) : formatPlain(row.medio) }}
+            </span>
+            <span class="liq-popover__value" role="cell">
+              {{ isSignedRow(row.concepto) ? formatSigned(row.optimista) : formatPlain(row.optimista) }}
+            </span>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</div>

@@ -13,9 +13,11 @@
   >
     <span [class]="thumbClasses()" aria-hidden="true"></span>
   </button>
-  @if (label()) {
+  @if (label() || hint()) {
     <span class="afi-switch__label-group">
-      <span class="afi-switch__label">{{ label() }}</span>
+      @if (label()) {
+        <span class="afi-switch__label">{{ label() }}</span>
+      }
       @if (hint()) {
         <span [id]="hintId" class="afi-switch__hint">{{ hint() }}</span>
       }

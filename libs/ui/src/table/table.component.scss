@@ -385,6 +385,9 @@
   &--tone-neutral {
     color: var(--foreground-secondary-default);
   }
+  &--tone-info {
+    color: var(--color-action-500);
+  }
 }
 
 // Muted row — reference / baseline rows that should not draw the eye

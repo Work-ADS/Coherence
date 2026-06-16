@@ -8,7 +8,7 @@ export type TableCellKind = 'text' | 'badge';
  * via the `afi-table__td--tone-{value}` modifier; `neutral` falls back to
  * the secondary foreground for "dim" cells.
  */
-export type TableCellTone = 'success' | 'warning' | 'danger' | 'neutral';
+export type TableCellTone = 'success' | 'warning' | 'danger' | 'neutral' | 'info';
 
 export type TableRowActionVariant = 'default' | 'danger';
 

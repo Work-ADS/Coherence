@@ -89,15 +89,15 @@ export class OptimizacionLiquidezPage {
     return [
       {
         ...buildSeries('Escenario pesimista', AGE_FROM, AGE_TO, 90_000, rate * 0.6),
-        color: 'var(--status-danger-foreground)',
+        color: 'var(--feedback-error-foreground)',
       },
       {
         ...buildSeries('Escenario medio', AGE_FROM, AGE_TO, 150_000, rate),
-        color: 'var(--brand-primary-foreground-default)',
+        color: 'var(--color-action-500)',
       },
       {
         ...buildSeries('Escenario optimista', AGE_FROM, AGE_TO, 220_000, rate * 1.4),
-        color: 'var(--status-success-foreground)',
+        color: 'var(--feedback-success-foreground)',
       },
     ];
   });
@@ -171,7 +171,7 @@ export class OptimizacionLiquidezPage {
         medio: subMed !== null ? `${formatEuro(med)}\n${subMed}` : formatEuro(med),
         optimista: subOpt !== null ? `${formatEuro(opt)}\n${subOpt}` : formatEuro(opt),
         tPesimista: 'danger' satisfies TableCellTone,
-        tMedio: 'warning' satisfies TableCellTone,
+        tMedio: 'info' satisfies TableCellTone,
         tOptimista: 'success' satisfies TableCellTone,
       };
     });

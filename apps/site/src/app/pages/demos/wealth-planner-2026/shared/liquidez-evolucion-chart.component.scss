@@ -44,15 +44,15 @@
 }
 
 .liq-legend__item--pesimista .liq-legend__dot {
-  background: var(--status-danger-foreground);
+  background: var(--feedback-error-foreground);
 }
 
 .liq-legend__item--medio .liq-legend__dot {
-  background: var(--brand-primary-foreground-default);
+  background: var(--color-action-500);
 }
 
 .liq-legend__item--optimista .liq-legend__dot {
-  background: var(--status-success-foreground);
+  background: var(--feedback-success-foreground);
 }
 
 // ─── Popover overlay ────────────────────────────────────────────────────────
@@ -131,15 +131,15 @@
 }
 
 .liq-popover__dot--pesimista {
-  background: var(--status-danger-foreground);
+  background: var(--feedback-error-foreground);
 }
 
 .liq-popover__dot--medio {
-  background: var(--brand-primary-foreground-default);
+  background: var(--color-action-500);
 }
 
 .liq-popover__dot--optimista {
-  background: var(--status-success-foreground);
+  background: var(--feedback-success-foreground);
 }
 
 .liq-popover__rows {

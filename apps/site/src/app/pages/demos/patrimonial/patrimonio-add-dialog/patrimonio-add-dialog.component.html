@@ -192,18 +192,21 @@
       <ul class="patrimonio-add-titulares">
         @for (t of titularOptions(); track t.value) {
           <li class="patrimonio-add-titulares__row">
-            <afi-checkbox
-              [checked]="isTitularActivo(t.value)"
-              [ariaLabel]="t.label"
-              size="md"
-              (checkedChange)="setTitularActivo(t.value, $event)"
-            />
-            <span
-              class="patrimonio-add-titulares__label"
-              [class.is-inactive]="!isTitularActivo(t.value)"
-            >
-              {{ t.label }}
-            </span>
+            <div class="patrimonio-add-titulares__name-group">
+              <afi-checkbox
+                size="sm"
+                [compact]="true"
+                [checked]="isTitularActivo(t.value)"
+                [ariaLabel]="t.label"
+                (checkedChange)="setTitularActivo(t.value, $event)"
+              />
+              <span
+                class="patrimonio-add-titulares__label"
+                [class.is-inactive]="!isTitularActivo(t.value)"
+              >
+                {{ t.label }}
+              </span>
+            </div>
             <afi-input
               type="number"
               suffix="%"

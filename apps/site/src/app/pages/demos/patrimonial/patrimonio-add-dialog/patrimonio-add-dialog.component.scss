@@ -81,14 +81,21 @@
 
 .patrimonio-add-titulares__row {
   display: grid;
-  grid-template-columns: auto 1fr minmax(0, 8rem);
+  grid-template-columns: 1fr minmax(0, 8rem);
   align-items: center;
   gap: var(--space-md);
+}
+
+.patrimonio-add-titulares__name-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
 }
 
 .patrimonio-add-titulares__label {
   font: var(--type-body-md-400);
   color: var(--foreground-primary-default);
+  line-height: 1;
   transition: color var(--duration-fast) var(--easing-standard);
 
   &.is-inactive {

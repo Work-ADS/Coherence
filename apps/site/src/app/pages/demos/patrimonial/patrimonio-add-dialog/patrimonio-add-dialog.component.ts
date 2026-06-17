@@ -160,6 +160,33 @@ export class PatrimonioAddDialogComponent {
   readonly revalorizacionManual = signal<string>('');
   readonly titularesActivos = signal<Record<string, boolean>>({});
   readonly titularPorcentajes = signal<Record<string, string>>({});
+  readonly titularesManualmente = signal<Set<string>>(new Set());
+
+  readonly titularesTotal = computed<number>(() => {
+    const activos = this.titularesActivos();
+    const porcentajes = this.titularPorcentajes();
+    let total = 0;
+    for (const [id, isActive] of Object.entries(activos)) {
+      if (!isActive) continue;
+      const n = Number.parseFloat(porcentajes[id] ?? '0');
+      if (Number.isFinite(n)) total += n;
+    }
+    return total;
+  });
+
+  readonly titularesTotalState = computed<'under' | 'exact' | 'over'>(() => {
+    const t = this.titularesTotal();
+    if (t > 100) return 'over';
+    if (t === 100) return 'exact';
+    return 'under';
+  });
+
+  readonly titularesTotalLabel = computed<string>(() => {
+    const t = this.titularesTotal();
+    // Round to whole number for display when integer-ish; keep 1 decimal otherwise.
+    const formatted = Number.isInteger(t) ? t.toString() : t.toFixed(1);
+    return `Total: ${formatted} %`;
+  });
 
   readonly addModeOptions: SegmentedOption[] = [
     { value: 'simple', label: 'Simple' },
@@ -307,6 +334,17 @@ export class PatrimonioAddDialogComponent {
   setTitularActivo(id: string | number, checked: boolean): void {
     const key = String(id);
     this.titularesActivos.update((curr) => ({ ...curr, [key]: checked }));
+    if (!checked) {
+      // Unchecking clears the porcentaje + the manual flag for that titular.
+      this.titularesManualmente.update((set) => {
+        if (!set.has(key)) return set;
+        const next = new Set(set);
+        next.delete(key);
+        return next;
+      });
+      this.titularPorcentajes.update((curr) => ({ ...curr, [key]: '' }));
+    }
+    this.autoDistributeTitulares();
   }
 
   isTitularActivo(id: string | number): boolean {
@@ -316,11 +354,58 @@ export class PatrimonioAddDialogComponent {
   setTitularPorcentaje(id: string | number, value: string | number | null): void {
     const key = String(id);
     const str = value === null ? '' : String(value);
+    // First user keystroke on a titular marks it as manually-edited so the
+    // auto-split logic stops overwriting it.
+    this.titularesManualmente.update((set) => {
+      if (set.has(key)) return set;
+      const next = new Set(set);
+      next.add(key);
+      return next;
+    });
     this.titularPorcentajes.update((curr) => ({ ...curr, [key]: str }));
+    // Redistribute the remaining (100 - manual-sum) across the still-auto
+    // titulares so siblings track the user's manual edit in real time.
+    this.autoDistributeTitulares();
   }
 
   porcentajeFor(id: string | number): string {
     return this.titularPorcentajes()[String(id)] ?? '';
+  }
+
+  /** Split the remaining percent (after honoring manually-edited titulares)
+   *  evenly across the still-auto active titulares. First entry takes any
+   *  rounding leftover so the active titulares sum to 100 when no manual
+   *  values are in play. */
+  private autoDistributeTitulares(): void {
+    const activos = this.titularesActivos();
+    const manual = this.titularesManualmente();
+    const porcentajes = { ...this.titularPorcentajes() };
+
+    let manualSum = 0;
+    const autoIds: string[] = [];
+
+    for (const [id, isActive] of Object.entries(activos)) {
+      if (!isActive) continue;
+      if (manual.has(id)) {
+        const n = Number.parseFloat(porcentajes[id] ?? '0');
+        manualSum += Number.isFinite(n) ? n : 0;
+      } else {
+        autoIds.push(id);
+      }
+    }
+
+    if (autoIds.length === 0) {
+      this.titularPorcentajes.set(porcentajes);
+      return;
+    }
+
+    const remaining = Math.max(0, 100 - manualSum);
+    const base = Math.floor(remaining / autoIds.length);
+    const extra = remaining - base * autoIds.length;
+    autoIds.forEach((id, i) => {
+      porcentajes[id] = String(base + (i < extra ? 1 : 0));
+    });
+    this.titularPorcentajes.set(porcentajes);
   }
 
   cancel(): void {
@@ -400,12 +485,17 @@ export class PatrimonioAddDialogComponent {
 
     const activos: Record<string, boolean> = {};
     const porcentajes: Record<string, string> = {};
+    const manual = new Set<string>();
     for (const t of asset.titulares ?? []) {
       activos[t.titularId] = true;
       porcentajes[t.titularId] = String(t.porcentaje);
+      // Treat persisted porcentajes as manual so re-opening edit doesn't
+      // overwrite the user's saved values via auto-distribute.
+      manual.add(t.titularId);
     }
     this.titularesActivos.set(activos);
     this.titularPorcentajes.set(porcentajes);
+    this.titularesManualmente.set(manual);
 
     this.tipoRevalorizacion.set(
       asset.revalorizacion != null && asset.revalorizacion !== 0 ? 'manual' : 'automatica',
@@ -434,5 +524,6 @@ export class PatrimonioAddDialogComponent {
     this.revalorizacionManual.set('');
     this.titularesActivos.set({});
     this.titularPorcentajes.set({});
+    this.titularesManualmente.set(new Set());
   }
 }

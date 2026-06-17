@@ -183,7 +183,15 @@
 
     <section class="patrimonio-add-form__section">
       <header class="patrimonio-add-form__section-head">
-        <h3 class="patrimonio-add-form__section-title">Titulares</h3>
+        <div class="patrimonio-add-form__section-title-row">
+          <h3 class="patrimonio-add-form__section-title">Titulares</h3>
+          <span
+            class="patrimonio-add-titulares__total-tag"
+            [attr.data-state]="titularesTotalState()"
+          >
+            {{ titularesTotalLabel() }}
+          </span>
+        </div>
         <p class="patrimonio-add-form__section-hint">
           Reparto entre los titulares del activo. No tiene por qué sumar 100%.
         </p>

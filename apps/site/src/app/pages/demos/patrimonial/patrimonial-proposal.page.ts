@@ -193,6 +193,7 @@ export class PatrimonialProposalPage {
     window.setTimeout(() => this.savedToastVisible.set(false), 3500);
   }
 
+
   readonly rowActionsOpen = signal<string | null>(null);
   readonly addTipo = signal<string>('liquidez');
   readonly addImporte = signal<string>('');

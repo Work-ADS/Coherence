@@ -45,6 +45,17 @@
       (valueChange)="setNombre($event)"
     />
 
+    @if (showEntidad()) {
+      <afi-select
+        label="Entidad"
+        placeholder="Selecciona la entidad"
+        [searchable]="true"
+        [options]="entidadOptions()"
+        [value]="entidad()"
+        (valueChange)="setEntidad($event)"
+      />
+    }
+
     <afi-input
       label="Valor actual"
       type="number"
@@ -52,6 +63,117 @@
       [value]="valor()"
       (valueChange)="setValor($event)"
     />
+
+    @if (showAvanzadoExtras()) {
+      <div class="patrimonio-add-form__avanzado-block">
+        <afi-radio-group
+          legend="¿Es patrimonio futuro?"
+          [required]="true"
+          orientation="horizontal"
+        >
+          @for (opt of yesNoOptions; track opt.value) {
+            <afi-radio-group-item
+              [value]="opt.value"
+              [label]="opt.label"
+              [selected]="patrimonioFuturo() === opt.value"
+              (selectedChange)="setPatrimonioFuturo($event)"
+            />
+          }
+        </afi-radio-group>
+
+        @if (patrimonioFuturo() === 'si') {
+          <afi-input
+            label="Año en que se espera obtener el activo"
+            type="number"
+            placeholder="2030"
+            [value]="anoObtencion()"
+            (valueChange)="setAnoObtencion($event)"
+          />
+        }
+
+        <afi-radio-group
+          legend="¿Generará ingresos?"
+          orientation="horizontal"
+        >
+          @for (opt of yesNoOptions; track opt.value) {
+            <afi-radio-group-item
+              [value]="opt.value"
+              [label]="opt.label"
+              [selected]="generaIngresos() === opt.value"
+              (selectedChange)="setGeneraIngresos($event)"
+            />
+          }
+        </afi-radio-group>
+
+        @if (generaIngresos() === 'si') {
+          <div class="patrimonio-add-form__ingresos">
+            <afi-select
+              label="Frecuencia"
+              placeholder="Selecciona la frecuencia"
+              [options]="frecuenciaOptions"
+              [value]="frecuencia()"
+              (valueChange)="setFrecuencia($event)"
+            />
+
+            <afi-radio-group
+              legend="Tipo de generación"
+              orientation="horizontal"
+            >
+              @for (opt of tipoGeneracionOptions; track opt.value) {
+                <afi-radio-group-item
+                  [value]="opt.value"
+                  [label]="opt.label"
+                  [selected]="tipoGeneracion() === opt.value"
+                  (selectedChange)="setTipoGeneracion($event)"
+                />
+              }
+            </afi-radio-group>
+
+            @if (tipoGeneracion() === 'importe') {
+              <afi-input
+                label="Importe"
+                type="number"
+                placeholder="0"
+                [value]="importeIngresos()"
+                (valueChange)="setImporteIngresos($event)"
+              />
+
+              <afi-radio-group
+                legend="Crecimiento estimado"
+                orientation="horizontal"
+              >
+                @for (opt of crecimientoOptions; track opt.value) {
+                  <afi-radio-group-item
+                    [value]="opt.value"
+                    [label]="opt.label"
+                    [selected]="crecimientoMode() === opt.value"
+                    (selectedChange)="setCrecimientoMode($event)"
+                  />
+                }
+              </afi-radio-group>
+
+              @if (crecimientoMode() === 'manual') {
+                <afi-input
+                  label="Crecimiento manual"
+                  type="number"
+                  placeholder="0"
+                  [value]="crecimientoManual()"
+                  (valueChange)="setCrecimientoManual($event)"
+                />
+              }
+            } @else {
+              <afi-input
+                label="Porcentaje"
+                type="number"
+                placeholder="0"
+                [value]="porcentajeIngresos()"
+                (valueChange)="setPorcentajeIngresos($event)"
+              />
+            }
+          </div>
+        }
+      </div>
+    }
 
     <section class="patrimonio-add-form__titulares">
       <header class="patrimonio-add-form__titulares-head">

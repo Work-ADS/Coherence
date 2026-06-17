@@ -10,7 +10,21 @@
 
 .patrimonio-add-form__mode-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
+}
+
+.patrimonio-add-form__avanzado-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.patrimonio-add-form__ingresos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-inline-start: var(--space-md);
+  border-inline-start: var(--border-width-hairline) solid var(--border-subtle);
 }
 
 .patrimonio-add-form__titulares {

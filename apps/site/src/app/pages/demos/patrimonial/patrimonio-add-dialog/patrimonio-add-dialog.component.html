@@ -65,120 +65,125 @@
     />
 
     @if (showAvanzadoExtras()) {
-      <div class="patrimonio-add-form__avanzado-block">
-        <afi-radio-group
-          legend="¿Es patrimonio futuro?"
-          [required]="true"
-          orientation="horizontal"
-        >
-          @for (opt of yesNoOptions; track opt.value) {
-            <afi-radio-group-item
-              [value]="opt.value"
-              [label]="opt.label"
-              [selected]="patrimonioFuturo() === opt.value"
-              (selectedChange)="setPatrimonioFuturo($event)"
-            />
-          }
-        </afi-radio-group>
+      <section class="patrimonio-add-form__section">
+        <header class="patrimonio-add-form__section-head">
+          <h3 class="patrimonio-add-form__section-title">Información adicional</h3>
+          <p class="patrimonio-add-form__section-hint">
+            Define si es un activo futuro y si generará ingresos.
+          </p>
+        </header>
 
-        @if (patrimonioFuturo() === 'si') {
-          <afi-input
-            label="Año en que se espera obtener el activo"
-            type="number"
-            placeholder="2030"
-            [value]="anoObtencion()"
-            (valueChange)="setAnoObtencion($event)"
-          />
-        }
+        <div class="patrimonio-add-form__section-body">
+          <afi-radio-group
+            legend="¿Es patrimonio futuro?"
+            [required]="true"
+            orientation="horizontal"
+          >
+            @for (opt of yesNoOptions; track opt.value) {
+              <afi-radio-group-item
+                [value]="opt.value"
+                [label]="opt.label"
+                [selected]="patrimonioFuturo() === opt.value"
+                (selectedChange)="setPatrimonioFuturo($event)"
+              />
+            }
+          </afi-radio-group>
 
-        <afi-radio-group
-          legend="¿Generará ingresos?"
-          orientation="horizontal"
-        >
-          @for (opt of yesNoOptions; track opt.value) {
-            <afi-radio-group-item
-              [value]="opt.value"
-              [label]="opt.label"
-              [selected]="generaIngresos() === opt.value"
-              (selectedChange)="setGeneraIngresos($event)"
-            />
-          }
-        </afi-radio-group>
-
-        @if (generaIngresos() === 'si') {
-          <div class="patrimonio-add-form__ingresos">
-            <afi-select
-              label="Frecuencia"
-              placeholder="Selecciona la frecuencia"
-              [options]="frecuenciaOptions"
-              [value]="frecuencia()"
-              (valueChange)="setFrecuencia($event)"
-            />
-
-            <afi-radio-group
-              legend="Tipo de generación"
-              orientation="horizontal"
-            >
-              @for (opt of tipoGeneracionOptions; track opt.value) {
-                <afi-radio-group-item
-                  [value]="opt.value"
-                  [label]="opt.label"
-                  [selected]="tipoGeneracion() === opt.value"
-                  (selectedChange)="setTipoGeneracion($event)"
-                />
-              }
-            </afi-radio-group>
-
-            @if (tipoGeneracion() === 'importe') {
+          @if (patrimonioFuturo() === 'si') {
+            <div class="patrimonio-add-form__indented">
               <afi-input
-                label="Importe"
+                label="Año en que se espera obtener el activo"
                 type="number"
-                placeholder="0"
-                [value]="importeIngresos()"
-                (valueChange)="setImporteIngresos($event)"
+                placeholder="2030"
+                [value]="anoObtencion()"
+                (valueChange)="setAnoObtencion($event)"
+              />
+            </div>
+          }
+
+          <afi-radio-group legend="¿Generará ingresos?" orientation="horizontal">
+            @for (opt of yesNoOptions; track opt.value) {
+              <afi-radio-group-item
+                [value]="opt.value"
+                [label]="opt.label"
+                [selected]="generaIngresos() === opt.value"
+                (selectedChange)="setGeneraIngresos($event)"
+              />
+            }
+          </afi-radio-group>
+
+          @if (generaIngresos() === 'si') {
+            <div class="patrimonio-add-form__indented">
+              <afi-select
+                label="Frecuencia"
+                placeholder="Selecciona la frecuencia"
+                [options]="frecuenciaOptions"
+                [value]="frecuencia()"
+                (valueChange)="setFrecuencia($event)"
               />
 
-              <afi-radio-group
-                legend="Crecimiento estimado"
-                orientation="horizontal"
-              >
-                @for (opt of crecimientoOptions; track opt.value) {
+              <afi-radio-group legend="Tipo de generación" orientation="horizontal">
+                @for (opt of tipoGeneracionOptions; track opt.value) {
                   <afi-radio-group-item
                     [value]="opt.value"
                     [label]="opt.label"
-                    [selected]="crecimientoMode() === opt.value"
-                    (selectedChange)="setCrecimientoMode($event)"
+                    [selected]="tipoGeneracion() === opt.value"
+                    (selectedChange)="setTipoGeneracion($event)"
                   />
                 }
               </afi-radio-group>
 
-              @if (crecimientoMode() === 'manual') {
+              @if (tipoGeneracion() === 'importe') {
                 <afi-input
-                  label="Crecimiento manual"
+                  label="Importe"
                   type="number"
                   placeholder="0"
-                  [value]="crecimientoManual()"
-                  (valueChange)="setCrecimientoManual($event)"
+                  [value]="importeIngresos()"
+                  (valueChange)="setImporteIngresos($event)"
+                />
+
+                <afi-radio-group
+                  legend="Crecimiento estimado"
+                  orientation="horizontal"
+                >
+                  @for (opt of crecimientoOptions; track opt.value) {
+                    <afi-radio-group-item
+                      [value]="opt.value"
+                      [label]="opt.label"
+                      [selected]="crecimientoMode() === opt.value"
+                      (selectedChange)="setCrecimientoMode($event)"
+                    />
+                  }
+                </afi-radio-group>
+
+                @if (crecimientoMode() === 'manual') {
+                  <afi-input
+                    label="Crecimiento manual"
+                    type="number"
+                    placeholder="0"
+                    [value]="crecimientoManual()"
+                    (valueChange)="setCrecimientoManual($event)"
+                  />
+                }
+              } @else {
+                <afi-input
+                  label="Porcentaje"
+                  type="number"
+                  placeholder="0"
+                  [value]="porcentajeIngresos()"
+                  (valueChange)="setPorcentajeIngresos($event)"
                 />
               }
-            } @else {
-              <afi-input
-                label="Porcentaje"
-                type="number"
-                placeholder="0"
-                [value]="porcentajeIngresos()"
-                (valueChange)="setPorcentajeIngresos($event)"
-              />
-            }
-          </div>
-        }
-      </div>
+            </div>
+          }
+        </div>
+      </section>
     }
 
-    <section class="patrimonio-add-form__titulares">
-      <header class="patrimonio-add-form__titulares-head">
-        <h3 class="patrimonio-add-form__titulares-title">Titulares</h3>
-        <p class="patrimonio-add-form__titulares-hint">
+    <section class="patrimonio-add-form__section">
+      <header class="patrimonio-add-form__section-head">
+        <h3 class="patrimonio-add-form__section-title">Titulares</h3>
+        <p class="patrimonio-add-form__section-hint">
           Reparto entre los titulares del activo. No tiene por qué sumar 100%.
         </p>
       </header>
@@ -200,6 +205,46 @@
         }
       </ul>
     </section>
+
+    @if (showAvanzadoExtras()) {
+      <section class="patrimonio-add-form__section">
+        <header class="patrimonio-add-form__section-head">
+          <h3 class="patrimonio-add-form__section-title">Revalorización esperada</h3>
+          <p class="patrimonio-add-form__section-hint">
+            Define cómo evoluciona el valor del activo en el tiempo.
+          </p>
+        </header>
+
+        <div class="patrimonio-add-form__section-body">
+          <afi-radio-group
+            legend="Tipo de revalorización esperada"
+            [required]="true"
+            orientation="horizontal"
+          >
+            @for (opt of revalorizacionOptions; track opt.value) {
+              <afi-radio-group-item
+                [value]="opt.value"
+                [label]="opt.label"
+                [selected]="tipoRevalorizacion() === opt.value"
+                (selectedChange)="setTipoRevalorizacion($event)"
+              />
+            }
+          </afi-radio-group>
+
+          @if (tipoRevalorizacion() === 'manual') {
+            <div class="patrimonio-add-form__indented">
+              <afi-input
+                label="Tasa anual"
+                type="number"
+                placeholder="2"
+                [value]="revalorizacionManual()"
+                (valueChange)="setRevalorizacionManual($event)"
+              />
+            </div>
+          }
+        </div>
+      </section>
+    }
   </div>
 
   <ng-container slot="footer">

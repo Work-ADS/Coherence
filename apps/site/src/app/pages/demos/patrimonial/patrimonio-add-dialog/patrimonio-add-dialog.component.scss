@@ -19,7 +19,10 @@
   gap: var(--space-md);
 }
 
-.patrimonio-add-form__ingresos {
+// Indented reveal — used for any conditional sub-field that depends on a radio
+// choice above (e.g. Año when ¿Es patrimonio futuro? = Sí, the whole ingresos
+// sub-block when ¿Generará ingresos? = Sí).
+.patrimonio-add-form__indented {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
@@ -27,17 +30,25 @@
   border-inline-start: var(--border-width-hairline) solid var(--border-subtle);
 }
 
-.patrimonio-add-form__titulares {
+// Section group — uppercase small-caps title + caption + content. Used for
+// TITULARES, INFORMACIÓN ADICIONAL, REVALORIZACIÓN ESPERADA. Mirrors the
+// Sociedades "PARTICIPACIÓN ACCIONARIAL" treatment.
+.patrimonio-add-form__section {
   margin-block-start: var(--space-sm);
   padding-block-start: var(--space-md);
   border-block-start: var(--border-width-hairline) solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
 }
 
-.patrimonio-add-form__titulares-head {
-  margin-block-end: var(--space-md);
+.patrimonio-add-form__section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
 }
 
-.patrimonio-add-form__titulares-title {
+.patrimonio-add-form__section-title {
   margin: 0;
   font: var(--type-body-sm-600);
   color: var(--foreground-secondary-default);
@@ -45,11 +56,19 @@
   letter-spacing: 0.08em;
 }
 
-.patrimonio-add-form__titulares-hint {
-  margin: var(--space-2xs) 0 0;
+.patrimonio-add-form__section-hint {
+  margin: 0;
   font: var(--type-body-sm-400);
   color: var(--foreground-tertiary-default);
 }
+
+.patrimonio-add-form__section-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+// ─── Titulares list (rows) ──────────────────────────────────────────────────
 
 .patrimonio-add-titulares {
   margin: 0;

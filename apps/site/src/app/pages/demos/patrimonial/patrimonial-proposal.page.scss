@@ -166,23 +166,12 @@
   }
 }
 
-// ── v3 "Añadir" dialog body spacing ─────────────────────────────────────────
-// The dialog uses afi-modal directly (type="form") so the body fills the
-// available height and scrolls. We add a soft vertical rhythm inside so
-// subsections don't feel crushed.
-.patrimonio-dialog-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-
-  // Placeholder paragraphs for fields not yet implemented
-  &__placeholder {
-    font: var(--type-body-md-400);
-    color: var(--foreground-tertiary);
-    margin: 0;
-    padding: var(--space-4) var(--space-3);
-    border-radius: var(--radius-md);
-    background: var(--surface-subtle);
-    text-align: center;
-  }
+// ── "Añadir patrimonio" trigger (V3 dropdown / V1-V2 direct) ────────────────
+// The trigger wraps an afi-button + an afi-menu so the menu can use the span
+// as its anchor element on V3. Layout stays unchanged on V1/V2 (no chevron,
+// no menu) — the only style here is a flex container so the wrapping span
+// behaves like an inline-flex action item.
+.patrimonio-add-trigger {
+  display: inline-flex;
+  align-items: center;
 }

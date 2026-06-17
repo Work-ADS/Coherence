@@ -1,0 +1,153 @@
+:host {
+  display: contents;
+}
+
+.patrimonio-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.patrimonio-add-form__mode-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.patrimonio-add-form__avanzado-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+// Indented reveal — used for any conditional sub-field that depends on a radio
+// choice above (e.g. Año when ¿Es patrimonio futuro? = Sí, the whole ingresos
+// sub-block when ¿Generará ingresos? = Sí).
+.patrimonio-add-form__indented {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-inline-start: var(--space-md);
+  border-inline-start: var(--border-width-hairline) solid var(--border-subtle);
+}
+
+// Section group — uppercase small-caps title + caption + content. Used for
+// TITULARES, INFORMACIÓN ADICIONAL, REVALORIZACIÓN ESPERADA. Mirrors the
+// Sociedades "PARTICIPACIÓN ACCIONARIAL" treatment.
+.patrimonio-add-form__section {
+  margin-block-start: var(--space-sm);
+  padding-block-start: var(--space-md);
+  border-block-start: var(--border-width-hairline) solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.patrimonio-add-form__section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.patrimonio-add-form__section-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.patrimonio-add-form__section-title {
+  margin: 0;
+  font: var(--type-body-sm-600);
+  color: var(--foreground-secondary-default);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.patrimonio-add-form__section-hint {
+  margin: 0;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.patrimonio-add-titulares__total-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-pill);
+  font: var(--type-body-sm-500);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: 0;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
+
+  &[data-state='under'] {
+    background: var(--surface-subtle);
+    color: var(--foreground-secondary-default);
+  }
+
+  &[data-state='exact'] {
+    background: var(--feedback-success-background);
+    color: var(--feedback-success-foreground);
+  }
+
+  &[data-state='over'] {
+    background: var(--feedback-error-background);
+    color: var(--feedback-error-foreground);
+  }
+}
+
+.patrimonio-add-form__section-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+// ─── Titulares list (rows) ──────────────────────────────────────────────────
+
+.patrimonio-add-titulares {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.patrimonio-add-titulares__row {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 8rem);
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.patrimonio-add-titulares__name-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+
+  // Collapse the afi-checkbox host's inherited line-height so its bounding
+  // box matches the visual checkbox square instead of the surrounding line-
+  // box. Without this, `align-items: center` aligns the host center (taller
+  // than the box) with the label, pushing the visible box above the text.
+  // The translateY then nudges the visible square down to the optical center
+  // of the label text (caps + lowercase mass sits in the upper portion of
+  // the line-box when there are no descenders, so geometric center sits
+  // visually above the text).
+  afi-checkbox {
+    line-height: 1;
+    transform: translateY(0.0625rem); // hairline nudge for optical alignment with label baseline
+  }
+}
+
+.patrimonio-add-titulares__label {
+  font: var(--type-body-md-400);
+  color: var(--foreground-primary-default);
+  transition: color var(--duration-fast) var(--easing-standard);
+
+  &.is-inactive {
+    color: var(--foreground-tertiary-default);
+  }
+}

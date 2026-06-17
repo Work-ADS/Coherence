@@ -149,18 +149,36 @@ export type TipoGeneracion = 'importe' | 'porcentaje';
 export type CrecimientoMode = 'mismo-activo' | 'manual';
 
 // v3 — patrimonio dialog two-step taxonomy (Figma 2026-06-10, Wealth manager
-// screens 2026/Dialogs for patrimonio). Step 1: TipoPatrimonioTop chooses one
-// of 7 top-level categories. Step 2: only Inversión carries a TipoInversion
-// sub-select PLUS a Simple/Avanzado discriminator. Other top-level branches
-// render a single-pane per-tipo form.
+// screens 2026/Dialogs for patrimonio; menu list expanded 2026-06-17 to 9
+// categories — adds 'otros-activos' and 'seguro-vida'). Step 1: TipoPatrimonioTop
+// chooses one of 9 top-level categories. Step 2: only Inversión carries a
+// TipoInversion sub-select PLUS a Simple/Avanzado discriminator. Other
+// top-level branches render a single-pane per-tipo form.
 export type TipoPatrimonioTop =
   | 'liquidez'
   | 'inversion'
-  | 'plan-pensiones'
-  | 'private-equity'
   | 'inmobiliario'
+  | 'private-equity'
+  | 'plan-pensiones'
   | 'participaciones'
-  | 'deudas';
+  | 'otros-activos'
+  | 'deudas'
+  | 'seguro-vida';
+
+/** Human-readable Spanish labels for each TipoPatrimonioTop slug. Source of
+ *  truth for the menu trigger items, the dialog title, and any surface that
+ *  needs to render a category name. Key order matches the menu list. */
+export const TIPO_PATRIMONIO_TOP_LABEL: Record<TipoPatrimonioTop, string> = {
+  liquidez: 'Liquidez',
+  inversion: 'Inversiones',
+  inmobiliario: 'Inmobiliario',
+  'private-equity': 'Private equity',
+  'plan-pensiones': 'Planes de pensiones',
+  participaciones: 'Participaciones empresariales',
+  'otros-activos': 'Otros activos',
+  deudas: 'Deuda',
+  'seguro-vida': 'Seguro de vida',
+};
 
 export type TipoInversion =
   | 'fondos'
@@ -170,6 +188,18 @@ export type TipoInversion =
   | 'etf'
   | 'cartera'
   | 'otros';
+
+/** Human-readable Spanish labels for each TipoInversion slug. Key order
+ *  matches the sub-select list (photo from 2026-06-17). */
+export const TIPO_INVERSION_LABEL: Record<TipoInversion, string> = {
+  'acciones-cotizadas': 'Acciones cotizadas',
+  fondos: 'Fondos de inversión',
+  'seguros-ahorro': 'Seguros de ahorro',
+  'renta-fija': 'Renta fija',
+  etf: 'ETF',
+  cartera: 'Cartera',
+  otros: 'Otros',
+};
 
 /** PPI / PPE / EPSV — radio shown only when tipoTop === 'plan-pensiones'. */
 export type PlanPensionesTipo = 'ppi' | 'ppe' | 'epsv';

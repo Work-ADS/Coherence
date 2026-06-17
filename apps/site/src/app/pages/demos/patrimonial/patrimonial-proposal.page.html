@@ -44,17 +44,57 @@
                      signal is still bridged through `bridgeDesignReviewVersion`
                      in the constructor. -->
 
-                <!-- Primary action — moved out of the filter strip per the
-                     canonical pattern. -->
-                <afi-button
+                <!-- Primary action — dropdown trigger on V3 (opens menu of 9
+                     asset categories → per-category dialog shell); falls back
+                     to the legacy V1/V2 modal on older versions. -->
+                <span
                   slot="actions"
-                  variant="primary"
-                  size="sm"
-                  ariaLabel="Añadir patrimonio"
-                  (clicked)="addDialogOpen.set(true)"
+                  class="patrimonio-add-trigger"
+                  #addTrigger
                 >
-                  + Añadir patrimonio
-                </afi-button>
+                  <afi-button
+                    variant="primary"
+                    size="sm"
+                    [iconEnd]="version() === 'v3' ? 'chevron-down' : null"
+                    ariaLabel="Añadir patrimonio"
+                    (clicked)="onAddTriggerClick()"
+                  >
+                    + Añadir patrimonio
+                    @if (version() === 'v3') {
+                      <svg
+                        slot="iconEnd"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    }
+                  </afi-button>
+                  <afi-menu
+                    [open]="addCategoryMenuOpen()"
+                    [anchor]="addTrigger"
+                    placement="bottom-end"
+                    ariaLabel="Categoría de patrimonio a añadir"
+                    (openChange)="addCategoryMenuOpen.set($event)"
+                  >
+                    @for (item of categoryMenuItems; track item.value) {
+                      @if (item.dividerBefore) {
+                        <afi-menu-divider />
+                      }
+                      <afi-menu-item
+                        [label]="item.label"
+                        (clicked)="selectCategory(item.value)"
+                      />
+                    }
+                  </afi-menu>
+                </span>
 
                 <!-- KPI cards — migrated 2026-06-10 from inline divs to
                      <afi-card padding="lg">. The primitive now collapses empty header/footer
@@ -1033,77 +1073,15 @@
            Per-branch fields, titulares, and the Simple/Avanzado toggle will
            be defined as we build each modal variant. -->
       @if (version() === 'v3') {
-        <afi-modal
-          size="md"
-          type="form"
-          title="Añadir activo"
-          [open]="addDialogOpen()"
-          [closeOnEsc]="true"
-          [closeOnBackdrop]="true"
-          (openChange)="addDialogOpen.set($event)"
-        >
-          <div class="patrimonio-dialog-body">
-            <!-- Context summary (dynamic total + delta placeholder) -->
-            <site-dialog-summary-card
-              [title]="dialogContextLabel()"
-              [total]="dialogContextTotal()"
-            />
-
-            <!-- Collapsible subsections template -->
-            <afi-page-header
-              level="subsection"
-              title="Tipo de activo"
-              [collapsible]="true"
-              [borderless]="true"
-            >
-              <p class="patrimonio-dialog-body__placeholder">
-                Tipo de patrimonio select + Simple/Avanzado toggle
-              </p>
-            </afi-page-header>
-
-            <afi-page-header
-              level="subsection"
-              title="Detalles"
-              [collapsible]="true"
-              [borderless]="true"
-            >
-              <p class="patrimonio-dialog-body__placeholder">
-                Branch-specific fields
-              </p>
-            </afi-page-header>
-
-            <afi-page-header
-              level="subsection"
-              title="Valoración"
-              [collapsible]="true"
-              [borderless]="true"
-            >
-              <p class="patrimonio-dialog-body__placeholder">
-                Nombre + Valor actual
-              </p>
-            </afi-page-header>
-
-            <afi-page-header
-              level="subsection"
-              title="Titulares"
-              [collapsible]="true"
-              [borderless]="true"
-            >
-              <p class="patrimonio-dialog-body__placeholder">
-                Titulares block
-              </p>
-            </afi-page-header>
-          </div>
-
-          <ng-container slot="footer">
-            <afi-button variant="ghost" size="sm" (clicked)="addDialogOpen.set(false)">
-              Cancelar
-            </afi-button>
-            <afi-button variant="primary" size="sm" (clicked)="addDialogOpen.set(false)">
-              Aceptar
-            </afi-button>
-          </ng-container>
-        </afi-modal>
+        <site-patrimonio-add-dialog
+          [open]="dialogOpen()"
+          [category]="dialogCategory()"
+          [existing]="editingAsset()"
+          [titularOptions]="dialogTitularOptions()"
+          [entidadOptions]="addEntidadOptions"
+          (openChange)="onAddDialogOpenChange($event)"
+          (saved)="onAddDialogSave($event)"
+        />
       }
 
       <!-- v1/v2 add dialog — Stripe-style: form on the left, live preview chart on the right -->

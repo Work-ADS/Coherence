@@ -19,6 +19,9 @@ import {
   IconButtonComponent,
   InputComponent,
   KbdComponent,
+  MenuComponent,
+  MenuDividerComponent,
+  MenuItemComponent,
   ModalComponent,
   PageHeaderComponent,
   SegmentedControlComponent,
@@ -28,7 +31,7 @@ import {
 } from '@coherence/ui';
 import type { SegmentedOption, SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
-import { DialogSummaryCardComponent } from '../shared/dialog-summary-card.component';
+import { PatrimonioAddDialogComponent } from './patrimonio-add-dialog/patrimonio-add-dialog.component';
 
 // GraphCardHeaderComponent removed 2026-06-10 — per-section headers now use
 // <afi-page-header level="section"> per the canonical migration.
@@ -40,10 +43,12 @@ import type {
   Frecuencia,
   InmobiliarioUso,
   NivelRiesgo,
+  PatrimonioAddMode,
   PatrimonioAsset,
   PatrimonioTipo,
   RentabilidadRiesgo,
   TipoGeneracion,
+  TipoPatrimonioTop,
 } from '../wealth-planner-2026/store';
 import { ActionToastComponent } from '../shared/action-toast.component';
 import { bridgeDesignReviewVersion } from '../shared/design-review-bridge';
@@ -106,6 +111,9 @@ type AddedAsset = {
     IconButtonComponent,
     InputComponent,
     KbdComponent,
+    MenuComponent,
+    MenuDividerComponent,
+    MenuItemComponent,
     ModalComponent,
     PageHeaderComponent,
     SegmentedControlComponent,
@@ -114,7 +122,7 @@ type AddedAsset = {
     TableComponent,
     DemoShellComponent,
     ActionToastComponent,
-    DialogSummaryCardComponent,
+    PatrimonioAddDialogComponent,
     PlannerSidebarComponent,
     PlannerTopBarComponent,
     KeyShortcutDirective,
@@ -135,6 +143,56 @@ export class PatrimonialProposalPage {
   }
 
   readonly addDialogOpen = signal(false);
+  readonly addCategoryMenuOpen = signal(false);
+  readonly activeAddCategory = signal<TipoPatrimonioTop | null>(null);
+
+  readonly categoryMenuItems: ReadonlyArray<{
+    value: TipoPatrimonioTop;
+    label: string;
+    dividerBefore?: boolean;
+  }> = [
+    { value: 'liquidez', label: 'Liquidez' },
+    { value: 'inversion', label: 'Inversiones' },
+    { value: 'inmobiliario', label: 'Inmobiliario' },
+    { value: 'private-equity', label: 'Private equity' },
+    { value: 'plan-pensiones', label: 'Planes de pensiones' },
+    { value: 'participaciones', label: 'Participaciones empresariales' },
+    { value: 'otros-activos', label: 'Otros activos' },
+    { value: 'deudas', label: 'Deuda', dividerBefore: true },
+    { value: 'seguro-vida', label: 'Seguro de vida' },
+  ];
+
+  onAddTriggerClick(): void {
+    if (this.version() === 'v3') {
+      this.addCategoryMenuOpen.set(!this.addCategoryMenuOpen());
+    } else {
+      this.addDialogOpen.set(true);
+    }
+  }
+
+  selectCategory(value: TipoPatrimonioTop): void {
+    this.addCategoryMenuOpen.set(false);
+    this.activeAddCategory.set(value);
+  }
+
+  onAddDialogOpenChange(open: boolean): void {
+    if (!open) this.activeAddCategory.set(null);
+  }
+
+  onAddDialogSave(event: {
+    category: TipoPatrimonioTop;
+    mode: PatrimonioAddMode;
+    inversionType: string | null;
+  }): void {
+    const label = this.categoryMenuItems.find(c => c.value === event.category)?.label ?? '';
+    const suffix = event.inversionType ? ` · ${event.inversionType}` : '';
+    this.savedToastMessage.set(
+      `Borrador de ${label}${suffix} (${event.mode}) — pendiente de implementar.`,
+    );
+    this.savedToastVisible.set(true);
+    window.setTimeout(() => this.savedToastVisible.set(false), 3500);
+  }
+
   readonly rowActionsOpen = signal<string | null>(null);
   readonly addTipo = signal<string>('liquidez');
   readonly addImporte = signal<string>('');
@@ -142,10 +200,10 @@ export class PatrimonialProposalPage {
   readonly addDescripcion = signal<string>('');
   readonly escShortcut: string[] = ['Esc'];
 
-  /** Page-level layout version. V2 (Brief C, Borja 2026-05-25) is the new
-   *  Simple/Avanzado modal default per the brief's open-decision lock; V1 is
-   *  preserved unchanged so seniors can compare; V3 stays as a stub. */
-  readonly version = signal<LayoutVersion>('v2');
+  /** Page-level layout version. V3 (2026-06-17) is the new per-category
+   *  dropdown + dialog shell default; V1 and V2 are preserved unchanged via
+   *  the floating design-review widget so seniors can still compare. */
+  readonly version = signal<LayoutVersion>('v3');
   readonly versions: VersionOption[] = [
     { key: 'v1', label: 'Versión 1' },
     { key: 'v2', label: 'Versión 2' },

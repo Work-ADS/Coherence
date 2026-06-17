@@ -1,0 +1,101 @@
+<afi-modal
+  size="md"
+  type="form"
+  [title]="dialogTitle()"
+  [open]="open()"
+  [closeOnEsc]="true"
+  [closeOnBackdrop]="false"
+  (openChange)="onOpenChange($event)"
+>
+  <div class="patrimonio-add-form" (keydown.enter)="accept()">
+    @if (modeChoiceEnabled()) {
+      <div class="patrimonio-add-form__mode-row">
+        <afi-segmented-control
+          size="sm"
+          ariaLabel="Modo del formulario"
+          [options]="addModeOptions"
+          [value]="addMode()"
+          (valueChange)="onModeChange($event)"
+        />
+      </div>
+    }
+
+    <afi-select
+      label="Tipo"
+      placeholder="Selecciona un tipo"
+      [options]="categoryOptions"
+      [value]="selectedCategory()"
+      (valueChange)="onCategoryChange($event)"
+    />
+
+    @if (selectedCategory() === 'inversion') {
+      <afi-select
+        label="Tipo de inversión"
+        placeholder="Selecciona"
+        [options]="inversionOptions"
+        [value]="inversionType()"
+        (valueChange)="onInversionTypeChange($event)"
+      />
+    }
+
+    <afi-input
+      label="Nombre"
+      [placeholder]="categoryLabel() + ' principal'"
+      [value]="nombre()"
+      (valueChange)="setNombre($event)"
+    />
+
+    <afi-input
+      label="Valor actual"
+      type="number"
+      placeholder="0"
+      [value]="valor()"
+      (valueChange)="setValor($event)"
+    />
+
+    <section class="patrimonio-add-form__titulares">
+      <header class="patrimonio-add-form__titulares-head">
+        <h3 class="patrimonio-add-form__titulares-title">Titulares</h3>
+        <p class="patrimonio-add-form__titulares-hint">
+          Reparto entre los titulares del activo. No tiene por qué sumar 100%.
+        </p>
+      </header>
+
+      <ul class="patrimonio-add-titulares">
+        @for (t of titularOptions(); track t.value) {
+          <li class="patrimonio-add-titulares__row">
+            <span class="patrimonio-add-titulares__label">{{ t.label }}</span>
+            <div class="patrimonio-add-titulares__input-cell">
+              <afi-input
+                type="number"
+                ariaLabel="Porcentaje de {{ t.label }}"
+                [value]="porcentajeFor(t.value)"
+                (valueChange)="setTitularPorcentaje(t.value, $event)"
+              />
+              <span class="patrimonio-add-titulares__unit">%</span>
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+  </div>
+
+  <ng-container slot="footer">
+    <afi-button
+      variant="ghost"
+      size="md"
+      ariaLabel="Cancelar"
+      (clicked)="cancel()"
+    >
+      Cancelar
+    </afi-button>
+    <afi-button
+      variant="primary"
+      size="md"
+      ariaLabel="Guardar activo"
+      (clicked)="accept()"
+    >
+      Guardar
+    </afi-button>
+  </ng-container>
+</afi-modal>

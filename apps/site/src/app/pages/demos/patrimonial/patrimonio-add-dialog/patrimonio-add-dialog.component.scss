@@ -90,12 +90,19 @@
   display: flex;
   align-items: center;
   gap: var(--space-2xs);
+
+  // Collapse the afi-checkbox host's inherited line-height so its bounding
+  // box matches the visual checkbox square instead of the surrounding line-
+  // box. Without this, `align-items: center` aligns the host center (taller
+  // than the box) with the label, pushing the visible box above the text.
+  afi-checkbox {
+    line-height: 1;
+  }
 }
 
 .patrimonio-add-titulares__label {
   font: var(--type-body-md-400);
   color: var(--foreground-primary-default);
-  line-height: 1;
   transition: color var(--duration-fast) var(--easing-standard);
 
   &.is-inactive {

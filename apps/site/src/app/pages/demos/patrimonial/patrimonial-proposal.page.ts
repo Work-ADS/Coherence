@@ -31,13 +31,19 @@ import {
 } from '@coherence/ui';
 import type { SegmentedOption, SelectOption, TableColumn, TableRowAction } from '@coherence/ui';
 
-import { PatrimonioAddDialogComponent } from './patrimonio-add-dialog/patrimonio-add-dialog.component';
+import {
+  PatrimonioAddDialogComponent,
+  type PatrimonioAddDialogPayload,
+} from './patrimonio-add-dialog/patrimonio-add-dialog.component';
 
 // GraphCardHeaderComponent removed 2026-06-10 — per-section headers now use
 // <afi-page-header level="section"> per the canonical migration.
 import { KeyShortcutDirective } from '../../../directives/key-shortcut.directive';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
-import { WealthPlannerStore } from '../wealth-planner-2026/store';
+import {
+  TIPO_PATRIMONIO_TOP_LABEL,
+  WealthPlannerStore,
+} from '../wealth-planner-2026/store';
 import type {
   CrecimientoMode,
   Frecuencia,
@@ -46,6 +52,7 @@ import type {
   PatrimonioAddMode,
   PatrimonioAsset,
   PatrimonioTipo,
+  PatrimonioTitular,
   RentabilidadRiesgo,
   TipoGeneracion,
   TipoPatrimonioTop,
@@ -145,6 +152,17 @@ export class PatrimonialProposalPage {
   readonly addDialogOpen = signal(false);
   readonly addCategoryMenuOpen = signal(false);
   readonly activeAddCategory = signal<TipoPatrimonioTop | null>(null);
+  readonly editingAsset = signal<PatrimonioAsset | null>(null);
+
+  readonly dialogOpen = computed(
+    () => this.activeAddCategory() !== null || this.editingAsset() !== null,
+  );
+
+  readonly dialogCategory = computed<TipoPatrimonioTop | null>(() => {
+    const editing = this.editingAsset();
+    if (editing) return editing.tipoTop ?? this.tipoToTipoTop(editing.tipo);
+    return this.activeAddCategory();
+  });
 
   readonly categoryMenuItems: ReadonlyArray<{
     value: TipoPatrimonioTop;
@@ -176,21 +194,204 @@ export class PatrimonialProposalPage {
   }
 
   onAddDialogOpenChange(open: boolean): void {
-    if (!open) this.activeAddCategory.set(null);
+    if (!open) {
+      this.activeAddCategory.set(null);
+      this.editingAsset.set(null);
+    }
   }
 
-  onAddDialogSave(event: {
-    category: TipoPatrimonioTop;
-    mode: PatrimonioAddMode;
-    inversionType: string | null;
-  }): void {
+  onAddDialogSave(event: PatrimonioAddDialogPayload): void {
     const label = this.categoryMenuItems.find(c => c.value === event.category)?.label ?? '';
-    const suffix = event.inversionType ? ` · ${event.inversionType}` : '';
-    this.savedToastMessage.set(
-      `Borrador de ${label}${suffix} (${event.mode}) — pendiente de implementar.`,
-    );
+    const partial = this.payloadToAssetPartial(event);
+
+    if (event.id) {
+      const existingInAdded = this.addedAssets().find(a => a.row.id === event.id);
+      if (existingInAdded) {
+        // v3-added row — update store in place and replace the row in
+        // addedAssets so the table reflects the edit.
+        this.store.updateAsset(event.id, partial);
+        const built = this.buildAddedAssetFromPayload(event, event.id);
+        this.addedAssets.update(arr =>
+          arr.map(a => (a.row.id === event.id ? built : a)),
+        );
+        this.latestAddedAssetId.set(event.id);
+      } else {
+        // Seed / page-only row: soft-delete the original and surface the
+        // edited copy with a fresh id so it doesn't get re-filtered by the
+        // deletedAssetIds set.
+        this.deletedAssetIds.update((set) => {
+          const next = new Set(set);
+          next.add(event.id!);
+          return next;
+        });
+        const editId = this.makeAssetId();
+        const asset: PatrimonioAsset = { id: editId, ...partial } as PatrimonioAsset;
+        this.store.addAsset(asset);
+        this.addedAssets.update(arr => [
+          this.buildAddedAssetFromPayload(event, editId),
+          ...arr,
+        ]);
+        this.latestAddedAssetId.set(editId);
+      }
+      this.savedToastMessage.set(`${label} actualizado`);
+    } else {
+      const newId = this.makeAssetId();
+      const asset: PatrimonioAsset = { id: newId, ...partial } as PatrimonioAsset;
+      this.store.addAsset(asset);
+      this.addedAssets.update(arr => [
+        this.buildAddedAssetFromPayload(event, newId),
+        ...arr,
+      ]);
+      this.latestAddedAssetId.set(newId);
+      this.savedToastMessage.set(`Activo «${asset.nombre || label}» añadido`);
+    }
+
     this.savedToastVisible.set(true);
     window.setTimeout(() => this.savedToastVisible.set(false), 3500);
+  }
+
+  private makeAssetId(): string {
+    return typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? `patrimonio-${crypto.randomUUID().slice(0, 8)}`
+      : `patrimonio-${Math.random().toString(36).slice(2, 10)}`;
+  }
+
+  private tipoTopToSectionKey(top: TipoPatrimonioTop): string {
+    switch (top) {
+      case 'liquidez':
+        return 'liquidez';
+      case 'inversion':
+        return 'inversiones';
+      case 'inmobiliario':
+        return 'inmobiliario';
+      case 'private-equity':
+        return 'private-equity';
+      case 'plan-pensiones':
+        return 'planes-pensiones';
+      case 'participaciones':
+        return 'participaciones';
+      case 'otros-activos':
+        return 'otros';
+      case 'deudas':
+        return 'deudas';
+      case 'seguro-vida':
+        return 'seguros';
+    }
+  }
+
+  private buildAddedAssetFromPayload(
+    payload: PatrimonioAddDialogPayload,
+    id: string,
+  ): AddedAsset {
+    const sectionKey = this.tipoTopToSectionKey(payload.category);
+    const valorNum = Number.parseFloat(payload.valor) || 0;
+    const valorLabel = this.formatEuro(valorNum);
+    const entidad = payload.entidad || '—';
+    const name = payload.nombre || TIPO_PATRIMONIO_TOP_LABEL[payload.category];
+    return {
+      sectionKey,
+      row: {
+        id,
+        name,
+        entidad,
+        valorNum,
+        cells: this.cellsForNewAsset(sectionKey, valorLabel, entidad),
+      },
+    };
+  }
+
+  /** Map the new v3 TipoPatrimonioTop down to the legacy v1/v2 PatrimonioTipo
+   *  so existing readers (filter chips, downstream tables, etc.) still get the
+   *  right grouping. Seguro de vida and Private equity don't have a 1:1 in the
+   *  legacy enum — collapse to 'otro' (universal catch-all). */
+  private tipoTopToTipo(top: TipoPatrimonioTop): PatrimonioTipo {
+    switch (top) {
+      case 'liquidez':
+        return 'liquidez';
+      case 'inversion':
+        return 'inversion';
+      case 'inmobiliario':
+        return 'inmobiliario';
+      case 'private-equity':
+        return 'inversion';
+      case 'plan-pensiones':
+        return 'pension';
+      case 'participaciones':
+        return 'participacion';
+      case 'otros-activos':
+        return 'otro';
+      case 'deudas':
+        return 'deudas';
+      case 'seguro-vida':
+        return 'otro';
+    }
+  }
+
+  /** Inverse mapping for hydrating the dialog from an asset whose `tipoTop`
+   *  field was never written (seed data + v1/v2 modal output). */
+  private tipoToTipoTop(tipo: PatrimonioTipo): TipoPatrimonioTop {
+    switch (tipo) {
+      case 'liquidez':
+        return 'liquidez';
+      case 'inversion':
+      case 'fondos':
+      case 'acciones-cotizadas':
+        return 'inversion';
+      case 'inmobiliario':
+        return 'inmobiliario';
+      case 'pension':
+        return 'plan-pensiones';
+      case 'participacion':
+      case 'participaciones-empresariales':
+        return 'participaciones';
+      case 'otro':
+      case 'otros':
+        return 'otros-activos';
+      case 'deudas':
+        return 'deudas';
+    }
+  }
+
+  private payloadToAssetPartial(p: PatrimonioAddDialogPayload): Partial<PatrimonioAsset> {
+    const toNumber = (v: string): number | undefined => {
+      if (v === '') return undefined;
+      const n = Number.parseFloat(v);
+      return Number.isFinite(n) ? n : undefined;
+    };
+
+    const titulares: PatrimonioTitular[] = Object.entries(p.titularesActivos)
+      .filter(([, active]) => active)
+      .map(([titularId], i) => ({
+        id: `titular-${titularId}-${i}`,
+        titularId,
+        porcentaje: toNumber(p.titularPorcentajes[titularId] ?? '') ?? 0,
+      }));
+
+    const partial: Partial<PatrimonioAsset> = {
+      nombre: p.nombre,
+      tipo: this.tipoTopToTipo(p.category),
+      tipoTop: p.category,
+      valor: toNumber(p.valor) ?? 0,
+      entidad: p.entidad ?? undefined,
+      addMode: p.mode,
+      tipoInversion: p.inversionType ?? undefined,
+      patrimonioFuturo: p.patrimonioFuturo === 'si',
+      anoObtencion: toNumber(p.anoObtencion),
+      generaIngresos: p.generaIngresos === 'si',
+      frecuencia: p.frecuencia ?? undefined,
+      tipoGeneracion: p.tipoGeneracion,
+      generacionValor:
+        p.tipoGeneracion === 'porcentaje'
+          ? toNumber(p.porcentajeIngresos)
+          : toNumber(p.importeIngresos),
+      crecimientoMode: p.crecimientoMode,
+      crecimientoManual: toNumber(p.crecimientoManual),
+      titulares,
+      revalorizacion:
+        p.tipoRevalorizacion === 'manual' ? toNumber(p.revalorizacionManual) : undefined,
+    };
+
+    return partial;
   }
 
 
@@ -1416,8 +1617,64 @@ export class PatrimonialProposalPage {
       this.openRowDeleteConfirm(event.row);
       return;
     }
-    // TODO(2026-05-28): wire Editar to the patrimonial store once the
-    // detail drawer / edit dialog lands.
+    if (event.action.key === 'edit') {
+      const id = this.rowSelectionKey(event.row);
+      if (!id) return;
+      let asset: PatrimonioAsset | undefined = this.store.patrimonio().find(a => a.id === id);
+      if (!asset) asset = this.synthAssetFromRow(event.row, id);
+      if (asset) this.editingAsset.set(asset);
+    }
+  }
+
+  /** Build a minimal PatrimonioAsset from a table row when the row isn't in
+   *  the store (i.e. it's a hardcoded seed row in `sections[].rows`). Lets
+   *  the edit dialog pre-populate from the visible row data; on save we
+   *  soft-delete the original and surface the edited copy via addedAssets. */
+  private synthAssetFromRow(
+    row: Record<string, unknown>,
+    id: string,
+  ): PatrimonioAsset | undefined {
+    for (const sec of this.sections) {
+      const match = sec.rows.find(
+        (r) => (r.id ?? r.name) === id || r.name === row['name'],
+      );
+      if (!match) continue;
+      const tipoTop = this.sectionKeyToTipoTop(sec.key);
+      return {
+        id,
+        nombre: String(row['name'] ?? match.name),
+        tipo: this.tipoTopToTipo(tipoTop),
+        tipoTop,
+        valor: typeof row['valorNum'] === 'number' ? (row['valorNum'] as number) : match.valorNum,
+        entidad: typeof row['entidad'] === 'string' ? (row['entidad'] as string) : match.entidad,
+      };
+    }
+    return undefined;
+  }
+
+  private sectionKeyToTipoTop(key: string): TipoPatrimonioTop {
+    switch (key) {
+      case 'liquidez':
+        return 'liquidez';
+      case 'inversiones':
+        return 'inversion';
+      case 'inmobiliario':
+        return 'inmobiliario';
+      case 'private-equity':
+        return 'private-equity';
+      case 'planes-pensiones':
+        return 'plan-pensiones';
+      case 'participaciones':
+        return 'participaciones';
+      case 'otros':
+        return 'otros-activos';
+      case 'deudas':
+        return 'deudas';
+      case 'seguros':
+        return 'seguro-vida';
+      default:
+        return 'otros-activos';
+    }
   }
 
   // ---- Filter state ----

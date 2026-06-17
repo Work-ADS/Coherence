@@ -1074,8 +1074,9 @@
            be defined as we build each modal variant. -->
       @if (version() === 'v3') {
         <site-patrimonio-add-dialog
-          [open]="activeAddCategory() !== null"
-          [category]="activeAddCategory()"
+          [open]="dialogOpen()"
+          [category]="dialogCategory()"
+          [existing]="editingAsset()"
           [titularOptions]="dialogTitularOptions()"
           [entidadOptions]="addEntidadOptions"
           (openChange)="onAddDialogOpenChange($event)"

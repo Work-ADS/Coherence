@@ -81,7 +81,7 @@
 
 .patrimonio-add-titulares__row {
   display: grid;
-  grid-template-columns: 1fr minmax(0, 8rem);
+  grid-template-columns: auto 1fr minmax(0, 8rem);
   align-items: center;
   gap: var(--space-md);
 }
@@ -89,16 +89,9 @@
 .patrimonio-add-titulares__label {
   font: var(--type-body-md-400);
   color: var(--foreground-primary-default);
-}
+  transition: color var(--duration-fast) var(--easing-standard);
 
-.patrimonio-add-titulares__input-cell {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: var(--space-2xs);
-}
-
-.patrimonio-add-titulares__unit {
-  font: var(--type-body-md-400);
-  color: var(--foreground-tertiary-default);
+  &.is-inactive {
+    color: var(--foreground-tertiary-default);
+  }
 }

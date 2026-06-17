@@ -10,6 +10,7 @@ import {
 
 import {
   ButtonComponent,
+  CheckboxComponent,
   InputComponent,
   ModalComponent,
   RadioGroupComponent,
@@ -25,6 +26,7 @@ import {
   type CrecimientoMode,
   type Frecuencia,
   type PatrimonioAddMode,
+  type PatrimonioAsset,
   type TipoGeneracion,
   type TipoInversion,
   type TipoPatrimonioTop,
@@ -39,6 +41,7 @@ export type YesNo = 'si' | 'no';
 export type TipoRevalorizacion = 'automatica' | 'manual';
 
 export interface PatrimonioAddDialogPayload {
+  id: string | null;
   category: TipoPatrimonioTop;
   mode: PatrimonioAddMode;
   inversionType: TipoInversion | null;
@@ -56,6 +59,7 @@ export interface PatrimonioAddDialogPayload {
   crecimientoManual: string;
   tipoRevalorizacion: TipoRevalorizacion;
   revalorizacionManual: string;
+  titularesActivos: Record<string, boolean>;
   titularPorcentajes: Record<string, string>;
 }
 
@@ -114,6 +118,7 @@ const REVALORIZACION_OPTIONS: ReadonlyArray<{ value: TipoRevalorizacion; label: 
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ButtonComponent,
+    CheckboxComponent,
     InputComponent,
     ModalComponent,
     RadioGroupComponent,
@@ -127,6 +132,7 @@ const REVALORIZACION_OPTIONS: ReadonlyArray<{ value: TipoRevalorizacion; label: 
 export class PatrimonioAddDialogComponent {
   readonly open = input<boolean>(false);
   readonly category = input<TipoPatrimonioTop | null>(null);
+  readonly existing = input<PatrimonioAsset | null>(null);
   readonly modeChoiceEnabled = input<boolean>(true);
   readonly titularOptions = input<ReadonlyArray<TitularOption>>([]);
   readonly entidadOptions = input<SelectOption[]>([]);
@@ -152,6 +158,7 @@ export class PatrimonioAddDialogComponent {
   readonly crecimientoManual = signal<string>('');
   readonly tipoRevalorizacion = signal<TipoRevalorizacion>('automatica');
   readonly revalorizacionManual = signal<string>('');
+  readonly titularesActivos = signal<Record<string, boolean>>({});
   readonly titularPorcentajes = signal<Record<string, string>>({});
 
   readonly addModeOptions: SegmentedOption[] = [
@@ -180,9 +187,14 @@ export class PatrimonioAddDialogComponent {
     return c ? TIPO_PATRIMONIO_TOP_LABEL[c] : '';
   });
 
+  readonly isEditing = computed(() => this.existing() !== null);
+
   readonly dialogTitle = computed(() => {
     const label = this.categoryLabel();
-    return label ? `Añadir ${label.toLowerCase()}` : 'Añadir activo';
+    if (!label) return this.isEditing() ? 'Editando activo' : 'Añadir activo';
+    return this.isEditing()
+      ? `Editando ${label.toLowerCase()}`
+      : `Añadir ${label.toLowerCase()}`;
   });
 
   readonly isAvanzado = computed(() => this.addMode() === 'avanzado');
@@ -195,6 +207,11 @@ export class PatrimonioAddDialogComponent {
     effect(() => {
       const c = this.category();
       if (c !== null) this.selectedCategory.set(c);
+    });
+
+    effect(() => {
+      const ex = this.existing();
+      if (ex) this.hydrateFromExisting(ex);
     });
   }
 
@@ -287,6 +304,15 @@ export class PatrimonioAddDialogComponent {
     this.revalorizacionManual.set(value === null ? '' : String(value));
   }
 
+  setTitularActivo(id: string | number, checked: boolean): void {
+    const key = String(id);
+    this.titularesActivos.update((curr) => ({ ...curr, [key]: checked }));
+  }
+
+  isTitularActivo(id: string | number): boolean {
+    return this.titularesActivos()[String(id)] === true;
+  }
+
   setTitularPorcentaje(id: string | number, value: string | number | null): void {
     const key = String(id);
     const str = value === null ? '' : String(value);
@@ -305,6 +331,7 @@ export class PatrimonioAddDialogComponent {
     const cat = this.selectedCategory();
     if (cat) {
       this.saved.emit({
+        id: this.existing()?.id ?? null,
         category: cat,
         mode: this.addMode(),
         inversionType: cat === 'inversion' ? this.inversionType() : null,
@@ -334,10 +361,58 @@ export class PatrimonioAddDialogComponent {
         tipoRevalorizacion: this.tipoRevalorizacion(),
         revalorizacionManual:
           this.tipoRevalorizacion() === 'manual' ? this.revalorizacionManual() : '',
+        titularesActivos: this.titularesActivos(),
         titularPorcentajes: this.titularPorcentajes(),
       });
     }
     this.openChange.emit(false);
+  }
+
+  private hydrateFromExisting(asset: PatrimonioAsset): void {
+    if (asset.tipoTop) this.selectedCategory.set(asset.tipoTop);
+    this.addMode.set(asset.addMode ?? 'simple');
+    this.nombre.set(asset.nombre);
+    this.valor.set(Number.isFinite(asset.valor) ? String(asset.valor) : '');
+    this.entidad.set(asset.entidad ?? null);
+    this.inversionType.set(asset.tipoInversion ?? null);
+
+    this.patrimonioFuturo.set(asset.patrimonioFuturo ? 'si' : 'no');
+    this.anoObtencion.set(asset.anoObtencion ? String(asset.anoObtencion) : '');
+
+    this.generaIngresos.set(asset.generaIngresos ? 'si' : 'no');
+    this.frecuencia.set(asset.frecuencia ?? null);
+    this.tipoGeneracion.set(asset.tipoGeneracion ?? 'importe');
+    if (asset.tipoGeneracion === 'porcentaje') {
+      this.porcentajeIngresos.set(
+        asset.generacionValor != null ? String(asset.generacionValor) : '',
+      );
+      this.importeIngresos.set('');
+    } else {
+      this.importeIngresos.set(
+        asset.generacionValor != null ? String(asset.generacionValor) : '',
+      );
+      this.porcentajeIngresos.set('');
+    }
+    this.crecimientoMode.set(asset.crecimientoMode ?? 'mismo-activo');
+    this.crecimientoManual.set(
+      asset.crecimientoManual != null ? String(asset.crecimientoManual) : '',
+    );
+
+    const activos: Record<string, boolean> = {};
+    const porcentajes: Record<string, string> = {};
+    for (const t of asset.titulares ?? []) {
+      activos[t.titularId] = true;
+      porcentajes[t.titularId] = String(t.porcentaje);
+    }
+    this.titularesActivos.set(activos);
+    this.titularPorcentajes.set(porcentajes);
+
+    this.tipoRevalorizacion.set(
+      asset.revalorizacion != null && asset.revalorizacion !== 0 ? 'manual' : 'automatica',
+    );
+    this.revalorizacionManual.set(
+      asset.revalorizacion != null ? String(asset.revalorizacion) : '',
+    );
   }
 
   private resetForm(): void {
@@ -357,6 +432,7 @@ export class PatrimonioAddDialogComponent {
     this.crecimientoManual.set('');
     this.tipoRevalorizacion.set('automatica');
     this.revalorizacionManual.set('');
+    this.titularesActivos.set({});
     this.titularPorcentajes.set({});
   }
 }

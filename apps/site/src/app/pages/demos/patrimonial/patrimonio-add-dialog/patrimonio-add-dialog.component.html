@@ -60,6 +60,7 @@
       label="Valor actual"
       type="number"
       placeholder="0"
+      suffix="€"
       [value]="valor()"
       (valueChange)="setValor($event)"
     />
@@ -191,16 +192,26 @@
       <ul class="patrimonio-add-titulares">
         @for (t of titularOptions(); track t.value) {
           <li class="patrimonio-add-titulares__row">
-            <span class="patrimonio-add-titulares__label">{{ t.label }}</span>
-            <div class="patrimonio-add-titulares__input-cell">
-              <afi-input
-                type="number"
-                ariaLabel="Porcentaje de {{ t.label }}"
-                [value]="porcentajeFor(t.value)"
-                (valueChange)="setTitularPorcentaje(t.value, $event)"
-              />
-              <span class="patrimonio-add-titulares__unit">%</span>
-            </div>
+            <afi-checkbox
+              [checked]="isTitularActivo(t.value)"
+              [ariaLabel]="t.label"
+              size="md"
+              (checkedChange)="setTitularActivo(t.value, $event)"
+            />
+            <span
+              class="patrimonio-add-titulares__label"
+              [class.is-inactive]="!isTitularActivo(t.value)"
+            >
+              {{ t.label }}
+            </span>
+            <afi-input
+              type="number"
+              suffix="%"
+              ariaLabel="Porcentaje de {{ t.label }}"
+              [disabled]="!isTitularActivo(t.value)"
+              [value]="porcentajeFor(t.value)"
+              (valueChange)="setTitularPorcentaje(t.value, $event)"
+            />
           </li>
         }
       </ul>

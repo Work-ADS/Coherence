@@ -158,8 +158,11 @@ export class PatrimonioAddDialogComponent {
   readonly crecimientoManual = signal<string>('');
   readonly tipoRevalorizacion = signal<TipoRevalorizacion>('automatica');
   readonly revalorizacionManual = signal<string>('');
-  readonly titularesActivos = signal<Record<string, boolean>>({});
-  readonly titularPorcentajes = signal<Record<string, string>>({});
+  // Default: Cliente owns 100% of every new activo. The checkbox is disabled
+  // in the template so the user can't drop themselves out; the porcentaje
+  // stays editable (set to 0 if the activo is wholly owned by someone else).
+  readonly titularesActivos = signal<Record<string, boolean>>({ cliente: true });
+  readonly titularPorcentajes = signal<Record<string, string>>({ cliente: '100' });
   readonly titularesManualmente = signal<Set<string>>(new Set());
 
   readonly titularesTotal = computed<number>(() => {
@@ -372,6 +375,14 @@ export class PatrimonioAddDialogComponent {
     return this.titularPorcentajes()[String(id)] ?? '';
   }
 
+  /** The asset is being added to the user's own wealth plan, so the user
+   *  (Cliente) is always at least partly involved. The checkbox is disabled
+   *  to prevent accidental "no titulares" state; the user can still set
+   *  their porcentaje to 0 if the asset is wholly owned by someone else. */
+  isUserTitular(id: string | number): boolean {
+    return String(id) === 'cliente';
+  }
+
   /** Split the remaining percent (after honoring manually-edited titulares)
    *  evenly across the still-auto active titulares. First entry takes any
    *  rounding leftover so the active titulares sum to 100 when no manual
@@ -493,6 +504,13 @@ export class PatrimonioAddDialogComponent {
       // overwrite the user's saved values via auto-distribute.
       manual.add(t.titularId);
     }
+    // No saved titulares (seed asset, freshly migrated v1/v2 row) → default
+    // to Cliente owning the full activo so the dialog opens with a sane,
+    // sum-to-100 state.
+    if (Object.keys(activos).length === 0) {
+      activos['cliente'] = true;
+      porcentajes['cliente'] = '100';
+    }
     this.titularesActivos.set(activos);
     this.titularPorcentajes.set(porcentajes);
     this.titularesManualmente.set(manual);
@@ -522,8 +540,12 @@ export class PatrimonioAddDialogComponent {
     this.crecimientoManual.set('');
     this.tipoRevalorizacion.set('automatica');
     this.revalorizacionManual.set('');
-    this.titularesActivos.set({});
-    this.titularPorcentajes.set({});
+    // Defaults: Cliente owns 100% of the new activo. The checkbox itself is
+    // disabled in the template so the user can't accidentally drop themselves
+    // out — they can still set the porcentaje to 0 if the activo is wholly
+    // owned by someone else.
+    this.titularesActivos.set({ cliente: true });
+    this.titularPorcentajes.set({ cliente: '100' });
     this.titularesManualmente.set(new Set());
   }
 }

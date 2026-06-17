@@ -205,6 +205,7 @@
                 size="sm"
                 [compact]="true"
                 [checked]="isTitularActivo(t.value)"
+                [disabled]="isUserTitular(t.value)"
                 [ariaLabel]="t.label"
                 (checkedChange)="setTitularActivo(t.value, $event)"
               />

@@ -209,6 +209,11 @@
   gap: var(--space-md);
   padding: var(--space-sm);
 
+  // Width of the small Lucide icon next to each section title. Lives on the
+  // wrapper so the list below can compute its indent (title-pad + icon + gap)
+  // and child labels sit at the same x as the section title.
+  --ds-progress-icon-size: 0.875rem;
+
   &__section {
     display: flex;
     flex-direction: column;
@@ -232,8 +237,8 @@
 
   &__title-icon {
     display: inline-flex;
-    width: 0.875rem;
-    height: 0.875rem;
+    width: var(--ds-progress-icon-size);
+    height: var(--ds-progress-icon-size);
     color: currentColor;
     opacity: 0.85;
 
@@ -247,16 +252,19 @@
     flex: 1 1 auto;
   }
 
-  // Item list — afi-nav-item primitives. Left-padding here provides the
-  // indent under each section separator (a job formerly handled by the
-  // bespoke .ds-progress__item left-padding; primitives shouldn't have to
-  // know about the parent layout).
+  // Item list — afi-nav-item primitives. Indent matches the section title's
+  // text-start (title pad + icon + gap) so each child label's first character
+  // sits at the same x as the section title's first character. Child
+  // nav-items clear their own leading pad via `--nav-item-leading-pad: 0` so
+  // the math works at the label level.
   &__list {
     list-style: none;
     margin: 0;
-    padding: 0 0 0 var(--space-md);
+    padding-block: 0;
+    padding-inline: calc(var(--space-sm) + var(--ds-progress-icon-size) + var(--space-xs)) 0;
     display: flex;
     flex-direction: column;
     gap: 0;
+    --nav-item-leading-pad: 0;
   }
 }

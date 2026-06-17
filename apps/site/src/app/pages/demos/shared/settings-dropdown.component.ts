@@ -8,15 +8,25 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { SegmentedControlComponent } from '@coherence/ui';
+import {
+  IconButtonComponent,
+  SegmentedControlComponent,
+  SelectComponent,
+} from '@coherence/ui';
 
 export interface SimulationSettings {
   currency: 'EUR' | 'USD' | 'GBP';
-  rounding: 'units' | 'thousands' | 'millions';
   riskProfile: 'conservative' | 'moderate' | 'aggressive';
   inflationRate: number;
   lifeExpectancy: number;
 }
+
+const INFLATION_STEP = 0.1;
+const INFLATION_MIN = 0;
+const INFLATION_MAX = 20;
+const LIFE_STEP = 1;
+const LIFE_MIN = 50;
+const LIFE_MAX = 120;
 
 /**
  * Settings Dropdown — global simulation settings panel.
@@ -28,7 +38,7 @@ export interface SimulationSettings {
 @Component({
   selector: 'site-settings-dropdown',
   standalone: true,
-  imports: [SegmentedControlComponent],
+  imports: [IconButtonComponent, SegmentedControlComponent, SelectComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './settings-dropdown.component.html',
   styleUrls: ['./settings-dropdown.component.scss'],
@@ -42,9 +52,7 @@ export class SettingsDropdownComponent {
   readonly closed = output<void>();
   readonly settingsChanged = output<SimulationSettings>();
 
-  // Local mutable copies
   readonly currency = signal<'EUR' | 'USD' | 'GBP'>('EUR');
-  readonly rounding = signal<'units' | 'thousands' | 'millions'>('thousands');
   readonly riskProfile = signal<'conservative' | 'moderate' | 'aggressive'>('moderate');
   readonly inflationRate = signal(2.1);
   readonly lifeExpectancy = signal(88);
@@ -53,12 +61,6 @@ export class SettingsDropdownComponent {
     { value: 'EUR', label: 'EUR (€)' },
     { value: 'USD', label: 'USD ($)' },
     { value: 'GBP', label: 'GBP (£)' },
-  ];
-
-  readonly roundingOptions = [
-    { value: 'units', label: 'Unidades' },
-    { value: 'thousands', label: 'Miles' },
-    { value: 'millions', label: 'Millones' },
   ];
 
   readonly riskOptions = [
@@ -85,27 +87,49 @@ export class SettingsDropdownComponent {
     const s = this.settings();
     if (s) {
       this.currency.set(s.currency);
-      this.rounding.set(s.rounding);
       this.riskProfile.set(s.riskProfile);
       this.inflationRate.set(s.inflationRate);
       this.lifeExpectancy.set(s.lifeExpectancy);
     }
   }
 
+  onRiskProfileChange(value: string | number | null): void {
+    if (typeof value === 'string') {
+      this.riskProfile.set(value as 'conservative' | 'moderate' | 'aggressive');
+    }
+  }
+
   onInflationInput(event: Event): void {
     const val = parseFloat((event.target as HTMLInputElement).value);
-    if (!isNaN(val)) this.inflationRate.set(val);
+    if (!isNaN(val)) this.inflationRate.set(this.clamp(val, INFLATION_MIN, INFLATION_MAX));
   }
 
   onLifeExpectancyInput(event: Event): void {
     const val = parseInt((event.target as HTMLInputElement).value, 10);
-    if (!isNaN(val)) this.lifeExpectancy.set(val);
+    if (!isNaN(val)) this.lifeExpectancy.set(this.clamp(val, LIFE_MIN, LIFE_MAX));
+  }
+
+  stepInflation(delta: 1 | -1): void {
+    const next = this.roundToStep(this.inflationRate() + delta * INFLATION_STEP, INFLATION_STEP);
+    this.inflationRate.set(this.clamp(next, INFLATION_MIN, INFLATION_MAX));
+  }
+
+  stepLife(delta: 1 | -1): void {
+    const next = this.lifeExpectancy() + delta * LIFE_STEP;
+    this.lifeExpectancy.set(this.clamp(next, LIFE_MIN, LIFE_MAX));
+  }
+
+  private clamp(value: number, min: number, max: number): number {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  private roundToStep(value: number, step: number): number {
+    return Math.round(value / step) * step;
   }
 
   private emitAndClose(): void {
     this.settingsChanged.emit({
       currency: this.currency(),
-      rounding: this.rounding(),
       riskProfile: this.riskProfile(),
       inflationRate: this.inflationRate(),
       lifeExpectancy: this.lifeExpectancy(),

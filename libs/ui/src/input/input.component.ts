@@ -42,6 +42,9 @@ export class InputComponent implements OnInit {
   readonly prefix = input<string | null>(null);
   readonly suffix = input<string | null>(null);
   readonly ariaLabel = input<string | null>(null);
+  readonly min = input<number | string | null>(null);
+  readonly max = input<number | string | null>(null);
+  readonly step = input<number | string | null>(null);
 
   readonly valueChange = output<string | number | null>();
   readonly focused = output<FocusEvent>();

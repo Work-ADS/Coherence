@@ -119,7 +119,6 @@ export class PlannerTopBarComponent {
   ]);
   readonly simulationSettings = signal<SimulationSettings>({
     currency: 'EUR',
-    rounding: 'thousands',
     riskProfile: 'moderate',
     inflationRate: 2.1,
     lifeExpectancy: 88,

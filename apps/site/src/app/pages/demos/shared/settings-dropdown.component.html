@@ -29,23 +29,14 @@
         />
       </section>
 
-      <!-- Rounding -->
-      <section class="settings-dd__section">
-        <label class="settings-dd__label">Redondeo</label>
-        <afi-segmented-control
-          [options]="roundingOptions"
-          [(value)]="rounding"
-          size="sm"
-        />
-      </section>
-
       <!-- Risk profile -->
       <section class="settings-dd__section">
-        <label class="settings-dd__label">Perfil de riesgo</label>
-        <afi-segmented-control
-          [options]="riskOptions"
-          [(value)]="riskProfile"
+        <afi-select
+          label="Perfil de riesgo"
           size="sm"
+          [options]="riskOptions"
+          [value]="riskProfile()"
+          (valueChange)="onRiskProfileChange($event)"
         />
       </section>
 
@@ -54,36 +45,84 @@
       <!-- Inflation rate -->
       <section class="settings-dd__section settings-dd__section--row">
         <label class="settings-dd__label" for="inflation-input">Inflación esperada</label>
-        <div class="settings-dd__number-field">
-          <input
-            id="inflation-input"
-            type="number"
-            class="settings-dd__number-input"
-            [value]="inflationRate()"
-            (input)="onInflationInput($event)"
-            step="0.1"
-            min="0"
-            max="20"
-          />
-          <span class="settings-dd__unit">%</span>
+        <div class="settings-dd__stepper">
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Disminuir inflación esperada"
+            (clicked)="stepInflation(-1)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </afi-icon-button>
+          <div class="settings-dd__stepper-field">
+            <input
+              id="inflation-input"
+              type="number"
+              class="settings-dd__stepper-input"
+              [value]="inflationRate()"
+              (input)="onInflationInput($event)"
+              step="0.1"
+              min="0"
+              max="20"
+              inputmode="decimal"
+            />
+            <span class="settings-dd__stepper-unit">%</span>
+          </div>
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Aumentar inflación esperada"
+            (clicked)="stepInflation(1)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </afi-icon-button>
         </div>
       </section>
 
       <!-- Life expectancy -->
       <section class="settings-dd__section settings-dd__section--row">
         <label class="settings-dd__label" for="life-input">Esperanza de vida</label>
-        <div class="settings-dd__number-field">
-          <input
-            id="life-input"
-            type="number"
-            class="settings-dd__number-input"
-            [value]="lifeExpectancy()"
-            (input)="onLifeExpectancyInput($event)"
-            step="1"
-            min="50"
-            max="120"
-          />
-          <span class="settings-dd__unit">años</span>
+        <div class="settings-dd__stepper">
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Disminuir esperanza de vida"
+            (clicked)="stepLife(-1)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </afi-icon-button>
+          <div class="settings-dd__stepper-field">
+            <input
+              id="life-input"
+              type="number"
+              class="settings-dd__stepper-input"
+              [value]="lifeExpectancy()"
+              (input)="onLifeExpectancyInput($event)"
+              step="1"
+              min="50"
+              max="120"
+              inputmode="numeric"
+            />
+            <span class="settings-dd__stepper-unit">años</span>
+          </div>
+          <afi-icon-button
+            variant="ghost"
+            size="sm"
+            ariaLabel="Aumentar esperanza de vida"
+            (clicked)="stepLife(1)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </afi-icon-button>
         </div>
       </section>
     </div>

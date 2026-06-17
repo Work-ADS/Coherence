@@ -64,9 +64,9 @@ let nextItemId = 0;
   `,
   template: `
     <label [for]="radioId"
-           [class]="compact() ? 'inline-flex items-center gap-1.5 cursor-pointer' : 'inline-flex items-start gap-space-2 min-h-[var(--dimension-11)] min-w-[var(--dimension-11)] cursor-pointer'"
+           [class]="labelClasses()"
            [class.opacity-50]="disabled()" [class.cursor-not-allowed]="disabled()">
-      <span [class]="compact() ? 'relative flex items-center justify-center' : 'relative flex items-center justify-center min-h-[var(--dimension-11)] min-w-[var(--dimension-11)]'">
+      <span [class]="circleWrapperClasses()">
         <!-- Hidden native radio for a11y -->
         <input
           type="radio"
@@ -85,8 +85,8 @@ let nextItemId = 0;
         </span>
       </span>
       @if (label()) {
-        <span [class]="compact() ? 'flex flex-col' : 'flex flex-col pt-[var(--dimension-2-5)]'">
-          <span [class]="compact() ? 'text-body-sm text-canvas-fg' : 'text-body-md text-canvas-fg'">{{ label() }}</span>
+        <span class="flex flex-col">
+          <span [class]="labelTextClasses()">{{ label() }}</span>
           @if (hint()) {
             <span [id]="hintId" class="text-body-sm text-neutral-500">{{ hint() }}</span>
           }
@@ -112,13 +112,49 @@ export class RadioGroupItemComponent {
   readonly radioId = `afi-radio-${nextItemId++}`;
   readonly hintId = `${this.radioId}-hint`;
 
+  /**
+   * Outer label uses grid so the radio circle (column 1) and the label-line
+   * (column 2 row 1) share a row. `items-start` keeps the circle aligned to
+   * the FIRST line of the label; if a hint is present it hangs below in
+   * column 2 row 2 without dragging the circle down. Column gap is
+   * `--space-1` so the circle sits a tight 4 spacing unit away from the
+   * label text.
+   */
+  readonly labelClasses = computed(() =>
+    this.compact()
+      ? 'inline-flex items-center gap-1.5 cursor-pointer'
+      : 'inline-grid grid-cols-[auto_1fr] items-start gap-x-space-1 cursor-pointer',
+  );
+
+  /**
+   * Circle wrapper is sized to match the ring (md → 20×20 via h-5 w-5, sm →
+   * 16×16 via h-4 w-4). The wrapper sits as the leading grid column, so the
+   * radio's LEFT EDGE lines up exactly with the grid column edge — i.e. the
+   * same x as the section title / field label above it.
+   */
+  readonly circleWrapperClasses = computed(() => {
+    const size = this.size() === 'sm' ? 'h-4 w-4' : 'h-5 w-5';
+    return `relative flex items-center justify-center ${size}`;
+  });
+
+  /**
+   * Label-line line-height matches the circle height. Without this the
+   * default `text-body-md` line-height could be larger than the circle's
+   * box, pushing the visual centers apart.
+   */
+  readonly labelTextClasses = computed(() =>
+    this.compact()
+      ? 'text-body-sm text-canvas-fg leading-4'
+      : 'text-body-md text-canvas-fg leading-5',
+  );
+
   readonly ringClasses = computed(() => {
     const isSelected = this.selected();
     const hasError = false; // error state managed by parent
 
     return [
       'afi-radio-ring',
-      'absolute flex items-center justify-center rounded-full border-2 cursor-pointer',
+      'flex items-center justify-center rounded-full border-2 cursor-pointer',
       'peer-focus-visible:ring-2 peer-focus-visible:ring-border-focus peer-focus-visible:ring-offset-2',
       dotSizeClasses[this.size()],
       isSelected ? 'bg-action border-action' : 'bg-control border-border-hairline',

@@ -47,6 +47,13 @@
   margin-inline: auto;
   padding-block: var(--space-xl);
   padding-inline: var(--space-lg);
+
+  // CSS variables inherit through Angular's view encapsulation, so setting
+  // `--page-header-padding-inline: 0` here cascades to the projected
+  // afi-page-header. With its own padding stripped, the title's left edge
+  // lines up with content boxes (afi-section, empty-state cards) that don't
+  // add their own outer padding inside .ops__page.
+  --page-header-padding-inline: 0;
 }
 
 // Version toggle is `display: none !important` globally (see

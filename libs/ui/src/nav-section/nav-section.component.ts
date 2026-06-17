@@ -110,7 +110,7 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
   /** Hide the section's own trigger row (use when an external nav-item acts as the parent) */
   readonly hideHeader = input<boolean>(false);
   /** Position of the expand/collapse chevron */
-  readonly chevronPosition = input<'left' | 'right'>('left');
+  readonly chevronPosition = input<'left' | 'right'>('right');
 
   readonly expandedChange = output<boolean>();
   readonly parentClicked = output<{ event: MouseEvent }>();

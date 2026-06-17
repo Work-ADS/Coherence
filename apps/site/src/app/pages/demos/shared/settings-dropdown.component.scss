@@ -100,6 +100,11 @@
 .settings-dd__label {
   font: var(--type-body-sm-400);
   color: var(--foreground-tertiary-default);
+
+  // In row sections (label + stepper on one line) keep the label whole.
+  .settings-dd__section--row & {
+    white-space: nowrap;
+  }
 }
 
 .settings-dd__divider {
@@ -115,23 +120,33 @@
 // this to be a clean fix; tracked as future primitive work. For now, fall
 // through to the default height which is slightly oversized in this dropdown.
 
-// ─── Number input ────────────────────────────────────────────────────────────
-.settings-dd__number-field {
+// ─── Number stepper ──────────────────────────────────────────────────────────
+// Mirrors the Patrimonio min/max stepper pattern (minus button + centered
+// number input with suffix + plus button) so all "type a number" controls in
+// the planner feel the same.
+.settings-dd__stepper {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2xs);
+}
+
+.settings-dd__stepper-field {
   display: flex;
   align-items: center;
   gap: var(--space-2xs);
 }
 
-.settings-dd__number-input {
-  width: var(--dimension-14);
-  height: var(--dimension-7); 
-  padding: 0 var(--space-xs);
+.settings-dd__stepper-input {
+  width: var(--dimension-12);
+  height: var(--dimension-7);
+  padding-inline: var(--space-xs);
   border: var(--border-width-hairline) solid var(--border-hairline);
   border-radius: var(--radius-control);
   background: var(--surface-raised);
   font: var(--type-body-sm-400);
   color: var(--foreground-primary-default);
-  text-align: right;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
   outline: none;
 
   &:focus {
@@ -139,7 +154,7 @@
     box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
   }
 
-  // Hide native spinner
+  // Hide native spinner — explicit +/- buttons replace it.
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -148,9 +163,10 @@
   -moz-appearance: textfield;
 }
 
-.settings-dd__unit {
+.settings-dd__stepper-unit {
   font: var(--type-body-sm-400);
   color: var(--foreground-tertiary-default);
+  white-space: nowrap;
 }
 
 // ─── Footer ──────────────────────────────────────────────────────────────────

@@ -5,7 +5,7 @@
 .nav-section__trigger {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
   width: 100%;
   padding: var(--space-xs);
   border-radius: var(--radius-sm);
@@ -23,8 +23,8 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--border-focus);
-    outline-offset: 2px;
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
   }
 
   &.has-active-child {
@@ -89,14 +89,21 @@
   position: relative;
   padding-left: var(--space-xs);
 
+  /* Child nav-items align their label with the section label above.
+     With trigger gap = `--space-sm` and trigger padding-inline-start = `--space-xs`,
+     the section label sits at `space-xs + icon + space-sm` from the section's left
+     edge. Children reach the same x by clearing their own leading padding so the
+     child icon sits directly under the section icon. */
+  --nav-item-leading-pad: 0;
+
   /* Vertical guide line */
   &::before {
     content: '';
     position: absolute;
-    left: 4px;
+    left: var(--space-2xs);
     top: 0;
     bottom: 0;
-    width: 1px;
+    width: var(--border-width-hairline);
     background: var(--border-subtle);
   }
 
@@ -105,29 +112,29 @@
     background: var(--border-subtle);
     background-image: linear-gradient(
       to bottom,
-      var(--brand-primary-border-default) 0px,
-      var(--brand-primary-border-default) var(--trail-end-y, 0px),
-      var(--border-subtle) var(--trail-end-y, 0px)
+      var(--brand-primary-border-default) 0,
+      var(--brand-primary-border-default) var(--trail-end-y, 0),
+      var(--border-subtle) var(--trail-end-y, 0)
     );
     transition: background-image var(--duration-base) var(--easing-standard);
   }
 }
 
-/* Horizontal stubs for child items — removed for cleaner alignment */
-.nav-section__children ::ng-deep > :not(.nav-section__marker) {
-  position: relative;
-}
+/* nav-item itself sets `:host { position: relative; }`, so the marker dot
+   below positions correctly relative to each child without a cross-scope
+   selector here. */
 
-/* Active marker dot */
+/* Active marker dot — uses the same x as the vertical guide line minus one
+   border width so the dot visually sits on the line. */
 .nav-section__marker {
   position: absolute;
-  left: 3px;
-  top: var(--marker-y, 0px);
-  width: 2px;
-  height: 16px;
+  left: calc(var(--space-2xs) - var(--border-width-hairline));
+  top: var(--marker-y, 0);
+  width: var(--border-width-thick);
+  height: var(--dimension-4);
   transform: translateY(-50%);
   background: var(--brand-primary-border-default);
-  border-radius: 1px;
+  border-radius: var(--border-width-hairline);
   opacity: 0;
   z-index: 1;
   pointer-events: none;
@@ -142,6 +149,7 @@
 /* No tree lines variant */
 .nav-section__children--flat {
   padding-left: var(--space-xs);
+  --nav-item-leading-pad: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

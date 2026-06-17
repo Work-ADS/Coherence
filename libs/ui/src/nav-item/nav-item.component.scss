@@ -9,6 +9,7 @@
   gap: var(--space-sm);
   width: 100%;
   padding: var(--space-xs);
+  padding-inline-start: var(--nav-item-leading-pad, var(--space-xs));
   border-radius: var(--radius-sm);
   border: none;
   background: var(--nav-item-background-default);
@@ -30,8 +31,8 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--border-focus);
-    outline-offset: 2px;
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
   }
 
   &.is-active {
@@ -83,13 +84,13 @@
   margin-left: auto;
   font: var(--type-body-sm-500);
   background: var(--feedback-error-background-default);
-  color: var(--feedback-error-foreground-default, #fff);
+  color: var(--feedback-error-foreground-default);
   border-radius: var(--radius-full);
-  padding: 1px var(--space-2xs);
+  padding: var(--border-width-hairline) var(--space-2xs);
   line-height: 1;
-  min-width: 18px;
+  min-width: 1.125rem;
   text-align: center;
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 
 .nav-item__chevron {

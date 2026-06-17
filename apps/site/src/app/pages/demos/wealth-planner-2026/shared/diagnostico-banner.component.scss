@@ -10,11 +10,16 @@
 .diagnostico-banner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
-  gap: var(--space-lg);
+  // Column gap separates summary + projection on wide rows; row gap stacks
+  // them cleanly when the row wraps.
+  gap: var(--space-md) var(--space-lg);
   padding-block: var(--space-md);
-  padding-inline: var(--space-xl);
+  // Aligns the banner's first glyph with the visible back-chevron in the
+  // planner top-bar above. `.ptb` itself sits at `--space-lg` from the rail,
+  // and the chevron sits another `--space-xs` inside the icon-button — so
+  // the banner needs the same combined inset to match.
+  padding-inline: calc(var(--space-lg) + var(--space-xs));
   background: var(--surface-subtle);
   border-block-end: var(--border-width-hairline) solid var(--border-subtle);
 }

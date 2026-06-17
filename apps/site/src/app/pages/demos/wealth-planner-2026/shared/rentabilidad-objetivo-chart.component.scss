@@ -9,7 +9,7 @@
 
   // Layout knobs — kept as host-level vars so consumers can override per
   // composition without forking the SCSS.
-  --rentabilidad-chart-bar-width: var(--space-lg);
+  --rentabilidad-chart-bar-width: var(--dimension-12);
   --rentabilidad-chart-bar-height: 18rem;
   --rentabilidad-chart-pointer-line: 4rem;
   --rentabilidad-chart-pointer-gap: var(--space-md);
@@ -33,9 +33,11 @@
 }
 
 .rentabilidad-chart__column-label {
-  font: var(--type-body-sm-400);
+  font: var(--type-section-eyebrow);
   color: var(--foreground-secondary-default);
   text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .rentabilidad-chart__plot {
@@ -73,21 +75,32 @@
   }
 }
 
+// Band scale labels sit INSIDE the bar at the top of each band so they
+// can't collide with the right-side `rentabilidad mínima necesaria`
+// pointer (whose value drifts band-to-band). The bar is widened to
+// `--dimension-12` to make room for the widest label ("10 %").
 .rentabilidad-chart__band-label {
   position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: calc(100% + var(--space-2xs));
-  transform: translateY(-50%);
-  font: var(--type-body-sm-400);
+  inset-block-start: var(--space-2xs);
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  text-align: center;
+  font: var(--type-body-sm-500);
   color: var(--foreground-primary-default);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+  pointer-events: none;
 
   &--base {
     inset-block-start: auto;
-    inset-block-end: 0;
-    transform: translateY(50%);
+    inset-block-end: var(--space-2xs);
   }
+}
+
+// White text on the dark red band; everywhere else the default dark text
+// keeps enough contrast (yellow/green/light-green).
+.rentabilidad-chart__band--error .rentabilidad-chart__band-label {
+  color: var(--foreground-inverse-default);
 }
 
 // Pointers — absolutely positioned to the plot. The vertical position is

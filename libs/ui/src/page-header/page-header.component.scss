@@ -39,12 +39,12 @@
 // every consumer got 0 padding from Tailwind preflight.
 // ---------------------------------------------------------------------------
 :host(.page-header--default) {
-  padding-inline: var(--space-lg);
+  padding-inline: var(--page-header-padding-inline, var(--space-lg));
   padding-block: var(--space-sm);
 }
 
 :host(.page-header--compact) {
-  padding-inline: var(--space-lg);
+  padding-inline: var(--page-header-padding-inline, var(--space-lg));
   padding-block: var(--space-xs);
 }
 

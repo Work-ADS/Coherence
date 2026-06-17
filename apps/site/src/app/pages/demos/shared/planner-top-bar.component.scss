@@ -8,13 +8,17 @@
   align-items: center;
   justify-content: space-between;
   height: var(--shell-header-height); // aligns with afi-sidebar's .sidebar__logo-row
-  padding-inline: var(--space-md);
+  // Match the page-header / section content rail. Combined with the leading-
+  // and trailing-flush nudges below, the leading visible icon and the trailing
+  // visible icon sit exactly at the same x as the content below.
+  padding-inline: var(--space-lg);
   border-bottom: var(--border-width-hairline) solid var(--border-hairline);
   background: var(--surface-default);
   flex-shrink: 0;
   // Positioning context for the mobile-centered brand mark.
   position: relative;
 }
+
 
 .ptb__start {
   display: flex;

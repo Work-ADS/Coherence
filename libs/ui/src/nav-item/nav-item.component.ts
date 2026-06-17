@@ -25,6 +25,7 @@ import {
       [class.is-disabled]="disabled()"
       [attr.aria-current]="active() ? 'page' : null"
       [attr.aria-label]="label()"
+      [attr.title]="label()"
       [disabled]="disabled()">
       <!-- Icon slot -->
       @if (showIcon()) {
@@ -58,12 +59,12 @@ import {
       }
     </button>
 
-    <!-- Tooltip (visible when sidebar collapsed, on hover/focus) -->
-    @if (!sidebarExpanded()) {
-      <span role="tooltip" class="nav-item__tooltip">
-        {{ label() }}
-      </span>
-    }
+    <!-- Custom DS tooltip — always rendered, revealed on hover via CSS. The
+         button also carries a native title attribute as a fallback for
+         truncated labels in expanded sidebar widths. -->
+    <span role="tooltip" class="nav-item__tooltip">
+      {{ label() }}
+    </span>
   `,
 })
 export class NavItemComponent {

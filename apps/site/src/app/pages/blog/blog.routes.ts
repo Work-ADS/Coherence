@@ -61,4 +61,12 @@ export const blog_routes: Routes = [
         (m) => m.MixinBrandBindPage,
       ),
   },
+  // UI moderna en 2026 — research + commitments for the visual redesign
+  {
+    path: 'ui-moderno-2026',
+    loadComponent: () =>
+      import('./ui-moderno-2026/ui-moderno-2026.page').then(
+        (m) => m.UiModerno2026Page,
+      ),
+  },
 ];

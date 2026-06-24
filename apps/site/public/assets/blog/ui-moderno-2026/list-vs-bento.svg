@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="600" height="380" fill="#F5F6FA"/>
+
+  <!-- Cycling state eyebrow -->
+  <text x="300" y="32" fill="#94A3B8" font-size="11" letter-spacing="1" text-anchor="middle">
+    LISTA PLANA
+    <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+  </text>
+  <text x="300" y="32" fill="#3B82F6" font-size="11" letter-spacing="1" text-anchor="middle">
+    REJILLA BENTO
+    <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+  </text>
+
+  <!-- Static title -->
+  <text x="300" y="56" fill="#1A2434" font-size="17" font-weight="600" text-anchor="middle">De la lista al bento</text>
+
+  <!-- Animated canvas: 4 rectangles morphing between layouts -->
+  <g transform="translate(180, 80)">
+    <!-- Rect 1: top row → big tile -->
+    <rect rx="6" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5">
+      <animate attributeName="x" values="0;0;0;0;0" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="0;0;0;0;0" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="width" values="240;240;148;148;240" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="height" values="42;42;120;120;42" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    </rect>
+
+    <!-- Rect 2: second row → tall narrow tile -->
+    <rect rx="6" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5">
+      <animate attributeName="x" values="0;0;156;156;0" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="y" values="50;50;0;0;50" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="width" values="240;240;84;84;240" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="height" values="42;42;120;120;42" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    </rect>
+
+    <!-- Rect 3: third row → small bottom-left tile -->
+    <rect rx="6" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5">
+      <animate attributeName="x" values="0;0;0;0;0" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="100;100;128;128;100" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="width" values="240;240;100;100;240" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="height" values="42;42;64;64;42" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    </rect>
+
+    <!-- Rect 4: fourth row → wide bottom-right tile -->
+    <rect rx="6" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5">
+      <animate attributeName="x" values="0;0;108;108;0" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="y" values="150;150;128;128;150" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="width" values="240;240;132;132;240" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="height" values="42;42;64;64;42" keyTimes="0;0.25;0.5;0.75;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    </rect>
+  </g>
+
+  <!-- Caption -->
+  <text x="300" y="320" fill="#6B7280" font-size="12" text-anchor="middle">La estructura adapta su jerarquía al contenido</text>
+</svg>

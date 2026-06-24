@@ -21,6 +21,26 @@ interface BlogPost {
 // editorial pieces.
 const POSTS: BlogPost[] = [
   {
+    slug: 'ui-moderno-2026',
+    eyebrow: {
+      es: 'INVESTIGACIÓN · UI 2026',
+      en: 'RESEARCH · UI 2026',
+    },
+    title: {
+      es: '¿Qué es UI moderna en 2026? Contexto del rediseño visual de Afi',
+      en: 'What is modern UI in 2026? Context for Afi\'s visual redesign',
+    },
+    date: {
+      es: '24 junio 2026',
+      en: 'June 24, 2026',
+    },
+    intro: {
+      es: 'El encargo era un moodboard; la investigación nos llevó a un sitio distinto. Cuatro fuentes, ocho temas, cinco compromisos — la base sobre la que se construye el resto del rediseño.',
+      en: 'The brief was a moodboard; research took us somewhere else. Four sources, eight themes, five commitments — the foundation the rest of the redesign rests on.',
+    },
+    thumb: 'whitelabel',
+  },
+  {
     slug: 'stitch-vs-claude',
     eyebrow: {
       es: 'REUNIÓN DE ÁREA · IA',

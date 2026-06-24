@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="600" height="380" fill="#F5F6FA"/>
+
+  <!-- Cycling intent eyebrow -->
+  <text x="300" y="32" fill="#3B82F6" font-size="11" letter-spacing="1" text-anchor="middle">
+    INTENCIÓN — PATRIMONIO
+    <animate attributeName="opacity" values="1;1;0;0;0;0;1" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+  </text>
+  <text x="300" y="32" fill="#3B82F6" font-size="11" letter-spacing="1" text-anchor="middle">
+    INTENCIÓN — PLANIFICACIÓN
+    <animate attributeName="opacity" values="0;0;1;1;0;0;0" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+  </text>
+  <text x="300" y="32" fill="#3B82F6" font-size="11" letter-spacing="1" text-anchor="middle">
+    INTENCIÓN — RIESGOS
+    <animate attributeName="opacity" values="0;0;0;0;1;1;0" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+  </text>
+
+  <!-- Static title -->
+  <text x="300" y="56" fill="#1A2434" font-size="17" font-weight="600" text-anchor="middle">Mismo producto, layout adaptado</text>
+
+  <!-- Device frame -->
+  <rect x="180" y="80" width="240" height="220" rx="10" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+  <rect x="200" y="100" width="200" height="14" rx="3" fill="#1A2434" opacity="0.85"/>
+
+  <!-- Animated content rectangles -->
+  <!-- Rect 1: full row → big chart → sidebar -->
+  <rect rx="4" fill="#E2E8F0">
+    <animate attributeName="x" values="200;200;200;200;200;200;200" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="y" values="130;130;130;130;130;130;130" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="width" values="200;200;200;200;55;55;200" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="height" values="30;30;60;60;150;150;30" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+  </rect>
+
+  <!-- Rect 2: second row → left card → top card -->
+  <rect rx="4" fill="#E2E8F0">
+    <animate attributeName="x" values="200;200;200;200;265;265;200" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="y" values="170;170;200;200;130;130;170" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="width" values="200;200;95;95;135;135;200" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="height" values="30;30;35;35;42;42;30" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+  </rect>
+
+  <!-- Rect 3: third row → right card (accent) → middle card -->
+  <rect rx="4" fill="#3B82F6" opacity="0.2">
+    <animate attributeName="x" values="200;200;305;305;265;265;200" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="y" values="210;210;200;200;182;182;210" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="width" values="200;200;95;95;135;135;200" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="height" values="30;30;35;35;42;42;30" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+  </rect>
+
+  <!-- Rect 4: fourth row → button bar → bottom card -->
+  <rect rx="4" fill="#E2E8F0">
+    <animate attributeName="x" values="200;200;200;200;265;265;200" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="y" values="250;250;245;245;234;234;250" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="width" values="200;200;200;200;135;135;200" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+    <animate attributeName="height" values="30;30;35;35;46;46;30" keyTimes="0;0.2;0.4;0.55;0.75;0.9;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+  </rect>
+
+  <!-- Caption -->
+  <text x="300" y="335" fill="#6B7280" font-size="12" text-anchor="middle">Cuando cambia la intención, la composición se reorganiza</text>
+</svg>

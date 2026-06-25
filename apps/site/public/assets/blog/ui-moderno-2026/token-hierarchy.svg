@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 380" font-family="system-ui, -apple-system, sans-serif">
+  <style>
+    @keyframes prim {
+      0%, 35% { fill: #3B82F6; }
+      45%, 80% { fill: #EC4899; }
+      90%, 100% { fill: #3B82F6; }
+    }
+    @keyframes sem {
+      0%, 38% { fill: #3B82F6; }
+      48%, 83% { fill: #EC4899; }
+      93%, 100% { fill: #3B82F6; }
+    }
+    @keyframes comp-solid {
+      0%, 41% { fill: #3B82F6; }
+      51%, 86% { fill: #EC4899; }
+      96%, 100% { fill: #3B82F6; }
+    }
+    @keyframes comp-light {
+      0%, 41% { fill: #3B82F6; opacity: 0.18; }
+      51%, 86% { fill: #EC4899; opacity: 0.18; }
+      96%, 100% { fill: #3B82F6; opacity: 0.18; }
+    }
+    @keyframes comp-text {
+      0%, 41% { fill: #3B82F6; }
+      51%, 86% { fill: #EC4899; }
+      96%, 100% { fill: #3B82F6; }
+    }
+    @keyframes hex {
+      0%, 35% { opacity: 1; }
+      37%, 43% { opacity: 0; }
+      45%, 80% { opacity: 0; }
+      90%, 100% { opacity: 1; }
+    }
+    @keyframes hex-alt {
+      0%, 43% { opacity: 0; }
+      45%, 80% { opacity: 1; }
+      82%, 100% { opacity: 0; }
+    }
+    .swatch { animation: prim 6s infinite; }
+    .sem-chip { animation: sem 6s infinite; }
+    .comp-fill { animation: comp-solid 6s infinite; }
+    .comp-light-fill { animation: comp-light 6s infinite; }
+    .comp-text { animation: comp-text 6s infinite; }
+    .hex-a { animation: hex 6s infinite; }
+    .hex-b { animation: hex-alt 6s infinite; }
+  </style>
+
+  <rect width="700" height="380" fill="#F5F6FA"/>
+
+  <text x="350" y="32" fill="#94A3B8" font-size="11" letter-spacing="1" text-anchor="middle">TOKENOPS</text>
+  <text x="350" y="56" fill="#1A2434" font-size="17" font-weight="600" text-anchor="middle">Una decisión, tres capas, todo en cascada</text>
+
+  <!-- Tier 1: Primitive -->
+  <g transform="translate(40, 100)">
+    <text x="0" y="14" fill="#94A3B8" font-size="10" letter-spacing="1">PRIMITIVO</text>
+    <rect x="0" y="24" width="160" height="60" rx="8" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect class="swatch" x="14" y="38" width="32" height="32" rx="4"/>
+    <text x="58" y="52" fill="#1A2434" font-size="13" font-weight="500">brand-500</text>
+    <text class="hex-a" x="58" y="68" fill="#6B7280" font-size="11" font-family="ui-monospace, monospace">#3B82F6</text>
+    <text class="hex-b" x="58" y="68" fill="#6B7280" font-size="11" font-family="ui-monospace, monospace">#EC4899</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <g transform="translate(210, 144)">
+    <line x1="0" y1="0" x2="50" y2="0" stroke="#CBD5E0" stroke-width="1.5" stroke-dasharray="4 2"/>
+    <polygon points="50,-4 58,0 50,4" fill="#CBD5E0"/>
+  </g>
+
+  <!-- Tier 2: Semantic -->
+  <g transform="translate(280, 100)">
+    <text x="0" y="14" fill="#94A3B8" font-size="10" letter-spacing="1">SEMÁNTICO</text>
+    <rect x="0" y="24" width="200" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1"/>
+    <circle class="sem-chip" cx="14" cy="35" r="5"/>
+    <text x="28" y="40" fill="#1A2434" font-size="11" font-family="ui-monospace, monospace">brand-primary-bg</text>
+
+    <rect x="0" y="54" width="200" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1"/>
+    <circle class="sem-chip" cx="14" cy="65" r="5"/>
+    <text x="28" y="70" fill="#1A2434" font-size="11" font-family="ui-monospace, monospace">link-color</text>
+
+    <rect x="0" y="84" width="200" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1"/>
+    <circle class="sem-chip" cx="14" cy="95" r="5"/>
+    <text x="28" y="100" fill="#1A2434" font-size="11" font-family="ui-monospace, monospace">badge-primary-bg</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <g transform="translate(500, 144)">
+    <line x1="0" y1="0" x2="50" y2="0" stroke="#CBD5E0" stroke-width="1.5" stroke-dasharray="4 2"/>
+    <polygon points="50,-4 58,0 50,4" fill="#CBD5E0"/>
+  </g>
+
+  <!-- Tier 3: Components -->
+  <g transform="translate(570, 100)">
+    <text x="0" y="14" fill="#94A3B8" font-size="10" letter-spacing="1">COMPONENTES</text>
+
+    <!-- Button -->
+    <rect class="comp-fill" x="0" y="24" width="100" height="30" rx="6"/>
+    <text x="50" y="44" fill="#FFFFFF" font-size="11" font-weight="600" text-anchor="middle">Confirmar</text>
+
+    <!-- Link -->
+    <text class="comp-text" x="0" y="76" font-size="12" font-weight="500">Ver más →</text>
+
+    <!-- Badge -->
+    <rect class="comp-light-fill" x="0" y="92" width="60" height="20" rx="10"/>
+    <text class="comp-text" x="30" y="106" font-size="10" font-weight="700" text-anchor="middle">NUEVO</text>
+  </g>
+
+  <!-- Caption -->
+  <text x="350" y="260" fill="#6B7280" font-size="12" text-anchor="middle">Cambia un token primitivo · los semánticos se actualizan · los componentes se repintan</text>
+
+  <text x="350" y="288" fill="#94A3B8" font-size="11" font-style="italic" text-anchor="middle">brand-500 → brand-primary-bg → button.background</text>
+
+  <text x="350" y="332" fill="#1A2434" font-size="12" font-weight="500" text-anchor="middle">Sin tocar ningún componente</text>
+</svg>

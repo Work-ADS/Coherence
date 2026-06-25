@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="800" height="420" fill="#F5F6FA"/>
+
+  <!-- LEFT PANEL: Tree with slow-traversing dot -->
+  <g transform="translate(50, 30)">
+    <text x="155" y="20" fill="#94A3B8" font-size="11" letter-spacing="1" text-anchor="middle">NAVEGACIÓN TRADICIONAL</text>
+    <text x="155" y="42" fill="#1A2434" font-size="17" font-weight="600" text-anchor="middle">Árbol de menús</text>
+
+    <!-- Static tree -->
+    <rect x="125" y="70" width="60" height="30" rx="4" fill="#1A2434"/>
+    <rect x="60" y="130" width="60" height="30" rx="4" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="190" y="130" width="60" height="30" rx="4" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <line x1="155" y1="100" x2="90" y2="130" stroke="#94A3B8" stroke-width="1.5"/>
+    <line x1="155" y1="100" x2="220" y2="130" stroke="#94A3B8" stroke-width="1.5"/>
+
+    <rect x="30" y="190" width="50" height="26" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="100" y="190" width="50" height="26" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="170" y="190" width="50" height="26" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="240" y="190" width="50" height="26" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <line x1="90" y1="160" x2="55" y2="190" stroke="#94A3B8" stroke-width="1.5"/>
+    <line x1="90" y1="160" x2="125" y2="190" stroke="#94A3B8" stroke-width="1.5"/>
+    <line x1="220" y1="160" x2="195" y2="190" stroke="#94A3B8" stroke-width="1.5"/>
+    <line x1="220" y1="160" x2="265" y2="190" stroke="#94A3B8" stroke-width="1.5"/>
+
+    <rect x="15" y="250" width="40" height="22" rx="2" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="65" y="250" width="40" height="22" rx="2" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="115" y="250" width="40" height="22" rx="2" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="165" y="250" width="40" height="22" rx="2" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="215" y="250" width="40" height="22" rx="2" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="265" y="250" width="40" height="22" rx="2" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <line x1="55" y1="216" x2="35" y2="250" stroke="#94A3B8" stroke-width="1.5"/>
+    <line x1="55" y1="216" x2="85" y2="250" stroke="#94A3B8" stroke-width="1.5"/>
+    <line x1="125" y1="216" x2="135" y2="250" stroke="#94A3B8" stroke-width="1.5"/>
+    <line x1="195" y1="216" x2="185" y2="250" stroke="#94A3B8" stroke-width="1.5"/>
+    <line x1="195" y1="216" x2="235" y2="250" stroke="#94A3B8" stroke-width="1.5"/>
+    <line x1="265" y1="216" x2="285" y2="250" stroke="#94A3B8" stroke-width="1.5"/>
+
+    <rect x="125" y="320" width="60" height="30" rx="4" fill="#3B82F6"/>
+    <text x="155" y="340" fill="#FFFFFF" font-size="10" font-weight="500" text-anchor="middle">Resultado</text>
+    <line x1="35" y1="272" x2="125" y2="320" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4 2"/>
+
+    <!-- Slow dot traversing the tree (6s loop) -->
+    <circle r="7" fill="#3B82F6" opacity="0">
+      <animate attributeName="cx" values="155;155;90;55;35;155;155" keyTimes="0;0.08;0.22;0.36;0.5;0.7;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="cy" values="85;85;145;203;261;335;335" keyTimes="0;0.08;0.22;0.36;0.5;0.7;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="opacity" values="0;1;1;1;1;1;0" keyTimes="0;0.05;0.22;0.36;0.5;0.85;1" dur="6s" repeatCount="indefinite"/>
+    </circle>
+
+    <text x="155" y="385" fill="#6B7280" font-size="12" text-anchor="middle">Muchos saltos hasta llegar</text>
+  </g>
+
+  <!-- RIGHT PANEL: Intent flow with fast dot -->
+  <g transform="translate(460, 30)">
+    <text x="155" y="20" fill="#3B82F6" font-size="11" letter-spacing="1" text-anchor="middle">ACCESO POR INTENCIÓN</text>
+    <text x="155" y="42" fill="#1A2434" font-size="17" font-weight="600" text-anchor="middle">Acceso directo guiado</text>
+
+    <rect x="20" y="80" width="120" height="38" rx="6" fill="#3B82F6" opacity="0.15" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="80" y="104" fill="#1A2434" font-size="12" font-weight="500" text-anchor="middle">Intención 1</text>
+
+    <rect x="170" y="80" width="120" height="38" rx="6" fill="#3B82F6" opacity="0.15" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="230" y="104" fill="#1A2434" font-size="12" font-weight="500" text-anchor="middle">Intención 2</text>
+
+    <rect x="40" y="160" width="40" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="90" y="160" width="40" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="190" y="160" width="40" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+    <rect x="240" y="160" width="40" height="22" rx="3" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="1.5"/>
+
+    <line x1="60" y1="118" x2="60" y2="160" stroke="#3B82F6" stroke-width="1.5"/>
+    <line x1="100" y1="118" x2="110" y2="160" stroke="#3B82F6" stroke-width="1.5"/>
+    <line x1="210" y1="118" x2="210" y2="160" stroke="#3B82F6" stroke-width="1.5"/>
+    <line x1="250" y1="118" x2="260" y2="160" stroke="#3B82F6" stroke-width="1.5"/>
+
+    <rect x="30" y="220" width="100" height="38" rx="6" fill="#3B82F6"/>
+    <text x="80" y="244" fill="#FFFFFF" font-size="12" font-weight="500" text-anchor="middle">Resultado</text>
+
+    <rect x="180" y="220" width="100" height="38" rx="6" fill="#3B82F6"/>
+    <text x="230" y="244" fill="#FFFFFF" font-size="12" font-weight="500" text-anchor="middle">Resultado</text>
+
+    <line x1="60" y1="182" x2="60" y2="220" stroke="#3B82F6" stroke-width="1.5"/>
+    <line x1="110" y1="182" x2="110" y2="220" stroke="#3B82F6" stroke-width="1.5"/>
+    <line x1="210" y1="182" x2="210" y2="220" stroke="#3B82F6" stroke-width="1.5"/>
+    <line x1="260" y1="182" x2="260" y2="220" stroke="#3B82F6" stroke-width="1.5"/>
+
+    <!-- Fast dot (2s loop, 3x faster than tree side) -->
+    <circle r="7" fill="#3B82F6" opacity="0">
+      <animate attributeName="cx" values="80;80;60;80;80" keyTimes="0;0.1;0.4;0.7;1" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="cy" values="99;99;171;239;239" keyTimes="0;0.1;0.4;0.7;1" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
+      <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;0.1;0.4;0.85;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+
+    <text x="155" y="385" fill="#6B7280" font-size="12" text-anchor="middle">Una intención, ruta corta</text>
+  </g>
+</svg>

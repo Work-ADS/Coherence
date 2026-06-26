@@ -45,51 +45,40 @@
 
     <div class="card-grid">
       @for (card of recentWork(); track card.routerLink) {
-        <a [routerLink]="card.routerLink" class="card">
+        <a
+          [routerLink]="card.routerLink"
+          class="card"
+          [attr.aria-label]="card.title + ' — ' + card.eyebrow"
+        >
           <div class="card__thumb" aria-hidden="true">
             @switch (card.thumb) {
               @case ('wealth-planner') { <site-evolution-glyph /> }
               @case ('sarevi')         { <site-whitelabel-frame-glyph /> }
               @case ('whitelabel')     { <site-collapse-glyph /> }
               @case ('slides')         { <site-slides-glyph /> }
+              @case ('video') {
+                @if (card.videoSrc) {
+                  <video
+                    class="card__video"
+                    [src]="card.videoSrc"
+                    [poster]="card.videoPoster || ''"
+                    loop
+                    playsinline
+                    preload="auto"
+                    (loadedmetadata)="playMuted($event)"
+                    (canplay)="playMuted($event)"
+                    (loadeddata)="playMuted($event)"
+                    (waiting)="playMuted($event)"
+                    (pause)="playMuted($event)"
+                  ></video>
+                }
+              }
             }
-          </div>
-          <div class="card__body">
-            <span class="card__eyebrow">{{ card.eyebrow }}</span>
-            <span class="card__title">{{ card.title }}</span>
-            <span class="card__blurb">{{ card.blurb }}</span>
           </div>
         </a>
       }
     </div>
   </section>
 
-  <!-- For developers -->
-  <section class="dev">
-    <div class="dev__header">
-      <div class="dev__line"></div>
-      <h2 class="dev__title">
-        {{ lang() === 'es' ? 'Para desarrolladores' : 'For developers' }}
-      </h2>
-      <div class="dev__line"></div>
-    </div>
-
-    <p class="dev__blurb">
-      @if (lang() === 'es') {
-        Descarga la capa semántica de la marca activa como un único archivo CSS plano —
-        valores hex/px ya resueltos, sin <code>var()</code> ni prefijos de marca. Listo
-        para integrarse en tu proyecto.
-      } @else {
-        Download the active brand’s semantic layer as a single flat CSS file —
-        hex/px values already resolved, no <code>var()</code> chains, no brand prefixes.
-        Drop straight into your project.
-      }
-    </p>
-
-    <div class="dev__actions">
-      <afi-button variant="secondary" (clicked)="downloadSemanticCss()">
-        {{ lang() === 'es' ? 'Descargar CSS semántico' : 'Download semantic CSS' }}
-      </afi-button>
-    </div>
-  </section>
+  <!-- For developers section removed — brand-in-flux. -->
 </div>

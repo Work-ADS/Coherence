@@ -6,3 +6,8 @@ dist/
 *.jpg
 *.jpeg
 .DS_Store
+
+# Thumbnails ship with the build — override the *.png / *.jpg block above.
+!apps/site/public/assets/thumbnails/**/*.png
+!apps/site/public/assets/thumbnails/**/*.jpg
+!apps/site/public/assets/thumbnails/**/*.jpeg

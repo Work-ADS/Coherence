@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import { LanguageService } from '../../services/language.service';
 
-type Thumb = 'whitelabel' | 'talk';
+type Thumb = 'whitelabel' | 'talk' | 'video';
 
 interface BlogPost {
   slug: string;
@@ -12,14 +12,38 @@ interface BlogPost {
   date: { es: string; en: string };
   intro: { es: string; en: string };
   thumb: Thumb;
+  /** Optional video src (relative to /assets); only used when thumb === 'video'. */
+  videoSrc?: string;
+  /** Optional poster image shown before video starts and on pause. */
+  videoPoster?: string;
   /** Optional route override; defaults to `/blog/<slug>`. */
   to?: string;
 }
 
-// Most-recent first. Other historical posts (decisiones-* / iteracion-* /
-// bitácora) moved under their demo case studies — they aren't standalone
-// editorial pieces.
+// Trimmed to the three featured pieces. Other historical posts moved under
+// their demo case studies — they aren't standalone editorial pieces.
 const POSTS: BlogPost[] = [
+  {
+    slug: 'brand-and-personas',
+    eyebrow: {
+      es: 'ESTRATEGIA · MARCA',
+      en: 'STRATEGY · BRAND',
+    },
+    title: {
+      es: 'Marca y personas: la base que el moodboard no puede inventar',
+      en: 'Brand and personas: what the moodboard can\'t make up',
+    },
+    date: {
+      es: '25 junio 2026',
+      en: 'June 25, 2026',
+    },
+    intro: {
+      es: 'Antes de abrir Figma, el brief: seis campos de marca y cinco personas. Por qué los demos en código nos dejan enseñar casos de uso de verdad, no sólo pantallas.',
+      en: 'Before opening Figma, the brief: six brand fields and five personas. Why code-based demos let us show real use cases, not just screens.',
+    },
+    thumb: 'video',
+    videoSrc: 'assets/thumbnails/brand-and-personas.mp4',
+  },
   {
     slug: 'ui-moderno-2026',
     eyebrow: {
@@ -38,48 +62,32 @@ const POSTS: BlogPost[] = [
       es: 'El encargo era un moodboard; la investigación nos llevó a un sitio distinto. Cuatro fuentes, ocho temas, cinco compromisos — la base sobre la que se construye el resto del rediseño.',
       en: 'The brief was a moodboard; research took us somewhere else. Four sources, eight themes, five commitments — the foundation the rest of the redesign rests on.',
     },
-    thumb: 'whitelabel',
+    thumb: 'video',
+    videoSrc: 'assets/thumbnails/ui-moderno-2026.mp4',
+    videoPoster: 'assets/thumbnails/ui-moderno-2026-poster.jpg',
   },
   {
-    slug: 'stitch-vs-claude',
+    slug: 'wealth-planner-2026',
     eyebrow: {
-      es: 'REUNIÓN DE ÁREA · IA',
-      en: 'AREA MEETING · AI',
+      es: 'DEMO · DIGITAL SOLUTIONS',
+      en: 'DEMO · DIGITAL SOLUTIONS',
     },
     title: {
-      es: 'Stitch o Claude: qué herramienta de IA usamos para conceptos de cliente',
-      en: 'Stitch or Claude: which AI tool we use for client concepts',
+      es: 'Wealth Planner 2026',
+      en: 'Wealth Planner 2026',
     },
     date: {
-      es: '28 mayo 2026',
-      en: 'May 28, 2026',
+      es: 'Junio 2026',
+      en: 'June 2026',
     },
     intro: {
-      es: 'Mismo encargo, cuatro escenarios de marca y una recomendación al final. Presentación navegable con las flechas del teclado.',
-      en: 'Same brief, four brand scenarios, one recommendation at the end. Keyboard-navigable slide deck.',
+      es: 'Rediseño completo del planificador patrimonial — situación, objetivos, diagnóstico, plan de acción. Cinco iteraciones con asesores senior.',
+      en: 'Full redesign of the wealth planner — situation, goals, diagnosis, action plan. Five iterations with senior advisors.',
     },
-    thumb: 'talk',
-    to: '/talks/stitch-vs-claude',
-  },
-  {
-    slug: 'mixin-brand-bind',
-    eyebrow: {
-      es: 'TOKENS · WHITE LABEL',
-      en: 'TOKENS · WHITE LABEL',
-    },
-    title: {
-      es: 'White label en una línea: el mixin coherence-brand-bind',
-      en: 'White label in one line: the coherence-brand-bind mixin',
-    },
-    date: {
-      es: '25 mayo 2026',
-      en: 'May 25, 2026',
-    },
-    intro: {
-      es: 'De 110 líneas de mapeos por marca a un @include de 8. Cómo cerramos la conversación de tokens del 22 de mayo sin tocar el contrato con programación.',
-      en: 'From 110 lines of per-brand mappings to an 8-line @include. How we closed the token conversation from May 22 without touching the contract with engineering.',
-    },
-    thumb: 'whitelabel',
+    thumb: 'video',
+    videoSrc: 'assets/thumbnails/wealth-planner-2026.mp4',
+    videoPoster: 'assets/thumbnails/wealth-planner-2026-poster.jpg',
+    to: '/demos/wealth-planner-2026',
   },
 ];
 
@@ -90,6 +98,8 @@ interface ViewPost {
   date: string;
   intro: string;
   thumb: Thumb;
+  videoSrc?: string;
+  videoPoster?: string;
   to?: string;
 }
 
@@ -125,7 +135,23 @@ export class BlogLandingPage {
       date: isEn ? p.date.en : p.date.es,
       intro: isEn ? p.intro.en : p.intro.es,
       thumb: p.thumb,
+      videoSrc: p.videoSrc,
+      videoPoster: p.videoPoster,
       to: p.to,
     }));
   });
+
+  /**
+   * Ensure the thumb video is muted, then start playback. Browsers block
+   * autoplay on unmuted videos; Angular's bare `muted` attribute doesn't
+   * survive the template renderer, so we set it explicitly here once the
+   * video can play.
+   */
+  playMuted(event: Event): void {
+    const video = event.target as HTMLVideoElement;
+    video.muted = true;
+    video.play().catch(() => {
+      /* autoplay blocked: video will start on next user interaction */
+    });
+  }
 }

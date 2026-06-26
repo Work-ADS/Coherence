@@ -8,7 +8,11 @@
   <ul class="blog-landing__list">
     @for (post of posts(); track post.slug) {
       <li class="blog-landing__item">
-        <a class="blog-landing__card" [routerLink]="post.to || ('/blog/' + post.slug)">
+        <a
+          class="blog-landing__card"
+          [routerLink]="post.to || ('/blog/' + post.slug)"
+          [attr.aria-label]="post.title + ' — ' + post.eyebrow"
+        >
           <div class="blog-landing__card-thumb blog-landing__card-thumb--{{ post.thumb }}" aria-hidden="true">
             <!-- Whitelabel: brand stripes that swap on hover -->
             @if (post.thumb === 'whitelabel') {
@@ -28,14 +32,22 @@
                 <span class="thumb-talk__arrow" aria-hidden="true">→</span>
               </div>
             }
-          </div>
-          <div class="blog-landing__card-body">
-            <div class="blog-landing__card-meta">
-              <span class="blog-landing__card-eyebrow">{{ post.eyebrow }}</span>
-              <span class="blog-landing__card-date">{{ post.date }}</span>
-            </div>
-            <span class="blog-landing__card-title">{{ post.title }}</span>
-            <span class="blog-landing__card-intro">{{ post.intro }}</span>
+            <!-- Video: looping MP4, autoplays muted -->
+            @if (post.thumb === 'video' && post.videoSrc) {
+              <video
+                class="thumb-video"
+                [src]="post.videoSrc"
+                [poster]="post.videoPoster || ''"
+                loop
+                playsinline
+                preload="auto"
+                (loadedmetadata)="playMuted($event)"
+                (canplay)="playMuted($event)"
+                (loadeddata)="playMuted($event)"
+                (waiting)="playMuted($event)"
+                (pause)="playMuted($event)"
+              ></video>
+            }
           </div>
         </a>
       </li>

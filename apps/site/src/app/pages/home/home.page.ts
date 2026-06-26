@@ -9,14 +9,17 @@ import {
   WhitelabelFrameGlyphComponent,
 } from '../../components/glyphs';
 import { LanguageService } from '../../services/language.service';
-import { exportSemanticCss } from '../../utils/export-semantic-css';
 
 interface WorkCard {
   routerLink: string;
   eyebrow: { es: string; en: string };
   title: { es: string; en: string };
   blurb: { es: string; en: string };
-  thumb: 'wealth-planner' | 'sarevi' | 'whitelabel' | 'slides';
+  thumb: 'wealth-planner' | 'sarevi' | 'whitelabel' | 'slides' | 'video';
+  /** Optional video src (relative to /assets); only used when thumb === 'video'. */
+  videoSrc?: string;
+  /** Optional poster image shown before video starts and on pause. */
+  videoPoster?: string;
 }
 
 @Component({
@@ -41,20 +44,39 @@ export class HomePage {
 
   private readonly cards: WorkCard[] = [
     {
-      routerLink: '/talks/stitch-vs-claude',
+      routerLink: '/blog/brand-and-personas',
       eyebrow: {
-        es: 'REUNIÓN DE ÁREA · IA',
-        en: 'AREA MEETING · AI',
+        es: 'ESTRATEGIA · MARCA',
+        en: 'STRATEGY · BRAND',
       },
       title: {
-        es: 'Stitch vs Claude para conceptos de cliente',
-        en: 'Stitch vs Claude for client concepts',
+        es: 'Marca y personas',
+        en: 'Brand and personas',
       },
       blurb: {
-        es: 'Mismo prompt, cinco escenarios de marca y una recomendación. Slide-show navegable con flechas y design.md descargable.',
-        en: 'Same prompt, five brand scenarios, one recommendation. Arrow-navigable slide-show with a downloadable design.md.',
+        es: 'Antes del moodboard, el brief: seis campos de marca y cinco personas que los demos en código sí pueden modelar.',
+        en: 'Before the moodboard, the brief: six brand fields and five personas the code-based demos can actually model.',
       },
-      thumb: 'slides',
+      thumb: 'video',
+      videoSrc: 'assets/thumbnails/brand-and-personas.mp4',
+    },
+    {
+      routerLink: '/blog/ui-moderno-2026',
+      eyebrow: {
+        es: 'INVESTIGACIÓN · UI 2026',
+        en: 'RESEARCH · UI 2026',
+      },
+      title: {
+        es: '¿Qué es UI moderna en 2026?',
+        en: 'What is modern UI in 2026?',
+      },
+      blurb: {
+        es: 'Cuatro fuentes, ocho temas, cinco compromisos. La base sobre la que se construye el rediseño visual de Afi.',
+        en: 'Four sources, eight themes, five commitments. The foundation Afi’s visual redesign rests on.',
+      },
+      thumb: 'video',
+      videoSrc: 'assets/thumbnails/ui-moderno-2026.mp4',
+      videoPoster: 'assets/thumbnails/ui-moderno-2026-poster.jpg',
     },
     {
       routerLink: '/demos/wealth-planner-2026',
@@ -70,39 +92,9 @@ export class HomePage {
         es: 'Rediseño completo — patrimonio, evolución y simulación. Cinco iteraciones con seniors.',
         en: 'Full redesign — wealth, evolution, simulation. Five iterations with senior advisors.',
       },
-      thumb: 'wealth-planner',
-    },
-    {
-      routerLink: '/demos/laboral-kutxa-sarevi',
-      eyebrow: {
-        es: 'DEMO · WHITE-LABEL',
-        en: 'DEMO · WHITE-LABEL',
-      },
-      title: {
-        es: 'Laboral Kutxa Sarevi',
-        en: 'Laboral Kutxa Sarevi',
-      },
-      blurb: {
-        es: 'Simulador de eficiencia energética sobre Coherence DS aplicando la paleta magenta + berenjena + verde de LK.',
-        en: 'Energy-efficiency simulator on Coherence DS using LK’s magenta + aubergine + green palette.',
-      },
-      thumb: 'sarevi',
-    },
-    {
-      routerLink: '/blog/mixin-brand-bind',
-      eyebrow: {
-        es: 'BLOG · TOKENS',
-        en: 'BLOG · TOKENS',
-      },
-      title: {
-        es: 'White-label en una línea',
-        en: 'White-label in one line',
-      },
-      blurb: {
-        es: 'Cómo el mixin coherence-brand-bind colapsa 90 líneas de mapeo por marca en un @include de 8.',
-        en: 'How the coherence-brand-bind mixin collapses 90 lines of per-brand mapping into an 8-line @include.',
-      },
-      thumb: 'whitelabel',
+      thumb: 'video',
+      videoSrc: 'assets/thumbnails/wealth-planner-2026.mp4',
+      videoPoster: 'assets/thumbnails/wealth-planner-2026-poster.jpg',
     },
   ];
 
@@ -111,13 +103,25 @@ export class HomePage {
     this.cards.map((c) => ({
       routerLink: c.routerLink,
       thumb: c.thumb,
+      videoSrc: c.videoSrc,
+      videoPoster: c.videoPoster,
       eyebrow: c.eyebrow[this.lang()],
       title: c.title[this.lang()],
       blurb: c.blurb[this.lang()],
     })),
   );
 
-  downloadSemanticCss(): void {
-    exportSemanticCss();
+  /**
+   * Ensure the thumb video is muted, then start playback. Browsers block
+   * autoplay on unmuted videos; Angular's bare `muted` attribute doesn't
+   * survive the template renderer, so we set it explicitly here once the
+   * video can play.
+   */
+  playMuted(event: Event): void {
+    const video = event.target as HTMLVideoElement;
+    video.muted = true;
+    video.play().catch(() => {
+      /* autoplay blocked: video will start on next user interaction */
+    });
   }
 }

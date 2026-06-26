@@ -43,6 +43,10 @@
   max-width: var(--content-prose);
 }
 
+// ─── Bento grid: hero + two stacked side tiles ────────────────────────────────
+//
+// Mobile: single column, equal heights.
+// Desktop (md breakpoint and up): asymmetric 2-col, first post spans both rows as hero.
 .blog-landing__list {
   list-style: none;
   padding: 0;
@@ -52,7 +56,12 @@
   gap: var(--space-lg);
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-rows: repeat(2, minmax(var(--dimension-60), 1fr));
+
+    & > :nth-child(1) {
+      grid-row: 1 / 3;
+    }
   }
 }
 
@@ -91,6 +100,13 @@
   position: relative;
   aspect-ratio: 16 / 9;
   overflow: hidden;
+  flex: 1;
+  min-height: 0;
+
+  // In bento (md breakpoint and up), drop the fixed aspect ratio so the thumb fills the cell.
+  @media (min-width: 768px) {
+    aspect-ratio: auto;
+  }
 
   &--whitelabel {
     background: linear-gradient(135deg, var(--color-thumb-dark-deep) 0%, var(--color-thumb-dark-medium) 100%);
@@ -103,6 +119,20 @@
   &--talk {
     background: linear-gradient(135deg, var(--color-afi-azul-profundo-500) 0%, var(--color-afi-naranja-500, var(--color-afi-azul-500)) 100%);
   }
+
+  &--video {
+    background: var(--surface-quiet);
+  }
+}
+
+// ─── Video thumb: looping MP4, fills the 16:9 frame ─────────────────────────
+.thumb-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .blog-landing__card-body {

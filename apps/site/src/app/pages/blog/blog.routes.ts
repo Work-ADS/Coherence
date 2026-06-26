@@ -69,4 +69,12 @@ export const blog_routes: Routes = [
         (m) => m.UiModerno2026Page,
       ),
   },
+  // Brand and personas — Part 2 of the redesign series
+  {
+    path: 'brand-and-personas',
+    loadComponent: () =>
+      import('./brand-and-personas/brand-and-personas.page').then(
+        (m) => m.BrandAndPersonasPage,
+      ),
+  },
 ];

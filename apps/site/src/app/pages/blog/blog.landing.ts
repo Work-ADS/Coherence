@@ -51,16 +51,16 @@ const POSTS: BlogPost[] = [
       en: 'RESEARCH · UI 2026',
     },
     title: {
-      es: '¿Qué es UI moderna en 2026? Contexto del rediseño visual de Afi',
-      en: 'What is modern UI in 2026? Context for Afi\'s visual redesign',
+      es: '¿Qué es UI moderna en 2026? La base de investigación del rediseño de Afi',
+      en: 'What is modern UI in 2026? The research behind Afi\'s redesign',
     },
     date: {
       es: '24 junio 2026',
       en: 'June 24, 2026',
     },
     intro: {
-      es: 'El encargo era un moodboard; la investigación nos llevó a un sitio distinto. Cuatro fuentes, ocho temas, cinco compromisos — la base sobre la que se construye el resto del rediseño.',
-      en: 'The brief was a moodboard; research took us somewhere else. Four sources, eight themes, five commitments — the foundation the rest of the redesign rests on.',
+      es: 'El encargo decía «moderno»; fuimos a averiguar qué significa. Convertir un adjetivo en definición: cómo se ven las interfaces, cómo se comportan, qué las sostiene — y cinco compromisos que se nos pueden auditar.',
+      en: 'The brief said "modern"; we went looking for what that means. Turning an adjective into a definition: how interfaces look, how they behave, what holds them together — and five commitments you can hold us to.',
     },
     thumb: 'video',
     videoSrc: 'assets/thumbnails/ui-moderno-2026.mp4',

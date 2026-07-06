@@ -54,12 +54,16 @@
   <!-- Baseline -->
   <line x1="60" y1="280" x2="640" y2="280" stroke="#CBD5E0" stroke-width="1.5"/>
 
-  <!-- Moving marker (chevron) above current bar -->
-  <g class="marker" transform="translate(230, 195)">
-    <circle cx="0" cy="0" r="8" fill="#3B82F6"/>
-    <circle cx="0" cy="0" r="14" fill="#3B82F6" opacity="0.2"/>
-    <text x="0" y="-18" fill="#1A2434" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle" class="label-now">AFI HOY</text>
-    <text x="0" y="-18" fill="#3B82F6" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle" class="label-target">AFI MAÑANA</text>
+  <!-- Moving marker (chevron) above current bar.
+       Outer group holds the static position; the CSS transform animation
+       lives on the inner group so it doesn't override the placement. -->
+  <g transform="translate(230, 195)">
+    <g class="marker">
+      <circle cx="0" cy="0" r="8" fill="#3B82F6"/>
+      <circle cx="0" cy="0" r="14" fill="#3B82F6" opacity="0.2"/>
+      <text x="0" y="-18" fill="#1A2434" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle" class="label-now">AFI HOY</text>
+      <text x="0" y="-18" fill="#3B82F6" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle" class="label-target">AFI MAÑANA</text>
+    </g>
   </g>
 
   <!-- Path between current and target -->

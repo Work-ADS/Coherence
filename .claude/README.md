@@ -8,7 +8,7 @@ Folder convention from Boris Cherny's "practical tips" talk: **commands, skills,
 |---|---|---|
 | `commands/<name>.md` | Reusable slash commands (checked in, shared with the team) | `/<name>` — filename *is* the command name |
 | `skills/<name>/SKILL.md` | On-demand skills (currently **user-level** at `~/.claude/skills/`) | Auto-triggered by their `description` |
-| `agents/<name>.md` | Subagents *(not yet created — see below)* | `@<name>` / Agent tool |
+| `agents/<name>.md` | Subagents — thin pointers to the canonical harnesses in `docs/agents/` | `@<name>` / Agent tool |
 | `settings.local.json` | Personal permissions/allowlist (not shared) | — |
 | `launch.json` | Dev-server config for preview tooling | — |
 
@@ -33,9 +33,9 @@ claude -p "/shipped 1 week ago" --output-format json
 
 `afi-redaccion` and `growth-audit` (in `~/.claude/skills/`) are **on-demand** tools — you fire them when you need them, they don't recur. Forcing them into loops would be wrong. They stay skills. `growth-audit` is generic (keep it user-level, cross-project); `afi-redaccion` is Afi-specific and references `docs/rules/copy-skill.md` (candidate to move project-level into `.claude/skills/` if the team should share it).
 
-## Not yet done — real subagents
+## Subagents (`agents/`)
 
-`docs/agents/` holds prose harnesses (`planner`, `builder`, `tester`, `ds-token-guardian`, `case-study`) that are **not wired as Claude Code subagents**. Converting them to `.claude/agents/<name>.md` (frontmatter + system prompt) would make them invokable by name. Deferred to avoid duplicating those large files and causing drift — decide single-source-of-truth first.
+`planner`, `builder`, `tester`, `ds-token-guardian`, `case-study` — each is a thin wrapper (frontmatter + a short prompt that reads its `docs/agents/<name>.md` harness). **`docs/agents/` stays the single source of truth**; the subagent bodies are pointers, so there's no duplication to drift. Edit behavior in `docs/agents/`, never in the wrapper.
 
 ## CLAUDE.md note
 

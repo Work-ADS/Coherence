@@ -37,6 +37,10 @@ claude -p "/shipped 1 week ago" --output-format json
 
 `planner`, `builder`, `tester`, `ds-token-guardian`, `case-study` — each is a thin wrapper (frontmatter + a short prompt that reads its `docs/agents/<name>.md` harness). **`docs/agents/` stays the single source of truth**; the subagent bodies are pointers, so there's no duplication to drift. Edit behavior in `docs/agents/`, never in the wrapper.
 
-## CLAUDE.md note
+## CLAUDE.md / context load (audited)
 
-Boris: keep `CLAUDE.md` short — it loads into every session's context. Ours points to `AGENTS.md` (7KB) → **11 required-read files**. That's a heavy per-session load worth auditing separately.
+Boris: keep `CLAUDE.md` short — it loads into every session's context. Ours is **466 bytes** ✅.
+
+The weight was in AGENTS.md's "read before coding" mandate (~60k tokens). Audit outcome:
+- **11 build-skill reads kept mandatory** — they're needed in-context while coding.
+- **`docs/strategy/plan.md` (124KB / ~31k tokens) demoted to on-demand** — it's strategy, not build rules. Read it only for planning/scoping/strategy work, not every coding task. Halves the pre-coding load.

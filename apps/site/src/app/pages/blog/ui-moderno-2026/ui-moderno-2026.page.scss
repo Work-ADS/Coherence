@@ -110,6 +110,12 @@
     font: var(--type-subtitle-body);
   }
 
+  &__h4 {
+    margin: var(--space-sm) 0 0;
+    color: var(--canvas-fg);
+    font: var(--type-body-lg-500);
+  }
+
   &__p {
     margin: 0;
     color: var(--canvas-fg);

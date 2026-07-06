@@ -1,4 +1,6 @@
-This is the Coherence DS repo. First read `docs/strategy/plan.md`.
+This is the Coherence DS repo.
+
+`docs/strategy/plan.md` is the strategy/roadmap context. It is large (~31k tokens), so read it **on demand** — for planning, scoping, or strategy work — **not** for every coding task. For coding work, skip it and follow the required-read order below.
 
 Address the user as **Richard** in conversational replies — natural openers and asides, not on every line, and never in code or file content.
 

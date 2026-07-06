@@ -11,3 +11,6 @@ dist/
 !apps/site/public/assets/thumbnails/**/*.png
 !apps/site/public/assets/thumbnails/**/*.jpg
 !apps/site/public/assets/thumbnails/**/*.jpeg
+
+# Local scratch for screenshots / working files
+scratch/

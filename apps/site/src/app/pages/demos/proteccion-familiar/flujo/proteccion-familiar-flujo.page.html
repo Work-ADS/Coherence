@@ -550,27 +550,13 @@
                     <aside class="pff-year-tip" role="tooltip">
                       <header class="pff-year-tip__head">
                         <h4 class="pff-year-tip__title">Año {{ year.year }}</h4>
-                        <div class="pff-year-tip__tabs" role="tablist">
-                          <button
-                            type="button"
-                            role="tab"
-                            [class.pff-year-tip__tab--active]="yearTipMode() === 'ano'"
-                            [attr.aria-selected]="yearTipMode() === 'ano'"
-                            (click)="yearTipMode.set('ano')"
-                          >
-                            <span class="pff-year-tip__tab-check" aria-hidden="true">✓</span>
-                            Año
-                          </button>
-                          <button
-                            type="button"
-                            role="tab"
-                            [class.pff-year-tip__tab--active]="yearTipMode() === 'acumulado'"
-                            [attr.aria-selected]="yearTipMode() === 'acumulado'"
-                            (click)="yearTipMode.set('acumulado')"
-                          >
-                            Acumulado
-                          </button>
-                        </div>
+                        <afi-segmented-control
+                          size="sm"
+                          [options]="yearTipModeOptions"
+                          [value]="yearTipMode()"
+                          (valueChange)="setYearTipMode($event)"
+                          ariaLabel="Vista del detalle del año"
+                        />
                       </header>
                       <table class="pff-year-tip__table">
                         <thead>

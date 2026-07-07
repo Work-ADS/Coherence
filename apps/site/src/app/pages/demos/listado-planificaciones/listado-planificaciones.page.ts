@@ -2,21 +2,22 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef,
   inject,
   signal,
-  viewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
   BadgeComponent,
   ButtonComponent,
-  IconButtonComponent,
+  InlineEditComponent,
   InputComponent,
   ModalComponent,
   PageHeaderComponent,
+  TableComponent,
   type BadgeIntent,
+  type TableColumn,
+  type TableRowAction,
 } from '@coherence/ui';
 
 import { NotificationStore } from '../../../services/notification.store';
@@ -25,7 +26,6 @@ import {
   type IdentityBreadcrumbStep,
 } from '../../../components/product-identity-bar';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
-import { PlannerTopBarComponent } from '../shared/planner-top-bar.component';
 import { AWP_PERSONAS } from '../wealth-planner-2026/data/personas';
 import {
   WealthPlannerStore,
@@ -39,11 +39,10 @@ import {
  * Sits OUT of the simulación flow (top-level `/listado-planificaciones`
  * route, not under `/wealth-planner-2026`). No planner sidebar — the §1-§6
  * navigation only makes sense once a planificación is open. Chrome:
- * `<site-demo-shell>` + `<site-planner-top-bar>` + page header + table.
+ * `<site-demo-shell>` + page header + table.
  *
- * Table is hand-rolled per the brief's allowance — `<afi-table>` cells lock
- * badge intent at column level, but each row's estado needs a different
- * intent (success / info / neutral).
+ * Table uses `<afi-table>` with `cellTemplates` for the per-row estado
+ * badge intent and the inline-edit name.
  */
 @Component({
   selector: 'site-listado-planificaciones',
@@ -51,12 +50,12 @@ import {
   imports: [
     BadgeComponent,
     ButtonComponent,
-    IconButtonComponent,
+    InlineEditComponent,
     InputComponent,
     ModalComponent,
     PageHeaderComponent,
+    TableComponent,
     DemoShellComponent,
-    PlannerTopBarComponent,
     ProductIdentityBarComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -94,6 +93,33 @@ export class ListadoPlanificacionesPage {
   readonly rows = computed<Planificacion[]>(() => this.store.planificacionesSorted());
   readonly isEmpty = computed<boolean>(() => this.store.planificaciones().length === 0);
 
+  // ── Table config ──────────────────────────────────────────────────────
+  readonly columns: TableColumn[] = [
+    { key: 'fecha', label: 'Fecha creación', width: 'var(--dimension-44)' },
+    { key: 'nombre', label: 'Nombre' },
+    { key: 'estado', label: 'Estado', width: 'var(--dimension-32)' },
+    { key: 'gestor', label: 'Gestor' },
+  ];
+
+  readonly rowActions: TableRowAction[] = [
+    { key: 'duplicate', label: 'Duplicar', icon: 'duplicate', ariaLabel: 'Duplicar planificación' },
+    { key: 'archive', label: 'Archivar', icon: 'archive', ariaLabel: 'Archivar planificación' },
+  ];
+
+  // Row view-model: adds the es-ES formatted `fecha`, and for archived rows
+  // the reserved `actions: []` (hide actions) + `muted: true` keys.
+  readonly tableRows = computed<Record<string, unknown>[]>(() =>
+    this.rows().map((p) => ({
+      id: p.id,
+      nombre: p.nombre,
+      estado: p.estado,
+      gestor: p.gestor,
+      route: p.route,
+      fecha: this.formatFecha(p.createdAt),
+      ...(p.estado === 'archivada' ? { actions: [], muted: true } : {}),
+    })),
+  );
+
   // ── Modal state ───────────────────────────────────────────────────────
   readonly nuevaModalOpen = signal<boolean>(false);
   readonly nuevaNombre = signal<string>('');
@@ -102,11 +128,6 @@ export class ListadoPlanificacionesPage {
   readonly archivarModalOpen = computed<boolean>(
     () => this.archivarTarget() !== null,
   );
-
-  // ── Inline rename state ───────────────────────────────────────────────
-  readonly renamingId = signal<string | null>(null);
-  readonly renameValue = signal<string>('');
-  readonly renameInputEl = viewChild<ElementRef<HTMLInputElement>>('renameInput');
 
   // ── Date formatter (es-ES) ────────────────────────────────────────────
   private readonly fechaFormatter = new Intl.DateTimeFormat('es-ES', {
@@ -146,20 +167,16 @@ export class ListadoPlanificacionesPage {
   }
 
   // ── Row interactions ──────────────────────────────────────────────────
-  openRow(plan: Planificacion, event?: Event): void {
-    if (this.renamingId() !== null) return; // ignore row activation while renaming
-    event?.stopPropagation();
-    this.router.navigateByUrl(plan.route);
+  onRowClicked(e: { row: Record<string, unknown>; event: MouseEvent }): void {
+    const plan = this.rows().find((p) => p.id === e.row['id']);
+    if (plan) this.router.navigateByUrl(plan.route);
   }
 
-  duplicateRow(plan: Planificacion, event?: Event): void {
-    event?.stopPropagation();
-    this.store.duplicarPlanificacion(plan.id);
-  }
-
-  archiveRow(plan: Planificacion, event?: Event): void {
-    event?.stopPropagation();
-    this.archivarTarget.set(plan);
+  onRowAction(e: { action: TableRowAction; row: Record<string, unknown> }): void {
+    const plan = this.rows().find((p) => p.id === e.row['id']);
+    if (!plan) return;
+    if (e.action.key === 'duplicate') this.store.duplicarPlanificacion(plan.id);
+    else if (e.action.key === 'archive') this.archivarTarget.set(plan);
   }
 
   // ── Nueva planificación ───────────────────────────────────────────────
@@ -202,44 +219,9 @@ export class ListadoPlanificacionesPage {
   }
 
   // ── Inline rename ─────────────────────────────────────────────────────
-  startRename(plan: Planificacion, event?: Event): void {
-    event?.stopPropagation();
-    this.renamingId.set(plan.id);
-    this.renameValue.set(plan.nombre);
-    setTimeout(() => {
-      const el = this.renameInputEl()?.nativeElement;
-      el?.focus();
-      el?.select?.();
-    }, 0);
-  }
-
-  setRenameValue(value: string | number | null): void {
-    this.renameValue.set(value == null ? '' : String(value));
-  }
-
-  commitRename(): void {
-    const id = this.renamingId();
-    if (!id) return;
-    const value = this.renameValue().trim();
-    if (value) {
-      this.store.renamePlanificacion(id, value);
-    }
-    this.cancelRename();
-  }
-
-  cancelRename(): void {
-    this.renamingId.set(null);
-    this.renameValue.set('');
-  }
-
-  onRenameKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      this.commitRename();
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      this.cancelRename();
-    }
+  onRenameCommit(row: Record<string, unknown>, value: string): void {
+    const plan = this.rows().find((p) => p.id === row['id']);
+    if (plan) this.store.renamePlanificacion(plan.id, value);
   }
 
   /** Demo-only — used by the empty-state preview to clear the seed. */

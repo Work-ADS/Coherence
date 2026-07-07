@@ -16,13 +16,13 @@ import {
   CheckboxComponent,
   InputComponent,
   LogoComponent,
-  PageHeaderComponent,
   SectionComponent,
+  SegmentedControlComponent,
   SelectComponent,
   StepperComponent,
   SwitchComponent,
 } from '@coherence/ui';
-import type { LineSeries, SelectOption } from '@coherence/ui';
+import type { LineSeries, SegmentedOption, SelectOption } from '@coherence/ui';
 
 import { DemoShellComponent } from '../../demo-shell/demo-shell.component';
 import { ProductIdentityBarComponent } from '../../../../components/product-identity-bar/product-identity-bar.component';
@@ -341,8 +341,8 @@ const STEPS = [
     CheckboxComponent,
     InputComponent,
     LogoComponent,
-    PageHeaderComponent,
     SectionComponent,
+    SegmentedControlComponent,
     SelectComponent,
     StepperComponent,
     SwitchComponent,
@@ -446,6 +446,14 @@ export class ProteccionFamiliarFlujoPage {
   // ── Chart year-detail tooltip (Step 3) ────────────────────────────────
   readonly activeYearDetail = signal<{ year: number } | null>(null);
   readonly yearTipMode = signal<'ano' | 'acumulado'>('ano');
+  readonly yearTipModeOptions: SegmentedOption[] = [
+    { value: 'ano', label: 'Año' },
+    { value: 'acumulado', label: 'Acumulado' },
+  ];
+
+  setYearTipMode(value: string): void {
+    if (value === 'ano' || value === 'acumulado') this.yearTipMode.set(value);
+  }
 
   readonly yearTipLines = computed(() => {
     const year = this.activeYearDetail()?.year;

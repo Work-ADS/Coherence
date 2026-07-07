@@ -13,25 +13,13 @@
   border-radius: var(--radius-card);
 }
 
-.pf-section {
+// ─── afi-section spacing (gate → cliente → cónyuge) ──────────────────────
+// afi-section already ships `:host + :host` spacing internally; the page
+// scopes these adjacent-sibling rules so both gaps read a uniform --space-lg
+// (page selectors out-specify the primitive's built-in --space-md stacking).
+.pf-gate + afi-section,
+afi-section + afi-section {
   margin-block-start: var(--space-lg);
-  padding-block: var(--space-lg);
-  padding-inline: var(--space-lg);
-  background: var(--surface-default);
-  border: var(--border-width-hairline) solid var(--border-subtle);
-  border-radius: var(--radius-card);
-}
-
-.pf-section__head {
-  margin-block-end: var(--space-md);
-}
-
-.pf-section__title {
-  margin: 0;
-  font: var(--type-body-sm-600);
-  color: var(--foreground-secondary-default);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
 
 // ─── Row layout: label | badge | actions ─────────────────────────────────

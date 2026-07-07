@@ -448,37 +448,6 @@
   color: var(--foreground-primary-default);
 }
 
-.pff-year-tip__tabs {
-  display: inline-flex;
-  background: var(--surface-quiet);
-  border-radius: var(--radius-md);
-  padding: var(--space-2xs);
-  gap: var(--space-2xs);
-}
-
-.pff-year-tip__tabs button {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  padding: var(--space-2xs) var(--space-sm);
-  border: none;
-  background: transparent;
-  border-radius: var(--radius-sm);
-  font: var(--type-body-sm-500);
-  color: var(--foreground-secondary-default);
-  cursor: pointer;
-}
-
-.pff-year-tip__tab--active {
-  background: var(--surface-default) !important;
-  color: var(--foreground-primary-default) !important;
-  box-shadow: var(--shadow-sm);
-}
-
-.pff-year-tip__tab-check {
-  color: var(--brand-secondary-background-default, var(--foreground-action-default));
-}
-
 .pff-year-tip__table {
   inline-size: 100%;
   border-collapse: collapse;

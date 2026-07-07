@@ -24,11 +24,7 @@
 
   @if (store.proteccionFamiliarEstablished()) {
     <!-- ─── Cliente row ────────────────────────────────────────────── -->
-    <section class="pf-section">
-      <header class="pf-section__head">
-        <h2 class="pf-section__title">Protección para el cliente</h2>
-      </header>
-
+    <afi-section title="Protección para el cliente">
       <div class="pf-row">
         <span class="pf-row__label">Estado</span>
         @if (store.proteccionFamiliar().cliente.activa) {
@@ -86,15 +82,11 @@
           }
         </ul>
       }
-    </section>
+    </afi-section>
 
     <!-- ─── Cónyuge row — only when Familia.tienePareja ──────────── -->
     @if (store.tienePareja()) {
-      <section class="pf-section">
-        <header class="pf-section__head">
-          <h2 class="pf-section__title">Protección para el cónyuge</h2>
-        </header>
-
+      <afi-section title="Protección para el cónyuge">
         <div class="pf-row">
           <span class="pf-row__label">Estado</span>
           @if (store.proteccionFamiliar().conyuge.activa) {
@@ -152,7 +144,7 @@
             }
           </ul>
         }
-      </section>
+      </afi-section>
     } @else {
       <p class="pf-pareja-hint">
         No hay cónyuge registrado en Familia. Cuando se añada uno, aparecerá

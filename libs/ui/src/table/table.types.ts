@@ -33,10 +33,15 @@ export type TableRowActionVariant = 'default' | 'danger';
  * icon adds a switch case in the template + a small file-size cost.
  *
  * Current set covers the WP/Sarevi migration: edit (pencil), delete
- * (trash), more (vertical ⋯). Add `'open'`, `'duplicate'`, `'archive'`
- * if a real consumer needs them.
+ * (trash), more (vertical ⋯), duplicate (stacked squares), archive
+ * (box). Add `'open'` if a real consumer needs it.
  */
-export type TableRowActionIcon = 'edit' | 'delete' | 'more';
+export type TableRowActionIcon =
+  | 'edit'
+  | 'delete'
+  | 'more'
+  | 'duplicate'
+  | 'archive';
 
 export interface TableColumn {
   key: string;

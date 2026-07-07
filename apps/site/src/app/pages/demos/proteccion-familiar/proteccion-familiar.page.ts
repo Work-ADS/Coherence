@@ -6,6 +6,7 @@ import {
   ButtonComponent,
   IconButtonComponent,
   PageHeaderComponent,
+  SectionComponent,
   SwitchComponent,
 } from '@coherence/ui';
 
@@ -42,6 +43,7 @@ const TIPO_LABELS: Record<ProductoProteccionTipo, string> = {
     ButtonComponent,
     IconButtonComponent,
     PageHeaderComponent,
+    SectionComponent,
     SwitchComponent,
     ObjetivosPageShellComponent,
   ],

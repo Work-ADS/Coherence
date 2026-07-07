@@ -3,8 +3,8 @@
 // =============================================================================
 //
 // BEM under `.lp`. Token-only; no hex / px / rgba outside libs/tokens.
-// Hand-rolled table per the brief's allowance (afi-table can't vary the
-// badge intent per row). Follows the desinversiones-futuras precedent.
+// The listado table uses `afi-table` (per-row estado badge + inline-edit
+// name are projected via cellTemplates).
 // =============================================================================
 
 .lp {
@@ -25,129 +25,8 @@
     padding: var(--space-2xl) var(--space-xl);
   }
 
-  &__eyebrow {
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wider);
-    color: var(--color-action-700);
-    font: var(--type-body-sm-500);
-  }
-
   &__body {
     margin-top: var(--space-2xl);
-  }
-
-  // ─── Table ──────────────────────────────────────────────────────────────
-  &__table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--canvas-base);
-    font: var(--type-body-md-400);
-    color: var(--canvas-fg);
-  }
-
-  &__th {
-    text-align: start;
-    padding: var(--space-sm) var(--space-md);
-    font: var(--type-body-sm-500);
-    color: var(--foreground-tertiary-default);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wider);
-    border-bottom: thin solid var(--border-hairline);
-    white-space: nowrap;
-
-    &--fecha {
-      width: var(--dimension-44);
-    }
-
-    &--estado {
-      width: var(--dimension-32);
-    }
-
-    &--actions {
-      width: var(--dimension-32);
-      text-align: end;
-    }
-  }
-
-  &__td {
-    padding: var(--space-md);
-    border-bottom: thin solid var(--border-hairline);
-    vertical-align: middle;
-
-    &--fecha {
-      color: var(--foreground-secondary-default);
-      white-space: nowrap;
-    }
-
-    &--actions {
-      text-align: end;
-    }
-  }
-
-  &__row {
-    cursor: pointer;
-    transition: background-color var(--duration-fast) var(--easing-enter);
-    outline: none;
-
-    &:hover:not(.lp__row--renaming) {
-      background: var(--surface-quiet);
-    }
-
-    &:focus-visible {
-      box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
-    }
-
-    &--archived {
-      color: var(--foreground-tertiary-default);
-
-      .lp__nombre {
-        color: var(--foreground-tertiary-default);
-      }
-    }
-
-    &--renaming {
-      cursor: default;
-      background: var(--surface-quiet);
-    }
-  }
-
-  &__nombre {
-    font: var(--type-body-md-500);
-    color: var(--canvas-fg);
-  }
-
-  &__rename-input {
-    width: 100%;
-    display: block;
-    border-radius: var(--radius-md);
-    background: var(--control-background-default);
-    color: var(--canvas-fg);
-    border: var(--border-width-hairline) solid var(--border-default);
-    font: var(--type-body-md-500);
-    padding: var(--space-2xs) var(--space-sm);
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
-      border-color: var(--border-focus);
-    }
-  }
-
-  &__actions {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2xs);
-    justify-content: flex-end;
-    // Hide-by-default revealed on row hover / focus to keep the resting
-    // table calm. Matches the afi-table action reveal modifier.
-    opacity: 0;
-    transition: opacity var(--duration-fast) var(--easing-enter);
-  }
-
-  &__row:hover &__actions,
-  &__row:focus-within &__actions,
-  &__row--renaming &__actions {
-    opacity: 1;
   }
 
   // ─── Empty state ────────────────────────────────────────────────────────
@@ -200,93 +79,5 @@
     display: flex;
     justify-content: flex-end;
     gap: var(--space-sm);
-  }
-
-  // Sr-only label removed — the empty actions <th> is announced by
-  // screen readers as a column without a header, which is fine when the
-  // cells contain icon-buttons with their own aria-label.
-}
-
-// ─── Narrow viewport (≤ 768) — rows become stacked cards ───────────────
-@media (max-width: 768px) {
-  .lp {
-    &__container {
-      padding: var(--space-lg) var(--space-md);
-    }
-
-    &__table,
-    &__table > tbody,
-    &__table > tbody > tr,
-    &__table > tbody > tr > td,
-    &__table > thead {
-      display: block;
-      width: 100%;
-    }
-
-    // Headers + actions-cell aria-label aren't needed when each cell
-    // is labeled inline below; visually hide thead.
-    &__table > thead {
-      display: none;
-    }
-
-    &__row {
-      padding: var(--space-md);
-      border: var(--border-width-hairline) solid var(--border-hairline);
-      border-radius: var(--radius-card);
-      margin-block-end: var(--space-sm);
-
-      // Reset table-cell border (now lives on the card itself).
-      .lp__td {
-        border-bottom: none;
-        padding: 0;
-      }
-    }
-
-    // Card layout: nombre on top, meta row below, actions at the bottom.
-    &__td {
-      &--fecha {
-        order: 2;
-        font: var(--type-body-sm-400);
-        color: var(--foreground-tertiary-default);
-        margin-block-start: var(--space-2xs);
-      }
-
-      &--nombre {
-        order: 1;
-        margin-block-end: var(--space-xs);
-      }
-
-      &--estado {
-        order: 3;
-        margin-block-start: var(--space-sm);
-      }
-
-      &--gestor {
-        order: 4;
-        font: var(--type-body-sm-400);
-        color: var(--foreground-secondary-default);
-        margin-block-start: var(--space-2xs);
-      }
-
-      &--actions {
-        order: 5;
-        text-align: start;
-        margin-block-start: var(--space-md);
-        padding-block-start: var(--space-md);
-        border-top: var(--border-width-hairline) solid var(--border-hairline);
-      }
-    }
-
-    &__nombre {
-      font: var(--type-body-md-600);
-    }
-
-    // At narrow widths, always show actions (no hover-to-reveal — touch
-    // targets need to be discoverable).
-    &__actions {
-      opacity: 1;
-      justify-content: flex-start;
-      gap: var(--space-sm);
-    }
   }
 }

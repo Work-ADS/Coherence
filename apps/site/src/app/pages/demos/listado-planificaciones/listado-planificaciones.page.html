@@ -55,94 +55,35 @@
               </div>
             </div>
           } @else {
-            <!-- Table -->
-            <table class="lp__table" role="table">
-              <thead>
-                <tr>
-                  <th scope="col" class="lp__th lp__th--fecha">Fecha creación</th>
-                  <th scope="col" class="lp__th lp__th--nombre">Nombre</th>
-                  <th scope="col" class="lp__th lp__th--estado">Estado</th>
-                  <th scope="col" class="lp__th lp__th--gestor">Gestor</th>
-                  <th scope="col" class="lp__th lp__th--actions" aria-label="Acciones"></th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (p of rows(); track p.id) {
-                  <tr
-                    class="lp__row"
-                    [class.lp__row--archived]="p.estado === 'archivada'"
-                    [class.lp__row--renaming]="renamingId() === p.id"
-                    [attr.data-estado]="p.estado"
-                    (click)="openRow(p, $event)"
-                    (keydown.enter)="openRow(p)"
-                    tabindex="0"
-                    role="link"
-                    [attr.aria-label]="'Abrir ' + p.nombre"
-                  >
-                    <td class="lp__td lp__td--fecha">{{ formatFecha(p.createdAt) }}</td>
-                    <td class="lp__td lp__td--nombre">
-                      @if (renamingId() === p.id) {
-                        <input
-                          #renameInput
-                          class="lp__rename-input"
-                          type="text"
-                          [value]="renameValue()"
-                          (input)="setRenameValue($any($event.target).value)"
-                          (keydown)="onRenameKeydown($event)"
-                          (blur)="commitRename()"
-                          (click)="$event.stopPropagation()"
-                          aria-label="Nuevo nombre de la planificación"
-                        />
-                      } @else {
-                        <span class="lp__nombre">{{ p.nombre }}</span>
-                      }
-                    </td>
-                    <td class="lp__td lp__td--estado">
-                      <afi-badge size="sm" [intent]="estadoIntent(p.estado)">
-                        {{ estadoLabel(p.estado) }}
-                      </afi-badge>
-                    </td>
-                    <td class="lp__td lp__td--gestor">{{ p.gestor }}</td>
-                    <td class="lp__td lp__td--actions">
-                      @if (p.estado !== 'archivada') {
-                        <div class="lp__actions">
-                          <afi-icon-button
-                            ariaLabel="Editar nombre"
-                            size="sm"
-                            variant="ghost"
-                            (clicked)="startRename(p, $event.event)"
-                          >
-                            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L4 13.172V16h2.828l7.379-7.379-2.828-2.828z" />
-                            </svg>
-                          </afi-icon-button>
-                          <afi-icon-button
-                            ariaLabel="Duplicar planificación"
-                            size="sm"
-                            variant="ghost"
-                            (clicked)="duplicateRow(p, $event.event)"
-                          >
-                            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path d="M7 3a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V5a2 2 0 00-2-2H7zm-3 5a2 2 0 00-2 2v7a2 2 0 002 2h6a2 2 0 002-2v-1H7a4 4 0 01-4-4V8H4z" />
-                            </svg>
-                          </afi-icon-button>
-                          <afi-icon-button
-                            ariaLabel="Archivar planificación"
-                            size="sm"
-                            variant="ghost"
-                            (clicked)="archiveRow(p, $event.event)"
-                          >
-                            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm1 4h12v8a2 2 0 01-2 2H6a2 2 0 01-2-2V8zm4 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-                            </svg>
-                          </afi-icon-button>
-                        </div>
-                      }
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
+            <!-- Per-row estado badge — intent varies by row, so it's a
+                 cell template rather than a column-level badge kind. -->
+            <ng-template #estadoTpl let-row="row">
+              <afi-badge size="sm" [intent]="estadoIntent($any(row).estado)">
+                {{ estadoLabel($any(row).estado) }}
+              </afi-badge>
+            </ng-template>
+            <!-- Nombre — inline-edit for editable rows; archived rows are
+                 read-only. -->
+            <ng-template #nombreTpl let-row="row">
+              @if ($any(row).estado === 'archivada') {
+                <span>{{ $any(row).nombre }}</span>
+              } @else {
+                <afi-inline-edit
+                  [value]="$any(row).nombre"
+                  ariaLabel="nombre de la planificación"
+                  (committed)="onRenameCommit(row, $event)"
+                />
+              }
+            </ng-template>
+
+            <afi-table
+              [columns]="columns"
+              [rows]="tableRows()"
+              [rowActions]="rowActions"
+              [cellTemplates]="{ estado: estadoTpl, nombre: nombreTpl }"
+              (rowClicked)="onRowClicked($event)"
+              (rowActionClicked)="onRowAction($event)"
+            />
           }
         </div>
       </div>

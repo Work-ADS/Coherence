@@ -5,6 +5,14 @@ export const demos_routes: Routes = [
     path: '',
     loadComponent: () => import('./demos.landing').then((m) => m.DemosLandingPage),
   },
+  // Identity v2 — foundations-modern workbench (button/input v2 proving ground)
+  {
+    path: 'foundations-modern/workbench',
+    loadComponent: () =>
+      import('./foundations-modern-workbench/foundations-modern-workbench.page').then(
+        (m) => m.FoundationsModernWorkbenchPage,
+      ),
+  },
   // Wealth Planner 2026 — overview surface (shell consumer)
   {
     path: 'wealth-planner-2026',

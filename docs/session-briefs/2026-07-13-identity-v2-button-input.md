@@ -39,3 +39,12 @@ These are the reverse-engineered Shopify Polaris button treatments. Hard-code th
 ## Out of scope
 
 Select/menu (next components after these two), documentation pages (come with the site restructure), dark mode values, brand accent, the moodboard's curated presentation.
+
+## Build notes (2026-07-13, button)
+
+- **Naming decided:** `afi-button-v2` / `libs/ui/src/button-v2/` (`ButtonV2Component`). Honest about being the parallel primitive; single rename when v2 becomes the default foundation.
+- **Effect styles live in `libs/tokens/foundations-modern/component-button.scss`** (hand-authored, outside the generated index), not in the component SCSS as this brief suggested — the pre-commit hook rightly blocks raw hex in `libs/ui/**`. Same values, one layer down, hook-exempt. `styles.scss` imports it next to the generated index.
+- **ESCALATION — destructive hover:** in Figma, Destructive/Hover renders pixel-identical to Default (verified by pixel sampling both symbols). The opaque face gradient (error/700 → error/500) hides the base-fill swap (700 → 500) bound underneath. Code mirrors Figma as-is, so destructive buttons give no hover feedback beyond the cursor. If unintended, lower the gradient layer's opacity in Figma (like Primary's 20 %) and the base swap becomes visible; code picks it up as a one-line change.
+- **XS type sizes** (12/16 vs 13/18 for SM–LG) have no `--type-button-*-xs` role in the synced set; added `--button-font-size-xs` / `--button-line-height-xs` to component-button.scss referencing dimension primitives.
+- **Spec file skipped:** zero `*.spec.ts` exist in `libs/ui` and no test runner is configured in package.json — the pre-flight "spec exists and runs" box is repo-wide unmet, tracked as infra debt, not button debt.
+- **Loading shrink/expand choreography** not prototyped yet (simple spinner shipped per brief); workbench is ready to host the prototype.

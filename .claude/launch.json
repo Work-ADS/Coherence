@@ -4,8 +4,28 @@
     {
       "name": "site",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["start", "--prefix", "apps/site", "--", "--port", "4202"],
+      "runtimeArgs": [
+        "start",
+        "--prefix",
+        "apps/site",
+        "--",
+        "--port",
+        "4202"
+      ],
       "port": 4202
+    },
+    {
+      "name": "site-4203",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "start",
+        "--prefix",
+        "apps/site",
+        "--",
+        "--port",
+        "4203"
+      ],
+      "port": 4203
     }
   ]
 }

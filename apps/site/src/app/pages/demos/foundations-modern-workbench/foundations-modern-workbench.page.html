@@ -1,0 +1,87 @@
+<site-demo-shell
+  [views]="['Workbench']"
+  demoSlug="foundations-modern-workbench"
+  demoRoute="/demos/foundations-modern/workbench"
+  homeRoute="/demos"
+  homeLabel="Volver a demos"
+>
+  <div class="workbench" data-foundation="modern">
+    <header class="workbench__header">
+      <h1 class="workbench__title">Botón — identidad v2</h1>
+      <p class="workbench__subtitle">
+        4 variantes × 4 tamaños × 6 estados · IBM Plex Sans · tokens foundations-modern
+      </p>
+    </header>
+
+    @for (variant of variants; track variant) {
+      <section class="workbench__section">
+        <h2 class="workbench__section-title">variant="{{ variant }}"</h2>
+        <div class="workbench__grid">
+          @for (size of sizes; track size) {
+            <div class="workbench__cell">
+              <span class="workbench__cell-label">size="{{ size }}"</span>
+              <div class="workbench__row">
+                <afi-button-v2 [variant]="variant" [size]="size">
+                  {{ labels[variant] }}
+                </afi-button-v2>
+                <afi-button-v2 [variant]="variant" [size]="size" [disabled]="true">
+                  {{ labels[variant] }}
+                </afi-button-v2>
+                <afi-button-v2 [variant]="variant" [size]="size" [loading]="true">
+                  {{ labels[variant] }}
+                </afi-button-v2>
+              </div>
+            </div>
+          }
+        </div>
+        <p class="workbench__hint">
+          Interactúe para ver el resto de estados: pase el cursor (hover), mantenga pulsado
+          (pressed) y navegue con Tab (focus).
+        </p>
+      </section>
+    }
+
+    <section class="workbench__section">
+      <h2 class="workbench__section-title">Slots de icono · ancho completo · carga interactiva</h2>
+      <div class="workbench__row">
+        <afi-button-v2 variant="secondary">
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M8 3v10M3 8h10" />
+          </svg>
+          Añadir sociedad
+        </afi-button-v2>
+        <afi-button-v2 variant="ghost">
+          Siguiente
+          <svg
+            slot="iconEnd"
+            class="workbench__icon"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 3l5 5-5 5" />
+          </svg>
+        </afi-button-v2>
+        <afi-button-v2 [loading]="simulating()" (clicked)="onSimulate()">
+          Simular carga
+        </afi-button-v2>
+      </div>
+      <div class="workbench__row workbench__row--stretch">
+        <afi-button-v2 [fullWidth]="true">Continuar</afi-button-v2>
+      </div>
+    </section>
+  </div>
+</site-demo-shell>

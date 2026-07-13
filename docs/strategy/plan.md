@@ -1064,6 +1064,17 @@ Re-evaluate per epic; anything here is allowed to graduate into Wave 1/2 if a co
 
 *This roadmap is a living artifact. Re-score after each v1 milestone and whenever a backlog item's confidence shifts.*
 
+### Decision — identity-v2 cutover is parity-gated, NOT pending (2026-07-13)
+
+The "cutover" (hoist `foundations-modern` to `:root`, archive the legacy serif token layer + superseded legacy primitives, restore the 750 kB budget) is **not a near-term task and should stop being treated as one.** As of 2026-07-13, v2 is **5 of 38 primitives** (~13%: button, input, menu, select, toggle); **73 files** import a legacy primitive that a v2 twin would replace; only **4 pages** opt into the modern foundation — the live site still renders entirely on v1. You cannot retire legacy until v2 reaches parity on the primitives the live pages use, so the cutover is blocked on building ~33 more v2 primitives, then migrating consumers.
+
+Standing decisions until a real trigger appears:
+- **Legacy serif identity — kept, not deleted.** It renders the live site today and is retained deliberately for a future serif redesign. Clean pre-modern baseline tagged `v1-serif-identity` (commit `209052a`) for retrieval: `git checkout v1-serif-identity`.
+- **White-label — kept, parked, not invested in.** The three-layer token architecture (primitive→semantic→brand) stays: it is not white-label tax, it is load-bearing for v2 theming (and future dark mode). The 5 client color skins (`libs/tokens/colors-{awm,banco-cooperativo,laboral-kutxa,mutualidad,unicaja}.scss`) are idle files that only ship when a brand is active — retained as reference; not expanded. Coherence is not currently used to white-label live products.
+- **Bundle budget** temporarily raised to **850 kB** warning (`apps/site/angular.json`); the genuine reduction comes from the cutover, not from trimming, so restore to 750 kB only at cutover.
+
+**Revisit the cutover only when BOTH:** (a) v2 covers the primitives the live/production pages actually use, AND (b) a real consumer commits to modern-only. Neither is true today.
+
 ---
 
 ## Appendix A — Brief template MD (LOCKED 2026-04-16)

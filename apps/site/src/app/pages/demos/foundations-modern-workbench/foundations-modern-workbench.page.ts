@@ -7,6 +7,7 @@ import {
   MenuV2Component,
   MenuDividerV2Component,
   SelectV2Component,
+  ToggleV2Component,
 } from '@coherence/ui';
 import type {
   ButtonV2Size,
@@ -40,6 +41,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     MenuV2Component,
     MenuDividerV2Component,
     SelectV2Component,
+    ToggleV2Component,
     DemoShellComponent,
   ],
   templateUrl: './foundations-modern-workbench.page.html',

@@ -8,7 +8,7 @@
       "Primitive Type": 9,
       "Primitive Elevation": 97,
       "Semantic Colors": 69,
-      "Semantic Dimensions": 52,
+      "Semantic Dimensions": 57,
       "Semantic Spacing": 12,
       "Semantic Typography": 48,
       "Primitive Motion": 6
@@ -3114,6 +3114,13 @@
           }
         },
         {
+          "name": "height/toggle",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-5}"
+          }
+        },
+        {
           "name": "width/sidebar/expanded",
           "type": "number",
           "values": {
@@ -3174,6 +3181,13 @@
           "type": "number",
           "values": {
             "Mode 1": "{dimension/dimension-50}"
+          }
+        },
+        {
+          "name": "width/toggle",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-9}"
           }
         },
         {
@@ -3244,6 +3258,13 @@
           "type": "number",
           "values": {
             "Mode 1": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "size/toggle-thumb",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4}"
           }
         },
         {
@@ -3366,6 +3387,13 @@
           }
         },
         {
+          "name": "pad/toggle-track",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-5}"
+          }
+        },
+        {
           "name": "gap/control-xs",
           "type": "number",
           "values": {
@@ -3398,6 +3426,13 @@
           "type": "number",
           "values": {
             "Mode 1": "{dimension/dimension-0-5}"
+          }
+        },
+        {
+          "name": "gap/control-label",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
           }
         }
       ]

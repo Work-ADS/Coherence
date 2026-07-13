@@ -91,6 +91,10 @@
       align-items: flex-start;
       gap: var(--layout-gap-comfortable);
     }
+
+    &--toggles {
+      gap: var(--layout-gap-comfortable);
+    }
   }
 
   &__input {

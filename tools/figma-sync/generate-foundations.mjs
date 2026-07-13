@@ -126,6 +126,8 @@ const files = {};
     let val = v.values['Modern'];
     if (v.name === 'font/family/primary') {
       val = `'IBM Plex Sans', sans-serif`; // Figma stores "IBM plex sans"; casing normalized
+    } else if (v.name === 'font/family/mono') {
+      val = `'IBM Plex Mono', monospace`;
     } else if (v.name.startsWith('font/letter-spacing/')) {
       val = val === 0 ? '0' : `${val}em`;
     }
@@ -133,6 +135,18 @@ const files = {};
   }
   body += '}\n';
   files['primitive-type.scss'] = header('primitive-type.scss — font primitives (mode: Modern)', "// IBM Plex Sans is loaded in apps/site/src/index.html alongside Roboto Serif.") + body;
+}
+
+// --- primitive-motion.scss -----------------------------------------------------
+
+{
+  let body = `${SCOPE} {\n`;
+  for (const v of varsOf('Primitive Motion')) {
+    const val = v.name.startsWith('duration/') ? `${v.values['Modern']}ms` : v.values['Modern'];
+    body += `  --motion-${cssName(v.name)}: ${val};\n`;
+  }
+  body += '}\n';
+  files['primitive-motion.scss'] = header('primitive-motion.scss — durations + easings (mode: Modern)', '// Design contract from Figma; implementation may refine curves in code for smoother animation.') + body;
 }
 
 // --- primitive-elevation.scss --------------------------------------------------
@@ -152,9 +166,16 @@ const files = {};
     body += `  --elevation-${lvl}: ${layer(`${lvl}/contact shadow`)}, ${layer(`${lvl}/ambient shadow`)};\n`;
   }
   body += `\n  // pressed states (neomorphic) — inner for filled surfaces, inverted for dark ones\n`;
+  body += `  // NOTE: buttons use the Figma EFFECT STYLES for pressed treatments (primary blur 8,\n`;
+  body += `  // secondary blur 2 — intentionally different); these vars mirror the variable set only.\n`;
   body += `  --elevation-pressed-inner: ${layer('pressed/inner-shadow', true)};\n`;
   body += `  --elevation-pressed-inner-inverted: inset ${part('pressed/inner-shadow/x')} ${part('pressed/inner-shadow/y')} ${part('pressed/inner-shadow/blur')} ${part('pressed/inner-shadow/spread')} ${ev['pressed/inner-shadow/inverted']};\n`;
   body += `  --elevation-pressed-box: ${layer('pressed/box-shadow')};\n`;
+
+  body += `\n  // semantic roles — mirror the Figma Elevation/roles/* effect styles\n`;
+  for (const [role, lvl] of Object.entries(snapshot.elevationRoles ?? {})) {
+    body += `  --elevation-${role}: var(--elevation-${lvl});\n`;
+  }
   body += '}\n';
   files['primitive-elevation.scss'] = header('primitive-elevation.scss — 7 elevation levels + pressed', '// Each level = contact shadow + ambient shadow, composed into one box-shadow value.') + body;
 }
@@ -247,6 +268,7 @@ files['index.scss'] = header('index.scss — foundations-modern entrypoint', `//
   ["@import './primitive-numbers.scss';",
    "@import './primitive-colors.scss';",
    "@import './primitive-type.scss';",
+   "@import './primitive-motion.scss';",
    "@import './primitive-elevation.scss';",
    "@import './semantic-colors.scss';",
    "@import './semantic-dimensions.scss';",

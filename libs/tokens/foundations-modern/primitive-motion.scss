@@ -1,0 +1,17 @@
+// =============================================================================
+// primitive-motion.scss — durations + easings (mode: Modern) — GENERATED, do not edit
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN → tools/figma-sync/foundations-modern.json
+// Regenerate: node tools/figma-sync/generate-foundations.mjs
+//
+// Design contract from Figma; implementation may refine curves in code for smoother animation.
+// =============================================================================
+
+[data-foundation="modern"] {
+  --motion-duration-fast: 150ms;
+  --motion-duration-base: 200ms;
+  --motion-duration-slow: 300ms;
+  --motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-easing-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-easing-exit: cubic-bezier(0.7, 0, 0.84, 0);
+}

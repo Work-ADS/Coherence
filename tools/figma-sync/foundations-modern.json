@@ -5,12 +5,13 @@
     "totals": {
       "Primitive Numbers": 140,
       "Primitive Colors": 100,
-      "Primitive Type": 8,
+      "Primitive Type": 9,
       "Primitive Elevation": 97,
       "Semantic Colors": 69,
       "Semantic Dimensions": 52,
       "Semantic Spacing": 12,
-      "Semantic Typography": 48
+      "Semantic Typography": 48,
+      "Primitive Motion": 6
     }
   },
   "collections": [
@@ -1770,6 +1771,13 @@
           "type": "number",
           "values": {
             "Modern": 0.02
+          }
+        },
+        {
+          "name": "font/family/mono",
+          "type": "text",
+          "values": {
+            "Modern": "IBM Plex Mono"
           }
         }
       ]
@@ -3894,6 +3902,63 @@
           }
         }
       ]
+    },
+    {
+      "collection": "Primitive Motion",
+      "modes": [
+        "Modern"
+      ],
+      "vars": [
+        {
+          "name": "duration/fast",
+          "type": "number",
+          "values": {
+            "Modern": 150
+          }
+        },
+        {
+          "name": "duration/base",
+          "type": "number",
+          "values": {
+            "Modern": 200
+          }
+        },
+        {
+          "name": "duration/slow",
+          "type": "number",
+          "values": {
+            "Modern": 300
+          }
+        },
+        {
+          "name": "easing/standard",
+          "type": "text",
+          "values": {
+            "Modern": "cubic-bezier(0.4, 0, 0.2, 1)"
+          }
+        },
+        {
+          "name": "easing/enter",
+          "type": "text",
+          "values": {
+            "Modern": "cubic-bezier(0.16, 1, 0.3, 1)"
+          }
+        },
+        {
+          "name": "easing/exit",
+          "type": "text",
+          "values": {
+            "Modern": "cubic-bezier(0.7, 0, 0.84, 0)"
+          }
+        }
+      ]
     }
-  ]
+  ],
+  "elevationRoles": {
+    "card": 1,
+    "tooltip": 2,
+    "menu": 3,
+    "drawer": 4,
+    "dialog": 5
+  }
 }

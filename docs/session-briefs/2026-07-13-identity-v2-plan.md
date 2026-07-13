@@ -53,6 +53,12 @@ Showcase becomes the front door; the system moves behind it; philosophy grows ar
 - **Per-product landing pages with value articulation** — future; hub page is the seed.
 - **v1 editorial identity case study** — parked idea.
 
+## Notes for the button/input build session
+
+- **Pressed states come from Figma EFFECT STYLES, not the pressed variables.** Confirmed by Richard 2026-07-13: `Elevation/pressed` (inner blur 8, for primary) and `Elevation/pressed/secondary` (inner blur 2 + drop, softer — secondary looked awful with the primary treatment) are intentionally different. The `pressed/inner-shadow` variable set only captures the primary variant.
+- **Shopify-style raised button treatments exist only as effect styles** (`Elevation/Raised`, `Raised-Neutral`, `Raised-Danger` — triple inner-shadow stacks; values captured in this session's Figma reads). Encode them in the button SCSS directly.
+- Figma additions pending (Richard running agent prompt): `font/family/mono`, "Primitive Motion" collection (3 durations + 3 easings, contract-only — code refines curves), `Elevation/roles/*` semantic effect styles, text style `h3`→`H3`. After they land: verify → refresh snapshot → regenerate → build components.
+
 ## Open questions
 
 1. **Add-patrimonio flow inventory** — which screens, click by click? (Determines the primitive bill and real slice-one size.)

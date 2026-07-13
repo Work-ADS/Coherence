@@ -194,5 +194,137 @@
         Interactúe para ver el resto de estados: pase el cursor (hover) y navegue con Tab (focus).
       </p>
     </section>
+
+    <h2 class="workbench__group-title">Menu item</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">6 estados · en el panel afi-menu-v2 con separador</h3>
+      <div class="workbench__menu-demo">
+        <afi-menu-v2 class="workbench__menu" ariaLabel="Acciones del documento">
+          <afi-menu-item-v2>
+            <svg
+              slot="icon"
+              class="workbench__icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M11 2.5l2.5 2.5L6 12.5 3 13l.5-3z" />
+            </svg>
+            Editar
+          </afi-menu-item-v2>
+          <afi-menu-item-v2 shortcut="⌘D">
+            <svg
+              slot="icon"
+              class="workbench__icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="5" y="5" width="8" height="8" rx="1.5" />
+              <path d="M3 11V4a1 1 0 011-1h7" />
+            </svg>
+            Duplicar
+          </afi-menu-item-v2>
+          <afi-menu-item-v2 [selected]="true">Fijar arriba</afi-menu-item-v2>
+          <afi-menu-item-v2 [disabled]="true">Renombrar</afi-menu-item-v2>
+          <afi-menu-divider-v2 />
+          <afi-menu-item-v2 variant="destructive">
+            <svg
+              slot="icon"
+              class="workbench__icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.5 8h6l.5-8" />
+            </svg>
+            Eliminar
+          </afi-menu-item-v2>
+        </afi-menu-v2>
+        <!-- State tags: one child per panel child, same height + gap tokens, so
+             the column stays row-aligned with the menu without magic numbers. -->
+        <ul class="workbench__menu-tags" aria-hidden="true">
+          <li class="workbench__menu-tag">por defecto · icono</li>
+          <li class="workbench__menu-tag">shortcut="⌘D"</li>
+          <li class="workbench__menu-tag">[selected]="true"</li>
+          <li class="workbench__menu-tag">[disabled]="true"</li>
+          <li class="workbench__menu-tag workbench__menu-tag--divider"></li>
+          <li class="workbench__menu-tag">variant="destructive"</li>
+        </ul>
+      </div>
+      <p class="workbench__hint">
+        Interactúe para ver hover y foco: pase el cursor y navegue con Tab. La fila destructiva
+        tiñe con la superficie de peligro; la seleccionada muestra la marca de verificación.
+      </p>
+    </section>
+
+    <h2 class="workbench__group-title">Select</h2>
+
+    @for (size of selectSizes; track size) {
+      <section class="workbench__section">
+        <h3 class="workbench__section-title">size="{{ size }}"</h3>
+        <div class="workbench__row workbench__row--inputs">
+          <afi-select-v2
+            class="workbench__input"
+            [size]="size"
+            [options]="selectOptions"
+            label="Tipo de sociedad"
+            hint="Elija la forma jurídica."
+          />
+          <afi-select-v2
+            class="workbench__input"
+            [size]="size"
+            [options]="selectOptions"
+            value="sa"
+            label="Tipo de sociedad"
+          />
+          <afi-select-v2
+            class="workbench__input"
+            [size]="size"
+            [options]="selectOptions"
+            label="Tipo de sociedad"
+            error="Seleccione una opción."
+          />
+          <afi-select-v2
+            class="workbench__input"
+            [size]="size"
+            [options]="selectOptions"
+            value="sl"
+            label="Tipo de sociedad"
+            [disabled]="true"
+          />
+        </div>
+      </section>
+    }
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">Lista larga · se desplaza pasadas 8 opciones</h3>
+      <div class="workbench__row workbench__row--inputs">
+        <afi-select-v2
+          class="workbench__input"
+          [options]="provinceOptions"
+          label="Provincia"
+          hint="Más de 8 opciones: el panel limita a 8 filas y se desplaza."
+        />
+      </div>
+    </section>
+    <p class="workbench__hint">
+      Estados: por defecto (marcador) · con valor · error · deshabilitado. Abra con clic o con
+      Enter / Flecha abajo; navegue con las flechas, escriba para buscar, Intro para elegir, Esc para
+      cerrar. El desplegable reutiliza afi-menu-v2 (role="listbox") con filas afi-menu-item-v2
+      (role="option").
+    </p>
   </div>
 </site-demo-shell>

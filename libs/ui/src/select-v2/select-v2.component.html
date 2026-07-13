@@ -1,0 +1,75 @@
+@if (label()) {
+  <label [for]="triggerId" class="afi-select-v2__label">
+    {{ label() }}
+    @if (required()) {
+      <span class="afi-select-v2__required" aria-hidden="true"> *</span>
+    }
+  </label>
+}
+
+<button
+  #trigger
+  [id]="triggerId"
+  type="button"
+  [class]="triggerClasses()"
+  role="combobox"
+  aria-haspopup="listbox"
+  [attr.aria-controls]="open() ? listboxId : null"
+  [attr.aria-expanded]="open() ? 'true' : 'false'"
+  [attr.aria-activedescendant]="activeOptionId()"
+  [attr.aria-invalid]="error() ? 'true' : null"
+  [attr.aria-required]="required() ? 'true' : null"
+  [attr.aria-describedby]="describedBy()"
+  [attr.aria-label]="ariaLabel()"
+  [disabled]="disabled()"
+  (click)="onTriggerClick()"
+  (keydown)="onTriggerKeydown($event)"
+>
+  <span class="afi-select-v2__value">{{ displayText() }}</span>
+  <svg
+    class="afi-select-v2__chevron"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M4 6l4 4 4-4" />
+  </svg>
+</button>
+
+@if (open()) {
+  <afi-menu-v2
+    [id]="listboxId"
+    class="afi-select-v2__panel"
+    [role]="'listbox'"
+    [ariaLabel]="ariaLabel() ?? label()"
+    [style.top.px]="panelTop()"
+    [style.left.px]="panelLeft()"
+    [style.inline-size.px]="panelWidth()"
+    [style.min-inline-size.px]="panelWidth()"
+    [style.max-block-size]="panelMaxBlockSize()"
+  >
+    @for (option of options(); track option.value; let i = $index) {
+      <afi-menu-item-v2
+        #optionEl
+        [role]="'option'"
+        [optionId]="optionId(i)"
+        [selected]="option.value === value()"
+        [active]="i === activeIndex()"
+        [disabled]="!!option.disabled"
+        (clicked)="onOptionClick(i)"
+      >
+        {{ option.label }}
+      </afi-menu-item-v2>
+    }
+  </afi-menu-v2>
+}
+
+@if (error()) {
+  <p [id]="errorId" class="afi-select-v2__help afi-select-v2__help--error" role="alert">{{ error() }}</p>
+} @else if (hint()) {
+  <p [id]="hintId" class="afi-select-v2__help">{{ hint() }}</p>
+}

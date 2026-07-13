@@ -1,0 +1,19 @@
+// afi-menu-v2 — identity v2 menu panel (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Menu (node 2405:1935).
+// Presentational panel chrome only: surface fill, hairline border, xl radius,
+// elevation-2 shadow, dimension-1 pad, gap-menu-item rows. Overlay behaviour
+// (open/close, anchoring, roving focus) lands in a later pass — the projected
+// items are native <button>s, so Tab still reaches them.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-menu-item);
+  min-inline-size: var(--width-menu-min);
+  padding: var(--dimension-1);
+  background: var(--background-surface);
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--elevation-2);
+}

@@ -1,0 +1,30 @@
+<button
+  type="button"
+  [class]="classes()"
+  [attr.id]="optionId()"
+  [attr.role]="role()"
+  [attr.tabindex]="role() === 'option' ? -1 : null"
+  [disabled]="disabled()"
+  [attr.aria-selected]="ariaSelected()"
+  (click)="onClick($event)"
+>
+  <span class="afi-menu-item-v2__icon"><ng-content select="[slot=icon]" /></span>
+  <span class="afi-menu-item-v2__label"><ng-content /></span>
+  @if (shortcut()) {
+    <span class="afi-menu-item-v2__shortcut">{{ shortcut() }}</span>
+  }
+  @if (selected()) {
+    <svg
+      class="afi-menu-item-v2__check"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M13.5 4.5 6.5 12 3 8.5" />
+    </svg>
+  }
+</button>

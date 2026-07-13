@@ -1,7 +1,20 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
-import { ButtonV2Component, InputV2Component } from '@coherence/ui';
-import type { ButtonV2Size, ButtonV2Variant, InputV2Size } from '@coherence/ui';
+import {
+  ButtonV2Component,
+  InputV2Component,
+  MenuItemV2Component,
+  MenuV2Component,
+  MenuDividerV2Component,
+  SelectV2Component,
+} from '@coherence/ui';
+import type {
+  ButtonV2Size,
+  ButtonV2Variant,
+  InputV2Size,
+  SelectV2Size,
+  SelectV2Option,
+} from '@coherence/ui';
 
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 
@@ -20,7 +33,15 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
   selector: 'site-foundations-modern-workbench-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonV2Component, InputV2Component, DemoShellComponent],
+  imports: [
+    ButtonV2Component,
+    InputV2Component,
+    MenuItemV2Component,
+    MenuV2Component,
+    MenuDividerV2Component,
+    SelectV2Component,
+    DemoShellComponent,
+  ],
   templateUrl: './foundations-modern-workbench.page.html',
   styleUrls: ['./foundations-modern-workbench.page.scss'],
 })
@@ -29,6 +50,32 @@ export class FoundationsModernWorkbenchPage {
   readonly sizes: ButtonV2Size[] = ['xs', 'sm', 'md', 'lg'];
 
   readonly inputSizes: InputV2Size[] = ['sm', 'md', 'lg'];
+
+  readonly selectSizes: SelectV2Size[] = ['sm', 'md', 'lg'];
+
+  readonly selectOptions: SelectV2Option[] = [
+    { value: 'sl', label: 'Sociedad limitada' },
+    { value: 'sa', label: 'Sociedad anónima' },
+    { value: 'slu', label: 'Sociedad limitada unipersonal' },
+    { value: 'coop', label: 'Sociedad cooperativa' },
+    { value: 'civil', label: 'Sociedad civil' },
+    { value: 'com', label: 'Comunidad de bienes', disabled: true },
+  ];
+
+  readonly provinceOptions: SelectV2Option[] = [
+    'Álava',
+    'Albacete',
+    'Alicante',
+    'Almería',
+    'Asturias',
+    'Ávila',
+    'Badajoz',
+    'Barcelona',
+    'Burgos',
+    'Cáceres',
+    'Cádiz',
+    'Cantabria',
+  ].map((name) => ({ value: name.toLowerCase(), label: name }));
 
   readonly labels: Record<ButtonV2Variant, string> = {
     primary: 'Guardar',

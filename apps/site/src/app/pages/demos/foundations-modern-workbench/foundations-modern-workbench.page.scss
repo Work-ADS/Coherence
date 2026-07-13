@@ -97,6 +97,45 @@
     inline-size: var(--width-menu-min);
   }
 
+  // Menu demo — the real afi-menu-v2 panel beside a row-aligned tag column that
+  // names each item's state. The tag column mirrors the panel's own rhythm
+  // (same gap + item-height + padding tokens, one child per panel child), so
+  // alignment holds with no magic numbers.
+  &__menu-demo {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--layout-gap-comfortable);
+  }
+
+  &__menu {
+    flex-shrink: 0;
+  }
+
+  &__menu-tags {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-menu-item);
+    padding-block: var(--dimension-1);
+    margin: 0;
+    list-style: none;
+  }
+
+  &__menu-tag {
+    display: flex;
+    align-items: center;
+    block-size: var(--height-component-md);
+    font-family: var(--font-family-mono);
+    font-size: var(--type-caption-size);
+    line-height: var(--type-caption-line-height);
+    color: var(--content-tertiary);
+
+    // Spacer matching the afi-menu-divider-v2 row height (dimension-1 pad ×2 +
+    // hairline) so the destructive tag lands opposite the destructive item.
+    &--divider {
+      block-size: calc(2 * var(--dimension-1) + var(--stroke-default));
+    }
+  }
+
   &__hint {
     font-size: var(--type-caption-size);
     line-height: var(--type-caption-line-height);

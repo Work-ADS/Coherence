@@ -1,0 +1,122 @@
+// afi-menu-item-v2 — identity v2 (foundations-modern tokens only).
+//
+// The atomic menu row (Figma Menu Item set 2401:1966). Anatomy:
+//   [.__icon?] · [.__label] · [.__shortcut?] · [.__check?]
+// The button carries every state's fill/text tone; the icon wrapper carries
+// the (dimmer) icon tone via currentColor, so a projected SVG drawn with
+// currentColor inherits it through the cascade (no style piercing needed).
+//
+// Touch target: height follows --height-component-md (32, dense-desktop) —
+// a menu row is a pointer/keyboard target inside an overlay, not a standalone
+// 44pt tap target; documented dense-context opt-out per accessibility.md.
+
+.afi-menu-item-v2 {
+  display: flex;
+  align-items: center;
+  gap: var(--dimension-2);
+  inline-size: 100%;
+  block-size: var(--height-component-md);
+  padding-inline: var(--dimension-2);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--content-primary);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  // hover-tint pattern. focus-visible reuses the hover fill — the roving
+  // highlight IS the focus affordance in a menu/listbox (Linear / Notion).
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: var(--background-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &--selected {
+    background: var(--background-selected);
+  }
+
+  // Keyboard cursor in a listbox (aria-activedescendant) — same tint as hover,
+  // driven by state not :focus. Sits after --selected so it wins on the
+  // currently-selected row while arrowing.
+  &--active {
+    background: var(--background-hover);
+  }
+
+  &:disabled {
+    color: var(--content-disabled);
+    cursor: not-allowed;
+  }
+
+  // ── Destructive — danger text; hover/focus tints with the danger surface ──
+  &--destructive {
+    color: var(--error-foreground);
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      background: var(--error-background);
+    }
+  }
+
+  // ── Icon slot — dimmer tone; :empty collapses it when no icon projects ────
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: var(--content-secondary);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &:disabled &__icon {
+    color: var(--content-disabled);
+  }
+
+  &--destructive &__icon {
+    color: var(--error-foreground);
+  }
+
+  &__label {
+    flex: 1 0 0;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__shortcut {
+    flex-shrink: 0;
+    color: var(--content-tertiary);
+    font-size: var(--type-caption-size);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--type-caption-line-height);
+    white-space: nowrap;
+  }
+
+  &:disabled &__shortcut {
+    color: var(--content-disabled);
+  }
+
+  &__check {
+    flex-shrink: 0;
+    inline-size: var(--icon-sm);
+    block-size: var(--icon-sm);
+    color: var(--content-primary);
+  }
+}
+
+// reduced-motion-collapse (motion-skill §4.6): drop the hover transition.
+@media (prefers-reduced-motion: reduce) {
+  .afi-menu-item-v2 {
+    transition: none;
+  }
+}

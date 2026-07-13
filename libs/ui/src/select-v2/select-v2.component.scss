@@ -1,0 +1,177 @@
+// afi-select-v2 — identity v2 (foundations-modern tokens only).
+//
+// Anatomy mirrors the Figma Select set (2406:2129) and reuses input-v2's field
+// chrome on a <button role="combobox">:
+//   host            = label + trigger + help, stacked with --gap-field-label
+//   .__trigger      = bordered flex row; owns bg/border/focus chrome + chevron
+//   .__value        = the selected value (or placeholder tone when unset)
+//   .__chevron      = trailing glyph; rotates 180deg in the open state
+//   .__help         = help text, recoloured to the error message on error
+//
+// Figma has no gradient/effect-style layers here, so every value resolves to an
+// existing semantic token (no hand-authored component-select.scss).
+//
+// Touch targets: all sizes are dense-desktop opt-outs per accessibility.md —
+// heights follow --height-component-* (28/32/40, below the 44pt AAA target).
+// Touch-first surfaces should use size "lg".
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-field-label);
+  font-family: var(--font-family-primary);
+}
+
+.afi-select-v2__label {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  color: var(--content-primary);
+}
+
+// Required asterisk uses the error tone as the "must-fill" cue; semantics ride
+// on aria-required in markup, not on colour.
+.afi-select-v2__required {
+  color: var(--error-foreground);
+}
+
+// ── Trigger — the bordered flex row carrying every state's chrome ────────────
+.afi-select-v2__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-control-sm);
+  inline-size: 100%;
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-lg);
+  background: var(--background-surface);
+  color: var(--content-primary);
+  font-family: inherit;
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-easing-standard),
+    background-color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  // ── Sizes — MD/LG straight from Figma; SM extrapolated from the token scale ─
+  &--sm {
+    block-size: var(--height-component-sm);
+    padding-inline: var(--pad-control-sm);
+  }
+
+  &--md {
+    block-size: var(--height-component-md);
+    padding-inline: var(--pad-control-md);
+  }
+
+  &--lg {
+    block-size: var(--height-component-lg);
+    padding-inline: var(--pad-control-lg);
+  }
+
+  // ── Hover (hover-tint) — only in the plain resting state ────────────────────
+  &:hover:not(:disabled):not(.afi-select-v2__trigger--error):not(.afi-select-v2__trigger--open) {
+    background: var(--background-hover);
+    border-color: var(--borders-hover);
+  }
+
+  // ── Focus / Open — blue border + inset ring. Open reuses the focus look
+  //    (the panel is anchored to the trigger, so the trigger stays "active").
+  //    focus-ring pattern (motion-skill §4.3): instant, never transitioned.
+  &:focus-visible,
+  &--open:not(.afi-select-v2__trigger--error) {
+    outline: none;
+    border-color: var(--borders-focus);
+    box-shadow: inset 0 0 0 var(--stroke-focus) var(--borders-focus);
+  }
+
+  // ── Error — light fill + error border; same-colour focus ring so the focus
+  //    affordance stays visible without clashing with the blue ring.
+  &--error {
+    background: var(--error-background);
+    border-color: var(--error-border);
+
+    &:focus-visible,
+    &.afi-select-v2__trigger--open {
+      outline: none;
+      box-shadow: inset 0 0 0 var(--stroke-focus) var(--error-border);
+    }
+  }
+
+  // ── Disabled ────────────────────────────────────────────────────────────────
+  &:disabled {
+    background: var(--disabled-background);
+    border-color: var(--borders-disabled);
+    color: var(--content-disabled);
+    cursor: not-allowed;
+  }
+}
+
+// ── Value — fills the row; placeholder tone when nothing is selected ─────────
+.afi-select-v2__value {
+  flex: 1 0 0;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.afi-select-v2__trigger--placeholder .afi-select-v2__value {
+  color: var(--content-placeholder);
+}
+
+.afi-select-v2__trigger:disabled .afi-select-v2__value {
+  color: var(--content-disabled);
+}
+
+// ── Chevron — dimmer tone; rotates to point up when the panel is open ────────
+.afi-select-v2__chevron {
+  flex-shrink: 0;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--content-secondary);
+  transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.afi-select-v2__trigger--open .afi-select-v2__chevron {
+  transform: rotate(180deg);
+}
+
+.afi-select-v2__trigger:disabled .afi-select-v2__chevron {
+  color: var(--content-disabled);
+}
+
+// ── Dropdown panel — the afi-menu-v2 listbox, anchored to the trigger ────────
+// Coords + width are set inline from the component (fixed positioning escapes
+// ancestor overflow); this rule only adds the layer role: lift above app chrome
+// and scroll past the 8-row cap (max-block-size is set inline per size).
+.afi-select-v2__panel {
+  position: fixed;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+// ── Help / error message ─────────────────────────────────────────────────────
+.afi-select-v2__help {
+  margin: 0;
+  font-size: var(--type-help-size);
+  font-weight: var(--type-help-weight);
+  line-height: var(--type-help-line-height);
+  color: var(--content-secondary);
+
+  &--error {
+    color: var(--error-foreground);
+  }
+}
+
+// reduced-motion-collapse (motion-skill §4.6): drop the hover/chevron motion;
+// state still reads through the instant colour + ring change.
+@media (prefers-reduced-motion: reduce) {
+  .afi-select-v2__trigger,
+  .afi-select-v2__chevron {
+    transition: none;
+  }
+}

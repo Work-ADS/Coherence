@@ -1,0 +1,15 @@
+// afi-menu-divider-v2 — identity v2 menu separator (foundations-modern tokens).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Menu separator (2405:1966).
+// The host owns the dimension-1 vertical padding; the line is a full-width hairline.
+
+:host {
+  display: block;
+  padding-block: var(--dimension-1);
+}
+
+.afi-menu-divider-v2__line {
+  display: block;
+  block-size: var(--stroke-default);
+  background: var(--borders-default);
+}

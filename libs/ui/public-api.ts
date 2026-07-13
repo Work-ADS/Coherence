@@ -7,6 +7,8 @@ export { ButtonV2Component } from './src/button-v2';
 export type { ButtonV2Variant, ButtonV2Size } from './src/button-v2';
 export { InputComponent } from './src/input';
 export type { InputSize, InputType } from './src/input';
+export { InputV2Component } from './src/input-v2';
+export type { InputV2Size, InputV2Type } from './src/input-v2';
 export { SearchComponent } from './src/search';
 export type { SearchSize, SearchSuggestion } from './src/search';
 export { FilterChipComponent } from './src/filter-chip';

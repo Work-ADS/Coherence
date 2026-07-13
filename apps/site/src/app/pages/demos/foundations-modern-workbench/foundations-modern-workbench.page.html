@@ -7,11 +7,13 @@
 >
   <div class="workbench" data-foundation="modern">
     <header class="workbench__header">
-      <h1 class="workbench__title">Botón — identidad v2</h1>
+      <h1 class="workbench__title">Identidad v2 — workbench</h1>
       <p class="workbench__subtitle">
-        4 variantes × 4 tamaños × 6 estados · IBM Plex Sans · tokens foundations-modern
+        Primitivas foundations-modern · IBM Plex Sans · tokens scoped [data-foundation="modern"]
       </p>
     </header>
+
+    <h2 class="workbench__group-title">Botón</h2>
 
     @for (variant of variants; track variant) {
       <section class="workbench__section">
@@ -82,6 +84,115 @@
       <div class="workbench__row workbench__row--stretch">
         <afi-button-v2 [fullWidth]="true">Continuar</afi-button-v2>
       </div>
+    </section>
+
+    <h2 class="workbench__group-title">Input</h2>
+
+    @for (size of inputSizes; track size) {
+      <section class="workbench__section">
+        <h3 class="workbench__section-title">size="{{ size }}"</h3>
+        <div class="workbench__row workbench__row--inputs">
+          <afi-input-v2
+            class="workbench__input"
+            [size]="size"
+            label="Nombre"
+            placeholder="Escriba su nombre"
+            hint="Tal como aparece en su DNI."
+          />
+          <afi-input-v2
+            class="workbench__input"
+            [size]="size"
+            label="Nombre"
+            value="María García"
+            hint="Tal como aparece en su DNI."
+          />
+          <afi-input-v2
+            class="workbench__input"
+            [size]="size"
+            label="Nombre"
+            value="María"
+            error="Este campo es obligatorio."
+          />
+          <afi-input-v2
+            class="workbench__input"
+            [size]="size"
+            label="Nombre"
+            value="María García"
+            hint="No editable en este contexto."
+            [disabled]="true"
+          />
+          <afi-input-v2
+            class="workbench__input"
+            [size]="size"
+            label="Nombre"
+            value="María García"
+            hint="Solo lectura."
+            [readonly]="true"
+          />
+        </div>
+      </section>
+    }
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">Adornos · prefijo, sufijo e iconos</h3>
+      <div class="workbench__row workbench__row--inputs">
+        <afi-input-v2
+          class="workbench__input"
+          label="Importe"
+          type="number"
+          prefix="€"
+          suffix="EUR"
+          placeholder="0,00"
+          hint="Importe en euros."
+        />
+        <afi-input-v2
+          class="workbench__input"
+          label="Buscar"
+          type="search"
+          placeholder="Buscar cliente"
+          hint="Filtra por nombre o NIF."
+        >
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="7" cy="7" r="4.5" />
+            <path d="M10.5 10.5L14 14" />
+          </svg>
+        </afi-input-v2>
+        <afi-input-v2
+          class="workbench__input"
+          label="Correo electrónico"
+          type="email"
+          placeholder="nombre@dominio.com"
+          hint="Le enviaremos la confirmación aquí."
+        >
+          <svg
+            slot="iconEnd"
+            class="workbench__icon"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="2" y="3.5" width="12" height="9" rx="1.5" />
+            <path d="M2.5 4.5L8 8.5l5.5-4" />
+          </svg>
+        </afi-input-v2>
+      </div>
+      <p class="workbench__hint">
+        Interactúe para ver el resto de estados: pase el cursor (hover) y navegue con Tab (focus).
+      </p>
     </section>
   </div>
 </site-demo-shell>

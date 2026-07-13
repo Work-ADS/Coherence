@@ -1,0 +1,179 @@
+// afi-input-v2 — identity v2 (foundations-modern tokens only).
+//
+// Anatomy mirrors the Figma Input set (2383:5318):
+//   host                 = label + field + help, stacked with --gap-field-label
+//   .__field             = bordered flex row; owns bg/border/focus chrome
+//   .__affix             = text prefix/suffix (€ / EUR); icon slots project in
+//   .__control           = the bare <input>, transparent, flex-1
+//   .__help              = help text, recoloured to the error message on error
+//
+// Figma has no gradient/effect-style layers here, so there is no hand-authored
+// component-input.scss — every value below resolves to an existing token.
+//
+// Touch targets: all sizes are dense-desktop opt-outs per accessibility.md —
+// heights follow --height-component-* (28/32/40, below the 44pt AAA target).
+// Touch-first surfaces should use size "lg" with generous spacing.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-field-label);
+  font-family: var(--font-family-primary);
+}
+
+.afi-input-v2__label {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  color: var(--content-primary);
+}
+
+// Required asterisk uses the error tone intentionally (the "must-fill" cue),
+// not as decorative colour — the semantics ride on aria-required in markup.
+.afi-input-v2__required {
+  color: var(--error-foreground);
+}
+
+// ── Field — the bordered flex row that carries every state's chrome ─────────
+.afi-input-v2__field {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  inline-size: 100%;
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-lg);
+  background: var(--background-surface);
+  color: var(--content-primary);
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-easing-standard),
+    background-color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  // ── Sizes ─────────────────────────────────────────────────────────────────
+  // MD/LG come straight from Figma; SM is extrapolated from the token scale.
+  &--sm {
+    block-size: var(--height-component-sm);
+    padding-inline: var(--pad-control-sm);
+  }
+
+  &--md {
+    block-size: var(--height-component-md);
+    padding-inline: var(--pad-control-md);
+  }
+
+  &--lg {
+    block-size: var(--height-component-lg);
+    padding-inline: var(--pad-control-lg);
+  }
+
+  // ── Hover (hover-tint) — only in the plain editable resting state ───────────
+  &:hover:not(.afi-input-v2__field--disabled):not(.afi-input-v2__field--readonly):not(.afi-input-v2__field--error) {
+    background: var(--background-hover);
+    border-color: var(--borders-hover);
+  }
+
+  // ── Focus — inset ring so it never clips inside an overflow-hidden parent.
+  //    focus-ring pattern (motion-skill §4.3): instant, never transitioned.
+  &:focus-within:not(.afi-input-v2__field--disabled):not(.afi-input-v2__field--error) {
+    border-color: var(--borders-focus);
+    box-shadow: inset 0 0 0 var(--stroke-focus) var(--borders-focus);
+  }
+
+  // ── Error — light fill + error border; keeps a same-colour focus ring so the
+  //    focus affordance stays visible without clashing with the blue ring.
+  &--error {
+    background: var(--error-background);
+    border-color: var(--error-border);
+
+    &:focus-within {
+      box-shadow: inset 0 0 0 var(--stroke-focus) var(--error-border);
+    }
+  }
+
+  // ── Disabled ────────────────────────────────────────────────────────────────
+  &--disabled {
+    background: var(--disabled-background);
+    border-color: var(--borders-disabled);
+    cursor: not-allowed;
+  }
+
+  // ── Read-only — Figma keeps the default chrome; only the value tone shifts.
+  &--readonly {
+    cursor: default;
+  }
+}
+
+// ── Control — the bare input; the field owns the visible chrome ─────────────
+.afi-input-v2__control {
+  flex: 1 0 0;
+  min-inline-size: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  padding: 0;
+
+  &::placeholder {
+    color: var(--content-placeholder);
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:disabled {
+    color: var(--content-disabled);
+    cursor: not-allowed;
+  }
+
+  // Numeric inputs always right-align — financial UIs read magnitudes
+  // right-to-left. Logical `end` so RTL locales still align toward the flow.
+  &[data-type='number'] {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.afi-input-v2__field--readonly .afi-input-v2__control {
+  color: var(--content-secondary);
+  cursor: default;
+}
+
+// ── Text affixes (€ / EUR) — icons project directly as flex children ────────
+.afi-input-v2__affix {
+  flex-shrink: 0;
+  color: var(--content-secondary);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+
+.afi-input-v2__field--disabled .afi-input-v2__affix {
+  color: var(--content-disabled);
+}
+
+// ── Help / error message ─────────────────────────────────────────────────────
+.afi-input-v2__help {
+  margin: 0;
+  font-size: var(--type-help-size);
+  font-weight: var(--type-help-weight);
+  line-height: var(--type-help-line-height);
+  color: var(--content-secondary);
+
+  &--error {
+    color: var(--error-foreground);
+  }
+}
+
+// reduced-motion-collapse (motion-skill §4.6): drop the hover/focus transitions;
+// state still reads through the instant colour + ring change.
+@media (prefers-reduced-motion: reduce) {
+  .afi-input-v2__field {
+    transition: none;
+  }
+}

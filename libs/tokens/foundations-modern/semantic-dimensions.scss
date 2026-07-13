@@ -1,0 +1,83 @@
+// =============================================================================
+// semantic-dimensions.scss — static component dimensions — GENERATED, do not edit
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN → tools/figma-sync/foundations-modern.json
+// Regenerate: node tools/figma-sync/generate-foundations.mjs
+//
+// Radius, heights, widths, strokes, icons, nav, table rows, avatars, control pad/gap.
+// =============================================================================
+
+[data-foundation="modern"] {
+
+  // radius
+  --radius-none: var(--dimension-0);
+  --radius-xs: var(--dimension-0-5);
+  --radius-sm: var(--dimension-1);
+  --radius-md: var(--dimension-1-5);
+  --radius-lg: var(--dimension-2);
+  --radius-xl: var(--dimension-3);
+  --radius-full: var(--dimension-249-75);
+
+  // height
+  --height-component-sm: var(--dimension-7);
+  --height-component-md: var(--dimension-8);
+  --height-component-lg: var(--dimension-10);
+  --height-component-xs: var(--dimension-6);
+
+  // width
+  --width-sidebar-expanded: var(--dimension-70);
+  --width-sidebar-collapsed: var(--dimension-18);
+  --width-drawer-sm: var(--dimension-90);
+  --width-drawer-md: var(--dimension-120);
+  --width-drawer-lg: var(--dimension-160);
+  --width-dialog-sm: var(--dimension-100);
+  --width-dialog-md: var(--dimension-140);
+  --width-dialog-lg: var(--dimension-180);
+  --width-menu-min: var(--dimension-50);
+
+  // stroke
+  --stroke-hairline: var(--dimension-0-25);
+  --stroke-default: var(--dimension-0-25);
+  --stroke-strong: var(--dimension-0-5);
+  --stroke-focus: var(--dimension-0-5);
+  --stroke-medium: var(--dimension-0-375);
+
+  // icon
+  --icon-xs: var(--dimension-3);
+  --icon-sm: var(--dimension-4);
+  --icon-md: var(--dimension-5);
+  --icon-lg: var(--dimension-6);
+  --icon-xl: var(--dimension-8);
+
+  // navigation
+  --navigation-navbar-height: var(--dimension-16);
+  --navigation-toolbar-height: var(--dimension-12);
+  --navigation-sidebar-item-height: var(--dimension-10);
+  --navigation-tab-height: var(--dimension-10);
+
+  // table
+  --table-row-compact: var(--dimension-8);
+  --table-row-default: var(--dimension-10);
+  --table-row-comfortable: var(--dimension-12);
+  --table-header-height: var(--dimension-10);
+
+  // avatar
+  --avatar-xs: var(--dimension-5);
+  --avatar-sm: var(--dimension-6);
+  --avatar-md: var(--dimension-8);
+  --avatar-lg: var(--dimension-10);
+  --avatar-xl: var(--dimension-14);
+
+  // pad
+  --pad-control-xs: var(--dimension-1-5);
+  --pad-control-sm: var(--dimension-2);
+  --pad-control-md: var(--dimension-2-5);
+  --pad-control-lg: var(--dimension-3);
+
+  // gap
+  --gap-control-xs: var(--dimension-0-5);
+  --gap-control-sm: var(--dimension-1);
+  --gap-control-md: var(--dimension-1-5);
+  --gap-field-label: var(--dimension-1);
+  --gap-menu-item: var(--dimension-0-5);
+}

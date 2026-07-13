@@ -112,7 +112,7 @@
     color: var(--content-inverse);
 
     &::before {
-      background: var(--button-sheen-primary);
+      background: var(--button-sheen);
     }
 
     &::after {
@@ -173,24 +173,24 @@
   }
 
   // ── Destructive ────────────────────────────────────────────────────────────
-  // Figma hover is visually identical to default: the face gradient is opaque
-  // and hides the bound base swap (error 700 → 500). Mirrored as-is; flagged
-  // as a build note in the session brief.
+  // Built on the same recipe as Primary: translucent shared sheen (::before)
+  // over a variable-bound base fill, so hover is a pure base swap (700 → 500).
+  // Replaces the old opaque Figma face gradient, which hid the base swap and
+  // made Figma's hover render identical to default (2026-07-13 decision).
   &--destructive {
     background-color: var(--button-destructive-background);
     color: var(--content-inverse);
 
     &::before {
-      background: var(--button-face-destructive);
+      background: var(--button-sheen);
     }
 
     &::after {
       box-shadow: var(--button-raised-danger); // Elevation/Raised-Danger
     }
 
-    // Hover — face brightens one error step (CODE PROPOSAL; see handoff doc).
-    &:hover:not(:disabled)::before {
-      background: var(--button-face-destructive-hover);
+    &:hover:not(:disabled) {
+      background-color: var(--button-destructive-background-hover);
     }
 
     &:active:not(:disabled) {

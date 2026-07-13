@@ -13,33 +13,15 @@
 [data-foundation="modern"] {
 
   // ── Face gradients (Figma gradient fills — no token binding possible) ──────
-  // Primary sheen: 180deg, primary/800 at 20% → primary/0 at 20%, laid over the
+  // Shared raised sheen: 180deg, dark at 20% → white at 20%, laid over the
   // variable-bound base fill so hover can transition the base underneath.
-  --button-sheen-primary: linear-gradient(
+  // Used by primary AND destructive (2026-07-13: destructive rebuilt on the
+  // sheen recipe — the old opaque face hid the base swap, so Figma's hover
+  // rendered identical to default; states are now pure base-token swaps).
+  --button-sheen: linear-gradient(
     180deg,
     #27272a33 0%,
     #ffffff33 100%
-  );
-
-  // Destructive face: 180deg, error/700 held to 63.5%, then error/500.
-  // Opaque — fully covers the variable-bound base fill (see build note in
-  // docs/session-briefs/2026-07-13-identity-v2-button-input.md).
-  --button-face-destructive: linear-gradient(
-    180deg,
-    var(--color-error-700) 0%,
-    var(--color-error-700) 63.5%,
-    var(--color-error-500) 100%
-  );
-
-  // Destructive hover face — CODE PROPOSAL (Figma hover is broken: identical
-  // to default). Same gradient structure shifted one error step brighter:
-  // 700→500 top, 500→300 bottom. Finalize the exact stops in Figma, then
-  // re-sync. See the Figma update prompt in the session handoff doc.
-  --button-face-destructive-hover: linear-gradient(
-    180deg,
-    var(--color-error-500) 0%,
-    var(--color-error-500) 63.5%,
-    var(--color-error-300) 100%
   );
 
   // ── Raised treatments (Figma effect styles) ────────────────────────────────
@@ -75,8 +57,10 @@
   // ── Variant-bound primitives with no semantic role yet ─────────────────────
   // Destructive pressed fill binds primitive error/900 directly in Figma.
   --button-destructive-pressed-background: var(--color-error-900);
-  // Destructive default base fill binds error/700 (hidden under the opaque face).
+  // Destructive base fills — the sheen overlay is translucent, so these show
+  // through and carry the state change (default 700 → hover 500).
   --button-destructive-background: var(--color-error-700);
+  --button-destructive-background-hover: var(--color-error-500);
 
   // ── XS type override ────────────────────────────────────────────────────────
   // Figma binds button text at 12/16 for XS (13/18 for SM–LG via --type-button-*).

@@ -13,6 +13,7 @@ export { MenuItemV2Component, MenuV2Component, MenuDividerV2Component } from './
 export type { MenuItemV2Variant, MenuItemV2Role } from './src/menu-v2';
 export { SelectV2Component } from './src/select-v2';
 export type { SelectV2Size, SelectV2Option } from './src/select-v2';
+export { ToggleV2Component } from './src/toggle-v2';
 export { SearchComponent } from './src/search';
 export type { SearchSize, SearchSuggestion } from './src/search';
 export { FilterChipComponent } from './src/filter-chip';

@@ -326,5 +326,23 @@
       cerrar. El desplegable reutiliza afi-menu-v2 (role="listbox") con filas afi-menu-item-v2
       (role="option").
     </p>
+
+    <h2 class="workbench__group-title">Toggle</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">2 valores × 4 estados · tamaño fijo</h3>
+      <div class="workbench__row workbench__row--toggles">
+        <afi-toggle-v2 label="Notificaciones" />
+        <afi-toggle-v2 label="Notificaciones" [checked]="true" />
+        <afi-toggle-v2 label="Notificaciones" [disabled]="true" />
+        <afi-toggle-v2 label="Notificaciones" [checked]="true" [disabled]="true" />
+        <afi-toggle-v2 ariaLabel="Activar sin etiqueta" />
+      </div>
+    </section>
+    <p class="workbench__hint">
+      Aplica al instante (sin Guardar). La etiqueta va a la izquierda del control
+      (convención de fila de ajustes). El pulgar se desliza 150 ms; en Deshabilitado la
+      sombra del pulgar se aplana. Actívelo con clic, Intro o Espacio.
+    </p>
   </div>
 </site-demo-shell>

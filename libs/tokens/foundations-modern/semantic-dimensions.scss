@@ -23,6 +23,7 @@
   --height-component-md: var(--dimension-8);
   --height-component-lg: var(--dimension-10);
   --height-component-xs: var(--dimension-6);
+  --height-toggle: var(--dimension-5);
 
   // width
   --width-sidebar-expanded: var(--dimension-70);
@@ -34,6 +35,7 @@
   --width-dialog-md: var(--dimension-140);
   --width-dialog-lg: var(--dimension-180);
   --width-menu-min: var(--dimension-50);
+  --width-toggle: var(--dimension-9);
 
   // stroke
   --stroke-hairline: var(--dimension-0-25);
@@ -48,6 +50,9 @@
   --icon-md: var(--dimension-5);
   --icon-lg: var(--dimension-6);
   --icon-xl: var(--dimension-8);
+
+  // size
+  --size-toggle-thumb: var(--dimension-4);
 
   // navigation
   --navigation-navbar-height: var(--dimension-16);
@@ -73,6 +78,7 @@
   --pad-control-sm: var(--dimension-2);
   --pad-control-md: var(--dimension-2-5);
   --pad-control-lg: var(--dimension-3);
+  --pad-toggle-track: var(--dimension-0-5);
 
   // gap
   --gap-control-xs: var(--dimension-0-5);
@@ -80,4 +86,5 @@
   --gap-control-md: var(--dimension-1-5);
   --gap-field-label: var(--dimension-1);
   --gap-menu-item: var(--dimension-0-5);
+  --gap-control-label: var(--dimension-2);
 }

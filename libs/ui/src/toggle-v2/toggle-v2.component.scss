@@ -1,0 +1,117 @@
+// afi-toggle-v2 — identity v2 (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Toggle set (2568:2478) +
+// documentation (2587:2500). Fixed size — one track/thumb for all contexts.
+//
+// Anatomy: label (left) + track (right) inside a hit-area row.
+//   .__label  = Body/small text, content-primary (content-disabled when off)
+//   .__track  = 36×20 pill button; owns fill + focus ring; the only stateful bg
+//   .__thumb  = 16×16 white circle, the ONLY element with a shadow (elevation-1);
+//               slides (track − pad×2 − thumb) between off (left) and on (right)
+//
+// Figma has no gradient/effect-style layers, so there is no hand-authored
+// component-toggle.scss — every value below resolves to an existing token.
+
+:host {
+  display: inline-block;
+}
+
+.afi-toggle-v2 {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-label);
+  min-block-size: var(--height-component-md);
+  font-family: var(--font-family-primary);
+  cursor: pointer;
+
+  &--disabled {
+    cursor: not-allowed;
+  }
+}
+
+.afi-toggle-v2__label {
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  color: var(--content-primary);
+
+  .afi-toggle-v2--disabled & {
+    color: var(--content-disabled);
+  }
+}
+
+// ── Track — the pill button; carries the stateful fill + the focus ring ─────
+.afi-toggle-v2__track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  inline-size: var(--width-toggle);
+  block-size: var(--height-toggle);
+  padding: var(--pad-toggle-track);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--control-background-active);
+  cursor: inherit;
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &:hover:not(:disabled) {
+    background: var(--control-background-hover);
+  }
+
+  // Single focus ring, identical to button-v2 — one focus look across the
+  // system, no canvas gap. focus-ring pattern (motion-skill §4.3) — instant,
+  // never transitioned. NB: Figma draws a gap ring on the toggle; Figma should
+  // be updated to match this single-ring treatment.
+  &:focus-visible {
+    outline: var(--stroke-focus) solid var(--borders-focus);
+    outline-offset: var(--dimension-0);
+  }
+
+  &--on {
+    background: var(--brand-background-default);
+
+    &:hover:not(:disabled) {
+      background: var(--brand-background-hover);
+    }
+  }
+
+  // Off and On both flatten to the disabled fill (Figma disabled/background).
+  &:disabled {
+    background: var(--disabled-background);
+    cursor: not-allowed;
+  }
+}
+
+// ── Thumb — the only element with a shadow; slides via transform for the ────
+// 150ms animation the Figma static variants only imply.
+.afi-toggle-v2__thumb {
+  inline-size: var(--size-toggle-thumb);
+  block-size: var(--size-toggle-thumb);
+  border-radius: var(--radius-full);
+  background: var(--background-canvas);
+  box-shadow: var(--elevation-1);
+  transform: translateX(0);
+  transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
+
+  // travel = track width − inset both sides − thumb width (36 − 4 − 16 = 16)
+  .afi-toggle-v2__track--on & {
+    transform: translateX(
+      calc(var(--width-toggle) - 2 * var(--pad-toggle-track) - var(--size-toggle-thumb))
+    );
+  }
+
+  // Disabled flattens the thumb shadow to Elevation/0 (transparent).
+  .afi-toggle-v2__track:disabled & {
+    box-shadow: var(--elevation-0);
+  }
+}
+
+// Reduced motion: the thumb travel is a large translation, so drop the slide +
+// fill transitions. Position and colour still change instantly — state communicates.
+@media (prefers-reduced-motion: reduce) {
+  .afi-toggle-v2__track,
+  .afi-toggle-v2__thumb {
+    transition: none;
+  }
+}

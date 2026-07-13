@@ -1,0 +1,43 @@
+@if (label()) {
+  <label [for]="inputId" class="afi-input-v2__label">
+    {{ label() }}
+    @if (required()) {
+      <span class="afi-input-v2__required" aria-hidden="true"> *</span>
+    }
+  </label>
+}
+
+<div [class]="fieldClasses()">
+  @if (prefix()) {
+    <span class="afi-input-v2__affix afi-input-v2__affix--prefix" aria-hidden="true">{{ prefix() }}</span>
+  }
+  <ng-content select="[slot=iconStart]" />
+  <input
+    [id]="inputId"
+    class="afi-input-v2__control"
+    [type]="type()"
+    [attr.data-type]="type()"
+    [placeholder]="placeholder() ?? ''"
+    [disabled]="disabled()"
+    [readOnly]="readonly()"
+    [value]="value() ?? ''"
+    [attr.aria-required]="required() ? 'true' : null"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-label]="ariaLabel()"
+    [attr.autocomplete]="autocomplete()"
+    (input)="onInput($event)"
+    (focus)="focused.emit($event)"
+    (blur)="blurred.emit($event)"
+  />
+  <ng-content select="[slot=iconEnd]" />
+  @if (suffix()) {
+    <span class="afi-input-v2__affix afi-input-v2__affix--suffix" aria-hidden="true">{{ suffix() }}</span>
+  }
+</div>
+
+@if (error()) {
+  <p [id]="errorId" class="afi-input-v2__help afi-input-v2__help--error" role="alert">{{ error() }}</p>
+} @else if (hint()) {
+  <p [id]="hintId" class="afi-input-v2__help">{{ hint() }}</p>
+}

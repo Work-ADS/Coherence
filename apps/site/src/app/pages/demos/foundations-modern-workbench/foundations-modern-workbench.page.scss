@@ -32,6 +32,15 @@
     color: var(--content-tertiary);
   }
 
+  &__group-title {
+    margin-block-start: var(--layout-gap-comfortable);
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-line-height);
+    letter-spacing: var(--font-letter-spacing-tight);
+    color: var(--content-primary);
+  }
+
   &__section {
     display: flex;
     flex-direction: column;
@@ -77,6 +86,15 @@
       display: block;
       max-inline-size: var(--width-drawer-sm);
     }
+
+    &--inputs {
+      align-items: flex-start;
+      gap: var(--layout-gap-comfortable);
+    }
+  }
+
+  &__input {
+    inline-size: var(--width-menu-min);
   }
 
   &__hint {

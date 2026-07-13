@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
-import { ButtonV2Component } from '@coherence/ui';
-import type { ButtonV2Size, ButtonV2Variant } from '@coherence/ui';
+import { ButtonV2Component, InputV2Component } from '@coherence/ui';
+import type { ButtonV2Size, ButtonV2Variant, InputV2Size } from '@coherence/ui';
 
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 
@@ -20,13 +20,15 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
   selector: 'site-foundations-modern-workbench-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonV2Component, DemoShellComponent],
+  imports: [ButtonV2Component, InputV2Component, DemoShellComponent],
   templateUrl: './foundations-modern-workbench.page.html',
   styleUrls: ['./foundations-modern-workbench.page.scss'],
 })
 export class FoundationsModernWorkbenchPage {
   readonly variants: ButtonV2Variant[] = ['primary', 'secondary', 'ghost', 'destructive'];
   readonly sizes: ButtonV2Size[] = ['xs', 'sm', 'md', 'lg'];
+
+  readonly inputSizes: InputV2Size[] = ['sm', 'md', 'lg'];
 
   readonly labels: Record<ButtonV2Variant, string> = {
     primary: 'Guardar',

@@ -1,0 +1,88 @@
+// =============================================================================
+// semantic-spacing.scss — responsive spacing (6 breakpoints) — GENERATED, do not edit
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN → tools/figma-sync/foundations-modern.json
+// Regenerate: node tools/figma-sync/generate-foundations.mjs
+//
+// Mobile-first: XS values at base, overrides only where a breakpoint changes the value.
+// =============================================================================
+
+[data-foundation="modern"] {
+  --canvas-padding-inline: var(--dimension-4);
+  --canvas-padding-block: var(--dimension-4);
+  --canvas-gap-nav-to-content: var(--dimension-4);
+  --canvas-gap-section-to-section: var(--dimension-6);
+  --canvas-gap-content-to-footer: var(--dimension-8);
+  --layout-gap-compact: var(--dimension-0-5);
+  --layout-gap-default: var(--dimension-3);
+  --layout-gap-comfortable: var(--dimension-4);
+  --section-padding-inline: var(--dimension-0);
+  --section-padding-block: var(--dimension-4);
+  --section-gap-header-to-content: var(--dimension-3);
+  --section-gap-content-to-content: var(--dimension-3);
+}
+
+@media (min-width: 576px) {
+  [data-foundation="modern"] {
+    --canvas-padding-inline: var(--dimension-5);
+    --canvas-padding-block: var(--dimension-5);
+    --canvas-gap-nav-to-content: var(--dimension-5);
+    --canvas-gap-section-to-section: var(--dimension-8);
+    --canvas-gap-content-to-footer: var(--dimension-10);
+    --layout-gap-default: var(--dimension-4);
+    --layout-gap-comfortable: var(--dimension-5);
+    --section-padding-block: var(--dimension-5);
+    --section-gap-header-to-content: var(--dimension-4);
+    --section-gap-content-to-content: var(--dimension-4);
+  }
+}
+
+@media (min-width: 768px) {
+  [data-foundation="modern"] {
+    --canvas-padding-inline: var(--dimension-6);
+    --canvas-padding-block: var(--dimension-6);
+    --canvas-gap-nav-to-content: var(--dimension-6);
+    --canvas-gap-section-to-section: var(--dimension-10);
+    --canvas-gap-content-to-footer: var(--dimension-12);
+    --layout-gap-default: var(--dimension-5);
+    --layout-gap-comfortable: var(--dimension-6);
+    --section-padding-block: var(--dimension-6);
+    --section-gap-header-to-content: var(--dimension-5);
+    --section-gap-content-to-content: var(--dimension-5);
+  }
+}
+
+@media (min-width: 992px) {
+  [data-foundation="modern"] {
+    --canvas-padding-inline: var(--dimension-8);
+    --canvas-padding-block: var(--dimension-8);
+    --canvas-gap-nav-to-content: var(--dimension-8);
+    --canvas-gap-section-to-section: var(--dimension-12);
+    --canvas-gap-content-to-footer: var(--dimension-16);
+    --layout-gap-default: var(--dimension-6);
+    --layout-gap-comfortable: var(--dimension-8);
+    --section-padding-block: var(--dimension-8);
+    --section-gap-header-to-content: var(--dimension-6);
+    --section-gap-content-to-content: var(--dimension-6);
+  }
+}
+
+@media (min-width: 1200px) {
+  [data-foundation="modern"] {
+    --canvas-padding-inline: var(--dimension-10);
+    --canvas-padding-block: var(--dimension-10);
+    --canvas-gap-nav-to-content: var(--dimension-10);
+    --canvas-gap-section-to-section: var(--dimension-14);
+    --canvas-gap-content-to-footer: var(--dimension-20);
+  }
+}
+
+@media (min-width: 1400px) {
+  [data-foundation="modern"] {
+    --canvas-padding-inline: var(--dimension-12);
+    --canvas-padding-block: var(--dimension-12);
+    --canvas-gap-nav-to-content: var(--dimension-12);
+    --canvas-gap-section-to-section: var(--dimension-16);
+    --canvas-gap-content-to-footer: var(--dimension-24);
+  }
+}

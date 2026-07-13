@@ -1,0 +1,3964 @@
+{
+  "_meta": {
+    "source": "Figma AFI-FOUNDATIONS-MODERN (xa3QosoCWiPdvRvgfQ5FaE), post-cleanup state verified 2026-07-13",
+    "note": "Built from Token Studio export tokensv3.zip (live sets only) + verified cleanup renames + 2 alpha primitives the export dropped. Aliases use {collection/path} syntax. See docs/session-briefs/2026-07-13-identity-v2-token-audit.md.",
+    "totals": {
+      "Primitive Numbers": 140,
+      "Primitive Colors": 100,
+      "Primitive Type": 9,
+      "Primitive Elevation": 97,
+      "Semantic Colors": 69,
+      "Semantic Dimensions": 52,
+      "Semantic Spacing": 12,
+      "Semantic Typography": 48,
+      "Primitive Motion": 6
+    }
+  },
+  "collections": [
+    {
+      "collection": "Primitive Numbers",
+      "modes": [
+        "Primitive numbers"
+      ],
+      "vars": [
+        {
+          "name": "dimension/dimension-0",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 0
+          }
+        },
+        {
+          "name": "dimension/dimension-0-5",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 2
+          }
+        },
+        {
+          "name": "dimension/dimension-1",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 4
+          }
+        },
+        {
+          "name": "dimension/dimension-1-5",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 6
+          }
+        },
+        {
+          "name": "dimension/dimension-2",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 8
+          }
+        },
+        {
+          "name": "dimension/dimension-2-5",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 10
+          }
+        },
+        {
+          "name": "dimension/dimension-3",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 12
+          }
+        },
+        {
+          "name": "dimension/dimension-3-5",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 14
+          }
+        },
+        {
+          "name": "dimension/dimension-4",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 16
+          }
+        },
+        {
+          "name": "dimension/dimension-4-5",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 18
+          }
+        },
+        {
+          "name": "dimension/dimension-5",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 20
+          }
+        },
+        {
+          "name": "dimension/dimension-6",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 24
+          }
+        },
+        {
+          "name": "dimension/dimension-7",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 28
+          }
+        },
+        {
+          "name": "dimension/dimension-8",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 32
+          }
+        },
+        {
+          "name": "dimension/dimension-9",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 36
+          }
+        },
+        {
+          "name": "dimension/dimension-10",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 40
+          }
+        },
+        {
+          "name": "dimension/dimension-11",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 44
+          }
+        },
+        {
+          "name": "dimension/dimension-12",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 48
+          }
+        },
+        {
+          "name": "dimension/dimension-13",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 52
+          }
+        },
+        {
+          "name": "dimension/dimension-14",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 56
+          }
+        },
+        {
+          "name": "dimension/dimension-15",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 60
+          }
+        },
+        {
+          "name": "dimension/dimension-16",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 64
+          }
+        },
+        {
+          "name": "dimension/dimension-17",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 68
+          }
+        },
+        {
+          "name": "dimension/dimension-18",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 72
+          }
+        },
+        {
+          "name": "dimension/dimension-19",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 76
+          }
+        },
+        {
+          "name": "dimension/dimension-20",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 80
+          }
+        },
+        {
+          "name": "dimension/dimension-21",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 84
+          }
+        },
+        {
+          "name": "dimension/dimension-22",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 88
+          }
+        },
+        {
+          "name": "dimension/dimension-23",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 92
+          }
+        },
+        {
+          "name": "dimension/dimension-24",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 96
+          }
+        },
+        {
+          "name": "dimension/dimension-25",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 100
+          }
+        },
+        {
+          "name": "dimension/dimension-26",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 104
+          }
+        },
+        {
+          "name": "dimension/dimension-27",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 108
+          }
+        },
+        {
+          "name": "dimension/dimension-28",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 112
+          }
+        },
+        {
+          "name": "dimension/dimension-29",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 116
+          }
+        },
+        {
+          "name": "dimension/dimension-30",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 120
+          }
+        },
+        {
+          "name": "dimension/dimension-31",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 124
+          }
+        },
+        {
+          "name": "dimension/dimension-32",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 128
+          }
+        },
+        {
+          "name": "dimension/dimension-33",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 132
+          }
+        },
+        {
+          "name": "dimension/dimension-34",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 136
+          }
+        },
+        {
+          "name": "dimension/dimension-35",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 140
+          }
+        },
+        {
+          "name": "dimension/dimension-36",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 144
+          }
+        },
+        {
+          "name": "dimension/dimension-37",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 148
+          }
+        },
+        {
+          "name": "dimension/dimension-38",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 152
+          }
+        },
+        {
+          "name": "dimension/dimension-39",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 156
+          }
+        },
+        {
+          "name": "dimension/dimension-40",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 160
+          }
+        },
+        {
+          "name": "dimension/dimension-41",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 164
+          }
+        },
+        {
+          "name": "dimension/dimension-42",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 168
+          }
+        },
+        {
+          "name": "dimension/dimension-43",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 172
+          }
+        },
+        {
+          "name": "dimension/dimension-44",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 176
+          }
+        },
+        {
+          "name": "dimension/dimension-45",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 180
+          }
+        },
+        {
+          "name": "dimension/dimension-46",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 184
+          }
+        },
+        {
+          "name": "dimension/dimension-47",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 188
+          }
+        },
+        {
+          "name": "dimension/dimension-48",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 192
+          }
+        },
+        {
+          "name": "dimension/dimension-49",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 196
+          }
+        },
+        {
+          "name": "dimension/dimension-50",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 200
+          }
+        },
+        {
+          "name": "dimension/dimension-52",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 208
+          }
+        },
+        {
+          "name": "dimension/dimension-54",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 216
+          }
+        },
+        {
+          "name": "dimension/dimension-56",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 224
+          }
+        },
+        {
+          "name": "dimension/dimension-58",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 232
+          }
+        },
+        {
+          "name": "dimension/dimension-60",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 240
+          }
+        },
+        {
+          "name": "dimension/dimension-62",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 248
+          }
+        },
+        {
+          "name": "dimension/dimension-64",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 256
+          }
+        },
+        {
+          "name": "dimension/dimension-66",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 264
+          }
+        },
+        {
+          "name": "dimension/dimension-68",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 272
+          }
+        },
+        {
+          "name": "dimension/dimension-70",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 280
+          }
+        },
+        {
+          "name": "dimension/dimension-72",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 288
+          }
+        },
+        {
+          "name": "dimension/dimension-74",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 296
+          }
+        },
+        {
+          "name": "dimension/dimension-76",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 304
+          }
+        },
+        {
+          "name": "dimension/dimension-78",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 312
+          }
+        },
+        {
+          "name": "dimension/dimension-80",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 320
+          }
+        },
+        {
+          "name": "dimension/dimension-82",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 328
+          }
+        },
+        {
+          "name": "dimension/dimension-84",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 336
+          }
+        },
+        {
+          "name": "dimension/dimension-86",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 344
+          }
+        },
+        {
+          "name": "dimension/dimension-88",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 352
+          }
+        },
+        {
+          "name": "dimension/dimension-90",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 360
+          }
+        },
+        {
+          "name": "dimension/dimension-92",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 368
+          }
+        },
+        {
+          "name": "dimension/dimension-94",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 376
+          }
+        },
+        {
+          "name": "dimension/dimension-96",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 384
+          }
+        },
+        {
+          "name": "dimension/dimension-98",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 392
+          }
+        },
+        {
+          "name": "dimension/dimension-100",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 400
+          }
+        },
+        {
+          "name": "dimension/dimension-102",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 408
+          }
+        },
+        {
+          "name": "dimension/dimension-104",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 416
+          }
+        },
+        {
+          "name": "dimension/dimension-106",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 424
+          }
+        },
+        {
+          "name": "dimension/dimension-108",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 432
+          }
+        },
+        {
+          "name": "dimension/dimension-110",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 440
+          }
+        },
+        {
+          "name": "dimension/dimension-112",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 448
+          }
+        },
+        {
+          "name": "dimension/dimension-114",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 456
+          }
+        },
+        {
+          "name": "dimension/dimension-116",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 464
+          }
+        },
+        {
+          "name": "dimension/dimension-118",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 472
+          }
+        },
+        {
+          "name": "dimension/dimension-120",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 480
+          }
+        },
+        {
+          "name": "dimension/dimension-122",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 488
+          }
+        },
+        {
+          "name": "dimension/dimension-124",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 496
+          }
+        },
+        {
+          "name": "dimension/dimension-126",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 504
+          }
+        },
+        {
+          "name": "dimension/dimension-128",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 512
+          }
+        },
+        {
+          "name": "dimension/dimension-130",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 520
+          }
+        },
+        {
+          "name": "dimension/dimension-132",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 528
+          }
+        },
+        {
+          "name": "dimension/dimension-134",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 536
+          }
+        },
+        {
+          "name": "dimension/dimension-136",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 544
+          }
+        },
+        {
+          "name": "dimension/dimension-138",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 552
+          }
+        },
+        {
+          "name": "dimension/dimension-140",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 560
+          }
+        },
+        {
+          "name": "dimension/dimension-142",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 568
+          }
+        },
+        {
+          "name": "dimension/dimension-144",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 576
+          }
+        },
+        {
+          "name": "dimension/dimension-146",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 584
+          }
+        },
+        {
+          "name": "dimension/dimension-148",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 592
+          }
+        },
+        {
+          "name": "dimension/dimension-150",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 600
+          }
+        },
+        {
+          "name": "dimension/dimension-152",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 608
+          }
+        },
+        {
+          "name": "dimension/dimension-154",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 616
+          }
+        },
+        {
+          "name": "dimension/dimension-156",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 624
+          }
+        },
+        {
+          "name": "dimension/dimension-158",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 632
+          }
+        },
+        {
+          "name": "dimension/dimension-160",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 640
+          }
+        },
+        {
+          "name": "dimension/dimension-162",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 648
+          }
+        },
+        {
+          "name": "dimension/dimension-164",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 656
+          }
+        },
+        {
+          "name": "dimension/dimension-166",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 664
+          }
+        },
+        {
+          "name": "dimension/dimension-168",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 672
+          }
+        },
+        {
+          "name": "dimension/dimension-170",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 680
+          }
+        },
+        {
+          "name": "dimension/dimension-172",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 688
+          }
+        },
+        {
+          "name": "dimension/dimension-174",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 696
+          }
+        },
+        {
+          "name": "dimension/dimension-176",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 704
+          }
+        },
+        {
+          "name": "dimension/dimension-178",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 712
+          }
+        },
+        {
+          "name": "dimension/dimension-180",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 720
+          }
+        },
+        {
+          "name": "dimension/dimension-182",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 728
+          }
+        },
+        {
+          "name": "dimension/dimension-184",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 736
+          }
+        },
+        {
+          "name": "dimension/dimension-186",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 744
+          }
+        },
+        {
+          "name": "dimension/dimension-188",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 752
+          }
+        },
+        {
+          "name": "dimension/dimension-190",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 760
+          }
+        },
+        {
+          "name": "dimension/dimension-192",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 768
+          }
+        },
+        {
+          "name": "dimension/dimension-194",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 776
+          }
+        },
+        {
+          "name": "dimension/dimension-196",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 784
+          }
+        },
+        {
+          "name": "dimension/dimension-198",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 792
+          }
+        },
+        {
+          "name": "dimension/dimension-200",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 800
+          }
+        },
+        {
+          "name": "dimension/dimension-0-25",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 1
+          }
+        },
+        {
+          "name": "dimension/dimension-240",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 960
+          }
+        },
+        {
+          "name": "dimension/dimension-285",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 1140
+          }
+        },
+        {
+          "name": "dimension/dimension-330",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 1320
+          }
+        },
+        {
+          "name": "dimension/dimension-135",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 540
+          }
+        },
+        {
+          "name": "dimension/dimension-55",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 220
+          }
+        },
+        {
+          "name": "dimension/dimension-3-25",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 13
+          }
+        },
+        {
+          "name": "dimension/dimension-249-75",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 999
+          }
+        },
+        {
+          "name": "dimension/dimension-0-375",
+          "type": "number",
+          "values": {
+            "Primitive numbers": 1.5
+          }
+        }
+      ]
+    },
+    {
+      "collection": "Primitive Colors",
+      "modes": [
+        "V4 Primitive colors"
+      ],
+      "vars": [
+        {
+          "name": "control/0",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#ffffff"
+          }
+        },
+        {
+          "name": "control/25",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fcfcfd"
+          }
+        },
+        {
+          "name": "control/50",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f9fafb"
+          }
+        },
+        {
+          "name": "control/100",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f2f4f7"
+          }
+        },
+        {
+          "name": "control/200",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#e4e7ec"
+          }
+        },
+        {
+          "name": "control/300",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#d0d5dd"
+          }
+        },
+        {
+          "name": "control/400",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#98a2b3"
+          }
+        },
+        {
+          "name": "control/500",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#667085"
+          }
+        },
+        {
+          "name": "control/600",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#475467"
+          }
+        },
+        {
+          "name": "control/700",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#344054"
+          }
+        },
+        {
+          "name": "control/800",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#1d2939"
+          }
+        },
+        {
+          "name": "control/900",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#101828"
+          }
+        },
+        {
+          "name": "control/950",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#0c111d"
+          }
+        },
+        {
+          "name": "primary/0",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#ffffff"
+          }
+        },
+        {
+          "name": "primary/25",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fcfcfc"
+          }
+        },
+        {
+          "name": "primary/50",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fafafa"
+          }
+        },
+        {
+          "name": "primary/100",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f4f4f5"
+          }
+        },
+        {
+          "name": "primary/200",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#e4e4e7"
+          }
+        },
+        {
+          "name": "primary/300",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#d4d4d8"
+          }
+        },
+        {
+          "name": "primary/400",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#a1a1aa"
+          }
+        },
+        {
+          "name": "primary/500",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#71717a"
+          }
+        },
+        {
+          "name": "primary/600",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#52525b"
+          }
+        },
+        {
+          "name": "primary/700",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#3f3f46"
+          }
+        },
+        {
+          "name": "primary/800",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#27272a"
+          }
+        },
+        {
+          "name": "primary/900",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#18181b"
+          }
+        },
+        {
+          "name": "info/25",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f8fbff"
+          }
+        },
+        {
+          "name": "info/50",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f0f6ff"
+          }
+        },
+        {
+          "name": "info/100",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#e0edff"
+          }
+        },
+        {
+          "name": "info/200",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#c7dbff"
+          }
+        },
+        {
+          "name": "info/300",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#9ec5fe"
+          }
+        },
+        {
+          "name": "info/500",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#4c8dff"
+          }
+        },
+        {
+          "name": "info/700",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#2f5fcc"
+          }
+        },
+        {
+          "name": "info/900",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#1c3a80"
+          }
+        },
+        {
+          "name": "success/25",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f8fdf9"
+          }
+        },
+        {
+          "name": "success/50",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f2fbf5"
+          }
+        },
+        {
+          "name": "success/100",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#e3f6e8"
+          }
+        },
+        {
+          "name": "success/200",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#c1e9cd"
+          }
+        },
+        {
+          "name": "success/300",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#97d7ad"
+          }
+        },
+        {
+          "name": "success/500",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#3fae6a"
+          }
+        },
+        {
+          "name": "success/700",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#2c7a4a"
+          }
+        },
+        {
+          "name": "success/900",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#1a4a2d"
+          }
+        },
+        {
+          "name": "warning/25",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fffef5"
+          }
+        },
+        {
+          "name": "warning/50",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fffbea"
+          }
+        },
+        {
+          "name": "warning/100",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fff5cc"
+          }
+        },
+        {
+          "name": "warning/200",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#ffe9a3"
+          }
+        },
+        {
+          "name": "warning/300",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#ffd666"
+          }
+        },
+        {
+          "name": "warning/500",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#ffc107"
+          }
+        },
+        {
+          "name": "warning/700",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#b28704"
+          }
+        },
+        {
+          "name": "warning/900",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#6d5300"
+          }
+        },
+        {
+          "name": "error/25",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fff8f8"
+          }
+        },
+        {
+          "name": "error/50",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fef3f2"
+          }
+        },
+        {
+          "name": "error/100",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fdecec"
+          }
+        },
+        {
+          "name": "error/200",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f9d3d3"
+          }
+        },
+        {
+          "name": "error/300",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f5a3a3"
+          }
+        },
+        {
+          "name": "error/500",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#e54848"
+          }
+        },
+        {
+          "name": "error/700",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#b53030"
+          }
+        },
+        {
+          "name": "error/900",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#6e1d1d"
+          }
+        },
+        {
+          "name": "data-viz/series/1",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#062d3f"
+          }
+        },
+        {
+          "name": "data-viz/series/2",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#37bbf4"
+          }
+        },
+        {
+          "name": "data-viz/series/3",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#c8dae2"
+          }
+        },
+        {
+          "name": "data-viz/series/4",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f3f3f3"
+          }
+        },
+        {
+          "name": "data-viz/series/5",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#72c971"
+          }
+        },
+        {
+          "name": "data-viz/series/6",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#367b35"
+          }
+        },
+        {
+          "name": "data-viz/series/7",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#eb5656"
+          }
+        },
+        {
+          "name": "data-viz/series/8",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#eb8787"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/1",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{Secondary/25}"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/2",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{primary/100}"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/3",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{primary/300}"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/4",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{primary/500}"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/5",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{primary/700}"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/6",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{primary/900}"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/7",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{Secondary/900}"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/8",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{Tertiary/700}"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/9",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{Tertiary/500}"
+          }
+        },
+        {
+          "name": "data-viz/monochrome/10",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "{Tertiary/300}"
+          }
+        },
+        {
+          "name": "data-viz/positive/subtle",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#c6f3c6"
+          }
+        },
+        {
+          "name": "data-viz/positive/default",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#72c971"
+          }
+        },
+        {
+          "name": "data-viz/positive/strong",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#367b35"
+          }
+        },
+        {
+          "name": "data-viz/negative/subtle",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#eb8787"
+          }
+        },
+        {
+          "name": "data-viz/negative/default",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#eb5656"
+          }
+        },
+        {
+          "name": "data-viz/neutral/axis",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#d0d5dd"
+          }
+        },
+        {
+          "name": "data-viz/neutral/grid",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f2f4f7"
+          }
+        },
+        {
+          "name": "data-viz/neutral/label",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#344054"
+          }
+        },
+        {
+          "name": "data-viz/neutral/tooltip-background",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#ffffff"
+          }
+        },
+        {
+          "name": "data-viz/neutral/tooltip-border",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#e4e7ec"
+          }
+        },
+        {
+          "name": "data-viz/neutral/tooltip-text",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#0c111d"
+          }
+        },
+        {
+          "name": "neutral/0",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#ffffff"
+          }
+        },
+        {
+          "name": "neutral/25",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#fafafa"
+          }
+        },
+        {
+          "name": "neutral/50",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f5f5f5"
+          }
+        },
+        {
+          "name": "neutral/100",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#f1f3f5"
+          }
+        },
+        {
+          "name": "neutral/200",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#e4e7eb"
+          }
+        },
+        {
+          "name": "neutral/300",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#d1d6db"
+          }
+        },
+        {
+          "name": "neutral/400",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#b0b8c1"
+          }
+        },
+        {
+          "name": "neutral/500",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#8a949e"
+          }
+        },
+        {
+          "name": "neutral/600",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#6b7480"
+          }
+        },
+        {
+          "name": "neutral/700",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#4f5761"
+          }
+        },
+        {
+          "name": "neutral/800",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#343a40"
+          }
+        },
+        {
+          "name": "neutral/900",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#1f2328"
+          }
+        },
+        {
+          "name": "primary/700/20",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#3f3f4633"
+          }
+        },
+        {
+          "name": "neutral/500/20",
+          "type": "color",
+          "values": {
+            "V4 Primitive colors": "#343a4033"
+          }
+        }
+      ]
+    },
+    {
+      "collection": "Primitive Type",
+      "modes": [
+        "Modern"
+      ],
+      "vars": [
+        {
+          "name": "font/family/primary",
+          "type": "text",
+          "values": {
+            "Modern": "IBM plex sans"
+          }
+        },
+        {
+          "name": "font/weight/regular",
+          "type": "number",
+          "values": {
+            "Modern": 400
+          }
+        },
+        {
+          "name": "font/weight/medium",
+          "type": "number",
+          "values": {
+            "Modern": 500
+          }
+        },
+        {
+          "name": "font/weight/semibold",
+          "type": "number",
+          "values": {
+            "Modern": 600
+          }
+        },
+        {
+          "name": "font/weight/bold",
+          "type": "number",
+          "values": {
+            "Modern": 700
+          }
+        },
+        {
+          "name": "font/letter-spacing/tight",
+          "type": "number",
+          "values": {
+            "Modern": -0.01
+          }
+        },
+        {
+          "name": "font/letter-spacing/normal",
+          "type": "number",
+          "values": {
+            "Modern": 0
+          }
+        },
+        {
+          "name": "font/letter-spacing/wide",
+          "type": "number",
+          "values": {
+            "Modern": 0.02
+          }
+        },
+        {
+          "name": "font/family/mono",
+          "type": "text",
+          "values": {
+            "Modern": "IBM Plex Mono"
+          }
+        }
+      ]
+    },
+    {
+      "collection": "Primitive Elevation",
+      "modes": [
+        "Primitive elevation"
+      ],
+      "vars": [
+        {
+          "name": "0/contact shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#00000000"
+          }
+        },
+        {
+          "name": "0/contact shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "0/contact shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "0/contact shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "0/contact shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "0/contact shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "0/ambient shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#00000000"
+          }
+        },
+        {
+          "name": "0/ambient shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "0/ambient shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "0/ambient shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "0/ambient shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "0/ambient shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "1/contact shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000001a"
+          }
+        },
+        {
+          "name": "1/contact shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "1/contact shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "1/contact shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0-25}"
+          }
+        },
+        {
+          "name": "1/contact shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0-5}"
+          }
+        },
+        {
+          "name": "1/contact shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "1/ambient shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000000a"
+          }
+        },
+        {
+          "name": "1/ambient shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "1/ambient shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "1/ambient shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-1}"
+          }
+        },
+        {
+          "name": "1/ambient shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "1/ambient shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "2/contact shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000001a"
+          }
+        },
+        {
+          "name": "2/contact shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "2/contact shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "2/contact shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0-5}"
+          }
+        },
+        {
+          "name": "2/contact shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-1}"
+          }
+        },
+        {
+          "name": "2/contact shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "2/ambient shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000000d"
+          }
+        },
+        {
+          "name": "2/ambient shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "2/ambient shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "2/ambient shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-1}"
+          }
+        },
+        {
+          "name": "2/ambient shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "2/ambient shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "3/contact shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000001a"
+          }
+        },
+        {
+          "name": "3/contact shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "3/contact shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "3/contact shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-1}"
+          }
+        },
+        {
+          "name": "3/contact shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "3/contact shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "3/ambient shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000000f"
+          }
+        },
+        {
+          "name": "3/ambient shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "3/ambient shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "3/ambient shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "3/ambient shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "3/ambient shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "4/contact shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000001a"
+          }
+        },
+        {
+          "name": "4/contact shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "4/contact shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "4/contact shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "4/contact shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "4/contact shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "4/ambient shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#00000014"
+          }
+        },
+        {
+          "name": "4/ambient shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "4/ambient shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "4/ambient shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "4/ambient shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "4/ambient shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "5/contact shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000001a"
+          }
+        },
+        {
+          "name": "5/contact shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "5/contact shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "5/contact shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-3}"
+          }
+        },
+        {
+          "name": "5/contact shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "5/contact shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "5/ambient shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000001a"
+          }
+        },
+        {
+          "name": "5/ambient shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "5/ambient shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "5/ambient shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "5/ambient shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-14}"
+          }
+        },
+        {
+          "name": "5/ambient shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "6/contact shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000001f"
+          }
+        },
+        {
+          "name": "6/contact shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "6/contact shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "6/contact shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "6/contact shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "6/contact shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "6/ambient shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#0000001f"
+          }
+        },
+        {
+          "name": "6/ambient shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "6/ambient shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "6/ambient shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "6/ambient shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-18}"
+          }
+        },
+        {
+          "name": "6/ambient shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "pressed/inner-shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#000000e5"
+          }
+        },
+        {
+          "name": "pressed/inner-shadow/inverted",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#3e3e3ee5"
+          }
+        },
+        {
+          "name": "pressed/inner-shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "innerShadow"
+          }
+        },
+        {
+          "name": "pressed/inner-shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "pressed/inner-shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0-25}"
+          }
+        },
+        {
+          "name": "pressed/inner-shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "pressed/inner-shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "pressed/box-shadow/color",
+          "type": "color",
+          "values": {
+            "Primitive elevation": "#00000029"
+          }
+        },
+        {
+          "name": "pressed/box-shadow/type",
+          "type": "text",
+          "values": {
+            "Primitive elevation": "boxShadow"
+          }
+        },
+        {
+          "name": "pressed/box-shadow/x",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "pressed/box-shadow/y",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-1}"
+          }
+        },
+        {
+          "name": "pressed/box-shadow/blur",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-2-5}"
+          }
+        },
+        {
+          "name": "pressed/box-shadow/spread",
+          "type": "number",
+          "values": {
+            "Primitive elevation": "{dimension/dimension-0}"
+          }
+        }
+      ]
+    },
+    {
+      "collection": "Semantic Colors",
+      "modes": [
+        "semantics V3",
+        "Mode"
+      ],
+      "vars": [
+        {
+          "name": "background/canvas",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/0}",
+            "Mode": "{neutral/0}"
+          }
+        },
+        {
+          "name": "background/surface",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/25}",
+            "Mode": "{neutral/25}"
+          }
+        },
+        {
+          "name": "background/elevated",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/25}",
+            "Mode": "{neutral/25}"
+          }
+        },
+        {
+          "name": "background/hover",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/50}",
+            "Mode": "{neutral/50}"
+          }
+        },
+        {
+          "name": "background/active",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/50}",
+            "Mode": "{neutral/50}"
+          }
+        },
+        {
+          "name": "background/selected",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/100}",
+            "Mode": "{neutral/100}"
+          }
+        },
+        {
+          "name": "control/background/default",
+          "type": "color",
+          "values": {
+            "semantics V3": "{control/50}",
+            "Mode": "{control/50}"
+          }
+        },
+        {
+          "name": "control/background/hover",
+          "type": "color",
+          "values": {
+            "semantics V3": "{control/100}",
+            "Mode": "{control/100}"
+          }
+        },
+        {
+          "name": "control/background/active",
+          "type": "color",
+          "values": {
+            "semantics V3": "{control/200}",
+            "Mode": "{control/200}"
+          }
+        },
+        {
+          "name": "control/background/selected",
+          "type": "color",
+          "values": {
+            "semantics V3": "{control/200}",
+            "Mode": "{control/200}"
+          }
+        },
+        {
+          "name": "control/background/disabled",
+          "type": "color",
+          "values": {
+            "semantics V3": "{disabled/background}",
+            "Mode": "{disabled/background}"
+          }
+        },
+        {
+          "name": "borders/default",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/300}",
+            "Mode": "{neutral/300}"
+          }
+        },
+        {
+          "name": "borders/hover",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/500}",
+            "Mode": "{neutral/500}"
+          }
+        },
+        {
+          "name": "borders/focus",
+          "type": "color",
+          "values": {
+            "semantics V3": "{info/500}",
+            "Mode": "{info/500}"
+          }
+        },
+        {
+          "name": "borders/disabled",
+          "type": "color",
+          "values": {
+            "semantics V3": "{disabled/border}",
+            "Mode": "{disabled/border}"
+          }
+        },
+        {
+          "name": "borders/strong",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/700}",
+            "Mode": "{neutral/100}"
+          }
+        },
+        {
+          "name": "borders/selected",
+          "type": "color",
+          "values": {
+            "semantics V3": "{primary/700/20}",
+            "Mode": "{neutral/500/20}"
+          }
+        },
+        {
+          "name": "error/background",
+          "type": "color",
+          "values": {
+            "semantics V3": "{error/50}",
+            "Mode": "{error/50}"
+          }
+        },
+        {
+          "name": "error/foreground",
+          "type": "color",
+          "values": {
+            "semantics V3": "{error/700}",
+            "Mode": "{error/700}"
+          }
+        },
+        {
+          "name": "error/border",
+          "type": "color",
+          "values": {
+            "semantics V3": "{error/300}",
+            "Mode": "{error/300}"
+          }
+        },
+        {
+          "name": "warning/background",
+          "type": "color",
+          "values": {
+            "semantics V3": "{warning/50}",
+            "Mode": "{warning/50}"
+          }
+        },
+        {
+          "name": "warning/foreground",
+          "type": "color",
+          "values": {
+            "semantics V3": "{warning/700}",
+            "Mode": "{warning/700}"
+          }
+        },
+        {
+          "name": "warning/border",
+          "type": "color",
+          "values": {
+            "semantics V3": "{warning/300}",
+            "Mode": "{warning/300}"
+          }
+        },
+        {
+          "name": "info/background",
+          "type": "color",
+          "values": {
+            "semantics V3": "{info/50}",
+            "Mode": "{info/50}"
+          }
+        },
+        {
+          "name": "info/foreground",
+          "type": "color",
+          "values": {
+            "semantics V3": "{info/700}",
+            "Mode": "{info/700}"
+          }
+        },
+        {
+          "name": "info/border",
+          "type": "color",
+          "values": {
+            "semantics V3": "{info/300}",
+            "Mode": "{info/300}"
+          }
+        },
+        {
+          "name": "disabled/background",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/100}",
+            "Mode": "{neutral/500}"
+          }
+        },
+        {
+          "name": "disabled/content",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/500}",
+            "Mode": "{neutral/500}"
+          }
+        },
+        {
+          "name": "disabled/border",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/300}",
+            "Mode": "{neutral/300}"
+          }
+        },
+        {
+          "name": "chart/primary/primary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/1}",
+            "Mode": "{data-viz/series/1}"
+          }
+        },
+        {
+          "name": "chart/primary/secondary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/2}",
+            "Mode": "{data-viz/series/2}"
+          }
+        },
+        {
+          "name": "chart/primary/tertiary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/3}",
+            "Mode": "{data-viz/series/3}"
+          }
+        },
+        {
+          "name": "chart/positive/background",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/positive/subtle}",
+            "Mode": "{data-viz/positive/subtle}"
+          }
+        },
+        {
+          "name": "chart/positive/default",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/positive/default}",
+            "Mode": "{data-viz/positive/default}"
+          }
+        },
+        {
+          "name": "chart/positive/strong",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/positive/strong}",
+            "Mode": "{data-viz/positive/strong}"
+          }
+        },
+        {
+          "name": "chart/negative/background",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/negative/subtle}",
+            "Mode": "{data-viz/negative/subtle}"
+          }
+        },
+        {
+          "name": "chart/negative/default",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/negative/default}",
+            "Mode": "{data-viz/negative/default}"
+          }
+        },
+        {
+          "name": "chart/secondary/primary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/1}",
+            "Mode": "{data-viz/series/1}"
+          }
+        },
+        {
+          "name": "chart/secondary/secondary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/2}",
+            "Mode": "{data-viz/series/2}"
+          }
+        },
+        {
+          "name": "chart/secondary/tertiary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/3}",
+            "Mode": "{data-viz/series/3}"
+          }
+        },
+        {
+          "name": "chart/comparison/primary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/1}",
+            "Mode": "{data-viz/series/1}"
+          }
+        },
+        {
+          "name": "chart/comparison/secondary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/2}",
+            "Mode": "{data-viz/series/2}"
+          }
+        },
+        {
+          "name": "chart/comparison/tertiary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/3}",
+            "Mode": "{data-viz/series/3}"
+          }
+        },
+        {
+          "name": "chart/forecast/primary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/1}",
+            "Mode": "{data-viz/series/1}"
+          }
+        },
+        {
+          "name": "chart/forecast/secondary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/2}",
+            "Mode": "{data-viz/series/2}"
+          }
+        },
+        {
+          "name": "chart/forecast/tertiary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/3}",
+            "Mode": "{data-viz/series/3}"
+          }
+        },
+        {
+          "name": "chart/neutral/primary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/1}",
+            "Mode": "{data-viz/series/1}"
+          }
+        },
+        {
+          "name": "chart/neutral/secondary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/2}",
+            "Mode": "{data-viz/series/2}"
+          }
+        },
+        {
+          "name": "chart/neutral/tertiary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/3}",
+            "Mode": "{data-viz/series/3}"
+          }
+        },
+        {
+          "name": "chart/grid/primary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/1}",
+            "Mode": "{data-viz/series/1}"
+          }
+        },
+        {
+          "name": "chart/grid/secondary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/2}",
+            "Mode": "{data-viz/series/2}"
+          }
+        },
+        {
+          "name": "chart/grid/tertiary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/3}",
+            "Mode": "{data-viz/series/3}"
+          }
+        },
+        {
+          "name": "chart/axis/primary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/1}",
+            "Mode": "{data-viz/series/1}"
+          }
+        },
+        {
+          "name": "chart/axis/secondary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/2}",
+            "Mode": "{data-viz/series/2}"
+          }
+        },
+        {
+          "name": "chart/axis/tertiary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/3}",
+            "Mode": "{data-viz/series/3}"
+          }
+        },
+        {
+          "name": "chart/labels/primary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/1}",
+            "Mode": "{data-viz/series/1}"
+          }
+        },
+        {
+          "name": "chart/labels/secondary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/2}",
+            "Mode": "{data-viz/series/2}"
+          }
+        },
+        {
+          "name": "chart/labels/tertiary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/series/3}",
+            "Mode": "{data-viz/series/3}"
+          }
+        },
+        {
+          "name": "brand/background/default",
+          "type": "color",
+          "values": {
+            "semantics V3": "{primary/700}",
+            "Mode": "{primary/700}"
+          }
+        },
+        {
+          "name": "brand/background/hover",
+          "type": "color",
+          "values": {
+            "semantics V3": "{primary/600}",
+            "Mode": "{primary/600}"
+          }
+        },
+        {
+          "name": "brand/background/pressed",
+          "type": "color",
+          "values": {
+            "semantics V3": "{primary/800}",
+            "Mode": "{primary/500}"
+          }
+        },
+        {
+          "name": "brand/background/disabled",
+          "type": "color",
+          "values": {
+            "semantics V3": "{disabled/background}",
+            "Mode": "{disabled/background}"
+          }
+        },
+        {
+          "name": "brand/background/active",
+          "type": "color",
+          "values": {
+            "semantics V3": "{primary/800}",
+            "Mode": "{primary/800}"
+          }
+        },
+        {
+          "name": "content/disabled",
+          "type": "color",
+          "values": {
+            "semantics V3": "{disabled/content}",
+            "Mode": "{disabled/content}"
+          }
+        },
+        {
+          "name": "content/placeholder",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/600}",
+            "Mode": "{neutral/600}"
+          }
+        },
+        {
+          "name": "content/inverse",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/0}",
+            "Mode": "{neutral/0}"
+          }
+        },
+        {
+          "name": "content/primary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/900}",
+            "Mode": "{neutral/900}"
+          }
+        },
+        {
+          "name": "content/secondary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/800}",
+            "Mode": "{neutral/800}"
+          }
+        },
+        {
+          "name": "content/tertiary",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/700}",
+            "Mode": "{neutral/700}"
+          }
+        }
+      ]
+    },
+    {
+      "collection": "Semantic Dimensions",
+      "modes": [
+        "Mode 1"
+      ],
+      "vars": [
+        {
+          "name": "radius/none",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "radius/xs",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-5}"
+          }
+        },
+        {
+          "name": "radius/sm",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-1}"
+          }
+        },
+        {
+          "name": "radius/md",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-1-5}"
+          }
+        },
+        {
+          "name": "radius/lg",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "radius/xl",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3}"
+          }
+        },
+        {
+          "name": "radius/full",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-249-75}"
+          }
+        },
+        {
+          "name": "height/component/sm",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-7}"
+          }
+        },
+        {
+          "name": "height/component/md",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "height/component/lg",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "height/component/xs",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "width/sidebar/expanded",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-70}"
+          }
+        },
+        {
+          "name": "width/sidebar/collapsed",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-18}"
+          }
+        },
+        {
+          "name": "width/drawer/sm",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-90}"
+          }
+        },
+        {
+          "name": "width/drawer/md",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-120}"
+          }
+        },
+        {
+          "name": "width/drawer/lg",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-160}"
+          }
+        },
+        {
+          "name": "width/dialog/sm",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-100}"
+          }
+        },
+        {
+          "name": "width/dialog/md",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-140}"
+          }
+        },
+        {
+          "name": "width/dialog/lg",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-180}"
+          }
+        },
+        {
+          "name": "width/menu-min",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-50}"
+          }
+        },
+        {
+          "name": "stroke/hairline",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-25}"
+          }
+        },
+        {
+          "name": "stroke/default",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-25}"
+          }
+        },
+        {
+          "name": "stroke/strong",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-5}"
+          }
+        },
+        {
+          "name": "stroke/focus",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-5}"
+          }
+        },
+        {
+          "name": "stroke/medium",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-375}"
+          }
+        },
+        {
+          "name": "icon/xs",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3}"
+          }
+        },
+        {
+          "name": "icon/sm",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "icon/md",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-5}"
+          }
+        },
+        {
+          "name": "icon/lg",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "icon/xl",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "navigation/navbar/height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-16}"
+          }
+        },
+        {
+          "name": "navigation/toolbar/height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-12}"
+          }
+        },
+        {
+          "name": "navigation/sidebar/item-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "navigation/tab/height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "table/row/compact",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "table/row/default",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "table/row/comfortable",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-12}"
+          }
+        },
+        {
+          "name": "table/header/height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "avatar/xs",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-5}"
+          }
+        },
+        {
+          "name": "avatar/sm",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "avatar/md",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "avatar/lg",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "avatar/xl",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-14}"
+          }
+        },
+        {
+          "name": "pad/control-xs",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-1-5}"
+          }
+        },
+        {
+          "name": "pad/control-sm",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "pad/control-md",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2-5}"
+          }
+        },
+        {
+          "name": "pad/control-lg",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3}"
+          }
+        },
+        {
+          "name": "gap/control-xs",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-5}"
+          }
+        },
+        {
+          "name": "gap/control-sm",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-1}"
+          }
+        },
+        {
+          "name": "gap/control-md",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-1-5}"
+          }
+        },
+        {
+          "name": "gap/field-label",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-1}"
+          }
+        },
+        {
+          "name": "gap/menu-item",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-5}"
+          }
+        }
+      ]
+    },
+    {
+      "collection": "Semantic Spacing",
+      "modes": [
+        "XS <576px",
+        "SM ≥576px",
+        "MD ≥768px",
+        "LG ≥992px",
+        "XL ≥1200px",
+        "XXL ≥1400px"
+      ],
+      "vars": [
+        {
+          "name": "canvas/padding/inline",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-4}",
+            "SM ≥576px": "{dimension/dimension-5}",
+            "MD ≥768px": "{dimension/dimension-6}",
+            "LG ≥992px": "{dimension/dimension-8}",
+            "XL ≥1200px": "{dimension/dimension-10}",
+            "XXL ≥1400px": "{dimension/dimension-12}"
+          }
+        },
+        {
+          "name": "canvas/padding/block",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-4}",
+            "SM ≥576px": "{dimension/dimension-5}",
+            "MD ≥768px": "{dimension/dimension-6}",
+            "LG ≥992px": "{dimension/dimension-8}",
+            "XL ≥1200px": "{dimension/dimension-10}",
+            "XXL ≥1400px": "{dimension/dimension-12}"
+          }
+        },
+        {
+          "name": "canvas/gap/nav-to-content",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-4}",
+            "SM ≥576px": "{dimension/dimension-5}",
+            "MD ≥768px": "{dimension/dimension-6}",
+            "LG ≥992px": "{dimension/dimension-8}",
+            "XL ≥1200px": "{dimension/dimension-10}",
+            "XXL ≥1400px": "{dimension/dimension-12}"
+          }
+        },
+        {
+          "name": "canvas/gap/section-to-section",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-6}",
+            "SM ≥576px": "{dimension/dimension-8}",
+            "MD ≥768px": "{dimension/dimension-10}",
+            "LG ≥992px": "{dimension/dimension-12}",
+            "XL ≥1200px": "{dimension/dimension-14}",
+            "XXL ≥1400px": "{dimension/dimension-16}"
+          }
+        },
+        {
+          "name": "canvas/gap/content-to-footer",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-8}",
+            "SM ≥576px": "{dimension/dimension-10}",
+            "MD ≥768px": "{dimension/dimension-12}",
+            "LG ≥992px": "{dimension/dimension-16}",
+            "XL ≥1200px": "{dimension/dimension-20}",
+            "XXL ≥1400px": "{dimension/dimension-24}"
+          }
+        },
+        {
+          "name": "layout/gap/compact",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-0-5}",
+            "SM ≥576px": "{dimension/dimension-0-5}",
+            "MD ≥768px": "{dimension/dimension-0-5}",
+            "LG ≥992px": "{dimension/dimension-0-5}",
+            "XL ≥1200px": "{dimension/dimension-0-5}",
+            "XXL ≥1400px": "{dimension/dimension-0-5}"
+          }
+        },
+        {
+          "name": "layout/gap/default",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-3}",
+            "SM ≥576px": "{dimension/dimension-4}",
+            "MD ≥768px": "{dimension/dimension-5}",
+            "LG ≥992px": "{dimension/dimension-6}",
+            "XL ≥1200px": "{dimension/dimension-6}",
+            "XXL ≥1400px": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "layout/gap/comfortable",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-4}",
+            "SM ≥576px": "{dimension/dimension-5}",
+            "MD ≥768px": "{dimension/dimension-6}",
+            "LG ≥992px": "{dimension/dimension-8}",
+            "XL ≥1200px": "{dimension/dimension-8}",
+            "XXL ≥1400px": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "section/padding/inline",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-0}",
+            "SM ≥576px": "{dimension/dimension-0}",
+            "MD ≥768px": "{dimension/dimension-0}",
+            "LG ≥992px": "{dimension/dimension-0}",
+            "XL ≥1200px": "{dimension/dimension-0}",
+            "XXL ≥1400px": "{dimension/dimension-0}"
+          }
+        },
+        {
+          "name": "section/padding/block",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-4}",
+            "SM ≥576px": "{dimension/dimension-5}",
+            "MD ≥768px": "{dimension/dimension-6}",
+            "LG ≥992px": "{dimension/dimension-8}",
+            "XL ≥1200px": "{dimension/dimension-8}",
+            "XXL ≥1400px": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "section/gap/header-to-content",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-3}",
+            "SM ≥576px": "{dimension/dimension-4}",
+            "MD ≥768px": "{dimension/dimension-5}",
+            "LG ≥992px": "{dimension/dimension-6}",
+            "XL ≥1200px": "{dimension/dimension-6}",
+            "XXL ≥1400px": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "section/gap/content-to-content",
+          "type": "number",
+          "values": {
+            "XS <576px": "{dimension/dimension-3}",
+            "SM ≥576px": "{dimension/dimension-4}",
+            "MD ≥768px": "{dimension/dimension-5}",
+            "LG ≥992px": "{dimension/dimension-6}",
+            "XL ≥1200px": "{dimension/dimension-6}",
+            "XXL ≥1400px": "{dimension/dimension-6}"
+          }
+        }
+      ]
+    },
+    {
+      "collection": "Semantic Typography",
+      "modes": [
+        "Mode 1"
+      ],
+      "vars": [
+        {
+          "name": "button/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3-25}"
+          }
+        },
+        {
+          "name": "button/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/medium}"
+          }
+        },
+        {
+          "name": "button/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4-5}"
+          }
+        },
+        {
+          "name": "label/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3}"
+          }
+        },
+        {
+          "name": "label/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/medium}"
+          }
+        },
+        {
+          "name": "label/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "caption/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3}"
+          }
+        },
+        {
+          "name": "caption/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "caption/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/medium}"
+          }
+        },
+        {
+          "name": "display/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "display/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/bold}"
+          }
+        },
+        {
+          "name": "display/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-12}"
+          }
+        },
+        {
+          "name": "display/metric/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "display/metric/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/semibold}"
+          }
+        },
+        {
+          "name": "display/metric/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "h1/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "h1/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/semibold}"
+          }
+        },
+        {
+          "name": "h1/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
+          "name": "h2/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "h2/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/semibold}"
+          }
+        },
+        {
+          "name": "h2/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-8}"
+          }
+        },
+        {
+          "name": "h3/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-5}"
+          }
+        },
+        {
+          "name": "h3/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/semibold}"
+          }
+        },
+        {
+          "name": "h3/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-7}"
+          }
+        },
+        {
+          "name": "h4/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4-5}"
+          }
+        },
+        {
+          "name": "h4/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/semibold}"
+          }
+        },
+        {
+          "name": "h4/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "body/large/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "body/large/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/regular}"
+          }
+        },
+        {
+          "name": "body/large/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "body/default/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3-5}"
+          }
+        },
+        {
+          "name": "body/default/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/regular}"
+          }
+        },
+        {
+          "name": "body/default/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4-5}"
+          }
+        },
+        {
+          "name": "body/small/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3-25}"
+          }
+        },
+        {
+          "name": "body/small/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/regular}"
+          }
+        },
+        {
+          "name": "body/small/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4-5}"
+          }
+        },
+        {
+          "name": "table/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3-25}"
+          }
+        },
+        {
+          "name": "table/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/regular}"
+          }
+        },
+        {
+          "name": "table/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4-5}"
+          }
+        },
+        {
+          "name": "code/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3-25}"
+          }
+        },
+        {
+          "name": "code/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/regular}"
+          }
+        },
+        {
+          "name": "code/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4-5}"
+          }
+        },
+        {
+          "name": "metric/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-12}"
+          }
+        },
+        {
+          "name": "metric/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/semibold}"
+          }
+        },
+        {
+          "name": "metric/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-14}"
+          }
+        },
+        {
+          "name": "help/size",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2-5}"
+          }
+        },
+        {
+          "name": "help/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/regular}"
+          }
+        },
+        {
+          "name": "help/line-height",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3}"
+          }
+        }
+      ]
+    },
+    {
+      "collection": "Primitive Motion",
+      "modes": [
+        "Modern"
+      ],
+      "vars": [
+        {
+          "name": "duration/fast",
+          "type": "number",
+          "values": {
+            "Modern": 150
+          }
+        },
+        {
+          "name": "duration/base",
+          "type": "number",
+          "values": {
+            "Modern": 200
+          }
+        },
+        {
+          "name": "duration/slow",
+          "type": "number",
+          "values": {
+            "Modern": 300
+          }
+        },
+        {
+          "name": "easing/standard",
+          "type": "text",
+          "values": {
+            "Modern": "cubic-bezier(0.4, 0, 0.2, 1)"
+          }
+        },
+        {
+          "name": "easing/enter",
+          "type": "text",
+          "values": {
+            "Modern": "cubic-bezier(0.16, 1, 0.3, 1)"
+          }
+        },
+        {
+          "name": "easing/exit",
+          "type": "text",
+          "values": {
+            "Modern": "cubic-bezier(0.7, 0, 0.84, 0)"
+          }
+        }
+      ]
+    }
+  ],
+  "elevationRoles": {
+    "card": 1,
+    "tooltip": 2,
+    "menu": 3,
+    "drawer": 4,
+    "dialog": 5
+  }
+}

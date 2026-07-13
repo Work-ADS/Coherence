@@ -58,3 +58,8 @@
 
 // Layer 5 — Backward-compat aliases
 @import './aliases.scss';
+
+// Layer 6 — Identity v2 foundation (Figma AFI-FOUNDATIONS-MODERN mirror).
+// Fully scoped under [data-foundation="modern"] — inert unless a page or
+// wrapper sets that attribute. Generated files; see tools/figma-sync/.
+@import './foundations-modern/index.scss';

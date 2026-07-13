@@ -1,0 +1,92 @@
+// Identity v2 workbench — throwaway chrome, minimal styling by design.
+// Everything inside .workbench reads foundations-modern tokens (activated by
+// the data-foundation="modern" attribute on the element itself).
+
+.workbench {
+  min-block-size: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--canvas-gap-section-to-section);
+  padding: var(--canvas-padding-block) var(--canvas-padding-inline);
+  background: var(--background-canvas);
+  color: var(--content-primary);
+  font-family: var(--font-family-primary);
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-field-label);
+  }
+
+  &__title {
+    font-size: var(--type-h2-size);
+    font-weight: var(--type-h2-weight);
+    line-height: var(--type-h2-line-height);
+    letter-spacing: var(--font-letter-spacing-tight);
+  }
+
+  &__subtitle {
+    font-size: var(--type-body-default-size);
+    font-weight: var(--type-body-default-weight);
+    line-height: var(--type-body-default-line-height);
+    color: var(--content-tertiary);
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap-header-to-content);
+  }
+
+  &__section-title {
+    padding-block-end: var(--gap-control-md);
+    border-block-end: var(--stroke-hairline) solid var(--borders-default);
+    font-family: var(--font-family-mono);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    line-height: var(--type-label-line-height);
+    color: var(--content-secondary);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--width-menu-min), 1fr));
+    gap: var(--layout-gap-default);
+  }
+
+  &__cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-control-md);
+  }
+
+  &__cell-label {
+    font-family: var(--font-family-mono);
+    font-size: var(--type-caption-size);
+    line-height: var(--type-caption-line-height);
+    color: var(--content-tertiary);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--layout-gap-default);
+
+    &--stretch {
+      display: block;
+      max-inline-size: var(--width-drawer-sm);
+    }
+  }
+
+  &__hint {
+    font-size: var(--type-caption-size);
+    line-height: var(--type-caption-line-height);
+    color: var(--content-placeholder);
+  }
+
+  &__icon {
+    inline-size: var(--icon-sm);
+    block-size: var(--icon-sm);
+  }
+}

@@ -3,6 +3,8 @@ export type { LogoVariant, LogoSize } from './src/logo';
 export { DownloadMdButtonComponent } from './src/download-md-button';
 export { ButtonComponent } from './src/button';
 export type { ButtonVariant, ButtonSize } from './src/button';
+export { ButtonV2Component } from './src/button-v2';
+export type { ButtonV2Variant, ButtonV2Size } from './src/button-v2';
 export { InputComponent } from './src/input';
 export type { InputSize, InputType } from './src/input';
 export { SearchComponent } from './src/search';

@@ -1,0 +1,132 @@
+// =============================================================================
+// primitive-colors.scss — V4 color ramps — GENERATED, do not edit
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN → tools/figma-sync/foundations-modern.json
+// Regenerate: node tools/figma-sync/generate-foundations.mjs
+//
+// primary ramp is the neutral-zinc placeholder until brand accents are chosen.
+// data-viz values are current-brand placeholders (colors deferred).
+// =============================================================================
+
+[data-foundation="modern"] {
+
+  // control
+  --color-control-0: #ffffff;
+  --color-control-25: #fcfcfd;
+  --color-control-50: #f9fafb;
+  --color-control-100: #f2f4f7;
+  --color-control-200: #e4e7ec;
+  --color-control-300: #d0d5dd;
+  --color-control-400: #98a2b3;
+  --color-control-500: #667085;
+  --color-control-600: #475467;
+  --color-control-700: #344054;
+  --color-control-800: #1d2939;
+  --color-control-900: #101828;
+  --color-control-950: #0c111d;
+
+  // primary
+  --color-primary-0: #ffffff;
+  --color-primary-25: #fcfcfc;
+  --color-primary-50: #fafafa;
+  --color-primary-100: #f4f4f5;
+  --color-primary-200: #e4e4e7;
+  --color-primary-300: #d4d4d8;
+  --color-primary-400: #a1a1aa;
+  --color-primary-500: #71717a;
+  --color-primary-600: #52525b;
+  --color-primary-700: #3f3f46;
+  --color-primary-800: #27272a;
+  --color-primary-900: #18181b;
+
+  // info
+  --color-info-25: #f8fbff;
+  --color-info-50: #f0f6ff;
+  --color-info-100: #e0edff;
+  --color-info-200: #c7dbff;
+  --color-info-300: #9ec5fe;
+  --color-info-500: #4c8dff;
+  --color-info-700: #2f5fcc;
+  --color-info-900: #1c3a80;
+
+  // success
+  --color-success-25: #f8fdf9;
+  --color-success-50: #f2fbf5;
+  --color-success-100: #e3f6e8;
+  --color-success-200: #c1e9cd;
+  --color-success-300: #97d7ad;
+  --color-success-500: #3fae6a;
+  --color-success-700: #2c7a4a;
+  --color-success-900: #1a4a2d;
+
+  // warning
+  --color-warning-25: #fffef5;
+  --color-warning-50: #fffbea;
+  --color-warning-100: #fff5cc;
+  --color-warning-200: #ffe9a3;
+  --color-warning-300: #ffd666;
+  --color-warning-500: #ffc107;
+  --color-warning-700: #b28704;
+  --color-warning-900: #6d5300;
+
+  // error
+  --color-error-25: #fff8f8;
+  --color-error-50: #fef3f2;
+  --color-error-100: #fdecec;
+  --color-error-200: #f9d3d3;
+  --color-error-300: #f5a3a3;
+  --color-error-500: #e54848;
+  --color-error-700: #b53030;
+  --color-error-900: #6e1d1d;
+
+  // data-viz
+  --color-data-viz-series-1: #062d3f;
+  --color-data-viz-series-2: #37bbf4;
+  --color-data-viz-series-3: #c8dae2;
+  --color-data-viz-series-4: #f3f3f3;
+  --color-data-viz-series-5: #72c971;
+  --color-data-viz-series-6: #367b35;
+  --color-data-viz-series-7: #eb5656;
+  --color-data-viz-series-8: #eb8787;
+  --color-data-viz-monochrome-1: var(--color-neutral-25); // TODO(colors-deferred): Figma aliases external {Secondary/25} — current-brand placeholder
+  --color-data-viz-monochrome-2: var(--color-primary-100);
+  --color-data-viz-monochrome-3: var(--color-primary-300);
+  --color-data-viz-monochrome-4: var(--color-primary-500);
+  --color-data-viz-monochrome-5: var(--color-primary-700);
+  --color-data-viz-monochrome-6: var(--color-primary-900);
+  --color-data-viz-monochrome-7: var(--color-neutral-900); // TODO(colors-deferred): Figma aliases external {Secondary/900} — current-brand placeholder
+  --color-data-viz-monochrome-8: var(--color-control-700); // TODO(colors-deferred): Figma aliases external {Tertiary/700} — current-brand placeholder
+  --color-data-viz-monochrome-9: var(--color-control-500); // TODO(colors-deferred): Figma aliases external {Tertiary/500} — current-brand placeholder
+  --color-data-viz-monochrome-10: var(--color-control-300); // TODO(colors-deferred): Figma aliases external {Tertiary/300} — current-brand placeholder
+  --color-data-viz-positive-subtle: #c6f3c6;
+  --color-data-viz-positive-default: #72c971;
+  --color-data-viz-positive-strong: #367b35;
+  --color-data-viz-negative-subtle: #eb8787;
+  --color-data-viz-negative-default: #eb5656;
+  --color-data-viz-neutral-axis: #d0d5dd;
+  --color-data-viz-neutral-grid: #f2f4f7;
+  --color-data-viz-neutral-label: #344054;
+  --color-data-viz-neutral-tooltip-background: #ffffff;
+  --color-data-viz-neutral-tooltip-border: #e4e7ec;
+  --color-data-viz-neutral-tooltip-text: #0c111d;
+
+  // neutral
+  --color-neutral-0: #ffffff;
+  --color-neutral-25: #fafafa;
+  --color-neutral-50: #f5f5f5;
+  --color-neutral-100: #f1f3f5;
+  --color-neutral-200: #e4e7eb;
+  --color-neutral-300: #d1d6db;
+  --color-neutral-400: #b0b8c1;
+  --color-neutral-500: #8a949e;
+  --color-neutral-600: #6b7480;
+  --color-neutral-700: #4f5761;
+  --color-neutral-800: #343a40;
+  --color-neutral-900: #1f2328;
+
+  // primary
+  --color-primary-700-20: #3f3f4633;
+
+  // neutral
+  --color-neutral-500-20: #343a4033;
+}

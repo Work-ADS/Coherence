@@ -8,6 +8,13 @@
 // brand palette = editing libs/tokens/colors.scss. See docs/rules/component-skill.md § 2.
 @import '../../../libs/tokens/variables';
 
+// Identity v2 — foundations-modern token mirror. Every rule is scoped under
+// [data-foundation="modern"], so importing it is inert for legacy pages.
+// component-button.scss is hand-authored (Figma effect styles + gradient
+// fills that cannot be variables) and lives outside the generated index.
+@import '../../../libs/tokens/foundations-modern/index';
+@import '../../../libs/tokens/foundations-modern/component-button';
+
 // Product-level tokens — Wealth Planner. Imported AFTER the DS so its
 // --plan-state-* tokens can reference DS --feedback-* values.
 // See docs/rules/dimension-tokens.md → "Product-level tokens".

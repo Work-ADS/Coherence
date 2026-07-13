@@ -1,0 +1,85 @@
+// =============================================================================
+// semantic-typography.scss — type roles (display → help) — GENERATED, do not edit
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN → tools/figma-sync/foundations-modern.json
+// Regenerate: node tools/figma-sync/generate-foundations.mjs
+//
+// Naming: --type-<style>-<prop>. Family/letter-spacing come from primitive-type.scss.
+// =============================================================================
+
+[data-foundation="modern"] {
+
+  // button
+  --type-button-size: var(--dimension-3-25);
+  --type-button-weight: var(--font-weight-medium);
+  --type-button-line-height: var(--dimension-4-5);
+
+  // label
+  --type-label-size: var(--dimension-3);
+  --type-label-weight: var(--font-weight-medium);
+  --type-label-line-height: var(--dimension-4);
+
+  // caption
+  --type-caption-size: var(--dimension-3);
+  --type-caption-line-height: var(--dimension-4);
+  --type-caption-weight: var(--font-weight-medium);
+
+  // display
+  --type-display-size: var(--dimension-10);
+  --type-display-weight: var(--font-weight-bold);
+  --type-display-line-height: var(--dimension-12);
+  --type-display-metric-size: var(--dimension-8);
+  --type-display-metric-weight: var(--font-weight-semibold);
+  --type-display-metric-line-height: var(--dimension-10);
+
+  // h1
+  --type-h1-size: var(--dimension-8);
+  --type-h1-weight: var(--font-weight-semibold);
+  --type-h1-line-height: var(--dimension-10);
+
+  // h2
+  --type-h2-size: var(--dimension-6);
+  --type-h2-weight: var(--font-weight-semibold);
+  --type-h2-line-height: var(--dimension-8);
+
+  // h3
+  --type-h3-size: var(--dimension-5);
+  --type-h3-weight: var(--font-weight-semibold);
+  --type-h3-line-height: var(--dimension-7);
+
+  // h4
+  --type-h4-size: var(--dimension-4-5);
+  --type-h4-weight: var(--font-weight-semibold);
+  --type-h4-line-height: var(--dimension-6);
+
+  // body
+  --type-body-large-size: var(--dimension-4);
+  --type-body-large-weight: var(--font-weight-regular);
+  --type-body-large-line-height: var(--dimension-6);
+  --type-body-default-size: var(--dimension-3-5);
+  --type-body-default-weight: var(--font-weight-regular);
+  --type-body-default-line-height: var(--dimension-4-5);
+  --type-body-small-size: var(--dimension-3-25);
+  --type-body-small-weight: var(--font-weight-regular);
+  --type-body-small-line-height: var(--dimension-4-5);
+
+  // table
+  --type-table-size: var(--dimension-3-25);
+  --type-table-weight: var(--font-weight-regular);
+  --type-table-line-height: var(--dimension-4-5);
+
+  // code
+  --type-code-size: var(--dimension-3-25);
+  --type-code-weight: var(--font-weight-regular);
+  --type-code-line-height: var(--dimension-4-5);
+
+  // metric
+  --type-metric-size: var(--dimension-12);
+  --type-metric-weight: var(--font-weight-semibold);
+  --type-metric-line-height: var(--dimension-14);
+
+  // help
+  --type-help-size: var(--dimension-2-5);
+  --type-help-weight: var(--font-weight-regular);
+  --type-help-line-height: var(--dimension-3);
+}

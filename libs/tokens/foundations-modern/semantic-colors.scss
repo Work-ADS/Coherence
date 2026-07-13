@@ -1,0 +1,110 @@
+// =============================================================================
+// semantic-colors.scss — 69 color roles × 2 modes — GENERATED, do not edit
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN → tools/figma-sync/foundations-modern.json
+// Regenerate: node tools/figma-sync/generate-foundations.mjs
+//
+// Mode "semantics V3" = light (default). Mode "Mode" = dark (mostly unauthored).
+// =============================================================================
+
+[data-foundation="modern"] {
+
+  // background
+  --background-canvas: var(--color-neutral-0);
+  --background-surface: var(--color-neutral-25);
+  --background-elevated: var(--color-neutral-25);
+  --background-hover: var(--color-neutral-50);
+  --background-active: var(--color-neutral-50);
+  --background-selected: var(--color-neutral-100);
+
+  // control
+  --control-background-default: var(--color-control-50);
+  --control-background-hover: var(--color-control-100);
+  --control-background-active: var(--color-control-200);
+  --control-background-selected: var(--color-control-200);
+  --control-background-disabled: var(--disabled-background);
+
+  // borders
+  --borders-default: var(--color-neutral-300);
+  --borders-hover: var(--color-neutral-500);
+  --borders-focus: var(--color-info-500);
+  --borders-disabled: var(--disabled-border);
+  --borders-strong: var(--color-neutral-700);
+  --borders-selected: var(--color-primary-700-20);
+
+  // error
+  --error-background: var(--color-error-50);
+  --error-foreground: var(--color-error-700);
+  --error-border: var(--color-error-300);
+
+  // warning
+  --warning-background: var(--color-warning-50);
+  --warning-foreground: var(--color-warning-700);
+  --warning-border: var(--color-warning-300);
+
+  // info
+  --info-background: var(--color-info-50);
+  --info-foreground: var(--color-info-700);
+  --info-border: var(--color-info-300);
+
+  // disabled
+  --disabled-background: var(--color-neutral-100);
+  --disabled-content: var(--color-neutral-500);
+  --disabled-border: var(--color-neutral-300);
+
+  // chart
+  --chart-primary-primary: var(--color-data-viz-series-1);
+  --chart-primary-secondary: var(--color-data-viz-series-2);
+  --chart-primary-tertiary: var(--color-data-viz-series-3);
+  --chart-positive-background: var(--color-data-viz-positive-subtle);
+  --chart-positive-default: var(--color-data-viz-positive-default);
+  --chart-positive-strong: var(--color-data-viz-positive-strong);
+  --chart-negative-background: var(--color-data-viz-negative-subtle);
+  --chart-negative-default: var(--color-data-viz-negative-default);
+  --chart-secondary-primary: var(--color-data-viz-series-1);
+  --chart-secondary-secondary: var(--color-data-viz-series-2);
+  --chart-secondary-tertiary: var(--color-data-viz-series-3);
+  --chart-comparison-primary: var(--color-data-viz-series-1);
+  --chart-comparison-secondary: var(--color-data-viz-series-2);
+  --chart-comparison-tertiary: var(--color-data-viz-series-3);
+  --chart-forecast-primary: var(--color-data-viz-series-1);
+  --chart-forecast-secondary: var(--color-data-viz-series-2);
+  --chart-forecast-tertiary: var(--color-data-viz-series-3);
+  --chart-neutral-primary: var(--color-data-viz-series-1);
+  --chart-neutral-secondary: var(--color-data-viz-series-2);
+  --chart-neutral-tertiary: var(--color-data-viz-series-3);
+  --chart-grid-primary: var(--color-data-viz-series-1);
+  --chart-grid-secondary: var(--color-data-viz-series-2);
+  --chart-grid-tertiary: var(--color-data-viz-series-3);
+  --chart-axis-primary: var(--color-data-viz-series-1);
+  --chart-axis-secondary: var(--color-data-viz-series-2);
+  --chart-axis-tertiary: var(--color-data-viz-series-3);
+  --chart-labels-primary: var(--color-data-viz-series-1);
+  --chart-labels-secondary: var(--color-data-viz-series-2);
+  --chart-labels-tertiary: var(--color-data-viz-series-3);
+
+  // brand
+  --brand-background-default: var(--color-primary-700);
+  --brand-background-hover: var(--color-primary-600);
+  --brand-background-pressed: var(--color-primary-800);
+  --brand-background-disabled: var(--disabled-background);
+  --brand-background-active: var(--color-primary-800);
+
+  // content
+  --content-disabled: var(--disabled-content);
+  --content-placeholder: var(--color-neutral-600);
+  --content-inverse: var(--color-neutral-0);
+  --content-primary: var(--color-neutral-900);
+  --content-secondary: var(--color-neutral-800);
+  --content-tertiary: var(--color-neutral-700);
+}
+
+// Dark theme — only 4/69 roles are authored in Figma so far.
+// When dark mode gets designed, re-sync and this block grows automatically.
+[data-foundation="modern"][data-theme='dark'],
+[data-foundation="modern"] [data-theme='dark'] {
+  --borders-strong: var(--color-neutral-100);
+  --borders-selected: var(--color-neutral-500-20);
+  --disabled-background: var(--color-neutral-500);
+  --brand-background-pressed: var(--color-primary-500);
+}

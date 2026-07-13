@@ -1,0 +1,69 @@
+// =============================================================================
+// component-button.scss — afi-button-v2 slots — HAND-AUTHORED (not generated)
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN, Button set 2383:5319, captured 2026-07-13.
+// These values come from Figma EFFECT STYLES and gradient fills, which cannot
+// be variables in Figma and therefore never appear in
+// tools/figma-sync/foundations-modern.json. Do not fold into index.scss
+// (generated); apps import this file explicitly alongside it.
+// The raised/pressed treatments are the reverse-engineered Shopify Polaris
+// button surfaces. Each entry is commented with its Figma style name.
+// =============================================================================
+
+[data-foundation="modern"] {
+
+  // ── Face gradients (Figma gradient fills — no token binding possible) ──────
+  // Shared raised sheen: 180deg, dark at 20% → white at 20%, laid over the
+  // variable-bound base fill so hover can transition the base underneath.
+  // Used by primary AND destructive (2026-07-13: destructive rebuilt on the
+  // sheen recipe — the old opaque face hid the base swap, so Figma's hover
+  // rendered identical to default; states are now pure base-token swaps).
+  --button-sheen: linear-gradient(
+    180deg,
+    #27272a33 0%,
+    #ffffff33 100%
+  );
+
+  // ── Raised treatments (Figma effect styles) ────────────────────────────────
+  // Elevation/Raised — dark/primary surface
+  --button-raised-primary:
+    inset 0 -1px 0 1px #000000cc,
+    inset 0 0 0 1px #303030,
+    inset 0 0.5px 0 1px #ffffff40;
+
+  // Elevation/Raised-Neutral — secondary surface
+  --button-raised-neutral:
+    inset 0 -1px 0 0 #b5b5b5,
+    inset 0 0 0 1px #0000001a,
+    inset 0 0.5px 0 1.5px #ffffff;
+
+  // Elevation/Raised-Danger — destructive surface
+  --button-raised-danger:
+    inset 0 -1px 0 1px #8e1f0bcc,
+    inset 0 0 0 1px #b5260bcc,
+    inset 0 0.5px 0 1.5px #ffffff59;
+
+  // ── Pressed treatments (Figma effect styles; blurs intentionally differ) ───
+  // Elevation/pressed — primary (inner blur 8)
+  --button-pressed-primary:
+    inset 0 1px 8px 0 #000000e5,
+    0 4px 10px 0 #00000029;
+
+  // Elevation/pressed/secondary — secondary (inner blur 2)
+  --button-pressed-secondary:
+    inset 0 1px 2px 0 #3e3e3ee5,
+    0 4px 10px 0 #00000029;
+
+  // ── Variant-bound primitives with no semantic role yet ─────────────────────
+  // Destructive pressed fill binds primitive error/900 directly in Figma.
+  --button-destructive-pressed-background: var(--color-error-900);
+  // Destructive base fills — the sheen overlay is translucent, so these show
+  // through and carry the state change (default 700 → hover 500).
+  --button-destructive-background: var(--color-error-700);
+  --button-destructive-background-hover: var(--color-error-500);
+
+  // ── XS type override ────────────────────────────────────────────────────────
+  // Figma binds button text at 12/16 for XS (13/18 for SM–LG via --type-button-*).
+  --button-font-size-xs: var(--dimension-3);
+  --button-line-height-xs: var(--dimension-4);
+}

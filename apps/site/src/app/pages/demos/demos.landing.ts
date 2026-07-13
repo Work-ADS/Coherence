@@ -16,6 +16,15 @@ export interface DemoCard {
 
 const DEMOS: DemoCard[] = [
   {
+    slug: 'foundations-modern-workbench',
+    title: 'Identidad v2 — workbench',
+    intro:
+      'Banco de pruebas de la nueva identidad (foundations-modern): botón v2 con todas sus variantes, tamaños y estados. Crecerá hasta convertirse en el moodboard de componentes.',
+    team: 'digital-solutions',
+    status: 'En curso',
+    overviewRoute: '/demos/foundations-modern/workbench',
+  },
+  {
     slug: 'wealth-planner-2026',
     title: 'Wealth Planner 2026',
     intro:

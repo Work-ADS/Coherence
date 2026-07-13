@@ -1,0 +1,20 @@
+// =============================================================================
+// primitive-type.scss — font primitives (mode: Modern) — GENERATED, do not edit
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN → tools/figma-sync/foundations-modern.json
+// Regenerate: node tools/figma-sync/generate-foundations.mjs
+//
+// IBM Plex Sans is loaded in apps/site/src/index.html alongside Roboto Serif.
+// =============================================================================
+
+[data-foundation="modern"] {
+  --font-family-primary: 'IBM Plex Sans', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-letter-spacing-tight: -0.01em;
+  --font-letter-spacing-normal: 0;
+  --font-letter-spacing-wide: 0.02em;
+  --font-family-mono: 'IBM Plex Mono', monospace;
+}

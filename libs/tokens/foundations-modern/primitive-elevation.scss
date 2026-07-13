@@ -1,0 +1,32 @@
+// =============================================================================
+// primitive-elevation.scss — 7 elevation levels + pressed — GENERATED, do not edit
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN → tools/figma-sync/foundations-modern.json
+// Regenerate: node tools/figma-sync/generate-foundations.mjs
+//
+// Each level = contact shadow + ambient shadow, composed into one box-shadow value.
+// =============================================================================
+
+[data-foundation="modern"] {
+  --elevation-0: none;
+  --elevation-1: var(--dimension-0) var(--dimension-0-25) var(--dimension-0-5) var(--dimension-0) #0000001a, var(--dimension-0) var(--dimension-1) var(--dimension-2) var(--dimension-0) #0000000a;
+  --elevation-2: var(--dimension-0) var(--dimension-0-5) var(--dimension-1) var(--dimension-0) #0000001a, var(--dimension-0) var(--dimension-1) var(--dimension-4) var(--dimension-0) #0000000d;
+  --elevation-3: var(--dimension-0) var(--dimension-1) var(--dimension-2) var(--dimension-0) #0000001a, var(--dimension-0) var(--dimension-2) var(--dimension-6) var(--dimension-0) #0000000f;
+  --elevation-4: var(--dimension-0) var(--dimension-2) var(--dimension-4) var(--dimension-0) #0000001a, var(--dimension-0) var(--dimension-4) var(--dimension-10) var(--dimension-0) #00000014;
+  --elevation-5: var(--dimension-0) var(--dimension-3) var(--dimension-6) var(--dimension-0) #0000001a, var(--dimension-0) var(--dimension-6) var(--dimension-14) var(--dimension-0) #0000001a;
+  --elevation-6: var(--dimension-0) var(--dimension-4) var(--dimension-8) var(--dimension-0) #0000001f, var(--dimension-0) var(--dimension-8) var(--dimension-18) var(--dimension-0) #0000001f;
+
+  // pressed states (neomorphic) — inner for filled surfaces, inverted for dark ones
+  // NOTE: buttons use the Figma EFFECT STYLES for pressed treatments (primary blur 8,
+  // secondary blur 2 — intentionally different); these vars mirror the variable set only.
+  --elevation-pressed-inner: inset var(--dimension-0) var(--dimension-0-25) var(--dimension-2) var(--dimension-0) #000000e5;
+  --elevation-pressed-inner-inverted: inset var(--dimension-0) var(--dimension-0-25) var(--dimension-2) var(--dimension-0) #3e3e3ee5;
+  --elevation-pressed-box: var(--dimension-0) var(--dimension-1) var(--dimension-2-5) var(--dimension-0) #00000029;
+
+  // semantic roles — mirror the Figma Elevation/roles/* effect styles
+  --elevation-card: var(--elevation-1);
+  --elevation-tooltip: var(--elevation-2);
+  --elevation-menu: var(--elevation-3);
+  --elevation-drawer: var(--elevation-4);
+  --elevation-dialog: var(--elevation-5);
+}

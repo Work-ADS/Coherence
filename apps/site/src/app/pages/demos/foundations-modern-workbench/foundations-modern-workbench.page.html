@@ -344,5 +344,30 @@
       (convención de fila de ajustes). El pulgar se desliza 150 ms; en Deshabilitado la
       sombra del pulgar se aplana. Actívelo con clic, Intro o Espacio.
     </p>
+
+    <h2 class="workbench__group-title">Checkbox</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">3 valores × 4 estados · tamaño fijo</h3>
+      <div class="workbench__row workbench__row--toggles">
+        <afi-checkbox-v2 label="Sin marcar" />
+        <afi-checkbox-v2 label="Marcado" [checked]="true" />
+        <afi-checkbox-v2 label="Indeterminado" [indeterminate]="true" />
+        <afi-checkbox-v2 label="Deshabilitado" [disabled]="true" />
+        <afi-checkbox-v2 label="Marcado · deshab." [checked]="true" [disabled]="true" />
+        <afi-checkbox-v2
+          label="Indet. · deshab."
+          [indeterminate]="true"
+          [disabled]="true"
+        />
+        <afi-checkbox-v2 ariaLabel="Marcar sin etiqueta" />
+      </div>
+    </section>
+    <p class="workbench__hint">
+      Control de formulario: el valor se recoge al Guardar, no se aplica al instante. La
+      etiqueta va a la derecha del control. Estados Hover y Focus en vivo (Tab para el aro
+      de foco). Indeterminado es un tercer estado que gobierna el padre —el clic solo pasa
+      a Marcado—. Actívelo con clic o Espacio.
+    </p>
   </div>
 </site-demo-shell>

@@ -1,0 +1,42 @@
+<label [class]="rootClasses()">
+  <input
+    #inputEl
+    type="checkbox"
+    class="afi-checkbox-v2__input"
+    [id]="checkboxId"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    [attr.aria-label]="!label() ? ariaLabel() : null"
+    (change)="onToggle($event)"
+  />
+  <span [class]="boxClasses()" aria-hidden="true">
+    @if (indeterminate()) {
+      <svg
+        class="afi-checkbox-v2__icon"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M4 8h8" />
+      </svg>
+    } @else if (checked()) {
+      <svg
+        class="afi-checkbox-v2__icon"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M13.5 4.5 6.5 12 3 8.5" />
+      </svg>
+    }
+  </span>
+  @if (label()) {
+    <span class="afi-checkbox-v2__label">{{ label() }}</span>
+  }
+</label>

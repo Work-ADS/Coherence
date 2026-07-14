@@ -1,0 +1,109 @@
+// afi-tab-v2 — identity v2 (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Tabs / Item (2627:2533).
+// The item owns only its trigger button: fixed navigation/tab/height, the
+// Content row (icon → label → count) with pad/control-lg inline padding and
+// gap/control-md between children, plus the resting / hover / selected /
+// disabled label colours and the focus ring. The sliding underline indicator
+// and the shared baseline are drawn by the parent list, so nothing here paints a
+// bottom border.
+//
+// Colour map: label content/secondary (resting) → content/primary (selected) →
+// content/disabled (disabled). The icon inherits the label colour (currentColor);
+// the count stays content/secondary as a supplementary value, dropping to
+// content/disabled when the item is disabled.
+
+:host {
+  display: inline-flex;
+}
+
+.afi-tab-v2 {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-md);
+  box-sizing: border-box;
+  block-size: var(--navigation-tab-height);
+  margin: 0;
+  padding-block: var(--dimension-0);
+  padding-inline: var(--pad-control-lg);
+  border: none;
+  background: transparent;
+  color: var(--content-secondary);
+  font-family: var(--font-family-primary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard),
+    color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  // ── Hover (enabled, resting or selected) ──────────────────────────────────
+  &:hover:not([aria-disabled='true']) {
+    background: var(--background-hover);
+  }
+
+  // Focus ring — instant, never transitioned, supplements the selected indicator
+  // (motion-skill §4.3 focus-ring pattern). The parent list is a horizontal
+  // scroll container (overflow-x: auto also clips the cross axis), which would
+  // crop an outside ring, so the offset is pulled inward by its own thickness —
+  // the ring hugs the tab edge and stays fully visible whether or not the bar
+  // is scrolled.
+  &:focus-visible {
+    outline: var(--stroke-focus) solid var(--borders-focus);
+    outline-offset: calc(-1 * var(--stroke-focus));
+  }
+
+  // ── Selected: label lifts to the primary content colour ───────────────────
+  &--selected {
+    color: var(--content-primary);
+  }
+
+  // ── Disabled: inert, muted label, not-allowed cursor ──────────────────────
+  &[aria-disabled='true'] {
+    color: var(--content-disabled);
+    cursor: not-allowed;
+  }
+
+  // Leading-flush (LOCKED — every afi-tabs instance): the first tab drops its
+  // inline-start padding so its label aligns with the page-header title above.
+  // The sliding underline follows automatically — the parent measures the
+  // trigger's bounding rect.
+  :host:first-of-type & {
+    padding-inline-start: var(--dimension-0);
+  }
+}
+
+.afi-tab-v2__icon {
+  display: inline-flex;
+  align-items: center;
+  color: currentColor;
+
+  // No icon projected → collapse so the content gap never renders a phantom space.
+  &:empty {
+    display: none;
+  }
+}
+
+.afi-tab-v2__label {
+  font-size: var(--type-button-size);
+  font-weight: var(--type-button-weight);
+  line-height: var(--type-button-line-height);
+  color: inherit;
+}
+
+.afi-tab-v2__count {
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  line-height: var(--type-caption-line-height);
+  color: var(--content-secondary);
+
+  .afi-tab-v2[aria-disabled='true'] & {
+    color: var(--content-disabled);
+  }
+}
+
+// reduced-motion-collapse (motion-skill §4.6): the hover fill / colour cross-fade
+// is non-essential, so it collapses to an instant state change.
+@media (prefers-reduced-motion: reduce) {
+  .afi-tab-v2 {
+    transition: none;
+  }
+}

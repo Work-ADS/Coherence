@@ -1,0 +1,52 @@
+// afi-tabs-v2 — identity v2 (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Tabs / List (2715:3172).
+// The list is a horizontal row of `<afi-tab-v2>` triggers with NO inter-item
+// gap, a shared full-width baseline (borders/default at stroke/hairline) on the
+// bottom edge, and a single sliding underline indicator (content/primary at
+// stroke/strong) that Smart-Animates its position over the selected tab.
+//
+// Overflow (per the Behavior canvas): one row that scrolls horizontally — never
+// wraps. The affordance is a partially clipped next item, so the native
+// scrollbar is hidden and there are no arrow buttons or fade gradients.
+
+:host {
+  display: block;
+}
+
+.afi-tabs-v2 {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  overflow-x: auto;
+  border-block-end: var(--stroke-hairline) solid var(--borders-default);
+
+  // Hide the scrollbar — the overflow cue is the clipped trailing item, not chrome.
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.afi-tabs-v2__indicator {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  block-size: var(--stroke-strong);
+  background: var(--content-primary);
+  transition:
+    transform var(--motion-duration-base) var(--motion-easing-standard),
+    width var(--motion-duration-base) var(--motion-easing-standard);
+  will-change: transform, width;
+
+  // Edge case: a disabled tab is the active one → mute the indicator.
+  &--disabled {
+    background: var(--content-disabled);
+  }
+
+  // reduced-motion (motion-skill §4.6): the position/width slide is non-essential.
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

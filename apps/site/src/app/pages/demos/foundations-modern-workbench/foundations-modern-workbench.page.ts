@@ -10,6 +10,8 @@ import {
   MenuV2Component,
   MenuDividerV2Component,
   SelectV2Component,
+  TabsV2Component,
+  TabV2Component,
   TagV2Component,
   ToggleV2Component,
 } from '@coherence/ui';
@@ -49,6 +51,8 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     MenuV2Component,
     MenuDividerV2Component,
     SelectV2Component,
+    TabsV2Component,
+    TabV2Component,
     TagV2Component,
     ToggleV2Component,
     DemoShellComponent,
@@ -109,6 +113,15 @@ export class FoundationsModernWorkbenchPage {
   // Chip — live selection + removable demo state.
   readonly chipSelected = signal(true);
   readonly chipRemovableVisible = signal(true);
+
+  // Tabs — live active index + the panel copy each view reveals.
+  readonly tabsActive = signal(0);
+  readonly tabPanels: string[] = [
+    'Patrimonio total, rentabilidad YTD y asignación por clase de activo.',
+    'Detalle de posiciones: renta fija, renta variable y alternativos.',
+    'Entradas y salidas previstas para los próximos doce meses.',
+    'Contratos, informes y documentación fiscal del cliente.',
+  ];
 
   onSimulate(): void {
     if (this.simulating()) {

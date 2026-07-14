@@ -203,7 +203,7 @@
         <afi-menu-v2 class="workbench__menu" ariaLabel="Acciones del documento">
           <afi-menu-item-v2>
             <svg
-              slot="icon"
+              slot="iconStart"
               class="workbench__icon"
               viewBox="0 0 16 16"
               fill="none"
@@ -219,7 +219,7 @@
           </afi-menu-item-v2>
           <afi-menu-item-v2 shortcut="⌘D">
             <svg
-              slot="icon"
+              slot="iconStart"
               class="workbench__icon"
               viewBox="0 0 16 16"
               fill="none"
@@ -239,7 +239,7 @@
           <afi-menu-divider-v2 />
           <afi-menu-item-v2 variant="destructive">
             <svg
-              slot="icon"
+              slot="iconStart"
               class="workbench__icon"
               viewBox="0 0 16 16"
               fill="none"
@@ -368,6 +368,58 @@
       etiqueta va a la derecha del control. Estados Hover y Focus en vivo (Tab para el aro
       de foco). Indeterminado es un tercer estado que gobierna el padre —el clic solo pasa
       a Marcado—. Actívelo con clic o Espacio.
+    </p>
+
+    <h2 class="workbench__group-title">Tag</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">2 tipos × icono no/sí · tamaño fijo</h3>
+      <div class="workbench__row workbench__row--toggles">
+        <afi-tag-v2 label="Renta fija" />
+        <afi-tag-v2 label="Renta fija">
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"
+            />
+            <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
+          </svg>
+        </afi-tag-v2>
+        <afi-tag-v2 kind="system" label="Beta" />
+        <afi-tag-v2 kind="system" label="Importado">
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 3v12" />
+            <path d="m8 11 4 4 4-4" />
+            <path d="M4 21h16" />
+          </svg>
+        </afi-tag-v2>
+      </div>
+    </section>
+    <p class="workbench__hint">
+      Metadatos pasivos: clasifican; no seleccionan ni accionan. «Category» (relleno neutro,
+      texto primario) para clases de activo —Renta fija, Alternativos—; «System» (borde
+      discontinuo, texto secundario) para el origen en la plataforma —Beta, Importado—. Sin
+      estados de interacción: ni hover, ni foco, ni deshabilitado. El icono es decorativo.
+      Para selección use Chip; para estado use Badge.
     </p>
   </div>
 </site-demo-shell>

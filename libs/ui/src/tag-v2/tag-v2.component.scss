@@ -1,0 +1,52 @@
+// afi-tag-v2 — identity v2 (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Tag set (2593:2587).
+// Passive metadata pill at a fixed height-component-xs. No interaction states
+// (no hover / focus / pressed / disabled) — so no transitions and no
+// reduced-motion block: the component never moves.
+//
+// Anatomy: pill container + optional projected leading icon + label.
+//   .afi-tag-v2         = the pill; box-sizing border-box so the system kind's
+//                         dashed boundary sits inside the fixed height and both
+//                         kinds share identical outer geometry.
+//   [slot=iconStart]    = consumer-projected, decorative; sized by the consumer
+//                         to --icon-sm, colour inherited via currentColor.
+//   .afi-tag-v2__label  = IBM Plex label text style; colour inherits the kind.
+
+:host {
+  display: inline-block;
+}
+
+.afi-tag-v2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: var(--gap-control-sm);
+  block-size: var(--height-component-xs);
+  padding-inline: var(--pad-control-sm);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-primary);
+
+  // Category — solid neutral fill, primary text, no boundary.
+  &--category {
+    background: var(--tag-background-default);
+    color: var(--content-primary);
+  }
+
+  // System — surface fill with a dashed inside boundary, secondary text. The
+  // Figma dash array [4, 4] is not variable-bindable; `dashed` is the DS analogue.
+  &--system {
+    border: var(--stroke-default) dashed var(--borders-default);
+    background: var(--background-surface);
+    color: var(--content-secondary);
+  }
+}
+
+.afi-tag-v2__label {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  white-space: nowrap;
+  color: inherit;
+}

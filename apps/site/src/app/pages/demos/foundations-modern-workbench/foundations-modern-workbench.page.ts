@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 import {
   ButtonV2Component,
+  CheckboxV2Component,
   InputV2Component,
   MenuItemV2Component,
   MenuV2Component,
@@ -36,6 +37,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ButtonV2Component,
+    CheckboxV2Component,
     InputV2Component,
     MenuItemV2Component,
     MenuV2Component,

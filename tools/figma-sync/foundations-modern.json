@@ -3268,6 +3268,13 @@
           }
         },
         {
+          "name": "size/checkbox",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4}"
+          }
+        },
+        {
           "name": "navigation/navbar/height",
           "type": "number",
           "values": {

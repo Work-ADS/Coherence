@@ -1,0 +1,117 @@
+// afi-checkbox-v2 — identity v2 (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Checkbox set (2553:2393).
+// Fixed 16×16 box; 3 values × 4 states resolve entirely from tokens, so there is
+// no hand-authored component-checkbox.scss.
+//
+// Anatomy: hidden native input + box (left) + label (right) inside a hit-area row.
+//   .__input = visually-hidden real checkbox; owns focus + keyboard + form state.
+//   .__box   = rounded square (size-checkbox); the only stateful surface (fill +
+//              border + focus ring). Border-box so the resting hairline border
+//              never shifts the filled state's geometry.
+//   .__icon  = Lucide check / minus (icon-xs), drawn in content-inverse (white) on
+//              the brand fill, content-disabled when disabled.
+
+:host {
+  display: inline-block;
+}
+
+.afi-checkbox-v2 {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-label);
+  min-block-size: var(--height-component-md);
+  font-family: var(--font-family-primary);
+  cursor: pointer;
+
+  &--disabled {
+    cursor: not-allowed;
+  }
+}
+
+// ── Input — visually hidden, but kept focusable so :focus-visible drives the ──
+// box's focus ring. Absolutely positioned out of flow; the box becomes the first
+// in-flow sibling while remaining the adjacent DOM sibling for the ring selector.
+.afi-checkbox-v2__input {
+  position: absolute;
+  inline-size: var(--size-checkbox);
+  block-size: var(--size-checkbox);
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+// ── Box — the only stateful surface: fill, border, focus ring ────────────────
+.afi-checkbox-v2__box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  inline-size: var(--size-checkbox);
+  block-size: var(--size-checkbox);
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-sm);
+  background: var(--background-canvas);
+  color: var(--content-inverse);
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-easing-standard),
+    border-color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  // Checked / indeterminate — filled brand square, border folds into the fill.
+  &--active {
+    border-color: var(--brand-background-default);
+    background: var(--brand-background-default);
+  }
+
+  // Hover (pointer over the whole row) — only on an enabled control.
+  .afi-checkbox-v2:hover:not(.afi-checkbox-v2--disabled) & {
+    border-color: var(--borders-hover);
+  }
+
+  .afi-checkbox-v2:hover:not(.afi-checkbox-v2--disabled) &--active {
+    border-color: var(--brand-background-hover);
+    background: var(--brand-background-hover);
+  }
+
+  // Single focus ring, identical to button-v2 / toggle-v2 — one focus look
+  // across the system. focus-ring pattern (motion-skill §4.3): instant, never
+  // transitioned. NB: Figma draws a gap ring; Figma should be updated to match
+  // this single-ring treatment.
+  .afi-checkbox-v2__input:focus-visible + & {
+    outline: var(--stroke-focus) solid var(--borders-focus);
+    outline-offset: var(--dimension-0);
+  }
+
+  // Disabled — flat disabled fill for both empty and filled; the check/dash
+  // drops to content-disabled so it still reads on the light fill.
+  .afi-checkbox-v2--disabled & {
+    border-color: var(--borders-disabled);
+    background: var(--disabled-background);
+    color: var(--content-disabled);
+  }
+}
+
+.afi-checkbox-v2__icon {
+  inline-size: var(--icon-xs);
+  block-size: var(--icon-xs);
+}
+
+.afi-checkbox-v2__label {
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  color: var(--content-primary);
+
+  .afi-checkbox-v2--disabled & {
+    color: var(--content-disabled);
+  }
+}
+
+// Reduced motion: state still changes instantly — colour communicates the state,
+// the transition is only easing, so dropping it loses nothing.
+@media (prefers-reduced-motion: reduce) {
+  .afi-checkbox-v2__box {
+    transition: none;
+  }
+}

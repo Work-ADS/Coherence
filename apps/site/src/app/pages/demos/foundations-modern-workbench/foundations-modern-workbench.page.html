@@ -540,5 +540,96 @@
       estados de interacción. Todas las parejas texto/fondo cumplen WCAG AA 4.5:1 (warning usa
       warning/900). Para clasificación pasiva use Tag; para selección, Chip.
     </p>
+
+    <h2 class="workbench__group-title">Tabs</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">
+        Barra interactiva · seleccionada / no seleccionada / contador / deshabilitada
+      </h3>
+      <afi-tabs-v2
+        ariaLabel="Vistas del cliente"
+        [activeIndex]="tabsActive()"
+        (activeIndexChange)="tabsActive.set($event)"
+      >
+        <afi-tab-v2 label="Resumen" controls="workbench-tabs-panel" />
+        <afi-tab-v2 label="Cartera" controls="workbench-tabs-panel" />
+        <afi-tab-v2 label="Flujo de caja" controls="workbench-tabs-panel" />
+        <afi-tab-v2 label="Documentos" [count]="8" controls="workbench-tabs-panel" />
+        <afi-tab-v2 label="Archivado" [disabled]="true" />
+      </afi-tabs-v2>
+      <div class="workbench__tabs-panel" id="workbench-tabs-panel" role="tabpanel" tabindex="0">
+        {{ tabPanels[tabsActive()] }}
+      </div>
+    </section>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">Icono inicial · contador suplementario</h3>
+      <afi-tabs-v2 ariaLabel="Secciones del informe">
+        <afi-tab-v2 label="General">
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          General
+        </afi-tab-v2>
+        <afi-tab-v2 label="Rendimiento">
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 17l6-6 4 4 8-8" />
+            <path d="M17 7h4v4" />
+          </svg>
+          Rendimiento
+        </afi-tab-v2>
+        <afi-tab-v2 label="Riesgo" [count]="2">
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z" />
+            <path d="M12 9v4" />
+            <path d="M12 16h.01" />
+          </svg>
+          Riesgo
+        </afi-tab-v2>
+      </afi-tabs-v2>
+    </section>
+    <p class="workbench__hint">
+      Navegación entre vistas hermanas del mismo contexto: cada pestaña revela un panel
+      distinto; no cambia un ajuste ni filtra (para eso, Segmented control). Siempre hay
+      exactamente una seleccionada —la primera activa por defecto—. La etiqueta seleccionada
+      sube a content/primary y el subrayado se desliza bajo ella (200 ms); hover y foco son
+      estados en vivo (pase el ratón o use Tab). Las flechas ←/→ y Inicio/Fin mueven foco y
+      selección a la vez, saltando las deshabilitadas. El contador es cantidad, no estado; el
+      icono de encabezado es decorativo y nunca sustituye a la etiqueta.
+    </p>
   </div>
 </site-demo-shell>

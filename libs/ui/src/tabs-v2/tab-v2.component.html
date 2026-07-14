@@ -1,0 +1,20 @@
+<button
+  #btn
+  type="button"
+  role="tab"
+  class="afi-tab-v2"
+  [class.afi-tab-v2--selected]="selected()"
+  [id]="tabId()"
+  [attr.aria-selected]="selected()"
+  [attr.aria-controls]="controls()"
+  [attr.aria-disabled]="disabled() ? 'true' : null"
+  [attr.aria-label]="count() !== null ? accessibleName() : null"
+  [tabindex]="selected() ? 0 : -1"
+  (click)="onClick()"
+>
+  <span class="afi-tab-v2__icon"><ng-content select="[slot=iconStart]" /></span>
+  <span class="afi-tab-v2__label">{{ label() }}</span>
+  @if (count() !== null) {
+    <span class="afi-tab-v2__count" aria-hidden="true">{{ count() }}</span>
+  }
+</button>

@@ -512,5 +512,33 @@
       deshabilitado sale del orden de tabulación. Para metadatos pasivos use Tag; para estado,
       Badge.
     </p>
+
+    <h2 class="workbench__group-title">Badge</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">5 tonos · sin punto · tamaño fijo</h3>
+      <div class="workbench__row workbench__row--toggles">
+        @for (badge of badgeTones; track badge.tone) {
+          <afi-badge-v2 [tone]="badge.tone" [label]="badge.label" />
+        }
+      </div>
+    </section>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">5 tonos · con punto de estado</h3>
+      <div class="workbench__row workbench__row--toggles">
+        @for (badge of badgeTones; track badge.tone) {
+          <afi-badge-v2 [tone]="badge.tone" [label]="badge.label" [dot]="true" />
+        }
+      </div>
+    </section>
+    <p class="workbench__hint">
+      Estado no interactivo: comunica la situación de un objeto —Borrador, Activo, Pendiente,
+      Vencido, En revisión—. La etiqueta lleva el significado por sí sola; el punto es una
+      pista visual redundante (aria-hidden), nunca el único indicador. «Critical» usa el rol
+      error/*; solo «Neutral» tiene borde, el resto son rellenos tintados sin borde. Sin
+      estados de interacción. Todas las parejas texto/fondo cumplen WCAG AA 4.5:1 (warning usa
+      warning/900). Para clasificación pasiva use Tag; para selección, Chip.
+    </p>
   </div>
 </site-demo-shell>

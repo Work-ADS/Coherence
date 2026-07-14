@@ -39,13 +39,18 @@
 
   // warning
   --warning-background: var(--color-warning-50);
-  --warning-foreground: var(--color-warning-700);
+  --warning-foreground: var(--color-warning-900);
   --warning-border: var(--color-warning-300);
 
   // info
   --info-background: var(--color-info-50);
   --info-foreground: var(--color-info-700);
   --info-border: var(--color-info-300);
+
+  // success
+  --success-background: var(--color-success-50);
+  --success-foreground: var(--color-success-700);
+  --success-border: var(--color-success-300);
 
   // disabled
   --disabled-background: var(--color-neutral-100);
@@ -100,6 +105,13 @@
 
   // tag
   --tag-background-default: var(--color-neutral-100);
+
+  // badge
+  --badge-dot-neutral: var(--color-neutral-700);
+  --badge-dot-success: var(--color-success-500);
+  --badge-dot-warning: var(--color-warning-500);
+  --badge-dot-critical: var(--color-error-500);
+  --badge-dot-info: var(--color-info-500);
 }
 
 // Dark theme — only 4/69 roles are authored in Figma so far.

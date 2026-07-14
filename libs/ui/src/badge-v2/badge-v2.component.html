@@ -1,0 +1,9 @@
+<span [class]="classes()">
+  @if (dot()) {
+    <svg class="afi-badge-v2__dot" viewBox="0 0 8 8" aria-hidden="true">
+      <circle class="afi-badge-v2__dot-halo" cx="4" cy="4" r="4" />
+      <circle class="afi-badge-v2__dot-indicator" cx="4" cy="4" r="3" />
+    </svg>
+  }
+  <span class="afi-badge-v2__label">{{ label() }}</span>
+</span>

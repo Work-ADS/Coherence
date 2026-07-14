@@ -1,0 +1,168 @@
+// afi-chip-v2 — identity v2 (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Chip set (2615:2526).
+// Interactive filter/select pill at a fixed height-component-xs. The Figma
+// "State" axis (Default / Hover / Focus / Pressed / Disabled) maps to live CSS
+// states, not inputs — only Selected and Disabled are component state.
+//
+// Anatomy: one bordered pill wrapper holding two sibling buttons (a button
+// cannot nest in a button):
+//   .afi-chip-v2          = the pill; owns border, fill, radius, height, inline
+//                           padding + child gap. box-sizing border-box so the
+//                           hairline inside stroke sits within the fixed height.
+//   .afi-chip-v2__body    = selection toggle <button>; transparent, stretches to
+//                           the pill height. Holds the icon slot + label.
+//   .afi-chip-v2__icon    = wraps [slot=iconStart]; content/secondary so the
+//                           decorative icon reads distinct from the label.
+//   .afi-chip-v2__label   = IBM Plex "label" text style, content/primary.
+//   .afi-chip-v2__remove  = optional dismiss <button>; owns "x" glyph.
+//
+// Fill + border are driven on the wrapper via :hover / :has(body:active) /
+// --selected / --disabled so the whole pill responds regardless of which child
+// the pointer is over. The focus ring is OUTSIDE alignment (outline), shown when
+// the body is focus-visible — mirrors the button-v2 focus recipe.
+
+:host {
+  display: inline-block;
+}
+
+.afi-chip-v2 {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  gap: var(--gap-control-sm);
+  block-size: var(--height-component-xs);
+  padding-inline: var(--pad-control-sm);
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-full);
+  background: var(--control-background-default);
+  font-family: var(--font-family-primary);
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-easing-standard),
+    border-color var(--motion-duration-fast) var(--motion-easing-standard),
+    color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  // ── Unselected interaction states ─────────────────────────────────────────
+  &:hover:not(.afi-chip-v2--disabled) {
+    background: var(--control-background-hover);
+    border-color: var(--borders-hover);
+  }
+
+  &:has(.afi-chip-v2__body:active):not(.afi-chip-v2--disabled) {
+    background: var(--control-background-active);
+    border-color: var(--borders-hover);
+  }
+
+  // focus-ring pattern (motion-skill §4.3) — instant, OUTSIDE alignment, never
+  // transitioned. Shown only for the selection body, not the Remove button.
+  &:has(.afi-chip-v2__body:focus-visible) {
+    outline: var(--stroke-focus) solid var(--borders-focus);
+    outline-offset: var(--dimension-0);
+  }
+
+  // ── Selected ───────────────────────────────────────────────────────────────
+  &--selected {
+    background: var(--control-background-selected);
+    border-color: var(--borders-selected);
+
+    &:hover:not(.afi-chip-v2--disabled) {
+      background: var(--control-background-hover);
+      border-color: var(--borders-selected);
+    }
+
+    &:has(.afi-chip-v2__body:active):not(.afi-chip-v2--disabled) {
+      background: var(--control-background-active);
+      border-color: var(--borders-selected);
+    }
+  }
+
+  // ── Disabled (selected or not) ───────────────────────────────────────────
+  &--disabled {
+    background: var(--disabled-background);
+    border-color: var(--borders-disabled);
+    cursor: not-allowed;
+  }
+}
+
+// Shared reset for the two interior buttons.
+.afi-chip-v2__body,
+.afi-chip-v2__remove {
+  display: inline-flex;
+  align-items: center;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.afi-chip-v2__body {
+  gap: var(--gap-control-sm);
+  color: var(--content-primary);
+
+  .afi-chip-v2--disabled & {
+    color: var(--content-disabled);
+  }
+}
+
+.afi-chip-v2__icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--content-secondary);
+
+  // No icon projected → collapse so the body gap never renders a phantom space.
+  &:empty {
+    display: none;
+  }
+
+  .afi-chip-v2--disabled & {
+    color: var(--content-disabled);
+  }
+}
+
+.afi-chip-v2__label {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  white-space: nowrap;
+  color: inherit;
+}
+
+.afi-chip-v2__remove {
+  color: var(--content-secondary);
+
+  // Remove owns its focus ring so keyboard users can tell it apart from the
+  // selection toggle. Same OUTSIDE recipe, rounded to the glyph.
+  &:focus-visible {
+    outline: var(--stroke-focus) solid var(--borders-focus);
+    outline-offset: var(--dimension-0);
+    border-radius: var(--radius-full);
+  }
+
+  .afi-chip-v2--disabled & {
+    color: var(--content-disabled);
+  }
+}
+
+.afi-chip-v2__remove-icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+// reduced-motion-collapse (motion-skill §4.6): the fill/border cross-fade is
+// non-essential, so it collapses to an instant state change.
+@media (prefers-reduced-motion: reduce) {
+  .afi-chip-v2 {
+    transition: none;
+  }
+}

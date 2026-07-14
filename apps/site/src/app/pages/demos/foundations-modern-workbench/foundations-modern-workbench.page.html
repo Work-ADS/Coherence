@@ -421,5 +421,96 @@
       estados de interacción: ni hover, ni foco, ni deshabilitado. El icono es decorativo.
       Para selección use Chip; para estado use Badge.
     </p>
+
+    <h2 class="workbench__group-title">Chip</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">2 selecciones × icono no/sí · quitable · tamaño fijo</h3>
+      <div class="workbench__row workbench__row--toggles">
+        <afi-chip-v2 label="Renta fija" />
+        <afi-chip-v2 label="Renta fija">
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 6h18" />
+            <path d="M7 12h10" />
+            <path d="M10 18h4" />
+          </svg>
+        </afi-chip-v2>
+        <afi-chip-v2 label="Renta fija" [selected]="true" />
+        <afi-chip-v2 label="Renta fija" [selected]="true">
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 6h18" />
+            <path d="M7 12h10" />
+            <path d="M10 18h4" />
+          </svg>
+        </afi-chip-v2>
+        <afi-chip-v2 label="Renta fija" [removable]="true" />
+        <afi-chip-v2 label="Renta fija" [disabled]="true" />
+        <afi-chip-v2 label="Renta fija" [selected]="true" [removable]="true" [disabled]="true" />
+      </div>
+    </section>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">
+        Estado en vivo · clic o Espacio para alternar · Tab para el aro de foco
+      </h3>
+      <div class="workbench__row workbench__row--toggles">
+        <afi-chip-v2
+          label="Alternativos"
+          [selected]="chipSelected()"
+          [removable]="true"
+          (selectedChange)="chipSelected.set($event)"
+        >
+          <svg
+            slot="iconStart"
+            class="workbench__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 6h18" />
+            <path d="M7 12h10" />
+            <path d="M10 18h4" />
+          </svg>
+        </afi-chip-v2>
+        @if (chipRemovableVisible()) {
+          <afi-chip-v2
+            label="Quítame"
+            [removable]="true"
+            (removed)="chipRemovableVisible.set(false)"
+          />
+        }
+      </div>
+    </section>
+    <p class="workbench__hint">
+      Control interactivo de filtro/selección. El cuerpo alterna Seleccionado (aria-pressed);
+      la «×» es una acción aparte que descarta el chip (removed). Hover, foco y pulsado son
+      estados CSS en vivo —pase el ratón o use Tab—. El icono va en content/secondary;
+      deshabilitado sale del orden de tabulación. Para metadatos pasivos use Tag; para estado,
+      Badge.
+    </p>
   </div>
 </site-demo-shell>

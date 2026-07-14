@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   ButtonV2Component,
   CheckboxV2Component,
+  ChipV2Component,
   InputV2Component,
   MenuItemV2Component,
   MenuV2Component,
@@ -39,6 +40,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
   imports: [
     ButtonV2Component,
     CheckboxV2Component,
+    ChipV2Component,
     InputV2Component,
     MenuItemV2Component,
     MenuV2Component,
@@ -91,6 +93,10 @@ export class FoundationsModernWorkbenchPage {
   };
 
   readonly simulating = signal(false);
+
+  // Chip — live selection + removable demo state.
+  readonly chipSelected = signal(true);
+  readonly chipRemovableVisible = signal(true);
 
   onSimulate(): void {
     if (this.simulating()) {

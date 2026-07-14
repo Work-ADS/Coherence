@@ -8,7 +8,7 @@
   [attr.aria-selected]="ariaSelected()"
   (click)="onClick($event)"
 >
-  <span class="afi-menu-item-v2__icon"><ng-content select="[slot=icon]" /></span>
+  <span class="afi-menu-item-v2__icon"><ng-content select="[slot=iconStart]" /></span>
   <span class="afi-menu-item-v2__label"><ng-content /></span>
   @if (shortcut()) {
     <span class="afi-menu-item-v2__shortcut">{{ shortcut() }}</span>

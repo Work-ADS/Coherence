@@ -8,6 +8,7 @@ import {
   MenuV2Component,
   MenuDividerV2Component,
   SelectV2Component,
+  TagV2Component,
   ToggleV2Component,
 } from '@coherence/ui';
 import type {
@@ -43,6 +44,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     MenuV2Component,
     MenuDividerV2Component,
     SelectV2Component,
+    TagV2Component,
     ToggleV2Component,
     DemoShellComponent,
   ],

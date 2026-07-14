@@ -7,7 +7,7 @@
       "Primitive Colors": 100,
       "Primitive Type": 9,
       "Primitive Elevation": 97,
-      "Semantic Colors": 69,
+      "Semantic Colors": 70,
       "Semantic Dimensions": 57,
       "Semantic Spacing": 12,
       "Semantic Typography": 48,
@@ -3026,6 +3026,14 @@
           "values": {
             "semantics V3": "{neutral/700}",
             "Mode": "{neutral/700}"
+          }
+        },
+        {
+          "name": "tag/background/default",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/100}",
+            "Mode": "{neutral/100}"
           }
         }
       ]

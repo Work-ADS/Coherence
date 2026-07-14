@@ -631,5 +631,102 @@
       selección a la vez, saltando las deshabilitadas. El contador es cantidad, no estado; el
       icono de encabezado es decorativo y nunca sustituye a la etiqueta.
     </p>
+
+    <h2 class="workbench__group-title">Card</h2>
+
+    <section class="workbench__section">
+      <h2 class="workbench__section-title">Matriz de estados · Header × Footer × acción</h2>
+      <div class="workbench__grid">
+        <div class="workbench__cell">
+          <span class="workbench__cell-label">Default (header, sin footer)</span>
+          <afi-card-v2
+            heading="Resumen de cartera"
+            supportingText="Rendimiento acumulado del trimestre"
+          >
+            <p class="workbench__card-body">
+              Contenido libre del cuerpo: texto, KPI, formulario o gráfico. La tarjeta
+              aporta solo la superficie y el ritmo; el contenido gestiona su propio alto.
+            </p>
+          </afi-card-v2>
+        </div>
+
+        <div class="workbench__cell">
+          <span class="workbench__cell-label">Header + Footer</span>
+          <afi-card-v2
+            heading="Confirmar traspaso"
+            supportingText="Revisa los datos antes de continuar"
+            [showFooter]="true"
+          >
+            <p class="workbench__card-body">Se moverán 12.500 € del fondo A al fondo B.</p>
+            <afi-button-v2 slot="footer" variant="ghost" size="sm">Cancelar</afi-button-v2>
+            <afi-button-v2 slot="footer" variant="primary" size="sm">Confirmar</afi-button-v2>
+          </afi-card-v2>
+        </div>
+
+        <div class="workbench__cell">
+          <span class="workbench__cell-label">Footer only (sin header)</span>
+          <afi-card-v2 [showHeader]="false" [showFooter]="true">
+            <p class="workbench__card-body">
+              Sin encabezado: el cuerpo abre la tarjeta y el pie la cierra con acciones.
+            </p>
+            <afi-button-v2 slot="footer" variant="ghost" size="sm">Descartar</afi-button-v2>
+            <afi-button-v2 slot="footer" variant="primary" size="sm">Guardar</afi-button-v2>
+          </afi-card-v2>
+        </div>
+
+        <div class="workbench__cell">
+          <span class="workbench__cell-label">Body only</span>
+          <afi-card-v2 [showHeader]="false">
+            <p class="workbench__card-body">
+              Solo cuerpo: contenedor mínimo para envolver contenido a medida (KPI, media,
+              gráfico) sin encabezado ni pie.
+            </p>
+          </afi-card-v2>
+        </div>
+
+        <div class="workbench__cell">
+          <span class="workbench__cell-label">Header + acción</span>
+          <afi-card-v2 heading="Notificaciones" supportingText="3 sin leer">
+            <!--
+              TODO(icon-button-v2): the header action wants a compact icon button
+              (kebab / "más acciones"). afi-button-v2 excludes icon-only usage by
+              design rule, so until afi-icon-button-v2 exists this demo projects a
+              labelled ghost button. When afi-icon-button-v2 lands, swap the
+              header-action slot here (and in the "Header + Footer + acción" card
+              below) to it.
+            -->
+            <afi-button-v2 slot="header-action" variant="ghost" size="sm">Ver</afi-button-v2>
+            <p class="workbench__card-body">
+              La acción del encabezado es un afi-button-v2 proyectado, con foco propio e
+              independiente de la superficie de la tarjeta.
+            </p>
+          </afi-card-v2>
+        </div>
+
+        <div class="workbench__cell">
+          <span class="workbench__cell-label">Header + Footer + acción</span>
+          <afi-card-v2
+            heading="Documento pendiente"
+            supportingText="Vence en 2 días"
+            [showFooter]="true"
+          >
+            <!-- TODO(icon-button-v2): switch this header action to afi-icon-button-v2 when it exists (see the note in the "Header + acción" card above). -->
+            <afi-button-v2 slot="header-action" variant="ghost" size="sm">Ver</afi-button-v2>
+            <p class="workbench__card-body">Firma el contrato para completar el alta.</p>
+            <afi-button-v2 slot="footer" variant="ghost" size="sm">Más tarde</afi-button-v2>
+            <afi-button-v2 slot="footer" variant="primary" size="sm">Firmar</afi-button-v2>
+          </afi-card-v2>
+        </div>
+      </div>
+      <p class="workbench__hint">
+        La tarjeta es una superficie de agrupación, no una interacción: sin role, sin
+        tabindex y sin evento de click en el contenedor. Las acciones viven en los hijos
+        proyectados —el botón de icono del encabezado y los botones del pie— que conservan
+        su propio foco. Header (por defecto activo) y Footer (por defecto inactivo) se
+        controlan con showHeader / showFooter, reflejo de los booleanos de Figma. La acción
+        de encabezado no tiene efecto si el header está oculto. El cuerpo ocupa el ancho que
+        le da el padre y nunca recorta ni desplaza su contenido.
+      </p>
+    </section>
   </div>
 </site-demo-shell>

@@ -3480,6 +3480,13 @@
           }
         },
         {
+          "name": "pad/card",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4}"
+          }
+        },
+        {
           "name": "pad/toggle-track",
           "type": "number",
           "values": {

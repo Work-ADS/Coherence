@@ -2648,8 +2648,8 @@
           "name": "warning/foreground",
           "type": "color",
           "values": {
-            "semantics V3": "{warning/700}",
-            "Mode": "{warning/700}"
+            "semantics V3": "{warning/900}",
+            "Mode": "{warning/900}"
           }
         },
         {
@@ -2682,6 +2682,30 @@
           "values": {
             "semantics V3": "{info/300}",
             "Mode": "{info/300}"
+          }
+        },
+        {
+          "name": "success/background",
+          "type": "color",
+          "values": {
+            "semantics V3": "{success/50}",
+            "Mode": "{success/50}"
+          }
+        },
+        {
+          "name": "success/foreground",
+          "type": "color",
+          "values": {
+            "semantics V3": "{success/700}",
+            "Mode": "{success/700}"
+          }
+        },
+        {
+          "name": "success/border",
+          "type": "color",
+          "values": {
+            "semantics V3": "{success/300}",
+            "Mode": "{success/300}"
           }
         },
         {
@@ -3035,6 +3059,46 @@
             "semantics V3": "{neutral/100}",
             "Mode": "{neutral/100}"
           }
+        },
+        {
+          "name": "badge/dot/neutral",
+          "type": "color",
+          "values": {
+            "semantics V3": "{neutral/700}",
+            "Mode": "{neutral/700}"
+          }
+        },
+        {
+          "name": "badge/dot/success",
+          "type": "color",
+          "values": {
+            "semantics V3": "{success/500}",
+            "Mode": "{success/500}"
+          }
+        },
+        {
+          "name": "badge/dot/warning",
+          "type": "color",
+          "values": {
+            "semantics V3": "{warning/500}",
+            "Mode": "{warning/500}"
+          }
+        },
+        {
+          "name": "badge/dot/critical",
+          "type": "color",
+          "values": {
+            "semantics V3": "{error/500}",
+            "Mode": "{error/500}"
+          }
+        },
+        {
+          "name": "badge/dot/info",
+          "type": "color",
+          "values": {
+            "semantics V3": "{info/500}",
+            "Mode": "{info/500}"
+          }
         }
       ]
     },
@@ -3119,6 +3183,13 @@
           "type": "number",
           "values": {
             "Mode 1": "{dimension/dimension-6}"
+          }
+        },
+        {
+          "name": "height/badge",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-5}"
           }
         },
         {
@@ -3280,6 +3351,13 @@
           "type": "number",
           "values": {
             "Mode 1": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "size/badge-dot",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
           }
         },
         {

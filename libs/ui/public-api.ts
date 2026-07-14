@@ -18,6 +18,8 @@ export { CheckboxV2Component } from './src/checkbox-v2';
 export { TagV2Component } from './src/tag-v2';
 export type { TagV2Kind } from './src/tag-v2';
 export { ChipV2Component } from './src/chip-v2';
+export { BadgeV2Component } from './src/badge-v2';
+export type { BadgeV2Tone } from './src/badge-v2';
 export { SearchComponent } from './src/search';
 export type { SearchSize, SearchSuggestion } from './src/search';
 export { FilterChipComponent } from './src/filter-chip';

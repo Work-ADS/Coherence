@@ -1,0 +1,115 @@
+// afi-badge-v2 — identity v2 (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Badge set (2635:2686).
+// Non-interactive status pill at a fixed height/badge. No interaction
+// states (no hover / focus / pressed / disabled) — so no transitions and no
+// reduced-motion block: the component never moves.
+//
+// Anatomy: pill container + optional leading status dot + label.
+//   .afi-badge-v2         = the pill; box-sizing border-box so the Neutral
+//                           tone's hairline border sits inside the fixed height
+//                           and all tones share identical outer geometry.
+//   .afi-badge-v2__dot    = optional circle, aria-hidden, colour inherited
+//                           from the tone via currentColor.
+//   .afi-badge-v2__label  = IBM Plex "Label Small" text; colour inherits the tone.
+//
+// Only Neutral carries a boundary (surface fill + hairline border); the four
+// semantic tones are borderless tinted fills straight from the AFI Modern
+// palette. `critical` maps to the error/* role.
+
+:host {
+  display: inline-block;
+}
+
+.afi-badge-v2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: var(--gap-control-md);
+  block-size: var(--height-badge);
+  padding-inline: var(--pad-control-sm);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-family-primary);
+
+  // Each tone sets: pill fill + label colour, the dot halo (subtle -300 ring)
+  // and the dot indicator (solid core). Only Neutral carries a boundary.
+  &--neutral {
+    background: var(--background-surface);
+    border: var(--stroke-default) solid var(--borders-default);
+    color: var(--content-secondary);
+
+    .afi-badge-v2__dot-halo {
+      fill: var(--borders-default);
+    }
+    .afi-badge-v2__dot-indicator {
+      fill: var(--badge-dot-neutral);
+    }
+  }
+
+  &--success {
+    background: var(--success-background);
+    color: var(--success-foreground);
+
+    .afi-badge-v2__dot-halo {
+      fill: var(--success-border);
+    }
+    .afi-badge-v2__dot-indicator {
+      fill: var(--badge-dot-success);
+    }
+  }
+
+  &--warning {
+    background: var(--warning-background);
+    color: var(--warning-foreground);
+
+    .afi-badge-v2__dot-halo {
+      fill: var(--warning-border);
+    }
+    .afi-badge-v2__dot-indicator {
+      fill: var(--badge-dot-warning);
+    }
+  }
+
+  // Critical surfaces the severe-red palette role, named `error/*` in tokens.
+  &--critical {
+    background: var(--error-background);
+    color: var(--error-foreground);
+
+    .afi-badge-v2__dot-halo {
+      fill: var(--error-border);
+    }
+    .afi-badge-v2__dot-indicator {
+      fill: var(--badge-dot-critical);
+    }
+  }
+
+  &--info {
+    background: var(--info-background);
+    color: var(--info-foreground);
+
+    .afi-badge-v2__dot-halo {
+      fill: var(--info-border);
+    }
+    .afi-badge-v2__dot-indicator {
+      fill: var(--badge-dot-info);
+    }
+  }
+}
+
+// Status dot — halo ring (subtle -300) + solid indicator core. Fills are set by
+// the tone modifier above; the SVG viewBox owns the inner r=3 geometry so no
+// extra sub-dot size token is needed.
+.afi-badge-v2__dot {
+  flex-shrink: 0;
+  inline-size: var(--size-badge-dot);
+  block-size: var(--size-badge-dot);
+}
+
+.afi-badge-v2__label {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  white-space: nowrap;
+  color: inherit;
+}

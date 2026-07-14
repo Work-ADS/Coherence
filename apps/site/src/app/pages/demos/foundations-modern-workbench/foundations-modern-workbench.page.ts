@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 import {
+  BadgeV2Component,
   ButtonV2Component,
   CheckboxV2Component,
   ChipV2Component,
@@ -13,6 +14,7 @@ import {
   ToggleV2Component,
 } from '@coherence/ui';
 import type {
+  BadgeV2Tone,
   ButtonV2Size,
   ButtonV2Variant,
   InputV2Size,
@@ -38,6 +40,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    BadgeV2Component,
     ButtonV2Component,
     CheckboxV2Component,
     ChipV2Component,
@@ -91,6 +94,15 @@ export class FoundationsModernWorkbenchPage {
     ghost: 'Ver detalle',
     destructive: 'Eliminar',
   };
+
+  // Badge — status tones with their canonical example labels (Figma status set).
+  readonly badgeTones: { tone: BadgeV2Tone; label: string }[] = [
+    { tone: 'neutral', label: 'Borrador' },
+    { tone: 'success', label: 'Activo' },
+    { tone: 'warning', label: 'Pendiente' },
+    { tone: 'critical', label: 'Vencido' },
+    { tone: 'info', label: 'En revisión' },
+  ];
 
   readonly simulating = signal(false);
 

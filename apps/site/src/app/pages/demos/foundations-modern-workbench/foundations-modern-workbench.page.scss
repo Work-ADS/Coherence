@@ -164,4 +164,14 @@
     inline-size: var(--icon-sm);
     block-size: var(--icon-sm);
   }
+
+  // Card demo — body copy owns its own type (the card shell never styles the
+  // projected content). Cards fill their grid cell, showing the "fills parent
+  // width" behaviour.
+  &__card-body {
+    margin: 0;
+    font-size: var(--type-body-default-size);
+    line-height: var(--type-body-default-line-height);
+    color: var(--content-secondary);
+  }
 }

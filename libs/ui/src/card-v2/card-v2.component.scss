@@ -1,0 +1,80 @@
+// afi-card-v2 — identity v2 (foundations-modern tokens only).
+//
+// The host element IS the card surface (no wrapper div): a flex column whose
+// section gap and inner padding both bind to --pad-card, matching the Figma
+// shell where padding and itemSpacing share the pad/card variable. Border,
+// radius and elevation come straight from the semantic scale. Every value is
+// token-bound; no raw px/hex/opacity on any layer.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pad-card);
+  padding: var(--pad-card);
+  background: var(--background-surface);
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--elevation-card);
+}
+
+// Header and footer are each a vertical stack (content + divider) with the same
+// pad/card rhythm as the shell.
+.afi-card-v2__header,
+.afi-card-v2__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pad-card);
+}
+
+// Header row: the text stack fills, the action hugs the trailing edge.
+.afi-card-v2__header-content {
+  display: flex;
+  align-items: center;
+}
+
+.afi-card-v2__text-stack {
+  flex: 1 1 0;
+  min-inline-size: 0; // let long headings wrap/truncate instead of pushing width
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-control-xs);
+}
+
+.afi-card-v2__heading {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-h4-size);
+  font-weight: var(--type-h4-weight);
+  line-height: var(--type-h4-line-height);
+  color: var(--content-primary);
+}
+
+.afi-card-v2__supporting {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-default-size);
+  font-weight: var(--type-body-default-weight);
+  line-height: var(--type-body-default-line-height);
+  color: var(--content-secondary);
+}
+
+// Projected header action (e.g. afi-icon-button). Collapses to zero width when
+// nothing is projected, so it never disturbs the header layout.
+.afi-card-v2__action {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+// Hairline separators below the header and above the footer.
+.afi-card-v2__divider {
+  block-size: var(--stroke-default);
+  background: var(--borders-default);
+}
+
+// Footer action row: projected buttons, aligned to the trailing edge.
+.afi-card-v2__footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gap-control-sm);
+}

@@ -1,0 +1,38 @@
+<!--
+  Card v2 — three stacked sections in visual (and DOM / reading) order:
+  header, body, footer. Header and footer are toggled by the showHeader /
+  showFooter inputs (mirroring the Figma Header / Footer booleans); the body
+  is always present. Dividers are decorative (aria-hidden). The header action
+  and footer buttons are projected — the card supplies only the layout.
+-->
+@if (showHeader()) {
+  <div class="afi-card-v2__header">
+    <div class="afi-card-v2__header-content">
+      <div class="afi-card-v2__text-stack">
+        @if (heading()) {
+          <p class="afi-card-v2__heading">{{ heading() }}</p>
+        }
+        @if (supportingText()) {
+          <p class="afi-card-v2__supporting">{{ supportingText() }}</p>
+        }
+      </div>
+      <div class="afi-card-v2__action">
+        <ng-content select="[slot=header-action]" />
+      </div>
+    </div>
+    <div class="afi-card-v2__divider" aria-hidden="true"></div>
+  </div>
+}
+
+<div class="afi-card-v2__body">
+  <ng-content />
+</div>
+
+@if (showFooter()) {
+  <div class="afi-card-v2__footer">
+    <div class="afi-card-v2__divider" aria-hidden="true"></div>
+    <div class="afi-card-v2__footer-actions">
+      <ng-content select="[slot=footer]" />
+    </div>
+  </div>
+}

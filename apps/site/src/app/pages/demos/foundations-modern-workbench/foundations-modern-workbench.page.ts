@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   BadgeV2Component,
   ButtonV2Component,
+  CardV2Component,
   CheckboxV2Component,
   ChipV2Component,
   InputV2Component,
@@ -44,6 +45,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
   imports: [
     BadgeV2Component,
     ButtonV2Component,
+    CardV2Component,
     CheckboxV2Component,
     ChipV2Component,
     InputV2Component,

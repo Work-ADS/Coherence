@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   ElementRef,
   HostListener,
   inject,
@@ -130,6 +131,14 @@ export class TableV2Component {
   readonly emptyAction = output<void>();
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly selectionState = signal<Record<string, unknown>[]>([]);
+
+  constructor() {
+    // `selected` remains the controlled API. Mirroring it locally also makes
+    // selection work in simple table previews where no parent consumes the
+    // `selectedChange` output.
+    effect(() => this.selectionState.set(this.selected()));
+  }
 
   readonly visibleColumns = computed(() => this.columns().filter((c) => !c.hidden));
 
@@ -149,31 +158,40 @@ export class TableV2Component {
   readonly allSelected = computed(() => {
     const r = this.rows();
     const key = this.trackByKey();
-    const selectedKeys = new Set(this.selected().map((row) => row[key]));
+    const selectedKeys = new Set(this.selectionState().map((row) => row[key]));
     return r.length > 0 && r.every((row) => selectedKeys.has(row[key]));
   });
 
   readonly someSelected = computed(() => {
-    const s = this.selected().length;
-    return s > 0 && !this.allSelected();
+    const key = this.trackByKey();
+    const selectedKeys = new Set(this.selectionState().map((row) => row[key]));
+    return this.rows().some((row) => selectedKeys.has(row[key])) && !this.allSelected();
   });
 
   isSelected(row: Record<string, unknown>): boolean {
     const key = this.trackByKey();
-    return this.selected().some((s) => s[key] === row[key]);
+    return this.selectionState().some((selected) => selected[key] === row[key]);
   }
 
   toggleAll(): void {
-    this.selectedChange.emit(this.allSelected() ? [] : [...this.rows()]);
+    this.setSelection(this.allSelected() ? [] : [...this.rows()]);
   }
 
   toggleRow(row: Record<string, unknown>, checked: boolean): void {
     const key = this.trackByKey();
+    const selected = this.selectionState();
     if (checked) {
-      this.selectedChange.emit([...this.selected(), row]);
+      this.setSelection(
+        selected.some((item) => item[key] === row[key]) ? selected : [...selected, row],
+      );
     } else {
-      this.selectedChange.emit(this.selected().filter((s) => s[key] !== row[key]));
+      this.setSelection(selected.filter((item) => item[key] !== row[key]));
     }
+  }
+
+  private setSelection(rows: Record<string, unknown>[]): void {
+    this.selectionState.set(rows);
+    this.selectedChange.emit(rows);
   }
 
   /**
@@ -188,10 +206,9 @@ export class TableV2Component {
   }
 
   /**
-   * Header checkbox changes are intentionally resolved from the table's
-   * externally controlled selection rather than the checkbox's local value.
-   * That keeps a click on either the checkbox or the surrounding header cell
-   * on the same select-all / clear-all path.
+   * Header checkbox changes resolve through the table selection state rather
+   * than the checkbox's local value. That keeps a click on either the checkbox
+   * or the surrounding header cell on the same select-all / clear-all path.
    */
   onHeaderSelectChange(): void {
     this.toggleAll();

@@ -66,15 +66,10 @@
             <div class="afi-table-v2__empty-inner">
               <span class="afi-table-v2__empty-text">{{ emptyText() }}</span>
               @if (emptyActionLabel()) {
-                <afi-icon-button-v2
-                  class="afi-table-v2__empty-action"
-                  variant="primary"
-                  size="md"
-                  [ariaLabel]="emptyActionLabel()!"
-                  (clicked)="emptyAction.emit()"
-                >
+                <afi-button-v2 variant="primary" (clicked)="emptyAction.emit()">
                   <svg
-                    class="afi-table-v2__icon"
+                    slot="iconStart"
+                    class="afi-table-v2__empty-action-icon"
                     viewBox="0 0 16 16"
                     fill="none"
                     stroke="currentColor"
@@ -84,7 +79,8 @@
                   >
                     <path d="M8 3v10M3 8h10" />
                   </svg>
-                </afi-icon-button-v2>
+                  {{ emptyActionLabel() }}
+                </afi-button-v2>
               }
             </div>
           </td>
@@ -140,7 +136,7 @@
                   @if (hasOverflowActionsFor(row)) {
                     <afi-icon-button-v2
                       size="sm"
-                      variant="secondary"
+                      variant="ghost"
                       ariaLabel="Más acciones"
                       ariaHasPopup="menu"
                       [ariaExpanded]="isMenuOpen(row)"

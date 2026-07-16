@@ -1,0 +1,13 @@
+<div class="afi-nav-section-v2" role="group" [attr.aria-label]="label() || null">
+  @if (showLabel()) {
+    <div class="afi-nav-section-v2__label">{{ label() }}</div>
+  }
+
+  <div class="afi-nav-section-v2__items">
+    @if (showEmpty()) {
+      <p class="afi-nav-section-v2__empty">{{ emptyText() }}</p>
+    } @else {
+      <ng-content />
+    }
+  </div>
+</div>

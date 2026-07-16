@@ -181,4 +181,20 @@
     line-height: var(--type-body-default-line-height);
     color: var(--content-secondary);
   }
+
+  // Sidebar demo frames — bounded height so the growing spacer + footer show.
+  // A hairline border only; the shell itself stays canvas-blended by design.
+  &__sidebar-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--layout-gap-default);
+    align-items: stretch;
+  }
+
+  &__sidebar-frame {
+    block-size: 30rem;
+    border: var(--stroke-hairline) solid var(--borders-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
 }

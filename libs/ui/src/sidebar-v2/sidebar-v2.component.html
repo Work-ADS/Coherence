@@ -1,0 +1,73 @@
+<nav
+  [attr.id]="navId"
+  [attr.aria-label]="ariaLabel()"
+  [class]="'afi-sidebar-v2' + (collapsed() ? ' afi-sidebar-v2--collapsed' : '')"
+  (keydown)="onKeydown($event)"
+>
+  <div class="afi-sidebar-v2__header">
+    @if (homeHref(); as h) {
+      <a class="afi-sidebar-v2__home" [href]="h">
+        <afi-logo-v2 [full]="!collapsed()" />
+      </a>
+    } @else {
+      <afi-logo-v2 [full]="!collapsed()" />
+    }
+  </div>
+
+  <div class="afi-sidebar-v2__content">
+    <ng-content />
+  </div>
+
+  <div class="afi-sidebar-v2__footer">
+    @if (collapsed()) {
+      <afi-icon-button-v2
+        variant="ghost"
+        size="md"
+        ariaLabel="Expandir barra lateral"
+        [ariaExpanded]="false"
+        [ariaControls]="navId"
+        (clicked)="toggle()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <path d="M9 3v18" />
+          <path d="m14 9 3 3-3 3" />
+        </svg>
+      </afi-icon-button-v2>
+    } @else {
+      <afi-button-v2
+        variant="ghost"
+        size="sm"
+        [fullWidth]="true"
+        [ariaExpanded]="true"
+        [ariaControls]="navId"
+        (clicked)="toggle()"
+      >
+        <svg
+          slot="iconStart"
+          class="afi-sidebar-v2__collapse-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <path d="M9 3v18" />
+          <path d="m16 15-3-3 3-3" />
+        </svg>
+        Contraer barra lateral
+      </afi-button-v2>
+    }
+  </div>
+</nav>

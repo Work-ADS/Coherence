@@ -1,0 +1,35 @@
+<afi-tooltip [text]="label()" position="right" [disabled]="!collapsed()">
+  @if (href(); as h) {
+    <a
+      #ctrl
+      [href]="disabled() ? null : h"
+      [class]="classes()"
+      [attr.aria-current]="selected() ? 'page' : null"
+      [attr.aria-disabled]="disabled() ? 'true' : null"
+      [attr.aria-label]="collapsed() ? label() : null"
+      [attr.tabindex]="disabled() ? -1 : null"
+      (click)="onClick($event)"
+    >
+      <ng-container [ngTemplateOutlet]="content" />
+    </a>
+  } @else {
+    <button
+      #ctrl
+      type="button"
+      [class]="classes()"
+      [disabled]="disabled()"
+      [attr.aria-current]="selected() ? 'page' : null"
+      [attr.aria-label]="collapsed() ? label() : null"
+      (click)="onClick($event)"
+    >
+      <ng-container [ngTemplateOutlet]="content" />
+    </button>
+  }
+</afi-tooltip>
+
+<ng-template #content>
+  <span class="afi-nav-item-v2__icon" aria-hidden="true">
+    <ng-content select="[slot=icon]" />
+  </span>
+  <span class="afi-nav-item-v2__label">{{ label() }}</span>
+</ng-template>

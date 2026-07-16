@@ -1,0 +1,18 @@
+// afi-logo-v2 — identity v2 (foundations-modern tokens only).
+//
+// Monochrome mark: paths fill with currentColor, so the tone is whatever the
+// parent sets (content/primary on light chrome, content/inverse on dark). The
+// drawing is icon/md tall; width follows the viewBox aspect ratio. Block
+// padding dimension-1 mirrors the Figma wrapper.
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  padding-block: var(--dimension-1);
+}
+
+.afi-logo-v2__svg {
+  display: block;
+  block-size: var(--icon-md);
+  inline-size: auto;
+}

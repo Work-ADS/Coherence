@@ -39,7 +39,7 @@
   border-block-end: var(--stroke-hairline) solid var(--borders-default);
   color: var(--content-secondary);
   font-size: var(--type-table-size);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--type-table-header-weight);
   line-height: var(--type-table-line-height);
   white-space: nowrap;
 }
@@ -280,8 +280,11 @@
   line-height: var(--type-body-default-line-height);
 }
 
-.afi-table-v2__empty-action {
-  display: inline-flex;
+// Sizes the "+" glyph projected into the empty-state afi-button-v2 iconStart
+// slot — button-v2 owns the box but does not size slotted icons.
+.afi-table-v2__empty-action-icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
 }
 
 // ── Loading — rows dim (geometry preserved) + centred spinner ────────────────

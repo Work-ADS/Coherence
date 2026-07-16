@@ -93,6 +93,7 @@
   --pad-control-lg: var(--dimension-3);
   --pad-card: var(--dimension-4);
   --pad-toggle-track: var(--dimension-0-5);
+  --pad-sidebar-block: var(--dimension-3);
 
   // gap
   --gap-control-xs: var(--dimension-0-5);
@@ -101,4 +102,8 @@
   --gap-field-label: var(--dimension-1);
   --gap-menu-item: var(--dimension-0-5);
   --gap-control-label: var(--dimension-2);
+  --gap-sidebar-item-content: var(--dimension-2);
+  --gap-sidebar-items: var(--dimension-0-5);
+  --gap-sidebar-label-to-items: var(--dimension-2);
+  --gap-sidebar-groups: var(--dimension-3);
 }

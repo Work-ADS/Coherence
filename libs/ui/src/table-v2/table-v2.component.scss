@@ -1,0 +1,337 @@
+// afi-table-v2 — identity v2 (foundations-modern tokens only).
+//
+// Shell (scroll container) carries the outer hairline border + surface fill; the
+// header row and each body row draw a single bottom hairline divider (never top
+// or side). Density drives row/cell height and cell inline padding only — the
+// header height is a constant. Alignment is a function of cell kind. Every value
+// is token-bound; no raw px/hex.
+
+:host {
+  display: block;
+}
+
+// ── Shell / scroll region ────────────────────────────────────────────────────
+.afi-table-v2__scroll {
+  position: relative;
+  overflow-x: auto;
+  background: var(--background-surface);
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-lg);
+
+  // Reserve space so the loader has room when there are no rows yet.
+  &--loading {
+    min-block-size: calc(3 * var(--table-row-default));
+  }
+}
+
+.afi-table-v2__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-family-primary);
+}
+
+// ── Header ───────────────────────────────────────────────────────────────────
+.afi-table-v2__th {
+  block-size: var(--table-header-height);
+  padding-inline: var(--pad-table-cell-inline-default);
+  vertical-align: middle;
+  text-align: start;
+  border-block-end: var(--stroke-hairline) solid var(--borders-default);
+  color: var(--content-secondary);
+  font-size: var(--type-table-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--type-table-line-height);
+  white-space: nowrap;
+}
+
+.afi-table-v2__th-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-table-cell-content);
+}
+
+.afi-table-v2__th--start .afi-table-v2__th-inner {
+  justify-content: flex-start;
+}
+
+.afi-table-v2__th--center .afi-table-v2__th-inner {
+  justify-content: center;
+}
+
+.afi-table-v2__th--end .afi-table-v2__th-inner {
+  justify-content: flex-end;
+}
+
+// Sort trigger — a native <button> inside the <th> so the cell keeps its
+// columnheader semantics. Reset to inherit the header's type/colour/alignment;
+// it fills the cell so the inner row can still justify-end for numeric columns.
+.afi-table-v2__sort-trigger {
+  display: flex;
+  inline-size: 100%;
+  block-size: 100%;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  user-select: none;
+
+  &:focus-visible {
+    outline: var(--stroke-focus) solid var(--borders-focus);
+    outline-offset: calc(-1 * var(--stroke-focus));
+  }
+}
+
+// Sort chevron slot — reserved for every sortable column so cycling the
+// direction (or clearing it) never shifts the header width.
+.afi-table-v2__sort {
+  display: inline-flex;
+  flex: none;
+  inline-size: var(--icon-xs);
+  block-size: var(--icon-xs);
+  color: var(--content-secondary);
+}
+
+.afi-table-v2__sort-icon {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+// ── Body cells ───────────────────────────────────────────────────────────────
+.afi-table-v2__td {
+  padding-inline: var(--pad-table-cell-inline-default);
+  vertical-align: middle;
+  border-block-end: var(--stroke-hairline) solid var(--borders-default);
+  color: var(--content-primary);
+  font-size: var(--type-table-size);
+  font-weight: var(--type-table-weight);
+  line-height: var(--type-table-line-height);
+}
+
+.afi-table-v2__td--start {
+  text-align: start;
+}
+
+.afi-table-v2__td--center {
+  text-align: center;
+}
+
+.afi-table-v2__td--end {
+  text-align: end;
+}
+
+// Tabular figures so numeric / monetary columns line up digit-for-digit
+// (the one Figma property that could not be tokenised).
+.afi-table-v2__th--numeric,
+.afi-table-v2__th--monetary,
+.afi-table-v2__td--numeric,
+.afi-table-v2__td--monetary {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.afi-table-v2__cell-text {
+  display: inline-block;
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+// ── Density — row/cell height + cell inline padding (header is constant) ──────
+.afi-table-v2__table--compact .afi-table-v2__td {
+  block-size: var(--table-row-compact);
+  padding-inline: var(--pad-table-cell-inline-compact);
+}
+
+.afi-table-v2__table--default .afi-table-v2__td {
+  block-size: var(--table-row-default);
+}
+
+.afi-table-v2__table--comfortable .afi-table-v2__td {
+  block-size: var(--table-row-comfortable);
+}
+
+// ── Rows ─────────────────────────────────────────────────────────────────────
+.afi-table-v2__row {
+  background: var(--background-surface);
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.afi-table-v2__row--hoverable:hover {
+  background: var(--background-hover);
+}
+
+.afi-table-v2__row--selected {
+  background: var(--background-selected);
+}
+
+.afi-table-v2__row--highlighted {
+  background: var(--background-selected);
+}
+
+// Last row's divider coincides with the shell's bottom border — drop it.
+.afi-table-v2__row:last-child .afi-table-v2__td {
+  border-block-end: none;
+}
+
+// ── Selection column ─────────────────────────────────────────────────────────
+.afi-table-v2__th-select,
+.afi-table-v2__td-select {
+  inline-size: var(--width-table-selection-column);
+  padding-inline: 0;
+  text-align: center;
+  cursor: pointer; // the whole cell toggles, not just the compact checkbox
+}
+
+.afi-table-v2__td-select afi-checkbox-v2 {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+// ── Trailing actions ─────────────────────────────────────────────────────────
+.afi-table-v2__th-actions,
+.afi-table-v2__td-actions {
+  inline-size: var(--dimension-0);
+  white-space: nowrap;
+  text-align: end;
+}
+
+.afi-table-v2__actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-table-cell-content);
+}
+
+// ── Reveal-on-hover: row checkbox + actions rest at 0 opacity, reveal on row
+//    hover / keyboard focus / selection. The header "select all" checkbox is in
+//    <thead> and is never subject to this. `reveal-always` opts out. ──────────
+.afi-table-v2__td-select afi-checkbox-v2,
+.afi-table-v2__actions {
+  opacity: 0;
+  transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.afi-table-v2__row:hover .afi-table-v2__td-select afi-checkbox-v2,
+.afi-table-v2__row:focus-within .afi-table-v2__td-select afi-checkbox-v2,
+.afi-table-v2__row--selected .afi-table-v2__td-select afi-checkbox-v2,
+.afi-table-v2__row:hover .afi-table-v2__actions,
+.afi-table-v2__row:focus-within .afi-table-v2__actions {
+  opacity: 1;
+}
+
+.afi-table-v2__table--reveal-always {
+  .afi-table-v2__td-select afi-checkbox-v2,
+  .afi-table-v2__actions {
+    opacity: 1;
+  }
+}
+
+// ── Icons (fill their icon-button / menu-item slot box) ──────────────────────
+.afi-table-v2__icon {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+// Fixed box for menu-item icons — the menu-item slot doesn't size the icon, so
+// constrain here (the inner SVG fills this box at 100%).
+.afi-table-v2__menu-icon {
+  display: inline-flex;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+// ── Overflow menu — position: fixed (coords set inline) so it escapes the
+//    horizontal-scroll region; translated -100% X to right-align to the ⋯. ────
+.afi-table-v2__menu {
+  position: fixed;
+  // Raw stacking value: the repo has no z-index scale token yet. Mirrors
+  // select-v2's overlay (also 1000). FOLLOW-UP: extract a shared --z-overlay
+  // semantic token (token-guardian) and point both overlays at it.
+  z-index: 1000;
+  transform: translateX(-100%);
+}
+
+// ── Empty state ──────────────────────────────────────────────────────────────
+.afi-table-v2__empty {
+  padding: var(--layout-gap-default);
+  text-align: center;
+}
+
+.afi-table-v2__empty-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--layout-gap-default);
+  padding-block: var(--layout-gap-default);
+}
+
+.afi-table-v2__empty-text {
+  color: var(--content-secondary);
+  font-size: var(--type-body-default-size);
+  font-weight: var(--type-body-default-weight);
+  line-height: var(--type-body-default-line-height);
+}
+
+.afi-table-v2__empty-action {
+  display: inline-flex;
+}
+
+// ── Loading — rows dim (geometry preserved) + centred spinner ────────────────
+.afi-table-v2__scroll--loading .afi-table-v2__row {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.afi-table-v2__loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.afi-table-v2__spinner {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  border-radius: var(--radius-full);
+  border: var(--stroke-focus) solid transparent;
+  border-block-start-color: var(--content-secondary);
+  border-inline-end-color: var(--content-secondary);
+  animation: afi-table-v2-spin calc(var(--motion-duration-slow) * 2) linear infinite;
+}
+
+.afi-table-v2__sr-only {
+  position: absolute;
+  inline-size: var(--dimension-0-25);
+  block-size: var(--dimension-0-25);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes afi-table-v2-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afi-table-v2__row,
+  .afi-table-v2__td-select afi-checkbox-v2,
+  .afi-table-v2__actions {
+    transition: none;
+  }
+
+  .afi-table-v2__spinner {
+    animation-duration: calc(var(--motion-duration-slow) * 6);
+  }
+}

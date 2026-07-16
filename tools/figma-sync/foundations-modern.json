@@ -3417,6 +3417,34 @@
           }
         },
         {
+          "name": "pad/table-cell-inline-compact",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "pad/table-cell-inline-default",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3}"
+          }
+        },
+        {
+          "name": "gap/table-cell-content",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "width/table-selection-column",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-10}"
+          }
+        },
+        {
           "name": "avatar/xs",
           "type": "number",
           "values": {

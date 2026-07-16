@@ -86,6 +86,62 @@
       </div>
     </section>
 
+    <h2 class="workbench__group-title">Icon button</h2>
+
+    @for (variant of iconButtonVariants; track variant) {
+      <section class="workbench__section">
+        <h2 class="workbench__section-title">variant="{{ variant }}"</h2>
+        <div class="workbench__grid">
+          @for (size of iconButtonSizes; track size) {
+            <div class="workbench__cell">
+              <span class="workbench__cell-label">size="{{ size }}"</span>
+              <div class="workbench__row">
+                <afi-icon-button-v2 [variant]="variant" [size]="size" ariaLabel="Buscar">
+                  <svg
+                    class="workbench__icon workbench__icon--fill"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="7" cy="7" r="4.5" />
+                    <path d="M10.5 10.5L14 14" />
+                  </svg>
+                </afi-icon-button-v2>
+                <afi-icon-button-v2
+                  [variant]="variant"
+                  [size]="size"
+                  [disabled]="true"
+                  ariaLabel="Buscar (deshabilitado)"
+                >
+                  <svg
+                    class="workbench__icon workbench__icon--fill"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="7" cy="7" r="4.5" />
+                    <path d="M10.5 10.5L14 14" />
+                  </svg>
+                </afi-icon-button-v2>
+              </div>
+            </div>
+          }
+        </div>
+        <p class="workbench__hint">
+          Botón cuadrado, solo icono. Pase el cursor (hover), mantenga pulsado (pressed) y
+          navegue con Tab (focus) para ver el resto de estados. SM usa icono de 16; MD y LG, 20.
+        </p>
+      </section>
+    }
+
     <h2 class="workbench__group-title">Input</h2>
 
     @for (size of inputSizes; track size) {
@@ -727,6 +783,60 @@
         de encabezado no tiene efecto si el header está oculto. El cuerpo ocupa el ancho que
         le da el padre y nunca recorta ni desplaza su contenido.
       </p>
+    </section>
+
+    <h2 class="workbench__group-title">Tabla</h2>
+
+    <section class="workbench__section">
+      <h2 class="workbench__section-title">Interactiva · selección + orden + acciones</h2>
+      <afi-table-v2
+        ariaLabel="Carteras de clientes"
+        [columns]="tableColumns"
+        [rows]="tableRows()"
+        [rowActions]="tableActions"
+        [selectable]="true"
+        [selected]="tableSelected()"
+        [sortBy]="tableSort()"
+        density="default"
+        (selectedChange)="onTableSelected($event)"
+        (sortChange)="onTableSort($event)"
+        (rowActionClicked)="onTableAction($event)"
+      />
+      <p class="workbench__hint">
+        Pase el cursor sobre una fila: la casilla y las acciones aparecen (en reposo están
+        ocultas). La casilla de la cabecera siempre es visible y pasa a indeterminada con
+        selección parcial. Ordene por Cliente, Posiciones o Valor (ciclo ninguno → asc → desc).
+        «Editar» (primaria) es una acción en línea; el menú ⋯ ofrece «Duplicar» y «Eliminar».
+        Seleccionadas: {{ tableSelected().length }} · Última acción: {{ tableLastAction() }}.
+      </p>
+    </section>
+
+    @for (density of tableDensities; track density) {
+      <section class="workbench__section">
+        <h3 class="workbench__section-title">density="{{ density }}"</h3>
+        <afi-table-v2
+          [columns]="tableColumns"
+          [rows]="tableData"
+          [rowActions]="tableActions"
+          [selectable]="true"
+          [density]="density"
+        />
+      </section>
+    }
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">Estado vacío · con acción</h3>
+      <afi-table-v2
+        [columns]="tableColumns"
+        [rows]="[]"
+        emptyText="No hay carteras que mostrar"
+        emptyActionLabel="Añadir cartera"
+      />
+    </section>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">Estado de carga · filas atenuadas + spinner</h3>
+      <afi-table-v2 [columns]="tableColumns" [rows]="tableData" [loading]="true" />
     </section>
   </div>
 </site-demo-shell>

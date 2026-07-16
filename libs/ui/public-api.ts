@@ -22,6 +22,18 @@ export { BadgeV2Component } from './src/badge-v2';
 export type { BadgeV2Tone } from './src/badge-v2';
 export { TabsV2Component, TabV2Component } from './src/tabs-v2';
 export { CardV2Component } from './src/card-v2';
+export { IconButtonV2Component } from './src/icon-button-v2';
+export type { IconButtonV2Variant, IconButtonV2Size } from './src/icon-button-v2';
+export { TableV2Component } from './src/table-v2';
+export type {
+  TableV2Column,
+  TableV2Density,
+  TableV2CellKind,
+  TableV2ActionsReveal,
+  TableV2RowAction,
+  TableV2RowActionIcon,
+  TableV2SortState,
+} from './src/table-v2';
 export { SearchComponent } from './src/search';
 export type { SearchSize, SearchSuggestion } from './src/search';
 export { FilterChipComponent } from './src/filter-chip';

@@ -1,0 +1,227 @@
+// afi-icon-button-v2 — identity v2 (foundations-modern tokens only).
+//
+// Shares afi-button-v2's chrome recipe (component-button.scss effect tokens):
+//   background-color = variable-bound base fill (transitions on hover)
+//   ::before (z -1)  = face sheen gradient, under the icon
+//   ::after  (over)  = raised / pressed inner-shadow effect layer
+// It differs from the button only by being a fixed square with a centered
+// icon and no label/padding. Every value is token-bound; no raw px/hex.
+
+.afi-icon-button-v2 {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--dimension-0);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-easing-standard),
+    color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  // Face sheen — above the host background, below the icon.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
+  }
+
+  // Effect-style layer — Figma draws raised/pressed shadows above the content.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    transition: box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
+  }
+
+  // Press nudge — the icon sinks one hairline step into the surface on press,
+  // pairing with the inset pressed shadow (mirrors afi-button-v2).
+  &:active:not(:disabled) .afi-icon-button-v2__icon {
+    transform: translateY(var(--dimension-0-25));
+  }
+
+  // focus-ring pattern (motion-skill §4.3) — instant, never transitioned.
+  &:focus-visible {
+    outline: var(--stroke-focus) solid var(--borders-focus);
+    outline-offset: var(--dimension-0);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  // ── Icon slot ────────────────────────────────────────────────────────────
+  // Owns the box; the projected SVG (currentColor) fills it. Colour comes from
+  // the button's `color` per variant.
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
+  }
+
+  // ── Sizes — square box + icon token ────────────────────────────────────────
+  &--sm {
+    inline-size: var(--height-component-sm);
+    block-size: var(--height-component-sm);
+
+    .afi-icon-button-v2__icon {
+      inline-size: var(--icon-sm);
+      block-size: var(--icon-sm);
+    }
+  }
+
+  &--md {
+    inline-size: var(--height-component-md);
+    block-size: var(--height-component-md);
+
+    .afi-icon-button-v2__icon {
+      inline-size: var(--icon-md);
+      block-size: var(--icon-md);
+    }
+  }
+
+  &--lg {
+    inline-size: var(--height-component-lg);
+    block-size: var(--height-component-lg);
+
+    .afi-icon-button-v2__icon {
+      inline-size: var(--icon-md);
+      block-size: var(--icon-md);
+    }
+  }
+
+  // ── Primary ────────────────────────────────────────────────────────────────
+  &--primary {
+    background-color: var(--brand-background-default);
+    color: var(--content-inverse);
+
+    &::before {
+      background: var(--button-sheen);
+    }
+
+    &::after {
+      box-shadow: var(--button-raised-primary); // Elevation/Raised
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--brand-background-hover);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--brand-background-pressed);
+
+      &::before {
+        opacity: 0;
+      }
+
+      &::after {
+        box-shadow: var(--button-pressed-primary); // Elevation/pressed
+      }
+    }
+  }
+
+  // ── Secondary ──────────────────────────────────────────────────────────────
+  &--secondary {
+    background-color: var(--control-background-default);
+    color: var(--content-primary);
+
+    &::after {
+      box-shadow: var(--button-raised-neutral); // Elevation/Raised-Neutral
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--control-background-hover);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--control-background-active);
+
+      &::after {
+        box-shadow: var(--button-pressed-secondary); // Elevation/pressed/secondary
+      }
+    }
+  }
+
+  // ── Ghost ──────────────────────────────────────────────────────────────────
+  &--ghost {
+    background-color: transparent;
+    color: var(--content-primary);
+
+    &:hover:not(:disabled) {
+      background-color: var(--control-background-hover); // hover-tint pattern
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--control-background-active);
+    }
+  }
+
+  // ── Destructive ──────────────────────────────────────────────────────────────
+  // Same recipe as Primary: translucent shared sheen over a variable-bound base
+  // fill, so hover is a pure base swap (700 → 500).
+  &--destructive {
+    background-color: var(--button-destructive-background);
+    color: var(--content-inverse);
+
+    &::before {
+      background: var(--button-sheen);
+    }
+
+    &::after {
+      box-shadow: var(--button-raised-danger); // Elevation/Raised-Danger
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--button-destructive-background-hover);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--button-destructive-pressed-background);
+
+      &::before {
+        opacity: 0;
+      }
+
+      &::after {
+        box-shadow: none;
+      }
+    }
+  }
+
+  // ── Disabled (all variants) ───────────────────────────────────────────────
+  &:disabled {
+    background-color: var(--disabled-background);
+    color: var(--disabled-content);
+
+    &::before {
+      opacity: 0;
+    }
+
+    &::after {
+      box-shadow: none;
+    }
+  }
+
+  &--ghost:disabled {
+    background-color: transparent;
+  }
+}
+
+// reduced-motion-collapse (motion-skill §4.6): transitions collapse.
+@media (prefers-reduced-motion: reduce) {
+  .afi-icon-button-v2,
+  .afi-icon-button-v2::before,
+  .afi-icon-button-v2::after,
+  .afi-icon-button-v2__icon {
+    transition: none;
+  }
+}

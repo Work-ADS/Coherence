@@ -163,6 +163,13 @@
   &__icon {
     inline-size: var(--icon-sm);
     block-size: var(--icon-sm);
+
+    // Fills the parent slot instead of the fixed --icon-sm box — lets
+    // afi-icon-button-v2 drive the icon size per component size (sm vs md/lg).
+    &--fill {
+      inline-size: 100%;
+      block-size: 100%;
+    }
   }
 
   // Card demo — body copy owns its own type (the card shell never styles the

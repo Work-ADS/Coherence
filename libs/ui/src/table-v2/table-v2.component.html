@@ -1,0 +1,270 @@
+<!--
+  Table v2 — semantic <table> on foundations-modern tokens. Header row +
+  optional selection column + kind-driven data cells + trailing actions. The
+  overflow ⋯ menu renders position:fixed so it escapes the horizontal-scroll
+  region; only one is open at a time.
+-->
+<div class="afi-table-v2__scroll" [class.afi-table-v2__scroll--loading]="state() === 'loading'">
+  <table [class]="tableClasses()" [attr.aria-label]="ariaLabel()">
+    <thead>
+      <tr class="afi-table-v2__head-row">
+        @if (selectable()) {
+          <th
+            scope="col"
+            class="afi-table-v2__th afi-table-v2__th-select"
+            (click)="onHeaderSelectClick($event)"
+          >
+            <afi-checkbox-v2
+              ariaLabel="Seleccionar todas las filas"
+              [checked]="allSelected()"
+              [indeterminate]="someSelected()"
+              (checkedChange)="onHeaderSelectChange()"
+            />
+          </th>
+        }
+        @for (col of visibleColumns(); track col.key) {
+          <th
+            scope="col"
+            [class]="headerCellClasses(col)"
+            [style.width]="col.width ?? null"
+            [attr.aria-sort]="col.sortable ? ariaSort(col.key) : null"
+          >
+            @if (col.sortable) {
+              <!-- Interactive role lives on an inner <button>, so the <th> keeps
+                   its native columnheader semantics (aria-sort). Native button
+                   gives Enter/Space + focus for free. -->
+              <button type="button" class="afi-table-v2__sort-trigger" (click)="onSort(col)">
+                <span class="afi-table-v2__th-inner">
+                  @if (chevronLeads(col)) {
+                    <ng-container [ngTemplateOutlet]="sortIcon" [ngTemplateOutletContext]="{ col }" />
+                  }
+                  <span class="afi-table-v2__th-label">{{ col.label }}</span>
+                  @if (!chevronLeads(col)) {
+                    <ng-container [ngTemplateOutlet]="sortIcon" [ngTemplateOutletContext]="{ col }" />
+                  }
+                </span>
+              </button>
+            } @else {
+              <span class="afi-table-v2__th-inner">
+                <span class="afi-table-v2__th-label">{{ col.label }}</span>
+              </span>
+            }
+          </th>
+        }
+        @if (hasRowActions()) {
+          <th scope="col" class="afi-table-v2__th afi-table-v2__th-actions">
+            <span class="afi-table-v2__sr-only">Acciones</span>
+          </th>
+        }
+      </tr>
+    </thead>
+
+    <tbody [attr.aria-busy]="state() === 'loading' ? 'true' : null">
+      @if (state() === 'empty') {
+        <tr>
+          <td [attr.colspan]="totalColumns()" class="afi-table-v2__empty" aria-live="polite">
+            <div class="afi-table-v2__empty-inner">
+              <span class="afi-table-v2__empty-text">{{ emptyText() }}</span>
+              @if (emptyActionLabel()) {
+                <afi-icon-button-v2
+                  class="afi-table-v2__empty-action"
+                  variant="primary"
+                  size="md"
+                  [ariaLabel]="emptyActionLabel()!"
+                  (clicked)="emptyAction.emit()"
+                >
+                  <svg
+                    class="afi-table-v2__icon"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M8 3v10M3 8h10" />
+                  </svg>
+                </afi-icon-button-v2>
+              }
+            </div>
+          </td>
+        </tr>
+      } @else {
+        @for (row of rows(); track trackKey(row)) {
+          <tr
+            [class]="rowClasses(row)"
+            [attr.data-row-key]="row[trackByKey()]"
+            (click)="onRowClick(row, $event)"
+          >
+            @if (selectable()) {
+              <td
+                class="afi-table-v2__td afi-table-v2__td-select"
+                (click)="onRowSelectClick(row, $event)"
+              >
+                <afi-checkbox-v2
+                  ariaLabel="Seleccionar fila"
+                  [checked]="isSelected(row)"
+                  (checkedChange)="toggleRow(row, $event)"
+                />
+              </td>
+            }
+            @for (col of visibleColumns(); track col.key) {
+              <td [class]="cellClasses(col)">
+                @if (col.kind === 'status') {
+                  @if (cellText(row, col)) {
+                    <afi-badge-v2 [tone]="badgeToneFor(row, col)" [label]="cellText(row, col)" />
+                  }
+                } @else {
+                  <span class="afi-table-v2__cell-text">{{ cellText(row, col) }}</span>
+                }
+              </td>
+            }
+            @if (hasRowActions()) {
+              <td class="afi-table-v2__td afi-table-v2__td-actions" (click)="$event.stopPropagation()">
+                <div class="afi-table-v2__actions">
+                  @for (action of inlineActionsFor(row); track action.key) {
+                    @if (action.icon) {
+                      <afi-icon-button-v2
+                        size="sm"
+                        [variant]="iconVariantFor(action)"
+                        [ariaLabel]="action.ariaLabel ?? action.label"
+                        (clicked)="onRowAction(action, row, $event.event)"
+                      >
+                        <ng-container
+                          [ngTemplateOutlet]="actionIcon"
+                          [ngTemplateOutletContext]="{ name: action.icon }"
+                        />
+                      </afi-icon-button-v2>
+                    }
+                  }
+                  @if (hasOverflowActionsFor(row)) {
+                    <afi-icon-button-v2
+                      size="sm"
+                      variant="secondary"
+                      ariaLabel="Más acciones"
+                      ariaHasPopup="menu"
+                      [ariaExpanded]="isMenuOpen(row)"
+                      (clicked)="toggleMenu(row, $event.event)"
+                    >
+                      <ng-container
+                        [ngTemplateOutlet]="actionIcon"
+                        [ngTemplateOutletContext]="{ name: 'more' }"
+                      />
+                    </afi-icon-button-v2>
+
+                    @if (isMenuOpen(row)) {
+                      <div
+                        class="afi-table-v2__menu"
+                        [style.top.px]="menuCoords()?.top"
+                        [style.left.px]="menuCoords()?.left"
+                        (keydown)="onMenuKeydown($event)"
+                      >
+                        <afi-menu-v2 ariaLabel="Acciones de fila">
+                          @for (action of overflowStandardActionsFor(row); track action.key) {
+                            <afi-menu-item-v2 (clicked)="onOverflowAction(action, row, $event.event)">
+                              @if (action.icon) {
+                                <span slot="iconStart" class="afi-table-v2__menu-icon">
+                                  <ng-container
+                                    [ngTemplateOutlet]="actionIcon"
+                                    [ngTemplateOutletContext]="{ name: action.icon }"
+                                  />
+                                </span>
+                              }
+                              {{ action.label }}
+                            </afi-menu-item-v2>
+                          }
+                          @if (hasOverflowDividerFor(row)) {
+                            <afi-menu-divider-v2 />
+                          }
+                          @for (action of overflowDangerActionsFor(row); track action.key) {
+                            <afi-menu-item-v2
+                              variant="destructive"
+                              (clicked)="onOverflowAction(action, row, $event.event)"
+                            >
+                              @if (action.icon) {
+                                <span slot="iconStart" class="afi-table-v2__menu-icon">
+                                  <ng-container
+                                    [ngTemplateOutlet]="actionIcon"
+                                    [ngTemplateOutletContext]="{ name: action.icon }"
+                                  />
+                                </span>
+                              }
+                              {{ action.label }}
+                            </afi-menu-item-v2>
+                          }
+                        </afi-menu-v2>
+                      </div>
+                    }
+                  }
+                </div>
+              </td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+
+  @if (state() === 'loading') {
+    <div class="afi-table-v2__loader" aria-live="polite">
+      <span class="afi-table-v2__spinner" aria-hidden="true"></span>
+      <span class="afi-table-v2__sr-only">Cargando…</span>
+    </div>
+  }
+</div>
+
+<!-- Sort chevron: slot is always reserved for a sortable column (reserved even
+     when unsorted) so cycling the direction never shifts the header width. -->
+<ng-template #sortIcon let-col="col">
+  <span class="afi-table-v2__sort" aria-hidden="true">
+    @if (isSortedAsc(col.key)) {
+      <svg class="afi-table-v2__sort-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 10l4-4 4 4" />
+      </svg>
+    } @else if (isSortedDesc(col.key)) {
+      <svg class="afi-table-v2__sort-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6l4 4 4-4" />
+      </svg>
+    }
+  </span>
+</ng-template>
+
+<!-- Action glyphs (Lucide-style). Filled ⋯ for the overflow trigger, stroked
+     for the rest. Fills its icon-button/menu-item slot box. -->
+<ng-template #actionIcon let-name="name">
+  @switch (name) {
+    @case ('more') {
+      <svg class="afi-table-v2__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <circle cx="12" cy="5" r="1.6" />
+        <circle cx="12" cy="12" r="1.6" />
+        <circle cx="12" cy="19" r="1.6" />
+      </svg>
+    }
+    @default {
+      <svg class="afi-table-v2__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        @switch (name) {
+          @case ('edit') {
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          }
+          @case ('delete') {
+            <path d="M3 6h18" />
+            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+          }
+          @case ('duplicate') {
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+          }
+          @case ('archive') {
+            <rect width="20" height="5" x="2" y="3" rx="1" />
+            <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+            <path d="M10 12h4" />
+          }
+        }
+      </svg>
+    }
+  }
+</ng-template>

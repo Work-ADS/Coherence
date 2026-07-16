@@ -69,6 +69,16 @@
   --table-row-comfortable: var(--dimension-12);
   --table-header-height: var(--dimension-10);
 
+  // pad
+  --pad-table-cell-inline-compact: var(--dimension-2);
+  --pad-table-cell-inline-default: var(--dimension-3);
+
+  // gap
+  --gap-table-cell-content: var(--dimension-2);
+
+  // width
+  --width-table-selection-column: var(--dimension-10);
+
   // avatar
   --avatar-xs: var(--dimension-5);
   --avatar-sm: var(--dimension-6);

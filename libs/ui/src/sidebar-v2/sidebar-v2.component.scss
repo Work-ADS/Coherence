@@ -1,0 +1,85 @@
+// afi-sidebar-v2 — identity v2 (foundations-modern tokens only).
+//
+// A canvas-blended navigation shell with ZERO embellishment (Figma annotation):
+// no border, divider, radius, shadow, or blur. Flex column — header (logo at
+// its natural height, no fixed row), a growing content region (the spacer that
+// pushes the footer down), and a footer collapse control. Root padding AND the
+// gap between header/content/footer both bind to pad/sidebar-block, matching
+// the Figma shell. Collapsed centers the column: logo mark, 40-square items,
+// and the raised expand button all align on the rail's axis.
+
+:host {
+  display: block;
+  block-size: 100%;
+}
+
+.afi-sidebar-v2 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pad-sidebar-block);
+  align-items: flex-start;
+  inline-size: var(--width-sidebar-expanded);
+  block-size: 100%;
+  padding: var(--pad-sidebar-block);
+  background: var(--background-canvas);
+  transition: inline-size var(--motion-duration-base) var(--motion-easing-standard);
+
+  &--collapsed {
+    align-items: center;
+    inline-size: var(--width-sidebar-collapsed);
+  }
+}
+
+// ── Header — the logo hugs its natural height; no fixed row, no inline pad ──
+.afi-sidebar-v2__header {
+  display: flex;
+  align-items: center;
+  color: var(--content-primary);
+}
+
+.afi-sidebar-v2__home {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-md);
+  color: inherit;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--stroke-focus) var(--borders-focus);
+  }
+}
+
+// ── Content — projected groups; grows to fill and push the footer down ─────
+.afi-sidebar-v2__content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--gap-sidebar-groups);
+  align-self: stretch;
+  overflow-y: auto;
+}
+
+// ── Footer — collapse (expanded) / expand (collapsed) control ──────────────
+.afi-sidebar-v2__footer {
+  display: flex;
+  flex-shrink: 0;
+  align-self: stretch;
+  justify-content: center;
+}
+
+// Collapse control reuses afi-button-v2 (ghost, sm, full-width); this shell
+// only sizes the projected panel-left-close icon — button-v2 owns the box,
+// chrome, hover/press and focus ring, and does not size slotted icons.
+.afi-sidebar-v2__collapse-icon {
+  flex-shrink: 0;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+// reduced-motion-collapse (motion-skill §4.6): swap the layout instantly.
+@media (prefers-reduced-motion: reduce) {
+  .afi-sidebar-v2 {
+    transition: none;
+  }
+}

@@ -1,0 +1,101 @@
+// afi-nav-item-v2 — identity v2 (foundations-modern tokens only).
+//
+// One navigation row: [.__icon] · [.__label]. The control carries every state's
+// fill + text tone; the icon inherits its tone through currentColor so a
+// projected SVG drawn with currentColor follows without style piercing.
+//
+// Selected is NEUTRAL by design (Figma annotation): background/selected fill +
+// content/primary text — no brand fill, accent bar, or bold weight. Focus is a
+// borders/focus ring at stroke/focus weight.
+
+:host {
+  display: block;
+}
+
+// The tooltip wrapper must not shrink the row — it spans the full rail width.
+afi-tooltip {
+  display: block;
+}
+
+.afi-nav-item-v2 {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sidebar-item-content);
+  inline-size: 100%;
+  block-size: var(--navigation-sidebar-item-height);
+  padding-inline: var(--pad-control-md);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--content-secondary);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &:hover:not(.afi-nav-item-v2--disabled) {
+    background: var(--background-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--stroke-focus) var(--borders-focus);
+  }
+
+  // Neutral selected state — subtle background contrast only.
+  &--selected {
+    background: var(--background-selected);
+    color: var(--content-primary);
+  }
+
+  &--disabled {
+    color: var(--content-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Collapsed rail — a centered square (item-height on both axes), icon
+  // centered inside, label removed. Matches the Figma 40-square item.
+  &--collapsed {
+    inline-size: var(--navigation-sidebar-item-height);
+    justify-content: center;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+.afi-nav-item-v2__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  color: inherit;
+
+  :where(svg) {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+.afi-nav-item-v2__label {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.afi-nav-item-v2--collapsed .afi-nav-item-v2__label {
+  display: none;
+}
+
+// reduced-motion-collapse (motion-skill §4.6): drop the hover transition.
+@media (prefers-reduced-motion: reduce) {
+  .afi-nav-item-v2 {
+    transition: none;
+  }
+}

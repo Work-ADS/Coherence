@@ -14,6 +14,7 @@ import { NgTemplateOutlet } from '@angular/common';
 
 import { BadgeV2Component } from '../badge-v2';
 import type { BadgeV2Tone } from '../badge-v2';
+import { ButtonV2Component } from '../button-v2';
 import { CheckboxV2Component } from '../checkbox-v2';
 import { IconButtonV2Component } from '../icon-button-v2';
 import type { IconButtonV2Variant } from '../icon-button-v2';
@@ -86,6 +87,7 @@ interface MenuCoords {
   imports: [
     NgTemplateOutlet,
     BadgeV2Component,
+    ButtonV2Component,
     CheckboxV2Component,
     IconButtonV2Component,
     MenuV2Component,
@@ -269,10 +271,10 @@ export class TableV2Component {
     );
   }
 
-  /** icon-button variant for an inline action: explicit override → danger → secondary. */
+  /** icon-button variant for an inline action: explicit override → danger → ghost. */
   iconVariantFor(action: TableV2RowAction): IconButtonV2Variant {
     if (action.iconVariant) return action.iconVariant;
-    return action.variant === 'danger' ? 'destructive' : 'secondary';
+    return action.variant === 'danger' ? 'destructive' : 'ghost';
   }
 
   // ── Alignment / classes ──────────────────────────────────────────────────────

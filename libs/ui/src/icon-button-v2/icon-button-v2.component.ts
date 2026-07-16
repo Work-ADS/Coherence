@@ -65,6 +65,9 @@ export class IconButtonV2Component {
   /** Menu-trigger support: reflected as `aria-haspopup` (e.g. `'menu'`). */
   readonly ariaHasPopup = input<string | null>(null);
 
+  /** Disclosure-trigger support: reflected as `aria-controls` when non-null. */
+  readonly ariaControls = input<string | null>(null);
+
   readonly clicked = output<{ event: MouseEvent }>();
 
   readonly classes = computed(() =>

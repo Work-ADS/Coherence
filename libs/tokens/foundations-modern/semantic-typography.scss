@@ -24,6 +24,9 @@
   --type-caption-line-height: var(--dimension-4);
   --type-caption-weight: var(--font-weight-medium);
 
+  // section-label
+  --type-section-label-weight: var(--font-weight-semibold);
+
   // display
   --type-display-size: var(--dimension-10);
   --type-display-weight: var(--font-weight-bold);
@@ -67,6 +70,7 @@
   --type-table-size: var(--dimension-3-25);
   --type-table-weight: var(--font-weight-regular);
   --type-table-line-height: var(--dimension-4-5);
+  --type-table-header-weight: var(--font-weight-medium);
 
   // code
   --type-code-size: var(--dimension-3-25);

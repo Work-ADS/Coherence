@@ -75,9 +75,11 @@ export interface TableV2RowAction {
   /** `danger` tints the overflow menu row / inline icon-button destructive. */
   variant?: 'default' | 'danger';
   /**
-   * Explicit icon-button variant for an INLINE action (e.g. the Edit action
-   * as `primary`). Falls back to `secondary` (or `destructive` when
-   * `variant: 'danger'`). Ignored for overflow-menu actions.
+   * Explicit icon-button variant for an INLINE action. Falls back to `ghost`
+   * (or `destructive` when `variant: 'danger'`) — ghost is the house rule for
+   * the trailing actions cell, per the Icon Button usage doc ("Use Ghost
+   * variant inside navigation bars, toolbars, and inline actions").
+   * Ignored for overflow-menu actions.
    */
   iconVariant?: IconButtonV2Variant;
   /**

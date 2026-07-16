@@ -3522,6 +3522,13 @@
           }
         },
         {
+          "name": "pad/sidebar-block",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3}"
+          }
+        },
+        {
           "name": "gap/control-xs",
           "type": "number",
           "values": {
@@ -3561,6 +3568,34 @@
           "type": "number",
           "values": {
             "Mode 1": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "gap/sidebar-item-content",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "gap/sidebar-items",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-0-5}"
+          }
+        },
+        {
+          "name": "gap/sidebar-label-to-items",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "gap/sidebar-groups",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-3}"
           }
         }
       ]
@@ -3792,6 +3827,13 @@
           }
         },
         {
+          "name": "section-label/weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/semibold}"
+          }
+        },
+        {
           "name": "display/size",
           "type": "number",
           "values": {
@@ -3999,6 +4041,13 @@
           "type": "number",
           "values": {
             "Mode 1": "{dimension/dimension-4-5}"
+          }
+        },
+        {
+          "name": "table/header-weight",
+          "type": "number",
+          "values": {
+            "Mode 1": "{font/weight/medium}"
           }
         },
         {

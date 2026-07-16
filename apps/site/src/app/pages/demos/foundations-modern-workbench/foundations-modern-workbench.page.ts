@@ -11,7 +11,10 @@ import {
   MenuItemV2Component,
   MenuV2Component,
   MenuDividerV2Component,
+  NavItemV2Component,
+  NavSectionV2Component,
   SelectV2Component,
+  SidebarV2Component,
   TableV2Component,
   TabsV2Component,
   TabV2Component,
@@ -62,7 +65,10 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     MenuItemV2Component,
     MenuV2Component,
     MenuDividerV2Component,
+    NavItemV2Component,
+    NavSectionV2Component,
     SelectV2Component,
+    SidebarV2Component,
     TabsV2Component,
     TabV2Component,
     TagV2Component,
@@ -73,6 +79,10 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
   styleUrls: ['./foundations-modern-workbench.page.scss'],
 })
 export class FoundationsModernWorkbenchPage {
+  // Sidebar workbench — collapsed state per demo frame (self-toggling).
+  readonly sidebarCollapsedMain = signal(false);
+  readonly sidebarCollapsedRail = signal(true);
+
   readonly variants: ButtonV2Variant[] = ['primary', 'secondary', 'ghost', 'destructive'];
   readonly sizes: ButtonV2Size[] = ['xs', 'sm', 'md', 'lg'];
 
@@ -162,7 +172,7 @@ export class FoundationsModernWorkbenchPage {
   // Row actions — the locked pattern: Edit inline (primary icon-button) + a ⋯
   // menu with Duplicar / Eliminar (danger). ≤2 inline, 3+ collapses to overflow.
   readonly tableActions: TableV2RowAction[] = [
-    { key: 'edit', label: 'Editar', icon: 'edit', iconVariant: 'primary' },
+    { key: 'edit', label: 'Editar', icon: 'edit' },
     { key: 'duplicate', label: 'Duplicar', icon: 'duplicate', overflow: true },
     { key: 'delete', label: 'Eliminar', icon: 'delete', variant: 'danger', overflow: true },
   ];

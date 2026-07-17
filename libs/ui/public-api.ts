@@ -24,6 +24,8 @@ export { TabsV2Component, TabV2Component } from './src/tabs-v2';
 export { CardV2Component } from './src/card-v2';
 export { IconButtonV2Component } from './src/icon-button-v2';
 export type { IconButtonV2Variant, IconButtonV2Size } from './src/icon-button-v2';
+export { DialogV2Component } from './src/dialog-v2';
+export type { DialogV2Size, DialogV2CloseReason } from './src/dialog-v2';
 export { TableV2Component } from './src/table-v2';
 export type {
   TableV2Column,

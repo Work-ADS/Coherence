@@ -35,6 +35,8 @@
   --width-dialog-sm: var(--dimension-100);
   --width-dialog-md: var(--dimension-140);
   --width-dialog-lg: var(--dimension-180);
+  --width-dialog-xl: var(--dimension-200);
+  --width-dialog-xxl: var(--dimension-240);
   --width-menu-min: var(--dimension-50);
   --width-toggle: var(--dimension-9);
 
@@ -92,6 +94,7 @@
   --pad-control-md: var(--dimension-2-5);
   --pad-control-lg: var(--dimension-3);
   --pad-card: var(--dimension-4);
+  --pad-dialog: var(--dimension-6);
   --pad-toggle-track: var(--dimension-0-5);
   --pad-sidebar-block: var(--dimension-3);
 
@@ -102,6 +105,7 @@
   --gap-field-label: var(--dimension-1);
   --gap-menu-item: var(--dimension-0-5);
   --gap-control-label: var(--dimension-2);
+  --gap-dialog-actions: var(--dimension-2);
   --gap-sidebar-item-content: var(--dimension-2);
   --gap-sidebar-items: var(--dimension-0-5);
   --gap-sidebar-label-to-items: var(--dimension-2);

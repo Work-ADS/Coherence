@@ -1,0 +1,194 @@
+// =============================================================================
+// afi-dialog-v2 — Dialog primitive, identity v2 (foundations-modern tokens).
+// 3-file split (LOCKED). BEM + semantic tokens only; no raw px/hex/opacity.
+// Native <dialog> supplies the focus trap, scroll-lock, top-layer + backdrop;
+// the shell mirrors the Figma Dialog (2736:3707): background/elevated fill,
+// radius/xl, Elevation/5, and pad/dialog as both padding and inter-section gap.
+// =============================================================================
+
+:host {
+  display: contents;
+}
+
+// ─── Native <dialog> shell ───────────────────────────────────────────────────
+// Resets the UA chrome and centres the dialog in the viewport. Each size sets
+// an explicit max-width; `inset: 0` + `margin: auto` is the standard top-layer
+// centering pattern.
+.afi-dialog-v2 {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  width: 100%;
+  inset: 0;
+  margin: auto;
+
+  // Tall dialogs (complex / 2-pane forms) can exceed the viewport. Cap the
+  // height and let the body scroll internally, with pad/dialog of breathing
+  // room top and bottom.
+  max-height: calc(100dvh - (var(--pad-dialog) * 2));
+  overflow: hidden;
+
+  &::backdrop {
+    // TODO(tokens): the modern foundation has no overlay/scrim token yet
+    // (flagged in the Figma doc). Point at the real v1 semantic token
+    // (--overlay-blanket) rather than the --surface-overlay compat alias in
+    // aliases.scss (that file is slated for deletion). Swap for a
+    // foundations-modern scrim token once Figma defines one.
+    background: var(--overlay-blanket);
+  }
+
+  // ─── Size variants — width only ─────────────────────────────────────────────
+  &--sm {
+    max-width: var(--width-dialog-sm);
+  }
+
+  &--md {
+    max-width: var(--width-dialog-md);
+  }
+
+  &--lg {
+    max-width: var(--width-dialog-lg);
+  }
+
+  &--xl {
+    max-width: var(--width-dialog-xl);
+  }
+
+  &--xxl {
+    max-width: var(--width-dialog-xxl);
+  }
+}
+
+// ─── Panel — the visible surface ─────────────────────────────────────────────
+// Flex column so the body can scroll when the dialog hits its height cap while
+// header + footer stay pinned. Padding and section gap both bind to pad/dialog,
+// matching the Figma shell.
+.afi-dialog-v2__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pad-dialog);
+  width: 100%;
+  padding: var(--pad-dialog);
+  background: var(--background-elevated);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--elevation-dialog);
+
+  // Match the dialog's viewport cap so the internal flex chain trips overflow
+  // (a percentage height on the panel would resolve to auto — the <dialog> has
+  // only max-height, no definite height — and the body would never scroll).
+  max-height: calc(100dvh - (var(--pad-dialog) * 2));
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+// Row: the text stack fills, the close button hugs the trailing edge and aligns
+// to the top of the title. No divider (unlike afi-card-v2).
+.afi-dialog-v2__header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-control-sm);
+}
+
+.afi-dialog-v2__text-stack {
+  flex: 1 1 0;
+  min-inline-size: 0; // let long titles wrap instead of pushing width
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-control-sm);
+}
+
+.afi-dialog-v2__title {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-h4-size);
+  font-weight: var(--type-h4-weight);
+  line-height: var(--type-h4-line-height);
+  color: var(--content-primary);
+}
+
+.afi-dialog-v2__description {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-default-size);
+  font-weight: var(--type-body-default-weight);
+  line-height: var(--type-body-default-line-height);
+  color: var(--content-secondary);
+}
+
+// Projected close button (afi-icon-button-v2). Never disturbs the header layout.
+.afi-dialog-v2__close {
+  flex: 0 0 auto;
+  display: flex;
+}
+
+// ─── Body ────────────────────────────────────────────────────────────────────
+// Grows to content height; scrolls only when the dialog hits its height cap.
+.afi-dialog-v2__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+// ─── Footer ──────────────────────────────────────────────────────────────────
+// Trailing-aligned action row. Hidden (and its section gap removed) when no
+// actions are projected.
+//
+// Visibility uses `:empty` intentionally — footer content is genuinely optional
+// and fully inferable from whether anything is projected, so no `showFooter`
+// input is warranted. (Sibling `afi-card-v2` uses explicit `showHeader`/
+// `showFooter` booleans because its header owns title/supporting-text logic that
+// isn't inferable; the divergence is deliberate, not an inconsistency to
+// "fix".) `:empty` is safe here because this repo keeps Angular's default
+// `preserveWhitespaces: false`, so no stray whitespace node defeats the match.
+.afi-dialog-v2__footer {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gap-dialog-actions);
+
+  &:empty {
+    display: none;
+  }
+}
+
+// ─── Entrance — dialog dissolve ──────────────────────────────────────────────
+// A light fade + scale-settle on the panel and a fade on the scrim. Lighter
+// than a drawer's panel-slide, so it runs at --motion-duration-base.
+@keyframes afi-dialog-v2-panel-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes afi-dialog-v2-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.afi-dialog-v2[open] .afi-dialog-v2__panel {
+  animation: afi-dialog-v2-panel-in var(--motion-duration-base) var(--motion-easing-enter);
+}
+
+.afi-dialog-v2[open]::backdrop {
+  animation: afi-dialog-v2-backdrop-in var(--motion-duration-base) var(--motion-easing-enter);
+}
+
+// reduced-motion-collapse (motion-skill §4.6): drop the entrance choreography;
+// the dialog still appears instantly with full state.
+@media (prefers-reduced-motion: reduce) {
+  .afi-dialog-v2[open] .afi-dialog-v2__panel,
+  .afi-dialog-v2[open]::backdrop {
+    animation: none;
+  }
+}

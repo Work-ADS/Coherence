@@ -1,219 +1,294 @@
 // =============================================================================
-// ui-moderno-2026.page.scss
+// ui-moderno-2026.page.scss — immersive dark reading room
 // =============================================================================
-// BEM under `.post`. Token-only — the clean-code hook blocks raw values
-// outside libs/tokens/.
+// BEM under `.reader`. Token-only — reader-specific values live in
+// libs/tokens/foundations-modern/component-reader.scss.
+//
+// Scroll-focus treatment: each beat runs a scroll-driven animation on its own
+// view() timeline — dimmed + blurred at the viewport edges, crisp at the
+// center. Guarded by @supports; browsers without scroll-driven animations
+// (and reduced-motion users) read every beat crisp.
 // =============================================================================
 
-.post {
+:host {
+  display: block;
+}
+
+.reader {
+  position: relative;
+  min-height: 100vh;
+  background: var(--reader-canvas);
+  color: var(--reader-content-primary);
+  overflow-x: clip;
+  animation: reader-enter var(--duration-slow) var(--easing-enter);
+}
+
+@keyframes reader-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// ─── Floating chrome ──────────────────────────────────────────────────────────
+.reader__chrome {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+  z-index: 10;
+}
+
+.reader__back {
+  font: var(--reader-type-support);
+  color: var(--reader-content-dim);
+  text-decoration: none;
+  padding: var(--space-2xs) var(--space-md);
+  border-radius: var(--radius-pill);
+  background: var(--reader-glass-surface);
+  border: var(--border-width-hairline) solid var(--reader-glass-border);
+  backdrop-filter: blur(var(--reader-glass-blur));
+  transition: color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    color: var(--reader-content-primary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+}
+
+// ─── Ambience ─────────────────────────────────────────────────────────────────
+.reader__ambience {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.reader__leak {
+  position: absolute;
+  inset-block-start: -25vh;
+  inset-inline-start: 10vw;
+  width: 55vw;
+  height: 110vh;
+  transform: rotate(60deg);
+  background: var(--reader-leak-gradient);
+}
+
+.reader__pill {
+  position: absolute;
+  inset-block-start: 44vh;
+  inset-inline-end: 10vw;
+  width: clamp(12rem, 26vw, 26rem);
+  height: var(--space-3xl);
+  border-radius: var(--radius-pill);
+  background: var(--reader-glass-surface);
+  border: var(--border-width-thick) solid var(--reader-glass-border);
+  filter: blur(var(--reader-glass-blur));
+  opacity: 0.4;
+}
+
+.reader__orb {
+  position: absolute;
+  inset-block-start: 44vh;
+  inset-inline-end: 4vw;
+  width: var(--space-3xl);
+  height: var(--space-3xl);
+  border-radius: var(--radius-pill);
+  background: var(--reader-glass-surface);
+  border: var(--border-width-thick) solid var(--reader-glass-border);
+  filter: blur(var(--reader-glass-blur));
+  opacity: 0.4;
+}
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
+.reader__hero {
+  position: relative;
+  z-index: 1;
+  min-height: 88vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background: var(--canvas-base);
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  max-width: var(--content-lg);
+  margin-inline: auto;
+  padding-inline: var(--space-xl);
+}
 
-  &__breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    height: var(--space-2xl);
-    padding: 0 var(--space-md);
-    background: var(--surface-quiet);
-    border-bottom: thin solid var(--border-hairline);
-    flex-shrink: 0;
-    font: var(--type-body-sm-400);
+.reader__eyebrow {
+  font: var(--reader-type-eyebrow);
+  letter-spacing: var(--tracking-wider);
+  color: var(--reader-content-dim);
+}
+
+.reader__title {
+  font: var(--reader-type-title);
+  letter-spacing: var(--font-letter-spacing-tight);
+  color: var(--reader-content-primary);
+}
+
+.reader__standfirst {
+  font: var(--reader-type-body);
+  color: var(--reader-content-secondary);
+}
+
+.reader__hint {
+  font: var(--reader-type-body);
+  color: var(--reader-content-dim);
+  margin-block-start: var(--space-xl);
+}
+
+// Cold-entry reveal for the hero (stagger-reveal, light tier — 4 elements).
+.reveal {
+  opacity: 0;
+  animation: reveal-blur-fade-rise var(--duration-reveal-normal) var(--easing-enter) both;
+  animation-delay: calc(var(--index, 0) * var(--reveal-stagger-normal));
+}
+
+@keyframes reveal-blur-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-rise-normal));
+    filter: blur(var(--reveal-blur-normal));
   }
-
-  &__breadcrumb-back {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--space-lg);
-    height: var(--space-lg);
-    border-radius: var(--radius-sm);
-    color: var(--color-neutral-500);
-    transition: background-color var(--duration-fast) var(--easing-enter);
-
-    &:hover {
-      background-color: var(--color-neutral-100);
-    }
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 0.125rem var(--border-focus);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
   }
+}
 
-  &__breadcrumb-parent {
-    color: var(--color-neutral-500);
-  }
+// ─── Beat stream ──────────────────────────────────────────────────────────────
+.reader__stream {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-lg);
+  margin-inline: auto;
+  padding-inline: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-3xl), 16vh, 12rem);
+}
 
-  &__breadcrumb-separator {
-    color: var(--color-neutral-400);
-  }
+.beat {
+  margin: 0;
+  font: var(--reader-type-body);
+  color: var(--reader-content-secondary);
+}
 
-  &__breadcrumb-current {
-    color: var(--canvas-fg);
-    font: var(--type-body-sm-500);
-  }
+.beat--headline {
+  font: var(--reader-type-headline);
+  letter-spacing: var(--font-letter-spacing-tight);
+  color: var(--reader-content-primary);
+}
 
-  &__icon {
-    width: var(--space-md);
-    height: var(--space-md);
-  }
+.beat--figure {
+  background: var(--reader-figure-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
 
-  &__main {
-    flex: 1;
-    overflow-y: auto;
-  }
+.beat__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 
-  &__article {
-    max-width: var(--content-prose);
-    margin: 0 auto;
-    padding: var(--space-2xl) var(--space-xl) var(--space-3xl);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xl);
-  }
-
-  &__eyebrow {
-    font: var(--type-body-sm-500);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-neutral-500);
-  }
-
-  &__lead {
-    margin: 0;
-    padding: var(--space-lg);
-    border-left: 0.1875rem solid var(--border-focus);
-    background: var(--surface-quiet);
-    border-radius: var(--radius-sm);
-    color: var(--canvas-fg);
-    font: var(--type-body-lg-400);
-  }
-
-  &__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-  }
-
-  &__h2 {
-    margin: 0;
-    color: var(--canvas-fg);
-    font: var(--type-display-sm);
-  }
-
-  &__h3 {
-    margin: var(--space-md) 0 0;
-    color: var(--canvas-fg);
-    font: var(--type-subtitle-body);
-  }
-
-  &__h4 {
-    margin: var(--space-sm) 0 0;
-    color: var(--canvas-fg);
-    font: var(--type-body-lg-500);
-  }
-
-  &__p {
-    margin: 0;
-    color: var(--canvas-fg);
-    font: var(--type-body);
-
-    code {
-      padding: 0 var(--space-2xs);
-      border-radius: var(--radius-xs);
-      background: var(--surface-muted);
-      color: var(--canvas-fg);
-      font-family: var(--font-mono);
-      font-size: 0.9em;
+// Scroll-focus: crisp only around the viewport center. Applied inside the
+// double guard so unsupported browsers and reduced-motion users never see
+// a permanently blurred line.
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .beat {
+      animation: beat-focus linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
     }
   }
+}
 
-  &__list {
-    margin: 0;
-    padding-left: var(--space-lg);
-    color: var(--canvas-fg);
-    font: var(--type-body);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
+@keyframes beat-focus {
+  0%,
+  100% {
+    opacity: var(--reader-dim-opacity);
+    filter: blur(var(--reader-blur));
+  }
+  42%,
+  58% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
 
-    code {
-      padding: 0 var(--space-2xs);
-      border-radius: var(--radius-xs);
-      background: var(--surface-muted);
-      font-family: var(--font-mono);
-      font-size: 0.9em;
-    }
+// ─── Sources ──────────────────────────────────────────────────────────────────
+.reader__end {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-lg);
+  margin-inline: auto;
+  padding: 30vh var(--space-xl) var(--space-3xl);
+}
+
+.reader__sources-summary {
+  font: var(--reader-type-support);
+  color: var(--reader-content-dim);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    color: var(--reader-content-primary);
   }
 
-  &__commitments {
-    margin: 0;
-    padding-left: var(--space-lg);
-    color: var(--canvas-fg);
-    font: var(--type-body);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+}
 
-    code {
-      padding: 0 var(--space-2xs);
-      border-radius: var(--radius-xs);
-      background: var(--surface-muted);
-      font-family: var(--font-mono);
-      font-size: 0.9em;
-    }
+.reader__source-list {
+  margin-block-start: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  list-style: none;
+  padding: 0;
+}
+
+.reader__source-link {
+  font: var(--reader-type-support);
+  color: var(--reader-content-dim);
+  text-decoration: underline;
+  text-underline-offset: var(--space-3xs);
+  transition: color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    color: var(--reader-content-primary);
   }
 
-  &__link {
-    color: var(--action-primary-default);
-    text-decoration: underline;
-    text-underline-offset: 0.1875rem;
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+}
 
-    &:hover {
-      color: var(--action-primary-hover);
-    }
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 0.125rem var(--border-focus);
-      border-radius: var(--radius-xs);
-    }
+// ─── Reduced motion ───────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .reader {
+    animation: reader-fade-only var(--duration-reduced-motion, 80ms) linear both;
   }
 
-  &__figure {
-    margin: var(--space-md) 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
+  .reveal {
+    animation: reader-fade-only var(--duration-reduced-motion, 80ms) linear both;
+    animation-delay: 0ms;
   }
 
-  &__figure-frame {
-    background: var(--surface-muted);
-    border: thin solid var(--border-hairline);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 12rem;
-  }
-
-  &__figure-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    border-radius: var(--radius-sm);
-  }
-
-  &__figcaption {
-    color: var(--color-neutral-500);
-    font: var(--type-body-sm-400);
-
-    strong {
-      color: var(--canvas-fg);
-    }
+  @keyframes reader-fade-only {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }

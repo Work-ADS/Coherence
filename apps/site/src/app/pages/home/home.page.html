@@ -1,4 +1,4 @@
-<div class="home">
+<div class="home" [class.home--expanding]="expandRect() !== null">
 
   <!-- Hero section -->
   <section class="hero">
@@ -19,18 +19,7 @@
       }
     </p>
 
-    <div class="hero__ctas">
-      <a routerLink="/demos">
-        <afi-button variant="primary">
-          {{ lang() === 'es' ? 'Ver demos' : 'View demos' }}
-        </afi-button>
-      </a>
-      <a routerLink="/componentes">
-        <afi-button variant="secondary">
-          {{ lang() === 'es' ? 'Ver componentes' : 'View components' }}
-        </afi-button>
-      </a>
-    </div>
+    <!-- Hero CTAs hidden — home focuses on the Modern UI card for now. -->
   </section>
 
   <!-- Divider + Recent work -->
@@ -48,6 +37,13 @@
         <a
           [routerLink]="card.routerLink"
           class="card"
+          [class.card--lifted]="expandRect() !== null"
+          [class.card--growing]="expandGrowing()"
+          [style.--exp-top]="expandRect() ? expandRect()!.top + 'px' : null"
+          [style.--exp-left]="expandRect() ? expandRect()!.left + 'px' : null"
+          [style.--exp-width]="expandRect() ? expandRect()!.width + 'px' : null"
+          [style.--exp-height]="expandRect() ? expandRect()!.height + 'px' : null"
+          (click)="onCardClick($event, card.routerLink)"
           [attr.aria-label]="card.title + ' — ' + card.eyebrow"
         >
           <div class="card__thumb" aria-hidden="true">

@@ -1,7 +1,7 @@
 ---
 description: Ship the current feature branch (commit → push to Azure → merge to GitHub main), then stop for the manual Azure PR merge. `/ship next <branch>` runs the post-merge cleanup and starts a new branch.
 argument-hint: "(nothing) for phase 1, or  next <new-branch-name>  for phase 2"
-allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git add:*), Bash(git reset:*), Bash(git commit:*), Bash(git push:*), Bash(git checkout:*), Bash(git switch:*), Bash(git merge:*), Bash(git branch:*), Bash(git fetch:*), Bash(git log:*), Bash(git merge-base:*), Bash(git rev-parse:*), Bash(git config:*)
+allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git add:*), Bash(git reset:*), Bash(git commit:*), Bash(git push:*), Bash(git checkout:*), Bash(git switch:*), Bash(git merge:*), Bash(git branch:*), Bash(git fetch:*), Bash(git log:*), Bash(git show:*), Bash(git merge-base:*), Bash(git rev-parse:*), Bash(git config:*), Bash(grep:*)
 ---
 
 This command automates Richard's two-remote ship flow. It has **two phases**; pick by `$ARGUMENTS`.
@@ -34,8 +34,22 @@ This command automates Richard's two-remote ship flow. It has **two phases**; pi
    - **Azure** (the feature branch, for his PR): `git push origin-afi <feature-branch>`.
    - **GitHub `main`** (fast-forward only): `git checkout main` → `git merge --ff-only <feature-branch>`. If the ff fails (main diverged), STOP and report — no force, no `--no-ff`. Then `git push richgriner1 main` and `git checkout <feature-branch>` to return.
    - **Print both push results** so it's visible that Azure AND GitHub each received the work. If either push fails, STOP and say which — do not report success on a half-push.
-6. **STOP and hand off.** Print: the commit subject, that the branch is on Azure + GitHub main is updated, and:
-   > Now merge the Azure PR in the web UI. When it's merged, run `/ship next <new-branch-name>`.
+5. **Figma reconciliation prompt (conditional).** The modern foundation is sometimes **code-led** — new tokens land in code (via the `tools/figma-sync/foundations-modern.json` → `generate-foundations.mjs` flow) before Figma has them, and primitives leave `TODO(tokens)` / BLOCKED-scrim markers. If this ship touched that contract, Figma must be updated or the next real sync overwrites the code additions. After the pushes, run two probes against the commit just made:
+   - **Token-contract change:** `git show --format= --name-only HEAD | grep -q 'tools/figma-sync/foundations-modern.json'`. If it hit, list the added/changed variables with `git show HEAD -- tools/figma-sync/foundations-modern.json` — capture each added `"name"` + its `{dimension/…}` or `{color/…}` alias (= resolved value).
+   - **Figma-facing deviations:** `git show HEAD --unified=0 -- 'libs/ui/**' | grep -inE 'TODO\(tokens\)|TODO\(figma\)|code-leads-figma|ahead of figma|BLOCKED — token'` — these flag scrim/value/component-gap gaps the Figma mock must adopt.
+
+   If **both** probes come back empty → print "No Figma changes needed this ship." and continue. Otherwise emit a **ready-to-paste prompt for the Figma agent** in a fenced block, filled ONLY from what the probes found (don't invent; list anything unresolved as a "verify" bullet):
+   ```
+   In Figma AFI-FOUNDATIONS-MODERN, reconcile these code-led changes so the next token sync is a no-op:
+   1. Create/update these variables (match the code aliases EXACTLY — same name, same primitive):
+      - <collection> → <name> = <primitive alias> (<resolved value>)
+      ...
+   2. New semantic colour / scrim, if any: <name> = <the code's CURRENT value> (from the TODO/BLOCKED marker).
+   3. Component updates, if any: <e.g. rebind the Dialog footer action gap to gap/dialog-actions (8px)>.
+   The shipped code is the source of truth for these values; if any differ from your design intent, flag it to Richard before changing rather than diverging silently.
+   ```
+6. **STOP and hand off.** Print: the commit subject, that the branch is on Azure + GitHub main is updated, the Figma prompt from step 5 (or "No Figma changes needed"), and:
+   > Now merge the Azure PR in the web UI. If a Figma reconciliation prompt was printed, paste it to the Figma agent while the PR is open. When it's merged, run `/ship next <new-branch-name>`.
    Do **not** proceed to cleanup — the Azure merge is a manual step.
 
 ---
@@ -66,3 +80,4 @@ Invoked as `/ship next <new-branch-name>`.
 - **Fast-forward only** for every `main` merge. A non-ff means STOP and report — no `--no-ff`, no force, no rebase surprises.
 - **The Azure PR merge is Richard's manual step.** Phase 1 always stops before cleanup; Phase 2 refuses to run until the branch is on Azure `main`.
 - **Let the pre-commit hook run** (no `--no-verify`); if clean-code fails, fix or surface, don't bypass.
+- **Figma is code-led at times.** If a Phase 1 ship changed `tools/figma-sync/foundations-modern.json` or left `TODO(tokens)`/`TODO(figma)`/BLOCKED-scrim markers in the diff, Phase 1 MUST emit the paste-ready Figma-agent prompt (step 5) — never silently skip it, since an un-reconciled sync will overwrite the code-side token additions.

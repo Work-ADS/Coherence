@@ -7,6 +7,7 @@ import {
   CheckboxV2Component,
   ChipV2Component,
   DialogV2Component,
+  DrawerV2Component,
   IconButtonV2Component,
   InputV2Component,
   MenuItemV2Component,
@@ -28,6 +29,8 @@ import type {
   ButtonV2Variant,
   DialogV2CloseReason,
   DialogV2Size,
+  DrawerV2CloseReason,
+  DrawerV2Size,
   IconButtonV2Size,
   IconButtonV2Variant,
   InputV2Size,
@@ -63,6 +66,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     CheckboxV2Component,
     ChipV2Component,
     DialogV2Component,
+    DrawerV2Component,
     IconButtonV2Component,
     TableV2Component,
     InputV2Component,
@@ -166,6 +170,58 @@ export class FoundationsModernWorkbenchPage {
   onCancelDelete(): void {
     this.deleteDialogOpen.set(false);
     this.deleteOutcome.set('Cancelado');
+  }
+
+  // Drawer — one instance driven by the size buttons; last close reason echoed.
+  readonly drawerSizes: DrawerV2Size[] = ['sm', 'md', 'lg'];
+  readonly drawerSize = signal<DrawerV2Size>('sm');
+  readonly drawerOpen = signal(false);
+  readonly drawerClosedReason = signal<string>('—');
+
+  openDrawer(size: DrawerV2Size): void {
+    this.drawerSize.set(size);
+    this.drawerOpen.set(true);
+  }
+
+  onDrawerClose(reason: DrawerV2CloseReason): void {
+    this.drawerOpen.set(false);
+    this.drawerClosedReason.set(reason);
+  }
+
+  // Filter panel — a projected-content example: chip filters + apply/clear footer.
+  readonly filterDrawerOpen = signal(false);
+  readonly filterOutcome = signal<string>('—');
+
+  // Chip filters are controlled here (single selection set keyed by the unique
+  // labels) so clicks toggle and stick — chip-v2's `selected` is a two-way
+  // model, so binding it to a constant literal wouldn't reflect interaction.
+  readonly statusFilters = ['Activo', 'Pendiente', 'Archivado'];
+  readonly categoryFilters = ['Ingreso', 'Gasto', 'Transferencia', 'Ajuste'];
+  readonly dateFilters = ['7 días', '30 días', 'Último trimestre', 'Personalizado'];
+  readonly selectedFilters = signal<Set<string>>(
+    new Set(['Activo', 'Ingreso', 'Gasto', '30 días']),
+  );
+
+  toggleFilter(label: string): void {
+    this.selectedFilters.update((current) => {
+      const next = new Set(current);
+      if (next.has(label)) {
+        next.delete(label);
+      } else {
+        next.add(label);
+      }
+      return next;
+    });
+  }
+
+  onApplyFilters(): void {
+    this.filterDrawerOpen.set(false);
+    this.filterOutcome.set('Filtros aplicados');
+  }
+
+  onCancelFilters(): void {
+    this.filterDrawerOpen.set(false);
+    this.filterOutcome.set('Cancelado');
   }
 
   readonly simulating = signal(false);

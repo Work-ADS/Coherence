@@ -1,0 +1,189 @@
+// =============================================================================
+// afi-drawer-v2 — Drawer primitive, identity v2 (foundations-modern tokens).
+// 3-file split (LOCKED). BEM + semantic tokens only; no raw px/hex/opacity.
+// Native <dialog> supplies the focus trap, scroll-lock, top-layer + backdrop;
+// the shell mirrors the Figma Drawer (2769:5408): right-anchored, full-height,
+// background/elevated fill, radius/lg on the inner corners only,
+// Elevation/roles/drawer shadow, pad/drawer section padding, and stroke/default
+// dividers under the header and above the footer.
+// =============================================================================
+
+:host {
+  display: contents;
+}
+
+// ─── Native <dialog> shell ───────────────────────────────────────────────────
+// Pins the panel to the trailing (right) edge and stretches it the full viewport
+// height. `inset-block: 0` sets the height; `inset-inline: auto 0` anchors the
+// trailing edge while the leading edge floats, so `max-inline-size` (per size)
+// drives the width. Degrades to full width on narrow viewports.
+.afi-drawer-v2 {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  inset-block: 0;
+  inset-inline: auto 0;
+  margin: 0;
+  inline-size: 100%;
+  block-size: 100dvh;
+  max-block-size: 100dvh;
+  overflow: hidden;
+
+  &::backdrop {
+    // TODO(tokens): the modern foundation has no overlay/scrim token yet
+    // (flagged in the Figma doc, shared with Dialog). Point at the real v1
+    // semantic token (--overlay-blanket) rather than the --surface-overlay
+    // compat alias in aliases.scss (that file is slated for deletion). Swap for
+    // a foundations-modern scrim token once Figma defines one.
+    background: var(--overlay-blanket);
+  }
+
+  // ─── Size variants — width only ─────────────────────────────────────────────
+  &--sm {
+    max-inline-size: var(--width-drawer-sm);
+  }
+
+  &--md {
+    max-inline-size: var(--width-drawer-md);
+  }
+
+  &--lg {
+    max-inline-size: var(--width-drawer-lg);
+  }
+}
+
+// ─── Panel — the visible surface ─────────────────────────────────────────────
+// Flex column so the body scrolls while header + footer stay pinned. Full height
+// of the dialog; the inner (leading) corners are rounded, the trailing edge sits
+// flush to the viewport (no radius). Sections are separated by their own
+// dividers, so — unlike afi-dialog-v2 — the panel carries no inter-section gap.
+.afi-drawer-v2__panel {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  block-size: 100%;
+  background: var(--background-elevated);
+  border-start-start-radius: var(--radius-lg);
+  border-end-start-radius: var(--radius-lg);
+  box-shadow: var(--elevation-drawer);
+  overflow: hidden; // clip the rounded corners against the scrolling body
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+// Toolbar-height row: the text stack fills, the close button hugs the trailing
+// edge. Content is vertically centred for the title-only case; when a
+// description is present the row grows and the block padding keeps it off the
+// divider. A stroke/default divider sits under the header.
+.afi-drawer-v2__header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  min-block-size: var(--navigation-toolbar-height);
+  padding-block: var(--gap-control-md);
+  padding-inline: var(--pad-drawer);
+  border-block-end: var(--stroke-default) solid var(--borders-default);
+}
+
+.afi-drawer-v2__text-stack {
+  flex: 1 1 0;
+  min-inline-size: 0; // let long titles wrap instead of pushing width
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-control-sm);
+}
+
+.afi-drawer-v2__title {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-h4-size);
+  font-weight: var(--type-h4-weight);
+  line-height: var(--type-h4-line-height);
+  color: var(--content-primary);
+}
+
+.afi-drawer-v2__description {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-default-size);
+  font-weight: var(--type-body-default-weight);
+  line-height: var(--type-body-default-line-height);
+  color: var(--content-secondary);
+}
+
+// Projected close button (afi-icon-button-v2). Never disturbs the header layout.
+.afi-drawer-v2__close {
+  flex: 0 0 auto;
+  display: flex;
+}
+
+// ─── Body ────────────────────────────────────────────────────────────────────
+// Grows to fill the panel between header and footer; scrolls independently.
+.afi-drawer-v2__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--pad-drawer);
+}
+
+// ─── Footer ──────────────────────────────────────────────────────────────────
+// Trailing-aligned action row with a stroke/default divider above it. Hidden
+// (divider included) when no actions are projected.
+//
+// Visibility uses `:empty` intentionally — footer content is genuinely optional
+// and fully inferable from whether anything is projected, so no `showFooter`
+// input is warranted (matching the sibling afi-dialog-v2 decision). `:empty` is
+// safe here because this repo keeps Angular's default `preserveWhitespaces:
+// false`, so no stray whitespace node defeats the match.
+.afi-drawer-v2__footer {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gap-dialog-actions);
+  padding: var(--pad-drawer);
+  border-block-start: var(--stroke-default) solid var(--borders-default);
+
+  &:empty {
+    display: none;
+  }
+}
+
+// ─── Entrance — slide in from the right ──────────────────────────────────────
+// The panel slides in from the trailing edge (Figma MOVE_IN, 300ms ease-out →
+// --motion-duration-slow · --motion-easing-enter); the scrim fades in.
+@keyframes afi-drawer-v2-panel-in {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes afi-drawer-v2-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.afi-drawer-v2[open] .afi-drawer-v2__panel {
+  animation: afi-drawer-v2-panel-in var(--motion-duration-slow) var(--motion-easing-enter);
+}
+
+.afi-drawer-v2[open]::backdrop {
+  animation: afi-drawer-v2-backdrop-in var(--motion-duration-slow) var(--motion-easing-enter);
+}
+
+// reduced-motion-collapse (motion-skill §4.6): drop the entrance choreography;
+// the drawer still appears instantly with full state.
+@media (prefers-reduced-motion: reduce) {
+  .afi-drawer-v2[open] .afi-drawer-v2__panel,
+  .afi-drawer-v2[open]::backdrop {
+    animation: none;
+  }
+}

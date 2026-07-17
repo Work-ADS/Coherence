@@ -34,8 +34,10 @@
 
     <div class="card-grid">
       @for (card of recentWork(); track card.routerLink) {
+        <!-- Plain href instead of routerLink: RouterLink's own click handler
+             ignores preventDefault and would navigate before the morph runs. -->
         <a
-          [routerLink]="card.routerLink"
+          [attr.href]="card.routerLink"
           class="card"
           [class.card--lifted]="expandRect() !== null"
           [class.card--growing]="expandGrowing()"

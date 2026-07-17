@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { LogoComponent } from '@coherence/ui';
 
 import {
@@ -33,7 +33,6 @@ interface ExpandRect {
   selector: 'site-home',
   standalone: true,
   imports: [
-    RouterLink,
     LogoComponent,
     EvolutionGlyphComponent,
     WhitelabelFrameGlyphComponent,

@@ -1,5 +1,15 @@
 // external
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  afterNextRender,
+  computed,
+  inject,
+  signal,
+  viewChildren,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 // relative
@@ -21,6 +31,13 @@ interface DiagramItem {
 }
 
 type StreamItem = BeatItem | DiagramItem;
+
+/** Distance-from-center tier driving the focus/blur treatment of a beat. */
+type FocusTier = 'focused' | 'near' | 'far';
+
+/** Band widths as a fraction of the viewport height. */
+const FOCUS_BAND = 0.22;
+const NEAR_BAND = 0.45;
 
 interface SourceLink {
   label: string;
@@ -44,10 +61,16 @@ const DIAGRAM = (file: string, altEs: string, altEn: string): DiagramItem => ({
 /**
  * Immersive dark reading room for the Modern UI 2026 post. The long-form
  * article (see git history) is condensed into thirty self-contained beats;
- * a scroll-driven focus treatment keeps the line at the viewport center
+ * a scroll-linked focus treatment keeps the line at the viewport center
  * crisp while neighbors sit dimmed and blurred (Figma AFI-FOUNDATIONS-MODERN,
- * "Animation frames" 2920:5691). Browsers without scroll-driven animations —
- * and reduced-motion users — read every line crisp.
+ * "Animation frames" 2920:5691).
+ *
+ * The focus tiers are computed in TS (rAF-throttled scroll listener →
+ * per-beat distance from viewport center → class binding) instead of CSS
+ * `animation-timeline: view()`: the shell's `main.content` is an overflow
+ * container that never scrolls on this route, so view() timelines attach to
+ * it and freeze. Reduced-motion users never enter the treatment — every
+ * beat stays crisp.
  */
 @Component({
   selector: 'site-ui-moderno-2026-page',
@@ -59,7 +82,19 @@ const DIAGRAM = (file: string, altEs: string, altEn: string): DiagramItem => ({
 })
 export class UiModerno2026Page {
   private readonly language = inject(LanguageService);
+  private readonly destroyRef = inject(DestroyRef);
   readonly isEn = computed(() => this.language.lang() === 'en');
+
+  private readonly beatRefs = viewChildren<ElementRef<HTMLElement>>('beatEl');
+
+  /** Focus tier per stream index; empty until the first measurement. */
+  readonly tiers = signal<readonly FocusTier[]>([]);
+
+  private recomputeScheduled = false;
+
+  constructor() {
+    afterNextRender(() => this.startFocusTracking());
+  }
 
   private readonly items: StreamItem[] = [
     // Acto 1 · El encargo
@@ -277,4 +312,59 @@ export class UiModerno2026Page {
     { label: 'dsruptr — The Ultimate Design Maturity Guide for Tech Leaders', href: 'https://dsruptr.com/2026/01/19/the-ultimate-design-maturity-guide-for-tech-leaders/' },
     { label: 'Emil Kowalski — intentional pause in high-impact interactions', href: 'https://emilkowal.ski/' },
   ];
+
+  /**
+   * Window-level scroll/resize listeners (capture catches the shell's inner
+   * scroller too, whichever ends up scrolling). Angular has no template
+   * event for "any ancestor scrolled", hence the manual listeners; both are
+   * passive and removed on destroy.
+   */
+  private startFocusTracking(): void {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const onScroll = () => this.scheduleRecompute();
+    window.addEventListener('scroll', onScroll, { capture: true, passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('scroll', onScroll, true);
+      window.removeEventListener('resize', onScroll);
+    });
+    this.recomputeTiers();
+  }
+
+  private scheduleRecompute(): void {
+    if (this.recomputeScheduled) return;
+    this.recomputeScheduled = true;
+    requestAnimationFrame(() => {
+      this.recomputeScheduled = false;
+      this.recomputeTiers();
+    });
+  }
+
+  /**
+   * Rect reads are unavoidable here: the tier depends on each beat's live
+   * distance to the viewport center, which no template binding exposes.
+   * Writes stay declarative — the signal drives class bindings.
+   */
+  private recomputeTiers(): void {
+    // A zero-height viewport (headless panes, mid-layout reads) would push
+    // every beat to "far"; leave the current state untouched instead.
+    if (window.innerHeight === 0) return;
+    const center = window.innerHeight / 2;
+    const focusBand = window.innerHeight * FOCUS_BAND;
+    const nearBand = window.innerHeight * NEAR_BAND;
+
+    const next = this.beatRefs().map((ref): FocusTier => {
+      const rect = ref.nativeElement.getBoundingClientRect();
+      const distance = Math.abs(rect.top + rect.height / 2 - center);
+      if (distance < focusBand) return 'focused';
+      if (distance < nearBand) return 'near';
+      return 'far';
+    });
+
+    const current = this.tiers();
+    if (next.length !== current.length || next.some((tier, i) => tier !== current[i])) {
+      this.tiers.set(next);
+    }
+  }
 }

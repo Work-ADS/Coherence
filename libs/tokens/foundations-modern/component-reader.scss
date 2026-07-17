@@ -20,10 +20,13 @@
   --reader-content-dim: rgba(255, 255, 255, 0.55);
 
   // ── Scroll-focus treatment ──────────────────────────────────────────────────
-  // A beat away from the viewport center sits at --reader-dim-opacity behind
-  // --reader-blur; it resolves to opacity 1 / blur 0 as it crosses the center.
+  // A beat far from the viewport center sits at --reader-dim-opacity behind
+  // --reader-blur; approaching the center it passes through the "near" tier
+  // and resolves to opacity 1 / blur 0 as it crosses.
   --reader-dim-opacity: 0.1;
+  --reader-dim-opacity-near: 0.3;
   --reader-blur: 12px;
+  --reader-blur-near: 6px;
 
   // ── Ambience (Figma: orange-light-leak, blurry-pill-widget, blurry-circle) ──
   // Pre-softened radial gradient instead of filter: blur() — a viewport-sized

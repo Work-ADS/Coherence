@@ -199,29 +199,31 @@
   height: auto;
 }
 
-// Scroll-focus: crisp only around the viewport center. Applied inside the
-// double guard so unsupported browsers and reduced-motion users never see
-// a permanently blurred line.
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .beat {
-      animation: beat-focus linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-    }
-  }
+// Scroll-focus: crisp only around the viewport center. The tier classes are
+// driven from TS (rAF-throttled scroll measurement); the transition smooths
+// the hop between tiers as the beat travels toward the center.
+.beat {
+  transition:
+    opacity var(--duration-slow) var(--easing-standard),
+    filter var(--duration-slow) var(--easing-standard);
 }
 
-@keyframes beat-focus {
-  0%,
-  100% {
-    opacity: var(--reader-dim-opacity);
-    filter: blur(var(--reader-blur));
-  }
-  42%,
-  58% {
+.beat--near {
+  opacity: var(--reader-dim-opacity-near);
+  filter: blur(var(--reader-blur-near));
+}
+
+.beat--far {
+  opacity: var(--reader-dim-opacity);
+  filter: blur(var(--reader-blur));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beat--near,
+  .beat--far {
     opacity: 1;
-    filter: blur(0);
+    filter: none;
+    transition: none;
   }
 }
 

@@ -34,13 +34,24 @@
   </header>
 
   <div class="reader__stream">
-    @for (item of stream(); track $index) {
+    @for (item of stream(); track $index; let i = $index) {
       @if (item.kind === 'beat') {
-        <p class="beat" [class.beat--headline]="item.weight === 'headline'">
+        <p
+          #beatEl
+          class="beat"
+          [class.beat--headline]="item.weight === 'headline'"
+          [class.beat--near]="tiers()[i] === 'near'"
+          [class.beat--far]="tiers()[i] === 'far'"
+        >
           {{ item.text }}
         </p>
       } @else {
-        <figure class="beat beat--figure">
+        <figure
+          #beatEl
+          class="beat beat--figure"
+          [class.beat--near]="tiers()[i] === 'near'"
+          [class.beat--far]="tiers()[i] === 'far'"
+        >
           <img class="beat__img" [src]="item.src" [alt]="item.alt" loading="lazy" />
         </figure>
       }

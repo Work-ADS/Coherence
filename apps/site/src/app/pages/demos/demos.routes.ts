@@ -13,6 +13,14 @@ export const demos_routes: Routes = [
         (m) => m.FoundationsModernWorkbenchPage,
       ),
   },
+  // Nueva simulación · Overview — goal-driven client dashboard (concept surface)
+  {
+    path: 'nueva-simulacion-overview',
+    loadComponent: () =>
+      import('./nueva-simulacion-overview/nueva-simulacion-overview.page').then(
+        (m) => m.NuevaSimulacionOverviewPage,
+      ),
+  },
   // Wealth Planner 2026 — overview surface (shell consumer)
   {
     path: 'wealth-planner-2026',

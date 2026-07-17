@@ -27,7 +27,7 @@ export type { IconButtonV2Variant, IconButtonV2Size } from './src/icon-button-v2
 export { DialogV2Component } from './src/dialog-v2';
 export type { DialogV2Size, DialogV2CloseReason } from './src/dialog-v2';
 export { DrawerV2Component } from './src/drawer-v2';
-export type { DrawerV2Size, DrawerV2CloseReason } from './src/drawer-v2';
+export type { DrawerV2Size, DrawerV2Anchor, DrawerV2CloseReason } from './src/drawer-v2';
 export { TableV2Component } from './src/table-v2';
 export type {
   TableV2Column,
@@ -81,6 +81,8 @@ export { SidebarComponent } from './src/sidebar';
 export type { SidebarMode } from './src/sidebar';
 export { NavItemComponent } from './src/nav-item';
 export { NavSectionComponent } from './src/nav-section';
+export { NavbarV2Component } from './src/navbar-v2';
+export type { NavbarV2Layout, NavbarV2Action } from './src/navbar-v2';
 export { SidebarV2Component } from './src/sidebar-v2';
 export { NavSectionV2Component } from './src/nav-section-v2';
 export { NavItemV2Component } from './src/nav-item-v2';

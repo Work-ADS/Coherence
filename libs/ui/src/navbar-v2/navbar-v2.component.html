@@ -1,0 +1,220 @@
+<nav [class]="classes()" [attr.aria-label]="ariaLabel()">
+  @switch (layout()) {
+    <!-- ── Desktop: menu + label · search field · help · bell · avatar ──────── -->
+    @case ('desktop') {
+      <div class="afi-navbar-v2__zone afi-navbar-v2__zone--lead">
+        @if (showMenuToggle()) {
+          <ng-container [ngTemplateOutlet]="menuToggle" />
+        }
+        <ng-container [ngTemplateOutlet]="pageLabel" />
+      </div>
+
+      <div class="afi-navbar-v2__zone afi-navbar-v2__zone--center">
+        @if (showSearch()) {
+          <button
+            type="button"
+            class="afi-navbar-v2__search-field"
+            (click)="emit('search')"
+          >
+            <span class="afi-navbar-v2__search-icon" aria-hidden="true">
+              <ng-container [ngTemplateOutlet]="iconSearch" />
+            </span>
+            <span class="afi-navbar-v2__search-placeholder">{{ searchPlaceholder() }}</span>
+            @if (searchShortcut()) {
+              <kbd class="afi-navbar-v2__kbd" aria-hidden="true">{{ searchShortcut() }}</kbd>
+            }
+          </button>
+        }
+      </div>
+
+      <div class="afi-navbar-v2__zone afi-navbar-v2__zone--trail">
+        @if (showHelp()) {
+          <afi-icon-button-v2
+            variant="ghost"
+            size="md"
+            ariaLabel="Ayuda"
+            (clicked)="emit('help')"
+          >
+            <ng-container [ngTemplateOutlet]="iconHelp" />
+          </afi-icon-button-v2>
+        }
+        @if (showNotifications()) {
+          <ng-container [ngTemplateOutlet]="notifications" />
+        }
+        <ng-container [ngTemplateOutlet]="avatar" />
+      </div>
+    }
+
+    <!-- ── Compact: label · search trigger · bell · avatar ──────────────────── -->
+    @case ('compact') {
+      <div class="afi-navbar-v2__zone afi-navbar-v2__zone--lead">
+        <ng-container [ngTemplateOutlet]="pageLabel" />
+      </div>
+
+      <div class="afi-navbar-v2__zone afi-navbar-v2__zone--actions afi-navbar-v2__zone--trail">
+        @if (showSearch()) {
+          <ng-container [ngTemplateOutlet]="searchTrigger" />
+        }
+        @if (showNotifications()) {
+          <ng-container [ngTemplateOutlet]="notifications" />
+        }
+        <ng-container [ngTemplateOutlet]="avatar" />
+      </div>
+    }
+
+    <!-- ── Mobile: menu + label · search trigger · overflow · avatar ────────── -->
+    @case ('mobile') {
+      <div class="afi-navbar-v2__zone afi-navbar-v2__zone--lead afi-navbar-v2__zone--actions">
+        @if (showMenuToggle()) {
+          <ng-container [ngTemplateOutlet]="menuToggle" />
+        }
+        <ng-container [ngTemplateOutlet]="pageLabel" />
+      </div>
+
+      <div class="afi-navbar-v2__zone afi-navbar-v2__zone--actions afi-navbar-v2__zone--trail">
+        @if (showSearch()) {
+          <ng-container [ngTemplateOutlet]="searchTrigger" />
+        }
+        @if (showOverflow()) {
+          <afi-icon-button-v2
+            variant="ghost"
+            size="md"
+            ariaLabel="Más acciones"
+            ariaHasPopup="menu"
+            (clicked)="emit('overflow')"
+          >
+            <ng-container [ngTemplateOutlet]="iconOverflow" />
+          </afi-icon-button-v2>
+        }
+        <ng-container [ngTemplateOutlet]="avatar" />
+      </div>
+    }
+  }
+</nav>
+
+<!-- ── Shared controls ──────────────────────────────────────────────────────── -->
+<ng-template #menuToggle>
+  <afi-icon-button-v2
+    variant="ghost"
+    size="md"
+    ariaLabel="Abrir menú de navegación"
+    (clicked)="emit('menu')"
+  >
+    <ng-container [ngTemplateOutlet]="iconMenu" />
+  </afi-icon-button-v2>
+</ng-template>
+
+<ng-template #pageLabel>
+  <span class="afi-navbar-v2__page-label">{{ currentPage() }}</span>
+</ng-template>
+
+<ng-template #searchTrigger>
+  <afi-icon-button-v2
+    variant="ghost"
+    size="md"
+    ariaLabel="Buscar"
+    (clicked)="emit('search')"
+  >
+    <ng-container [ngTemplateOutlet]="iconSearch" />
+  </afi-icon-button-v2>
+</ng-template>
+
+<ng-template #notifications>
+  <afi-icon-button-v2
+    variant="ghost"
+    size="md"
+    ariaLabel="Notificaciones"
+    (clicked)="emit('notifications')"
+  >
+    <ng-container [ngTemplateOutlet]="iconBell" />
+  </afi-icon-button-v2>
+</ng-template>
+
+<ng-template #avatar>
+  <button
+    type="button"
+    class="afi-navbar-v2__avatar"
+    [attr.aria-label]="'Menú de usuario, ' + initials()"
+    aria-haspopup="menu"
+    (click)="emit('avatar')"
+  >
+    {{ initials() }}
+  </button>
+</ng-template>
+
+<!-- ── Icon glyphs (Lucide, 24 viewBox, currentColor stroke) ────────────────── -->
+<ng-template #iconMenu>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M4 6h16M4 12h16M4 18h16" />
+  </svg>
+</ng-template>
+
+<ng-template #iconSearch>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+</ng-template>
+
+<ng-template #iconHelp>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+    <path d="M12 17h.01" />
+  </svg>
+</ng-template>
+
+<ng-template #iconBell>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+    <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+  </svg>
+</ng-template>
+
+<ng-template #iconOverflow>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="12" cy="5" r="1" />
+    <circle cx="12" cy="19" r="1" />
+  </svg>
+</ng-template>

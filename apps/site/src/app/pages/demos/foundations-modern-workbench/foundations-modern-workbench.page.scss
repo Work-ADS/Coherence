@@ -219,4 +219,35 @@
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
+
+  // Navbar demo — each layout in a width-bounded frame so the responsive
+  // variants read at a glance. The bar owns its own bottom hairline.
+  &__navbar-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-gap-default);
+  }
+
+  // Label sits ABOVE the frame (outside the bordered box); the frame holds
+  // only the bar. The width cap constrains both so they read as one column.
+  &__navbar-demo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-control-sm);
+
+    &--compact {
+      max-inline-size: 48rem;
+    }
+
+    &--mobile {
+      max-inline-size: 24rem;
+    }
+  }
+
+  &__navbar-frame {
+    inline-size: 100%;
+    border: var(--stroke-hairline) solid var(--borders-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
 }

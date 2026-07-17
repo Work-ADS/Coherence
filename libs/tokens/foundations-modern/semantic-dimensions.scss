@@ -111,4 +111,14 @@
   --gap-sidebar-items: var(--dimension-0-5);
   --gap-sidebar-label-to-items: var(--dimension-2);
   --gap-sidebar-groups: var(--dimension-3);
+
+  // pad
+  --pad-navbar-inline: var(--dimension-4);
+
+  // gap
+  --gap-navbar-zones: var(--dimension-4);
+  --gap-navbar-actions: var(--dimension-2);
+
+  // width
+  --width-navbar-search: var(--dimension-90);
 }

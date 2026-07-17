@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 
 import { IconButtonV2Component } from '../icon-button-v2/icon-button-v2.component';
-import type { DrawerV2CloseReason, DrawerV2Size } from './drawer-v2.variants';
+import type { DrawerV2Anchor, DrawerV2CloseReason, DrawerV2Size } from './drawer-v2.variants';
 
 let nextId = 0;
 
@@ -80,6 +80,10 @@ export class DrawerV2Component implements OnDestroy {
   /** Width variant — structure is identical across sizes. */
   readonly size = input<DrawerV2Size>('sm');
 
+  /** Anchored edge. `right` (default) is the standard drawer; `left` is the
+   * off-canvas navigation pattern (host `afi-sidebar-v2` as the body). */
+  readonly anchor = input<DrawerV2Anchor>('right');
+
   /** H4 title in the header. Empty/null → the title node is omitted. */
   readonly title = input<string | null>(null);
 
@@ -113,7 +117,7 @@ export class DrawerV2Component implements OnDestroy {
   readonly descriptionId = `afi-drawer-v2-desc-${this.id}`;
 
   readonly dialogClasses = computed(() =>
-    ['afi-drawer-v2', `afi-drawer-v2--${this.size()}`].join(' '),
+    ['afi-drawer-v2', `afi-drawer-v2--${this.size()}`, `afi-drawer-v2--${this.anchor()}`].join(' '),
   );
 
   readonly hasHeader = computed(

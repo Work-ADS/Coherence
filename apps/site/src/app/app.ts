@@ -105,9 +105,13 @@ export class App {
     const topLevelDemoRoutes =
       /^\/clientes(\/|$)/.test(url) ||
       /^\/listado-planificaciones(\/|$)/.test(url);
+    // Depth-2 exception: the Nueva simulación · Overview is a platform surface
+    // (its own sidebar-v2 + navbar-v2 chrome), so it renders full-screen too.
+    const overviewPlatform = /^\/demos\/nueva-simulacion-overview(\/|$)/.test(url);
     return (
       demosFullScreen ||
       topLevelDemoRoutes ||
+      overviewPlatform ||
       /^\/afi-insights(\/|$)/.test(url) ||
       /^\/talks\/.+/.test(url)
     );

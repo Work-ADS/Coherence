@@ -15,6 +15,9 @@ export interface DemoCard {
 }
 
 const DEMOS: DemoCard[] = [
+  // NOTE: 'nueva-simulacion-overview' is intentionally NOT listed here yet —
+  // the page + route exist at /demos/nueva-simulacion-overview for iteration,
+  // but it's hidden from the demos landing until the look is ready.
   {
     slug: 'foundations-modern-workbench',
     title: 'Identidad v2 — workbench',

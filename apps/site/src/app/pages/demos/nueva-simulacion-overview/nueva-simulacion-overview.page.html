@@ -1,0 +1,172 @@
+<div class="ov" data-foundation="modern">
+  <afi-sidebar-v2
+    class="ov__sidebar"
+    ariaLabel="Navegación del cliente"
+    homeHref="/demos"
+    [collapsed]="sidebarCollapsed()"
+    (collapsedChange)="sidebarCollapsed.set($event)"
+  >
+    <afi-button-v2 class="ov__new" variant="ghost" [fullWidth]="true">
+        <svg slot="iconStart" class="ov__new-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+          <path d="M8 3v10M3 8h10" />
+        </svg>
+        Nueva simulación
+      </afi-button-v2>
+
+      <afi-nav-section-v2 label="Cliente">
+        <afi-nav-item-v2 label="Overview" href="#" [selected]="true">
+          <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>
+        </afi-nav-item-v2>
+        <afi-nav-item-v2 label="Familia" href="#">
+          <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+        </afi-nav-item-v2>
+        <afi-nav-item-v2 label="Patrimonio" href="#">
+          <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18" /><path d="M5 21V10l7-5 7 5v11" /><path d="M9 21v-6h6v6" /></svg>
+        </afi-nav-item-v2>
+        <afi-nav-item-v2 label="Ingresos y gastos" href="#">
+          <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16l-4-4 4-4" /><path d="M3 12h14" /><path d="M17 8l4 4-4 4" /><path d="M21 12H7" /></svg>
+        </afi-nav-item-v2>
+      </afi-nav-section-v2>
+
+      <afi-nav-section-v2 label="Simulaciones recientes">
+        @for (sim of recentSims; track sim.title) {
+          <afi-nav-item-v2 [label]="sim.title" href="#">
+            <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>
+          </afi-nav-item-v2>
+        }
+      </afi-nav-section-v2>
+    </afi-sidebar-v2>
+
+    <div class="ov__main">
+      <afi-navbar-v2
+        class="ov__navbar"
+        layout="desktop"
+        currentPage="Overview"
+        userName="Marc Puig · Gestor"
+        (activated)="onNav($event)"
+      />
+
+      <main class="ov__content">
+        <afi-loading-overlay [visible]="loading()" [delay]="0" message="Cargando cliente…" />
+
+        @if (!loading()) {
+        <header class="ov__head reveal" style="--i: 0">
+          <div>
+            <h1 class="ov__title">Elena Serrano Vidal</h1>
+            <p class="ov__meta">Patrimonio consolidado · actualizado hoy</p>
+          </div>
+          <div class="ov__actions">
+            <afi-button-v2 variant="ghost" size="sm">Comparar</afi-button-v2>
+            <afi-button-v2 variant="secondary" size="sm">Informe</afi-button-v2>
+          </div>
+        </header>
+
+        <div class="ov__bento">
+          <afi-card-v2 class="ov__kpi reveal" style="--i: 1" [showHeader]="false">
+            <p class="ov__kpi-label">Patrimonio neto</p>
+            <p class="ov__kpi-value">4,82 M€</p>
+            <p class="ov__kpi-delta ov__kpi-delta--up">+3,2% este año</p>
+          </afi-card-v2>
+
+          <afi-card-v2 class="ov__kpi reveal" style="--i: 2" [showHeader]="false">
+            <p class="ov__kpi-label">Tu dinero dura hasta</p>
+            <p class="ov__kpi-value">2071</p>
+            <p class="ov__kpi-delta">a los 94 años · con holgura</p>
+          </afi-card-v2>
+
+          <afi-card-v2 class="ov__kpi reveal" style="--i: 3" [showHeader]="false">
+            <p class="ov__kpi-label">Año libre de deuda</p>
+            <p class="ov__kpi-value">2029</p>
+            <p class="ov__kpi-delta ov__kpi-delta--up">2 años antes del plan</p>
+          </afi-card-v2>
+
+          <afi-card-v2 class="ov__kpi reveal" style="--i: 4" [showHeader]="false">
+            <p class="ov__kpi-label">Preparación jubilación</p>
+            <p class="ov__kpi-value">82%</p>
+            <p class="ov__kpi-delta">en camino · faltan 240 €/mes</p>
+          </afi-card-v2>
+
+          <afi-card-v2
+            class="ov__hero reveal"
+            style="--i: 5"
+            heading="Proyección de patrimonio"
+            supportingText="Con plan frente a sin plan · 2026–2060"
+          >
+            <afi-chart-line
+              [data]="projection"
+              [hideInstructions]="true"
+              [hideDataTable]="true"
+              height="17rem"
+              locale="es-ES"
+            />
+          </afi-card-v2>
+
+          <afi-card-v2 class="ov__side reveal" style="--i: 6" heading="Distribución de activos">
+            <afi-chart-bar
+              [data]="allocation"
+              orientation="horizontal"
+              height="12rem"
+              locale="es-ES"
+            />
+          </afi-card-v2>
+
+          <afi-card-v2 class="ov__side reveal" style="--i: 7" heading="Liquidez">
+            <div class="ov__stats">
+              <div class="ov__stat">
+                <span class="ov__stat-k">Disponible</span>
+                <span class="ov__stat-v">820 k€</span>
+              </div>
+              <div class="ov__stat">
+                <span class="ov__stat-k">Comprometido</span>
+                <span class="ov__stat-v">4,00 M€</span>
+              </div>
+            </div>
+          </afi-card-v2>
+
+          <afi-card-v2 class="ov__third reveal" style="--i: 8" heading="Objetivo de legado">
+            <p class="ov__kpi-value">1,02 M€</p>
+            <p class="ov__kpi-label">de 1,50 M€ objetivo</p>
+            <div class="ov__badge-row">
+              <afi-badge-v2 tone="success" label="En camino · 68%" [dot]="true" />
+            </div>
+          </afi-card-v2>
+
+          <afi-card-v2 class="ov__third reveal" style="--i: 9" heading="Familia">
+            <ul class="ov__people">
+              @for (person of family; track person.name) {
+                <li class="ov__person">
+                  <span>{{ person.name }}</span>
+                  <span class="ov__person-rel">{{ person.rel }}</span>
+                </li>
+              }
+            </ul>
+          </afi-card-v2>
+
+          <afi-card-v2 class="ov__third reveal" style="--i: 10" heading="A revisar">
+            <ul class="ov__alerts">
+              @for (alert of alerts; track alert.tag) {
+                <li class="ov__alert">
+                  <afi-badge-v2 [tone]="alert.tone" [label]="alert.tag" />
+                  <span>{{ alert.text }}</span>
+                </li>
+              }
+            </ul>
+          </afi-card-v2>
+
+          <afi-card-v2 class="ov__strip reveal" style="--i: 11" heading="Simulaciones recientes">
+            <div class="ov__sims">
+              @for (sim of recentSims; track sim.title) {
+                <article class="ov__sim">
+                  <afi-badge-v2 [tone]="sim.tone" [label]="sim.chip" [dot]="true" />
+                  <h3 class="ov__sim-title">{{ sim.title }}</h3>
+                  <p class="ov__sim-outcome">{{ sim.outcome }}</p>
+                  <p class="ov__sim-when">{{ sim.when }}</p>
+                </article>
+              }
+            </div>
+          </afi-card-v2>
+        </div>
+        }
+      </main>
+    </div>
+  </div>

@@ -1,0 +1,74 @@
+<!--
+  Drawer v2 — native <dialog> engine wrapping the foundations-modern shell,
+  right-anchored and full viewport height. Header (title + optional description +
+  close), Body (projected, scrolls), Footer (projected, trailing-aligned, hidden
+  when empty). Unlike afi-dialog-v2, the header and footer carry dividers
+  (border under the header, border over the footer). The panel stops click
+  propagation so a click on the dialog element itself registers as a backdrop
+  (scrim) click.
+
+  Footer contract: project the action buttons DIRECTLY, each carrying
+  slot="footer" (not wrapped in a single container) — the footer row owns the
+  --gap-dialog-actions spacing between them.
+-->
+<dialog
+  #dialogEl
+  [class]="dialogClasses()"
+  [attr.aria-labelledby]="title() ? titleId : null"
+  [attr.aria-describedby]="description() ? descriptionId : null"
+  [attr.aria-label]="!title() ? ariaLabel() : null"
+  (cancel)="onCancel($event)"
+  (close)="onNativeClose()"
+  (click)="onBackdropClick($event)"
+>
+  <div class="afi-drawer-v2__panel" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    @if (hasHeader()) {
+      <div class="afi-drawer-v2__header">
+        <div class="afi-drawer-v2__text-stack">
+          @if (title()) {
+            <h2 [id]="titleId" class="afi-drawer-v2__title">{{ title() }}</h2>
+          }
+          @if (description()) {
+            <p [id]="descriptionId" class="afi-drawer-v2__description">
+              {{ description() }}
+            </p>
+          }
+        </div>
+
+        @if (showClose()) {
+          <div class="afi-drawer-v2__close">
+            <afi-icon-button-v2
+              variant="ghost"
+              size="sm"
+              ariaLabel="Cerrar"
+              (clicked)="close('button')"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </afi-icon-button-v2>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Body -->
+    <div class="afi-drawer-v2__body">
+      <ng-content />
+    </div>
+
+    <!-- Footer -->
+    <div class="afi-drawer-v2__footer">
+      <ng-content select="[slot=footer]" />
+    </div>
+  </div>
+</dialog>

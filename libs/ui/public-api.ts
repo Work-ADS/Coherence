@@ -26,6 +26,8 @@ export { IconButtonV2Component } from './src/icon-button-v2';
 export type { IconButtonV2Variant, IconButtonV2Size } from './src/icon-button-v2';
 export { DialogV2Component } from './src/dialog-v2';
 export type { DialogV2Size, DialogV2CloseReason } from './src/dialog-v2';
+export { DrawerV2Component } from './src/drawer-v2';
+export type { DrawerV2Size, DrawerV2CloseReason } from './src/drawer-v2';
 export { TableV2Component } from './src/table-v2';
 export type {
   TableV2Column,

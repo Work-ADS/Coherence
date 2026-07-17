@@ -3536,6 +3536,13 @@
           }
         },
         {
+          "name": "pad/drawer",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-6}"
+          }
+        },
+        {
           "name": "pad/toggle-track",
           "type": "number",
           "values": {

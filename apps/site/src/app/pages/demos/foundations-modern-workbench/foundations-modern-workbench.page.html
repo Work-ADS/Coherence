@@ -986,5 +986,109 @@
         </afi-button-v2>
       </afi-dialog-v2>
     </section>
+
+    <h2 class="workbench__group-title">Drawer</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">Tamaños · plantilla de contenido</h3>
+      <div class="workbench__row">
+        @for (size of drawerSizes; track size) {
+          <afi-button-v2 variant="secondary" size="sm" (clicked)="openDrawer(size)">
+            size="{{ size }}"
+          </afi-button-v2>
+        }
+      </div>
+      <p class="workbench__hint">
+        Panel anclado a la derecha, altura completa: cabecera fija (título +
+        descripción + cerrar), cuerpo con scroll independiente y footer de
+        acciones. Último cierre: <strong>{{ drawerClosedReason() }}</strong>.
+      </p>
+
+      <afi-drawer-v2
+        [open]="drawerOpen()"
+        [size]="drawerSize()"
+        title="Título del panel"
+        description="Texto de descripción opcional que aporta contexto adicional."
+        (openChange)="drawerOpen.set($event)"
+        (closed)="onDrawerClose($event)"
+      >
+        <p class="workbench__dialog-body">
+          El contenido del cuerpo va aquí. Esta área admite cualquier contenido
+          proyectado a través del slot por defecto y hace scroll de forma
+          independiente cuando supera la altura del viewport, mientras la
+          cabecera y el footer permanecen fijos.
+        </p>
+        <afi-button-v2 slot="footer" variant="secondary" size="sm" (clicked)="onDrawerClose('button')">
+          Cancelar
+        </afi-button-v2>
+        <afi-button-v2 slot="footer" variant="primary" size="sm" (clicked)="onDrawerClose('button')">
+          Guardar
+        </afi-button-v2>
+      </afi-drawer-v2>
+    </section>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">Panel de filtros · contenido proyectado</h3>
+      <div class="workbench__row">
+        <afi-button-v2 variant="secondary" size="sm" (clicked)="filterDrawerOpen.set(true)">
+          Abrir filtros
+        </afi-button-v2>
+      </div>
+      <p class="workbench__hint">Resultado: <strong>{{ filterOutcome() }}</strong>.</p>
+
+      <afi-drawer-v2
+        [open]="filterDrawerOpen()"
+        size="sm"
+        title="Filtros"
+        description="Ajusta los criterios para acotar los resultados."
+        (openChange)="filterDrawerOpen.set($event)"
+        (closed)="onCancelFilters()"
+      >
+        <div class="workbench__drawer-filters">
+          <div class="workbench__filter-group">
+            <span class="workbench__cell-label">Estado</span>
+            <div class="workbench__row">
+              @for (label of statusFilters; track label) {
+                <afi-chip-v2
+                  [label]="label"
+                  [selected]="selectedFilters().has(label)"
+                  (selectedChange)="toggleFilter(label)"
+                />
+              }
+            </div>
+          </div>
+          <div class="workbench__filter-group">
+            <span class="workbench__cell-label">Categoría</span>
+            <div class="workbench__row">
+              @for (label of categoryFilters; track label) {
+                <afi-chip-v2
+                  [label]="label"
+                  [selected]="selectedFilters().has(label)"
+                  (selectedChange)="toggleFilter(label)"
+                />
+              }
+            </div>
+          </div>
+          <div class="workbench__filter-group">
+            <span class="workbench__cell-label">Rango de fechas</span>
+            <div class="workbench__row">
+              @for (label of dateFilters; track label) {
+                <afi-chip-v2
+                  [label]="label"
+                  [selected]="selectedFilters().has(label)"
+                  (selectedChange)="toggleFilter(label)"
+                />
+              }
+            </div>
+          </div>
+        </div>
+        <afi-button-v2 slot="footer" variant="ghost" size="sm" (clicked)="onCancelFilters()">
+          Limpiar
+        </afi-button-v2>
+        <afi-button-v2 slot="footer" variant="primary" size="sm" (clicked)="onApplyFilters()">
+          Aplicar
+        </afi-button-v2>
+      </afi-drawer-v2>
+    </section>
   </div>
 </site-demo-shell>

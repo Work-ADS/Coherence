@@ -155,6 +155,19 @@
     color: var(--content-secondary);
   }
 
+  // Drawer filter demo — grouped chip filters projected into the drawer body.
+  &__drawer-filters {
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-gap-comfortable);
+  }
+
+  &__filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-control-md);
+  }
+
   // Tabs demo — the panel each view reveals. Sits under the bar and swaps copy
   // as the active tab changes; tabindex=0 so keyboard users reach its content.
   &__tabs-panel {

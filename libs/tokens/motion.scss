@@ -25,4 +25,35 @@
   --easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --easing-enter:    cubic-bezier(0.16, 1, 0.3, 1);
   --easing-exit:     cubic-bezier(0.7, 0, 0.84, 0);
+
+  // ── Reveal / stagger (staggered "blur-and-fade" entrance) ─────────────────
+  // Backs the `stagger-reveal` pattern in docs/rules/motion-skill.md §4.7.
+  // Three intensity tiers. Tier tracks ELEMENT COUNT, not just taste:
+  //   light  = many small elements (rows, grid cells, menu items)
+  //   normal = cards, metric tiles, panels — the default
+  //   heavy  = a few hero elements on first paint (page-load moment) only
+  // Enters use --easing-enter; every consumer owns a prefers-reduced-motion
+  // fallback (fade only, no rise/blur) — see the catalog snippet.
+
+  // Per-element enter duration (longer than --duration-slow: reveals travel farther)
+  --duration-reveal-light:  400ms;
+  --duration-reveal-normal: 500ms;
+  --duration-reveal-heavy:  600ms;
+
+  // Stagger — gap between one sibling's start and the next
+  --reveal-stagger-light:   40ms;
+  --reveal-stagger-normal:  70ms;
+  --reveal-stagger-heavy:  100ms;
+
+  // Rise — upward travel as the element fades in
+  --reveal-rise-light:   6px;
+  --reveal-rise-normal: 10px;
+  --reveal-rise-heavy:  14px;
+
+  // Blur-in — enter blur amount (animates to 0). Its own semantic scale;
+  // low/mid mirror --blur-sm/--blur-md, heavy is tuned to 14px (a touch under
+  // --blur-lg's 16px, which read as too soft for the reveal).
+  --reveal-blur-light:   4px;
+  --reveal-blur-normal:  8px;
+  --reveal-blur-heavy:  14px;
 }

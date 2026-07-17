@@ -53,6 +53,16 @@ Source: [libs/tokens/motion.scss](../../libs/tokens/motion.scss).
 
 Choreography pairing rule: **enters use `--easing-enter`, exits use `--easing-exit`, hover/active use `--easing-standard` or `--easing-enter`.** The full discipline is in [component-skill.md §11](./component-skill.md).
 
+### Reveal / stagger (added 2026-07-17)
+
+Backs the `stagger-reveal` pattern (§4.7). Three intensity tiers — the tier tracks **element count**, not taste (see §4.7).
+
+| Tier | Duration | Stagger | Rise | Blur |
+|---|---|---|---|---|
+| `light` | `--duration-reveal-light` 400ms | `--reveal-stagger-light` 40ms | `--reveal-rise-light` 6px | `--reveal-blur-light` 4px |
+| `normal` | `--duration-reveal-normal` 500ms | `--reveal-stagger-normal` 70ms | `--reveal-rise-normal` 10px | `--reveal-blur-normal` 8px |
+| `heavy` | `--duration-reveal-heavy` 600ms | `--reveal-stagger-heavy` 100ms | `--reveal-rise-heavy` 14px | `--reveal-blur-heavy` 14px |
+
 ### Tailwind mapping
 
 `tailwind.config.js` (lines 209–220) maps these to utility classes (`duration-fast`, `ease-enter`, etc.). Use either layer — the values resolve to the same custom property.
@@ -194,6 +204,63 @@ State communication must still work — opacity-only fades stay; spatial choreog
 
 ---
 
+### 4.7 `stagger-reveal`
+
+**When** — orchestrated entrances where several elements appear in sequence: a dashboard or page on first paint, a list/grid populating, cards settling in. The signature soft "blur-and-fade" reveal.
+
+**Properties** — `opacity` (0→1) + `transform: translateY()` (rise→0) + `filter: blur()` (→0), sequenced per element via a `--index` (or `--col` for grids) multiplied by the tier's stagger delay.
+
+**Tiers** — intensity tracks **element count**, not taste. `light` for *many* small elements (table rows, grid cells, menu items); `normal` (default) for cards, metric tiles, panels; `heavy` **only** for a *few* hero elements on first paint — it drags on long lists. Grids/long lists always use `light` so the cascade never overruns. Tokens: §3 "Reveal / stagger" table.
+
+**Tokens** — `var(--duration-reveal-<tier>) var(--easing-enter)`, `var(--reveal-stagger-<tier>)`, `var(--reveal-rise-<tier>)`, `var(--reveal-blur-<tier>)`.
+
+```scss
+@keyframes reveal-blur-fade-rise {
+  from { opacity: 0; transform: translateY(var(--_rise)); filter: blur(var(--_blur)); }
+  to   { opacity: 1; transform: translateY(0);            filter: blur(0); }
+}
+
+.reveal {
+  // defaults = normal tier; --reveal--light / --reveal--heavy override
+  --_dur: var(--duration-reveal-normal);
+  --_stagger: var(--reveal-stagger-normal);
+  --_rise: var(--reveal-rise-normal);
+  --_blur: var(--reveal-blur-normal);
+
+  opacity: 0; // hold hidden until the animation runs (no flash)
+  animation: reveal-blur-fade-rise var(--_dur) var(--easing-enter) both;
+  animation-delay: calc(var(--index, 0) * var(--_stagger));
+}
+
+.reveal--light {
+  --_dur: var(--duration-reveal-light);
+  --_stagger: var(--reveal-stagger-light);
+  --_rise: var(--reveal-rise-light);
+  --_blur: var(--reveal-blur-light);
+}
+.reveal--heavy {
+  --_dur: var(--duration-reveal-heavy);
+  --_stagger: var(--reveal-stagger-heavy);
+  --_rise: var(--reveal-rise-heavy);
+  --_blur: var(--reveal-blur-heavy);
+}
+
+// grids sweep by column, not source order — set --col per cell, force light
+.reveal--grid {
+  --_stagger: var(--reveal-stagger-light);
+  animation-delay: calc(var(--col, 0) * var(--_stagger));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: reveal-fade-only 80ms linear both; animation-delay: 0ms; }
+  @keyframes reveal-fade-only { from { opacity: 0; } to { opacity: 1; } }
+}
+```
+
+**Currently used in** — none yet. Tokens + pattern landed 2026-07-17 ahead of the first consumer. Apply per-element `--index`/`--col` by hand for now; promote to a `[dsStaggerReveal]` directive (auto-sets `--index` from list index) when the first dynamic list/grid needs it.
+
+---
+
 ## 5. How to use this catalog
 
 1. **Designing a new primitive's motion** — open this file. If a pattern matches, copy the snippet, reference the section number in your build prompt.
@@ -219,11 +286,12 @@ These are not blockers for the catalog — they ARE the catalog's first targets.
 
 - **Tier 2 (Angular animations) patterns** — none yet in the codebase. When the first Tier 2 pattern lands (likely sidebar collapse with coordinated width + opacity), document the trigger/state machine here.
 - **Tier 3 (Motion One)** — reserved for DS site demonstrations. Not catalog-worthy until a real use case exists.
-- **Stagger / sequential patterns** — when staggered list reveals are needed (afi-insights cards, table row entries), define a `stagger` pattern with explicit delay tokens. Not in V1.
+- ~~**Stagger / sequential patterns** — when staggered list reveals are needed (afi-insights cards, table row entries), define a `stagger` pattern with explicit delay tokens. Not in V1.~~ **Done 2026-07-17** — see `stagger-reveal` (§4.7). Directive (`[dsStaggerReveal]`) still pending a first consumer.
 - **Loading shimmer** — likely needed for skeleton loaders. Build the primitive first, then catalog.
 
 ---
 
 ## 8. Changelog
 
+- **2026-07-17** — Added `stagger-reveal` (§4.7): staggered "blur-and-fade" entrance with three intensity tiers (light/normal/heavy). New tokens in `motion.scss` (`--duration-reveal-*`, `--reveal-stagger-*`, `--reveal-rise-*`, `--reveal-blur-*`). Un-parked from §7. Directive still pending a first consumer.
 - **2026-05-20** — V1 LOCKED. Six named patterns (`hover-tint`, `opacity-fade`, `focus-ring`, `slide-fade-enter`, `panel-slide`, `reduced-motion-collapse`). Token reference for `--duration-*` and `--easing-*` consolidated. Three known gaps + two token violations flagged.

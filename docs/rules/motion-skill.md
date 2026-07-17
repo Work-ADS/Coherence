@@ -206,7 +206,9 @@ State communication must still work — opacity-only fades stay; spatial choreog
 
 ### 4.7 `stagger-reveal`
 
-**When** — orchestrated entrances where several elements appear in sequence: a dashboard or page on first paint, a list/grid populating, cards settling in. The signature soft "blur-and-fade" reveal.
+**When** — **cold entries only**: first paint, app load, a hard refresh, an empty state filling for the first time. The moment the user is *arriving*, where a beat of choreography reads as considered.
+
+**When NOT to use** — **warm transitions** inside an active session: route changes, tab switches, filter/data refreshes, any in-place re-render while the user is heads-down working. There the blur + stagger stops being polish and becomes latency you are adding on purpose. Warm transitions get `opacity-fade` (§4.2) at `--duration-fast`, or nothing. **Rule of thumb: the more often a user will see a motion, the less of it it earns** — a first load happens once; a route change happens dozens of times an hour.
 
 **Properties** — `opacity` (0→1) + `transform: translateY()` (rise→0) + `filter: blur()` (→0), sequenced per element via a `--index` (or `--col` for grids) multiplied by the tier's stagger delay.
 

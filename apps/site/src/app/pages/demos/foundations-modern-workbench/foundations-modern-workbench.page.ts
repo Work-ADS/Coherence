@@ -13,6 +13,7 @@ import {
   MenuItemV2Component,
   MenuV2Component,
   MenuDividerV2Component,
+  NavbarV2Component,
   NavItemV2Component,
   NavSectionV2Component,
   SelectV2Component,
@@ -34,6 +35,7 @@ import type {
   IconButtonV2Size,
   IconButtonV2Variant,
   InputV2Size,
+  NavbarV2Action,
   SelectV2Size,
   SelectV2Option,
   TableV2Column,
@@ -73,6 +75,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     MenuItemV2Component,
     MenuV2Component,
     MenuDividerV2Component,
+    NavbarV2Component,
     NavItemV2Component,
     NavSectionV2Component,
     SelectV2Component,
@@ -90,6 +93,12 @@ export class FoundationsModernWorkbenchPage {
   // Sidebar workbench — collapsed state per demo frame (self-toggling).
   readonly sidebarCollapsedMain = signal(false);
   readonly sidebarCollapsedRail = signal(true);
+
+  // Navbar workbench — echoes the last control the bar emitted, and drives the
+  // off-canvas nav drawer opened by the menu toggle (left-anchored drawer-v2
+  // hosting afi-sidebar-v2).
+  readonly navbarLastAction = signal<NavbarV2Action | null>(null);
+  readonly navDrawerOpen = signal(false);
 
   readonly variants: ButtonV2Variant[] = ['primary', 'secondary', 'ghost', 'destructive'];
   readonly sizes: ButtonV2Size[] = ['xs', 'sm', 'md', 'lg'];
@@ -186,6 +195,13 @@ export class FoundationsModernWorkbenchPage {
   onDrawerClose(reason: DrawerV2CloseReason): void {
     this.drawerOpen.set(false);
     this.drawerClosedReason.set(reason);
+  }
+
+  onNavbarAction(action: NavbarV2Action): void {
+    this.navbarLastAction.set(action);
+    if (action === 'menu') {
+      this.navDrawerOpen.set(true);
+    }
   }
 
   // Filter panel — a projected-content example: chip filters + apply/clear footer.

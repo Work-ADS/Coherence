@@ -1090,5 +1090,87 @@
         </afi-button-v2>
       </afi-drawer-v2>
     </section>
+
+    <h2 class="workbench__group-title">Navbar</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">
+        Tres disposiciones · desktop · compact · mobile
+      </h3>
+      <div class="workbench__navbar-stack">
+        <div class="workbench__navbar-demo">
+          <span class="workbench__cell-label">layout="desktop"</span>
+          <div class="workbench__navbar-frame">
+            <afi-navbar-v2
+              layout="desktop"
+              currentPage="Plan"
+              userName="María Ruiz"
+              (activated)="onNavbarAction($event)"
+            />
+          </div>
+        </div>
+
+        <div class="workbench__navbar-demo workbench__navbar-demo--compact">
+          <span class="workbench__cell-label">layout="compact"</span>
+          <div class="workbench__navbar-frame">
+            <afi-navbar-v2
+              layout="compact"
+              currentPage="Plan"
+              userName="María Ruiz"
+              (activated)="onNavbarAction($event)"
+            />
+          </div>
+        </div>
+
+        <div class="workbench__navbar-demo workbench__navbar-demo--mobile">
+          <span class="workbench__cell-label">layout="mobile"</span>
+          <div class="workbench__navbar-frame">
+            <afi-navbar-v2
+              layout="mobile"
+              currentPage="Plan"
+              userName="María Ruiz"
+              (activated)="onNavbarAction($event)"
+            />
+          </div>
+        </div>
+      </div>
+      <p class="workbench__hint">
+        Última acción emitida:
+        <strong>{{ navbarLastAction() ?? '—' }}</strong>. La barra es un
+        disparador: el buscador abre la paleta de comandos (no filtra). Botones de
+        icono siempre en variante ghost. Pulse el menú (☰) en compact o mobile
+        para abrir la navegación.
+      </p>
+
+      <!-- Off-canvas navigation: the menu toggle opens afi-sidebar-v2 inside a
+           left-anchored afi-drawer-v2 (no new component). -->
+      <afi-drawer-v2
+        anchor="left"
+        size="sm"
+        ariaLabel="Navegación"
+        [open]="navDrawerOpen()"
+        (openChange)="navDrawerOpen.set($event)"
+      >
+        <afi-sidebar-v2 ariaLabel="Navegación principal">
+          <afi-nav-section-v2 label="Planificación">
+            <afi-nav-item-v2 label="Resumen" href="#" [selected]="true">
+              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>
+            </afi-nav-item-v2>
+            <afi-nav-item-v2 label="Cartera" href="#">
+              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
+            </afi-nav-item-v2>
+            <afi-nav-item-v2 label="Flujo de caja" href="#">
+              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></svg>
+            </afi-nav-item-v2>
+          </afi-nav-section-v2>
+
+          <afi-nav-section-v2 label="Recientes">
+            <afi-nav-item-v2 label="Estrategia Q3" href="#">
+              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+            </afi-nav-item-v2>
+          </afi-nav-section-v2>
+        </afi-sidebar-v2>
+      </afi-drawer-v2>
+    </section>
   </div>
 </site-demo-shell>

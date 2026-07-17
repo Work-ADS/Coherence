@@ -24,6 +24,18 @@
  */
 export type DrawerV2Size = 'sm' | 'md' | 'lg';
 
+/**
+ * Edge the panel is anchored to.
+ *
+ * - `right` (default) — the standard detail/filter/form drawer; slides in from
+ *   the trailing edge. Structure and every other value is unchanged.
+ * - `left` — the off-canvas navigation pattern: host `afi-sidebar-v2` as the
+ *   body and slides in from the leading edge, matching the Navbar behaviour
+ *   canvas ("menu button → opens navigation drawer"). Only the anchored edge,
+ *   the rounded (inner) corners, and the slide direction mirror.
+ */
+export type DrawerV2Anchor = 'right' | 'left';
+
 /** Reason a drawer closed, emitted on the `closed` output. */
 export type DrawerV2CloseReason = 'esc' | 'backdrop' | 'button';
 

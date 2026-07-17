@@ -3632,6 +3632,34 @@
           "values": {
             "Mode 1": "{dimension/dimension-3}"
           }
+        },
+        {
+          "name": "pad/navbar-inline",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "gap/navbar-zones",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-4}"
+          }
+        },
+        {
+          "name": "gap/navbar-actions",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "width/navbar-search",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-90}"
+          }
         }
       ]
     },

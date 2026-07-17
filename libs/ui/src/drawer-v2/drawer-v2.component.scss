@@ -50,6 +50,13 @@
   &--lg {
     max-inline-size: var(--width-drawer-lg);
   }
+
+  // ─── Anchor: left ────────────────────────────────────────────────────────────
+  // Off-canvas navigation. Pin the LEADING edge instead of the trailing one;
+  // corner-rounding + slide direction flip below. Everything else is shared.
+  &--left {
+    inset-inline: 0 auto;
+  }
 }
 
 // ─── Panel — the visible surface ─────────────────────────────────────────────
@@ -67,6 +74,15 @@
   border-end-start-radius: var(--radius-lg);
   box-shadow: var(--elevation-drawer);
   overflow: hidden; // clip the rounded corners against the scrolling body
+}
+
+// Left anchor: round the trailing (right) inner corners; the leading edge sits
+// flush to the viewport instead.
+.afi-drawer-v2--left .afi-drawer-v2__panel {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-start-end-radius: var(--radius-lg);
+  border-end-end-radius: var(--radius-lg);
 }
 
 // ─── Header ──────────────────────────────────────────────────────────────────
@@ -161,6 +177,17 @@
   }
 }
 
+// Left anchor slides in from the leading edge.
+@keyframes afi-drawer-v2-panel-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
 @keyframes afi-drawer-v2-backdrop-in {
   from {
     opacity: 0;
@@ -173,6 +200,10 @@
 
 .afi-drawer-v2[open] .afi-drawer-v2__panel {
   animation: afi-drawer-v2-panel-in var(--motion-duration-slow) var(--motion-easing-enter);
+}
+
+.afi-drawer-v2--left[open] .afi-drawer-v2__panel {
+  animation: afi-drawer-v2-panel-in-left var(--motion-duration-slow) var(--motion-easing-enter);
 }
 
 .afi-drawer-v2[open]::backdrop {

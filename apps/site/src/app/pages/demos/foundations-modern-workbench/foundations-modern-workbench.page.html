@@ -918,5 +918,73 @@
         </div>
       </div>
     </section>
+
+    <h2 class="workbench__group-title">Dialog</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">Tamaños · plantilla de contenido</h3>
+      <div class="workbench__row">
+        @for (size of dialogSizes; track size) {
+          <afi-button-v2 variant="secondary" size="sm" (clicked)="openDialog(size)">
+            size="{{ size }}"
+          </afi-button-v2>
+        }
+      </div>
+      <p class="workbench__hint">
+        Base template: cabecera (título + descripción + cerrar), cuerpo proyectado
+        y footer de acciones. Último cierre: <strong>{{ dialogClosedReason() }}</strong>.
+      </p>
+
+      <afi-dialog-v2
+        [open]="dialogOpen()"
+        [size]="dialogSize()"
+        title="Título del diálogo"
+        description="Texto de descripción opcional que aporta contexto adicional."
+        (openChange)="dialogOpen.set($event)"
+        (closed)="onDialogClose($event)"
+      >
+        <p class="workbench__dialog-body">
+          El contenido del cuerpo va aquí. Esta área admite cualquier contenido
+          proyectado a través del slot por defecto, permitiendo composiciones
+          flexibles sin modificar el componente base.
+        </p>
+        <afi-button-v2 slot="footer" variant="secondary" size="sm" (clicked)="onDialogClose('button')">
+          Cancelar
+        </afi-button-v2>
+        <afi-button-v2 slot="footer" variant="primary" size="sm" (clicked)="onDialogClose('button')">
+          Guardar
+        </afi-button-v2>
+      </afi-dialog-v2>
+    </section>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">Confirmación destructiva · eliminar</h3>
+      <div class="workbench__row">
+        <afi-button-v2 variant="destructive" size="sm" (clicked)="deleteDialogOpen.set(true)">
+          Eliminar cliente
+        </afi-button-v2>
+      </div>
+      <p class="workbench__hint">Resultado: <strong>{{ deleteOutcome() }}</strong>.</p>
+
+      <afi-dialog-v2
+        [open]="deleteDialogOpen()"
+        size="sm"
+        title="Eliminar cliente"
+        description="Esta acción no se puede deshacer. Se eliminarán la ficha del cliente y todas sus posiciones asociadas."
+        (openChange)="deleteDialogOpen.set($event)"
+        (closed)="onCancelDelete()"
+      >
+        <p class="workbench__dialog-body">
+          ¿Seguro que quieres eliminar a <strong>María García</strong>? No podrás
+          recuperar sus datos una vez confirmada la eliminación.
+        </p>
+        <afi-button-v2 slot="footer" variant="secondary" size="sm" (clicked)="onCancelDelete()">
+          Cancelar
+        </afi-button-v2>
+        <afi-button-v2 slot="footer" variant="destructive" size="sm" (clicked)="onConfirmDelete()">
+          Eliminar
+        </afi-button-v2>
+      </afi-dialog-v2>
+    </section>
   </div>
 </site-demo-shell>

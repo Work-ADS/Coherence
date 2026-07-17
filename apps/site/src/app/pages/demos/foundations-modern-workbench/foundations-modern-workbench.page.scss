@@ -146,6 +146,15 @@
     color: var(--content-placeholder);
   }
 
+  // Dialog demo — projected body copy; reset the default paragraph margin so it
+  // sits flush inside the dialog's own pad/dialog rhythm.
+  &__dialog-body {
+    margin: 0;
+    font-size: var(--type-body-default-size);
+    line-height: var(--type-body-default-line-height);
+    color: var(--content-secondary);
+  }
+
   // Tabs demo — the panel each view reveals. Sits under the bar and swaps copy
   // as the active tab changes; tabindex=0 so keyboard users reach its content.
   &__tabs-panel {

@@ -6,6 +6,7 @@ import {
   CardV2Component,
   CheckboxV2Component,
   ChipV2Component,
+  DialogV2Component,
   IconButtonV2Component,
   InputV2Component,
   MenuItemV2Component,
@@ -25,6 +26,8 @@ import type {
   BadgeV2Tone,
   ButtonV2Size,
   ButtonV2Variant,
+  DialogV2CloseReason,
+  DialogV2Size,
   IconButtonV2Size,
   IconButtonV2Variant,
   InputV2Size,
@@ -59,6 +62,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     CardV2Component,
     CheckboxV2Component,
     ChipV2Component,
+    DialogV2Component,
     IconButtonV2Component,
     TableV2Component,
     InputV2Component,
@@ -133,6 +137,36 @@ export class FoundationsModernWorkbenchPage {
     { tone: 'critical', label: 'Vencido' },
     { tone: 'info', label: 'En revisión' },
   ];
+
+  // Dialog — one instance driven by the size buttons; last close reason echoed.
+  readonly dialogSizes: DialogV2Size[] = ['sm', 'md', 'lg', 'xl', 'xxl'];
+  readonly dialogSize = signal<DialogV2Size>('sm');
+  readonly dialogOpen = signal(false);
+  readonly dialogClosedReason = signal<string>('—');
+
+  openDialog(size: DialogV2Size): void {
+    this.dialogSize.set(size);
+    this.dialogOpen.set(true);
+  }
+
+  onDialogClose(reason: DialogV2CloseReason): void {
+    this.dialogOpen.set(false);
+    this.dialogClosedReason.set(reason);
+  }
+
+  // Destructive confirm — a delete flow. Tracks whether the item was deleted.
+  readonly deleteDialogOpen = signal(false);
+  readonly deleteOutcome = signal<string>('—');
+
+  onConfirmDelete(): void {
+    this.deleteDialogOpen.set(false);
+    this.deleteOutcome.set('Eliminado');
+  }
+
+  onCancelDelete(): void {
+    this.deleteDialogOpen.set(false);
+    this.deleteOutcome.set('Cancelado');
+  }
 
   readonly simulating = signal(false);
 

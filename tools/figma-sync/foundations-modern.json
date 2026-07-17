@@ -3256,6 +3256,20 @@
           }
         },
         {
+          "name": "width/dialog/xl",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-200}"
+          }
+        },
+        {
+          "name": "width/dialog/xxl",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-240}"
+          }
+        },
+        {
           "name": "width/menu-min",
           "type": "number",
           "values": {
@@ -3515,6 +3529,13 @@
           }
         },
         {
+          "name": "pad/dialog",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-6}"
+          }
+        },
+        {
           "name": "pad/toggle-track",
           "type": "number",
           "values": {
@@ -3565,6 +3586,13 @@
         },
         {
           "name": "gap/control-label",
+          "type": "number",
+          "values": {
+            "Mode 1": "{dimension/dimension-2}"
+          }
+        },
+        {
+          "name": "gap/dialog-actions",
           "type": "number",
           "values": {
             "Mode 1": "{dimension/dimension-2}"

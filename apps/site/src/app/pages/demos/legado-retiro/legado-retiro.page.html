@@ -77,6 +77,7 @@
             class="block w-[260px]"
             ariaLabel="Buscar activo por nombre"
             placeholder="Buscar activo"
+            [typeahead]="true"
             [value]="assetSearchTerm()"
             [suggestions]="assetSuggestions()"
             emptyMessage="Sin coincidencias en tu patrimonio."

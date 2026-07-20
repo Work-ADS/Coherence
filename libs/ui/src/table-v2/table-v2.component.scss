@@ -180,6 +180,30 @@
   border-block-end: none;
 }
 
+// ── Reveal motion (opt-in `reveal="stagger"`) ────────────────────────────────
+// Blur-and-fade-rise cascade (motion-skill §4.7 `stagger-reveal`): `light`-tier
+// stagger so the cascade never overruns a long list, with the heavy blur amount
+// for on-screen presence. Replays whenever `revealKey` re-keys the rows (see the
+// component's `rowTrack`). DELIBERATE warm-transition exception — documented on
+// `TableV2Reveal`; the reduced-motion block below is the required collapse.
+.afi-table-v2__row--reveal {
+  animation: afi-table-v2-reveal var(--duration-reveal-normal) var(--motion-easing-enter) both;
+  animation-delay: calc(var(--reveal-index, 0) * var(--reveal-stagger-light));
+}
+
+@keyframes afi-table-v2-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-rise-normal));
+    filter: blur(var(--reveal-blur-heavy));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
 // ── Selection column ─────────────────────────────────────────────────────────
 .afi-table-v2__th-select,
 .afi-table-v2__td-select {
@@ -336,5 +360,21 @@
 
   .afi-table-v2__spinner {
     animation-duration: calc(var(--motion-duration-slow) * 6);
+  }
+
+  // Reveal collapses to a single short fade — no stagger delay, no blur, no
+  // translate. The row set (state) never depended on the motion.
+  .afi-table-v2__row--reveal {
+    animation: afi-table-v2-reveal-fade 80ms linear both;
+    animation-delay: 0ms;
+  }
+}
+
+@keyframes afi-table-v2-reveal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

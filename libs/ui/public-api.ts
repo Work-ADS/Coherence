@@ -34,10 +34,17 @@ export type {
   TableV2Density,
   TableV2CellKind,
   TableV2ActionsReveal,
+  TableV2Reveal,
   TableV2RowAction,
   TableV2RowActionIcon,
   TableV2SortState,
 } from './src/table-v2';
+export { TableApronComponent } from './src/table-apron';
+export type {
+  TableApronSize,
+  TableApronToken,
+  TableApronTokenIcon,
+} from './src/table-apron';
 export { SearchComponent } from './src/search';
 export type { SearchSize, SearchSuggestion } from './src/search';
 export { FilterChipComponent } from './src/filter-chip';

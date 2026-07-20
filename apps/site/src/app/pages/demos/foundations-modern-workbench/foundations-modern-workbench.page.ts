@@ -16,8 +16,10 @@ import {
   NavbarV2Component,
   NavItemV2Component,
   NavSectionV2Component,
+  SearchComponent,
   SelectV2Component,
   SidebarV2Component,
+  TableApronComponent,
   TableV2Component,
   TabsV2Component,
   TabV2Component,
@@ -38,6 +40,7 @@ import type {
   NavbarV2Action,
   SelectV2Size,
   SelectV2Option,
+  TableApronToken,
   TableV2Column,
   TableV2Density,
   TableV2RowAction,
@@ -78,8 +81,10 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     NavbarV2Component,
     NavItemV2Component,
     NavSectionV2Component,
+    SearchComponent,
     SelectV2Component,
     SidebarV2Component,
+    TableApronComponent,
     TabsV2Component,
     TabV2Component,
     TagV2Component,
@@ -245,6 +250,10 @@ export class FoundationsModernWorkbenchPage {
   // Chip — live selection + removable demo state.
   readonly chipSelected = signal(true);
   readonly chipRemovableVisible = signal(true);
+  // Chip value segment — selected chip carrying an applied filter value; Clear
+  // resets both the selection and the value back to the empty "Filter" state.
+  readonly chipValueSelected = signal(true);
+  readonly chipValue = signal<string | null>('Renta variable');
 
   // Tabs — live active index + the panel copy each view reveals.
   readonly tabsActive = signal(0);
@@ -325,5 +334,84 @@ export class FoundationsModernWorkbenchPage {
 
     this.simulating.set(true);
     setTimeout(() => this.simulating.set(false), 2000);
+  }
+
+  // ── Table apron — search + single-select status filter + live-count pill ──────
+  // The page owns the filter/search state; the table renders the resolved rows
+  // and replays the blur-and-fade cascade on every filter change (revealKey);
+  // the apron reads out "shown / total" + the active filters as removable tokens.
+  readonly orderColumns: TableV2Column[] = [
+    { key: 'pedido', label: 'Pedido', kind: 'text' },
+    { key: 'cliente', label: 'Cliente', kind: 'text' },
+    { key: 'total', label: 'Total', kind: 'monetary' },
+    { key: 'estado', label: 'Estado', kind: 'status', toneKey: 'estadoTone' },
+  ];
+
+  readonly orderStatusFilters: { key: string; label: string }[] = [
+    { key: 'todos', label: 'Todos' },
+    { key: 'nuevo', label: 'Nuevos' },
+    { key: 'atrasado', label: 'Atrasados' },
+    { key: 'cerrado', label: 'Cerrados' },
+  ];
+
+  readonly orderData: Record<string, unknown>[] = [
+    { id: '52000', pedido: '#52000', cliente: 'Ava Bennett', total: '2.400,00 €', estado: 'Nuevo', estadoTone: 'info', estadoKey: 'nuevo' },
+    { id: '52003', pedido: '#52003', cliente: 'Tessa Foster', total: '3.600,00 €', estado: 'Nuevo', estadoTone: 'info', estadoKey: 'nuevo' },
+    { id: '52006', pedido: '#52006', cliente: 'Reed Ellison', total: '750,00 €', estado: 'Atrasado', estadoTone: 'warning', estadoKey: 'atrasado' },
+    { id: '52009', pedido: '#52009', cliente: 'Noah Holloway', total: '7.200,00 €', estado: 'Nuevo', estadoTone: 'info', estadoKey: 'nuevo' },
+    { id: '52012', pedido: '#52012', cliente: 'Isla Quimby', total: '2.400,00 €', estado: 'Cerrado', estadoTone: 'success', estadoKey: 'cerrado' },
+    { id: '52015', pedido: '#52015', cliente: 'Wren Iverson', total: '3.600,00 €', estado: 'Atrasado', estadoTone: 'warning', estadoKey: 'atrasado' },
+    { id: '52018', pedido: '#52018', cliente: 'Milo Hartley', total: '750,00 €', estado: 'Cerrado', estadoTone: 'success', estadoKey: 'cerrado' },
+    { id: '52021', pedido: '#52021', cliente: 'June Alvarez', total: '7.200,00 €', estado: 'Nuevo', estadoTone: 'info', estadoKey: 'nuevo' },
+    { id: '52024', pedido: '#52024', cliente: 'Ava Bennett', total: '2.400,00 €', estado: 'Atrasado', estadoTone: 'warning', estadoKey: 'atrasado' },
+    { id: '52027', pedido: '#52027', cliente: 'Tessa Foster', total: '3.600,00 €', estado: 'Cerrado', estadoTone: 'success', estadoKey: 'cerrado' },
+    { id: '52030', pedido: '#52030', cliente: 'Reed Ellison', total: '750,00 €', estado: 'Nuevo', estadoTone: 'info', estadoKey: 'nuevo' },
+    { id: '52033', pedido: '#52033', cliente: 'Noah Holloway', total: '7.200,00 €', estado: 'Cerrado', estadoTone: 'success', estadoKey: 'cerrado' },
+  ];
+
+  readonly orderStatus = signal<string>('todos');
+  readonly orderSearch = signal<string>('');
+
+  setOrderStatus(key: string): void {
+    this.orderStatus.set(key);
+  }
+
+  setOrderSearch(value: string): void {
+    this.orderSearch.set(value);
+  }
+
+  /** Rows after the status filter + free-text search (the page filters, not the table). */
+  readonly visibleOrders = computed(() => {
+    const status = this.orderStatus();
+    const query = this.orderSearch().trim().toLowerCase();
+    return this.orderData.filter((row) => {
+      if (status !== 'todos' && row['estadoKey'] !== status) return false;
+      if (!query) return true;
+      const haystack = `${String(row['cliente'])} ${String(row['pedido'])}`.toLowerCase();
+      return haystack.includes(query);
+    });
+  });
+
+  /** Change signature — any filter change re-keys the rows and replays the reveal. */
+  readonly orderRevealKey = computed(() => `${this.orderStatus()}|${this.orderSearch().trim()}`);
+
+  /** Active filters as apron tokens (a selected non-"todos" status + a search term). */
+  readonly apronTokens = computed<TableApronToken[]>(() => {
+    const tokens: TableApronToken[] = [];
+    const status = this.orderStatus();
+    if (status !== 'todos') {
+      const label = this.orderStatusFilters.find((f) => f.key === status)?.label ?? status;
+      tokens.push({ id: 'estado', label, icon: 'filter' });
+    }
+    const query = this.orderSearch().trim();
+    if (query) {
+      tokens.push({ id: 'buscar', label: query, icon: 'search' });
+    }
+    return tokens;
+  });
+
+  onApronDismiss(token: TableApronToken): void {
+    if (token.id === 'estado') this.orderStatus.set('todos');
+    if (token.id === 'buscar') this.orderSearch.set('');
   }
 }

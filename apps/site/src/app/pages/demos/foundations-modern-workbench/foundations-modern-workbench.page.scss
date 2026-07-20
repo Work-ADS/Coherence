@@ -250,4 +250,42 @@
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
+
+  // ── Table apron demo ───────────────────────────────────────────────────────
+  &__apron-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--layout-gap-default);
+    margin-block-end: var(--layout-gap-comfortable);
+  }
+
+  &__apron-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-control-sm);
+  }
+
+  &__apron-search {
+    inline-size: min(20rem, 100%);
+  }
+
+  // Positioning context for the floating apron — reserves room below the table
+  // so the pill can overlap the bottom edge, centred (the canonical placement).
+  &__apron-frame {
+    position: relative;
+    padding-block-end: var(--dimension-10);
+  }
+
+  &__apron-float {
+    position: absolute;
+    inset-block-end: var(--dimension-4);
+    inset-inline-start: 50%;
+    display: flex;
+    justify-content: center;
+    max-inline-size: calc(100% - 2 * var(--dimension-4));
+    transform: translateX(-50%);
+  }
 }

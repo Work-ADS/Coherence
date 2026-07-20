@@ -561,10 +561,29 @@
         }
       </div>
     </section>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">
+        Con valor aplicado · «×» borra el valor y vuelve al chip vacío
+      </h3>
+      <div class="workbench__row workbench__row--toggles">
+        <afi-chip-v2 label="Clase" value="Renta variable" [selected]="true" />
+        <afi-chip-v2 label="Clase" value="Renta variable" [selected]="true" [disabled]="true" />
+        <afi-chip-v2
+          label="Divisa"
+          [selected]="chipValueSelected()"
+          [value]="chipValue()"
+          (selectedChange)="chipValueSelected.set($event)"
+          (cleared)="chipValue.set(null)"
+        />
+      </div>
+    </section>
     <p class="workbench__hint">
       Control interactivo de filtro/selección. El cuerpo alterna Seleccionado (aria-pressed);
-      la «×» es una acción aparte que descarta el chip (removed). Hover, foco y pulsado son
-      estados CSS en vivo —pase el ratón o use Tab—. El icono va en content/secondary;
+      la «×» es una acción aparte que descarta el chip (removed). Con un valor aplicado y el
+      chip seleccionado aparece el segmento de valor —separador, valor en content/tertiary y
+      una «×» que borra el valor (cleared) y deja de nuevo el chip vacío—. Hover, foco y pulsado
+      son estados CSS en vivo —pase el ratón o use Tab—. El icono va en content/secondary;
       deshabilitado sale del orden de tabulación. Para metadatos pasivos use Tag; para estado,
       Badge.
     </p>
@@ -789,19 +808,34 @@
 
     <section class="workbench__section">
       <h2 class="workbench__section-title">Interactiva · selección + orden + acciones</h2>
-      <afi-table-v2
-        ariaLabel="Carteras de clientes"
-        [columns]="tableColumns"
-        [rows]="tableRows()"
-        [rowActions]="tableActions"
-        [selectable]="true"
-        [selected]="tableSelected()"
-        [sortBy]="tableSort()"
-        density="default"
-        (selectedChange)="onTableSelected($event)"
-        (sortChange)="onTableSort($event)"
-        (rowActionClicked)="onTableAction($event)"
-      />
+      <div class="workbench__apron-frame">
+        <afi-table-v2
+          ariaLabel="Carteras de clientes"
+          [columns]="tableColumns"
+          [rows]="tableRows()"
+          [rowActions]="tableActions"
+          [selectable]="true"
+          [selected]="tableSelected()"
+          [sortBy]="tableSort()"
+          density="default"
+          (selectedChange)="onTableSelected($event)"
+          (sortChange)="onTableSort($event)"
+          (rowActionClicked)="onTableAction($event)"
+        />
+        @if (tableSelected().length) {
+          <div class="workbench__apron-float">
+            <afi-table-apron
+              [shown]="tableRows().length"
+              [total]="tableData.length"
+              noun="cartera"
+              nounPlural="carteras"
+              [selectedCount]="tableSelected().length"
+              [selectedText]="tableSelected().length + ' seleccionadas'"
+              (selectionCleared)="onTableSelected([])"
+            />
+          </div>
+        }
+      </div>
       <p class="workbench__hint">
         Pase el cursor sobre una fila: la casilla y las acciones aparecen (en reposo están
         ocultas). La casilla de la cabecera siempre es visible y pasa a indeterminada con
@@ -837,6 +871,62 @@
     <section class="workbench__section">
       <h3 class="workbench__section-title">Estado de carga · filas atenuadas + spinner</h3>
       <afi-table-v2 [columns]="tableColumns" [rows]="tableData" [loading]="true" />
+    </section>
+
+    <h2 class="workbench__group-title">Table apron</h2>
+
+    <section class="workbench__section">
+      <h2 class="workbench__section-title">Buscar + filtrar · recuento en vivo con tokens</h2>
+
+      <div class="workbench__apron-controls">
+        <div class="workbench__apron-filters" role="group" aria-label="Filtrar pedidos por estado">
+          @for (filter of orderStatusFilters; track filter.key) {
+            <afi-chip-v2
+              [label]="filter.label"
+              [selected]="orderStatus() === filter.key"
+              (selectedChange)="setOrderStatus(filter.key)"
+            />
+          }
+        </div>
+        <afi-search
+          class="workbench__apron-search"
+          placeholder="Buscar por cliente o pedido"
+          ariaLabel="Buscar pedidos"
+          [value]="orderSearch()"
+          (valueChange)="setOrderSearch($event)"
+          (cleared)="setOrderSearch('')"
+        />
+      </div>
+
+      <div class="workbench__apron-frame">
+        <afi-table-v2
+          ariaLabel="Pedidos"
+          [columns]="orderColumns"
+          [rows]="visibleOrders()"
+          reveal="stagger"
+          [revealKey]="orderRevealKey()"
+          density="default"
+          emptyText="No hay pedidos que coincidan con la búsqueda"
+        />
+        <div class="workbench__apron-float">
+          <afi-table-apron
+            [shown]="visibleOrders().length"
+            [total]="orderData.length"
+            noun="pedido"
+            [tokens]="apronTokens()"
+            (tokenDismissed)="onApronDismiss($event)"
+          />
+        </div>
+      </div>
+
+      <p class="workbench__hint">
+        La página filtra; la tabla solo pinta las filas resueltas y reproduce la cascada
+        (blur + desvanecido) en cada cambio de filtro vía <code>revealKey</code>. El apron
+        (recuento en vivo <code>role="status"</code> + tokens de filtro retirables) flota sobre
+        el borde inferior. Filtre por estado, escriba en la búsqueda y retire un token con su ×.
+        Excepción de motion deliberada: la cascada se reproduce en transiciones «calientes»;
+        colapsa a un desvanecido breve con <code>prefers-reduced-motion</code>.
+      </p>
     </section>
 
     <h2 class="workbench__group-title">Sidebar</h2>

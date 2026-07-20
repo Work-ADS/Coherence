@@ -86,9 +86,11 @@
           </td>
         </tr>
       } @else {
-        @for (row of rows(); track trackKey(row)) {
+        @for (row of rows(); track rowTrack(row); let rowIndex = $index) {
           <tr
             [class]="rowClasses(row)"
+            [class.afi-table-v2__row--reveal]="reveal() === 'stagger'"
+            [style.--reveal-index]="rowIndex"
             [attr.data-row-key]="row[trackByKey()]"
             (click)="onRowClick(row, $event)"
           >

@@ -2488,24 +2488,24 @@
           "name": "background/surface",
           "type": "color",
           "values": {
-            "semantics V3": "{neutral/25}",
-            "Mode": "{neutral/25}"
+            "semantics V3": "{neutral/0}",
+            "Mode": "{neutral/0}"
           }
         },
         {
           "name": "background/elevated",
           "type": "color",
           "values": {
-            "semantics V3": "{neutral/25}",
-            "Mode": "{neutral/25}"
+            "semantics V3": "{neutral/0}",
+            "Mode": "{neutral/0}"
           }
         },
         {
           "name": "background/hover",
           "type": "color",
           "values": {
-            "semantics V3": "{neutral/50}",
-            "Mode": "{neutral/50}"
+            "semantics V3": "{neutral/25}",
+            "Mode": "{neutral/25}"
           }
         },
         {

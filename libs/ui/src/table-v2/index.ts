@@ -4,6 +4,7 @@ export type {
   TableV2Density,
   TableV2CellKind,
   TableV2ActionsReveal,
+  TableV2Reveal,
   TableV2RowAction,
   TableV2RowActionIcon,
   TableV2SortState,

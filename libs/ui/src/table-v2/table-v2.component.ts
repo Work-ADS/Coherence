@@ -26,6 +26,7 @@ import type {
   TableV2ActionsReveal,
   TableV2Column,
   TableV2Density,
+  TableV2Reveal,
   TableV2RowAction,
   TableV2SortState,
 } from './table-v2.variants';
@@ -110,6 +111,22 @@ export class TableV2Component {
   readonly rowHoverable = input<boolean>(true);
   readonly rowActions = input<TableV2RowAction[]>([]);
   readonly actionsReveal = input<TableV2ActionsReveal>('hover');
+
+  /**
+   * Opt-in row-entrance motion. See `TableV2Reveal` — `none` (default) keeps
+   * the compliant behaviour; `stagger` replays a blur-and-fade cascade whenever
+   * `revealKey` changes. Deliberate warm-transition exception; documented on the
+   * type.
+   */
+  readonly reveal = input<TableV2Reveal>('none');
+
+  /**
+   * Replay trigger for `reveal: 'stagger'`. Bind it to the current
+   * filter/search signature (any value whose change means "the set changed");
+   * mutating it re-keys the rows so the cascade replays. Ignored when
+   * `reveal` is `none`.
+   */
+  readonly revealKey = input<unknown>(null);
 
   /** Empty-state message (Figma: "No data to display"). */
   readonly emptyText = input<string>('No hay datos que mostrar');
@@ -332,6 +349,19 @@ export class TableV2Component {
   // ── Cell content ─────────────────────────────────────────────────────────────
   trackKey(row: Record<string, unknown>): unknown {
     return row[this.trackByKey()];
+  }
+
+  /**
+   * `@for` track for body rows. Normally the stable row key. When
+   * `reveal: 'stagger'` is active it folds `revealKey` into the key so a change
+   * re-keys every row — Angular recreates the row nodes and the CSS entrance
+   * animation replays across the whole set (the only reliable pure-CSS way to
+   * replay a keyframe on rows that survive a filter). Selection is unaffected:
+   * `isSelected` compares by `trackByKey` value, not by this render key.
+   */
+  rowTrack(row: Record<string, unknown>): unknown {
+    const base = row[this.trackByKey()];
+    return this.reveal() === 'stagger' ? `${String(this.revealKey())}::${String(base)}` : base;
   }
 
   cellText(row: Record<string, unknown>, col: TableV2Column): string {

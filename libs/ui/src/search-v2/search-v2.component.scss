@@ -136,14 +136,14 @@
 
   &:focus-visible {
     outline: var(--stroke-focus) solid var(--borders-focus);
-    outline-offset: var(--dimension-0-25);
+    outline-offset: var(--dimension-0);
   }
 }
 
 // ── Preview panel — the afi-menu-v2 listbox, anchored to the field ────────────
 .afi-search-v2__panel {
   position: fixed;
-  z-index: 1000;
+  z-index: var(--z-overlay);
   overflow-y: auto;
 }
 

@@ -14,4 +14,16 @@
   --motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --motion-easing-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --motion-easing-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --motion-reveal-duration-light: 400ms;
+  --motion-reveal-duration-normal: 500ms;
+  --motion-reveal-duration-heavy: 600ms;
+  --motion-reveal-stagger-light: 40ms;
+  --motion-reveal-stagger-normal: 70ms;
+  --motion-reveal-stagger-heavy: 100ms;
+  --motion-reveal-rise-light: 6px;
+  --motion-reveal-rise-normal: 10px;
+  --motion-reveal-rise-heavy: 14px;
+  --motion-reveal-blur-light: 4px;
+  --motion-reveal-blur-normal: 8px;
+  --motion-reveal-blur-heavy: 14px;
 }

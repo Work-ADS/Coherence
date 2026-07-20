@@ -11,7 +11,19 @@
     <span class="afi-chip-v2__label">{{ label() }}</span>
   </button>
 
-  @if (removable()) {
+  @if (showValue()) {
+    <span class="afi-chip-v2__separator" aria-hidden="true"></span>
+    <span class="afi-chip-v2__value">{{ value() }}</span>
+    <button
+      type="button"
+      class="afi-chip-v2__remove"
+      [attr.aria-label]="clearAccessibleName()"
+      [disabled]="disabled()"
+      (click)="onClear($event)"
+    >
+      <ng-container [ngTemplateOutlet]="closeIcon" />
+    </button>
+  } @else if (removable()) {
     <button
       type="button"
       class="afi-chip-v2__remove"
@@ -19,19 +31,23 @@
       [disabled]="disabled()"
       (click)="onRemove($event)"
     >
-      <svg
-        class="afi-chip-v2__remove-icon"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M18 6 6 18" />
-        <path d="m6 6 12 12" />
-      </svg>
+      <ng-container [ngTemplateOutlet]="closeIcon" />
     </button>
   }
 </span>
+
+<ng-template #closeIcon>
+  <svg
+    class="afi-chip-v2__remove-icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
+  </svg>
+</ng-template>

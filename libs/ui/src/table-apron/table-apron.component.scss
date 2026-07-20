@@ -18,7 +18,10 @@
   gap: var(--gap-control-sm);
   min-inline-size: 0;
   padding-block: var(--dimension-1);
-  padding-inline: var(--dimension-1) var(--dimension-2);
+  // Leading value has no value-matched --pad-control-* token (the smallest,
+  // --pad-control-xs, is larger); kept as the --dimension-1 primitive until a
+  // smaller --pad-control-2xs is added. Trailing is the semantic pad token.
+  padding-inline: var(--dimension-1) var(--pad-control-sm);
   border: var(--stroke-default) solid var(--borders-default);
   border-radius: var(--radius-full);
   background: var(--background-hover);
@@ -29,7 +32,7 @@
   animation: afi-table-apron-enter var(--motion-duration-base) var(--motion-easing-enter);
 
   &--sm {
-    gap: var(--dimension-1);
+    gap: var(--gap-control-sm);
   }
 }
 
@@ -47,18 +50,18 @@
 // ── Count (live region) ──────────────────────────────────────────────────────
 .afi-table-apron__count {
   margin: 0;
-  padding-inline: var(--dimension-2);
+  padding-inline: var(--pad-control-sm);
   white-space: nowrap;
 
   .afi-table-apron--sm & {
-    padding-inline: var(--dimension-1-5);
+    padding-inline: var(--pad-control-xs);
   }
 }
 
 .afi-table-apron__count-visual {
   display: inline-flex;
   align-items: baseline;
-  gap: var(--dimension-1);
+  gap: var(--gap-control-sm);
   color: var(--content-secondary);
   font-size: var(--type-label-size);
   font-weight: var(--type-label-weight);
@@ -83,7 +86,7 @@
 .afi-table-apron__tokens {
   display: flex;
   align-items: center;
-  gap: var(--dimension-1);
+  gap: var(--gap-control-sm);
   min-inline-size: 0;
   margin: 0;
   padding: 0;
@@ -94,7 +97,7 @@
 .afi-table-apron__token {
   display: inline-flex;
   align-items: center;
-  gap: var(--dimension-1);
+  gap: var(--gap-control-sm);
   flex: none;
   block-size: var(--height-component-xs);
   padding-inline: var(--pad-control-sm);
@@ -129,14 +132,14 @@
 .afi-table-apron__selection-group {
   display: inline-flex;
   align-items: center;
-  gap: var(--dimension-1);
+  gap: var(--gap-control-sm);
   flex: none;
 }
 
 .afi-table-apron__selection-actions {
   display: inline-flex;
   align-items: center;
-  gap: var(--dimension-0-5);
+  gap: var(--gap-control-xs);
 }
 
 .afi-table-apron__action-icon {
@@ -156,7 +159,7 @@
 .afi-table-apron__selection {
   display: inline-flex;
   align-items: center;
-  gap: var(--dimension-1);
+  gap: var(--gap-control-sm);
   flex: none;
   block-size: var(--height-component-xs);
   padding-inline: var(--pad-control-sm);
@@ -213,7 +216,7 @@
 
   &:focus-visible {
     outline: var(--stroke-focus) solid var(--borders-focus);
-    outline-offset: var(--dimension-0-25);
+    outline-offset: var(--dimension-0);
   }
 }
 

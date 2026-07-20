@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -31,6 +32,13 @@ import {
  *  - Selection and removal are DIFFERENT actions: clicking the chip body toggles
  *    Selected; clicking Remove emits `removed`. They are two sibling `<button>`s
  *    (a button cannot nest inside a button), wrapped by the visual pill.
+ *  - `value` is the applied-filter value. When the chip is Selected AND carries a
+ *    value, a third segment renders after the label — a hairline separator, the
+ *    value text (`content/tertiary`) and a Clear `×`. Clicking Clear deselects the
+ *    chip and emits `cleared`, so the pill resets to the empty "Filter" state; the
+ *    consumer clears its own `value` binding in response. This Clear `×` is
+ *    intrinsic to the value segment and shows regardless of `removable`; it
+ *    replaces the `removable` `×` while a value is displayed.
  *
  * Icon: optional leading icon, decorative, projected through `[slot=iconStart]`
  * and sized by the consumer to `--icon-sm` — the projection + sizing mechanism
@@ -50,6 +58,7 @@ import {
 @Component({
   selector: 'afi-chip-v2',
   standalone: true,
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chip-v2.component.html',
   styleUrls: ['./chip-v2.component.scss'],
@@ -59,13 +68,22 @@ export class ChipV2Component {
   readonly selected = model<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly removable = input<boolean>(false);
+  /** Applied-filter value; shows a value segment only while the chip is selected. */
+  readonly value = input<string | null>(null);
   /** Accessible name override for the chip body; defaults to the visible label. */
   readonly ariaLabel = input<string | null>(null);
   /** Accessible name for the Remove button; `{label}` is appended when null. */
   readonly removeLabel = input<string | null>(null);
+  /** Accessible name for the Clear button in the value segment; defaults from `label`. */
+  readonly clearLabel = input<string | null>(null);
 
   /** Emitted when the Remove button is activated. Selection is left untouched. */
   readonly removed = output<void>();
+  /** Emitted when the value segment's Clear button deselects the chip. */
+  readonly cleared = output<void>();
+
+  /** The value segment (separator + value + clear) renders only when selected with a value. */
+  readonly showValue = computed(() => this.selected() && !!this.value());
 
   readonly rootClasses = computed(() => {
     const parts = ['afi-chip-v2'];
@@ -78,9 +96,21 @@ export class ChipV2Component {
     () => this.removeLabel() ?? `Quitar ${this.label()}`,
   );
 
+  readonly clearAccessibleName = computed(
+    () => this.clearLabel() ?? `Borrar ${this.label()}`,
+  );
+
   onToggle(): void {
     if (this.disabled()) return;
+    // If the body deselects a chip that was showing its applied value, clear the
+    // value too (emit `cleared`) — the same contract as the Clear ×. Without
+    // this the consumer's `value` binding stays set and the stale value would
+    // reappear the next time the chip is selected.
+    const wasShowingValue = this.showValue();
     this.selected.update((value) => !value);
+    if (wasShowingValue && !this.selected()) {
+      this.cleared.emit();
+    }
   }
 
   onRemove(event: MouseEvent): void {
@@ -88,5 +118,15 @@ export class ChipV2Component {
     event.stopPropagation();
     if (this.disabled()) return;
     this.removed.emit();
+  }
+
+  onClear(event: MouseEvent): void {
+    // Keep the click off the chip body so clearing never re-toggles selection.
+    event.stopPropagation();
+    if (this.disabled()) return;
+    // Deselect so the value segment collapses back to the empty "Filter" chip;
+    // the consumer clears its own value binding in response to `cleared`.
+    this.selected.set(false);
+    this.cleared.emit();
   }
 }

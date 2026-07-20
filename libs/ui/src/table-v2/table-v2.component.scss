@@ -195,15 +195,15 @@
 // component's `rowTrack`). DELIBERATE warm-transition exception — documented on
 // `TableV2Reveal`; the reduced-motion block below is the required collapse.
 .afi-table-v2__row--reveal {
-  animation: afi-table-v2-reveal var(--duration-reveal-normal) var(--motion-easing-enter) both;
-  animation-delay: calc(var(--reveal-index, 0) * var(--reveal-stagger-light));
+  animation: afi-table-v2-reveal var(--motion-reveal-duration-normal) var(--motion-easing-enter) both;
+  animation-delay: calc(var(--reveal-index, 0) * var(--motion-reveal-stagger-light));
 }
 
 @keyframes afi-table-v2-reveal {
   from {
     opacity: 0;
-    transform: translateY(var(--reveal-rise-normal));
-    filter: blur(var(--reveal-blur-heavy));
+    transform: translateY(var(--motion-reveal-rise-normal));
+    filter: blur(var(--motion-reveal-blur-heavy));
   }
   to {
     opacity: 1;
@@ -287,10 +287,7 @@
 //    horizontal-scroll region; translated -100% X to right-align to the ⋯. ────
 .afi-table-v2__menu {
   position: fixed;
-  // Raw stacking value: the repo has no z-index scale token yet. Mirrors
-  // select-v2's overlay (also 1000). FOLLOW-UP: extract a shared --z-overlay
-  // semantic token (token-guardian) and point both overlays at it.
-  z-index: 1000;
+  z-index: var(--z-overlay);
   transform: translateX(-100%);
 }
 

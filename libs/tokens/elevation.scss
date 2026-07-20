@@ -14,6 +14,11 @@
 // =============================================================================
 
 :root {
+  // Layering — z-index for anchored overlays that must escape ancestor overflow
+  // (dropdown/listbox panels anchored with position: fixed). Shared + foundation-
+  // agnostic; consumed by select-v2 / search-v2 / table-v2 overflow menus.
+  --z-overlay: 1000;
+
   // Shadows — TODO: replace with Figma values (48 tokens in AFI Primitive Elevation)
   --elevation-none: none;
   --elevation-sm:   0 1px 2px 0 hsla(200, 5%, 9%, 0.05);

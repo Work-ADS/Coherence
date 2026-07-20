@@ -150,7 +150,7 @@
 // and scroll past the 8-row cap (max-block-size is set inline per size).
 .afi-select-v2__panel {
   position: fixed;
-  z-index: 1000;
+  z-index: var(--z-overlay);
   overflow-y: auto;
 }
 

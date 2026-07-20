@@ -2488,24 +2488,24 @@
           "name": "background/surface",
           "type": "color",
           "values": {
-            "semantics V3": "{neutral/25}",
-            "Mode": "{neutral/25}"
+            "semantics V3": "{neutral/0}",
+            "Mode": "{neutral/0}"
           }
         },
         {
           "name": "background/elevated",
           "type": "color",
           "values": {
-            "semantics V3": "{neutral/25}",
-            "Mode": "{neutral/25}"
+            "semantics V3": "{neutral/0}",
+            "Mode": "{neutral/0}"
           }
         },
         {
           "name": "background/hover",
           "type": "color",
           "values": {
-            "semantics V3": "{neutral/50}",
-            "Mode": "{neutral/50}"
+            "semantics V3": "{neutral/25}",
+            "Mode": "{neutral/25}"
           }
         },
         {
@@ -4225,6 +4225,66 @@
           "values": {
             "Modern": "cubic-bezier(0.7, 0, 0.84, 0)"
           }
+        },
+        {
+          "name": "reveal-duration/light",
+          "type": "text",
+          "values": { "Modern": "400ms" }
+        },
+        {
+          "name": "reveal-duration/normal",
+          "type": "text",
+          "values": { "Modern": "500ms" }
+        },
+        {
+          "name": "reveal-duration/heavy",
+          "type": "text",
+          "values": { "Modern": "600ms" }
+        },
+        {
+          "name": "reveal-stagger/light",
+          "type": "text",
+          "values": { "Modern": "40ms" }
+        },
+        {
+          "name": "reveal-stagger/normal",
+          "type": "text",
+          "values": { "Modern": "70ms" }
+        },
+        {
+          "name": "reveal-stagger/heavy",
+          "type": "text",
+          "values": { "Modern": "100ms" }
+        },
+        {
+          "name": "reveal-rise/light",
+          "type": "text",
+          "values": { "Modern": "6px" }
+        },
+        {
+          "name": "reveal-rise/normal",
+          "type": "text",
+          "values": { "Modern": "10px" }
+        },
+        {
+          "name": "reveal-rise/heavy",
+          "type": "text",
+          "values": { "Modern": "14px" }
+        },
+        {
+          "name": "reveal-blur/light",
+          "type": "text",
+          "values": { "Modern": "4px" }
+        },
+        {
+          "name": "reveal-blur/normal",
+          "type": "text",
+          "values": { "Modern": "8px" }
+        },
+        {
+          "name": "reveal-blur/heavy",
+          "type": "text",
+          "values": { "Modern": "14px" }
         }
       ]
     }

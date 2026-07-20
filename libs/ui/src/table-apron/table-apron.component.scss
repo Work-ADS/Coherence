@@ -1,0 +1,244 @@
+// afi-table-apron — identity v2 (foundations-modern tokens only).
+//
+// A floating status pill: a rounded capsule holding the live result count and
+// the active-filter tokens. `:host` is inline-flex so the pill shrink-wraps its
+// content; the CONSUMER owns where it sits — the canonical placement is a
+// centred, bottom-overlapping float over the table (see the workbench demo).
+// Every value is token-bound; no raw px/hex.
+
+:host {
+  display: inline-flex;
+  max-inline-size: 100%;
+}
+
+// ── Capsule ──────────────────────────────────────────────────────────────────
+.afi-table-apron {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  min-inline-size: 0;
+  padding-block: var(--dimension-1);
+  // Leading value has no value-matched --pad-control-* token (the smallest,
+  // --pad-control-xs, is larger); kept as the --dimension-1 primitive until a
+  // smaller --pad-control-2xs is added. Trailing is the semantic pad token.
+  padding-inline: var(--dimension-1) var(--pad-control-sm);
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-full);
+  background: var(--background-hover);
+  box-shadow: var(--elevation-menu);
+  font-family: var(--font-family-primary);
+
+  // slide-fade-enter (motion-skill §4.4) — the apron settles in on appear.
+  animation: afi-table-apron-enter var(--motion-duration-base) var(--motion-easing-enter);
+
+  &--sm {
+    gap: var(--gap-control-sm);
+  }
+}
+
+@keyframes afi-table-apron-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--dimension-1-5));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ── Count (live region) ──────────────────────────────────────────────────────
+.afi-table-apron__count {
+  margin: 0;
+  padding-inline: var(--pad-control-sm);
+  white-space: nowrap;
+
+  .afi-table-apron--sm & {
+    padding-inline: var(--pad-control-xs);
+  }
+}
+
+.afi-table-apron__count-visual {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--gap-control-sm);
+  color: var(--content-secondary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+}
+
+.afi-table-apron__count-shown {
+  color: var(--content-primary);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.afi-table-apron__count-sep {
+  color: var(--content-tertiary);
+}
+
+.afi-table-apron__count-total {
+  font-variant-numeric: tabular-nums;
+}
+
+// ── Tokens ───────────────────────────────────────────────────────────────────
+.afi-table-apron__tokens {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+}
+
+.afi-table-apron__token {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  flex: none;
+  block-size: var(--height-component-xs);
+  padding-inline: var(--pad-control-sm);
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-full);
+  background: var(--background-surface);
+  box-shadow: var(--elevation-1);
+  color: var(--content-primary);
+}
+
+.afi-table-apron__token-icon {
+  display: inline-flex;
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--content-secondary);
+
+  svg {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+.afi-table-apron__token-label {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  white-space: nowrap;
+}
+
+// ── Selection group (chip + bulk actions) ───────────────────────────────────
+.afi-table-apron__selection-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  flex: none;
+}
+
+.afi-table-apron__selection-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-xs);
+}
+
+.afi-table-apron__action-icon {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+// Danger bulk action (e.g. Borrar): ghost button, but the glyph keeps the error
+// tint so it still reads as destructive — quieter than a filled red button.
+.afi-table-apron__action-icon--danger {
+  color: var(--error-foreground);
+}
+
+// ── Selection chip ───────────────────────────────────────────────────────────
+// Visually distinct from filter tokens: filled with the selected-row tint so it
+// reads as "this reflects the rows you have selected".
+.afi-table-apron__selection {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  flex: none;
+  block-size: var(--height-component-xs);
+  padding-inline: var(--pad-control-sm);
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-full);
+  background: var(--background-selected);
+  color: var(--content-primary);
+}
+
+.afi-table-apron__selection-icon {
+  display: inline-flex;
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--content-secondary);
+
+  svg {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+.afi-table-apron__selection-label {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  white-space: nowrap;
+}
+
+.afi-table-apron__token-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: none;
+  color: var(--content-secondary);
+  cursor: pointer;
+  transition: color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  svg {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  &:hover {
+    color: var(--content-primary);
+  }
+
+  &:focus-visible {
+    outline: var(--stroke-focus) solid var(--borders-focus);
+    outline-offset: var(--dimension-0);
+  }
+}
+
+// ── Screen-reader-only text ──────────────────────────────────────────────────
+.afi-table-apron__sr-only {
+  position: absolute;
+  inline-size: var(--dimension-0-25);
+  block-size: var(--dimension-0-25);
+  padding: 0;
+  margin: calc(-1 * var(--dimension-0-25));
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ── Reduced motion ───────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .afi-table-apron {
+    animation: none;
+  }
+  .afi-table-apron__token-remove {
+    transition: none;
+  }
+}

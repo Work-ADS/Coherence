@@ -86,6 +86,14 @@
   }
 }
 
+// The sort trigger is a flex button that fills the header cell; without this the
+// inner label span shrink-wraps to flex-start and a right-aligned (numeric /
+// monetary) header drifts left of its right-aligned numbers. Stretch it so the
+// inner's justify-content (start / center / end) lands over the data column.
+.afi-table-v2__sort-trigger .afi-table-v2__th-inner {
+  inline-size: 100%;
+}
+
 // Sort chevron slot — reserved for every sortable column so cycling the
 // direction (or clearing it) never shifts the header width.
 .afi-table-v2__sort {
@@ -180,10 +188,38 @@
   border-block-end: none;
 }
 
+// ── Reveal motion (opt-in `reveal="stagger"`) ────────────────────────────────
+// Blur-and-fade-rise cascade (motion-skill §4.7 `stagger-reveal`): `light`-tier
+// stagger so the cascade never overruns a long list, with the heavy blur amount
+// for on-screen presence. Replays whenever `revealKey` re-keys the rows (see the
+// component's `rowTrack`). DELIBERATE warm-transition exception — documented on
+// `TableV2Reveal`; the reduced-motion block below is the required collapse.
+.afi-table-v2__row--reveal {
+  animation: afi-table-v2-reveal var(--motion-reveal-duration-normal) var(--motion-easing-enter) both;
+  animation-delay: calc(var(--reveal-index, 0) * var(--motion-reveal-stagger-light));
+}
+
+@keyframes afi-table-v2-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-reveal-rise-normal));
+    filter: blur(var(--motion-reveal-blur-heavy));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
 // ── Selection column ─────────────────────────────────────────────────────────
 .afi-table-v2__th-select,
 .afi-table-v2__td-select {
   inline-size: var(--width-table-selection-column);
+  // Hold the width when the table overflows and scrolls — auto table-layout
+  // otherwise collapses this column to the checkbox's content width, killing the
+  // checkbox's centered gutter on narrow viewports.
+  min-inline-size: var(--width-table-selection-column);
   padding-inline: 0;
   text-align: center;
   cursor: pointer; // the whole cell toggles, not just the compact checkbox
@@ -251,10 +287,7 @@
 //    horizontal-scroll region; translated -100% X to right-align to the ⋯. ────
 .afi-table-v2__menu {
   position: fixed;
-  // Raw stacking value: the repo has no z-index scale token yet. Mirrors
-  // select-v2's overlay (also 1000). FOLLOW-UP: extract a shared --z-overlay
-  // semantic token (token-guardian) and point both overlays at it.
-  z-index: 1000;
+  z-index: var(--z-overlay);
   transform: translateX(-100%);
 }
 
@@ -336,5 +369,21 @@
 
   .afi-table-v2__spinner {
     animation-duration: calc(var(--motion-duration-slow) * 6);
+  }
+
+  // Reveal collapses to a single short fade — no stagger delay, no blur, no
+  // translate. The row set (state) never depended on the motion.
+  .afi-table-v2__row--reveal {
+    animation: afi-table-v2-reveal-fade 80ms linear both;
+    animation-delay: 0ms;
+  }
+}
+
+@keyframes afi-table-v2-reveal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

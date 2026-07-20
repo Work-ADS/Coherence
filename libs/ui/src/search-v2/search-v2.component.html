@@ -1,0 +1,93 @@
+<!--
+  Search v2 — a search field whose typeahead preview reuses the select-v2
+  dropdown harness (afi-menu-v2 listbox + fixed-anchored panel). Focus stays in
+  the input (editable combobox); aria-activedescendant tracks the highlight.
+-->
+@if (label()) {
+  <label [for]="inputId" [id]="labelId" class="afi-search-v2__label">{{ label() }}</label>
+}
+
+<div #field [class]="fieldClasses()">
+  <svg
+    class="afi-search-v2__icon-lead"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="7" cy="7" r="4.5" />
+    <path d="M13.5 13.5 10.5 10.5" />
+  </svg>
+
+  <input
+    #inputEl
+    [id]="inputId"
+    type="search"
+    class="afi-search-v2__input"
+    role="combobox"
+    autocomplete="off"
+    aria-autocomplete="list"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [disabled]="disabled()"
+    [attr.aria-controls]="isOpen() ? listboxId : null"
+    [attr.aria-expanded]="isOpen() ? 'true' : 'false'"
+    [attr.aria-activedescendant]="activeOptionId()"
+    [attr.aria-label]="ariaLabel()"
+    (input)="onInput($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    (keydown)="onKeydown($event)"
+  />
+
+  @if (hasValue()) {
+    <button type="button" class="afi-search-v2__clear" aria-label="Borrar búsqueda" (click)="clear()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" />
+      </svg>
+    </button>
+  }
+</div>
+
+@if (isOpen()) {
+  <afi-menu-v2
+    [id]="listboxId"
+    class="afi-search-v2__panel"
+    [role]="'listbox'"
+    [ariaLabel]="ariaLabel() ?? label() ?? 'Sugerencias'"
+    [style.top.px]="panelTop()"
+    [style.left.px]="panelLeft()"
+    [style.inline-size.px]="panelWidth()"
+    [style.min-inline-size.px]="panelWidth()"
+    [style.max-block-size]="panelMaxBlockSize()"
+  >
+    @if (showSuggestions()) {
+      @for (suggestion of suggestions(); track suggestionKey($index, suggestion); let i = $index) {
+        <afi-menu-item-v2
+          #optionEl
+          [role]="'option'"
+          [optionId]="optionId(i)"
+          [active]="i === activeIndex()"
+          (clicked)="onOptionClick(i)"
+        >
+          <span class="afi-search-v2__suggestion">
+            <span class="afi-search-v2__suggestion-main">
+              <span class="afi-search-v2__suggestion-label">{{ suggestion.label }}</span>
+              @if (suggestion.description) {
+                <span class="afi-search-v2__suggestion-desc">{{ suggestion.description }}</span>
+              }
+            </span>
+            @if (suggestion.trailing) {
+              <span class="afi-search-v2__suggestion-trailing">{{ suggestion.trailing }}</span>
+            }
+          </span>
+        </afi-menu-item-v2>
+      }
+    } @else {
+      <p class="afi-search-v2__empty">{{ emptyMessage() }}</p>
+    }
+  </afi-menu-v2>
+}

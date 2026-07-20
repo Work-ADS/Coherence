@@ -38,6 +38,27 @@ export type TableV2CellKind = 'text' | 'numeric' | 'monetary' | 'status';
  */
 export type TableV2ActionsReveal = 'hover' | 'always';
 
+/**
+ * Opt-in row-entrance motion, replayed whenever `revealKey` changes.
+ *
+ * - `none` (default) — no entrance motion; rows appear/disappear instantly.
+ * - `stagger` — a blur-and-fade-rise cascade across the visible rows
+ *   (motion-skill §4.7 `stagger-reveal`, `light` tier stagger with a heavier
+ *   blur for presence). Bump `revealKey` (e.g. to the current filter/search
+ *   signature) to replay it on every filter change.
+ *
+ * DELIBERATE MOTION-RULE EXCEPTION (Richard, 2026-07-20): motion-skill §4.7
+ * reserves `stagger-reveal` for COLD entries and prescribes a plain
+ * `opacity-fade` for WARM transitions such as filter/search refreshes. This
+ * mode intentionally replays the full cascade on those warm transitions — it is
+ * the requested "table apron" experience and is strictly opt-in (`none` keeps
+ * the compliant behaviour). WCAG 2.2 trade-off: it adds > 200ms motion on a
+ * frequent action, so it collapses to a ≤ 80ms fade under
+ * `prefers-reduced-motion: reduce`; state communication (the row set) never
+ * depends on the motion.
+ */
+export type TableV2Reveal = 'none' | 'stagger';
+
 export interface TableV2Column {
   /** Row-data property this column reads. */
   key: string;

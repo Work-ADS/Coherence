@@ -34,12 +34,23 @@ export type {
   TableV2Density,
   TableV2CellKind,
   TableV2ActionsReveal,
+  TableV2Reveal,
   TableV2RowAction,
   TableV2RowActionIcon,
   TableV2SortState,
 } from './src/table-v2';
+export { TableApronComponent } from './src/table-apron';
+export type {
+  TableApronActionIcon,
+  TableApronSelectionAction,
+  TableApronSize,
+  TableApronToken,
+  TableApronTokenIcon,
+} from './src/table-apron';
 export { SearchComponent } from './src/search';
 export type { SearchSize, SearchSuggestion } from './src/search';
+export { SearchV2Component } from './src/search-v2';
+export type { SearchV2Size, SearchV2Suggestion } from './src/search-v2';
 export { FilterChipComponent } from './src/filter-chip';
 export type {
   FilterChipMode,

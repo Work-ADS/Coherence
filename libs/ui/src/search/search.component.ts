@@ -23,12 +23,17 @@ let nextId = 0;
  * and an optional clear button that appears when the value is non-empty.
  * Submits on `Enter` (emits `searched`); clears on click of the × button.
  *
- * Optional `[suggestions]` enables a typeahead dropdown rendered while
- * the input is focused and the consumer has provided at least one
- * suggestion. Consumers own the filtering (typically via a `computed()`
- * over the current `value()`) and respond to `(suggestionPicked)` to
- * commit. The empty-results panel renders automatically when the user
- * has typed something but the suggestions list is empty.
+ * Two modes, chosen with `[typeahead]`:
+ *
+ * - **Filter mode (default, `typeahead=false`)** — a plain search box that
+ *   filters a list/table elsewhere on the page. NO dropdown, NO "no matches"
+ *   panel ever: the filtered surface itself is the feedback, so an
+ *   "Sin coincidencias" popover next to a table that shows matches would lie.
+ *   Wire `(valueChange)` to a filter signal.
+ * - **Typeahead mode (`typeahead=true`)** — a combobox with a suggestions
+ *   dropdown. Provide `[suggestions]` (consumers own the filtering, typically a
+ *   `computed()` over `value()`) and respond to `(suggestionPicked)`. The
+ *   empty-results panel renders when the user has typed but the list is empty.
  *
  * Use when the input's purpose is *search* (filter rows, look up items).
  * For freeform text entry, use `<afi-input>` instead.
@@ -48,10 +53,19 @@ export class SearchComponent implements OnInit {
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
 
-  /** Optional typeahead suggestions. When empty (default), no dropdown
-   *  renders — primitive behaves exactly like the original search input. */
+  /**
+   * Enable the typeahead dropdown. Default `false` = filter mode: a plain
+   * search box with no dropdown and no empty-results panel (the filtered
+   * surface elsewhere is the feedback). Set `true` for a combobox with a
+   * suggestions dropdown — then also provide `[suggestions]`.
+   */
+  readonly typeahead = input<boolean>(false);
+
+  /** Typeahead suggestions (only used when `typeahead` is `true`). Consumers
+   *  own the filtering, typically a `computed()` over `value()`. */
   readonly suggestions = input<readonly SearchSuggestion[]>([]);
-  /** Message shown when the user has typed but suggestions is empty. */
+  /** Message shown in typeahead mode when the user has typed but suggestions
+   *  is empty. */
   readonly emptyMessage = input<string>('Sin coincidencias.');
 
   readonly valueChange = output<string>();
@@ -83,17 +97,21 @@ export class SearchComponent implements OnInit {
 
   readonly hasSuggestions = computed(() => this.suggestions().length > 0);
 
-  /** Render the dropdown only while focused AND at least one suggestion
-   *  exists. Consumers can keep `[suggestions]` empty until the user
-   *  has typed enough to narrow the list. */
+  /** Render the dropdown only in typeahead mode, while focused AND at least
+   *  one suggestion exists. Consumers can keep `[suggestions]` empty until the
+   *  user has typed enough to narrow the list. */
   readonly showSuggestions = computed(
-    () => this.focused() && this.hasSuggestions() && !this.disabled(),
+    () =>
+      this.typeahead() && this.focused() && this.hasSuggestions() && !this.disabled(),
   );
 
-  /** Render the "no matches" panel when the user has typed something
-   *  but suggestions is empty. Mutually exclusive with showSuggestions. */
+  /** Render the "no matches" panel only in typeahead mode, when the user has
+   *  typed something but suggestions is empty. In filter mode (default) there
+   *  is no dropdown at all, so this never fires. Mutually exclusive with
+   *  showSuggestions. */
   readonly showEmptyMessage = computed(
     () =>
+      this.typeahead() &&
       this.focused() &&
       this.hasValue() &&
       !this.hasSuggestions() &&

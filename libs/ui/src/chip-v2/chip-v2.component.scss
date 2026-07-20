@@ -15,7 +15,11 @@
 //   .afi-chip-v2__icon    = wraps [slot=iconStart]; content/secondary so the
 //                           decorative icon reads distinct from the label.
 //   .afi-chip-v2__label   = IBM Plex "label" text style, content/primary.
-//   .afi-chip-v2__remove  = optional dismiss <button>; owns "x" glyph.
+//   .afi-chip-v2__separator = hairline (borders/strong) between label and value;
+//                           renders only in the selected value segment.
+//   .afi-chip-v2__value   = applied filter value, content/tertiary; value segment.
+//   .afi-chip-v2__remove  = optional dismiss/clear <button>; owns "x" glyph. Reused
+//                           for both Remove (removable) and Clear (value segment).
 //
 // Fill + border are driven on the wrapper via :hover / :has(body:active) /
 // --selected / --disabled so the whole pill responds regardless of which child
@@ -136,6 +140,30 @@
   line-height: var(--type-label-line-height);
   white-space: nowrap;
   color: inherit;
+}
+
+// Value segment (selected + value): hairline separator, then the applied value.
+.afi-chip-v2__separator {
+  flex: none;
+  inline-size: var(--stroke-hairline);
+  block-size: var(--icon-sm);
+  background: var(--borders-strong);
+
+  .afi-chip-v2--disabled & {
+    background: var(--borders-disabled);
+  }
+}
+
+.afi-chip-v2__value {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  white-space: nowrap;
+  color: var(--content-tertiary);
+
+  .afi-chip-v2--disabled & {
+    color: var(--content-disabled);
+  }
 }
 
 .afi-chip-v2__remove {

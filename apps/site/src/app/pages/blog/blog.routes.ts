@@ -77,4 +77,12 @@ export const blog_routes: Routes = [
         (m) => m.BrandAndPersonasPage,
       ),
   },
+  // Wealth Planner information architecture — Part 3 of the redesign series
+  {
+    path: 'arquitectura-informacion',
+    loadComponent: () =>
+      import('./arquitectura-informacion/arquitectura-informacion.page').then(
+        (m) => m.ArquitecturaInformacionPage,
+      ),
+  },
 ];

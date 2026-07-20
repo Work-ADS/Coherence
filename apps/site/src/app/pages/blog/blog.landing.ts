@@ -24,6 +24,26 @@ interface BlogPost {
 // their demo case studies — they aren't standalone editorial pieces.
 const POSTS: BlogPost[] = [
   {
+    slug: 'arquitectura-informacion',
+    eyebrow: {
+      es: 'PRODUCTO · ARQUITECTURA DE LA INFORMACIÓN',
+      en: 'PRODUCT · INFORMATION ARCHITECTURE',
+    },
+    title: {
+      es: 'Wealth Planner: arquitectura de la información',
+      en: 'Wealth Planner: information architecture',
+    },
+    date: {
+      es: '20 julio 2026',
+      en: 'July 20, 2026',
+    },
+    intro: {
+      es: 'Puedes modernizar los componentes y seguir sin tener una plataforma moderna. Por qué el flujo del Wealth Planner refleja cómo se construye un plan — y no cómo lo usan los asesores.',
+      en: 'You can modernize the components and still not have a modern platform. Why the Wealth Planner\'s flow reflects how a plan gets built — not how advisors use it.',
+    },
+    thumb: 'talk',
+  },
+  {
     slug: 'brand-and-personas',
     eyebrow: {
       es: 'ESTRATEGIA · MARCA',

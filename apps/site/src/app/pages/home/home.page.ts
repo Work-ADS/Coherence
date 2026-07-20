@@ -53,8 +53,25 @@ export class HomePage {
   /** Second phase of the morph: rect → full viewport, background blurs away. */
   readonly expandGrowing = signal(false);
 
-  // Brand-and-personas and Wealth Planner cards hidden — home focuses on Modern UI for now.
+  // Brand-and-personas and Wealth Planner demo cards hidden — home features
+  // the redesign series: Modern UI (surface) + Information Architecture (structure).
   private readonly cards: WorkCard[] = [
+    {
+      routerLink: '/blog/arquitectura-informacion',
+      eyebrow: {
+        es: 'PRODUCTO · ARQUITECTURA DE LA INFORMACIÓN',
+        en: 'PRODUCT · INFORMATION ARCHITECTURE',
+      },
+      title: {
+        es: 'Wealth Planner: arquitectura de la información',
+        en: 'Wealth Planner: information architecture',
+      },
+      blurb: {
+        es: 'Puedes modernizar los componentes y seguir sin tener una plataforma moderna. Reorganizar el planificador en torno a cómo lo usan los asesores.',
+        en: 'You can modernize the components and still not have a modern platform. Reorganizing the planner around how advisors use it.',
+      },
+      thumb: 'wealth-planner',
+    },
     {
       routerLink: '/blog/ui-moderno-2026',
       eyebrow: {

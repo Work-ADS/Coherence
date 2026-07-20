@@ -1,0 +1,203 @@
+<div class="post">
+  <!-- Breadcrumb -->
+  <div class="post__breadcrumb">
+    <a routerLink="/blog" class="post__breadcrumb-back" aria-label="Back to blog">
+      <svg class="post__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+    <span class="post__breadcrumb-parent">Blog</span>
+    <span class="post__breadcrumb-separator" aria-hidden="true">/</span>
+    <span class="post__breadcrumb-current">
+      @if (isEn()) {
+        Information architecture
+      } @else {
+        Arquitectura de la información
+      }
+    </span>
+  </div>
+
+  <main class="post__main">
+    <article class="post__article">
+      @if (isEn()) {
+        <afi-page-header
+          title="Wealth Planner: information architecture"
+          subtitle="Reorganizing the Afi Wealth Planner around how advisors use it."
+          [sticky]="false"
+          [scrollFade]="false"
+        >
+          <span slot="breadcrumb" class="post__eyebrow">PRODUCT · INFORMATION ARCHITECTURE</span>
+        </afi-page-header>
+
+        <blockquote class="post__lead">
+          <em>
+            Part 3 of the redesign series. Part 1 defined what modern UI means in 2026; Part 2 set the brand and personas. This one is about structure — because you can modernize the components and still not have a modern platform.
+          </em>
+        </blockquote>
+
+        <!-- 1. Context -->
+        <section class="post__section" aria-labelledby="context">
+          <h2 id="context" class="post__h2">1. Context</h2>
+          <p class="post__p">
+            The Afi Wealth Planner is a tool financial advisors use to build, simulate, and present wealth plans to clients. We have two versions, our demo and white-labeled for clients. Our challenge was to make wealth planner look more modern by designing a new visual system — components, tokens, type. But during discovery we realized if your experience is old-fashioned, a new look doesn't help.
+          </p>
+        </section>
+
+        <!-- 2. Defining modern -->
+        <section class="post__section" aria-labelledby="modern">
+          <h2 id="modern" class="post__h2">2. Defining "modern"</h2>
+          <p class="post__p">
+            Before opening Figma, we wanted to define what "modern" meant — otherwise every review turns into a debate about what people like versus what they don't. And when those opinions come mostly from non-designers, the platform rarely ends up better for it.
+          </p>
+          <p class="post__p">
+            We synthesized the research in <a class="post__link" routerLink="/blog/ui-moderno-2026">Part 1 of this series</a>. The short version:
+          </p>
+          <ul class="principles">
+            <li class="principles__item">
+              <strong>Be intentional with visuals.</strong> Neutral tones, functional depth, bento grids for hierarchy. Color and animation aren't used as decoration but to communicate information fast to users.
+            </li>
+            <li class="principles__item">
+              <strong>Dynamic instead of linear.</strong> We have to be flexible. Linear flows create boring experiences; what we need is to truly understand the user's objective and build the layout around it.
+            </li>
+            <li class="principles__item">
+              <strong>Systems over preferences.</strong> Semantic tokens as one source of truth, so decisions stay consistent and even machine-readable.
+            </li>
+            <li class="principles__item">
+              <strong>Evidence over opinion.</strong> Because layouts can be dynamic there is more of an emphasis on tracking metrics and talking to users. Only listening to one person based on what they like stunts creativity.
+            </li>
+            <li class="principles__item">
+              <strong>Pay attention to the small details.</strong> Now that building is so much faster, modern UI is giving space and allowing time to focus on the smallest details that users wouldn't think about, because it subconsciously improves the experience. An arrow twisting or button container hugging when the CTA text changes used to be looked at as a nice to have, but now it's a must have — it's your way to stand out and show that, even with AI, we pay attention to these opportunities of delight.
+            </li>
+          </ul>
+          <p class="post__p">
+            Two findings from that research pointed straight at this project: a new palette won't fix a static layout, and raising design maturity is a team sport — it depends on how the whole organization decides, not on the design team alone.
+          </p>
+        </section>
+
+        <!-- 3. The problem -->
+        <section class="post__section" aria-labelledby="problem">
+          <h2 id="problem" class="post__h2">3. The problem</h2>
+          <p class="post__p">
+            The current information architecture reflects how a plan gets built and how the calculation is implemented in the backend. But the overall product treats every page as an equal part of the experience and doesn't account for any use case past a user's first time.
+          </p>
+          <p class="post__p">
+            On top of that, there are many points of friction. For example, the advisor currently has to fill out tedious pages before seeing any data worth looking at.
+          </p>
+          <p class="post__p">
+            To understand the value each screen provides, we mapped all ~15 screens to a user-value statement. We asked: what is the insight a user would want to reach within 5 seconds of looking at this page? That let us understand which data belongs together, so users can gather quick but powerful insights.
+          </p>
+          <p class="post__p">
+            Right now, our product perspective is <em>"I'm making this calculation for you — you figure out how to use the screen."</em> This needs to change to: <em>"We've done a calculation based on your data and here are the insights you can take from it to reach your goals."</em>
+          </p>
+          <p class="post__p">
+            That's why something like Conclusiones needs to be a dashboard: right now you see Diagnóstico and Plan de acción — two connected things — on two separate pages. But the user wants to understand their situation and how to fix it.
+          </p>
+          <p class="post__p">
+            A visible symptom of all this: most pages look empty — a single chart or table floating in whitespace. That emptiness isn't a styling problem; it's what poor planning looks like, and it's what makes the product feel static.
+          </p>
+        </section>
+
+        <!-- 4. Why the flow ended up this way -->
+        <section class="post__section" aria-labelledby="why">
+          <h2 id="why" class="post__h2">4. Why the flow ended up this way</h2>
+          <p class="post__p">
+            To solve this properly, we have to name what caused it. We rarely prototype in Figma — we present static pages and scroll across the canvas — so interactions don't get thought through early in the design process. Designs reach developers before the client has signed off, and details that were never discussed — like how a hover should behave — show up months later as an expensive, annoying change.
+          </p>
+          <p class="post__p">
+            When design is treated one dimensionally, you default to thinking about flows as linear. That's a real limitation now that AI is opening a more dynamic chapter of design: a static way of working, with little room for collaboration and creativity, tends to produce a static product.
+          </p>
+          <p class="post__p">
+            This is less about tools and colors than about mindset. It's systemic. Afi is a very traditional company that has truly become a respected institution. Unfortunately, because we are a successful company, change and innovation <em>in practice</em> is often put on the back burner.
+          </p>
+          <p class="post__p">
+            Design has often meant producing screens quickly, where questions about objectives or audience didn't have a place. Changing that is less a design task than an organizational one: it depends on everyone sharing a language for deciding.
+          </p>
+          <p class="post__p">
+            This project argues for treating design as an integral part of building products — understanding and defining what we're solving before we open Figma or touch code.
+          </p>
+        </section>
+
+        <!-- 5. What we did -->
+        <section class="post__section" aria-labelledby="process">
+          <h2 id="process" class="post__h2">5. What we did (and are still doing)</h2>
+          <!-- TODO(workbench): link "current output" to the components workbench when the URL is confirmed. -->
+          <p class="post__p">
+            <strong>We started with goals, not screens.</strong> Before opening Figma, we agreed on what the redesign had to achieve.
+          </p>
+          <p class="post__p">
+            <strong>We benchmarked and moodboarded.</strong> We ran a competitive benchmark and built moodboards in Mobbin and Figma for specific components, pulling references from products we admired. Then we went through them together, component by component, deciding what we liked and what we didn't — a shared reference before anyone built anything.
+          </p>
+          <p class="post__p">
+            <strong>We built the design system in black and white first.</strong> We set up our primitive and semantic tokens with no color at all. A token is just a named decision — "background canvas," "background elevated" — that does the same job everywhere it appears. Defining that vocabulary before the palette means choosing colors later is a single move: update the primitive, and every screen changes with it. Same for spacing decisions like nav-to-content — set a base now, adjust as the brand matures, and it propagates everywhere.
+          </p>
+          <p class="post__p">
+            <strong>With the foundation set, we built in code, then Figma.</strong> We listed the primitive components and built them in code first, using our references. Then we generated prompts for the Figma agent to create the components and their documentation. That alone saved us a huge amount of time on documentation. And because everything points back to the same variables, adjusting one reflects the change everywhere it's needed.
+          </p>
+          <p class="post__p">
+            <strong>We connected Figma to the real project.</strong> Once the components and docs existed in Figma, I wired them into our Angular project and built a live components page — the system running in the actual product, not a mockup of it.
+          </p>
+          <p class="post__p">
+            <strong>We tooled the discipline with two skills.</strong> Our /DS clean-up skill audits a component or page, tells me where it's drifting from the system, and then — on a second prompt — fixes it. The audits stay small, which keeps the work honest and makes sure our variables are used the way we intended.
+          </p>
+          <p class="post__p">
+            Our /ship skill commits and pushes; I merge; then it deletes the branch, starts a new one, and hands back a Figma prompt for anything that changed in the variables or the system, so Figma and code never drift apart.
+          </p>
+          <p class="post__p">
+            <strong>Where we are now:</strong> the components exist at a basic, low-fidelity level. We're adding micro-interactions and a bit more experience in code so we can show the team what a modern, interactive product actually feels like — the thing static Figma pages could never convey.
+          </p>
+        </section>
+
+        <!-- 6. What we learned -->
+        <section class="post__section" aria-labelledby="learned">
+          <h2 id="learned" class="post__h2">6. What we learned</h2>
+          <p class="post__p">
+            Before going deeper into graphs and patterns, we wanted to look at the whole product, not one screen at a time. So we ran a value audit across all ~15 pages and gave each one a value proposition: what insight it delivers and what the user should do next.
+          </p>
+          <p class="post__p">
+            Looking outward at other fintechs, one pattern was consistent: they lead with insights and options, and they build for flexibility. Our ethos was already there — flexibility and the ability to plan — but the execution wasn't: most pages were a single graph or table with a pile of options and no guidance. Flexibility without direction.
+          </p>
+        </section>
+
+        <!-- 7. Our direction -->
+        <section class="post__section" aria-labelledby="direction">
+          <h2 id="direction" class="post__h2">7. Our direction</h2>
+          <p class="post__p">
+            The decision that came out of it: organize the product around the value each page delivers, not the order a plan gets built. Fewer, richer, insight-first screens; flexibility with guidance, not a fixed linear path.
+          </p>
+          <p class="post__p">
+            The detailed structure — how the sections collapse and what each dashboard holds — is the climax, still ahead. The ideas we're carrying into it are below.
+          </p>
+        </section>
+
+        <!-- 8. Seeds -->
+        <section class="post__section" aria-labelledby="seeds">
+          <h2 id="seeds" class="post__h2">8. Seeds for the next phase</h2>
+          <p class="post__p">
+            <strong>Profile-as-substrate.</strong> Client data (ingresos, gastos, patrimonio, family) lives as a persistent profile that every simulation draws from — the way Claude keeps Projects / Artifacts / personalization across sessions. Creating a new simulation means choosing what to include, not re-entering anything. It also resolves the white-label vs. Afi split cleanly: institutional deployments load the profile automatically for existing clients; the Afi version fills it by hand. Same model, one way in.
+          </p>
+          <p class="post__p">
+            <strong>Consistency of general information.</strong> A related thread worth its own seed: keeping general and shared info consistent across the product instead of re-entering or re-deciding it per page. The broader point is one consistent source of truth for shared information.
+          </p>
+        </section>
+      } @else {
+        <!-- Spanish version pending the afi-redaccion pass -->
+        <afi-page-header
+          title="Wealth Planner: arquitectura de la información"
+          subtitle="Reorganizar el Afi Wealth Planner en torno a cómo lo usan los asesores."
+          [sticky]="false"
+          [scrollFade]="false"
+        >
+          <span slot="breadcrumb" class="post__eyebrow">PRODUCTO · ARQUITECTURA DE LA INFORMACIÓN</span>
+        </afi-page-header>
+
+        <p class="lang-notice">
+          La versión en español está en preparación. Mientras tanto, puedes leer la versión en inglés cambiando el idioma en la barra superior.
+        </p>
+      }
+    </article>
+  </main>
+</div>

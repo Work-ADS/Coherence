@@ -1,0 +1,54 @@
+// =============================================================================
+// component-reader.scss — immersive reading view — HAND-AUTHORED (not generated)
+// =============================================================================
+// Source: Figma AFI-FOUNDATIONS-MODERN, "Animation frames" section 2920:5691,
+// captured 2026-07-17. The dark reading room for long-form blog posts: off-black
+// canvas (never pure black — the post's own halation rule), scroll-focus text
+// treatment (crisp at viewport center, blurred and dimmed away from it), an
+// orange light-leak and glassy ambient widgets. These values come from Figma
+// effect styles and gradient fills that cannot be variables, so they never
+// appear in tools/figma-sync/foundations-modern.json. Apps import this file
+// explicitly alongside the generated index (same pattern as component-button).
+// =============================================================================
+
+[data-foundation="modern"] {
+
+  // ── Canvas + content ────────────────────────────────────────────────────────
+  --reader-canvas: #050508;
+  --reader-content-primary: #ffffff;
+  --reader-content-secondary: var(--color-primary-200);
+  --reader-content-dim: rgba(255, 255, 255, 0.55);
+
+  // ── Scroll-focus treatment ──────────────────────────────────────────────────
+  // A beat far from the viewport center sits at --reader-dim-opacity behind
+  // --reader-blur; approaching the center it passes through the "near" tier
+  // and resolves to opacity 1 / blur 0 as it crosses.
+  --reader-dim-opacity: 0.1;
+  --reader-dim-opacity-near: 0.3;
+  --reader-blur: 12px;
+  --reader-blur-near: 6px;
+
+  // ── Ambience (Figma: orange-light-leak, blurry-pill-widget, blurry-circle) ──
+  // Pre-softened radial gradient instead of filter: blur() — a viewport-sized
+  // blurred fixed layer breaks Chrome compositing while scrolling.
+  --reader-leak-gradient: radial-gradient(
+    ellipse 50% 42% at 50% 40%,
+    rgba(234, 88, 12, 0.32) 0%,
+    rgba(154, 52, 18, 0.12) 45%,
+    rgba(194, 65, 12, 0) 72%
+  );
+  --reader-glass-surface: rgba(255, 255, 255, 0.06);
+  --reader-glass-border: rgba(255, 255, 255, 0.12);
+  --reader-glass-blur: 11px;
+
+  // ── Figures ─────────────────────────────────────────────────────────────────
+  // Diagrams are authored for light surfaces; they render on a light panel.
+  --reader-figure-surface: var(--color-neutral-25);
+
+  // ── Type (IBM Plex Sans via the foundation's primary family) ───────────────
+  --reader-type-eyebrow: 600 0.8125rem/1.2 var(--font-family-primary);
+  --reader-type-title: 700 clamp(2.5rem, 6vw, 4.5rem)/1.1 var(--font-family-primary);
+  --reader-type-headline: 700 clamp(2rem, 4.6vw, 3.5rem)/1.15 var(--font-family-primary);
+  --reader-type-body: 500 clamp(1.25rem, 2.4vw, 1.875rem)/1.4 var(--font-family-primary);
+  --reader-type-support: 400 1rem/1.55 var(--font-family-primary);
+}

@@ -14,6 +14,7 @@
 // fills that cannot be variables) and lives outside the generated index.
 @import '../../../libs/tokens/foundations-modern/index';
 @import '../../../libs/tokens/foundations-modern/component-button';
+@import '../../../libs/tokens/foundations-modern/component-reader';
 
 // Product-level tokens — Wealth Planner. Imported AFTER the DS so its
 // --plan-state-* tokens can reference DS --feedback-* values.

@@ -208,3 +208,67 @@
 // completes the metaphor (curve redraws, bars swap positions, lines
 // collapse to one). Mirrors richardgriner.com/components/motion/glyphs.
 
+// ─── Cinematic open: card morphs to full screen, page blurs away ─────────────
+// The morph animates the container's box (top/left/width/height) — a genuine
+// container morph that transform: scale() can't express without distorting
+// the cover video. DS-site-only choreography; reduced-motion users never
+// enter this state (the click handler navigates immediately).
+.home--expanding {
+  .hero,
+  .recent__header {
+    filter: blur(var(--reveal-blur-heavy));
+    opacity: 0;
+    transition:
+      filter var(--duration-reveal-heavy) var(--easing-exit),
+      opacity var(--duration-reveal-heavy) var(--easing-exit);
+  }
+}
+
+.card--lifted {
+  position: fixed;
+  top: var(--exp-top);
+  left: var(--exp-left);
+  width: var(--exp-width);
+  height: var(--exp-height);
+  margin: 0;
+  z-index: 40;
+  transform: none;
+  box-shadow: none;
+  transition:
+    top var(--duration-reveal-heavy) var(--easing-enter),
+    left var(--duration-reveal-heavy) var(--easing-enter),
+    width var(--duration-reveal-heavy) var(--easing-enter),
+    height var(--duration-reveal-heavy) var(--easing-enter),
+    border-radius var(--duration-reveal-heavy) var(--easing-enter);
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  // Dark veil that fades in while the card grows, so the hand-off to the
+  // reader's off-black canvas is a dark-to-dark cut instead of a light flash.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--canvas-fg);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-reveal-heavy) var(--easing-enter);
+  }
+}
+
+.card--growing {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border-color: transparent;
+
+  &::after {
+    opacity: 1;
+  }
+}
+

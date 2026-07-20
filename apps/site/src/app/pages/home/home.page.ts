@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ButtonComponent, LogoComponent } from '@coherence/ui';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { LogoComponent } from '@coherence/ui';
 
 import {
   CollapseGlyphComponent,
@@ -16,19 +16,24 @@ interface WorkCard {
   title: { es: string; en: string };
   blurb: { es: string; en: string };
   thumb: 'wealth-planner' | 'sarevi' | 'whitelabel' | 'slides' | 'video';
-  /** Optional video src (relative to /assets); only used when thumb === 'video'. */
-  videoSrc?: string;
+  /** Optional per-language video src (relative to /assets); only used when thumb === 'video'. */
+  videoSrc?: { es: string; en: string };
   /** Optional poster image shown before video starts and on pause. */
   videoPoster?: string;
+}
+
+interface ExpandRect {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
 }
 
 @Component({
   selector: 'site-home',
   standalone: true,
   imports: [
-    RouterLink,
     LogoComponent,
-    ButtonComponent,
     EvolutionGlyphComponent,
     WhitelabelFrameGlyphComponent,
     CollapseGlyphComponent,
@@ -40,26 +45,16 @@ interface WorkCard {
 })
 export class HomePage {
   private readonly language = inject(LanguageService);
+  private readonly router = inject(Router);
   readonly lang = this.language.lang;
 
+  /** Frozen viewport rect of the clicked card while it morphs to full screen. */
+  readonly expandRect = signal<ExpandRect | null>(null);
+  /** Second phase of the morph: rect → full viewport, background blurs away. */
+  readonly expandGrowing = signal(false);
+
+  // Brand-and-personas and Wealth Planner cards hidden — home focuses on Modern UI for now.
   private readonly cards: WorkCard[] = [
-    {
-      routerLink: '/blog/brand-and-personas',
-      eyebrow: {
-        es: 'ESTRATEGIA · MARCA',
-        en: 'STRATEGY · BRAND',
-      },
-      title: {
-        es: 'Marca y personas',
-        en: 'Brand and personas',
-      },
-      blurb: {
-        es: 'Antes del moodboard, el brief: seis campos de marca y cinco personas que los demos en código sí pueden modelar.',
-        en: 'Before the moodboard, the brief: six brand fields and five personas the code-based demos can actually model.',
-      },
-      thumb: 'video',
-      videoSrc: 'assets/thumbnails/brand-and-personas.mp4',
-    },
     {
       routerLink: '/blog/ui-moderno-2026',
       eyebrow: {
@@ -75,26 +70,10 @@ export class HomePage {
         en: 'Four sources, eight themes, five commitments. The foundation Afi’s visual redesign rests on.',
       },
       thumb: 'video',
-      videoSrc: 'assets/thumbnails/ui-moderno-2026.mp4',
-      videoPoster: 'assets/thumbnails/ui-moderno-2026-poster.jpg',
-    },
-    {
-      routerLink: '/demos/wealth-planner-2026',
-      eyebrow: {
-        es: 'DEMO · DIGITAL SOLUTIONS',
-        en: 'DEMO · DIGITAL SOLUTIONS',
+      videoSrc: {
+        es: 'assets/thumbnails/ui-moderno-2026-es.mp4',
+        en: 'assets/thumbnails/ui-moderno-2026-en.mp4',
       },
-      title: {
-        es: 'Wealth Planner 2026',
-        en: 'Wealth Planner 2026',
-      },
-      blurb: {
-        es: 'Rediseño completo — patrimonio, evolución y simulación. Cinco iteraciones con seniors.',
-        en: 'Full redesign — wealth, evolution, simulation. Five iterations with senior advisors.',
-      },
-      thumb: 'video',
-      videoSrc: 'assets/thumbnails/wealth-planner-2026.mp4',
-      videoPoster: 'assets/thumbnails/wealth-planner-2026-poster.jpg',
     },
   ];
 
@@ -103,7 +82,7 @@ export class HomePage {
     this.cards.map((c) => ({
       routerLink: c.routerLink,
       thumb: c.thumb,
-      videoSrc: c.videoSrc,
+      videoSrc: c.videoSrc?.[this.lang()],
       videoPoster: c.videoPoster,
       eyebrow: c.eyebrow[this.lang()],
       title: c.title[this.lang()],
@@ -123,5 +102,38 @@ export class HomePage {
     video.play().catch(() => {
       /* autoplay blocked: video will start on next user interaction */
     });
+  }
+
+  /**
+   * Cinematic open: freeze the card at its viewport rect, then let CSS morph
+   * it to full screen while the rest of the page blurs away; navigate once
+   * the morph lands. Modifier clicks keep native anchor behavior (new tab),
+   * and reduced-motion users navigate immediately.
+   */
+  onCardClick(event: MouseEvent, routerLink: string): void {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (this.expandRect() !== null) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.router.navigateByUrl(routerLink);
+      return;
+    }
+
+    // Rect read via the event's own target (allowed pointer interaction) —
+    // it seeds the fixed-position start frame of the CSS morph.
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    this.expandRect.set({
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+    });
+
+    // Two frames so the fixed start rect paints before the morph target kicks in.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => this.expandGrowing.set(true)),
+    );
+    setTimeout(() => this.router.navigateByUrl(routerLink), 680);
   }
 }

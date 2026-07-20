@@ -822,19 +822,19 @@
           (sortChange)="onTableSort($event)"
           (rowActionClicked)="onTableAction($event)"
         />
-        @if (tableSelected().length) {
-          <div class="workbench__apron-float">
-            <afi-table-apron
-              [shown]="tableRows().length"
-              [total]="tableData.length"
-              noun="cartera"
-              nounPlural="carteras"
-              [selectedCount]="tableSelected().length"
-              [selectedText]="tableSelected().length + ' seleccionadas'"
-              (selectionCleared)="onTableSelected([])"
-            />
-          </div>
-        }
+        <div class="workbench__apron-float">
+          <afi-table-apron
+            [shown]="tableRows().length"
+            [total]="tableData.length"
+            noun="cartera"
+            nounPlural="carteras"
+            [selectedCount]="tableSelected().length"
+            [selectedText]="tableSelected().length + ' seleccionadas'"
+            [selectionActions]="bulkActions"
+            (selectionCleared)="onTableSelected([])"
+            (selectionAction)="onCarterasBulk($event)"
+          />
+        </div>
       </div>
       <p class="workbench__hint">
         Pase el cursor sobre una fila: la casilla y las acciones aparecen (en reposo están
@@ -848,13 +848,30 @@
     @for (density of tableDensities; track density) {
       <section class="workbench__section">
         <h3 class="workbench__section-title">density="{{ density }}"</h3>
-        <afi-table-v2
-          [columns]="tableColumns"
-          [rows]="tableData"
-          [rowActions]="tableActions"
-          [selectable]="true"
-          [density]="density"
-        />
+        <div class="workbench__apron-frame">
+          <afi-table-v2
+            [columns]="tableColumns"
+            [rows]="tableData"
+            [rowActions]="tableActions"
+            [selectable]="true"
+            [density]="density"
+            [selected]="densitySel(density)"
+            (selectedChange)="setDensitySelected(density, $event)"
+          />
+          <div class="workbench__apron-float">
+            <afi-table-apron
+              [shown]="tableData.length"
+              [total]="tableData.length"
+              noun="cartera"
+              nounPlural="carteras"
+              [selectedCount]="densitySel(density).length"
+              [selectedText]="densitySel(density).length + ' seleccionadas'"
+              [selectionActions]="bulkActions"
+              (selectionCleared)="clearDensitySelection(density)"
+              (selectionAction)="onDensityBulk(density, $event)"
+            />
+          </div>
+        </div>
       </section>
     }
 
@@ -888,11 +905,12 @@
             />
           }
         </div>
-        <afi-search
+        <afi-search-v2
           class="workbench__apron-search"
           placeholder="Buscar por cliente o pedido"
           ariaLabel="Buscar pedidos"
           [value]="orderSearch()"
+          [suggestions]="orderSuggestions()"
           (valueChange)="setOrderSearch($event)"
           (cleared)="setOrderSearch('')"
         />

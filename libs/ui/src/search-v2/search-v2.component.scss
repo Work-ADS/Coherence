@@ -1,0 +1,204 @@
+// afi-search-v2 — identity v2 (foundations-modern tokens only).
+//
+// Field chrome mirrors select-v2 (bordered flex row on --background-surface,
+// --radius-lg), but the interactive element is a free-text <input>, so the focus
+// ring rides on :focus-within (focus lives in the input, not the wrapper). The
+// preview panel is an afi-menu-v2 listbox, fixed-anchored from the component.
+// Every value is token-bound; no raw px/hex.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-field-label);
+  font-family: var(--font-family-primary);
+}
+
+.afi-search-v2__label {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  color: var(--content-primary);
+}
+
+// ── Field — bordered flex row: leading icon + input + clear ──────────────────
+.afi-search-v2__field {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  inline-size: 100%;
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-lg);
+  background: var(--background-surface);
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-easing-standard),
+    background-color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &--sm {
+    block-size: var(--height-component-sm);
+    padding-inline: var(--pad-control-sm);
+  }
+
+  &--md {
+    block-size: var(--height-component-md);
+    padding-inline: var(--pad-control-md);
+  }
+
+  &--lg {
+    block-size: var(--height-component-lg);
+    padding-inline: var(--pad-control-lg);
+  }
+
+  &:hover:not(.afi-search-v2__field--disabled):not(:focus-within) {
+    background: var(--background-hover);
+    border-color: var(--borders-hover);
+  }
+
+  // focus-ring pattern (motion-skill §4.3): instant, never transitioned.
+  &:focus-within {
+    border-color: var(--borders-focus);
+    box-shadow: inset 0 0 0 var(--stroke-focus) var(--borders-focus);
+  }
+
+  &--disabled {
+    background: var(--disabled-background);
+    border-color: var(--borders-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.afi-search-v2__icon-lead {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--content-secondary);
+
+  .afi-search-v2__field--disabled & {
+    color: var(--content-disabled);
+  }
+}
+
+.afi-search-v2__input {
+  flex: 1 0 0;
+  min-inline-size: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--content-primary);
+  font-family: inherit;
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: var(--content-placeholder);
+  }
+
+  &:disabled {
+    color: var(--content-disabled);
+    cursor: not-allowed;
+  }
+
+  // Drop the native search decorations (webkit "x" + magnifier) — we own them.
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    appearance: none;
+  }
+}
+
+.afi-search-v2__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: none;
+  color: var(--content-secondary);
+  cursor: pointer;
+  transition: color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  svg {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  &:hover {
+    color: var(--content-primary);
+  }
+
+  &:focus-visible {
+    outline: var(--stroke-focus) solid var(--borders-focus);
+    outline-offset: var(--dimension-0-25);
+  }
+}
+
+// ── Preview panel — the afi-menu-v2 listbox, anchored to the field ────────────
+.afi-search-v2__panel {
+  position: fixed;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+// ── Suggestion row (projected into a menu-item-v2 label slot) ─────────────────
+.afi-search-v2__suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-control-sm);
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.afi-search-v2__suggestion-main {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.afi-search-v2__suggestion-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--content-primary);
+}
+
+.afi-search-v2__suggestion-desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--type-help-size);
+  font-weight: var(--type-help-weight);
+  line-height: var(--type-help-line-height);
+  color: var(--content-secondary);
+}
+
+.afi-search-v2__suggestion-trailing {
+  flex: none;
+  color: var(--content-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.afi-search-v2__empty {
+  margin: 0;
+  padding-block: var(--dimension-1);
+  padding-inline: var(--dimension-2);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  color: var(--content-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afi-search-v2__field,
+  .afi-search-v2__clear {
+    transition: none;
+  }
+}

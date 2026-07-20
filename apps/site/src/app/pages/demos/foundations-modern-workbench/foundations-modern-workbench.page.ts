@@ -16,7 +16,7 @@ import {
   NavbarV2Component,
   NavItemV2Component,
   NavSectionV2Component,
-  SearchComponent,
+  SearchV2Component,
   SelectV2Component,
   SidebarV2Component,
   TableApronComponent,
@@ -38,8 +38,10 @@ import type {
   IconButtonV2Variant,
   InputV2Size,
   NavbarV2Action,
+  SearchV2Suggestion,
   SelectV2Size,
   SelectV2Option,
+  TableApronSelectionAction,
   TableApronToken,
   TableV2Column,
   TableV2Density,
@@ -81,7 +83,7 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     NavbarV2Component,
     NavItemV2Component,
     NavSectionV2Component,
-    SearchComponent,
+    SearchV2Component,
     SelectV2Component,
     SidebarV2Component,
     TableApronComponent,
@@ -327,6 +329,44 @@ export class FoundationsModernWorkbenchPage {
     this.tableLastAction.set(`${e.action.label} · ${String(e.row['cliente'])}`);
   }
 
+  // ── Apron bulk actions + per-density selection ────────────────────────────────
+  // The apron shows on every populated table (not loading / empty). When rows are
+  // selected it surfaces a selection chip + these bulk actions as icon buttons.
+  readonly bulkActions: TableApronSelectionAction[] = [
+    { key: 'delete', label: 'Borrar', icon: 'delete', variant: 'danger' },
+  ];
+
+  /** Selection per density table (they share the same rows but track separately). */
+  readonly densitySelected = signal<Record<string, Record<string, unknown>[]>>({
+    compact: [],
+    default: [],
+    comfortable: [],
+  });
+
+  /** Safe accessor for a density's selection (dodges noUncheckedIndexedAccess). */
+  densitySel(density: string): Record<string, unknown>[] {
+    return this.densitySelected()[density] ?? [];
+  }
+
+  setDensitySelected(density: string, rows: Record<string, unknown>[]): void {
+    this.densitySelected.update((map) => ({ ...map, [density]: rows }));
+  }
+
+  clearDensitySelection(density: string): void {
+    this.densitySelected.update((map) => ({ ...map, [density]: [] }));
+  }
+
+  onCarterasBulk(action: TableApronSelectionAction): void {
+    this.tableLastAction.set(`${action.label} · ${this.tableSelected().length} carteras`);
+    this.onTableSelected([]);
+  }
+
+  onDensityBulk(density: string, action: TableApronSelectionAction): void {
+    const n = this.densitySel(density).length;
+    this.tableLastAction.set(`${action.label} · ${n} carteras (${density})`);
+    this.clearDensitySelection(density);
+  }
+
   onSimulate(): void {
     if (this.simulating()) {
       return;
@@ -414,4 +454,18 @@ export class FoundationsModernWorkbenchPage {
     if (token.id === 'estado') this.orderStatus.set('todos');
     if (token.id === 'buscar') this.orderSearch.set('');
   }
+
+  /** Typeahead preview for afi-search-v2: the current matches, capped, mapped to
+   *  suggestion rows (label = cliente, description = pedido · estado, trailing = total). */
+  readonly orderSuggestions = computed<SearchV2Suggestion[]>(() => {
+    if (!this.orderSearch().trim()) return [];
+    return this.visibleOrders()
+      .slice(0, 6)
+      .map((row) => ({
+        id: String(row['id']),
+        label: String(row['cliente']),
+        description: `${String(row['pedido'])} · ${String(row['estado'])}`,
+        trailing: String(row['total']),
+      }));
+  });
 }

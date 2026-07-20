@@ -125,6 +125,31 @@
   white-space: nowrap;
 }
 
+// ── Selection group (chip + bulk actions) ───────────────────────────────────
+.afi-table-apron__selection-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dimension-1);
+  flex: none;
+}
+
+.afi-table-apron__selection-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dimension-0-5);
+}
+
+.afi-table-apron__action-icon {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+// Danger bulk action (e.g. Borrar): ghost button, but the glyph keeps the error
+// tint so it still reads as destructive — quieter than a filled red button.
+.afi-table-apron__action-icon--danger {
+  color: var(--error-foreground);
+}
+
 // ── Selection chip ───────────────────────────────────────────────────────────
 // Visually distinct from filter tokens: filled with the selected-row tint so it
 // reads as "this reflects the rows you have selected".

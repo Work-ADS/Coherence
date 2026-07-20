@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
-import type { TableApronSize, TableApronToken } from './table-apron.variants';
+import { IconButtonV2Component } from '../icon-button-v2';
+import type {
+  TableApronSelectionAction,
+  TableApronSize,
+  TableApronToken,
+} from './table-apron.variants';
 
 /**
  * Table apron — identity v2 (foundations-modern).
@@ -27,6 +32,7 @@ import type { TableApronSize, TableApronToken } from './table-apron.variants';
   selector: 'afi-table-apron',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [IconButtonV2Component],
   templateUrl: './table-apron.component.html',
   styleUrls: ['./table-apron.component.scss'],
 })
@@ -58,11 +64,18 @@ export class TableApronComponent {
    * feminine/other form (e.g. `3 seleccionadas`) when the row noun needs it.
    */
   readonly selectedText = input<string | null>(null);
+  /**
+   * Bulk actions offered while rows are selected — rendered as icon buttons
+   * beside the selection chip (e.g. Borrar). Emits `selectionAction` on click.
+   */
+  readonly selectionActions = input<TableApronSelectionAction[]>([]);
 
   /** Emitted when a token's × is activated. Consumer clears that filter. */
   readonly tokenDismissed = output<TableApronToken>();
   /** Emitted when the selection chip's × is activated. Consumer clears selection. */
   readonly selectionCleared = output<void>();
+  /** Emitted when a bulk selection action's icon button is activated. */
+  readonly selectionAction = output<TableApronSelectionAction>();
 
   /** Noun agrees with the total collection size (30 resultados, 1 resultado). */
   readonly nounForm = computed(() =>
@@ -91,5 +104,9 @@ export class TableApronComponent {
 
   onClearSelection(): void {
     this.selectionCleared.emit();
+  }
+
+  onSelectionAction(action: TableApronSelectionAction): void {
+    this.selectionAction.emit(action);
   }
 }

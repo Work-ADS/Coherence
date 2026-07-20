@@ -1,5 +1,7 @@
 export { TableApronComponent } from './table-apron.component';
 export type {
+  TableApronActionIcon,
+  TableApronSelectionAction,
   TableApronSize,
   TableApronToken,
   TableApronTokenIcon,

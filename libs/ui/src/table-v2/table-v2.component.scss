@@ -86,6 +86,14 @@
   }
 }
 
+// The sort trigger is a flex button that fills the header cell; without this the
+// inner label span shrink-wraps to flex-start and a right-aligned (numeric /
+// monetary) header drifts left of its right-aligned numbers. Stretch it so the
+// inner's justify-content (start / center / end) lands over the data column.
+.afi-table-v2__sort-trigger .afi-table-v2__th-inner {
+  inline-size: 100%;
+}
+
 // Sort chevron slot — reserved for every sortable column so cycling the
 // direction (or clearing it) never shifts the header width.
 .afi-table-v2__sort {
@@ -208,6 +216,10 @@
 .afi-table-v2__th-select,
 .afi-table-v2__td-select {
   inline-size: var(--width-table-selection-column);
+  // Hold the width when the table overflows and scrolls — auto table-layout
+  // otherwise collapses this column to the checkbox's content width, killing the
+  // checkbox's centered gutter on narrow viewports.
+  min-inline-size: var(--width-table-selection-column);
   padding-inline: 0;
   text-align: center;
   cursor: pointer; // the whole cell toggles, not just the compact checkbox

@@ -21,6 +21,26 @@ export type TableApronSize = 'sm' | 'md';
 /** Optional leading glyph on a token, signalling the filter's origin. */
 export type TableApronTokenIcon = 'search' | 'filter';
 
+/** Icon glyphs for bulk selection actions (rendered as icon buttons). */
+export type TableApronActionIcon = 'delete' | 'duplicate' | 'archive' | 'download';
+
+/**
+ * A bulk action offered while rows are selected — rendered as an icon button
+ * beside the selection count. `variant: 'danger'` renders the destructive
+ * icon-button variant (e.g. Borrar); everything else is ghost (the toolbar
+ * house rule).
+ */
+export interface TableApronSelectionAction {
+  /** Stable identifier carried back on `selectionAction`. */
+  key: string;
+  /** Accessible name for the icon button (e.g. "Borrar"). */
+  label: string;
+  /** Icon glyph. */
+  icon: TableApronActionIcon;
+  /** `danger` renders the destructive icon-button variant. */
+  variant?: 'default' | 'danger';
+}
+
 /**
  * One active-filter token in the apron. A token is a readout of a filter the
  * consumer has applied (a selected tab, a search term, a facet), NOT a control:

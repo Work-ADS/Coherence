@@ -5,13 +5,18 @@
 
 .shell {
   display: flex;
-  min-height: 100vh;
+  // Fixed viewport height (not min-height) so .content is always the scroll
+  // container — with min-height the body scrolls on tall pages and carries
+  // the overlaid glass bar away with it.
+  height: 100vh;
+  height: 100dvh;
   background: var(--canvas-primary);
   color: var(--foreground-primary-default);
 }
 
 // ─── Right column ──────────────────────────────────────────────────────────────
 .main-column {
+  position: relative; // anchors the glass top bar, which overlays the content
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -19,32 +24,117 @@
   background: var(--canvas-primary);
 }
 
-// ─── Top bar nav ───────────────────────────────────────────────────────────────
-.top-nav {
-  display: flex;
-  align-items: center;
-  gap: var(--space-lg);
+// Glass top bar floats over the content so the page frosts through it as it
+// scrolls under (Garaje-style). Rendered only on non-full-screen routes; the
+// content clears it via .content--offset.
+afi-top-bar {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 30;
+  overflow: hidden;
+
+  // Iridescent glare — faint warm-gold/azul light caught in the glass. Painted
+  // BEHIND the bar (z-index -1), so the header's backdrop blur frosts it and
+  // it reads as colour in the glass rather than a printed gradient. Existing
+  // primitives at low alpha only (warning-* doubles as the warm ambience hue —
+  // v1 has no orange primitive; revisit if an ambience scale gets tokenized).
+  // Deliberately STATIC: animating anything beneath a backdrop-filter forces
+  // Chromium to re-filter every frame and stalls scrolling (same class of
+  // issue as mix-blend-mode + backdrop-filter; see component-reader.scss).
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        45% 260% at 18% 130%,
+        color-mix(in srgb, var(--color-afi-azul-500) 14%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        38% 240% at 62% -40%,
+        color-mix(in srgb, var(--color-warning-300) 20%, transparent),
+        transparent 72%
+      ),
+      radial-gradient(
+        30% 220% at 88% 140%,
+        color-mix(in srgb, var(--color-warning-500) 10%, transparent),
+        transparent 75%
+      );
+  }
+
+  // Adaptive contrast — set by the app shell while content tagged
+  // data-nav-tone="dark" is behind the frost. The light tint drops away
+  // (pure blur over the dark surface) and the logo + menu flip to the
+  // inverse palette. Colors transition so the swap reads as one move.
+  &.on-dark {
+    --top-bar-glass-tint: transparent;
+
+    .site-nav {
+      // afi-navbar-item-v2 paints with the content/* scale — remap it to the
+      // inverse tones (plus the logo, which follows currentColor when
+      // monochrome) so the whole zone flips together.
+      color: var(--foreground-inverse-default);
+
+      --content-tertiary: var(--foreground-inverse-secondary);
+      --content-primary: var(--foreground-inverse-default);
+      --content-disabled: var(--foreground-inverse-tertiary);
+    }
+
+    // The toggle's track is transparent, so the unselected option sits on
+    // the frost — flip its tones too. The selected thumb stays white, so
+    // its own text (--foreground-primary-default) stays dark.
+    site-language-toggle {
+      --foreground-tertiary-default: var(--foreground-inverse-secondary);
+      --foreground-secondary-default: var(--foreground-inverse-default);
+    }
+  }
 }
 
-.top-nav__link {
-  font: var(--type-body-md-400);
-  color: var(--foreground-primary-default);
-  text-decoration: none;
+// ─── Nav bar ─────────────────────────────────────────────────────────────────
+// Figma AFI-FOUNDATIONS-MODERN 2974:5945. The bar carries
+// data-foundation="modern", so the --gap-navbar-* / IBM Plex tokens resolve to
+// their v2 values. Zones: logo (left) · menu (centered, flex-1) · language
+// select (right, in the top bar's end slot).
+.site-nav {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--gap-navbar-zones);
+  min-width: 0;
   transition: color var(--duration-fast) var(--easing-standard);
+}
 
-  &:hover,
-  &.active {
-    color: var(--brand-primary-border-default);
-  }
-
-  &.active {
-    font: var(--type-body-md-500);
-  }
+.site-nav__menu {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-navbar-actions);
 }
 
 .top-bar__end {
   display: flex;
   align-items: center;
+
+  // ES/EN toggle, v2 skin. The segmented control is a v1 primitive that reads
+  // v1 tokens — inside this modern-scoped zone we remap those tokens to their
+  // foundations-modern equivalents (IBM Plex, 13/16, neutral scale) instead of
+  // growing the primitive's API. Visual-parity-only override.
+  // The track is TRANSPARENT (Garaje-style): the unselected option sits
+  // directly on the bar's frost; only the selected thumb paints white.
+  site-language-toggle {
+    --type-body-sm-400: var(--font-weight-medium) var(--type-body-small-size) / var(--dimension-4) var(--font-family-primary);
+    --type-body-sm-500: var(--font-weight-semibold) var(--type-body-small-size) / var(--dimension-4) var(--font-family-primary);
+    --foreground-tertiary-default: var(--content-tertiary);
+    --foreground-secondary-default: var(--content-secondary);
+    --foreground-primary-default: var(--content-primary);
+    --control-background-default: transparent;
+    --control-background-active: var(--background-surface);
+    --border-focus: var(--borders-focus);
+  }
 }
 
 // ─── Content ───────────────────────────────────────────────────────────────────
@@ -53,4 +143,10 @@
   min-width: 0;
   overflow-y: auto;
   background: var(--canvas-primary);
+
+  // Clear the overlaying glass bar so the first content isn't hidden behind
+  // it at rest. Only applied when the bar is shown (non-full-screen routes).
+  &--offset {
+    padding-top: var(--top-bar-height);
+  }
 }

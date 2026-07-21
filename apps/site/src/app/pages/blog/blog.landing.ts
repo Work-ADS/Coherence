@@ -1,23 +1,44 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 
 import { LanguageService } from '../../services/language.service';
 
-type Thumb = 'whitelabel' | 'talk' | 'video';
+type Thumb = 'whitelabel' | 'ia' | 'video';
+
+/**
+ * Which landing surface a post belongs to. `methodology` = the redesign-series
+ * narrative (Modern UI → Brand & personas → Information architecture), shown on
+ * /metodologia. `blog` = everything else, shown on /blog. A single POSTS list
+ * feeds both landings; the route's `data.collection` selects the subset.
+ */
+type Collection = 'methodology' | 'blog';
 
 interface BlogPost {
   slug: string;
+  /** Landing this post appears on. */
+  collection: Collection;
   eyebrow: { es: string; en: string };
   title: { es: string; en: string };
   date: { es: string; en: string };
   intro: { es: string; en: string };
   thumb: Thumb;
-  /** Optional video src (relative to /assets); only used when thumb === 'video'. */
-  videoSrc?: string;
+  /**
+   * Optional video src (relative to /assets); only used when thumb === 'video'.
+   * A per-language pair swaps the clip with the active locale.
+   */
+  videoSrc?: string | { es: string; en: string };
   /** Optional poster image shown before video starts and on pause. */
   videoPoster?: string;
   /** Optional route override; defaults to `/blog/<slug>`. */
   to?: string;
+  /**
+   * True when the thumb is a dark surface. Emits `data-nav-tone="dark"` on the
+   * card so the glass top bar flips to its inverse palette while the card
+   * scrolls behind it.
+   */
+  darkThumb?: boolean;
 }
 
 // Trimmed to the three featured pieces. Other historical posts moved under
@@ -25,6 +46,8 @@ interface BlogPost {
 const POSTS: BlogPost[] = [
   {
     slug: 'arquitectura-informacion',
+    collection: 'methodology',
+    darkThumb: true,
     eyebrow: {
       es: 'PRODUCTO · ARQUITECTURA DE LA INFORMACIÓN',
       en: 'PRODUCT · INFORMATION ARCHITECTURE',
@@ -41,31 +64,35 @@ const POSTS: BlogPost[] = [
       es: 'Puedes modernizar los componentes y seguir sin tener una plataforma moderna. Por qué el flujo del Wealth Planner refleja cómo se construye un plan — y no cómo lo usan los asesores.',
       en: 'You can modernize the components and still not have a modern platform. Why the Wealth Planner\'s flow reflects how a plan gets built — not how advisors use it.',
     },
-    thumb: 'talk',
+    thumb: 'ia',
   },
   {
     slug: 'brand-and-personas',
+    collection: 'methodology',
+    darkThumb: true,
     eyebrow: {
       es: 'ESTRATEGIA · MARCA',
       en: 'STRATEGY · BRAND',
     },
     title: {
-      es: 'Marca y personas: la base que el moodboard no puede inventar',
-      en: 'Brand and personas: what the moodboard can\'t make up',
+      es: 'Estrategia de marca: la base que el moodboard no puede inventar',
+      en: 'Brand strategy: what the moodboard can\'t make up',
     },
     date: {
       es: '25 junio 2026',
       en: 'June 25, 2026',
     },
     intro: {
-      es: 'Antes de abrir Figma, el brief: seis campos de marca y cinco personas. Por qué los demos en código nos dejan enseñar casos de uso de verdad, no sólo pantallas.',
-      en: 'Before opening Figma, the brief: six brand fields and five personas. Why code-based demos let us show real use cases, not just screens.',
+      es: 'Antes de abrir Figma, el brief: seis campos de marca que hoy guían los simuladores y la nueva identidad. Por qué los demos en código nos dejan enseñar casos de uso de verdad, no sólo pantallas.',
+      en: 'Before opening Figma, the brief: six brand fields that now steer the simulators and the new identity. Why code-based demos let us show real use cases, not just screens.',
     },
     thumb: 'video',
     videoSrc: 'assets/thumbnails/brand-and-personas.mp4',
   },
   {
     slug: 'ui-moderno-2026',
+    collection: 'methodology',
+    darkThumb: true,
     eyebrow: {
       es: 'INVESTIGACIÓN · UI 2026',
       en: 'RESEARCH · UI 2026',
@@ -83,11 +110,15 @@ const POSTS: BlogPost[] = [
       en: 'The brief said "modern"; we went looking for what that means. Turning an adjective into a definition: how interfaces look, how they behave, what holds them together — and five commitments you can hold us to.',
     },
     thumb: 'video',
-    videoSrc: 'assets/thumbnails/ui-moderno-2026.mp4',
-    videoPoster: 'assets/thumbnails/ui-moderno-2026-poster.jpg',
+    // Language-specific renders of the Modern UI graphic (July 2026 upload).
+    videoSrc: {
+      es: 'assets/thumbnails/ui-moderno-2026-es.mp4',
+      en: 'assets/thumbnails/ui-moderno-2026-en.mp4',
+    },
   },
   {
     slug: 'wealth-planner-2026',
+    collection: 'blog',
     eyebrow: {
       es: 'DEMO · DIGITAL SOLUTIONS',
       en: 'DEMO · DIGITAL SOLUTIONS',
@@ -121,6 +152,7 @@ interface ViewPost {
   videoSrc?: string;
   videoPoster?: string;
   to?: string;
+  darkThumb?: boolean;
 }
 
 @Component({
@@ -133,10 +165,34 @@ interface ViewPost {
 })
 export class BlogLandingPage {
   private readonly language = inject(LanguageService);
+  private readonly route = inject(ActivatedRoute);
   readonly lang = this.language.lang;
+
+  /**
+   * The landing this instance renders. Set via route `data.collection`
+   * (/metodologia → 'methodology'); defaults to 'blog'. One component, two
+   * surfaces — filtered from the shared POSTS list.
+   */
+  private readonly collection = toSignal(
+    this.route.data.pipe(map((d) => (d['collection'] as Collection) ?? 'blog')),
+    { initialValue: 'blog' as Collection },
+  );
+
+  /** Methodology renders the centered Design-at-Afi hero instead of the blog header. */
+  readonly isMethodology = computed(() => this.collection() === 'methodology');
 
   readonly headerCopy = computed(() => {
     const isEn = this.lang() === 'en';
+    if (this.collection() === 'methodology') {
+      // Design at Afi hero — Figma AFI-FOUNDATIONS-MODERN 2975:9948.
+      return {
+        eyebrow: '',
+        title: isEn ? 'Documenting our new era' : 'Documentamos nuestra nueva era',
+        intro: isEn
+          ? 'We\'re entering a new chapter of technology, where design is what sets you apart. This is how the Afi design team works now, documented as it happens.'
+          : 'Entramos en un nuevo capítulo de la tecnología, en el que el diseño es lo que marca la diferencia. Así trabaja ahora el equipo de diseño de Afi, documentado en tiempo real.',
+      };
+    }
     return {
       eyebrow: isEn ? 'BLOG' : 'BLOG',
       title: isEn ? 'Notes from the DS' : 'Notas del DS',
@@ -148,16 +204,18 @@ export class BlogLandingPage {
 
   readonly posts = computed<ViewPost[]>(() => {
     const isEn = this.lang() === 'en';
-    return POSTS.map((p) => ({
+    const active = this.collection();
+    return POSTS.filter((p) => p.collection === active).map((p) => ({
       slug: p.slug,
       eyebrow: isEn ? p.eyebrow.en : p.eyebrow.es,
       title: isEn ? p.title.en : p.title.es,
       date: isEn ? p.date.en : p.date.es,
       intro: isEn ? p.intro.en : p.intro.es,
       thumb: p.thumb,
-      videoSrc: p.videoSrc,
+      videoSrc: typeof p.videoSrc === 'string' ? p.videoSrc : p.videoSrc?.[isEn ? 'en' : 'es'],
       videoPoster: p.videoPoster,
       to: p.to,
+      darkThumb: p.darkThumb,
     }));
   });
 

@@ -1,0 +1,26 @@
+@if (href(); as h) {
+  <a
+    [href]="disabled() ? null : h"
+    [class]="classes()"
+    [attr.aria-current]="selected() ? 'page' : null"
+    [attr.aria-disabled]="disabled() ? 'true' : null"
+    [attr.tabindex]="disabled() ? -1 : null"
+    (click)="onClick($event)"
+  >
+    <span class="afi-navbar-item-v2__label">{{ label() }}</span>
+    <!-- Bold-width reserve: invisible duplicate at the selected weight so
+         toggling selection never shifts neighbouring items. -->
+    <span class="afi-navbar-item-v2__reserve" aria-hidden="true">{{ label() }}</span>
+  </a>
+} @else {
+  <button
+    type="button"
+    [class]="classes()"
+    [disabled]="disabled()"
+    [attr.aria-current]="selected() ? 'page' : null"
+    (click)="onClick($event)"
+  >
+    <span class="afi-navbar-item-v2__label">{{ label() }}</span>
+    <span class="afi-navbar-item-v2__reserve" aria-hidden="true">{{ label() }}</span>
+  </button>
+}

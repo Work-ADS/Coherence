@@ -1,143 +1,59 @@
 <div class="shell">
 
-  <!-- Sidebar: logo + section nav (hidden on fullscreen/homepage).
-       Renders different children based on activeSection() so each section
-       gets its own contextual navigation tree. Components/Patterns is the
-       @default to preserve existing behavior on /componentes + /patrones
-       + /recursos. -->
-  @if (showSidebar()) {
-    <afi-sidebar mode="static" ariaLabel="Section navigation">
-      <div slot="top">
-        <coherence-logo variant="color" size="sm" href="/" />
-      </div>
-
-      @switch (activeSection()) {
-        @case ('fundamentos') {
-          <afi-nav-section label="Foundations" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
-            <afi-nav-item label="Color" [showIcon]="false" [active]="isActive('/fundamentos/color')" (clicked)="navigate('/fundamentos/color')" />
-            <afi-nav-item label="Typography" [showIcon]="false" [active]="isActive('/fundamentos/tipografia')" (clicked)="navigate('/fundamentos/tipografia')" />
-            <afi-nav-item label="Space" [showIcon]="false" [active]="isActive('/fundamentos/espacio')" (clicked)="navigate('/fundamentos/espacio')" />
-            <afi-nav-item label="Motion" [showIcon]="false" [active]="isActive('/fundamentos/movimiento')" (clicked)="navigate('/fundamentos/movimiento')" />
-            <afi-nav-item label="Accessibility" [showIcon]="false" [active]="isActive('/fundamentos/accesibilidad')" (clicked)="navigate('/fundamentos/accesibilidad')" />
-            <afi-nav-item label="Logo" [showIcon]="false" [active]="isActive('/fundamentos/logo')" (clicked)="navigate('/fundamentos/logo')" />
-          </afi-nav-section>
-        }
-
-        @case ('demos') {
-          <afi-nav-section label="AFI demos" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
-            <afi-nav-item label="Wealth Planner 2026" [showIcon]="false" [active]="isActive('/demos/wealth-planner-2026')" (clicked)="navigate('/demos/wealth-planner-2026')" />
-            <afi-nav-item label="AFI Wealth Manager" [showIcon]="false" [active]="isActive('/demos/awm')" (clicked)="navigate('/demos/awm')" />
-          </afi-nav-section>
-          <afi-nav-section label="Sarevi" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
-            <afi-nav-item label="Laboral Kutxa" [showIcon]="false" [active]="isActive('/demos/laboral-kutxa-sarevi')" (clicked)="navigate('/demos/laboral-kutxa-sarevi')" />
-            <afi-nav-item label="Unicaja" [showIcon]="false" [active]="isActive('/demos/sarevi-unicaja')" (clicked)="navigate('/demos/sarevi-unicaja')" />
-            <afi-nav-item label="Banco Cooperativo" [showIcon]="false" [active]="isActive('/demos/sarevi-banco-cooperativo')" (clicked)="navigate('/demos/sarevi-banco-cooperativo')" />
-          </afi-nav-section>
-        }
-
-        @case ('patrones') {
-          <!-- Patterns — composition / layout / UX patterns. All entries must
-               resolve to a /patrones/* URL so the section context stays on
-               Patterns. Components-side primitive docs are linked from the
-               pattern page itself, not from the sidebar. -->
-          <afi-nav-section label="Patterns" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
-            <afi-nav-item label="Charts" [showIcon]="false" [active]="isActive('/patrones/graficos')" (clicked)="navigate('/patrones/graficos')" />
-            <afi-nav-item label="Sidebar" [showIcon]="false" [active]="isActive('/patrones/sidebar-ia-comparison')" (clicked)="navigate('/patrones/sidebar-ia-comparison')" />
-
-            <!-- Header — expandable group of cabecera patterns -->
-            <afi-nav-section label="Header" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
-              <afi-nav-item label="Page header" [showIcon]="false" [active]="isActive('/patrones/cabeceras/cabecera-de-pagina')" (clicked)="navigate('/patrones/cabeceras/cabecera-de-pagina')" />
-              <afi-nav-item label="Section header" [showIcon]="false" [active]="isActive('/patrones/cabeceras/cabecera-de-seccion')" (clicked)="navigate('/patrones/cabeceras/cabecera-de-seccion')" />
-              <afi-nav-item label="Top bar" [showIcon]="false" [active]="isActive('/patrones/cabeceras/top-bar')" (clicked)="navigate('/patrones/cabeceras/top-bar')" />
-              <afi-nav-item label="Top nav" [showIcon]="false" [active]="isActive('/patrones/cabeceras/top-nav')" (clicked)="navigate('/patrones/cabeceras/top-nav')" />
-            </afi-nav-section>
-
-            <afi-nav-item label="Modal" [showIcon]="false" [active]="isActive('/patrones/dialog-decisiones')" (clicked)="navigate('/patrones/dialog-decisiones')" />
-            <afi-nav-item label="Shell" [showIcon]="false" [active]="isActive('/patrones/shells')" (clicked)="navigate('/patrones/shells')" />
-            <afi-nav-item label="Table" [showIcon]="false" [active]="isActive('/patrones/tablas')" (clicked)="navigate('/patrones/tablas')" />
-          </afi-nav-section>
-        }
-
-        @default {
-          <!-- Components — primitives only. Composition / layout / UX
-               patterns (sidebar, modal, drawer, page header, nav section,
-               charts, headers) live exclusively under Patterns. -->
-          <afi-nav-section label="Components" [defaultExpanded]="true" [showTreeLines]="true" chevronPosition="right">
-            <afi-nav-item label="Avatar" [showIcon]="false" [active]="isActive('/componentes/avatar')" (clicked)="navigate('/componentes/avatar')" />
-            <afi-nav-item label="Badge" [showIcon]="false" [active]="isActive('/componentes/badge')" (clicked)="navigate('/componentes/badge')" />
-            <afi-nav-item label="Button" [showIcon]="false" [active]="isActive('/componentes/button')" (clicked)="navigate('/componentes/button')" />
-            <afi-nav-item label="Card" [showIcon]="false" [active]="isActive('/componentes/card')" (clicked)="navigate('/componentes/card')" />
-            <afi-nav-item label="Checkbox" [showIcon]="false" [active]="isActive('/componentes/checkbox')" (clicked)="navigate('/componentes/checkbox')" />
-            <afi-nav-item label="Dropdown Panel" [showIcon]="false" [active]="isActive('/componentes/dropdown-panel')" (clicked)="navigate('/componentes/dropdown-panel')" />
-            <afi-nav-item label="Filter Chip" [showIcon]="false" [active]="isActive('/componentes/filter-chip')" (clicked)="navigate('/componentes/filter-chip')" />
-            <afi-nav-item label="Icon Button" [showIcon]="false" [active]="isActive('/componentes/icon-button')" (clicked)="navigate('/componentes/icon-button')" />
-            <afi-nav-item label="Inline Edit" [showIcon]="false" [active]="isActive('/componentes/inline-edit')" (clicked)="navigate('/componentes/inline-edit')" />
-            <afi-nav-item label="Input" [showIcon]="false" [active]="isActive('/componentes/input')" (clicked)="navigate('/componentes/input')" />
-            <afi-nav-item label="Kbd" [showIcon]="false" [active]="isActive('/componentes/kbd')" (clicked)="navigate('/componentes/kbd')" />
-            <afi-nav-item label="Loading Overlay" [showIcon]="false" [active]="isActive('/componentes/loading-overlay')" (clicked)="navigate('/componentes/loading-overlay')" />
-            <afi-nav-item label="Menu" [showIcon]="false" [active]="isActive('/componentes/menu')" (clicked)="navigate('/componentes/menu')" />
-            <afi-nav-item label="Nav Item" [showIcon]="false" [active]="isActive('/componentes/nav-item')" (clicked)="navigate('/componentes/nav-item')" />
-            <afi-nav-item label="Radio Group" [showIcon]="false" [active]="isActive('/componentes/radio-group')" (clicked)="navigate('/componentes/radio-group')" />
-            <afi-nav-item label="Segmented Control" [showIcon]="false" [active]="isActive('/componentes/segmented-control')" (clicked)="navigate('/componentes/segmented-control')" />
-            <afi-nav-item label="Select" [showIcon]="false" [active]="isActive('/componentes/select')" (clicked)="navigate('/componentes/select')" />
-            <afi-nav-item label="Status Chip" [showIcon]="false" [active]="isActive('/componentes/status-chip')" (clicked)="navigate('/componentes/status-chip')" />
-            <afi-nav-item label="Switch" [showIcon]="false" [active]="isActive('/componentes/switch')" (clicked)="navigate('/componentes/switch')" />
-            <afi-nav-item label="Tabs" [showIcon]="false" [active]="isActive('/componentes/tabs')" (clicked)="navigate('/componentes/tabs')" />
-            <afi-nav-item label="Toast" [showIcon]="false" [active]="isActive('/componentes/toast')" (clicked)="navigate('/componentes/toast')" />
-            <afi-nav-item label="Tooltip" [showIcon]="false" [active]="isActive('/componentes/tooltip')" (clicked)="navigate('/componentes/tooltip')" />
-          </afi-nav-section>
-        }
-      }
-    </afi-sidebar>
-  }
-
-  <!-- Right column: top bar + content -->
+  <!-- Single-column shell — the old contextual section sidebar was retired
+       2026-07-21 with the new nav bar; every route navigates from the glass
+       top bar alone. Section routes (/componentes, /patrones, /fundamentos)
+       stay reachable by URL, just without their old sidebar trees. -->
   <div class="main-column">
 
     <!-- Top bar — hidden on demo / insights routes (they bring their own chrome).
          On the homepage we render the bar with only the right-side controls
          (no nav links) so language/brand/theme stay reachable from the hero. -->
     @if (!isFullScreenRoute()) {
-      <afi-top-bar>
+      <!-- .on-dark: adaptive contrast — flips the bar to the inverse palette
+           while content tagged data-nav-tone="dark" scrolls behind the frost. -->
+      <afi-top-bar variant="glass" [class.on-dark]="navOnDark()">
         @if (!isHomepage()) {
-          <nav slot="start" class="top-nav" aria-label="Main navigation">
-            <a routerLink="/fundamentos" routerLinkActive="active" class="top-nav__link">
-              {{ lang() === 'es' ? 'Fundamentos' : 'Foundations' }}
-            </a>
-            <a routerLink="/componentes" routerLinkActive="active" class="top-nav__link">
-              {{ lang() === 'es' ? 'Componentes' : 'Components' }}
-            </a>
-            <a routerLink="/patrones" routerLinkActive="active" class="top-nav__link">
-              {{ lang() === 'es' ? 'Patrones' : 'Patterns' }}
-            </a>
-            <a routerLink="/demos" routerLinkActive="active" class="top-nav__link">
-              {{ lang() === 'es' ? 'Demos' : 'Demos' }}
-            </a>
-            <a routerLink="/blog" routerLinkActive="active" class="top-nav__link">
-              {{ lang() === 'es' ? 'Blog' : 'Blog' }}
-            </a>
-          </nav>
+          <!-- Nav bar — Figma AFI-FOUNDATIONS-MODERN 2974:5945. Logo (→home)
+               left, menu items centered, language toggle right; the bar opts
+               into the modern foundation (IBM Plex + v2 tokens) via
+               data-foundation="modern". Fundamentos / Componentes / Patrones
+               stay off the bar while the v2 primitives are in flight (routes
+               remain live). Labels match the Figma; 'Example' is a provisional
+               link to the demos index until the dashboard examples are defined. -->
+          <div slot="start" class="site-nav" data-foundation="modern">
+            <coherence-logo [variant]="navOnDark() ? 'monochrome' : 'color'" size="sm" href="/" />
+            <nav class="site-nav__menu" aria-label="Main navigation">
+              <afi-navbar-item-v2
+                label="Design at Afi"
+                [selected]="isActive('/metodologia')"
+                (selectedChange)="navigate('/metodologia')" />
+              <afi-navbar-item-v2
+                label="Workbench"
+                [selected]="isActive('/workbench')"
+                (selectedChange)="navigate('/workbench')" />
+              <afi-navbar-item-v2
+                label="Example"
+                [selected]="isActive('/demos')"
+                (selectedChange)="navigate('/demos')" />
+            </nav>
+          </div>
         }
 
-        <div slot="end" class="top-bar__end">
+        <div slot="end" class="top-bar__end" data-foundation="modern">
           <site-language-toggle />
           <!--
-            <site-brand-picker /> hidden 2026-05-26 — exposing brand swapping
-            at the top of every page feels off for client-facing demos. Each
-            branded demo (e.g. Laboral Kutxa Sarevi) already scopes its
-            brand locally via `data-brand="…"` on the demo root, so the
-            user enters a brand experience by navigating to the demo URL
-            rather than picking a brand globally.
-            Restore by uncommenting this line + the matching import +
-            `imports` entry in app.ts.
+            <site-brand-picker /> hidden 2026-05-26 and <site-theme-toggle />
+            hidden 2026-07-21 (modern foundation is light-only). Restore either
+            by re-adding the element here plus its import + `imports` entry in
+            app.ts.
           -->
-          <site-theme-toggle />
         </div>
       </afi-top-bar>
     }
 
     <!-- Main content -->
-    <main class="content" id="main-content">
+    <main class="content" [class.content--offset]="!isFullScreenRoute()" id="main-content">
       <router-outlet />
     </main>
   </div>

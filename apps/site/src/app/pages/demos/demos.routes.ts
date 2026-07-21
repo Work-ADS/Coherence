@@ -5,14 +5,8 @@ export const demos_routes: Routes = [
     path: '',
     loadComponent: () => import('./demos.landing').then((m) => m.DemosLandingPage),
   },
-  // Identity v2 — foundations-modern workbench (button/input v2 proving ground)
-  {
-    path: 'foundations-modern/workbench',
-    loadComponent: () =>
-      import('./foundations-modern-workbench/foundations-modern-workbench.page').then(
-        (m) => m.FoundationsModernWorkbenchPage,
-      ),
-  },
+  // Identity v2 workbench moved to top-level /workbench (nav destination);
+  // the old /demos/foundations-modern/workbench URL redirects in app.routes.ts.
   // Nueva simulación · Overview — goal-driven client dashboard (concept surface)
   {
     path: 'nueva-simulacion-overview',

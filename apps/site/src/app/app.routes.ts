@@ -1,11 +1,10 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  {
-    path: '',
-    pathMatch: 'full',
-    loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage),
-  },
+  // Home = Design at Afi (the methodology landing) for now. The old hero
+  // (pages/home) stays in the tree, just unrouted — restore by swapping this
+  // redirect back to its loadComponent.
+  { path: '', pathMatch: 'full', redirectTo: '/metodologia' },
   {
     path: 'fundamentos',
     loadChildren: () =>
@@ -33,6 +32,23 @@ export const routes: Routes = [
     path: 'blog',
     loadChildren: () => import('./pages/blog/blog.routes').then((m) => m.blog_routes),
   },
+  // Methodology — the redesign-series narrative. Reuses BlogLandingPage,
+  // filtered to the 'methodology' collection via route data.
+  {
+    path: 'metodologia',
+    loadComponent: () =>
+      import('./pages/blog/blog.landing').then((m) => m.BlogLandingPage),
+    data: { collection: 'methodology' },
+  },
+  // Workbench — first-class nav destination (previously a demo route).
+  {
+    path: 'workbench',
+    loadComponent: () =>
+      import('./pages/demos/foundations-modern-workbench/foundations-modern-workbench.page').then(
+        (m) => m.FoundationsModernWorkbenchPage,
+      ),
+  },
+  { path: 'demos/foundations-modern/workbench', redirectTo: '/workbench' },
   {
     path: 'demos',
     loadChildren: () =>

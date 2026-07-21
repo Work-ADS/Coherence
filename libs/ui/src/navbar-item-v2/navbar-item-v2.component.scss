@@ -1,0 +1,70 @@
+// afi-navbar-item-v2 — identity v2 (foundations-modern tokens only).
+//
+// One horizontal nav-bar destination. States are typographic (Figma nav item
+// 2974:9905): default Medium `content/tertiary` → hover `content/primary` →
+// selected Bold `content/primary`; disabled `disabled/content`. No pill or
+// fill — the focus ring is the only drawn box, per the DS focus convention.
+
+:host {
+  display: inline-flex;
+}
+
+.afi-navbar-item-v2 {
+  display: inline-grid;
+  align-items: center;
+  block-size: var(--navigation-sidebar-item-height);
+  padding-inline: var(--pad-control-md);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--content-tertiary);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--dimension-4);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &:hover:not(.afi-navbar-item-v2--disabled) {
+    color: var(--content-primary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--stroke-focus) var(--borders-focus);
+  }
+
+  // Selected — bold, primary tone. Width is already reserved by __reserve.
+  &--selected {
+    color: var(--content-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  &--disabled {
+    color: var(--content-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// Label + reserve stack in the same grid cell: the invisible bold duplicate
+// fixes the width at the selected weight, so weight changes never reflow.
+.afi-navbar-item-v2__label,
+.afi-navbar-item-v2__reserve {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+
+.afi-navbar-item-v2__reserve {
+  visibility: hidden;
+  font-weight: var(--font-weight-bold);
+}
+
+// reduced-motion-collapse (motion-skill §4.6): drop the hover transition.
+@media (prefers-reduced-motion: reduce) {
+  .afi-navbar-item-v2 {
+    transition: none;
+  }
+}

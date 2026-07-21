@@ -12,6 +12,8 @@
 // Figma has no gradient/effect-style layers, so there is no hand-authored
 // component-toggle.scss — every value below resolves to an existing token.
 
+@use '../styles/focus-ring' as *;
+
 :host {
   display: inline-block;
 }
@@ -64,8 +66,7 @@
   // never transitioned. NB: Figma draws a gap ring on the toggle; Figma should
   // be updated to match this single-ring treatment.
   &:focus-visible {
-    outline: var(--stroke-focus) solid var(--borders-focus);
-    outline-offset: var(--dimension-0);
+    @include focus-ring-v2;
   }
 
   &--on {
@@ -86,19 +87,32 @@
 // ── Thumb — the only element with a shadow; slides via transform for the ────
 // 150ms animation the Figma static variants only imply.
 .afi-toggle-v2__thumb {
+  // Travel lives in a private var so the press squish below can compose with
+  // the slide regardless of which end the thumb sits at.
+  // travel = track width − inset both sides − thumb width (36 − 4 − 16 = 16)
+  --_travel: var(--dimension-0);
   inline-size: var(--size-toggle-thumb);
   block-size: var(--size-toggle-thumb);
   border-radius: var(--radius-full);
   background: var(--background-canvas);
   box-shadow: var(--elevation-1);
-  transform: translateX(0);
-  transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
+  transform: translateX(var(--_travel));
+  // Spring slide — the overshoot carries the thumb a hair past its endpoint into
+  // the track wall before settling, reading as a physical "thunk" (motion-skill
+  // §4.8 easing; trial per checkbox/radio family retune — revert to
+  // --motion-easing-standard if it reads as a glitch).
+  transition: transform var(--motion-duration-fast) var(--motion-easing-spring);
 
-  // travel = track width − inset both sides − thumb width (36 − 4 − 16 = 16)
   .afi-toggle-v2__track--on & {
-    transform: translateX(
-      calc(var(--width-toggle) - 2 * var(--pad-toggle-track) - var(--size-toggle-thumb))
-    );
+    --_travel: calc(var(--width-toggle) - 2 * var(--pad-toggle-track) - var(--size-toggle-thumb));
+  }
+
+  // Press squish — height-only: the thumb flattens under the finger while its
+  // width holds (Fluid Functionalism switch recipe), springing back to a full
+  // circle on release. Composes with the slide via --_travel so pressing works
+  // at either end of the track.
+  .afi-toggle-v2__track:active:not(:disabled) & {
+    transform: translateX(var(--_travel)) scaleY(0.8);
   }
 
   // Disabled flattens the thumb shadow to Elevation/0 (transparent).
@@ -113,5 +127,10 @@
   .afi-toggle-v2__track,
   .afi-toggle-v2__thumb {
     transition: none;
+  }
+
+  // Drop the press squish — a deformation with no transition would just snap.
+  .afi-toggle-v2__track:active .afi-toggle-v2__thumb {
+    transform: translateX(var(--_travel));
   }
 }

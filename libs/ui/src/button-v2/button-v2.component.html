@@ -9,12 +9,12 @@
   [attr.aria-controls]="ariaControls()"
   (click)="onClick($event)"
 >
-  <ng-content select="[slot=iconStart]" />
+  <span class="btn-v2__icon"><ng-content select="[slot=iconStart]" /></span>
   @if (loading()) {
     <span class="btn-v2__spinner" aria-hidden="true"></span>
     <span class="btn-v2__sr-only">Cargando…</span>
   } @else {
     <span class="btn-v2__label"><ng-content /></span>
   }
-  <ng-content select="[slot=iconEnd]" />
+  <span class="btn-v2__icon"><ng-content select="[slot=iconEnd]" /></span>
 </button>

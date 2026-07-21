@@ -1,0 +1,171 @@
+// afi-radio-v2 — identity v2 (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Radio set (2956:5911).
+// Fixed 16×16 ring; Selected ×2 × State ×5 resolve entirely from tokens, so there
+// is no hand-authored value here.
+//
+// Anatomy: hidden native input + ring (left) + label (right) inside a hit-area row.
+//   .__input = visually-hidden real radio; owns focus + keyboard + form state.
+//   .__ring  = circular control (size-radio); the only stateful surface (fill +
+//              border + focus ring). Border-box so the resting hairline never
+//              shifts the filled state's geometry.
+//   .__dot   = inner disc (size-radio-dot) in content-inverse (white) on the brand
+//              fill, content-disabled when disabled; spring-scales in on select.
+//
+// Per-state fill (verified per-variant in Figma):
+//   Unselected — fill control-background-{default|hover|active} tracks the pointer
+//     state; the checkbox keeps a static canvas fill, the radio does not.
+//   Selected   — fill + border are the brand background (default/hover/pressed).
+//   Disabled   — flat disabled-background + borders-disabled either way.
+
+@use '../styles/focus-ring' as *;
+
+:host {
+  display: inline-block;
+}
+
+.afi-radio-v2 {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-label);
+  min-block-size: var(--height-component-md);
+  font-family: var(--font-family-primary);
+  cursor: pointer;
+
+  &--disabled {
+    cursor: not-allowed;
+  }
+}
+
+// ── Input — visually hidden, but kept focusable so :focus-visible drives the ──
+// ring's focus ring. Absolutely positioned out of flow; the ring becomes the first
+// in-flow sibling while remaining the adjacent DOM sibling for the ring selector.
+.afi-radio-v2__input {
+  position: absolute;
+  inline-size: var(--size-radio);
+  block-size: var(--size-radio);
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+// ── Ring — the only stateful surface: fill, border, focus ring ───────────────
+.afi-radio-v2__ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  inline-size: var(--size-radio);
+  block-size: var(--size-radio);
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-full);
+  background: var(--control-background-default);
+  transition:
+    background-color var(--motion-duration-slower) var(--motion-easing-standard),
+    border-color var(--motion-duration-slower) var(--motion-easing-standard),
+    transform var(--motion-duration-base) var(--motion-easing-spring);
+
+  // Hover grow + press squish (motion-skill §4.8, Animate UI values shared with
+  // checkbox-v2) — the ring swells to 1.05 under the pointer, dips to 0.95 while
+  // pressed, and springs back on release (the overshoot in --motion-easing-spring
+  // is the bounce). The row's :hover/:active drive both, so pressing anywhere on
+  // the row (ring or label) gives the same tactile feedback. Press rule sits
+  // after hover at equal specificity so :active wins while both apply.
+  .afi-radio-v2:hover:not(.afi-radio-v2--disabled) & {
+    transform: scale(1.05);
+  }
+
+  .afi-radio-v2:active:not(.afi-radio-v2--disabled) & {
+    transform: scale(0.95);
+  }
+
+  // Selected — filled brand circle, border folds into the fill.
+  &--selected {
+    border-color: var(--brand-background-default);
+    background: var(--brand-background-default);
+  }
+
+  // Hover (pointer over the whole row) — only on an enabled control.
+  .afi-radio-v2:hover:not(.afi-radio-v2--disabled) & {
+    border-color: var(--borders-hover);
+    background: var(--control-background-hover);
+  }
+
+  .afi-radio-v2:hover:not(.afi-radio-v2--disabled) &--selected {
+    border-color: var(--brand-background-hover);
+    background: var(--brand-background-hover);
+  }
+
+  // Pressed — the empty ring deepens a step; the selected ring goes to the brand
+  // pressed tone. Sits alongside the squish transform above.
+  .afi-radio-v2:active:not(.afi-radio-v2--disabled) & {
+    border-color: var(--borders-hover);
+    background: var(--control-background-active);
+  }
+
+  .afi-radio-v2:active:not(.afi-radio-v2--disabled) &--selected {
+    border-color: var(--brand-background-pressed);
+    background: var(--brand-background-pressed);
+  }
+
+  // Single focus ring, identical to button-v2 / checkbox-v2 — one focus look
+  // across the system. focus-ring pattern (motion-skill §4.3): instant, never
+  // transitioned.
+  .afi-radio-v2__input:focus-visible + & {
+    @include focus-ring-v2;
+  }
+
+  // Disabled — flat disabled fill for both empty and selected; the dot drops to
+  // content-disabled so it still reads on the light fill.
+  .afi-radio-v2--disabled & {
+    border-color: var(--borders-disabled);
+    background: var(--disabled-background);
+  }
+}
+
+// ── Inner dot — the selection mark; spring-scales in (motion-skill §4.8) ──────
+.afi-radio-v2__dot {
+  inline-size: var(--size-radio-dot);
+  block-size: var(--size-radio-dot);
+  border-radius: var(--radius-full);
+  background: var(--content-inverse);
+  transform: scale(0);
+  transition: transform var(--motion-duration-base) var(--motion-easing-spring);
+
+  &--visible {
+    transform: scale(1);
+  }
+
+  .afi-radio-v2--disabled &--visible {
+    background: var(--content-disabled);
+  }
+}
+
+.afi-radio-v2__label {
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  color: var(--content-primary);
+
+  .afi-radio-v2--disabled & {
+    color: var(--content-disabled);
+  }
+}
+
+// Reduced motion: selection still reads instantly — the dot's presence and the
+// fill communicate state, the transition is only easing, so dropping it loses
+// nothing.
+@media (prefers-reduced-motion: reduce) {
+  .afi-radio-v2__ring,
+  .afi-radio-v2__dot {
+    transition: none;
+  }
+
+  // Drop the hover grow and press squish entirely — a spatial move with no
+  // transition would just snap, which is worse than not moving.
+  .afi-radio-v2:hover .afi-radio-v2__ring,
+  .afi-radio-v2:active .afi-radio-v2__ring {
+    transform: none;
+  }
+}

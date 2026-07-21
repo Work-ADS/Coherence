@@ -263,6 +263,66 @@ State communication must still work — opacity-only fades stay; spatial choreog
 
 ---
 
+### 4.8 `press-squish`
+
+**When** — a small interactive control that should feel physically pressable: the control dips smaller while the pointer is actively pressing it, then springs back on release. Checkboxes, radios, and other compact form controls where a press deserves tactile feedback. **Not** for large surfaces (a drawer or modal does not squish) and not a substitute for `hover-tint` — this is the *press* moment specifically.
+
+**Properties** — `transform: scale()` only. The element scales down (`0.95`, per the Animate UI checkbox recipe) while `:active` and returns to `1` on release. Optionally pair with a hover-grow companion (`scale(1.05)` on `:hover`, press rule after hover at equal specificity so `:active` wins) for the full Animate UI feel. No position change — the control never leaves its box; the spring's overshoot briefly carries scale a few percent past the resting size on the way back, which reads as the "bounce".
+
+**Tokens** — `var(--motion-duration-base) var(--motion-easing-spring)`. `--motion-easing-spring` (`cubic-bezier(0.34, 2, 0.64, 1)`) is the overshoot curve; **it exists only in the foundations-modern (v2) layer** — there is no legacy `libs/tokens/motion.scss` equivalent, so this pattern is v2-only for now. (Tuned a touch bouncier than the legacy `afi-checkbox` 1.56 curve for a feel distinctly separate from `--motion-easing-standard`.)
+
+```scss
+.control__box {
+  transition: transform var(--motion-duration-base) var(--motion-easing-spring);
+}
+
+// optional hover-grow companion — press rule sits after it at equal specificity so :active wins
+.control:hover:not(.control--disabled) .control__box {
+  transform: scale(1.05);
+}
+
+// drive from the row/label :active so pressing the label or the control both squish
+.control:active:not(.control--disabled) .control__box {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control:active .control__box { transform: none; } // drop the spatial move entirely
+}
+```
+
+**Reduced motion** — remove the transform outright. A scale with no transition would snap-jump, which is worse than staying still; state is already communicated by fill/border.
+
+**Taste note** — the overshoot is the first bouncy easing in the v2 family (button-v2 / toggle-v2 use `--motion-easing-standard`, no overshoot). It's a deliberately playful-but-contained micro-interaction; if a surface wants the calmer house feel instead, use `--motion-easing-standard` on the same `transform` and drop the bounce.
+
+**Currently used in** — [checkbox-v2](../../libs/ui/src/checkbox-v2/checkbox-v2.component.scss) (press-squish on the box; ported from the legacy `afi-checkbox`, where the rule existed but was never wired to a pressed state), [radio-v2](../../libs/ui/src/radio-v2/radio-v2.component.scss) (press-squish on the ring).
+
+---
+
+### 4.9 `control-fill-fade`
+
+**When** — a small selection control (checkbox, radio) transitioning between its empty and filled states. The brand fill crossfades in/out slowly enough to read as a soft "bloom" rather than an instant flip — the Animate UI checkbox signature. Pairs with `press-squish` (§4.8) and, on checkbox/radio, the icon draw-in.
+
+**Properties** — `background-color` + `border-color` only. Deliberately the *slowest* colour transition in the system; never applied to hover-only tints (those stay on `--duration-fast`, `hover-tint` §4.1) — this is the *selected-state* crossfade specifically.
+
+**Tokens** — `var(--motion-duration-slower) var(--motion-easing-standard)`. `--motion-duration-slower` (500ms) exists only in the foundations-modern (v2) layer; it matches animate-ui's exact 500ms fill fade.
+
+```scss
+.control__box {
+  transition:
+    background-color var(--motion-duration-slower) var(--motion-easing-standard),
+    border-color var(--motion-duration-slower) var(--motion-easing-standard);
+
+  &--active { background: var(--brand-background-default); border-color: var(--brand-background-default); }
+}
+```
+
+**Reduced motion** — drop the transition (`transition: none`); the fill still changes instantly, and colour alone communicates the state.
+
+**Currently used in** — [checkbox-v2](../../libs/ui/src/checkbox-v2/checkbox-v2.component.scss), [radio-v2](../../libs/ui/src/radio-v2/radio-v2.component.scss).
+
+---
+
 ## 5. How to use this catalog
 
 1. **Designing a new primitive's motion** — open this file. If a pattern matches, copy the snippet, reference the section number in your build prompt.
@@ -295,5 +355,8 @@ These are not blockers for the catalog — they ARE the catalog's first targets.
 
 ## 8. Changelog
 
+- **2026-07-21 (later still)** — toggle-v2 joined the press-feedback family with two variations: the thumb slide moved to `--motion-easing-spring` (overshoot "thunk" into the track wall), and press-down flattens the thumb height-only (`scaleY(0.8)`, width holds — Fluid Functionalism switch recipe) composed with the slide via a `--_travel` var. If a third primitive wants the height-only squish, promote it to a named §4 pattern.
+- **2026-07-21 (later)** — `press-squish` retuned to the Animate UI checkbox recipe: press dips to `0.95` (was `0.9`) with an optional `1.05` hover-grow companion; checkbox-v2 also gained the delayed check draw (fill lands first, check draws one `--motion-duration-base` beat later, opacity fade riding along) and a `--motion-duration-slower` (500ms) colour fade (see §4.9 `control-fill-fade`). Source: animate-ui.com base checkbox (whileHover 1.05 / whileTap 0.95 / pathLength draw at .2s + .2s delay).
+- **2026-07-21** — Added `press-squish` (§4.8): tactile press feedback — a control scales down while `:active` and springs back on release via the overshoot curve. Requires the foundations-modern `--motion-easing-spring` token (`cubic-bezier(0.34, 2, 0.64, 1)`), added to `tools/figma-sync/foundations-modern.json` → `primitive-motion.scss`. First consumer: `checkbox-v2`. First bouncy easing in the v2 family — taste note flags the alternative calm treatment.
 - **2026-07-17** — Added `stagger-reveal` (§4.7): staggered "blur-and-fade" entrance with three intensity tiers (light/normal/heavy). New tokens in `motion.scss` (`--duration-reveal-*`, `--reveal-stagger-*`, `--reveal-rise-*`, `--reveal-blur-*`). Un-parked from §7. Directive still pending a first consumer.
 - **2026-05-20** — V1 LOCKED. Six named patterns (`hover-tint`, `opacity-fade`, `focus-ring`, `slide-fade-enter`, `panel-slide`, `reduced-motion-collapse`). Token reference for `--duration-*` and `--easing-*` consolidated. Three known gaps + two token violations flagged.

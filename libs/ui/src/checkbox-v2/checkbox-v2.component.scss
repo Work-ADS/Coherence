@@ -12,6 +12,8 @@
 //   .__icon  = Lucide check / minus (icon-xs), drawn in content-inverse (white) on
 //              the brand fill, content-disabled when disabled.
 
+@use '../styles/focus-ring' as *;
+
 :host {
   display: inline-block;
 }
@@ -54,9 +56,27 @@
   border-radius: var(--radius-sm);
   background: var(--background-canvas);
   color: var(--content-inverse);
+  // Animate UI checkbox recipe (animate-ui.com base checkbox): slow colour
+  // fade on the fill (their exact 500ms — the long crossfade is what gives the
+  // fill its soft "bloom"), springy scale on hover/press.
   transition:
-    background-color var(--motion-duration-fast) var(--motion-easing-standard),
-    border-color var(--motion-duration-fast) var(--motion-easing-standard);
+    background-color var(--motion-duration-slower) var(--motion-easing-standard),
+    border-color var(--motion-duration-slower) var(--motion-easing-standard),
+    transform var(--motion-duration-base) var(--motion-easing-spring);
+
+  // Hover grow + press squish (Animate UI: whileHover 1.05 / whileTap 0.95) —
+  // the box swells slightly under the pointer and dips while pressed, springing
+  // back on release (the overshoot in --motion-easing-spring is the bounce).
+  // The label row's :hover/:active drive both, so pressing anywhere on the row
+  // (box or label) gives the same tactile feedback. Press rule sits after hover
+  // at equal specificity so :active wins while both apply.
+  .afi-checkbox-v2:hover:not(.afi-checkbox-v2--disabled) & {
+    transform: scale(1.05);
+  }
+
+  .afi-checkbox-v2:active:not(.afi-checkbox-v2--disabled) & {
+    transform: scale(0.95);
+  }
 
   // Checked / indeterminate — filled brand square, border folds into the fill.
   &--active {
@@ -79,8 +99,7 @@
   // transitioned. NB: Figma draws a gap ring; Figma should be updated to match
   // this single-ring treatment.
   .afi-checkbox-v2__input:focus-visible + & {
-    outline: var(--stroke-focus) solid var(--borders-focus);
-    outline-offset: var(--dimension-0);
+    @include focus-ring-v2;
   }
 
   // Disabled — flat disabled fill for both empty and filled; the check/dash
@@ -97,6 +116,44 @@
   block-size: var(--icon-xs);
 }
 
+// ── Icon draw-in — Animate UI checkbox recipe ────────────────────────────────
+// The stroke is hidden by offsetting a full-length dash (the CSS equivalent of
+// motion's pathLength 0→1) plus an opacity fade. On check, the draw waits one
+// beat (--motion-duration-base delay) so the brand fill lands first and the
+// check draws onto it — Animate UI's signature sequencing (duration .2s, delay
+// .2s). Unchecking reverses immediately, no delay. dasharray 16 ≈ the check
+// path's ~15.2 user-unit length; 8 = the dash path.
+.afi-checkbox-v2__check {
+  stroke-dasharray: 16;
+  stroke-dashoffset: 16;
+  opacity: 0;
+  transition:
+    stroke-dashoffset var(--motion-duration-base) var(--motion-easing-standard),
+    opacity var(--motion-duration-base) var(--motion-easing-standard);
+
+  &--visible {
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transition-delay: var(--motion-duration-base);
+  }
+}
+
+// Indeterminate dash: same draw + fade, no delay (Animate UI animates it in a
+// single .2s beat).
+.afi-checkbox-v2__dash {
+  stroke-dasharray: 8;
+  stroke-dashoffset: 8;
+  opacity: 0;
+  transition:
+    stroke-dashoffset var(--motion-duration-base) var(--motion-easing-standard),
+    opacity var(--motion-duration-base) var(--motion-easing-standard);
+
+  &--visible {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
 .afi-checkbox-v2__label {
   font-size: var(--type-body-small-size);
   font-weight: var(--type-body-small-weight);
@@ -111,7 +168,16 @@
 // Reduced motion: state still changes instantly — colour communicates the state,
 // the transition is only easing, so dropping it loses nothing.
 @media (prefers-reduced-motion: reduce) {
-  .afi-checkbox-v2__box {
+  .afi-checkbox-v2__box,
+  .afi-checkbox-v2__check,
+  .afi-checkbox-v2__dash {
     transition: none;
+  }
+
+  // Drop the hover grow and press squish entirely — a spatial move with no
+  // transition would just snap, which is worse than not moving.
+  .afi-checkbox-v2:hover .afi-checkbox-v2__box,
+  .afi-checkbox-v2:active .afi-checkbox-v2__box {
+    transform: none;
   }
 }

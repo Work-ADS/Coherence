@@ -426,6 +426,52 @@
       a Marcado—. Actívelo con clic o Espacio.
     </p>
 
+    <h2 class="workbench__group-title">Radio</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">
+        Selección única · 2 valores × 5 estados · tamaño fijo
+      </h3>
+      <div class="workbench__row workbench__row--toggles">
+        <afi-radio-group-v2 legend="Perfil de riesgo" [value]="'moderado'">
+          <afi-radio-v2 value="conservador" label="Conservador" />
+          <afi-radio-v2 value="moderado" label="Moderado" />
+          <afi-radio-v2 value="dinamico" label="Dinámico" />
+        </afi-radio-group-v2>
+
+        <afi-radio-group-v2 legend="Con opción deshabilitada" [value]="'a'">
+          <afi-radio-v2 value="a" label="Opción A" />
+          <afi-radio-v2 value="b" label="Opción B" />
+          <afi-radio-v2 value="c" label="Opción C (deshab.)" [disabled]="true" />
+        </afi-radio-group-v2>
+
+        <afi-radio-group-v2
+          legend="Grupo deshabilitado"
+          [value]="'x'"
+          [disabled]="true"
+        >
+          <afi-radio-v2 value="x" label="Opción X" />
+          <afi-radio-v2 value="y" label="Opción Y" />
+        </afi-radio-group-v2>
+
+        <afi-radio-group-v2
+          legend="En horizontal"
+          orientation="horizontal"
+          [value]="'si'"
+        >
+          <afi-radio-v2 value="si" label="Sí" />
+          <afi-radio-v2 value="no" label="No" />
+        </afi-radio-group-v2>
+      </div>
+    </section>
+    <p class="workbench__hint">
+      Control de formulario de selección única: el valor se recoge al Guardar, no se
+      aplica al instante. La etiqueta va a la derecha del aro y el punto interior entra
+      con un muelle al seleccionar. Tab entra en el grupo por la opción marcada; las
+      flechas mueven foco y selección entre opciones habilitadas (con vuelta al
+      principio) y Espacio selecciona. Las opciones deshabilitadas no reciben foco.
+    </p>
+
     <h2 class="workbench__group-title">Tag</h2>
 
     <section class="workbench__section">

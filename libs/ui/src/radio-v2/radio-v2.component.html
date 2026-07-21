@@ -1,0 +1,24 @@
+<label [class]="rootClasses()">
+  <input
+    type="radio"
+    class="afi-radio-v2__input"
+    [id]="radioId"
+    [name]="resolvedName()"
+    [value]="value()"
+    [checked]="resolvedChecked()"
+    [disabled]="resolvedDisabled()"
+    [attr.aria-label]="!label() ? ariaLabel() : null"
+    (change)="onSelect($event)"
+  />
+  <span [class]="ringClasses()" aria-hidden="true">
+    <!-- Inner dot spring-scales 0 → 1 on select (motion-skill §4.8); it holds at
+         scale(0) while unselected so selection reads as a settle-in, not a pop. -->
+    <span
+      class="afi-radio-v2__dot"
+      [class.afi-radio-v2__dot--visible]="resolvedChecked()"
+    ></span>
+  </span>
+  @if (label()) {
+    <span class="afi-radio-v2__label">{{ label() }}</span>
+  }
+</label>

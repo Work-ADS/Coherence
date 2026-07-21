@@ -1,0 +1,8 @@
+// Shared v2 focus ring — one focus look across the foundations-modern family
+// (button-v2 / toggle-v2 / checkbox-v2 …). Include INSIDE each component's own
+// :focus-visible selector; the mixin holds only the declarations, not the selector,
+// because each primitive targets focus differently (self vs. adjacent input sibling).
+@mixin focus-ring-v2 {
+  outline: var(--stroke-focus) solid var(--borders-focus);
+  outline-offset: var(--dimension-0);
+}

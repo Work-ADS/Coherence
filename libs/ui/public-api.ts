@@ -15,6 +15,8 @@ export { SelectV2Component } from './src/select-v2';
 export type { SelectV2Size, SelectV2Option } from './src/select-v2';
 export { ToggleV2Component } from './src/toggle-v2';
 export { CheckboxV2Component } from './src/checkbox-v2';
+export { RadioV2Component } from './src/radio-v2';
+export { RadioGroupV2Component } from './src/radio-group-v2';
 export { TagV2Component } from './src/tag-v2';
 export type { TagV2Kind } from './src/tag-v2';
 export { ChipV2Component } from './src/chip-v2';

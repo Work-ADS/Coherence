@@ -6,6 +6,8 @@
 // centred, bottom-overlapping float over the table (see the workbench demo).
 // Every value is token-bound; no raw px/hex.
 
+@use '../styles/focus-ring' as *;
+
 :host {
   display: inline-flex;
   max-inline-size: 100%;
@@ -15,13 +17,13 @@
 .afi-table-apron {
   display: inline-flex;
   align-items: center;
-  gap: var(--gap-control-sm);
+  // Figma (2936:5797) binds the md capsule gap to the dimension-2 primitive —
+  // there is no matching --gap-control-* semantic at that step — so code mirrors
+  // that binding.
+  gap: var(--dimension-2);
   min-inline-size: 0;
   padding-block: var(--dimension-1);
-  // Leading value has no value-matched --pad-control-* token (the smallest,
-  // --pad-control-xs, is larger); kept as the --dimension-1 primitive until a
-  // smaller --pad-control-2xs is added. Trailing is the semantic pad token.
-  padding-inline: var(--dimension-1) var(--pad-control-sm);
+  padding-inline: var(--pad-control-lg);
   border: var(--stroke-default) solid var(--borders-default);
   border-radius: var(--radius-full);
   background: var(--background-hover);
@@ -48,21 +50,25 @@
 }
 
 // ── Count (live region) ──────────────────────────────────────────────────────
+// The capsule's own padding owns the leading space (Figma: symmetric
+// pad/control-lg); the count carries no extra padding of its own.
+// The <p> must share the label metrics — inheriting the page's body type would
+// give it a taller line box, and the visible label-size text would sit on that
+// box's lower baseline, a hair off the chips' optical centre.
 .afi-table-apron__count {
   margin: 0;
-  padding-inline: var(--pad-control-sm);
   white-space: nowrap;
-
-  .afi-table-apron--sm & {
-    padding-inline: var(--pad-control-xs);
-  }
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line-height);
 }
 
+// Figma: shown count in content/primary, separator + total + noun all in
+// content/tertiary, everything at the label weight (no semibold override).
 .afi-table-apron__count-visual {
   display: inline-flex;
   align-items: baseline;
   gap: var(--gap-control-sm);
-  color: var(--content-secondary);
+  color: var(--content-tertiary);
   font-size: var(--type-label-size);
   font-weight: var(--type-label-weight);
   line-height: var(--type-label-line-height);
@@ -70,12 +76,7 @@
 
 .afi-table-apron__count-shown {
   color: var(--content-primary);
-  font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
-}
-
-.afi-table-apron__count-sep {
-  color: var(--content-tertiary);
 }
 
 .afi-table-apron__count-total {
@@ -100,7 +101,7 @@
   gap: var(--gap-control-sm);
   flex: none;
   block-size: var(--height-component-xs);
-  padding-inline: var(--pad-control-sm);
+  padding-inline: var(--pad-control-lg);
   border: var(--stroke-default) solid var(--borders-default);
   border-radius: var(--radius-full);
   background: var(--background-surface);
@@ -162,24 +163,11 @@
   gap: var(--gap-control-sm);
   flex: none;
   block-size: var(--height-component-xs);
-  padding-inline: var(--pad-control-sm);
+  padding-inline: var(--pad-control-lg);
   border: var(--stroke-default) solid var(--borders-default);
   border-radius: var(--radius-full);
   background: var(--background-selected);
   color: var(--content-primary);
-}
-
-.afi-table-apron__selection-icon {
-  display: inline-flex;
-  flex: none;
-  inline-size: var(--icon-sm);
-  block-size: var(--icon-sm);
-  color: var(--content-secondary);
-
-  svg {
-    inline-size: 100%;
-    block-size: 100%;
-  }
 }
 
 .afi-table-apron__selection-label {
@@ -215,8 +203,7 @@
   }
 
   &:focus-visible {
-    outline: var(--stroke-focus) solid var(--borders-focus);
-    outline-offset: var(--dimension-0);
+    @include focus-ring-v2;
   }
 }
 

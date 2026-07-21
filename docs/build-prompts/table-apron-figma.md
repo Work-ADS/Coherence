@@ -65,8 +65,9 @@ in a section header with a single, legible, dismissable summary.
 - **Variants:** none (single visual intent). Do **not** add a colour variant —
   the apron is always the neutral floating status pill.
 - **Sizes (Figma property `Size`):** `md` (default) · `sm` (dense — pairs with a
-  compact table). Size changes gap + count padding only; token height stays
-  `height-component-xs`.
+  compact table). Per the current Figma frame (2936:5797), size changes the
+  capsule child gap only (`sm` tightens `dimension-2` → `gap-control-sm`);
+  padding and token height (`height-component-xs`) stay fixed across sizes.
 - **Content properties:**
   - `Tokens` — boolean/variant for `0` vs `1+` (show/hide the tokens list).
   - Token sub-component properties: `Icon` = `none | search | filter`;
@@ -105,16 +106,16 @@ the variables the shipped SCSS uses, so Figma and code resolve identically.
 | Capsule border | `borders/default` (`--borders-default`), width `stroke/default` |
 | Capsule radius | `radius/full` (`--radius-full`) |
 | Capsule shadow | `elevation/menu` (`--elevation-menu`) |
-| Capsule padding | block `dimension-1` (4); inline `dimension-1` / `dimension-2` |
-| Count — `shown` | `content/primary`, weight `font-weight/semibold`, tabular figures |
-| Count — total + noun | `content/secondary`, type `label` |
+| Capsule padding | block `dimension-1` (4); inline `pad-control-lg` (12, symmetric per Figma 2936:5797) |
+| Count — `shown` | `content/primary`, type `label` (weight 500), tabular figures |
+| Count — total + noun | `content/tertiary`, type `label` |
 | Count — `/` separator | `content/tertiary` |
 | Token fill | `background/surface` (`--background-surface`) |
 | Token border | `borders/default` |
 | Token shadow | `elevation/1` |
 | Token radius | `radius/full` |
 | Token height | `height-component-xs` (24) |
-| Token inline padding | `pad-control-sm` |
+| Token inline padding | `pad-control-lg` (12, per Figma 2936:5797) |
 | Token label | `content/primary`, type `label` |
 | Token icon + ✕ | `content/secondary`, size `icon/sm` (16) |
 | ✕ hover | `content/primary` |

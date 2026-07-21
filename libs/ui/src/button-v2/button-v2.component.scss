@@ -11,6 +11,8 @@
 // heights follow --height-component-* (below the AAA target). Consumers on
 // touch-first surfaces should use size "lg" and provide generous spacing.
 
+@use '../styles/focus-ring' as *;
+
 .btn-v2 {
   position: relative;
   isolation: isolate;
@@ -54,9 +56,12 @@
   // Press nudge — the label + icons sink one hairline step (--dimension-0-25)
   // into the surface on press, pairing with the inset pressed shadow so the
   // button reads as physically depressed. Container-first would move the whole
-  // box; here we deliberately move only the projected content for the "inset"
-  // feel Richard specified. Pseudo-elements (::before/::after) are not
-  // children, so they stay put.
+  // box; here we deliberately move only the content for the "inset" feel
+  // Richard specified. Pseudo-elements (::before/::after) are not children, so
+  // they stay put. NB: `> *` is scoped to this component's content attribute
+  // under Emulated encapsulation, so it only reaches template-owned children —
+  // which is why the icons live in `.btn-v2__icon` wrappers (below) rather than
+  // projecting as bare slotted siblings that the nudge would miss.
   & > * {
     transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
   }
@@ -65,10 +70,21 @@
     transform: translateY(var(--dimension-0-25));
   }
 
+  // Icon slot wrappers — template-owned so the press nudge reaches the projected
+  // icon inside them. Collapsed when no icon is projected so an empty wrapper
+  // never adds a phantom flex gap around a text-only button.
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+
+    &:not(:has(*)) {
+      display: none;
+    }
+  }
+
   // focus-ring pattern (motion-skill §4.3) — instant, never transitioned.
   &:focus-visible {
-    outline: var(--stroke-focus) solid var(--borders-focus);
-    outline-offset: var(--dimension-0);
+    @include focus-ring-v2;
   }
 
   &:disabled {

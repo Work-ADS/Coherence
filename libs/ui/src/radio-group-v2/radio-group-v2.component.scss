@@ -1,0 +1,40 @@
+// afi-radio-group-v2 — identity v2 (foundations-modern tokens only).
+//
+// Semantic container for a set of afi-radio-v2 children: a <fieldset> reset to
+// carry no native chrome, an optional legend, and a flex options list that stacks
+// (vertical) or wraps into a row (horizontal). All state + fills live on the
+// radios; this file is layout only.
+
+:host {
+  display: block;
+}
+
+.afi-radio-group-v2 {
+  // Strip the native fieldset chrome; layout is owned below.
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.afi-radio-group-v2__legend {
+  padding: 0;
+  margin-block-end: var(--gap-control-label);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  color: var(--content-primary);
+}
+
+.afi-radio-group-v2__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-control-sm);
+}
+
+.afi-radio-group-v2--horizontal .afi-radio-group-v2__options {
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: var(--gap-control-label);
+  row-gap: var(--gap-control-sm);
+}

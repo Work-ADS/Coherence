@@ -148,8 +148,8 @@ export class App {
   private matchFullScreen(url: string): boolean {
     // Demos: full-screen only inside an interactive demo. Demo OVERVIEW pages
     // (depth 2, e.g. /demos/wealth-planner-2026, /demos/laboral-kutxa-sarevi,
-    // /demos/sarevi-unicaja, /demos/sarevi-banco-cooperativo) keep the section
-    // sidebar. Going deeper (depth 3+, e.g. /demo, /familia, /gastos) hands
+    // /demos/sarevi-unicaja, /demos/sarevi-banco-cooperativo) keep the site
+    // chrome. Going deeper (depth 3+, e.g. /demo, /familia, /gastos) hands
     // the chrome to the demo itself.
     const demosFullScreen = /^\/demos\/[^/]+\/.+/.test(url);
     // Top-level demo destinations that aren't under /demos/* but still belong

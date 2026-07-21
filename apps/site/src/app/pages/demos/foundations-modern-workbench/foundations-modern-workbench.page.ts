@@ -51,7 +51,6 @@ import type {
   TableV2SortState,
 } from '@coherence/ui';
 
-import { DemoShellComponent } from '../demo-shell/demo-shell.component';
 
 /**
  * Identity v2 workbench — the foundations-modern proving ground.
@@ -95,7 +94,6 @@ import { DemoShellComponent } from '../demo-shell/demo-shell.component';
     TabV2Component,
     TagV2Component,
     ToggleV2Component,
-    DemoShellComponent,
   ],
   templateUrl: './foundations-modern-workbench.page.html',
   styleUrls: ['./foundations-modern-workbench.page.scss'],

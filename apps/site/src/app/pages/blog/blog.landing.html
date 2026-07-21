@@ -1,9 +1,18 @@
 <section class="blog-landing">
-  <header class="blog-landing__header">
-    <p class="blog-landing__eyebrow">{{ headerCopy().eyebrow }}</p>
-    <h1 class="blog-landing__title">{{ headerCopy().title }}</h1>
-    <p class="blog-landing__intro">{{ headerCopy().intro }}</p>
-  </header>
+  @if (isMethodology()) {
+    <!-- Design at Afi hero — Figma AFI-FOUNDATIONS-MODERN 2975:9948:
+         centered IBM Plex display + body/large, modern tokens. -->
+    <header class="blog-landing__hero" data-foundation="modern">
+      <h1 class="blog-landing__hero-title">{{ headerCopy().title }}</h1>
+      <p class="blog-landing__hero-intro">{{ headerCopy().intro }}</p>
+    </header>
+  } @else {
+    <header class="blog-landing__header">
+      <p class="blog-landing__eyebrow">{{ headerCopy().eyebrow }}</p>
+      <h1 class="blog-landing__title">{{ headerCopy().title }}</h1>
+      <p class="blog-landing__intro">{{ headerCopy().intro }}</p>
+    </header>
+  }
 
   <ul class="blog-landing__list">
     @for (post of posts(); track post.slug) {
@@ -27,14 +36,75 @@
                 <span class="thumb-wl__stripe thumb-wl__stripe--4"></span>
               </div>
             }
-            <!-- Talk: 3 mini slide cards that shift right on hover (suggests arrow navigation) -->
-            @if (post.thumb === 'talk') {
-              <div class="thumb-talk">
-                <span class="thumb-talk__card thumb-talk__card--1"></span>
-                <span class="thumb-talk__card thumb-talk__card--2"></span>
-                <span class="thumb-talk__card thumb-talk__card--3"></span>
-                <span class="thumb-talk__arrow" aria-hidden="true">→</span>
-              </div>
+            <!-- IA: animated sitemap of the Wealth Planner's real information
+                 architecture (the case study's subject). Column-by-column
+                 build — root, then the four plan phases, then Situación's
+                 sections — followed by a highlight beat tracing the advisor's
+                 path (Planificación → Situación → Patrimonio). Pill nodes +
+                 elbow connectors per the IA-reference style. -->
+            @if (post.thumb === 'ia') {
+              <svg class="thumb-ia" viewBox="0 0 340 200" fill="none" aria-hidden="true" data-foundation="modern">
+                <!-- Root -->
+                <g class="thumb-ia__stage thumb-ia__stage--root">
+                  <rect class="thumb-ia__pill thumb-ia__pill--hl" x="4" y="88" width="96" height="20" rx="10" />
+                  <circle class="thumb-ia__dot" cx="16" cy="98" r="4" />
+                  <text class="thumb-ia__label thumb-ia__label--root" x="26" y="101.5">Planificación</text>
+                </g>
+
+                <!-- Root → phases -->
+                <g class="thumb-ia__stage thumb-ia__stage--links1">
+                  <path class="thumb-ia__link" d="M100 98 C116 98 110 34 126 34" pathLength="1" />
+                  <path class="thumb-ia__link thumb-ia__link--hl" d="M100 98 C116 98 110 78 126 78" pathLength="1" />
+                  <path class="thumb-ia__link" d="M100 98 C116 98 110 122 126 122" pathLength="1" />
+                  <path class="thumb-ia__link" d="M100 98 C116 98 110 166 126 166" pathLength="1" />
+                </g>
+
+                <!-- Phases -->
+                <g class="thumb-ia__stage thumb-ia__stage--phases">
+                  <rect class="thumb-ia__pill thumb-ia__pill--hl" x="126" y="68" width="92" height="20" rx="10" />
+                  <circle class="thumb-ia__dot" cx="138" cy="78" r="4" />
+                  <text class="thumb-ia__label thumb-ia__label--hl" x="148" y="81.5">Situación</text>
+
+                  <rect class="thumb-ia__pill" x="126" y="24" width="92" height="20" rx="10" />
+                  <circle class="thumb-ia__dot" cx="138" cy="34" r="4" />
+                  <text class="thumb-ia__label" x="148" y="37.5">Objetivos</text>
+
+                  <rect class="thumb-ia__pill" x="126" y="112" width="92" height="20" rx="10" />
+                  <circle class="thumb-ia__dot" cx="138" cy="122" r="4" />
+                  <text class="thumb-ia__label" x="148" y="125.5">Diagnóstico</text>
+
+                  <rect class="thumb-ia__pill" x="126" y="156" width="92" height="20" rx="10" />
+                  <circle class="thumb-ia__dot" cx="138" cy="166" r="4" />
+                  <text class="thumb-ia__label" x="148" y="169.5">Plan de acción</text>
+                </g>
+
+                <!-- Situación → sections -->
+                <g class="thumb-ia__stage thumb-ia__stage--links2">
+                  <path class="thumb-ia__link" d="M218 78 C238 78 236 14 256 14" pathLength="1" />
+                  <path class="thumb-ia__link" d="M218 78 C238 78 236 58 256 58" pathLength="1" />
+                  <path class="thumb-ia__link" d="M218 78 C238 78 236 102 256 102" pathLength="1" />
+                  <path class="thumb-ia__link thumb-ia__link--hl" d="M218 78 C238 78 236 146 256 146" pathLength="1" />
+                </g>
+
+                <!-- Sections -->
+                <g class="thumb-ia__stage thumb-ia__stage--sections">
+                  <rect class="thumb-ia__pill" x="256" y="4" width="80" height="20" rx="10" />
+                  <circle class="thumb-ia__dot" cx="268" cy="14" r="4" />
+                  <text class="thumb-ia__label" x="278" y="17.5">Familia</text>
+
+                  <rect class="thumb-ia__pill" x="256" y="48" width="80" height="20" rx="10" />
+                  <circle class="thumb-ia__dot" cx="268" cy="58" r="4" />
+                  <text class="thumb-ia__label" x="278" y="61.5">Ingresos</text>
+
+                  <rect class="thumb-ia__pill" x="256" y="92" width="80" height="20" rx="10" />
+                  <circle class="thumb-ia__dot" cx="268" cy="102" r="4" />
+                  <text class="thumb-ia__label" x="278" y="105.5">Gastos</text>
+
+                  <rect class="thumb-ia__pill thumb-ia__pill--hl" x="256" y="136" width="80" height="20" rx="10" />
+                  <circle class="thumb-ia__dot" cx="268" cy="146" r="4" />
+                  <text class="thumb-ia__label thumb-ia__label--hl" x="278" y="149.5">Patrimonio</text>
+                </g>
+              </svg>
             }
             <!-- Video: looping MP4, autoplays muted -->
             @if (post.thumb === 'video' && post.videoSrc) {

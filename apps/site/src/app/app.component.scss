@@ -31,12 +31,44 @@ afi-top-bar {
   position: absolute;
   inset: 0 0 auto 0;
   z-index: 30;
+  overflow: hidden;
+
+  // Iridescent glare — faint warm-gold/azul light caught in the glass. Painted
+  // BEHIND the bar (z-index -1), so the header's backdrop blur frosts it and
+  // it reads as colour in the glass rather than a printed gradient. Existing
+  // primitives at low alpha only (warning-* doubles as the warm ambience hue —
+  // v1 has no orange primitive; revisit if an ambience scale gets tokenized).
+  // Deliberately STATIC: animating anything beneath a backdrop-filter forces
+  // Chromium to re-filter every frame and stalls scrolling (same class of
+  // issue as mix-blend-mode + backdrop-filter; see component-reader.scss).
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        45% 260% at 18% 130%,
+        color-mix(in srgb, var(--color-afi-azul-500) 14%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        38% 240% at 62% -40%,
+        color-mix(in srgb, var(--color-warning-300) 20%, transparent),
+        transparent 72%
+      ),
+      radial-gradient(
+        30% 220% at 88% 140%,
+        color-mix(in srgb, var(--color-warning-500) 10%, transparent),
+        transparent 75%
+      );
+  }
 
   // Adaptive contrast — set by the app shell while content tagged
   // data-nav-tone="dark" is behind the frost. The light tint drops away
   // (pure blur over the dark surface) and the logo + menu flip to the
-  // inverse palette. The ES/EN toggle keeps its own solid surface, so it
-  // needs no flip. Colors transition so the swap reads as one move.
+  // inverse palette. Colors transition so the swap reads as one move.
   &.on-dark {
     --top-bar-glass-tint: transparent;
 
@@ -49,6 +81,14 @@ afi-top-bar {
       --content-tertiary: var(--foreground-inverse-secondary);
       --content-primary: var(--foreground-inverse-default);
       --content-disabled: var(--foreground-inverse-tertiary);
+    }
+
+    // The toggle's track is transparent, so the unselected option sits on
+    // the frost — flip its tones too. The selected thumb stays white, so
+    // its own text (--foreground-primary-default) stays dark.
+    site-language-toggle {
+      --foreground-tertiary-default: var(--foreground-inverse-secondary);
+      --foreground-secondary-default: var(--foreground-inverse-default);
     }
   }
 }
@@ -83,13 +123,15 @@ afi-top-bar {
   // v1 tokens — inside this modern-scoped zone we remap those tokens to their
   // foundations-modern equivalents (IBM Plex, 13/16, neutral scale) instead of
   // growing the primitive's API. Visual-parity-only override.
+  // The track is TRANSPARENT (Garaje-style): the unselected option sits
+  // directly on the bar's frost; only the selected thumb paints white.
   site-language-toggle {
     --type-body-sm-400: var(--font-weight-medium) var(--type-body-small-size) / var(--dimension-4) var(--font-family-primary);
     --type-body-sm-500: var(--font-weight-semibold) var(--type-body-small-size) / var(--dimension-4) var(--font-family-primary);
     --foreground-tertiary-default: var(--content-tertiary);
     --foreground-secondary-default: var(--content-secondary);
     --foreground-primary-default: var(--content-primary);
-    --control-background-default: var(--background-selected);
+    --control-background-default: transparent;
     --control-background-active: var(--background-surface);
     --border-focus: var(--borders-focus);
   }

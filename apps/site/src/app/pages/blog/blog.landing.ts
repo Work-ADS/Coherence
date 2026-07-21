@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { LanguageService } from '../../services/language.service';
 
-type Thumb = 'whitelabel' | 'talk' | 'video';
+type Thumb = 'whitelabel' | 'ia' | 'video';
 
 /**
  * Which landing surface a post belongs to. `methodology` = the redesign-series
@@ -24,8 +24,11 @@ interface BlogPost {
   date: { es: string; en: string };
   intro: { es: string; en: string };
   thumb: Thumb;
-  /** Optional video src (relative to /assets); only used when thumb === 'video'. */
-  videoSrc?: string;
+  /**
+   * Optional video src (relative to /assets); only used when thumb === 'video'.
+   * A per-language pair swaps the clip with the active locale.
+   */
+  videoSrc?: string | { es: string; en: string };
   /** Optional poster image shown before video starts and on pause. */
   videoPoster?: string;
   /** Optional route override; defaults to `/blog/<slug>`. */
@@ -61,7 +64,7 @@ const POSTS: BlogPost[] = [
       es: 'Puedes modernizar los componentes y seguir sin tener una plataforma moderna. Por qué el flujo del Wealth Planner refleja cómo se construye un plan — y no cómo lo usan los asesores.',
       en: 'You can modernize the components and still not have a modern platform. Why the Wealth Planner\'s flow reflects how a plan gets built — not how advisors use it.',
     },
-    thumb: 'talk',
+    thumb: 'ia',
   },
   {
     slug: 'brand-and-personas',
@@ -72,16 +75,16 @@ const POSTS: BlogPost[] = [
       en: 'STRATEGY · BRAND',
     },
     title: {
-      es: 'Marca y personas: la base que el moodboard no puede inventar',
-      en: 'Brand and personas: what the moodboard can\'t make up',
+      es: 'Estrategia de marca: la base que el moodboard no puede inventar',
+      en: 'Brand strategy: what the moodboard can\'t make up',
     },
     date: {
       es: '25 junio 2026',
       en: 'June 25, 2026',
     },
     intro: {
-      es: 'Antes de abrir Figma, el brief: seis campos de marca y cinco personas. Por qué los demos en código nos dejan enseñar casos de uso de verdad, no sólo pantallas.',
-      en: 'Before opening Figma, the brief: six brand fields and five personas. Why code-based demos let us show real use cases, not just screens.',
+      es: 'Antes de abrir Figma, el brief: seis campos de marca que hoy guían los simuladores y la nueva identidad. Por qué los demos en código nos dejan enseñar casos de uso de verdad, no sólo pantallas.',
+      en: 'Before opening Figma, the brief: six brand fields that now steer the simulators and the new identity. Why code-based demos let us show real use cases, not just screens.',
     },
     thumb: 'video',
     videoSrc: 'assets/thumbnails/brand-and-personas.mp4',
@@ -107,8 +110,11 @@ const POSTS: BlogPost[] = [
       en: 'The brief said "modern"; we went looking for what that means. Turning an adjective into a definition: how interfaces look, how they behave, what holds them together — and five commitments you can hold us to.',
     },
     thumb: 'video',
-    videoSrc: 'assets/thumbnails/ui-moderno-2026.mp4',
-    videoPoster: 'assets/thumbnails/ui-moderno-2026-poster.jpg',
+    // Language-specific renders of the Modern UI graphic (July 2026 upload).
+    videoSrc: {
+      es: 'assets/thumbnails/ui-moderno-2026-es.mp4',
+      en: 'assets/thumbnails/ui-moderno-2026-en.mp4',
+    },
   },
   {
     slug: 'wealth-planner-2026',
@@ -172,15 +178,19 @@ export class BlogLandingPage {
     { initialValue: 'blog' as Collection },
   );
 
+  /** Methodology renders the centered Design-at-Afi hero instead of the blog header. */
+  readonly isMethodology = computed(() => this.collection() === 'methodology');
+
   readonly headerCopy = computed(() => {
     const isEn = this.lang() === 'en';
     if (this.collection() === 'methodology') {
+      // Design at Afi hero — Figma AFI-FOUNDATIONS-MODERN 2975:9948.
       return {
-        eyebrow: isEn ? 'METHODOLOGY' : 'METODOLOGÍA',
-        title: isEn ? 'How we design' : 'Cómo diseñamos',
+        eyebrow: '',
+        title: isEn ? 'Documenting our new era' : 'Documentamos nuestra nueva era',
         intro: isEn
-          ? 'The redesign series — the research, the brand and personas, and the information architecture behind Afi\'s modern platform. Read in order or dip in.'
-          : 'La serie del rediseño — la investigación, la marca y las personas, y la arquitectura de la información detrás de la plataforma moderna de Afi. Léela en orden o entra por donde quieras.',
+          ? 'We\'re entering a new chapter of technology, where design is what sets you apart. This is how the Afi design team works now, documented as it happens.'
+          : 'Entramos en un nuevo capítulo de la tecnología, en el que el diseño es lo que marca la diferencia. Así trabaja ahora el equipo de diseño de Afi, documentado en tiempo real.',
       };
     }
     return {
@@ -202,7 +212,7 @@ export class BlogLandingPage {
       date: isEn ? p.date.en : p.date.es,
       intro: isEn ? p.intro.en : p.intro.es,
       thumb: p.thumb,
-      videoSrc: p.videoSrc,
+      videoSrc: typeof p.videoSrc === 'string' ? p.videoSrc : p.videoSrc?.[isEn ? 'en' : 'es'],
       videoPoster: p.videoPoster,
       to: p.to,
       darkThumb: p.darkThumb,

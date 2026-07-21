@@ -1,12 +1,24 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 
 import { LanguageService } from '../../services/language.service';
 
 type Thumb = 'whitelabel' | 'talk' | 'video';
 
+/**
+ * Which landing surface a post belongs to. `methodology` = the redesign-series
+ * narrative (Modern UI → Brand & personas → Information architecture), shown on
+ * /metodologia. `blog` = everything else, shown on /blog. A single POSTS list
+ * feeds both landings; the route's `data.collection` selects the subset.
+ */
+type Collection = 'methodology' | 'blog';
+
 interface BlogPost {
   slug: string;
+  /** Landing this post appears on. */
+  collection: Collection;
   eyebrow: { es: string; en: string };
   title: { es: string; en: string };
   date: { es: string; en: string };
@@ -18,6 +30,12 @@ interface BlogPost {
   videoPoster?: string;
   /** Optional route override; defaults to `/blog/<slug>`. */
   to?: string;
+  /**
+   * True when the thumb is a dark surface. Emits `data-nav-tone="dark"` on the
+   * card so the glass top bar flips to its inverse palette while the card
+   * scrolls behind it.
+   */
+  darkThumb?: boolean;
 }
 
 // Trimmed to the three featured pieces. Other historical posts moved under
@@ -25,6 +43,8 @@ interface BlogPost {
 const POSTS: BlogPost[] = [
   {
     slug: 'arquitectura-informacion',
+    collection: 'methodology',
+    darkThumb: true,
     eyebrow: {
       es: 'PRODUCTO · ARQUITECTURA DE LA INFORMACIÓN',
       en: 'PRODUCT · INFORMATION ARCHITECTURE',
@@ -45,6 +65,8 @@ const POSTS: BlogPost[] = [
   },
   {
     slug: 'brand-and-personas',
+    collection: 'methodology',
+    darkThumb: true,
     eyebrow: {
       es: 'ESTRATEGIA · MARCA',
       en: 'STRATEGY · BRAND',
@@ -66,6 +88,8 @@ const POSTS: BlogPost[] = [
   },
   {
     slug: 'ui-moderno-2026',
+    collection: 'methodology',
+    darkThumb: true,
     eyebrow: {
       es: 'INVESTIGACIÓN · UI 2026',
       en: 'RESEARCH · UI 2026',
@@ -88,6 +112,7 @@ const POSTS: BlogPost[] = [
   },
   {
     slug: 'wealth-planner-2026',
+    collection: 'blog',
     eyebrow: {
       es: 'DEMO · DIGITAL SOLUTIONS',
       en: 'DEMO · DIGITAL SOLUTIONS',
@@ -121,6 +146,7 @@ interface ViewPost {
   videoSrc?: string;
   videoPoster?: string;
   to?: string;
+  darkThumb?: boolean;
 }
 
 @Component({
@@ -133,10 +159,30 @@ interface ViewPost {
 })
 export class BlogLandingPage {
   private readonly language = inject(LanguageService);
+  private readonly route = inject(ActivatedRoute);
   readonly lang = this.language.lang;
+
+  /**
+   * The landing this instance renders. Set via route `data.collection`
+   * (/metodologia → 'methodology'); defaults to 'blog'. One component, two
+   * surfaces — filtered from the shared POSTS list.
+   */
+  private readonly collection = toSignal(
+    this.route.data.pipe(map((d) => (d['collection'] as Collection) ?? 'blog')),
+    { initialValue: 'blog' as Collection },
+  );
 
   readonly headerCopy = computed(() => {
     const isEn = this.lang() === 'en';
+    if (this.collection() === 'methodology') {
+      return {
+        eyebrow: isEn ? 'METHODOLOGY' : 'METODOLOGÍA',
+        title: isEn ? 'How we design' : 'Cómo diseñamos',
+        intro: isEn
+          ? 'The redesign series — the research, the brand and personas, and the information architecture behind Afi\'s modern platform. Read in order or dip in.'
+          : 'La serie del rediseño — la investigación, la marca y las personas, y la arquitectura de la información detrás de la plataforma moderna de Afi. Léela en orden o entra por donde quieras.',
+      };
+    }
     return {
       eyebrow: isEn ? 'BLOG' : 'BLOG',
       title: isEn ? 'Notes from the DS' : 'Notas del DS',
@@ -148,7 +194,8 @@ export class BlogLandingPage {
 
   readonly posts = computed<ViewPost[]>(() => {
     const isEn = this.lang() === 'en';
-    return POSTS.map((p) => ({
+    const active = this.collection();
+    return POSTS.filter((p) => p.collection === active).map((p) => ({
       slug: p.slug,
       eyebrow: isEn ? p.eyebrow.en : p.eyebrow.es,
       title: isEn ? p.title.en : p.title.es,
@@ -158,6 +205,7 @@ export class BlogLandingPage {
       videoSrc: p.videoSrc,
       videoPoster: p.videoPoster,
       to: p.to,
+      darkThumb: p.darkThumb,
     }));
   });
 

@@ -13,7 +13,11 @@
           [routerLink]="post.to || ('/blog/' + post.slug)"
           [attr.aria-label]="post.title + ' — ' + post.eyebrow"
         >
-          <div class="blog-landing__card-thumb blog-landing__card-thumb--{{ post.thumb }}" aria-hidden="true">
+          <div
+            class="blog-landing__card-thumb blog-landing__card-thumb--{{ post.thumb }}"
+            [attr.data-nav-tone]="post.darkThumb ? 'dark' : null"
+            aria-hidden="true"
+          >
             <!-- Whitelabel: brand stripes that swap on hover -->
             @if (post.thumb === 'whitelabel') {
               <div class="thumb-wl">

@@ -1,7 +1,7 @@
 <div class="post">
   <!-- Breadcrumb -->
   <div class="post__breadcrumb">
-    <a routerLink="/blog" class="post__breadcrumb-back" aria-label="Back to blog">
+    <a routerLink="/metodologia" class="post__breadcrumb-back" aria-label="Back to methodology">
       <svg class="post__icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path
           fill-rule="evenodd"
@@ -10,7 +10,7 @@
         />
       </svg>
     </a>
-    <span class="post__breadcrumb-parent">Blog</span>
+    <span class="post__breadcrumb-parent">{{ isEn() ? 'Methodology' : 'Metodología' }}</span>
     <span class="post__breadcrumb-separator" aria-hidden="true">/</span>
     <span class="post__breadcrumb-current">
       @if (isEn()) {

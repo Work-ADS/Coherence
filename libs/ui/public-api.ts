@@ -99,6 +99,7 @@ export type { NavbarV2Layout, NavbarV2Action } from './src/navbar-v2';
 export { SidebarV2Component } from './src/sidebar-v2';
 export { NavSectionV2Component } from './src/nav-section-v2';
 export { NavItemV2Component } from './src/nav-item-v2';
+export { NavbarItemV2Component } from './src/navbar-item-v2';
 export { LogoV2Component } from './src/logo-v2';
 export { MenuComponent, MenuItemComponent, MenuDividerComponent } from './src/menu';
 export type { MenuPlacement, MenuItemVariant } from './src/menu';

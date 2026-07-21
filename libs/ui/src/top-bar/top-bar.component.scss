@@ -9,6 +9,18 @@
   &--borderless {
     border-bottom: none;
   }
+
+  // Glass — transparent tint + backdrop blur so content frosts through the bar
+  // as it scrolls under. The consumer positions the host over the content.
+  // `--top-bar-glass-tint` lets the host retint the frost (e.g. drop it to
+  // `transparent` while dark content is behind the bar) without new inputs.
+  &--glass {
+    background: color-mix(in srgb, var(--top-bar-glass-tint, var(--surface-default)) 55%, transparent);
+    backdrop-filter: blur(var(--blur-lg));
+    -webkit-backdrop-filter: blur(var(--blur-lg));
+    border-bottom: none;
+    transition: background var(--duration-fast) var(--easing-standard);
+  }
 }
 
 .top-bar__start {

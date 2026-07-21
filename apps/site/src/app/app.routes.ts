@@ -33,6 +33,14 @@ export const routes: Routes = [
     path: 'blog',
     loadChildren: () => import('./pages/blog/blog.routes').then((m) => m.blog_routes),
   },
+  // Methodology — the redesign-series narrative. Reuses BlogLandingPage,
+  // filtered to the 'methodology' collection via route data.
+  {
+    path: 'metodologia',
+    loadComponent: () =>
+      import('./pages/blog/blog.landing').then((m) => m.BlogLandingPage),
+    data: { collection: 'methodology' },
+  },
   {
     path: 'demos',
     loadChildren: () =>

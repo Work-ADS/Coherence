@@ -1,0 +1,207 @@
+// =============================================================================
+// Planner navbar v2 — Figma AFI-FOUNDATIONS-MODERN 2938:6946 over the
+// coherence glass recipe (same mix as afi-top-bar[variant=glass]: token blur
+// + surface tint via color-mix). Breadcrumb trail left, actions right.
+// =============================================================================
+
+:host {
+  display: block;
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 40;
+}
+
+.pnb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-control-md);
+  padding-block: var(--gap-control-sm);
+  padding-inline: var(--canvas-padding-inline);
+  // The coherence glass: translucent surface tint over a token blur.
+  background: color-mix(in srgb, var(--background-surface) 55%, transparent);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  border-block-end: var(--stroke-hairline) solid var(--borders-default);
+  font-family: var(--font-family-primary);
+  color: var(--content-primary);
+}
+
+// ---------------------------------------------------------------------------
+// Breadcrumb trail
+// ---------------------------------------------------------------------------
+
+.pnb__crumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-md);
+  min-inline-size: 0;
+}
+
+.pnb__chip {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--avatar-xs);
+  block-size: var(--avatar-xs);
+  border: var(--stroke-hairline) solid var(--borders-default);
+  border-radius: var(--radius-sm);
+  color: var(--content-secondary);
+  flex-shrink: 0;
+
+  svg {
+    inline-size: var(--icon-size-xs, var(--gap-control-md));
+    block-size: var(--icon-size-xs, var(--gap-control-md));
+  }
+
+  &--dark {
+    background: var(--content-primary);
+    border-color: var(--content-primary);
+    color: var(--content-inverse);
+  }
+}
+
+.pnb__client {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  text-decoration: none;
+  color: var(--content-primary);
+  border-radius: var(--radius-sm);
+  transition: color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &:hover .pnb__client-name {
+    color: var(--content-secondary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--gap-control-xs) var(--borders-focus);
+  }
+}
+
+.pnb__client-name {
+  font-size: var(--type-body-default-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--type-body-default-line-height);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-inline-size: 14rem;
+}
+
+.pnb__sep {
+  color: var(--borders-default);
+  font-size: var(--type-h4-size);
+  font-weight: var(--font-weight-regular);
+}
+
+.pnb__sim {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+}
+
+.pnb__sim-name {
+  font-size: var(--type-body-default-size);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pnb__estado {
+  position: relative;
+  display: inline-flex;
+}
+
+.pnb__estado-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-xs);
+  border: none;
+  background: transparent;
+  padding: var(--gap-control-xs);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: background var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &:hover {
+    background: var(--background-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--gap-control-xs) var(--borders-focus);
+  }
+}
+
+.pnb__chevron {
+  inline-size: var(--gap-control-md);
+  block-size: var(--gap-control-md);
+  color: var(--content-tertiary);
+}
+
+.pnb__view {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+}
+
+.pnb__view-name {
+  font-size: var(--type-body-default-size);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+// Narrow viewports: the current-view crumb is the first thing to yield —
+// client + simulation + estado are the load-bearing context.
+@media (max-width: 56rem) {
+  .pnb__view,
+  .pnb__sep--view {
+    display: none;
+  }
+
+  .pnb__client-name {
+    max-inline-size: 9rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Menus (component-local overlay until menu-v2 grows its shared harness)
+// ---------------------------------------------------------------------------
+
+.pnb__menu {
+  position: absolute;
+  inset-block-start: calc(100% + var(--gap-control-xs));
+  inset-inline-start: 0;
+  min-inline-size: 11rem;
+  z-index: 50;
+}
+
+// ---------------------------------------------------------------------------
+// Right actions
+// ---------------------------------------------------------------------------
+
+.pnb__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  flex-shrink: 0;
+}
+
+.pnb__action-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.pnb__avatar {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--avatar-md);
+  block-size: var(--avatar-md);
+  border: var(--stroke-hairline) solid var(--borders-default);
+  border-radius: var(--radius-full);
+  background: var(--background-selected);
+  color: var(--content-secondary);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  letter-spacing: var(--font-letter-spacing-wide);
+  user-select: none;
+}

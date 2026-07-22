@@ -1,0 +1,133 @@
+<header class="pnb" data-foundation="modern">
+  <!-- ── Left: breadcrumb trail — cliente / simulación · estado / vista ── -->
+  <nav class="pnb__crumbs" aria-label="Contexto de la planificación">
+    <a class="pnb__client" [routerLink]="clientRoute()">
+      <span class="pnb__chip" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      </span>
+      <span class="pnb__client-name">{{ clientName() }}</span>
+    </a>
+
+    <span class="pnb__sep" aria-hidden="true">/</span>
+
+    <div class="pnb__sim">
+      <span class="pnb__chip pnb__chip--dark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="4" width="16" height="16" rx="2" />
+          <rect x="9" y="9" width="6" height="6" />
+          <path d="M15 2v2" /><path d="M15 20v2" /><path d="M2 15h2" /><path d="M2 9h2" />
+          <path d="M20 15h2" /><path d="M20 9h2" /><path d="M9 2v2" /><path d="M9 20v2" />
+        </svg>
+      </span>
+      <afi-inline-edit
+        class="pnb__sim-name"
+        [value]="simNameShown()"
+        ariaLabel="nombre de la simulación"
+        (committed)="onRename($event)"
+      />
+
+      <div class="pnb__estado">
+        <button
+          type="button"
+          class="pnb__estado-trigger"
+          [attr.aria-expanded]="estadoOpen()"
+          aria-haspopup="menu"
+          aria-label="Cambiar estado de la simulación"
+          (click)="toggleEstado($event)"
+        >
+          <afi-badge-v2 [label]="estadoLabel()" [tone]="estadoTone()" [dot]="true" />
+          <svg class="pnb__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+
+        @if (estadoOpen()) {
+          <afi-menu-v2 class="pnb__menu" ariaLabel="Estado de la simulación">
+            @for (opt of estados; track opt.value) {
+              <afi-menu-item-v2
+                [selected]="opt.value === estado()"
+                (clicked)="onEstadoChange(opt.value)"
+              >
+                {{ opt.label }}
+              </afi-menu-item-v2>
+            }
+          </afi-menu-v2>
+        }
+      </div>
+    </div>
+
+    <span class="pnb__sep pnb__sep--view" aria-hidden="true">/</span>
+
+    <span class="pnb__view">
+      <span class="pnb__chip" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+        </svg>
+      </span>
+      <span class="pnb__view-name">{{ currentView() }}</span>
+    </span>
+  </nav>
+
+  <!-- ── Right: notas · ajustes · asesor ── -->
+  <div class="pnb__actions">
+    <div class="pnb__action-anchor">
+      <afi-icon-button-v2
+        variant="ghost"
+        size="sm"
+        ariaLabel="Notas de la planificación"
+        (clicked)="toggleNotes($event)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z" />
+          <path d="M15 3v5h5" />
+          <path d="M8 13h8" />
+          <path d="M8 17h5" />
+        </svg>
+      </afi-icon-button-v2>
+      <site-notes-panel-v2
+        [open]="notesOpen()"
+        [notes]="notes()"
+        (closed)="notesOpen.set(false)"
+        (noteAdded)="addNote($event)"
+        (noteDeleted)="deleteNote($event)"
+      />
+    </div>
+
+    <div class="pnb__action-anchor">
+      <afi-icon-button-v2
+        variant="ghost"
+        size="sm"
+        ariaLabel="Ajustes de la simulación"
+        (clicked)="toggleSettings($event)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      </afi-icon-button-v2>
+      <site-settings-panel-v2
+        [open]="settingsOpen()"
+        [settings]="simulationSettings()"
+        (closed)="settingsOpen.set(false)"
+        (settingsChanged)="onSettingsChanged($event)"
+      />
+    </div>
+
+    <span class="pnb__avatar" [attr.aria-label]="'Asesor: ' + advisorName()" role="img">
+      {{ advisorInitials() }}
+    </span>
+  </div>
+</header>
+
+<afi-toast
+  [message]="toastMessage()"
+  [visible]="toastVisible()"
+  (undo)="onToastUndo()"
+  (dismissed)="hideToast()"
+/>

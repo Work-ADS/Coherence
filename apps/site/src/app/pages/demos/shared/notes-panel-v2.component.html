@@ -1,0 +1,53 @@
+@if (open()) {
+  <div class="npv" role="dialog" aria-label="Notas de la planificación">
+    <header class="npv__head">
+      <span class="npv__title">Notas</span>
+      <afi-icon-button-v2 variant="ghost" size="sm" ariaLabel="Cerrar notas" (clicked)="closed.emit()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+        </svg>
+      </afi-icon-button-v2>
+    </header>
+
+    @if (notes().length > 0) {
+      <ul class="npv__list">
+        @for (note of notes(); track note.id) {
+          <li class="npv__note">
+            <div class="npv__note-body">
+              <span class="npv__note-time">{{ formatTime(note.timestamp) }}</span>
+              <p class="npv__note-text">{{ note.text }}</p>
+            </div>
+            <afi-icon-button-v2
+              class="npv__note-delete"
+              variant="ghost"
+              size="sm"
+              ariaLabel="Eliminar nota"
+              (clicked)="noteDeleted.emit(note.id)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 6h18" />
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
+            </afi-icon-button-v2>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="npv__empty">Aún no hay notas. Añada la primera.</p>
+    }
+
+    <footer class="npv__composer">
+      <afi-input-v2
+        class="npv__input"
+        size="sm"
+        placeholder="Añadir nota…"
+        ariaLabel="Nueva nota"
+        [value]="draft()"
+        (valueChange)="draft.set($event)"
+        (keydown)="onDraftKeydown($event)"
+      />
+      <afi-button-v2 variant="secondary" size="sm" (clicked)="addNote()">Añadir</afi-button-v2>
+    </footer>
+  </div>
+}

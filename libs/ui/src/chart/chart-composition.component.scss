@@ -1,0 +1,199 @@
+// Composition strip — monochrome part-to-whole band (foundations-modern).
+// Ink comes from the semantic --chart-monochrome-* ramp; per-segment ink and
+// width arrive as --_ink / --_grow custom properties from the template.
+// Height is overridable per surface via --chart-composition-height.
+
+:host {
+  display: block;
+}
+
+.comp {
+  position: relative;
+  font-family: var(--font-family-primary);
+}
+
+.comp__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-control-md);
+  margin-block-end: var(--gap-control-md);
+}
+
+.comp__head-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+}
+
+.comp__title {
+  font-family: var(--font-family-primary);
+  font-size: var(--type-h4-size);
+  font-weight: var(--type-h4-weight);
+  line-height: var(--type-h4-line-height);
+  color: var(--content-primary);
+}
+
+.comp__subtitle {
+  margin-block-start: var(--gap-control-xs);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  color: var(--content-secondary);
+}
+
+.comp__sr {
+  position: absolute;
+  inline-size: var(--stroke-hairline);
+  block-size: var(--stroke-hairline);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.comp__strip-wrap {
+  position: relative;
+}
+
+.comp__strip {
+  display: flex;
+  block-size: var(--chart-composition-height, var(--type-body-default-line-height));
+}
+
+.comp__segment {
+  flex: var(--_grow) 1 0%;
+  min-inline-size: var(--gap-control-sm);
+  background: var(--_ink);
+  transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &--dim {
+    opacity: 0.35;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--gap-control-xs) var(--borders-focus);
+  }
+}
+
+// Variant: rounded, gapped pills — the quiet product register.
+.comp__strip--segments {
+  gap: var(--gap-control-xs);
+
+  .comp__segment {
+    border-radius: var(--radius-full);
+  }
+}
+
+// Variant: flat editorial rectangles — print register, taller band.
+.comp__strip--blocks {
+  gap: var(--gap-control-xs);
+  block-size: var(--chart-composition-height, var(--type-h2-line-height));
+
+  .comp__segment {
+    border-radius: var(--radius-none);
+  }
+}
+
+// Variant: hairline tick field — the emphasized segment renders solid,
+// the rest read as texture (tick pitch = hairline ink + small gap).
+.comp__strip--ticks {
+  gap: var(--gap-control-sm);
+  block-size: var(--chart-composition-height, var(--type-h2-line-height));
+
+  .comp__segment {
+    border-radius: var(--radius-none);
+    background: repeating-linear-gradient(
+      90deg,
+      var(--_ink) 0,
+      var(--_ink) var(--stroke-hairline),
+      transparent var(--stroke-hairline),
+      transparent var(--_pitch, var(--gap-control-sm))
+    );
+
+    &--emphasis {
+      background: var(--_ink);
+    }
+  }
+}
+
+.comp__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-control-sm) var(--pad-control-lg);
+  margin-block-start: var(--gap-control-md);
+  padding: 0;
+  list-style: none;
+}
+
+.comp__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  color: var(--content-secondary);
+  transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &--dim {
+    opacity: 0.4;
+  }
+}
+
+.comp__legend-swatch {
+  inline-size: var(--gap-control-md);
+  block-size: var(--gap-control-md);
+  border-radius: var(--radius-full);
+  background: var(--_ink);
+}
+
+.comp__legend-pct {
+  font-weight: var(--type-section-label-weight);
+  color: var(--content-primary);
+}
+
+.comp__empty {
+  padding-block: var(--pad-control-md);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-small-size);
+  line-height: var(--type-body-small-line-height);
+  color: var(--content-tertiary);
+}
+
+.comp__table {
+  margin-block-start: var(--gap-control-md);
+}
+
+.comp__table-toggle {
+  border: none;
+  background: transparent;
+  padding: var(--gap-control-xs) 0;
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  color: var(--content-secondary);
+  transition: color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &:hover {
+    color: var(--content-primary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--gap-control-xs) var(--borders-focus);
+    border-radius: var(--radius-xs);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .comp__segment,
+  .comp__legend-item {
+    transition: none;
+  }
+}

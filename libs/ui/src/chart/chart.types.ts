@@ -67,5 +67,6 @@ export interface TickStop {
 
 export type BarOrientation = 'vertical' | 'horizontal';
 export type BarSort = 'asc' | 'desc' | null;
+export type CompositionVariant = 'segments' | 'blocks' | 'ticks';
 export type HeatmapScale = 'sequential' | 'divergent';
 export type DumbbellOrientation = 'vertical' | 'horizontal';

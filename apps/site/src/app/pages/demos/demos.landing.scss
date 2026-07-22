@@ -1,5 +1,6 @@
 // =============================================================================
-// Demos landing — index page for /demos with team-taxonomy segmented control.
+// Demos landing — identity v2 (foundations-modern). «Productos» header +
+// action cards (card-v2 wrapped in routerLinks) + the AFI tradicional divider.
 // =============================================================================
 
 :host {
@@ -7,115 +8,121 @@
 }
 
 .demos-landing {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
-  max-width: var(--dimension-240);
+  max-inline-size: var(--content-lg);
   margin-inline: auto;
-  padding-block: var(--space-2xl);
-  padding-inline: var(--space-md);
-}
-
-.demos-landing__header {
+  padding-block: var(--canvas-padding-block);
+  padding-inline: var(--canvas-padding-inline);
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--canvas-gap-section-to-section);
+  font-family: var(--font-family-primary);
+  color: var(--content-primary);
 }
 
-.demos-landing__eyebrow {
-  margin: 0;
-  font: var(--type-body-sm-500);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-  color: var(--foreground-tertiary-default);
-}
+// ---------------------------------------------------------------------------
+// Header
+// ---------------------------------------------------------------------------
 
 .demos-landing__title {
-  margin: 0;
-  font: var(--type-display-md, var(--type-body-lg-600));
-  color: var(--foreground-primary-default);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  line-height: var(--type-display-line-height);
 }
 
-.demos-landing__intro {
-  margin: 0;
-  font: var(--type-body-md-400);
-  color: var(--foreground-secondary-default);
-  max-width: var(--dimension-180);
+.demos-landing__subtitle {
+  margin-block-start: var(--gap-control-sm);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-large-size);
+  font-weight: var(--type-body-large-weight);
+  line-height: var(--type-body-large-line-height);
+  color: var(--content-secondary);
+  max-inline-size: 62ch;
 }
 
-.demos-landing__filter {
-  display: flex;
-  align-items: center;
-}
+// ---------------------------------------------------------------------------
+// Action-card grid
+// ---------------------------------------------------------------------------
 
 .demos-landing__grid {
-  list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(var(--dimension-80), 1fr));
-  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--layout-gap-default);
 }
 
-.demos-landing__card-wrap {
-  display: flex;
-}
-
-.demos-landing__card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  padding: var(--space-md);
-  width: 100%;
+.demos-landing__card-link {
+  display: block;
+  block-size: 100%;
   text-decoration: none;
   color: inherit;
-  border-radius: var(--radius-card);
-  background: var(--surface-default);
-  border: var(--border-width-hairline) solid var(--border-hairline);
-  transition:
-    background var(--duration-fast) var(--easing-enter),
-    border-color var(--duration-fast) var(--easing-enter);
+  border-radius: var(--radius-xl);
+  transition: box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
 
   &:hover {
-    background: var(--surface-subtle);
-    border-color: var(--border-default);
+    box-shadow: var(--elevation-tooltip);
   }
 
   &:focus-visible {
-    outline: var(--border-width-thick) solid var(--border-focus);
-    outline-offset: var(--border-width-thick);
+    outline: none;
+    box-shadow: 0 0 0 var(--gap-control-xs) var(--borders-focus);
   }
 }
 
-.demos-landing__card-title-row {
+.demos-landing__card-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-sm);
+  gap: var(--gap-control-md);
 }
 
 .demos-landing__card-title {
-  font: var(--type-body-md-600);
-  color: var(--foreground-primary-default);
-}
-
-.demos-landing__card-status {
-  font: var(--type-body-sm-500);
-  padding: var(--space-2xs) var(--space-xs);
-  background: var(--brand-secondary-neutral-background-default);
-  color: var(--brand-secondary-neutral-foreground-default);
-  border-radius: var(--radius-pill);
+  font-size: var(--type-h4-size);
+  font-weight: var(--type-h4-weight);
+  line-height: var(--type-h4-line-height);
+  color: var(--content-primary);
 }
 
 .demos-landing__card-intro {
-  font: var(--type-body-sm-400);
-  color: var(--foreground-secondary-default);
+  display: block;
+  margin-block-start: var(--gap-control-sm);
+  font-size: var(--type-body-small-size);
+  line-height: var(--type-body-small-line-height);
+  color: var(--content-secondary);
 }
 
-.demos-landing__empty {
-  margin: 0;
-  padding: var(--space-xl) 0;
-  text-align: center;
-  font: var(--type-body-md-400);
-  color: var(--foreground-tertiary-default);
+// ---------------------------------------------------------------------------
+// AFI tradicional divider
+// ---------------------------------------------------------------------------
+
+.demos-landing__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-md);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-block-start: var(--stroke-hairline) solid var(--borders-default);
+  }
+}
+
+.demos-landing__divider-label {
+  font-family: var(--font-family-primary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-section-label-weight);
+  line-height: var(--type-label-line-height);
+  letter-spacing: calc(var(--font-letter-spacing-wide) * 5);
+  text-transform: uppercase;
+  color: var(--content-tertiary);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demos-landing__card-link {
+    transition: none;
+  }
 }

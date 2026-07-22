@@ -1,0 +1,132 @@
+// =============================================================================
+// Panel del asesor — dashboard surface. Hero-first: navbar-v2 + toolbar with
+// the treatment select, client header, then the hero at its real size.
+// Modern semantic tokens throughout; the exploratory editorial typescale
+// matches the hero lab so both pages judge the same treatment identically.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.pa {
+  min-height: 100vh;
+  background: var(--background-canvas);
+  color: var(--content-primary);
+  font-family: var(--font-family-primary);
+}
+
+// ---------------------------------------------------------------------------
+// Content
+// ---------------------------------------------------------------------------
+
+.pa__content {
+  max-inline-size: var(--content-lg);
+  margin-inline: auto;
+  padding-block: var(--canvas-padding-block);
+  padding-inline: var(--canvas-padding-inline);
+  display: flex;
+  flex-direction: column;
+  gap: var(--canvas-gap-section-to-section);
+}
+
+// The hero owns a narrower measure than the page so figure and strip read
+// as one composed unit (lab finding: full-width strip unbalanced the figure).
+.pa__hero {
+  max-inline-size: 56rem;
+}
+
+// ---------------------------------------------------------------------------
+// Hero treatments (same registers as the lab)
+// ---------------------------------------------------------------------------
+
+.hero__label {
+  font-family: var(--font-family-primary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  letter-spacing: calc(var(--font-letter-spacing-wide) * 5);
+  text-transform: uppercase;
+  color: var(--content-tertiary);
+}
+
+.hero__figure {
+  font-family: var(--font-family-primary);
+  font-variant-numeric: tabular-nums;
+  color: var(--content-primary);
+}
+
+.hero__dec {
+  color: var(--content-tertiary);
+}
+
+.hero--product .hero__figure {
+  margin-block: var(--gap-control-sm) var(--pad-control-lg);
+  font-size: var(--type-display-metric-size);
+  font-weight: var(--type-display-metric-weight);
+  line-height: var(--type-display-metric-line-height);
+}
+
+.hero--editorial {
+  --lab-hero-size: calc(var(--type-display-size) * 2);
+}
+
+.hero--editorial .hero__figure {
+  margin-block: var(--gap-control-md) var(--pad-dialog);
+  font-size: var(--lab-hero-size);
+  font-weight: var(--font-weight-regular);
+  line-height: calc(var(--lab-hero-size) * 1.04);
+  letter-spacing: var(--font-letter-spacing-tight);
+}
+
+.hero--editorial .hero__dec {
+  font-size: calc(var(--lab-hero-size) * 0.45);
+}
+
+.hero__caption {
+  margin-block-start: var(--gap-control-md);
+  max-inline-size: 52ch;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-default-size);
+  line-height: var(--type-body-default-line-height);
+  color: var(--content-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Cold-entry reveal (stagger-reveal, normal tier — motion-skill §4.7)
+// ---------------------------------------------------------------------------
+
+@keyframes pa-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-reveal-rise-normal));
+    filter: blur(var(--motion-reveal-blur-normal));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  animation: pa-reveal var(--motion-reveal-duration-normal) var(--motion-easing-enter) both;
+  animation-delay: calc(var(--index, 0) * var(--motion-reveal-stagger-normal));
+}
+
+@keyframes pa-reveal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: pa-reveal-fade 80ms linear both;
+    animation-delay: 0ms;
+  }
+}

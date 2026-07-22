@@ -1,0 +1,113 @@
+// Notes panel v2 — floating modern surface anchored below its trigger.
+
+:host {
+  position: absolute;
+  inset-block-start: calc(100% + var(--gap-control-xs));
+  inset-inline-end: 0;
+  z-index: 50;
+}
+
+.npv {
+  inline-size: 21rem;
+  background: var(--background-surface);
+  border: var(--stroke-hairline) solid var(--borders-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--elevation-tooltip);
+  font-family: var(--font-family-primary);
+  color: var(--content-primary);
+  overflow: hidden;
+}
+
+.npv__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--gap-control-sm);
+  padding-inline: var(--pad-control-lg);
+  border-block-end: var(--stroke-hairline) solid var(--borders-default);
+}
+
+.npv__title {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-section-label-weight);
+  line-height: var(--type-label-line-height);
+  letter-spacing: var(--font-letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--content-secondary);
+}
+
+.npv__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-block-size: 16rem;
+  overflow-y: auto;
+}
+
+.npv__note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-control-sm);
+  padding-block: var(--gap-control-sm);
+  padding-inline: var(--pad-control-lg);
+
+  & + & {
+    border-block-start: var(--stroke-hairline) solid var(--borders-default);
+  }
+}
+
+.npv__note-body {
+  min-inline-size: 0;
+  flex: 1;
+}
+
+.npv__note-time {
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  line-height: var(--type-caption-line-height);
+  color: var(--content-tertiary);
+}
+
+.npv__note-text {
+  margin-block-start: var(--gap-control-xs);
+  font-size: var(--type-body-small-size);
+  line-height: var(--type-body-small-line-height);
+  color: var(--content-primary);
+}
+
+.npv__note-delete {
+  opacity: 0;
+  transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.npv__note:hover .npv__note-delete,
+.npv__note:focus-within .npv__note-delete {
+  opacity: 1;
+}
+
+.npv__empty {
+  margin: 0;
+  padding-block: var(--pad-control-lg);
+  padding-inline: var(--pad-control-lg);
+  font-size: var(--type-body-small-size);
+  line-height: var(--type-body-small-line-height);
+  color: var(--content-tertiary);
+}
+
+.npv__composer {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  padding: var(--gap-control-sm) var(--pad-control-lg) var(--pad-control-lg);
+  border-block-start: var(--stroke-hairline) solid var(--borders-default);
+}
+
+.npv__input {
+  flex: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .npv__note-delete {
+    transition: none;
+  }
+}

@@ -1,4 +1,5 @@
 export { ChartBarComponent } from './chart-bar.component';
+export { ChartCompositionComponent } from './chart-composition.component';
 export { ChartLineComponent } from './chart-line.component';
 export { ChartHeatmapComponent } from './chart-heatmap.component';
 export { ChartDumbbellComponent } from './chart-dumbbell.component';
@@ -16,6 +17,7 @@ export type {
   TextureId,
   BarOrientation,
   BarSort,
+  CompositionVariant,
   HeatmapScale,
   DumbbellOrientation,
   ChartMargins,

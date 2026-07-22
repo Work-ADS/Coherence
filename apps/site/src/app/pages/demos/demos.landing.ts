@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+// external
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { SegmentedControlComponent, type SegmentedOption } from '@coherence/ui';
-
-export type DemoTeam = 'digital-solutions' | 'communications';
+// internal (libs)
+import { CardV2Component, TagV2Component } from '@coherence/ui';
 
 export interface DemoCard {
   slug: string;
   title: string;
   intro: string;
-  team: DemoTeam;
+  /** Which identity system the demo showcases — drives the landing grouping. */
+  system: 'v2' | 'traditional';
   status?: string;
   overviewRoute: string;
 }
@@ -18,12 +19,50 @@ const DEMOS: DemoCard[] = [
   // NOTE: 'nueva-simulacion-overview' is intentionally NOT listed here yet —
   // the page + route exist at /demos/nueva-simulacion-overview for iteration,
   // but it's hidden from the demos landing until the look is ready.
+  // NOTE: the Sarevi demos (laboral-kutxa-sarevi, sarevi-unicaja) and AWM are
+  // hidden from the landing (2026-07-22) — routes stay live for direct links.
+  {
+    slug: 'panel-asesor-hero-lab',
+    title: 'Panel del asesor — hero lab',
+    intro:
+      'Laboratorio del hero del panel: los tres tratamientos (Producto, Editorial, Trazos) lado a lado sobre el mismo dato, con pines de comentario para elegir registro.',
+    system: 'v2',
+    status: 'Identidad v2',
+    overviewRoute: '/demos/panel-asesor/hero-lab',
+  },
+  {
+    slug: 'panel-asesor-producto',
+    title: 'Panel del asesor · T1 Producto',
+    intro:
+      'El dashboard de marca en registro producto: tarjeta contenida, píldoras con hueco, cifra en display-metric.',
+    system: 'v2',
+    status: 'Identidad v2',
+    overviewRoute: '/demos/panel-asesor/producto',
+  },
+  {
+    slug: 'panel-asesor-editorial',
+    title: 'Panel del asesor · T2 Editorial',
+    intro:
+      'El dashboard de marca en registro editorial: cifra a gran cuerpo sobre el lienzo, bloques planos, voz de informe.',
+    system: 'v2',
+    status: 'Identidad v2',
+    overviewRoute: '/demos/panel-asesor/editorial',
+  },
+  {
+    slug: 'panel-asesor-trazos',
+    title: 'Panel del asesor · T3 Trazos',
+    intro:
+      'El dashboard de marca en la variante de autor: campo de trazos finos con banda sólida solo en el foco.',
+    system: 'v2',
+    status: 'Identidad v2',
+    overviewRoute: '/demos/panel-asesor/trazos',
+  },
   {
     slug: 'foundations-modern-workbench',
     title: 'Identidad v2 — workbench',
     intro:
       'Banco de pruebas de la nueva identidad (foundations-modern): botón v2 con todas sus variantes, tamaños y estados. Crecerá hasta convertirse en el moodboard de componentes.',
-    team: 'digital-solutions',
+    system: 'v2',
     status: 'En curso',
     overviewRoute: '/demos/foundations-modern/workbench',
   },
@@ -32,77 +71,31 @@ const DEMOS: DemoCard[] = [
     title: 'Wealth Planner 2026',
     intro:
       'Rediseño completo — patrimonio, evolución, simulación. Entra por el listado de planificaciones del cliente.',
-    team: 'digital-solutions',
-    status: 'En curso',
-    // Card now lands on the listado (the per-cliente hub). The overview
+    system: 'traditional',
+    status: 'Identidad tradicional',
+    // Card lands on the listado (the per-cliente hub). The overview
     // (case study + bitácora + documento funcional + tokens) is still
     // reachable at /demos/wealth-planner-2026 for direct links.
     overviewRoute: '/listado-planificaciones',
   },
-  {
-    slug: 'laboral-kutxa-sarevi',
-    title: 'Laboral kutxa sarevi',
-    intro:
-      'Simulador de eficiencia energética Sarevi 360 — rebrand del flujo sobre Coherence DS aplicando la paleta beige + berenjena + verde de Laboral Kutxa.',
-    team: 'digital-solutions',
-    status: 'Nuevo',
-    overviewRoute: '/demos/laboral-kutxa-sarevi',
-  },
-  {
-    slug: 'sarevi-unicaja',
-    title: 'Sarevi Unicaja',
-    intro:
-      'Nueva versión del simulador Sarevi con marca Unicaja: Manrope, canvas blanco, controles tipo radio-card y acentos teal.',
-    team: 'digital-solutions',
-    status: 'Nuevo',
-    overviewRoute: '/demos/sarevi-unicaja',
-  },
-  {
-    slug: 'awm',
-    title: 'AFI Wealth Manager',
-    intro:
-      'Plataforma B2B para asesores patrimoniales — sub-marca AFI sobre PrimeNG. Cada funcionalidad abre con marca AWM aplicada.',
-    team: 'digital-solutions',
-    status: 'Sub-marca',
-    overviewRoute: '/demos/awm',
-  },
 ];
 
-const TEAM_OPTIONS: SegmentedOption[] = [
-  { value: 'digital-solutions', label: 'Digital solutions' },
-  { value: 'communications', label: 'Communications' },
-];
-
+/**
+ * Demos landing — identity v2 (foundations-modern).
+ *
+ * «Productos»: the v2 demos as action cards (card-v2 + tag-v2 inside a
+ * routerLink), then the «AFI tradicional» divider with the legacy-identity
+ * demos beneath. Single view — the team switch was retired 2026-07-22.
+ */
 @Component({
   selector: 'site-demos-landing',
   standalone: true,
-  imports: [RouterLink, SegmentedControlComponent],
+  imports: [RouterLink, CardV2Component, TagV2Component],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './demos.landing.html',
   styleUrl: './demos.landing.scss',
 })
 export class DemosLandingPage {
-  readonly activeTeam = signal<DemoTeam>('digital-solutions');
-
-  readonly teamOptions = TEAM_OPTIONS;
-
-  readonly visibleDemos = computed<DemoCard[]>(() =>
-    DEMOS.filter((d) => d.team === this.activeTeam()),
-  );
-
-  readonly emptyStateCopy = computed(() => {
-    switch (this.activeTeam()) {
-      case 'communications':
-        return 'Próximamente — demos del equipo de Communications.';
-      case 'digital-solutions':
-      default:
-        return 'Aún no hay demos publicados por este equipo.';
-    }
-  });
-
-  setTeam(team: string | number | null): void {
-    if (team === 'digital-solutions' || team === 'communications') {
-      this.activeTeam.set(team);
-    }
-  }
+  readonly v2Demos: DemoCard[] = DEMOS.filter((d) => d.system === 'v2');
+  readonly traditionalDemos: DemoCard[] = DEMOS.filter((d) => d.system === 'traditional');
 }

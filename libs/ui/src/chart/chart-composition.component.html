@@ -1,0 +1,99 @@
+<afi-loading-overlay variant="quiet-spinner" [visible]="loading()">
+  <figure class="comp" role="figure" [attr.aria-labelledby]="title() ? titleElId : null">
+    @if (title() || subtitle()) {
+      <div class="comp__head">
+        <div>
+          @if (title()) {
+            <figcaption [id]="titleElId" class="comp__title">{{ title() }}</figcaption>
+          }
+          @if (subtitle()) {
+            <p class="comp__subtitle">{{ subtitle() }}</p>
+          }
+        </div>
+        <div class="comp__head-actions">
+          <ng-content select="[slot=action]" />
+          <afi-chart-instructions (opened)="instructionsOpened.emit()" />
+        </div>
+      </div>
+    }
+
+    <div [id]="a11yId" class="comp__sr">{{ a11yText() }}</div>
+
+    @if (segments().length > 0) {
+      <div
+        class="comp__strip-wrap"
+        (pointermove)="onStripMove($event)"
+        (pointerleave)="onStripLeave()"
+      >
+        <div
+          class="comp__strip comp__strip--{{ variant() }}"
+          role="img"
+          [attr.aria-label]="stripSummary()"
+          [attr.aria-describedby]="a11yId"
+        >
+          @for (seg of segments(); track seg.datum.key; let i = $index) {
+            <div
+              class="comp__segment"
+              [class.comp__segment--emphasis]="seg.emphasized"
+              [class.comp__segment--dim]="hovered() !== null && hovered() !== i"
+              [style.--_grow]="seg.fraction"
+              [style.--_ink]="seg.ink"
+              [style.--_pitch]="'calc(var(--gap-control-sm) * ' + seg.pitch + ')'"
+              tabindex="0"
+              role="graphics-symbol"
+              [attr.aria-label]="seg.aria"
+              (pointerenter)="onSegmentEnter(i)"
+              (focus)="onSegmentFocus(i)"
+              (blur)="onStripLeave()"
+              (click)="onSegmentActivated(i)"
+              (keydown.enter)="onSegmentActivated(i)"
+            ></div>
+          }
+        </div>
+        <afi-chart-tooltip
+          [title]="tipTitle()"
+          [value]="tipValue()"
+          [secondary]="tipSecondary()"
+        />
+      </div>
+
+      @if (showLegend()) {
+        <ul class="comp__legend">
+          @for (seg of segments(); track seg.datum.key; let i = $index) {
+            <li
+              class="comp__legend-item"
+              [class.comp__legend-item--dim]="hovered() !== null && hovered() !== i"
+            >
+              <span class="comp__legend-swatch" [style.--_ink]="seg.ink" aria-hidden="true"></span>
+              <span class="comp__legend-label">{{ seg.datum.key }}</span>
+              <span class="comp__legend-pct">{{ formatPct(seg.fraction) }}</span>
+            </li>
+          }
+        </ul>
+      }
+    } @else {
+      <div class="comp__empty" aria-live="polite">Sin datos para mostrar</div>
+    }
+
+    <div class="comp__table">
+      <button
+        type="button"
+        class="comp__table-toggle"
+        [attr.aria-expanded]="tableOpen()"
+        (click)="onTableToggle()"
+      >
+        {{ tableOpen() ? 'Ocultar tabla de datos' : 'Ver datos en tabla' }}
+      </button>
+      @if (tableOpen()) {
+        <afi-table-v2
+          [columns]="tableColumns()"
+          [rows]="tableRows()"
+          trackByKey="key"
+          [rowHoverable]="false"
+        />
+      }
+    </div>
+
+    <ng-content select="[slot=footer]" />
+  </figure>
+</afi-loading-overlay>

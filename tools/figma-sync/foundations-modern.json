@@ -2965,6 +2965,38 @@
           }
         },
         {
+          "name": "chart/monochrome/strong",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/monochrome/7}",
+            "Mode": "{data-viz/monochrome/7}"
+          }
+        },
+        {
+          "name": "chart/monochrome/medium",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/monochrome/5}",
+            "Mode": "{data-viz/monochrome/5}"
+          }
+        },
+        {
+          "name": "chart/monochrome/soft",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/monochrome/3}",
+            "Mode": "{data-viz/monochrome/3}"
+          }
+        },
+        {
+          "name": "chart/monochrome/faint",
+          "type": "color",
+          "values": {
+            "semantics V3": "{data-viz/monochrome/2}",
+            "Mode": "{data-viz/monochrome/2}"
+          }
+        },
+        {
           "name": "brand/background/default",
           "type": "color",
           "values": {
@@ -4257,62 +4289,86 @@
         {
           "name": "reveal-duration/light",
           "type": "text",
-          "values": { "Modern": "400ms" }
+          "values": {
+            "Modern": "400ms"
+          }
         },
         {
           "name": "reveal-duration/normal",
           "type": "text",
-          "values": { "Modern": "500ms" }
+          "values": {
+            "Modern": "500ms"
+          }
         },
         {
           "name": "reveal-duration/heavy",
           "type": "text",
-          "values": { "Modern": "600ms" }
+          "values": {
+            "Modern": "600ms"
+          }
         },
         {
           "name": "reveal-stagger/light",
           "type": "text",
-          "values": { "Modern": "40ms" }
+          "values": {
+            "Modern": "40ms"
+          }
         },
         {
           "name": "reveal-stagger/normal",
           "type": "text",
-          "values": { "Modern": "70ms" }
+          "values": {
+            "Modern": "70ms"
+          }
         },
         {
           "name": "reveal-stagger/heavy",
           "type": "text",
-          "values": { "Modern": "100ms" }
+          "values": {
+            "Modern": "100ms"
+          }
         },
         {
           "name": "reveal-rise/light",
           "type": "text",
-          "values": { "Modern": "6px" }
+          "values": {
+            "Modern": "6px"
+          }
         },
         {
           "name": "reveal-rise/normal",
           "type": "text",
-          "values": { "Modern": "10px" }
+          "values": {
+            "Modern": "10px"
+          }
         },
         {
           "name": "reveal-rise/heavy",
           "type": "text",
-          "values": { "Modern": "14px" }
+          "values": {
+            "Modern": "14px"
+          }
         },
         {
           "name": "reveal-blur/light",
           "type": "text",
-          "values": { "Modern": "4px" }
+          "values": {
+            "Modern": "4px"
+          }
         },
         {
           "name": "reveal-blur/normal",
           "type": "text",
-          "values": { "Modern": "8px" }
+          "values": {
+            "Modern": "8px"
+          }
         },
         {
           "name": "reveal-blur/heavy",
           "type": "text",
-          "values": { "Modern": "14px" }
+          "values": {
+            "Modern": "14px"
+          }
         }
       ]
     }

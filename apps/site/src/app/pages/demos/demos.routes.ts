@@ -15,6 +15,32 @@ export const demos_routes: Routes = [
         (m) => m.NuevaSimulacionOverviewPage,
       ),
   },
+  // Panel del asesor — dashboard examples, one route per hero treatment.
+  // Depth-3 routes drop the site chrome; the page brings planner-navbar-v2.
+  {
+    path: 'panel-asesor/producto',
+    data: { treatment: 't1' },
+    loadComponent: () =>
+      import('./panel-asesor/panel-asesor.page').then((m) => m.PanelAsesorPage),
+  },
+  {
+    path: 'panel-asesor/editorial',
+    data: { treatment: 't2' },
+    loadComponent: () =>
+      import('./panel-asesor/panel-asesor.page').then((m) => m.PanelAsesorPage),
+  },
+  {
+    path: 'panel-asesor/trazos',
+    data: { treatment: 't3' },
+    loadComponent: () =>
+      import('./panel-asesor/panel-asesor.page').then((m) => m.PanelAsesorPage),
+  },
+  // Panel del asesor — hero lab (side-by-side comparison of the 3 treatments)
+  {
+    path: 'panel-asesor/hero-lab',
+    loadComponent: () =>
+      import('./panel-asesor/panel-asesor-hero-lab.page').then((m) => m.PanelAsesorHeroLabPage),
+  },
   // Wealth Planner 2026 — overview surface (shell consumer)
   {
     path: 'wealth-planner-2026',

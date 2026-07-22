@@ -1,0 +1,195 @@
+// =============================================================================
+// Panel del asesor — hero lab. Three treatments of the patrimonio-total hero.
+// Everything reads modern semantic tokens; the exploratory typescale for the
+// editorial treatments derives page-local sizes from type tokens via calc()
+// (the winning treatment promotes its sizes to real semantic tokens).
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+.lab {
+  background: var(--background-canvas);
+  color: var(--content-primary);
+  font-family: var(--font-family-primary);
+  padding-block: var(--canvas-padding-block);
+  padding-inline: var(--canvas-padding-inline);
+}
+
+.lab__inner {
+  max-inline-size: var(--content-lg);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--canvas-gap-section-to-section);
+}
+
+// ---------------------------------------------------------------------------
+// Page head
+// ---------------------------------------------------------------------------
+
+.lab__eyebrow {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  // Micro-label tracking: wide × 5 ≈ 0.1em. If a treatment wins with this,
+  // it becomes a --font-letter-spacing-caps token.
+  letter-spacing: calc(var(--font-letter-spacing-wide) * 5);
+  text-transform: uppercase;
+  color: var(--content-tertiary);
+}
+
+// Belt-and-braces: the site base styles some elements with the serif family
+// directly, which beats inheritance — pin the modern family per text class.
+.lab__title,
+.lab__lead,
+.lab__eyebrow,
+.lab__case-name,
+.lab__case-claim,
+.hero__label,
+.hero__figure,
+.hero__caption {
+  font-family: var(--font-family-primary);
+}
+
+.lab__title {
+  margin-block-start: var(--gap-control-sm);
+  font-size: var(--type-h1-size);
+  font-weight: var(--type-h1-weight);
+  line-height: var(--type-h1-line-height);
+}
+
+.lab__lead {
+  margin-block-start: var(--gap-control-md);
+  max-inline-size: 62ch;
+  font-size: var(--type-body-large-size);
+  font-weight: var(--type-body-large-weight);
+  line-height: var(--type-body-large-line-height);
+  color: var(--content-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Case sections
+// ---------------------------------------------------------------------------
+
+.lab__case {
+  border-block-start: var(--stroke-hairline) solid var(--borders-default);
+  padding-block-start: var(--section-padding-block);
+}
+
+.lab__case-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--gap-control-md);
+  margin-block-end: var(--section-gap-header-to-content);
+}
+
+.lab__case-name {
+  font-size: var(--type-h3-size);
+  font-weight: var(--type-h3-weight);
+  line-height: var(--type-h3-line-height);
+}
+
+.lab__case-claim {
+  flex-basis: 100%;
+  font-size: var(--type-body-default-size);
+  line-height: var(--type-body-default-line-height);
+  color: var(--content-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Hero treatments
+// ---------------------------------------------------------------------------
+
+.hero__label {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  letter-spacing: calc(var(--font-letter-spacing-wide) * 5);
+  text-transform: uppercase;
+  color: var(--content-tertiary);
+}
+
+.hero__figure {
+  font-variant-numeric: tabular-nums;
+  color: var(--content-primary);
+}
+
+.hero__dec {
+  color: var(--content-tertiary);
+}
+
+// T1 — Producto: the contained display-metric register.
+.hero--product .hero__figure {
+  margin-block: var(--gap-control-sm) var(--pad-control-lg);
+  font-size: var(--type-display-metric-size);
+  font-weight: var(--type-display-metric-weight);
+  line-height: var(--type-display-metric-line-height);
+}
+
+// T2 / T3 — Editorial: oversized light figure straight on the canvas.
+.hero--editorial {
+  // Exploratory: display size × 2 (≈ double the H1 register).
+  --lab-hero-size: calc(var(--type-display-size) * 2);
+}
+
+.hero--editorial .hero__figure {
+  margin-block: var(--gap-control-md) var(--pad-dialog);
+  font-size: var(--lab-hero-size);
+  font-weight: var(--font-weight-regular);
+  line-height: calc(var(--lab-hero-size) * 1.04);
+  letter-spacing: var(--font-letter-spacing-tight);
+}
+
+.hero--editorial .hero__dec {
+  font-size: calc(var(--lab-hero-size) * 0.45);
+}
+
+.hero__caption {
+  margin-block-start: var(--gap-control-md);
+  max-inline-size: 52ch;
+  font-size: var(--type-body-default-size);
+  line-height: var(--type-body-default-line-height);
+  color: var(--content-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Cold-entry reveal (stagger-reveal, normal tier — motion-skill §4.7)
+// ---------------------------------------------------------------------------
+
+@keyframes lab-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-reveal-rise-normal));
+    filter: blur(var(--motion-reveal-blur-normal));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  animation: lab-reveal var(--motion-reveal-duration-normal) var(--motion-easing-enter) both;
+  animation-delay: calc(var(--index, 0) * var(--motion-reveal-stagger-normal));
+}
+
+@keyframes lab-reveal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: lab-reveal-fade 80ms linear both;
+    animation-delay: 0ms;
+  }
+}

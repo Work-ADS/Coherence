@@ -1,0 +1,75 @@
+<site-demo-shell
+  [views]="['Hero lab']"
+  demoSlug="panel-asesor-hero"
+  demoRoute="/demos/panel-asesor/hero-lab"
+  homeRoute="/demos"
+  homeLabel="Volver a demos"
+>
+  <div class="lab" data-foundation="modern">
+    <div class="lab__inner">
+      <header class="lab__head reveal" style="--index: 0">
+        <p class="lab__eyebrow">Panel del asesor · experimento 1</p>
+        <h1 class="lab__title">Hero: patrimonio total</h1>
+        <p class="lab__lead">
+          Tres tratamientos del mismo dato para fijar el registro visual del panel.
+          El cliente: matrimonio con seis inmuebles y la transición de Andalucía
+          recién acordada. Misma cifra, misma composición, tres voces.
+        </p>
+      </header>
+
+      <section class="lab__case reveal" style="--index: 1" aria-labelledby="t1-name">
+        <header class="lab__case-head">
+          <afi-badge-v2 tone="neutral" label="T1" />
+          <h2 id="t1-name" class="lab__case-name">Producto</h2>
+          <p class="lab__case-claim">
+            El registro SaaS silencioso: tarjeta, cifra contenida, píldoras con hueco.
+          </p>
+        </header>
+        <afi-card-v2 [showHeader]="false">
+          <div class="hero hero--product">
+            <p class="hero__label">Patrimonio total</p>
+            <p class="hero__figure">{{ totalEntero }}<span class="hero__dec">{{ totalResto }}</span></p>
+            <afi-chart-composition [data]="composicion" variant="segments" />
+          </div>
+        </afi-card-v2>
+      </section>
+
+      <section class="lab__case reveal" style="--index: 2" aria-labelledby="t2-name">
+        <header class="lab__case-head">
+          <afi-badge-v2 tone="neutral" label="T2" />
+          <h2 id="t2-name" class="lab__case-name">Editorial</h2>
+          <p class="lab__case-claim">
+            El registro de informe: sin tarjeta, cifra a gran cuerpo, bloques planos.
+          </p>
+        </header>
+        <div class="hero hero--editorial">
+          <p class="hero__label">Patrimonio total</p>
+          <p class="hero__figure">{{ totalEntero }}<span class="hero__dec">{{ totalResto }}</span></p>
+          <afi-chart-composition [data]="composicion" variant="blocks" />
+          <p class="hero__caption">
+            El 70 % del patrimonio es inmobiliario: la venta de Andalucía financia el
+            reequilibrio acordado en la reunión.
+          </p>
+        </div>
+      </section>
+
+      <section class="lab__case reveal" style="--index: 3" aria-labelledby="t3-name">
+        <header class="lab__case-head">
+          <afi-badge-v2 tone="neutral" label="T3" />
+          <h2 id="t3-name" class="lab__case-name">Trazos</h2>
+          <p class="lab__case-claim">
+            La variante de autor: campo de trazos finos, banda sólida solo en el foco.
+          </p>
+        </header>
+        <div class="hero hero--editorial">
+          <p class="hero__label">Patrimonio total</p>
+          <p class="hero__figure">{{ totalEntero }}<span class="hero__dec">{{ totalResto }}</span></p>
+          <afi-chart-composition [data]="composicion" variant="ticks" />
+          <p class="hero__caption">
+            La banda sólida marca el foco — inmobiliario — y el resto queda como textura.
+          </p>
+        </div>
+      </section>
+    </div>
+  </div>
+</site-demo-shell>

@@ -1,0 +1,44 @@
+@if (open()) {
+  <div class="spv" role="dialog" aria-label="Ajustes de la simulación">
+    <header class="spv__head">
+      <span class="spv__title">Ajustes</span>
+      <afi-icon-button-v2 variant="ghost" size="sm" ariaLabel="Cerrar ajustes" (clicked)="closed.emit()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+        </svg>
+      </afi-icon-button-v2>
+    </header>
+
+    <div class="spv__fields">
+      <afi-select-v2
+        size="sm"
+        label="Moneda"
+        [options]="currencyOptions"
+        [(value)]="currency"
+      />
+      <afi-select-v2
+        size="sm"
+        label="Perfil de riesgo"
+        [options]="riskOptions"
+        [(value)]="riskProfile"
+      />
+      <afi-input-v2
+        size="sm"
+        label="Inflación anual (%)"
+        [value]="inflationRate()"
+        (valueChange)="inflationRate.set($event)"
+      />
+      <afi-input-v2
+        size="sm"
+        label="Esperanza de vida (años)"
+        [value]="lifeExpectancy()"
+        (valueChange)="lifeExpectancy.set($event)"
+      />
+    </div>
+
+    <footer class="spv__footer">
+      <afi-button-v2 variant="ghost" size="sm" (clicked)="closed.emit()">Cancelar</afi-button-v2>
+      <afi-button-v2 variant="primary" size="sm" (clicked)="save()">Guardar</afi-button-v2>
+    </footer>
+  </div>
+}

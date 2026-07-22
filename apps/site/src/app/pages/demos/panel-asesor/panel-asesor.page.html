@@ -1,0 +1,45 @@
+<div class="pa" data-foundation="modern">
+  <site-planner-navbar-v2
+    clientName="Carmen y Andrés Ortega"
+    simName="Plan patrimonial 2026"
+    currentView="Panel"
+    advisorName="Marc Puig"
+  />
+
+  <main class="pa__content">
+    <section class="pa__hero reveal" style="--index: 0" aria-label="Patrimonio total">
+      @switch (treatment) {
+        @case ('t2') {
+          <div class="hero hero--editorial">
+            <p class="hero__label">Patrimonio total</p>
+            <p class="hero__figure">{{ totalEntero }}<span class="hero__dec">{{ totalResto }}</span></p>
+            <afi-chart-composition [data]="composicion" [variant]="stripVariant()" />
+            <p class="hero__caption">
+              El 70 % del patrimonio es inmobiliario: la venta de Andalucía financia el
+              reequilibrio acordado en la reunión.
+            </p>
+          </div>
+        }
+        @case ('t3') {
+          <div class="hero hero--editorial">
+            <p class="hero__label">Patrimonio total</p>
+            <p class="hero__figure">{{ totalEntero }}<span class="hero__dec">{{ totalResto }}</span></p>
+            <afi-chart-composition [data]="composicion" [variant]="stripVariant()" />
+            <p class="hero__caption">
+              La banda sólida marca el foco — inmobiliario — y el resto queda como textura.
+            </p>
+          </div>
+        }
+        @default {
+          <afi-card-v2 [showHeader]="false">
+            <div class="hero hero--product">
+              <p class="hero__label">Patrimonio total</p>
+              <p class="hero__figure">{{ totalEntero }}<span class="hero__dec">{{ totalResto }}</span></p>
+              <afi-chart-composition [data]="composicion" [variant]="stripVariant()" />
+            </div>
+          </afi-card-v2>
+        }
+      }
+    </section>
+  </main>
+</div>

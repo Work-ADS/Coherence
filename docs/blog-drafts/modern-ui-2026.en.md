@@ -3,7 +3,7 @@ slug: modern-ui-2026
 eyebrow: RESEARCH · UI 2026
 title: What is modern UI in 2026? The research behind Afi's visual redesign
 date: 24 June 2026
-subtitle: The research base behind the visual redesign — six learnings on what modern UI means in 2026, and a six-point checklist to review the work against.
+subtitle: The research base behind the visual redesign. Six learnings on what modern UI means in 2026, and a six-point checklist to review the work against.
 lang: en
 mirror-of: ui-moderno-2026
 ---
@@ -18,11 +18,9 @@ But why?
 
 Because most designs without definition end up as preference-based designs instead of evidence-based designs. Everyone likes something different, and when the team finally agrees, it gets vetoed by a team lead. Not because of a valuable insight, but because they don't like it.
 
-The decisions ride on individual taste, not shared principles.
-
 ## Learning 1: Design maturity
 
-The research called this design maturity. It measured how widely design language is shared in a team — not how skilled the designers are. This was one of the key insights. Obviously colors and fonts matter, but introducing vocabulary the whole team can use will help us maintain the momentum after the initial launch of the new UI. We can make beautiful screens all we want, but if people say no because of preference rather than insight and we don't know how to replicate it, we're setting ourselves up for failure.
+The research called this design maturity. It measured how widely design language is shared in a team, not how skilled the designers are. This was one of the key insights. Introducing vocabulary the whole team can use will help us maintain the momentum after the initial launch of the new UI. We can make beautiful screens, but if a team lead vetoes them on preference, we have no shared reasoning to fall back on. That's the failure mode.
 
 The research puts a shared scale under this: five stages of maturity.
 
@@ -37,20 +35,20 @@ Afi sits between *Managed* and *Defined*, and this redesign is the first step to
 For example, the Velvetum study (*UX/UI Design Tools 2026*) makes the point: a fourteen-designer team's productivity rose 38% because the rest of the organization adopted the same stack and the same protocols.
 
 ![The five stages of design maturity with Afi crossing from Managed to Defined](./assets/modern-ui-2026/design-maturity-stages.svg)
-*Diagram 1 — The five stages of maturity. Afi is crossing from Managed to Defined; the next jump — to Optimized — no longer depends on the design team.*
+*Diagram 1 — The five stages of maturity. Afi is crossing from Managed to Defined; the next jump, to Optimized, no longer depends on the design team.*
 
 ## Learning 2: Build around user intent
 
-Our digital products are built on static layouts: the page is decided at design time and served identically to everyone. It works, but it carries constraints — *we show you the same thing regardless of what you came here to do*. For clients who come in to make different decisions — review their wealth, plan a retirement, compare scenarios — that uniformity forces everyone down the same path, no matter which decision they came for.
+Our digital products are built on static layouts: the page is decided at design time and served identically to everyone. It works, but it carries a constraint: we show you the same thing, no matter why you came. Whether you're reviewing your wealth, planning to buy a house, or selling property to reinvest, you see the same screen; and that gives the product a generic feel.
 
 ![Static layout vs layout adapted to user intent](./assets/modern-ui-2026/static-vs-personalized.svg)
 *Diagram 2 — Today we serve the same screen to every user. An adaptive interface proposes a different layer depending on the intent each user arrives with.*
 
-UI in 2026 starts from intent: the interface recognizes what the user is trying to accomplish, then shows what's relevant. The four classic intents — informational, navigational, commercial, transactional — aren't new; what's new is treating them as the *starting point* of the flow.
+UI in 2026 starts from intent: the interface recognizes what the user is trying to accomplish, then shows what's relevant. The four classic intents (informational, navigational, commercial, transactional) aren't new; what's new is treating them as the *starting point* of the flow.
 
-Google PAIR distinguishes explicit intent (what the user names) from implicit intent (what the system infers from behavior). Both feed the decision about what gets shown first. For Afi, with no conversational AI in the product yet, this doesn't mean bolting on a chat. It means designing forms and screens so the system infers intent earlier and proposes the correct information.
+Google PAIR (People + AI Research) distinguishes explicit intent (what the user names) from implicit intent (what the system infers from behavior). Both feed the decision about what gets shown first. For Afi, with no conversational AI in the product yet, this doesn't mean bolting on a chat. It means designing forms and screens so the system infers intent before the user has to ask for it explicitly and proposes the correct information.
 
-A completely intent-driven product might not be the best fit for Afi yet, but the direction is still valuable for us: the user should see relevant information based on **what they want**.
+A fully intent-driven product isn't Afi's next step; the direction still holds: the user should see relevant information based on **what they want**.
 
 ![Menu tree vs direct access guided by intent](./assets/modern-ui-2026/tree-vs-intent.svg)
 *Diagram 3 — Navigation stops asking the user to walk a tree and starts offering short routes from each intent.*
@@ -61,7 +59,7 @@ For a decade, engineers chased instant response on every interaction. Designers 
 
 Emil Kowalski compared two identical buttons for a high-impact action: one confirms the millisecond it's clicked; the other inserts a short processing animation before the same confirmation. Users overwhelmingly trusted the delayed version.
 
-The mechanism is **perceived reliability**: for a high-stakes action — authorizing a payment, moving funds, rebalancing a portfolio — the brain doesn't believe a system that responds too fast had time to do the work. The window is small: 150–250 milliseconds. Long enough to register that something happened; short enough that the app doesn't feel sluggish. Below 150 ms triggers anxiety; above 250 ms feels broken.
+The mechanism is **perceived reliability**: for a high-stakes action (authorizing a payment, moving funds, rebalancing a portfolio), the brain doesn't believe a system that responds too fast had time to do the work. The window is small: 150–250 milliseconds. Long enough to register that something happened; short enough that the app doesn't feel sluggish. Below 150 ms triggers anxiety; above 250 ms feels broken.
 
 ![Instant button vs button with an intentional 150–250 ms pause](./assets/modern-ui-2026/pause-confidence.svg)
 *Diagram 4 — Same gesture, two responses. The instant button feels broken; the 150–250 ms pause conveys that the system is doing the work.*
@@ -70,11 +68,11 @@ The mechanism is **perceived reliability**: for a high-stakes action — authori
 
 Stan Vision (*Fintech UX in 2026*) defines trust in financial products as **transparency + consistency + responsiveness**. In practice:
 
-- **Predict, but always announce.** Pre-filling a transfer is welcome; executing it without confirmation is not. And if the application pre-fills, it says why: *"based on your last three transfers to this payee…"*. Silent prefill reads as surveillance; announced prefill reads as competence.
+- **Predict, but always announce.** Pre-filling a transfer is welcome; executing it without confirmation crosses the line. And if the application pre-fills, it says why: *"based on your last three transfers to this payee…"*. Silent prefill reads as surveillance; announced prefill reads as competence.
 - **Friction where it earns it.** The 150–250 ms processing beat from Learning 3. Trust comes from the system signaling it took the action seriously.
-- **Biometrics as handshake.** Face ID, fingerprint, voice — no longer just security measures, but an emotional cue: *we know it's you, your environment is secure, let's proceed*.
+- **Biometrics as handshake.** Face ID, fingerprint and voice are no longer just security measures, but an emotional cue: *we know it's you, your environment is secure, let's proceed*.
 
-Don Norman's three levels of emotional design frame the rest: **visceral** (the first-impression reaction), **behavioral** (pleasure and effectiveness during use), **reflective** (how it sits with the user afterwards). An interface that only wins the visceral level doesn't last, and in a product people open daily, the reflective level is where the relationship lives.
+Don Norman's three levels of emotional design frame the rest: **visceral** (the first-impression reaction), **behavioral** (pleasure and effectiveness during use), **reflective** (how it sits with the user afterwards). An interface that only wins the visceral level doesn't last, and in a product people open daily, the reflective level is where the relationship lives: by day 30, the user stops re-checking the numbers because the product has been right for a month.
 
 ## Learning 5: Stylish but minimalist
 
@@ -86,13 +84,13 @@ Apple-style depth and translucency have matured. Professional tools now adopt *A
 
 It stops being a nice-to-have and in a lot of products has become the default state: between 60% and 80% of users prefer it (Tubik, Merveilleux). Afi doesn't need an all-dark-mode product, but we do need to start building with it in mind. One way to adjust the platform to context is using system backgrounds: during the day, light mode; at night, dark mode. If a user prefers one over the other, they simply choose it as their default.
 
-One critical detail: never pure black. Absolute black under white text produces *halation* — the white glows and bleeds at the edges, so the text seems blurry.
+One critical detail: never pure black. Absolute black under white text produces *halation*: the white glows and bleeds at the edges, so the text seems blurry.
 
 #### Color that communicates
 
-Color in 2026 communicates, it doesn't decorate. Surfaces stay neutral, which gives the accents more meaning. When one color is reserved for communication, the user learns to recognize it without thinking. When everything is colorful, nothing stands out.
+In 2026, color stops decorating and starts communicating. Surfaces stay neutral, which gives the accents more meaning. When one color is reserved for communication, the user learns to recognize it without thinking. When everything is colorful, nothing stands out.
 
-States work the same way: green means positive, red means risk — but color should never be alone. A colorblind user can't tell a red −2% from a green +2%, so indicators pair color with a universal arrow (up/down). 
+States work the same way: green means positive, red means risk. But color should never be alone. A colorblind user can't tell a red −2% from a green +2%, so indicators pair color with a universal arrow (up/down). 
 
 The meaning has to be consistent to be learnable. That's the semantic layer again: `color-action`, `color-positive`, `color-critical`. The name carries the intent, and the intent stays the same across all five brands.
 
@@ -103,36 +101,36 @@ Asymmetric cards of different sizes are the default pattern for 2026 dashboards:
 ![Flat list vs asymmetric bento grid](./assets/modern-ui-2026/list-vs-bento.svg)
 *Diagram 5 — The flat list makes every piece equal. The bento grid uses size and shape to signal importance without imposing rigid columns.*
 
-Expressive minimalism connects with high-cognitive-load B2B products because it prioritizes content instead of ranking everything the same. For example Cresco opted for interfaces that look like technical blueprints: visible grids, monospaced numerals, no ornament. For people moving serious numbers, the trust comes from the *absence* of decoration: a high signal-to-noise ratio that communicates competence.
+Expressive minimalism connects with high-cognitive-load B2B products because it treats content by importance instead of giving everything equal visual weight. For example Cresco opted for interfaces that look like technical blueprints: visible grids, monospaced numerals, no ornament. For people moving serious numbers, the trust comes from the *absence* of decoration: a high signal-to-noise ratio that communicates competence.
 
 ## Learning 6: Create a map machines can read
 
 AI has moved from generative (producing content) to *agentic* (executing work).
 
-For an agent to build interfaces on the system without breaking visual identity, it needs to understand the difference between `blue-500` (descriptive) and `button-primary` (functional). Figma refers to this as *TokenOps*: the person or team responsible for creating rules the AI can read to create consistent outputs. This mindset is the difference between a system only humans can understand and one an AI can consume too.
+For an agent to build interfaces on the system without breaking visual identity, it needs to understand the difference between `blue-500` (descriptive) and `button-primary` (functional). Figma refers to this as *TokenOps*: the practice of maintaining machine-readable token rules so an AI produces consistent output. Ask an agent for a confirmation dialog: it reads the system's dialog, spacing and color tokens, and ships a component that matches the rest of the product without inventing a single hex value. This is the difference between a system only humans can understand and one an AI can consume too.
 
 ![Token cascade: primitive → semantic → component](./assets/modern-ui-2026/token-hierarchy.svg)
-*Diagram 6 — One decision at the primitive level propagates to the semantic tokens and, from there, to every component — without anyone touching a single component file.*
+*Diagram 6 — One decision at the primitive level propagates to the semantic tokens and, from there, to every component, without anyone touching a single component file.*
 
 ## Summary
 
 Here is a quick checklist so when the redesign is reviewed the conversation is based on research, not preference.
 
-**1. A shared design language.** Decisions are made with vocabulary the whole team shares — tokens, patterns, intent — not personal taste.
+**1. A shared design language.** Decisions are made with vocabulary the whole team shares (tokens, patterns, intent), not personal taste.
 
-**2. Intent-based design.** We need to build products based on the objectives of the users.
+**2. Intent-based design.** Screens serve the intent the user arrives with: the explicit one they name and the implicit one the system infers from behavior (Google PAIR's distinction).
 
 **3. Functional motion, not decorative.** Every animation pattern is justified by the trust it adds or the attention it directs.
 
-**4. Trust as a formula.** Transparency, consistency and responsiveness in every interaction — and an interface that works on all three of Norman's levels:
+**4. Trust as a formula.** Transparency, consistency and responsiveness in every interaction, and an interface that works on all three of Norman's levels:
 
 1. **Visceral** (the first-impression reaction)
 2. **Behavioral** (pleasure and effectiveness during use)
 3. **Reflective** (how it sits with the user afterwards)
 
-**5. Stylish but minimalist.** Neutral tones, functional depth, glass on chrome and solid backgrounds on data — and color reserved for meaning: action and state, never decoration.
+**5. Stylish but minimalist.** Neutral tones, functional depth, glass on chrome and solid backgrounds on data. Color reserved for meaning: action and state, never decoration.
 
-**6. *TokenOps* ready for the next generation.** Semantic tokens are the single source of truth. Functional naming (`button-primary`), not descriptive (`blue-500`). This is the precondition for an AI to build on the system without breaking its identity — and for us to make consistent decisions.
+**6. *TokenOps* ready for the next generation.** Semantic tokens are the single source of truth. Functional naming (`button-primary`), not descriptive (`blue-500`). This is the precondition for an AI to build on the system without breaking its identity, and for us to make consistent decisions.
 
 ---
 

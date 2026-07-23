@@ -54,9 +54,10 @@ export class TableApronComponent {
   readonly size = input<TableApronSize>('md');
 
   /**
-   * Number of currently-selected rows. When > 0 the apron shows a distinct
-   * selection chip (tied visually to the table's selected-row tint) with a
-   * clear ×. Leave 0 to hide it.
+   * Number of currently-selected rows. When > 0 the apron shows a selection
+   * token — same chrome as a filter token (check icon + label + clear ×),
+   * filled with the table's selected-row tint, since a selection is a clearable
+   * state just like a filter. Leave 0 to hide it.
    */
   readonly selectedCount = input<number>(0);
   /**

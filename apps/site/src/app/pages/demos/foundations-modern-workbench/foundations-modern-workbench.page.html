@@ -934,7 +934,9 @@
       <p class="workbench__hint">
         Pase el cursor sobre una fila: la casilla y las acciones aparecen (en reposo están
         ocultas). La casilla de la cabecera siempre es visible y pasa a indeterminada con
-        selección parcial. Ordene por Cliente, Posiciones o Valor (ciclo ninguno → asc → desc).
+        selección parcial. Ordene por Cliente, Posiciones o Valor (ciclo ninguno → asc → desc);
+        pase el cursor por una cabecera ordenable para ver la pista de orden. Esta tabla ordena
+        en el consumidor (patrón headless, reacciona a «sortChange»).
         «Editar» (primaria) es una acción en línea; el menú ⋯ ofrece «Duplicar» y «Eliminar».
         Seleccionadas: {{ tableSelected().length }} · Última acción: {{ tableLastAction() }}.
       </p>
@@ -950,6 +952,7 @@
             [rowActions]="tableActions"
             [selectable]="true"
             [density]="density"
+            autoSort
             [selected]="densitySel(density)"
             (selectedChange)="setDensitySelected(density, $event)"
           />
@@ -969,6 +972,11 @@
         </div>
       </section>
     }
+    <p class="workbench__hint">
+      Las tablas por densidad usan «autoSort»: la propia tabla ordena sus filas al pulsar
+      una cabecera —texto por orden alfabético; numérico y monetario por valor— sin escuchar
+      «sortChange».
+    </p>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">Estado vacío · con acción</h3>

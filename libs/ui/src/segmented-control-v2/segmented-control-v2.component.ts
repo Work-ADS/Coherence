@@ -36,7 +36,9 @@ import { SegmentedControlV2Option } from './segmented-control-v2.variants';
  *    the `options` array, never from separate size/count variants.
  *  - Single fixed size (height/component/sm) — no sm/md/lg. Like `afi-toggle-v2`,
  *    a consistent control height reads better and no compact/large variant has
- *    surfaced.
+ *    surfaced. That height is a deliberate dense-desktop touch-target opt-out
+ *    (settings / filter rows, not touch-first surfaces): it sits below the 44×44
+ *    minimum, and `ariaLabel` supplies the accessible name.
  *  - Numeric labels use tabular figures (AFI rule) — handled in the stylesheet.
  *
  * Motion: a single pill Smart-Animates its position + width to the selected

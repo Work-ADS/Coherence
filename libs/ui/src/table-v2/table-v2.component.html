@@ -35,13 +35,10 @@
                    gives Enter/Space + focus for free. -->
               <button type="button" class="afi-table-v2__sort-trigger" (click)="onSort(col)">
                 <span class="afi-table-v2__th-inner">
-                  @if (chevronLeads(col)) {
-                    <ng-container [ngTemplateOutlet]="sortIcon" [ngTemplateOutletContext]="{ col }" />
-                  }
                   <span class="afi-table-v2__th-label">{{ col.label }}</span>
-                  @if (!chevronLeads(col)) {
-                    <ng-container [ngTemplateOutlet]="sortIcon" [ngTemplateOutletContext]="{ col }" />
-                  }
+                  <!-- Sort icon ALWAYS trails the label — consistent across
+                       start- and end-aligned columns. -->
+                  <ng-container [ngTemplateOutlet]="sortIcon" [ngTemplateOutletContext]="{ col }" />
                 </span>
               </button>
             } @else {
@@ -86,7 +83,7 @@
           </td>
         </tr>
       } @else {
-        @for (row of rows(); track rowTrack(row); let rowIndex = $index) {
+        @for (row of displayRows(); track rowTrack(row); let rowIndex = $index) {
           <tr
             [class]="rowClasses(row)"
             [class.afi-table-v2__row--reveal]="reveal() === 'stagger'"
@@ -100,7 +97,7 @@
                 (click)="onRowSelectClick(row, $event)"
               >
                 <afi-checkbox-v2
-                  ariaLabel="Seleccionar fila"
+                  [ariaLabel]="rowSelectLabel(row)"
                   [checked]="isSelected(row)"
                   (checkedChange)="toggleRow(row, $event)"
                 />
@@ -211,17 +208,56 @@
   }
 </div>
 
-<!-- Sort chevron: slot is always reserved for a sortable column (reserved even
-     when unsorted) so cycling the direction never shifts the header width. -->
+<!-- Sort icon: slot is always reserved for a sortable column (reserved even
+     when unsorted) so cycling the direction never shifts the header width.
+     Glyphs are the Lucide sort family from the Figma "icon ideas" section
+     (3042:10432): a-z / z-a for text columns, 0-1 / 1-0 for numeric + monetary,
+     arrow-up-down as the unsorted hint. -->
 <ng-template #sortIcon let-col="col">
   <span class="afi-table-v2__sort" aria-hidden="true">
     @if (isSortedAsc(col.key)) {
-      <svg class="afi-table-v2__sort-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 10l4-4 4 4" />
+      <svg class="afi-table-v2__sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        @if (numericSort(col)) {
+          <path d="m3 16 4 4 4-4" />
+          <path d="M7 20V4" />
+          <rect x="15" y="4" width="4" height="6" ry="2" />
+          <path d="M17 20v-6h-2" />
+          <path d="M15 20h4" />
+        } @else {
+          <path d="m3 16 4 4 4-4" />
+          <path d="M7 20V4" />
+          <path d="M20 8h-5" />
+          <path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10" />
+          <path d="M15 14h5l-5 6h5" />
+        }
       </svg>
     } @else if (isSortedDesc(col.key)) {
-      <svg class="afi-table-v2__sort-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 6l4 4 4-4" />
+      <svg class="afi-table-v2__sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        @if (numericSort(col)) {
+          <path d="m3 16 4 4 4-4" />
+          <path d="M7 20V4" />
+          <path d="M17 10V4h-2" />
+          <path d="M15 10h4" />
+          <rect x="15" y="14" width="4" height="6" ry="2" />
+        } @else {
+          <path d="m3 16 4 4 4-4" />
+          <path d="M7 4v16" />
+          <path d="M15 4h5l-5 6h5" />
+          <path d="M15 20v-3.5a2.5 2.5 0 0 1 5 0V20" />
+          <path d="M20 18h-5" />
+        }
+      </svg>
+    } @else {
+      <!-- code-leads-figma: hover/focus hint on a sortable-but-unsorted header.
+           The Figma header cell (2730:3888) defines only Sort=None/Ascending/
+           Descending with no hover state; this discoverability affordance is
+           added code-side (Richard, 2026-07-23) and should be reflected back into
+           the Figma component set. Faint until the header is hovered/focused. -->
+      <svg class="afi-table-v2__sort-icon afi-table-v2__sort-icon--hint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m21 16-4 4-4-4" />
+        <path d="M17 20V4" />
+        <path d="m3 8 4-4 4 4" />
+        <path d="M7 4v16" />
       </svg>
     }
   </span>

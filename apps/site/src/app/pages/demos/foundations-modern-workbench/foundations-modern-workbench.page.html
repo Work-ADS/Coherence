@@ -2,6 +2,25 @@
      first-class site destination (top-bar "Workbench" at /workbench), so it
      lives under the site glass nav instead of the demo feedback chrome. -->
 <div class="workbench" data-foundation="modern">
+  <nav class="workbench__nav" aria-label="Índice de componentes">
+    <ul class="workbench__nav-list">
+      @for (label of sections(); track label; let i = $index) {
+        <li class="workbench__nav-item">
+          <button
+            type="button"
+            class="workbench__nav-link"
+            [class.workbench__nav-link--active]="i === activeSection()"
+            [attr.aria-current]="i === activeSection() ? 'true' : null"
+            (click)="scrollToSection(i)"
+          >
+            {{ label }}
+          </button>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="workbench__main">
     <header class="workbench__header">
       <h1 class="workbench__title">Identidad v2 — workbench</h1>
       <p class="workbench__subtitle">
@@ -9,7 +28,7 @@
       </p>
     </header>
 
-    <h2 class="workbench__group-title">Botón</h2>
+    <h2 #wbGroup class="workbench__group-title">Botón</h2>
 
     @for (variant of variants; track variant) {
       <section class="workbench__section">
@@ -82,7 +101,7 @@
       </div>
     </section>
 
-    <h2 class="workbench__group-title">Icon button</h2>
+    <h2 #wbGroup class="workbench__group-title">Icon button</h2>
 
     @for (variant of iconButtonVariants; track variant) {
       <section class="workbench__section">
@@ -138,7 +157,7 @@
       </section>
     }
 
-    <h2 class="workbench__group-title">Input</h2>
+    <h2 #wbGroup class="workbench__group-title">Input</h2>
 
     @for (size of inputSizes; track size) {
       <section class="workbench__section">
@@ -247,7 +266,7 @@
       </p>
     </section>
 
-    <h2 class="workbench__group-title">Menu item</h2>
+    <h2 #wbGroup class="workbench__group-title">Menu item</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">6 estados · en el panel afi-menu-v2 con separador</h3>
@@ -323,7 +342,7 @@
       </p>
     </section>
 
-    <h2 class="workbench__group-title">Select</h2>
+    <h2 #wbGroup class="workbench__group-title">Select</h2>
 
     @for (size of selectSizes; track size) {
       <section class="workbench__section">
@@ -379,7 +398,7 @@
       (role="option").
     </p>
 
-    <h2 class="workbench__group-title">Toggle</h2>
+    <h2 #wbGroup class="workbench__group-title">Toggle</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">2 valores × 4 estados · tamaño fijo</h3>
@@ -397,7 +416,41 @@
       sombra del pulgar se aplana. Actívelo con clic, Intro o Espacio.
     </p>
 
-    <h2 class="workbench__group-title">Checkbox</h2>
+    <h2 #wbGroup class="workbench__group-title">Control segmentado</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">2–4 segmentos · una opción siempre activa · tamaño fijo</h3>
+      <div class="workbench__row workbench__row--toggles">
+        <afi-segmented-control-v2
+          [options]="segmentedPeriodo"
+          [(value)]="segPeriodo"
+          ariaLabel="Periodo"
+        />
+        <afi-segmented-control-v2
+          [options]="segmentedVista"
+          [(value)]="segVista"
+          ariaLabel="Vista"
+        />
+        <afi-segmented-control-v2
+          [options]="segmentedEstado"
+          [(value)]="segEstado"
+          ariaLabel="Estado"
+        />
+        <afi-segmented-control-v2
+          [options]="segmentedFrecuencia"
+          [(value)]="segFrecuencia"
+          ariaLabel="Frecuencia"
+        />
+      </div>
+    </section>
+    <p class="workbench__hint">
+      Cambia un modo o ajuste de la vista actual; la navegación entre vistas son las
+      pestañas. La píldora se desliza al segmento activo (200 ms) y se detiene al
+      instante con «reduced motion». Muévase con las flechas, Inicio y Fin; los
+      segmentos deshabilitados se omiten.
+    </p>
+
+    <h2 #wbGroup class="workbench__group-title">Checkbox</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">3 valores × 4 estados · tamaño fijo</h3>
@@ -422,7 +475,7 @@
       a Marcado—. Actívelo con clic o Espacio.
     </p>
 
-    <h2 class="workbench__group-title">Radio</h2>
+    <h2 #wbGroup class="workbench__group-title">Radio</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">
@@ -468,7 +521,7 @@
       principio) y Espacio selecciona. Las opciones deshabilitadas no reciben foco.
     </p>
 
-    <h2 class="workbench__group-title">Tag</h2>
+    <h2 #wbGroup class="workbench__group-title">Tag</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">2 tipos × icono no/sí · tamaño fijo</h3>
@@ -520,7 +573,7 @@
       Para selección use Chip; para estado use Badge.
     </p>
 
-    <h2 class="workbench__group-title">Chip</h2>
+    <h2 #wbGroup class="workbench__group-title">Chip</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">2 selecciones × icono no/sí · quitable · tamaño fijo</h3>
@@ -630,7 +683,7 @@
       Badge.
     </p>
 
-    <h2 class="workbench__group-title">Badge</h2>
+    <h2 #wbGroup class="workbench__group-title">Badge</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">5 tonos · sin punto · tamaño fijo</h3>
@@ -658,7 +711,7 @@
       warning/900). Para clasificación pasiva use Tag; para selección, Chip.
     </p>
 
-    <h2 class="workbench__group-title">Tabs</h2>
+    <h2 #wbGroup class="workbench__group-title">Tabs</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">
@@ -749,7 +802,7 @@
       icono de encabezado es decorativo y nunca sustituye a la etiqueta.
     </p>
 
-    <h2 class="workbench__group-title">Card</h2>
+    <h2 #wbGroup class="workbench__group-title">Card</h2>
 
     <section class="workbench__section">
       <h2 class="workbench__section-title">Matriz de estados · Header × Footer × acción</h2>
@@ -846,7 +899,7 @@
       </p>
     </section>
 
-    <h2 class="workbench__group-title">Tabla</h2>
+    <h2 #wbGroup class="workbench__group-title">Tabla</h2>
 
     <section class="workbench__section">
       <h2 class="workbench__section-title">Interactiva · selección + orden + acciones</h2>
@@ -932,7 +985,7 @@
       <afi-table-v2 [columns]="tableColumns" [rows]="tableData" [loading]="true" />
     </section>
 
-    <h2 class="workbench__group-title">Table apron</h2>
+    <h2 #wbGroup class="workbench__group-title">Table apron</h2>
 
     <section class="workbench__section">
       <h2 class="workbench__section-title">Buscar + filtrar · recuento en vivo con tokens</h2>
@@ -989,7 +1042,7 @@
       </p>
     </section>
 
-    <h2 class="workbench__group-title">Sidebar</h2>
+    <h2 #wbGroup class="workbench__group-title">Sidebar</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">
@@ -1069,7 +1122,7 @@
       </div>
     </section>
 
-    <h2 class="workbench__group-title">Dialog</h2>
+    <h2 #wbGroup class="workbench__group-title">Dialog</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">Tamaños · plantilla de contenido</h3>
@@ -1137,7 +1190,7 @@
       </afi-dialog-v2>
     </section>
 
-    <h2 class="workbench__group-title">Drawer</h2>
+    <h2 #wbGroup class="workbench__group-title">Drawer</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">Tamaños · plantilla de contenido</h3>
@@ -1241,7 +1294,7 @@
       </afi-drawer-v2>
     </section>
 
-    <h2 class="workbench__group-title">Navbar</h2>
+    <h2 #wbGroup class="workbench__group-title">Navbar</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">
@@ -1322,4 +1375,5 @@
         </afi-sidebar-v2>
       </afi-drawer-v2>
     </section>
+  </div>
 </div>

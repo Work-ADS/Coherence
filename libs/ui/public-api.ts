@@ -23,6 +23,8 @@ export { ChipV2Component } from './src/chip-v2';
 export { BadgeV2Component } from './src/badge-v2';
 export type { BadgeV2Tone } from './src/badge-v2';
 export { TabsV2Component, TabV2Component } from './src/tabs-v2';
+export { SegmentedControlV2Component } from './src/segmented-control-v2';
+export type { SegmentedControlV2Option } from './src/segmented-control-v2';
 export { CardV2Component } from './src/card-v2';
 export { IconButtonV2Component } from './src/icon-button-v2';
 export type { IconButtonV2Variant, IconButtonV2Size } from './src/icon-button-v2';

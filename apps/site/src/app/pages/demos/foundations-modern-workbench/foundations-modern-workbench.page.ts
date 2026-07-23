@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  signal,
+  viewChildren,
+} from '@angular/core';
 
 import {
   BadgeV2Component,
@@ -19,6 +29,7 @@ import {
   RadioGroupV2Component,
   RadioV2Component,
   SearchV2Component,
+  SegmentedControlV2Component,
   SelectV2Component,
   SidebarV2Component,
   TableApronComponent,
@@ -41,6 +52,7 @@ import type {
   InputV2Size,
   NavbarV2Action,
   SearchV2Suggestion,
+  SegmentedControlV2Option,
   SelectV2Size,
   SelectV2Option,
   TableApronSelectionAction,
@@ -88,6 +100,7 @@ import type {
     SelectV2Component,
     RadioGroupV2Component,
     RadioV2Component,
+    SegmentedControlV2Component,
     SidebarV2Component,
     TableApronComponent,
     TabsV2Component,
@@ -99,6 +112,54 @@ import type {
   styleUrls: ['./foundations-modern-workbench.page.scss'],
 })
 export class FoundationsModernWorkbenchPage {
+  private readonly destroyRef = inject(DestroyRef);
+
+  // ─── Side index (table of contents) ───
+  // Driven off the rendered group titles so the nav stays in sync as groups are
+  // added — no hand-maintained list, no querySelector.
+  readonly groupTitles = viewChildren<ElementRef<HTMLElement>>('wbGroup');
+  readonly sections = signal<string[]>([]);
+  readonly activeSection = signal(0);
+
+  constructor() {
+    afterNextRender(() => {
+      const groups = this.groupTitles();
+      this.sections.set(
+        groups.map((group) => group.nativeElement.textContent?.trim() ?? ''),
+      );
+
+      // Scroll-spy: highlight the group nearest the top of the viewport. The
+      // bottom rootMargin biases the "active" pick toward the upper third so the
+      // highlight flips as a section's heading reaches the top, not its middle.
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries.filter((entry) => entry.isIntersecting);
+          if (visible.length === 0) return;
+          const topmost = visible.reduce((a, b) =>
+            a.boundingClientRect.top < b.boundingClientRect.top ? a : b,
+          );
+          const index = groups.findIndex(
+            (group) => group.nativeElement === topmost.target,
+          );
+          if (index >= 0) this.activeSection.set(index);
+        },
+        { rootMargin: '0px 0px -70% 0px', threshold: 0 },
+      );
+      groups.forEach((group) => observer.observe(group.nativeElement));
+      this.destroyRef.onDestroy(() => observer.disconnect());
+    });
+  }
+
+  scrollToSection(index: number): void {
+    // ElementRef.scrollIntoView is the standard reach here (as in afi-tabs-v2);
+    // smoothness is dropped when the user prefers reduced motion.
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.groupTitles()[index]?.nativeElement.scrollIntoView({
+      behavior: reduce ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }
+
   // Sidebar workbench — collapsed state per demo frame (self-toggling).
   readonly sidebarCollapsedMain = signal(false);
   readonly sidebarCollapsedRail = signal(true);
@@ -143,6 +204,32 @@ export class FoundationsModernWorkbenchPage {
     'Cádiz',
     'Cantabria',
   ].map((name) => ({ value: name.toLowerCase(), label: name }));
+
+  // Segmented control — one selection is always active; count comes from the array.
+  readonly segmentedPeriodo: SegmentedControlV2Option[] = [
+    { value: 'mensual', label: 'Mensual' },
+    { value: 'anual', label: 'Anual' },
+  ];
+  readonly segmentedVista: SegmentedControlV2Option[] = [
+    { value: 'resumen', label: 'Resumen' },
+    { value: 'actividad', label: 'Actividad' },
+    { value: 'ajustes', label: 'Ajustes' },
+  ];
+  readonly segmentedEstado: SegmentedControlV2Option[] = [
+    { value: 'todos', label: 'Todos' },
+    { value: 'activos', label: 'Activos' },
+    { value: 'pendientes', label: 'Pendientes' },
+    { value: 'archivados', label: 'Archivados' },
+  ];
+  readonly segmentedFrecuencia: SegmentedControlV2Option[] = [
+    { value: 'diario', label: 'Diario' },
+    { value: 'semanal', label: 'Semanal', disabled: true },
+    { value: 'mensual', label: 'Mensual' },
+  ];
+  readonly segPeriodo = signal('mensual');
+  readonly segVista = signal('resumen');
+  readonly segEstado = signal('activos');
+  readonly segFrecuencia = signal('diario');
 
   readonly labels: Record<ButtonV2Variant, string> = {
     primary: 'Guardar',

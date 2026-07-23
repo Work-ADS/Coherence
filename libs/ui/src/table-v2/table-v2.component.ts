@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -65,10 +66,15 @@ interface MenuCoords {
  *    checkbox is always visible and shows indeterminate on partial selection;
  *    row checkboxes + trailing actions reveal on hover / focus / selection
  *    (`actionsReveal`, default `hover`).
- *  - Sort: clicking a sortable header cycles none → asc → desc → none; only the
- *    active column shows a chevron; the icon slot is always reserved so toggling
- *    never shifts the header width. The table does not sort — consumers pass
- *    pre-sorted rows and react to `sortChange`.
+ *  - Sort: clicking a sortable header cycles none → asc → desc → none. The sort
+ *    icon ALWAYS trails the label — same placement on every alignment. Active
+ *    columns show a Lucide sort glyph matched to the column kind (a-z / z-a for
+ *    text, 0-1 / 1-0 for numeric + monetary); sortable-but-unsorted headers
+ *    reveal a faint arrow-up-down hint on hover/focus so sortable columns stay
+ *    discoverable (icon set: Figma "icon ideas" 3042:10432). The icon slot is
+ *    always reserved so toggling never shifts the header width. Headless by
+ *    default (consumers pass pre-sorted rows and react to `sortChange`); set
+ *    `autoSort` to have the table sort its own rows.
  *  - Data / Empty (message + optional "add" action) / Loading (rows dimmed with
  *    geometry preserved + centred spinner) states.
  *  - Trailing actions: inline icon-buttons (icon-button-v2) plus an overflow
@@ -106,6 +112,16 @@ export class TableV2Component {
   readonly selected = input<Record<string, unknown>[]>([]);
   readonly selectable = input<boolean>(false);
   readonly sortBy = input<TableV2SortState | null>(null);
+
+  /**
+   * Sort the rows internally instead of delegating to the consumer. When `true`,
+   * clicking a sortable header sorts the table's own `rows` (text/status by es-ES
+   * locale, numeric/monetary numerically) with no `sortChange` wiring required;
+   * `sortChange` still fires for observability. Leave `false` (default) for
+   * server-side or custom sorting, where the consumer passes pre-sorted `rows`
+   * and reacts to `sortChange`.
+   */
+  readonly autoSort = input(false, { transform: booleanAttribute });
   readonly loading = input<boolean>(false);
   readonly density = input<TableV2Density>('default');
   readonly rowHoverable = input<boolean>(true);
@@ -151,6 +167,8 @@ export class TableV2Component {
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly selectionState = signal<Record<string, unknown>[]>([]);
+  /** Uncontrolled sort state used only in `autoSort` mode. */
+  private readonly internalSort = signal<TableV2SortState | null>(null);
 
   constructor() {
     // `selected` remains the controlled API. Mirroring it locally also makes
@@ -319,8 +337,8 @@ export class TableV2Component {
     ].join(' ');
   }
 
-  /** Sortable numeric/monetary columns lead with the chevron (right-aligned text). */
-  chevronLeads(col: TableV2Column): boolean {
+  /** Numeric/monetary columns use the 0-1/1-0 sort glyphs; the rest use a-z/z-a. */
+  numericSort(col: TableV2Column): boolean {
     return col.kind === 'numeric' || col.kind === 'monetary';
   }
 
@@ -369,6 +387,20 @@ export class TableV2Component {
     return value === null || value === undefined ? '' : String(value);
   }
 
+  /**
+   * Per-row accessible name for the selection checkbox. Names the row by its
+   * first text column so screen-reader users can tell rows apart (accessibility.md
+   * Table checklist: "Row-selection checkboxes have `aria-label` referencing the
+   * row identifier"). Falls back to the generic phrase when no text column yields
+   * a value.
+   */
+  rowSelectLabel(row: Record<string, unknown>): string {
+    const cols = this.visibleColumns();
+    const labelCol = cols.find((c) => (c.kind ?? 'text') === 'text') ?? cols[0];
+    const name = labelCol ? this.cellText(row, labelCol).trim() : '';
+    return name ? `Seleccionar fila: ${name}` : 'Seleccionar fila';
+  }
+
   /** Badge tone for a status cell: per-row `toneKey` → column `badgeTone` → neutral. */
   badgeToneFor(row: Record<string, unknown>, col: TableV2Column): BadgeV2Tone {
     if (col.toneKey) {
@@ -386,32 +418,75 @@ export class TableV2Component {
     return col.badgeTone ?? 'neutral';
   }
 
+  /** Active sort — internal state in `autoSort` mode, else the controlled `sortBy`. */
+  readonly effectiveSort = computed(() =>
+    this.autoSort() ? this.internalSort() : this.sortBy(),
+  );
+
+  /**
+   * Rows in render order. In `autoSort` mode the table sorts its own rows by the
+   * active column — numeric/monetary parsed es-ES-aware (e.g. "1.240.500 €"),
+   * everything else by locale compare, nulls last. Otherwise the consumer's
+   * `rows` pass through untouched (headless / controlled sorting).
+   */
+  readonly displayRows = computed(() => {
+    const rows = this.rows();
+    const sort = this.internalSort();
+    if (!this.autoSort() || !sort) return rows;
+    const col = this.columns().find((c) => c.key === sort.column);
+    const numeric = col?.kind === 'numeric' || col?.kind === 'monetary';
+    const factor = sort.direction === 'asc' ? 1 : -1;
+    return [...rows].sort((a, b) => {
+      const av = a[sort.column];
+      const bv = b[sort.column];
+      const aNil = av === null || av === undefined;
+      const bNil = bv === null || bv === undefined;
+      if (aNil && bNil) return 0;
+      if (aNil) return 1; // nulls last, regardless of direction
+      if (bNil) return -1;
+      const cmp = numeric
+        ? TableV2Component.toNumber(av) - TableV2Component.toNumber(bv)
+        : String(av).localeCompare(String(bv), 'es', { numeric: true });
+      return factor * cmp;
+    });
+  });
+
+  /** Parse a raw or es-ES-formatted value ("1.240.500 €") to a comparable number. */
+  private static toNumber(value: unknown): number {
+    return typeof value === 'string'
+      ? Number(value.replace(/[^\d,-]/g, '').replace(',', '.'))
+      : Number(value);
+  }
+
   ariaSort(columnKey: string): 'none' | 'ascending' | 'descending' {
-    const sort = this.sortBy();
+    const sort = this.effectiveSort();
     if (!sort || sort.column !== columnKey) return 'none';
     return sort.direction === 'asc' ? 'ascending' : 'descending';
   }
 
   isSortedAsc(columnKey: string): boolean {
-    const sort = this.sortBy();
+    const sort = this.effectiveSort();
     return !!sort && sort.column === columnKey && sort.direction === 'asc';
   }
 
   isSortedDesc(columnKey: string): boolean {
-    const sort = this.sortBy();
+    const sort = this.effectiveSort();
     return !!sort && sort.column === columnKey && sort.direction === 'desc';
   }
 
   onSort(col: TableV2Column): void {
     if (!col.sortable) return;
-    const current = this.sortBy();
+    const current = this.effectiveSort();
+    let next: TableV2SortState | null;
     if (!current || current.column !== col.key) {
-      this.sortChange.emit({ column: col.key, direction: 'asc' });
+      next = { column: col.key, direction: 'asc' };
     } else if (current.direction === 'asc') {
-      this.sortChange.emit({ column: col.key, direction: 'desc' });
+      next = { column: col.key, direction: 'desc' };
     } else {
-      this.sortChange.emit(null);
+      next = null;
     }
+    if (this.autoSort()) this.internalSort.set(next);
+    this.sortChange.emit(next);
   }
 
   // ── Row / action clicks ──────────────────────────────────────────────────────

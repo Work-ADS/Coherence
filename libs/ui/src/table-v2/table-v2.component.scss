@@ -80,6 +80,10 @@
   cursor: pointer;
   user-select: none;
 
+  // focus-ring (motion-skill §4.3) — deliberately NOT the shared focus-ring-v2
+  // mixin: the header lives in an overflow-x scroll container, so an outward ring
+  // would be clipped. The offset is pulled inward by its own width so the ring
+  // hugs the cell edge and stays fully visible (same approach as afi-tab-v2).
   &:focus-visible {
     outline: var(--stroke-focus) solid var(--borders-focus);
     outline-offset: calc(-1 * var(--stroke-focus));
@@ -94,19 +98,41 @@
   inline-size: 100%;
 }
 
-// Sort chevron slot — reserved for every sortable column so cycling the
-// direction (or clearing it) never shifts the header width.
+// Sort icon slot — reserved for every sortable column so cycling the direction
+// (or clearing it) never shifts the header width. icon-sm, not icon-xs: the
+// Lucide sort glyphs (a-z / 1-0) carry letterforms that blur at the smaller step.
 .afi-table-v2__sort {
   display: inline-flex;
   flex: none;
-  inline-size: var(--icon-xs);
-  block-size: var(--icon-xs);
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
   color: var(--content-secondary);
 }
 
 .afi-table-v2__sort-icon {
   inline-size: 100%;
   block-size: 100%;
+}
+
+// Hover/focus hint (code-leads-figma — the Figma header cell 2730:3888 has no
+// hover state): a faint chevron that fades in when a sortable-but-unsorted header
+// is hovered or focused, so sortable columns are discoverable without cluttering
+// the resting header. The active (sorted) chevron stays full-strength.
+.afi-table-v2__sort-icon--hint {
+  color: var(--content-tertiary);
+  opacity: 0;
+  transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.afi-table-v2__sort-trigger:hover .afi-table-v2__sort-icon--hint,
+.afi-table-v2__sort-trigger:focus-visible .afi-table-v2__sort-icon--hint {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afi-table-v2__sort-icon--hint {
+    transition: none;
+  }
 }
 
 // ── Body cells ───────────────────────────────────────────────────────────────

@@ -127,7 +127,7 @@ export const tokenUsage = [
   { property: 'Divisor de fila', token: 'var(--borders-default)', note: 'alto --stroke-hairline, solo inferior' },
   { property: 'Texto de celda', token: 'var(--content-primary)', note: 'estilo table 13/18/400' },
   { property: 'Texto de cabecera', token: 'var(--content-secondary)', note: 'estilo table header 13/18/500' },
-  { property: 'Icono de orden', token: 'var(--content-secondary)', note: 'tamaño --icon-xs' },
+  { property: 'Icono de orden', token: 'var(--content-secondary)', note: 'tamaño --icon-sm' },
   { property: 'Fila hover', token: 'var(--background-hover)' },
   { property: 'Fila seleccionada', token: 'var(--background-selected)' },
 ];

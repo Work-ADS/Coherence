@@ -154,27 +154,13 @@
   color: var(--error-foreground);
 }
 
-// ── Selection chip ───────────────────────────────────────────────────────────
-// Visually distinct from filter tokens: filled with the selected-row tint so it
-// reads as "this reflects the rows you have selected".
-.afi-table-apron__selection {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gap-control-sm);
-  flex: none;
-  block-size: var(--height-component-xs);
-  padding-inline: var(--pad-control-lg);
-  border: var(--stroke-default) solid var(--borders-default);
-  border-radius: var(--radius-full);
+// ── Selection token ──────────────────────────────────────────────────────────
+// Selection is a clearable state — the same species as a filter — so it shares
+// the token chrome (icon + label + ×) instead of being a second, competing
+// counter chip. Only the fill differs: the table's selected-row tint ties it to
+// the rows it reflects.
+.afi-table-apron__token--selection {
   background: var(--background-selected);
-  color: var(--content-primary);
-}
-
-.afi-table-apron__selection-label {
-  font-size: var(--type-label-size);
-  font-weight: var(--type-label-weight);
-  line-height: var(--type-label-line-height);
-  white-space: nowrap;
 }
 
 .afi-table-apron__token-remove {

@@ -1,0 +1,121 @@
+// afi-segmented-control-v2 — identity v2 (foundations-modern tokens only).
+//
+// Figma source of truth: AFI-FOUNDATIONS-MODERN → Segmented Control set
+// (3005:5944) + documentation (3007:6757). A track (control/background/default,
+// radius/lg) padded by gap/control-xs hosts a row of transparent segment buttons
+// (height/component/sm, pad/control-sm, radius/md). One pill (control/200)
+// slides behind the buttons to mark the selected segment; unselected buttons
+// tint on hover (control/100). Labels are the `button` text style —
+// content/secondary resting, content/primary selected, content/disabled inert.
+
+:host {
+  display: inline-block;
+  max-inline-size: 100%;
+}
+
+.afi-segmented-control-v2 {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-xs);
+  box-sizing: border-box;
+  padding: var(--gap-control-xs);
+  border-radius: var(--radius-lg);
+  background: var(--control-background-default);
+  font-family: var(--font-family-primary);
+
+  // ── Sliding pill ───────────────────────────────────────────────────────────
+  // Vertically inset by the track padding so its height matches the segments;
+  // horizontal position + width are measured and driven by the component.
+  &__indicator {
+    position: absolute;
+    inset-block: var(--gap-control-xs);
+    inset-inline-start: var(--dimension-0);
+    z-index: 0;
+    border-radius: var(--radius-md);
+    background: var(--control-background-active);
+    will-change: transform, width;
+
+    // hover-tint / positional slide (motion-skill §4.1): only animate after the
+    // first measure, so the pill lands under the initial selection rather than
+    // growing in from zero width.
+    &--animated {
+      transition:
+        transform var(--motion-duration-base) var(--motion-easing-standard),
+        width var(--motion-duration-base) var(--motion-easing-standard);
+    }
+
+    // Selected segment is itself disabled → mute the pill.
+    &--disabled {
+      background: var(--control-background-disabled);
+    }
+
+    // reduced-motion-collapse (motion-skill §4.6): the slide is non-essential.
+    @media (prefers-reduced-motion: reduce) {
+      &--animated {
+        transition: none;
+      }
+    }
+  }
+
+  // ── Segment button ───────────────────────────────────────────────────────────
+  &__segment {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    block-size: var(--height-component-sm);
+    margin: 0;
+    padding-block: var(--dimension-0);
+    padding-inline: var(--pad-control-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--content-secondary);
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--motion-duration-fast) var(--motion-easing-standard),
+      color var(--motion-duration-fast) var(--motion-easing-standard);
+
+    // Hover only tints unselected, enabled segments (the pill owns the selected one).
+    &:hover:not(:disabled):not(.afi-segmented-control-v2__segment--selected) {
+      background: var(--control-background-hover);
+    }
+
+    &--selected {
+      color: var(--content-primary);
+    }
+
+    &:disabled {
+      color: var(--content-disabled);
+      cursor: not-allowed;
+    }
+
+    // Focus shadow-pair (Figma "focus shadow-pair") — a canvas-coloured inner gap
+    // then the focus ring. Deviates from the family focus-ring-v2 outline mixin on
+    // purpose: the ring sits inside the track, so the gap keeps it legible against
+    // the pill and neighbouring segments.
+    &:focus-visible {
+      outline: none;
+      box-shadow:
+        0 0 0 var(--stroke-hairline) var(--background-canvas),
+        0 0 0 calc(var(--stroke-hairline) + var(--stroke-focus)) var(--borders-focus);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &__label {
+    font-size: var(--type-button-size);
+    font-weight: var(--type-button-weight);
+    line-height: var(--type-button-line-height);
+    // Tabular figures for numeric content (Figma usage rule / AFI rule).
+    font-variant-numeric: tabular-nums;
+    color: inherit;
+  }
+}

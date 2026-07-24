@@ -66,29 +66,33 @@ const POSTS: BlogPost[] = [
     },
     thumb: 'ia',
   },
-  {
-    slug: 'brand-and-personas',
-    collection: 'methodology',
-    darkThumb: true,
-    eyebrow: {
-      es: 'ESTRATEGIA · MARCA',
-      en: 'STRATEGY · BRAND',
-    },
-    title: {
-      es: 'Estrategia de marca: la base que el moodboard no puede inventar',
-      en: 'Brand strategy: what the moodboard can\'t make up',
-    },
-    date: {
-      es: '25 junio 2026',
-      en: 'June 25, 2026',
-    },
-    intro: {
-      es: 'Antes de abrir Figma, el brief: seis campos de marca que hoy guían los simuladores y la nueva identidad. Por qué los demos en código nos dejan enseñar casos de uso de verdad, no sólo pantallas.',
-      en: 'Before opening Figma, the brief: six brand fields that now steer the simulators and the new identity. Why code-based demos let us show real use cases, not just screens.',
-    },
-    thumb: 'video',
-    videoSrc: 'assets/thumbnails/brand-and-personas.mp4',
-  },
+  // Hidden 2026-07-24 — brand-and-personas is AI-drafted and factually wrong;
+  // Richard is replacing it. The /blog/brand-and-personas route still resolves
+  // (direct URL), it's just delisted from the methodology landing. Restore by
+  // uncommenting once the rewrite lands.
+  // {
+  //   slug: 'brand-and-personas',
+  //   collection: 'methodology',
+  //   darkThumb: true,
+  //   eyebrow: {
+  //     es: 'ESTRATEGIA · MARCA',
+  //     en: 'STRATEGY · BRAND',
+  //   },
+  //   title: {
+  //     es: 'Estrategia de marca: la base que el moodboard no puede inventar',
+  //     en: 'Brand strategy: what the moodboard can\'t make up',
+  //   },
+  //   date: {
+  //     es: '25 junio 2026',
+  //     en: 'June 25, 2026',
+  //   },
+  //   intro: {
+  //     es: 'Antes de abrir Figma, el brief: seis campos de marca que hoy guían los simuladores y la nueva identidad. Por qué los demos en código nos dejan enseñar casos de uso de verdad, no sólo pantallas.',
+  //     en: 'Before opening Figma, the brief: six brand fields that now steer the simulators and the new identity. Why code-based demos let us show real use cases, not just screens.',
+  //   },
+  //   thumb: 'video',
+  //   videoSrc: 'assets/thumbnails/brand-and-personas.mp4',
+  // },
   {
     slug: 'ui-moderno-2026',
     collection: 'methodology',

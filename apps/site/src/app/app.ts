@@ -162,15 +162,10 @@ export class App {
     // Depth-2 exception: the Nueva simulación · Overview is a platform surface
     // (its own sidebar-v2 + navbar-v2 chrome), so it renders full-screen too.
     const overviewPlatform = /^\/demos\/nueva-simulacion-overview(\/|$)/.test(url);
-    // The Modern UI post renders as an immersive dark reading room with its
-    // own floating chrome (back link + language toggle), so the DS top bar
-    // would be double chrome.
-    const immersiveReader = /^\/blog\/ui-moderno-2026(\/|$)/.test(url);
     return (
       demosFullScreen ||
       topLevelDemoRoutes ||
       overviewPlatform ||
-      immersiveReader ||
       /^\/afi-insights(\/|$)/.test(url) ||
       /^\/talks\/.+/.test(url)
     );

@@ -1,305 +1,229 @@
 // =============================================================================
-// ui-moderno-2026.page.scss — immersive dark reading room
+// ui-moderno-2026.page.scss
 // =============================================================================
-// BEM under `.reader`. Token-only — reader-specific values live in
-// libs/tokens/foundations-modern/component-reader.scss.
-//
-// Scroll-focus treatment: each beat runs a scroll-driven animation on its own
-// view() timeline — dimmed + blurred at the viewport edges, crisp at the
-// center. Guarded by @supports; browsers without scroll-driven animations
-// (and reduced-motion users) read every beat crisp.
+// Part 1 of the redesign series, built on the identity-v2 modern foundation.
+// The root carries data-foundation="modern", so all COLOR and TYPE resolve to
+// the v2 set: IBM Plex Sans, per-role type scale (--type-h2-*,
+// --type-body-default-*, …) and the --content-* / --background-* / --borders-*
+// semantic colors. Spacing, radius and layout widths (--space-*, --radius-*,
+// --content-prose) are foundation-agnostic globals — shared by v1 and v2 alike,
+// same as every other v2 surface. Token-only — the clean-code hook blocks raw
+// values outside libs/tokens/.
 // =============================================================================
 
-:host {
-  display: block;
-}
+@use '../../../../../../../libs/ui/src/styles/focus-ring' as *;
 
-.reader {
-  position: relative;
+.post {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  background: var(--reader-canvas);
-  color: var(--reader-content-primary);
-  overflow-x: clip;
-  // Mirror of the home card's darkening morph: the reader arrives dark and
-  // blurred, then resolves to clear. Opacity stays near-opaque so the light
-  // body behind never flashes through.
-  animation: reader-enter var(--duration-reveal-heavy) var(--easing-enter);
-}
+  font-family: var(--font-family-primary);
+  color: var(--content-primary);
+  background: var(--background-canvas);
 
-@keyframes reader-enter {
-  from {
-    opacity: 0.85;
-    filter: blur(var(--reveal-blur-heavy));
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-  }
-}
-
-// ─── Floating chrome ──────────────────────────────────────────────────────────
-.reader__chrome {
-  position: fixed;
-  inset-block-start: 0;
-  inset-inline: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-lg);
-  z-index: 10;
-}
-
-.reader__back {
-  font: var(--reader-type-support);
-  color: var(--reader-content-dim);
-  text-decoration: none;
-  padding: var(--space-2xs) var(--space-md);
-  border-radius: var(--radius-pill);
-  background: var(--reader-glass-surface);
-  border: var(--border-width-hairline) solid var(--reader-glass-border);
-  backdrop-filter: blur(var(--reader-glass-blur));
-  transition: color var(--duration-fast) var(--easing-enter);
-
-  &:hover {
-    color: var(--reader-content-primary);
+  &__main {
+    flex: 1;
+    overflow-y: auto;
   }
 
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  &__article {
+    max-width: var(--content-prose);
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-xl) var(--space-3xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  // ─── Article hero (title block) — v2 modern header, replacing the v1
+  //     serif afi-page-header so the whole page reads on the modern scale. ───
+  &__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  // Ghost "back to Design at Afi" button — sits where the eyebrow used to.
+  // Persistent-label-alignment rule (AGENTS.md, LOCKED): the resting state is
+  // the anchor, so the always-visible chevron lines up with the title/body
+  // column. The button's own inline padding is pulled back with a negative
+  // margin (edge-anchor, as filter-chip does); on hover the ghost background
+  // bleeds left of that edge — the box may look offset, but the icon stays put.
+  &__back {
+    align-self: flex-start;
+    margin-inline-start: calc(-1 * var(--pad-control-sm));
+    margin-bottom: var(--space-2xs);
+
+    // afi-button-v2 sizes only its own spinner, so a slotted SVG needs an
+    // explicit box or it collapses to 0. Height is the icon token (same
+    // rendered size as a natural chevron); width tracks the viewBox, which is
+    // cropped to the glyph's left edge (viewBox "7 0 13 20") so the visible
+    // chevron — not empty padding — is what the negative margin anchors to the
+    // text column.
+    svg[slot='iconStart'] {
+      block-size: var(--icon-sm);
+      inline-size: auto;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    color: var(--content-primary);
+    font-size: var(--type-h1-size);
+    font-weight: var(--type-h1-weight);
+    line-height: var(--type-h1-line-height);
+  }
+
+  &__standfirst {
+    margin: 0;
+    color: var(--content-secondary);
+    font-size: var(--type-body-large-size);
+    font-weight: var(--type-body-large-weight);
+    line-height: var(--type-body-large-line-height);
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  // Section heading — v2 H2 role.
+  &__h2 {
+    margin: 0;
+    color: var(--content-primary);
+    font-size: var(--type-h2-size);
+    font-weight: var(--type-h2-weight);
+    line-height: var(--type-h2-line-height);
+  }
+
+  // Subsection heading (Learning 5 sub-parts) — v2 H3 role.
+  &__h3 {
+    margin: var(--space-sm) 0 0;
+    color: var(--content-primary);
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-line-height);
+  }
+
+  &__p {
+    margin: 0;
+    color: var(--content-secondary);
+    font-size: var(--type-body-default-size);
+    font-weight: var(--type-body-default-weight);
+    line-height: var(--type-body-default-line-height);
+  }
+
+  &__link {
+    color: var(--content-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+
+    &:focus-visible {
+      @include focus-ring-v2;
+    }
+  }
+
+  &__code {
+    font-family: var(--font-family-mono);
+    font-size: var(--type-code-size);
+    padding: 0 var(--space-3xs);
+    border-radius: var(--radius-xs);
+    // Static tinted surface (not the --background-active interaction state).
+    background: var(--tag-background-default);
+    border: thin solid var(--borders-default);
+  }
+
+  // ─── Diagrams ───
+  &__figure {
+    margin: var(--space-sm) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    border: thin solid var(--borders-default);
+    // Static tinted placeholder (not the --background-hover interaction state).
+    background: var(--tag-background-default);
+  }
+
+  &__caption {
+    color: var(--content-tertiary);
+    font-size: var(--type-body-small-size);
+    font-weight: var(--type-body-small-weight);
+    line-height: var(--type-body-small-line-height);
+    font-style: italic;
+  }
+
+  // ─── Sources ───
+  &__sources-intro {
+    margin: 0;
+    color: var(--content-secondary);
+    font-size: var(--type-body-default-size);
+    font-weight: var(--type-body-default-weight);
+    line-height: var(--type-body-default-line-height);
+  }
+
+  &__sources-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  &__sources-label {
+    color: var(--content-primary);
+    font-size: var(--type-body-default-size);
+    font-weight: var(--type-label-weight);
+    line-height: var(--type-body-default-line-height);
+  }
+
+  &__sources-list {
+    margin: 0;
+    padding-left: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    color: var(--content-secondary);
+    font-size: var(--type-body-small-size);
+    font-weight: var(--type-body-small-weight);
+    line-height: var(--type-body-small-line-height);
   }
 }
 
-// ─── Ambience ─────────────────────────────────────────────────────────────────
-.reader__ambience {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.reader__leak {
-  position: absolute;
-  inset-block-start: -25vh;
-  inset-inline-start: 10vw;
-  width: 55vw;
-  height: 110vh;
-  transform: rotate(60deg);
-  background: var(--reader-leak-gradient);
-}
-
-.reader__pill {
-  position: absolute;
-  inset-block-start: 44vh;
-  inset-inline-end: 10vw;
-  width: clamp(12rem, 26vw, 26rem);
-  height: var(--space-3xl);
-  border-radius: var(--radius-pill);
-  background: var(--reader-glass-surface);
-  border: var(--border-width-thick) solid var(--reader-glass-border);
-  filter: blur(var(--reader-glass-blur));
-  opacity: 0.4;
-}
-
-.reader__orb {
-  position: absolute;
-  inset-block-start: 44vh;
-  inset-inline-end: 4vw;
-  width: var(--space-3xl);
-  height: var(--space-3xl);
-  border-radius: var(--radius-pill);
-  background: var(--reader-glass-surface);
-  border: var(--border-width-thick) solid var(--reader-glass-border);
-  filter: blur(var(--reader-glass-blur));
-  opacity: 0.4;
-}
-
-// ─── Hero ─────────────────────────────────────────────────────────────────────
-.reader__hero {
-  position: relative;
-  z-index: 1;
-  min-height: 88vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: var(--space-lg);
-  max-width: var(--content-lg);
-  margin-inline: auto;
-  padding-inline: var(--space-xl);
-}
-
-.reader__eyebrow {
-  font: var(--reader-type-eyebrow);
-  letter-spacing: var(--tracking-wider);
-  color: var(--reader-content-dim);
-}
-
-.reader__title {
-  font: var(--reader-type-title);
-  letter-spacing: var(--font-letter-spacing-tight);
-  color: var(--reader-content-primary);
-}
-
-.reader__standfirst {
-  font: var(--reader-type-body);
-  color: var(--reader-content-secondary);
-}
-
-.reader__hint {
-  font: var(--reader-type-body);
-  color: var(--reader-content-dim);
-  margin-block-start: var(--space-xl);
-}
-
-// Cold-entry reveal for the hero (stagger-reveal, light tier — 4 elements).
-.reveal {
-  opacity: 0;
-  animation: reveal-blur-fade-rise var(--duration-reveal-normal) var(--easing-enter) both;
-  animation-delay: calc(var(--index, 0) * var(--reveal-stagger-normal));
-}
-
-@keyframes reveal-blur-fade-rise {
-  from {
-    opacity: 0;
-    transform: translateY(var(--reveal-rise-normal));
-    filter: blur(var(--reveal-blur-normal));
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-// ─── Beat stream ──────────────────────────────────────────────────────────────
-.reader__stream {
-  position: relative;
-  z-index: 1;
-  max-width: var(--content-lg);
-  margin-inline: auto;
-  padding-inline: var(--space-xl);
-  display: flex;
-  flex-direction: column;
-  gap: clamp(var(--space-3xl), 16vh, 12rem);
-}
-
-.beat {
+// ─── Numbered / bulleted principle lists (maturity stages, trust levers,
+//     the closing checklist) — reused from the sibling series pages. ───
+.principles {
   margin: 0;
-  font: var(--reader-type-body);
-  color: var(--reader-content-secondary);
-}
-
-.beat--headline {
-  font: var(--reader-type-headline);
-  letter-spacing: var(--font-letter-spacing-tight);
-  color: var(--reader-content-primary);
-}
-
-.beat--figure {
-  background: var(--reader-figure-surface);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-}
-
-.beat__img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-// Scroll-focus: crisp only around the viewport center. The tier classes are
-// driven from TS (rAF-throttled scroll measurement); the transition smooths
-// the hop between tiers as the beat travels toward the center.
-.beat {
-  transition:
-    opacity var(--duration-slow) var(--easing-standard),
-    filter var(--duration-slow) var(--easing-standard);
-}
-
-.beat--near {
-  opacity: var(--reader-dim-opacity-near);
-  filter: blur(var(--reader-blur-near));
-}
-
-.beat--far {
-  opacity: var(--reader-dim-opacity);
-  filter: blur(var(--reader-blur));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .beat--near,
-  .beat--far {
-    opacity: 1;
-    filter: none;
-    transition: none;
-  }
-}
-
-// ─── Sources ──────────────────────────────────────────────────────────────────
-.reader__end {
-  position: relative;
-  z-index: 1;
-  max-width: var(--content-lg);
-  margin-inline: auto;
-  padding: 30vh var(--space-xl) var(--space-3xl);
-}
-
-.reader__sources-summary {
-  font: var(--reader-type-support);
-  color: var(--reader-content-dim);
-  cursor: pointer;
-  transition: color var(--duration-fast) var(--easing-enter);
-
-  &:hover {
-    color: var(--reader-content-primary);
-  }
-
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
-  }
-}
-
-.reader__source-list {
-  margin-block-start: var(--space-lg);
+  padding: 0;
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
-  list-style: none;
-  padding: 0;
-}
+  gap: var(--space-md);
 
-.reader__source-link {
-  font: var(--reader-type-support);
-  color: var(--reader-content-dim);
-  text-decoration: underline;
-  text-underline-offset: var(--space-3xs);
-  transition: color var(--duration-fast) var(--easing-enter);
-
-  &:hover {
-    color: var(--reader-content-primary);
+  &__item {
+    color: var(--content-secondary);
+    font-size: var(--type-body-default-size);
+    font-weight: var(--type-body-default-weight);
+    line-height: var(--type-body-default-line-height);
+    padding-left: var(--space-md);
+    border-left: 0.125rem solid var(--borders-default);
   }
 
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
-  }
-}
-
-// ─── Reduced motion ───────────────────────────────────────────────────────────
-@media (prefers-reduced-motion: reduce) {
-  .reader {
-    animation: reader-fade-only var(--duration-reduced-motion, 80ms) linear both;
-  }
-
-  .reveal {
-    animation: reader-fade-only var(--duration-reduced-motion, 80ms) linear both;
-    animation-delay: 0ms;
-  }
-
-  @keyframes reader-fade-only {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  // Nested ordered list (Norman's three levels inside the checklist).
+  &__sublist {
+    margin: var(--space-2xs) 0 0;
+    padding-left: var(--space-lg);
+    list-style: decimal;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    font-size: var(--type-body-small-size);
+    line-height: var(--type-body-small-line-height);
   }
 }

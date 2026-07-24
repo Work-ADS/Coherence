@@ -62,6 +62,21 @@ export class HyperTextDirective {
     return HyperTextDirective.POOL[(Math.random() * HyperTextDirective.POOL.length) | 0] ?? '';
   }
 
+  /**
+   * Read a CSS time custom property as milliseconds, UNIT-AWARE. The production
+   * CSS optimizer rewrites `1150ms` to the equivalent `1.15s`, and `parseFloat`
+   * is unit-naive (`parseFloat('1.15s')` === 1.15) — so without this the decode
+   * runs for ~1ms in prod and looks like nothing happened. Returns NaN if unset.
+   */
+  private static readMs(value: string): number {
+    const raw = value.trim();
+    const n = parseFloat(raw);
+    if (Number.isNaN(n)) return NaN;
+    if (raw.endsWith('ms')) return n;
+    if (raw.endsWith('s')) return n * 1000; // seconds → ms
+    return n; // unitless — assume ms
+  }
+
   private frameId = 0;
 
   constructor() {
@@ -90,7 +105,7 @@ export class HyperTextDirective {
     // take the reduced-motion path (final text, no animation) with NO hardcoded
     // numeric fallback.
     const styles = getComputedStyle(this.host.nativeElement);
-    const durationMs = parseFloat(styles.getPropertyValue('--motion-decode-duration'));
+    const durationMs = HyperTextDirective.readMs(styles.getPropertyValue('--motion-decode-duration'));
     const blurPeak = parseFloat(styles.getPropertyValue('--motion-decode-blur'));
     if (Number.isNaN(durationMs) || Number.isNaN(blurPeak)) return; // final text already shown
 

@@ -63,6 +63,17 @@ Backs the `stagger-reveal` pattern (§4.7). Three intensity tiers — the tier t
 | `normal` | `--duration-reveal-normal` 500ms | `--reveal-stagger-normal` 70ms | `--reveal-rise-normal` 10px | `--reveal-blur-normal` 8px |
 | `heavy` | `--duration-reveal-heavy` 600ms | `--reveal-stagger-heavy` 100ms | `--reveal-rise-heavy` 14px | `--reveal-blur-heavy` 14px |
 
+### Decode (added 2026-07-24)
+
+Backs the `text-decode-scramble` pattern (§4.10). Two tokens, modern-layer only, and — unusually — **consumed by JavaScript, not SCSS** (the directive reads them once via `getComputedStyle` and drives an rAF loop). No px/ms is duplicated as a TS constant.
+
+| Token | Value | When |
+|---|---|---|
+| `--motion-decode-duration` | 1150ms | Total scramble-to-resolve run length, length-independent. |
+| `--motion-decode-blur` | 2.5px | Peak of the per-character blur band that travels with the resolve front. |
+
+The envelope SHAPE (band width, peak position, easing) stays as directive code constants by design — those are curve-shape numbers, not brand values. Only the two knobs above are tokens. Both live only in the foundations-modern (v2) layer; there is no legacy `motion.scss` equivalent, so this pattern is v2-only.
+
 ### Tailwind mapping
 
 `tailwind.config.js` (lines 209–220) maps these to utility classes (`duration-fast`, `ease-enter`, etc.). Use either layer — the values resolve to the same custom property.
@@ -323,6 +334,22 @@ State communication must still work — opacity-only fades stay; spatial choreog
 
 ---
 
+### 4.10 `text-decode-scramble`
+
+**When** — a user-initiated ES/EN language switch on **headings only**. It reads as a warm-but-deliberate "decode" of the new-language text. **Never** on auto re-renders, route changes, data refreshes, or first paint — the trigger is strictly the user flipping the language (`LanguageService.switched`), and the per-language `@if` branches re-mount the heading on that flip.
+
+**Properties** — per-character JS/rAF scramble (each character cycles random letters, then locks left-to-right) + a per-character `filter: blur()` band that travels L→R with the resolve front (0 behind the front, a raised-cosine bump just ahead, 0 far ahead). This is the **first Tier-3, JS-driven entry in the catalog** — the others are CSS/keyframe patterns; this one cannot be expressed in CSS because the scramble and the moving blur band are computed per character per frame.
+
+**Tokens** — `--motion-decode-duration` (1150ms, run length) + `--motion-decode-blur` (2.5px, blur-band peak) — see §3 "Decode". The directive reads these token VALUES once via `getComputedStyle` at the start of the run. The envelope shape — band width, peak position, easing — lives as directive code constants by design (curve-shape numbers, not brand values).
+
+**Reduced motion** — `prefers-reduced-motion: reduce` skips the animation entirely and renders the final text. The same fallback fires if the tokens do not resolve (host outside the modern scope): no animation, no hardcoded numeric fallback.
+
+**Structure-preserving** — only text-node characters are wrapped in transient per-character `<span>`s; inline element nodes (e.g. `<em>`) stay in place, whitespace is never scrambled, opacity is never touched, and the spans unwrap back to plain text nodes on completion (clean final DOM).
+
+**Currently used in** — the `[siteHyperText]` directive (`apps/site/src/app/directives/hyper-text.directive.ts`) on the blog title + section headings (`apps/site/src/app/pages/blog/ui-moderno-2026/`).
+
+---
+
 ## 5. How to use this catalog
 
 1. **Designing a new primitive's motion** — open this file. If a pattern matches, copy the snippet, reference the section number in your build prompt.
@@ -355,6 +382,7 @@ These are not blockers for the catalog — they ARE the catalog's first targets.
 
 ## 8. Changelog
 
+- **2026-07-24** — Added `text-decode-scramble` (§4.10): the language-switch "decode" on blog headings, reworked so the blur travels per-character with the resolve front (was a single uniform whole-element blur). First Tier-3, JS-driven catalog entry. Two new modern-layer tokens, `--motion-decode-duration` (1150ms) + `--motion-decode-blur` (2.5px), added via `tools/figma-sync/foundations-modern.json` → `primitive-motion.scss` and consumed by the `[siteHyperText]` directive by reading the token values into JS — the first pattern to do so.
 - **2026-07-21 (later still)** — toggle-v2 joined the press-feedback family with two variations: the thumb slide moved to `--motion-easing-spring` (overshoot "thunk" into the track wall), and press-down flattens the thumb height-only (`scaleY(0.8)`, width holds — Fluid Functionalism switch recipe) composed with the slide via a `--_travel` var. If a third primitive wants the height-only squish, promote it to a named §4 pattern.
 - **2026-07-21 (later)** — `press-squish` retuned to the Animate UI checkbox recipe: press dips to `0.95` (was `0.9`) with an optional `1.05` hover-grow companion; checkbox-v2 also gained the delayed check draw (fill lands first, check draws one `--motion-duration-base` beat later, opacity fade riding along) and a `--motion-duration-slower` (500ms) colour fade (see §4.9 `control-fill-fade`). Source: animate-ui.com base checkbox (whileHover 1.05 / whileTap 0.95 / pathLength draw at .2s + .2s delay).
 - **2026-07-21** — Added `press-squish` (§4.8): tactile press feedback — a control scales down while `:active` and springs back on release via the overshoot curve. Requires the foundations-modern `--motion-easing-spring` token (`cubic-bezier(0.34, 2, 0.64, 1)`), added to `tools/figma-sync/foundations-modern.json` → `primitive-motion.scss`. First consumer: `checkbox-v2`. First bouncy easing in the v2 family — taste note flags the alternative calm treatment.

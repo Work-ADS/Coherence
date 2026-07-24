@@ -23,11 +23,21 @@ export class LanguageService {
   private readonly _lang = signal<Lang>(this.readInitial());
   readonly lang = this._lang.asReadonly();
 
+  /**
+   * True once the user has actively switched language via `set()`. Stays false
+   * for the initial load (which goes through `readInitial`, not `set`). Lets
+   * text-transition effects (e.g. the HyperText decode) fire only on a real
+   * toggle, never as a page-load entrance.
+   */
+  private readonly _switched = signal(false);
+  readonly switched = this._switched.asReadonly();
+
   constructor() {
     this.apply(this._lang());
   }
 
   set(next: Lang): void {
+    if (next !== this._lang()) this._switched.set(true);
     this._lang.set(next);
     this.apply(next);
     this.persist(next);

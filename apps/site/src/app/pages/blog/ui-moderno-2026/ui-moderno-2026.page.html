@@ -1,79 +1,621 @@
-<article class="reader" data-foundation="modern">
-
-  <!-- Floating chrome — the route renders full-screen, so the page carries
-       its own way back and the language toggle. -->
-  <div class="reader__chrome">
-    <a routerLink="/metodologia" class="reader__back">
-      ← {{ isEn() ? 'Back to methodology' : 'Volver a metodología' }}
-    </a>
-    <site-language-toggle />
-  </div>
-
-  <!-- Ambience: orange light-leak + glass widgets floating behind the text. -->
-  <div class="reader__ambience" aria-hidden="true">
-    <div class="reader__leak"></div>
-    <div class="reader__pill"></div>
-    <div class="reader__orb"></div>
-  </div>
-
-  <header class="reader__hero">
-    <p class="reader__eyebrow reveal" style="--index: 0">
-      {{ isEn() ? 'RESEARCH · UI 2026' : 'INVESTIGACIÓN · UI 2026' }}
-    </p>
-    <h1 class="reader__title reveal" style="--index: 1">
-      {{ isEn() ? 'What is modern UI in 2026?' : '¿Qué es UI moderna en 2026?' }}
-    </h1>
-    <p class="reader__standfirst reveal" style="--index: 2">
-      @if (isEn()) {
-        The research base behind Afi's visual redesign, condensed into thirty ideas.
-      } @else {
-        La base de investigación del rediseño visual de Afi, condensada en treinta ideas.
-      }
-    </p>
-    <p class="reader__hint reveal" style="--index: 3" aria-hidden="true">↓</p>
-  </header>
-
-  <div class="reader__stream">
-    @for (item of stream(); track $index; let i = $index) {
-      @if (item.kind === 'beat') {
-        <p
-          #beatEl
-          class="beat"
-          [class.beat--headline]="item.weight === 'headline'"
-          [class.beat--near]="tiers()[i] === 'near'"
-          [class.beat--far]="tiers()[i] === 'far'"
-        >
-          {{ item.text }}
-        </p>
-      } @else {
-        <figure
-          #beatEl
-          class="beat beat--figure"
-          [class.beat--near]="tiers()[i] === 'near'"
-          [class.beat--far]="tiers()[i] === 'far'"
-        >
-          <img class="beat__img" [src]="item.src" [alt]="item.alt" loading="lazy" />
-        </figure>
-      }
-    }
-  </div>
-
-  <footer class="reader__end">
-    <details class="reader__sources">
-      <summary class="reader__sources-summary">
-        {{ isEn()
-          ? 'Sources — internal dossier «Research modern UI», June 2026'
-          : 'Fuentes — dossier interno «Research modern UI», junio 2026' }}
-      </summary>
-      <ul class="reader__source-list">
-        @for (source of sources; track source.href) {
-          <li>
-            <a class="reader__source-link" [href]="source.href" target="_blank" rel="noopener noreferrer">
-              {{ source.label }}
-            </a>
-          </li>
+<div class="post" data-foundation="modern">
+  <main class="post__main">
+    <article class="post__article">
+      <!-- Shared hero — the back button (label intentionally untranslated,
+           matches the nav) renders once; only title + standfirst switch per
+           language. Kept as the first child of .post__hero so the resting
+           chevron stays anchored to the text column (LOCKED alignment). -->
+      <header class="post__hero">
+        <afi-button-v2 variant="ghost" size="sm" class="post__back" (clicked)="back()">
+          <svg slot="iconStart" viewBox="7 0 13 20" fill="currentColor" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Design at Afi
+        </afi-button-v2>
+        @if (isEn()) {
+          <h1 siteHyperText class="post__title">What is modern UI in 2026?</h1>
+          <p class="post__standfirst">
+            The research base behind the visual redesign. Six learnings on what modern UI means in 2026, and a six-point checklist to review the work against.
+          </p>
+        } @else {
+          <h1 siteHyperText class="post__title">¿Qué es UI moderna en 2026?</h1>
+          <p class="post__standfirst">
+            La base de investigación del rediseño visual. Seis aprendizajes sobre qué significa UI moderna en 2026 y una lista de control de seis puntos para revisar el trabajo.
+          </p>
         }
-      </ul>
-    </details>
-  </footer>
-</article>
+      </header>
+
+      @if (isEn()) {
+        <!-- Context -->
+        <section class="post__section" aria-labelledby="context">
+          <h2 id="context" siteHyperText class="post__h2">Context</h2>
+          <p class="post__p">
+            My boss handed me a vague task. "Build a visual identity for our demos. Something more modern." No persona, no buyer profile, no constraints.
+          </p>
+          <p class="post__p">
+            Instead of jumping straight into design, I wanted to answer: What does modern UI mean in 2026?
+          </p>
+          <p class="post__p">But why?</p>
+          <p class="post__p">
+            Because most designs without definition end up as preference-based designs instead of evidence-based designs. Everyone likes something different, and when the team finally agrees, it gets vetoed by a team lead. Not because of a valuable insight, but because they don't like it.
+          </p>
+        </section>
+
+        <!-- Learning 1 -->
+        <section class="post__section" aria-labelledby="maturity">
+          <h2 id="maturity" siteHyperText class="post__h2">Learning 1: Design maturity</h2>
+          <p class="post__p">
+            The research called this design maturity. It measured how widely design language is shared in a team, not how skilled the designers are. This was one of the key insights. Introducing vocabulary the whole team can use will help us maintain the momentum after the initial launch of the new UI. We can make beautiful screens, but if a team lead vetoes them on preference, we have no shared reasoning to fall back on. That's the failure mode.
+          </p>
+          <p class="post__p">The research puts a shared scale under this: five stages of maturity.</p>
+          <ul class="principles">
+            <li class="principles__item"><strong>Ad hoc.</strong> Design happens screen by screen; every decision is personal.</li>
+            <li class="principles__item"><strong>Managed.</strong> Reusable pieces exist, but the rules live in designers' heads.</li>
+            <li class="principles__item"><strong>Defined.</strong> Tokens and patterns are written down and become the source of truth.</li>
+            <li class="principles__item"><strong>Optimized.</strong> The rest of the organization decides with them: product consults tokens before requesting exceptions; engineering implements by semantic name.</li>
+            <li class="principles__item"><strong>Adaptive.</strong> The system is machine-readable; an AI can build on it without breaking identity.</li>
+          </ul>
+          <p class="post__p">
+            Afi sits between <em>Managed</em> and <em>Defined</em>, and this redesign is the first step to reaching <em>Optimized</em>. We have the opportunity to change how decisions are made downstream and boost productivity.
+          </p>
+          <p class="post__p">
+            For example, the Velvetum study (<em>UX/UI Design Tools 2026</em>) makes the point: a fourteen-designer team's productivity rose 38% because the rest of the organization adopted the same stack and the same protocols.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/modern-ui-2026/design-maturity-stages.svg"
+              alt="The five stages of design maturity with Afi crossing from Managed to Defined"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagram 1 — The five stages of maturity. Afi is crossing from Managed to Defined; the next jump, to Optimized, no longer depends on the design team.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- Learning 2 -->
+        <section class="post__section" aria-labelledby="intent">
+          <h2 id="intent" siteHyperText class="post__h2">Learning 2: Build around user intent</h2>
+          <p class="post__p">
+            Our digital products are built on static layouts: the page is decided at design time and served identically to everyone. It works, but it carries a constraint: we show you the same thing, no matter why you came. Whether you're reviewing your wealth, planning to buy a house, or selling property to reinvest, you see the same screen; and that gives the product a generic feel.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/modern-ui-2026/static-vs-personalized.svg"
+              alt="Static layout vs layout adapted to user intent"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagram 2 — Today we serve the same screen to every user. An adaptive interface proposes a different layer depending on the intent each user arrives with.
+            </figcaption>
+          </figure>
+          <p class="post__p">
+            UI in 2026 starts from intent: the interface recognizes what the user is trying to accomplish, then shows what's relevant. The four classic intents (informational, navigational, commercial, transactional) aren't new; what's new is treating them as the <em>starting point</em> of the flow.
+          </p>
+          <p class="post__p">
+            Google PAIR (People + AI Research) distinguishes explicit intent (what the user names) from implicit intent (what the system infers from behavior). Both feed the decision about what gets shown first. For Afi, with no conversational AI in the product yet, this doesn't mean bolting on a chat. It means designing forms and screens so the system infers intent before the user has to ask for it explicitly and proposes the correct information.
+          </p>
+          <p class="post__p">
+            A fully intent-driven product isn't Afi's next step; the direction still holds: the user should see relevant information based on <strong>what they want</strong>.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/modern-ui-2026/tree-vs-intent.svg"
+              alt="Menu tree vs direct access guided by intent"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagram 3 — Navigation stops asking the user to walk a tree and starts offering short routes from each intent.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- Learning 3 -->
+        <section class="post__section" aria-labelledby="friction">
+          <h2 id="friction" siteHyperText class="post__h2">Learning 3: Friction as a feature</h2>
+          <p class="post__p">
+            For a decade, engineers chased instant response on every interaction. Designers in 2026 are deliberately adding delays back in.
+          </p>
+          <p class="post__p">
+            Emil Kowalski compared two identical buttons for a high-impact action: one confirms the millisecond it's clicked; the other inserts a short processing animation before the same confirmation. Users overwhelmingly trusted the delayed version.
+          </p>
+          <p class="post__p">
+            The mechanism is <strong>perceived reliability</strong>: for a high-stakes action (authorizing a payment, moving funds, rebalancing a portfolio), the brain doesn't believe a system that responds too fast had time to do the work. The window is small: 150–250 milliseconds. Long enough to register that something happened; short enough that the app doesn't feel sluggish. Below 150 ms triggers anxiety; above 250 ms feels broken.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/modern-ui-2026/pause-confidence.svg"
+              alt="Instant button vs button with an intentional 150–250 ms pause"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagram 4 — Same gesture, two responses. The instant button feels broken; the 150–250 ms pause conveys that the system is doing the work.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- Learning 4 -->
+        <section class="post__section" aria-labelledby="trust">
+          <h2 id="trust" siteHyperText class="post__h2">Learning 4: Trust is a formula</h2>
+          <p class="post__p">
+            Stan Vision (<em>Fintech UX in 2026</em>) defines trust in financial products as <strong>transparency + consistency + responsiveness</strong>. In practice:
+          </p>
+          <ul class="principles">
+            <li class="principles__item">
+              <strong>Predict, but always announce.</strong> Pre-filling a transfer is welcome; executing it without confirmation crosses the line. And if the application pre-fills, it says why: <em>"based on your last three transfers to this payee…"</em>. Silent prefill reads as surveillance; announced prefill reads as competence.
+            </li>
+            <li class="principles__item">
+              <strong>Friction where it earns it.</strong> The 150–250 ms processing beat from Learning 3. Trust comes from the system signaling it took the action seriously.
+            </li>
+            <li class="principles__item">
+              <strong>Biometrics as handshake.</strong> Face ID, fingerprint and voice are no longer just security measures, but an emotional cue: <em>we know it's you, your environment is secure, let's proceed</em>.
+            </li>
+          </ul>
+          <p class="post__p">
+            Don Norman's three levels of emotional design frame the rest: <strong>visceral</strong> (the first-impression reaction), <strong>behavioral</strong> (pleasure and effectiveness during use), <strong>reflective</strong> (how it sits with the user afterwards). An interface that only wins the visceral level doesn't last, and in a product people open daily, the reflective level is where the relationship lives: by day 30, the user stops re-checking the numbers because the product has been right for a month.
+          </p>
+        </section>
+
+        <!-- Learning 5 -->
+        <section class="post__section" aria-labelledby="minimalist">
+          <h2 id="minimalist" siteHyperText class="post__h2">Learning 5: Stylish but minimalist</h2>
+
+          <h3 siteHyperText class="post__h3">The <em>Liquid Glass</em> trend</h3>
+          <p class="post__p">
+            Apple-style depth and translucency have matured. Professional tools now adopt <em>Anti-Liquid Glass</em>: they keep blur and depth as a spatial cue (a panel visibly floats above the content) but remove the refractive distortion that hurts legibility in dense interfaces. Linear is the reference. The rule that falls out of it: glass on chrome, solid backgrounds on data.
+          </p>
+
+          <h3 siteHyperText class="post__h3">Dark mode</h3>
+          <p class="post__p">
+            It stops being a nice-to-have and in a lot of products has become the default state: between 60% and 80% of users prefer it (Tubik, Merveilleux). Afi doesn't need an all-dark-mode product, but we do need to start building with it in mind. One way to adjust the platform to context is using system backgrounds: during the day, light mode; at night, dark mode. If a user prefers one over the other, they simply choose it as their default.
+          </p>
+          <p class="post__p">
+            One critical detail: never pure black. Absolute black under white text produces <em>halation</em>: the white glows and bleeds at the edges, so the text seems blurry.
+          </p>
+
+          <h3 siteHyperText class="post__h3">Color that communicates</h3>
+          <p class="post__p">
+            In 2026, color stops decorating and starts communicating. Surfaces stay neutral, which gives the accents more meaning. When one color is reserved for communication, the user learns to recognize it without thinking. When everything is colorful, nothing stands out.
+          </p>
+          <p class="post__p">
+            States work the same way: green means positive, red means risk. But color should never be alone. A colorblind user can't tell a red −2% from a green +2%, so indicators pair color with a universal arrow (up/down).
+          </p>
+          <p class="post__p">
+            The meaning has to be consistent to be learnable. That's the semantic layer again: <code class="post__code">color-action</code>, <code class="post__code">color-positive</code>, <code class="post__code">color-critical</code>. The name carries the intent, and the intent stays the same across all five brands.
+          </p>
+
+          <h3 siteHyperText class="post__h3">The <em>bento</em> grid</h3>
+          <p class="post__p">
+            Asymmetric cards of different sizes are the default pattern for 2026 dashboards: visual hierarchy without rigid columns. A large card for a chart, a small one for recent transactions.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/modern-ui-2026/list-vs-bento.svg"
+              alt="Flat list vs asymmetric bento grid"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagram 5 — The flat list makes every piece equal. The bento grid uses size and shape to signal importance without imposing rigid columns.
+            </figcaption>
+          </figure>
+          <p class="post__p">
+            Expressive minimalism connects with high-cognitive-load B2B products because it treats content by importance instead of giving everything equal visual weight. For example Cresco opted for interfaces that look like technical blueprints: visible grids, monospaced numerals, no ornament. For people moving serious numbers, the trust comes from the <em>absence</em> of decoration: a high signal-to-noise ratio that communicates competence.
+          </p>
+        </section>
+
+        <!-- Learning 6 -->
+        <section class="post__section" aria-labelledby="machine">
+          <h2 id="machine" siteHyperText class="post__h2">Learning 6: Create a map machines can read</h2>
+          <p class="post__p">
+            AI has moved from generative (producing content) to <em>agentic</em> (executing work).
+          </p>
+          <p class="post__p">
+            For an agent to build interfaces on the system without breaking visual identity, it needs to understand the difference between <code class="post__code">blue-500</code> (descriptive) and <code class="post__code">button-primary</code> (functional). Figma refers to this as <em>TokenOps</em>: the practice of maintaining machine-readable token rules so an AI produces consistent output. Ask an agent for a confirmation dialog: it reads the system's dialog, spacing and color tokens, and ships a component that matches the rest of the product without inventing a single hex value. This is the difference between a system only humans can understand and one an AI can consume too.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/modern-ui-2026/token-hierarchy.svg"
+              alt="Token cascade: primitive to semantic to component"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagram 6 — One decision at the primitive level propagates to the semantic tokens and, from there, to every component, without anyone touching a single component file.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- Summary -->
+        <section class="post__section" aria-labelledby="summary">
+          <h2 id="summary" siteHyperText class="post__h2">Summary</h2>
+          <p class="post__p">
+            Here is a quick checklist so when the redesign is reviewed the conversation is based on research, not preference.
+          </p>
+          <ul class="principles">
+            <li class="principles__item">
+              <strong>1. A shared design language.</strong> Decisions are made with vocabulary the whole team shares (tokens, patterns, intent), not personal taste.
+            </li>
+            <li class="principles__item">
+              <strong>2. Intent-based design.</strong> Screens serve the intent the user arrives with: the explicit one they name and the implicit one the system infers from behavior (Google PAIR's distinction).
+            </li>
+            <li class="principles__item">
+              <strong>3. Functional motion, not decorative.</strong> Every animation pattern is justified by the trust it adds or the attention it directs.
+            </li>
+            <li class="principles__item">
+              <strong>4. Trust as a formula.</strong> Transparency, consistency and responsiveness in every interaction, and an interface that works on all three of Norman's levels:
+              <ol class="principles__sublist">
+                <li><strong>Visceral</strong> (the first-impression reaction)</li>
+                <li><strong>Behavioral</strong> (pleasure and effectiveness during use)</li>
+                <li><strong>Reflective</strong> (how it sits with the user afterwards)</li>
+              </ol>
+            </li>
+            <li class="principles__item">
+              <strong>5. Stylish but minimalist.</strong> Neutral tones, functional depth, glass on chrome and solid backgrounds on data. Color reserved for meaning: action and state, never decoration.
+            </li>
+            <li class="principles__item">
+              <strong>6. TokenOps ready for the next generation.</strong> Semantic tokens are the single source of truth. Functional naming (<code class="post__code">button-primary</code>), not descriptive (<code class="post__code">blue-500</code>). This is the precondition for an AI to build on the system without breaking its identity, and for us to make consistent decisions.
+            </li>
+          </ul>
+        </section>
+
+        <!-- Sources -->
+        <section class="post__section" aria-labelledby="sources">
+          <h2 id="sources" siteHyperText class="post__h2">Sources</h2>
+          <p class="post__sources-intro">
+            Collected in the internal dossier <em>Research modern UI</em> (June 2026), with the original articles cited throughout the post. Grouped by what each one is useful for.
+          </p>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>Trend roundups</strong> — cross-source agreement on where the field is moving:</p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://tubikstudio.com/blog/ui-design-trends-2026/" target="_blank" rel="noopener noreferrer">Tubik Studio — UI Design Trends 2026</a></li>
+              <li><a class="post__link" href="https://uxdesign.cc/the-most-popular-experience-design-trends-of-2026-3ca85c8a3e3d" target="_blank" rel="noopener noreferrer">UX Collective — The most popular experience design trends of 2026</a></li>
+              <li><a class="post__link" href="https://elements.envato.com/learn/web-design-trends" target="_blank" rel="noopener noreferrer">Envato Elements — Web Design Trends</a></li>
+              <li><a class="post__link" href="https://www.merveilleux.design/en/blog/article/ui-ux-trends-2026" target="_blank" rel="noopener noreferrer">Merveilleux — UI/UX Trends 2026</a></li>
+              <li><a class="post__link" href="https://findasaas.com/blog/saas-ux-trends-2026" target="_blank" rel="noopener noreferrer">Find a SaaS — SaaS UX Trends 2026</a></li>
+              <li><a class="post__link" href="https://www.linkedin.com/pulse/evolution-ui-design-2026-trends-shaping-modern-digital-gowtham-v-c6k4c" target="_blank" rel="noopener noreferrer">Gowtham V — Evolution of UI Design: 2026 Trends Shaping Modern Digital Experiences</a> (LinkedIn Pulse)</li>
+              <li><a class="post__link" href="https://www.linkedin.com/posts/sohan-talukder_2026-uiux-trends-activity-7414988664407023616-3yMo" target="_blank" rel="noopener noreferrer">Sohan Talukder — 2026 UI/UX Trends</a> (LinkedIn)</li>
+              <li><a class="post__link" href="https://www.blushush.co.uk/blogs/top-5-user-interface-design-trends-for-modern-websites" target="_blank" rel="noopener noreferrer">Blushush — Top 5 User Interface Design Trends for Modern Websites</a></li>
+              <li><a class="post__link" href="https://spunk.pics/blog/ui-design-trends-2026" target="_blank" rel="noopener noreferrer">Spunk — UI Design Trends 2026</a></li>
+            </ul>
+          </div>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>Fintech-specific</strong> — what users expect from financial products:</p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://www.stan.vision/journal/fintech-ux-in-2026-what-users-expect-from-modern-financial-products" target="_blank" rel="noopener noreferrer">Stan Vision — Fintech UX in 2026: What users expect from modern financial products</a> (source for the trust formula)</li>
+              <li><a class="post__link" href="https://www.vezadigital.com/post/fintech-web-design-trends" target="_blank" rel="noopener noreferrer">Veza Digital — Fintech Web Design Trends</a></li>
+            </ul>
+          </div>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>Design systems + maturity</strong> — the token-layer story:</p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://www.figma.com/blog/the-future-of-design-systems-is-semantic/" target="_blank" rel="noopener noreferrer">Figma — The future of design systems is semantic</a> (TokenOps)</li>
+              <li><a class="post__link" href="https://dsruptr.com/2026/01/19/the-ultimate-design-maturity-guide-for-tech-leaders/" target="_blank" rel="noopener noreferrer">dsruptr — The Ultimate Design Maturity Guide for Tech Leaders</a> (the five-stage maturity model)</li>
+              <li><a class="post__link" href="https://velvetum.com/en/journal/ux-ui-design-tools-2026" target="_blank" rel="noopener noreferrer">Velvetum — UX/UI Design Tools 2026</a> (the stack-consolidation study)</li>
+            </ul>
+          </div>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>AI as teammate</strong> — intent and visible reasoning:</p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://pair.withgoogle.com/guidebook/" target="_blank" rel="noopener noreferrer">Google PAIR — People + AI Guidebook</a></li>
+            </ul>
+          </div>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>Classics + specific references:</strong></p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://www.nngroup.com/books/emotional-design/" target="_blank" rel="noopener noreferrer">Don Norman — Emotional Design: Why we love (or hate) everyday things</a></li>
+              <li><a class="post__link" href="https://emilkowal.ski/" target="_blank" rel="noopener noreferrer">Emil Kowalski</a> (the intentional pause in high-impact interactions)</li>
+            </ul>
+          </div>
+        </section>
+      } @else {
+        <!-- Contexto -->
+        <section class="post__section" aria-labelledby="contexto">
+          <h2 id="contexto" siteHyperText class="post__h2">Contexto</h2>
+          <p class="post__p">
+            Mi jefe me encargó una tarea: «Construye una identidad visual para nuestras demos. Algo más moderno». Sin persona, sin perfil de comprador, sin restricciones.
+          </p>
+          <p class="post__p">
+            En lugar de saltar directamente al diseño y Figma, quise investigar una cosa: ¿qué significa UI moderna en 2026?
+          </p>
+          <p class="post__p"><em>¿Por qué?</em></p>
+          <p class="post__p">
+            Porque la mayoría de los diseños sin definición acaban basados en preferencias, no en <strong>evidencia</strong>. A cada uno le gusta algo distinto y, cuando el equipo por fin se pone de acuerdo, alguien lo veta. No por una observación valiosa, sino porque no le gusta.
+          </p>
+        </section>
+
+        <!-- Aprendizaje 1 -->
+        <section class="post__section" aria-labelledby="madurez">
+          <h2 id="madurez" siteHyperText class="post__h2">Aprendizaje 1: La madurez de diseño</h2>
+          <p class="post__p">
+            La investigación lo llama madurez de diseño: mide hasta qué punto el lenguaje de diseño se comparte en el equipo, no la habilidad de los diseñadores. Fue una de las claves de la investigación. Introducir un vocabulario que todo el equipo pueda usar nos ayudará a mantener el impulso después del lanzamiento inicial de la nueva UI. Podemos diseñar pantallas preciosas, pero si un responsable las veta por preferencia, no tenemos un criterio compartido al que recurrir. Ahí está el fracaso.
+          </p>
+          <p class="post__p">
+            La investigación pone una escala compartida debajo de todo esto: cinco etapas de madurez.
+          </p>
+          <ul class="principles">
+            <li class="principles__item"><strong>Ad hoc.</strong> El diseño ocurre pantalla a pantalla; cada decisión es personal.</li>
+            <li class="principles__item"><strong>Gestionado (Managed).</strong> Existen componentes reutilizables, pero las reglas viven en la cabeza de los diseñadores.</li>
+            <li class="principles__item"><strong>Definido (Defined).</strong> Los tokens y patrones están escritos y se convierten en la fuente de verdad.</li>
+            <li class="principles__item"><strong>Optimizado (Optimized).</strong> El resto de la organización decide con ellos: producto consulta los tokens antes de pedir excepciones; programación implementa por nombre semántico.</li>
+            <li class="principles__item"><strong>Adaptativo (Adaptive).</strong> El sistema es legible por máquinas; una IA puede construir sobre él sin romper la identidad.</li>
+          </ul>
+          <p class="post__p">
+            Afi está entre <em>Gestionado</em> y <em>Definido</em>, y este rediseño es el primer paso hacia <em>Optimizado</em>. Tenemos la oportunidad de cambiar cómo se toman las decisiones aguas abajo y de ganar productividad.
+          </p>
+          <p class="post__p">
+            El estudio de Velvetum (<em>UX/UI Design Tools 2026</em>) lo ilustra: la productividad de un equipo de catorce diseñadores subió un 38 % porque el resto de la organización adoptó el mismo stack y los mismos protocolos.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/ui-moderno-2026/design-maturity-stages.svg"
+              alt="Las cinco etapas de madurez de diseño con Afi cruzando de Gestionado a Definido"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagrama 1 — Las cinco etapas de madurez. Afi está cruzando de Gestionado a Definido; el siguiente salto, a Optimizado, ya no depende del equipo de diseño.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- Aprendizaje 2 -->
+        <section class="post__section" aria-labelledby="intencion">
+          <h2 id="intencion" siteHyperText class="post__h2">Aprendizaje 2: Diseñar en torno a la intención del usuario</h2>
+          <p class="post__p">
+            Nuestros productos digitales se construyen sobre <em>layouts</em> estáticos: la página se decide en tiempo de diseño y se sirve idéntica a todo el mundo. Funciona, pero impone una restricción: te mostramos lo mismo, da igual por qué viniste. Ya sea que entres a revisar tu patrimonio, a planificar la compra de una casa o a vender inmuebles para reinvertir, ves la misma pantalla; y eso le da al producto un aire genérico.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/ui-moderno-2026/static-vs-personalized.svg"
+              alt="Layout estático frente a layout adaptado a la intención del usuario"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagrama 2 — Hoy servimos la misma pantalla a todos los usuarios. Una interfaz adaptativa propone una capa distinta según la intención con la que llega cada usuario.
+            </figcaption>
+          </figure>
+          <p class="post__p">
+            La UI de 2026 parte de la intención: la interfaz reconoce qué intenta conseguir el usuario y muestra lo relevante. Las cuatro intenciones clásicas (informativa, de navegación, comercial, transaccional) no son nuevas; lo nuevo es tratarlas como <em>punto de partida</em> del flujo.
+          </p>
+          <p class="post__p">
+            Por ejemplo, Google PAIR (People + AI Research) distingue entre intención explícita (la que el usuario nombra) e implícita (la que el sistema infiere del comportamiento). Ambas alimentan la decisión de qué se muestra primero. Para Afi, sin IA conversacional en el producto todavía, esto no significa añadir un chat. Significa diseñar formularios y pantallas para que el sistema infiera la intención antes de que el usuario tenga que pedirla explícitamente y proponga la información correcta.
+          </p>
+          <p class="post__p">
+            Un producto guiado por completo por la intención no es el siguiente paso de Afi; la dirección sí nos vale: el usuario debería ver información relevante según <strong>lo que quiere conseguir</strong>.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/ui-moderno-2026/tree-vs-intent.svg"
+              alt="Árbol de menús frente a acceso directo guiado por la intención"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagrama 3 — La navegación deja de pedir al usuario que recorra un árbol y empieza a ofrecer rutas cortas desde cada intención.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- Aprendizaje 3 -->
+        <section class="post__section" aria-labelledby="friccion">
+          <h2 id="friccion" siteHyperText class="post__h2">Aprendizaje 3: La fricción como funcionalidad</h2>
+          <p class="post__p">
+            Durante una década, los ingenieros persiguieron la respuesta instantánea en cada interacción. Los diseñadores de 2026 están reintroduciendo esperas deliberadas.
+          </p>
+          <p class="post__p">
+            Emil Kowalski comparó dos botones idénticos para una acción de alto impacto: uno confirma en el mismo milisegundo del clic; el otro inserta una breve animación de procesamiento antes de la misma confirmación. Los usuarios confiaron de forma abrumadora en la versión con espera.
+          </p>
+          <p class="post__p">
+            El mecanismo es la <strong>fiabilidad percibida</strong>: en una acción sensible (autorizar un pago, mover fondos, reequilibrar una cartera), el cerebro no se cree que un sistema que responde demasiado rápido haya tenido tiempo de hacer el trabajo. La ventana es pequeña: 150-250 milisegundos. Lo bastante larga para registrar que algo ha pasado; lo bastante corta para que la aplicación no parezca lenta. Por debajo de 150 ms genera ansiedad; por encima de 250 ms parece rota.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/ui-moderno-2026/pause-confidence.svg"
+              alt="Botón instantáneo frente a botón con una pausa intencional de 150-250 ms"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagrama 4 — Mismo gesto, dos respuestas. El botón instantáneo parece roto; la pausa de 150-250 ms transmite que el sistema está haciendo el trabajo.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- Aprendizaje 4 -->
+        <section class="post__section" aria-labelledby="confianza">
+          <h2 id="confianza" siteHyperText class="post__h2">Aprendizaje 4: La confianza es una fórmula</h2>
+          <p class="post__p">
+            Stan Vision (<em>Fintech UX in 2026</em>) define la confianza en productos financieros como <strong>transparencia + consistencia + capacidad de respuesta</strong>. En la práctica:
+          </p>
+          <ul class="principles">
+            <li class="principles__item">
+              <strong>Predecir, pero siempre avisar.</strong> Precargar una transferencia es bienvenido; ejecutarla sin confirmación cruza la línea. Y si la aplicación precarga, explica por qué: <em>«según tus tres últimas transferencias a este destinatario…»</em>. La precarga silenciosa se lee como vigilancia; la anunciada, como competencia.
+            </li>
+            <li class="principles__item">
+              <strong>Fricción donde se la gana.</strong> El compás de procesamiento de 150-250 ms del Aprendizaje 3. La confianza nace de que el sistema señale que se ha tomado la acción en serio.
+            </li>
+            <li class="principles__item">
+              <strong>La biometría como apretón de manos.</strong> Face ID, huella y voz ya no son solo medidas de seguridad, sino una señal emocional: <em>sabemos que eres tú, tu entorno es seguro, adelante</em>.
+            </li>
+          </ul>
+          <p class="post__p">
+            Los tres niveles del diseño emocional de Don Norman enmarcan el resto: <strong>visceral</strong> (la reacción de la primera impresión), <strong>conductual</strong> (placer y eficacia durante el uso) y <strong>reflexivo</strong> (cómo queda en la memoria del usuario después). Una interfaz que solo gana en el nivel visceral no dura, y en un producto que se abre a diario, el nivel reflexivo es donde vive la relación: a los treinta días, el usuario deja de comprobar las cifras porque el producto lleva un mes acertando.
+          </p>
+        </section>
+
+        <!-- Aprendizaje 5 -->
+        <section class="post__section" aria-labelledby="minimalista">
+          <h2 id="minimalista" siteHyperText class="post__h2">Aprendizaje 5: Con estilo, pero minimalista</h2>
+
+          <h3 siteHyperText class="post__h3">La tendencia <em>Liquid Glass</em></h3>
+          <p class="post__p">
+            La profundidad y la translucidez al estilo Apple han madurado. Las herramientas profesionales adoptan ahora el <em>Anti-Liquid Glass</em>: mantienen el desenfoque y la profundidad como señal espacial (un panel flota visiblemente sobre el contenido), pero eliminan la distorsión refractiva que perjudica la legibilidad en interfaces densas. Linear es la referencia. La regla que se deriva: cristal en la estructura de la interfaz, fondos sólidos en los datos.
+          </p>
+
+          <h3 siteHyperText class="post__h3">Modo oscuro</h3>
+          <p class="post__p">
+            Deja de ser un <em>nice-to-have</em> y en muchos productos se ha convertido en el estado por defecto: entre el 60 % y el 80 % de los usuarios lo prefieren (Tubik, Merveilleux). Afi no necesita un producto todo en oscuro, pero sí empezar a construir teniéndolo en cuenta. Una forma de ajustar la plataforma al contexto es usar los fondos del sistema: de día, modo claro; de noche, modo oscuro. Si un usuario prefiere uno u otro, simplemente lo elige como su opción por defecto.
+          </p>
+          <p class="post__p">
+            Un detalle crítico: nunca negro puro como fondo. El negro absoluto bajo texto blanco produce <em>halación</em>: el blanco brilla y sangra por los bordes, y el texto parece borroso.
+          </p>
+
+          <h3 siteHyperText class="post__h3">El color que comunica</h3>
+          <p class="post__p">
+            En 2026, el color deja de decorar y pasa a comunicar. Las superficies se mantienen neutras, y eso da más significado a los acentos. Cuando un color se reserva para comunicar, el usuario aprende a reconocerlo sin pensar. Cuando todo es colorido, nada destaca.
+          </p>
+          <p class="post__p">
+            Los estados funcionan igual: verde significa positivo, rojo significa riesgo. Pero el color nunca debe ir solo. Un usuario daltónico no distingue un −2 % rojo de un +2 % verde, así que los indicadores acompañan el color con una flecha universal (arriba/abajo).
+          </p>
+          <p class="post__p">
+            El significado tiene que ser consistente para poder aprenderse. Ahí vuelve la capa semántica: <code class="post__code">color-action</code>, <code class="post__code">color-positive</code>, <code class="post__code">color-critical</code>. El nombre lleva la intención, y la intención se mantiene en las cinco marcas.
+          </p>
+
+          <h3 siteHyperText class="post__h3">La retícula <em>bento</em></h3>
+          <p class="post__p">
+            Las tarjetas asimétricas de distintos tamaños son el patrón por defecto de los dashboards de 2026: jerarquía visual sin columnas rígidas. Una tarjeta grande para un gráfico, una pequeña para los últimos movimientos.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/ui-moderno-2026/list-vs-bento.svg"
+              alt="Lista plana frente a retícula bento asimétrica"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagrama 5 — La lista plana iguala todas las piezas. La retícula bento usa tamaño y forma para señalar importancia sin imponer columnas rígidas.
+            </figcaption>
+          </figure>
+          <p class="post__p">
+            El minimalismo expresivo (<em>bentos</em>) conecta con los productos B2B de alta carga cognitiva porque trata el contenido según su importancia en lugar de dar a todo el mismo peso visual. Cresco, por ejemplo, optó por interfaces que parecen planos técnicos: retículas visibles, numerales monoespaciados, cero ornamento. Para quien mueve cifras serias, la confianza nace de la <em>ausencia</em> de decoración: una relación señal-ruido alta que comunica competencia.
+          </p>
+        </section>
+
+        <!-- Aprendizaje 6 -->
+        <section class="post__section" aria-labelledby="maquinas">
+          <h2 id="maquinas" siteHyperText class="post__h2">Aprendizaje 6: Crear un mapa que las máquinas puedan leer</h2>
+          <p class="post__p">
+            La IA ha pasado de generativa (producir contenido) a <em>agéntica</em> (ejecutar trabajo).
+          </p>
+          <p class="post__p">
+            Para que un agente construya interfaces sobre el sistema sin romper la identidad visual, necesita entender la diferencia entre <code class="post__code">blue-500</code> (descriptivo) y <code class="post__code">button-primary</code> (funcional). Figma lo llama <em>TokenOps</em>: la práctica de mantener reglas de tokens legibles por máquinas para que una IA produzca resultados consistentes. Pídele a un agente un diálogo de confirmación: lee los tokens de diálogo, espaciado y color del sistema, y entrega un componente que encaja con el resto del producto sin inventarse un solo valor hexadecimal. Esa es la diferencia entre un sistema que solo entienden las personas y uno que una IA también puede consumir.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/ui-moderno-2026/token-hierarchy.svg"
+              alt="Cascada de tokens: primitivo, semántico, componente"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Diagrama 6 — Una decisión en el nivel primitivo se propaga a los tokens semánticos y, desde ahí, a todos los componentes, sin que nadie toque un archivo de componente.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- Resumen -->
+        <section class="post__section" aria-labelledby="resumen">
+          <h2 id="resumen" siteHyperText class="post__h2">Resumen</h2>
+          <p class="post__p">
+            Una lista de control rápida para que, cuando se revise el rediseño, la conversación se base en investigación y no en preferencias.
+          </p>
+          <ul class="principles">
+            <li class="principles__item">
+              <strong>1. Un lenguaje de diseño compartido.</strong> Las decisiones se toman con un vocabulario que todo el equipo comparte (tokens, patrones, intención), no con el gusto personal.
+            </li>
+            <li class="principles__item">
+              <strong>2. Diseño basado en la intención.</strong> Las pantallas sirven a la intención con la que llega el usuario: la explícita que nombra y la implícita que el sistema infiere de su comportamiento (la distinción de Google PAIR).
+            </li>
+            <li class="principles__item">
+              <strong>3. Movimiento funcional, no decorativo.</strong> Cada patrón de animación se justifica por la confianza que aporta o la atención que dirige.
+            </li>
+            <li class="principles__item">
+              <strong>4. La confianza como fórmula.</strong> Transparencia, consistencia y capacidad de respuesta en cada interacción, y una interfaz que funciona en los tres niveles de Norman:
+              <ol class="principles__sublist">
+                <li><strong>Visceral</strong> (la reacción de la primera impresión)</li>
+                <li><strong>Conductual</strong> (placer y eficacia durante el uso)</li>
+                <li><strong>Reflexivo</strong> (cómo queda en la memoria del usuario después)</li>
+              </ol>
+            </li>
+            <li class="principles__item">
+              <strong>5. Con estilo, pero minimalista.</strong> Tonos neutros, profundidad funcional, cristal en la estructura y fondos sólidos en los datos. Color reservado para el significado: acción y estado, nunca decoración.
+            </li>
+            <li class="principles__item">
+              <strong>6. TokenOps preparado para la siguiente generación.</strong> Los tokens semánticos son la única fuente de verdad. Nomenclatura funcional (<code class="post__code">button-primary</code>), no descriptiva (<code class="post__code">blue-500</code>). Es la condición previa para que una IA construya sobre el sistema sin romper su identidad, y para que nosotros tomemos decisiones consistentes.
+            </li>
+          </ul>
+        </section>
+
+        <!-- Fuentes -->
+        <section class="post__section" aria-labelledby="fuentes">
+          <h2 id="fuentes" siteHyperText class="post__h2">Fuentes</h2>
+          <p class="post__sources-intro">
+            Recopiladas en el dosier interno <em>Research modern UI</em> (junio de 2026), con los artículos originales citados a lo largo del post. Agrupadas por su utilidad.
+          </p>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>Panorámicas de tendencias</strong> — coincidencia entre fuentes sobre hacia dónde va el sector:</p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://tubikstudio.com/blog/ui-design-trends-2026/" target="_blank" rel="noopener noreferrer">Tubik Studio — UI Design Trends 2026</a></li>
+              <li><a class="post__link" href="https://uxdesign.cc/the-most-popular-experience-design-trends-of-2026-3ca85c8a3e3d" target="_blank" rel="noopener noreferrer">UX Collective — The most popular experience design trends of 2026</a></li>
+              <li><a class="post__link" href="https://elements.envato.com/learn/web-design-trends" target="_blank" rel="noopener noreferrer">Envato Elements — Web Design Trends</a></li>
+              <li><a class="post__link" href="https://www.merveilleux.design/en/blog/article/ui-ux-trends-2026" target="_blank" rel="noopener noreferrer">Merveilleux — UI/UX Trends 2026</a></li>
+              <li><a class="post__link" href="https://findasaas.com/blog/saas-ux-trends-2026" target="_blank" rel="noopener noreferrer">Find a SaaS — SaaS UX Trends 2026</a></li>
+              <li><a class="post__link" href="https://www.linkedin.com/pulse/evolution-ui-design-2026-trends-shaping-modern-digital-gowtham-v-c6k4c" target="_blank" rel="noopener noreferrer">Gowtham V — Evolution of UI Design: 2026 Trends Shaping Modern Digital Experiences</a> (LinkedIn Pulse)</li>
+              <li><a class="post__link" href="https://www.linkedin.com/posts/sohan-talukder_2026-uiux-trends-activity-7414988664407023616-3yMo" target="_blank" rel="noopener noreferrer">Sohan Talukder — 2026 UI/UX Trends</a> (LinkedIn)</li>
+              <li><a class="post__link" href="https://www.blushush.co.uk/blogs/top-5-user-interface-design-trends-for-modern-websites" target="_blank" rel="noopener noreferrer">Blushush — Top 5 User Interface Design Trends for Modern Websites</a></li>
+              <li><a class="post__link" href="https://spunk.pics/blog/ui-design-trends-2026" target="_blank" rel="noopener noreferrer">Spunk — UI Design Trends 2026</a></li>
+            </ul>
+          </div>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>Específicas de fintech</strong> — qué esperan los usuarios de los productos financieros:</p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://www.stan.vision/journal/fintech-ux-in-2026-what-users-expect-from-modern-financial-products" target="_blank" rel="noopener noreferrer">Stan Vision — Fintech UX in 2026: What users expect from modern financial products</a> (fuente de la fórmula de la confianza)</li>
+              <li><a class="post__link" href="https://www.vezadigital.com/post/fintech-web-design-trends" target="_blank" rel="noopener noreferrer">Veza Digital — Fintech Web Design Trends</a></li>
+            </ul>
+          </div>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>Sistemas de diseño y madurez</strong> — la historia de la capa de tokens:</p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://www.figma.com/blog/the-future-of-design-systems-is-semantic/" target="_blank" rel="noopener noreferrer">Figma — The future of design systems is semantic</a> (TokenOps)</li>
+              <li><a class="post__link" href="https://dsruptr.com/2026/01/19/the-ultimate-design-maturity-guide-for-tech-leaders/" target="_blank" rel="noopener noreferrer">dsruptr — The Ultimate Design Maturity Guide for Tech Leaders</a> (el modelo de madurez de cinco etapas)</li>
+              <li><a class="post__link" href="https://velvetum.com/en/journal/ux-ui-design-tools-2026" target="_blank" rel="noopener noreferrer">Velvetum — UX/UI Design Tools 2026</a> (el estudio de consolidación de herramientas)</li>
+            </ul>
+          </div>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>La IA como compañera de equipo</strong> — intención y razonamiento visible:</p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://pair.withgoogle.com/guidebook/" target="_blank" rel="noopener noreferrer">Google PAIR — People + AI Guidebook</a></li>
+            </ul>
+          </div>
+
+          <div class="post__sources-group">
+            <p class="post__sources-label"><strong>Clásicos y referencias concretas:</strong></p>
+            <ul class="post__sources-list">
+              <li><a class="post__link" href="https://www.nngroup.com/books/emotional-design/" target="_blank" rel="noopener noreferrer">Don Norman — Emotional Design: Why we love (or hate) everyday things</a></li>
+              <li><a class="post__link" href="https://emilkowal.ski/" target="_blank" rel="noopener noreferrer">Emil Kowalski</a> (la pausa intencional en interacciones de alto impacto)</li>
+            </ul>
+          </div>
+        </section>
+      }
+    </article>
+  </main>
+</div>

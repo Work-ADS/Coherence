@@ -4369,6 +4369,20 @@
           "values": {
             "Modern": "14px"
           }
+        },
+        {
+          "name": "decode/duration",
+          "type": "text",
+          "values": {
+            "Modern": "1150ms"
+          }
+        },
+        {
+          "name": "decode/blur",
+          "type": "text",
+          "values": {
+            "Modern": "2.5px"
+          }
         }
       ]
     }

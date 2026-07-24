@@ -20,8 +20,12 @@ import type { ButtonV2Size, ButtonV2Variant } from './button-v2.variants';
  * mirrored in `libs/tokens/foundations-modern/component-button.scss`.
  *
  * Icon-only usage is out of scope by design rule ("Icon-only actions → Icon
- * Button component") — always provide a visible label. Icon slots project
- * consumer content sized to `--icon-sm` (`--icon-xs` at size `xs`).
+ * Button component") — always provide a visible label. Icons project through
+ * `[slot=iconStart]` / `[slot=iconEnd]`; the consumer sizes the projected SVG
+ * (typically to `--icon-sm`, or `--icon-xs` at size `xs`) and it inherits the
+ * label colour via `currentColor`. The `.btn-v2__icon` wrapper only positions
+ * the slot and carries the press nudge — it does not size its content, so an
+ * unsized SVG collapses. (Same contract afi-tag-v2 documents.)
  */
 @Component({
   selector: 'afi-button-v2',

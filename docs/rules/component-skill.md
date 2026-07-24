@@ -83,6 +83,13 @@ For section/table reveal actions such as `Ver datos`, the always-visible trigger
 - If hover/focus reveals a larger container, menu, tooltip, or data panel, that expanded container may be offset relative to the trigger.
 - Do not indent the resting trigger to center a hidden hover panel. The UI should look aligned before the user interacts with it.
 
+**Anchoring a ghost/icon trigger to the text column — two padding sources to cancel.** When a ghost button (or any padded control) opens its container only on hover, its resting glyph reads as *inset* from the text column because two paddings sit to the left of the visible mark:
+
+1. **The control's own inline padding.** Pull it back with a negative inline-start margin equal to that padding — never a magic pixel value. Use the token the control pads with, e.g. `margin-inline-start: calc(-1 * var(--pad-control-sm))` (the edge-anchor technique `filter-chip` uses). On hover the ghost background bleeds left of the anchor; that offset box is expected — the glyph must not move.
+2. **The icon's own viewBox padding.** SVG icons are usually drawn centered with empty space around the glyph, so aligning the icon *box* still leaves the visible mark floating right. Crop that empty space out of the `viewBox` (keep the same height so the rendered size is unchanged — crop the horizontal padding only, then let `inline-size: auto` track the new aspect). Do **not** shrink the icon to fake alignment; the glyph size must be preserved.
+
+Verify with the real glyph, not the box: `path.getBoundingClientRect().left` must equal the title/body left edge. Worked example: the ghost "‹ Design at Afi" back button on `blog/ui-moderno-2026`.
+
 ### Multi-client theming (whitelabel) — the foundation rule
 - **Brand swap = token-layer swap, not component-layer swap.** Brand overrides live at `libs/tokens/brand/{client}.ts`; style-dictionary builds a brand-specific `tokens.css`. Components stay brand-agnostic — they reference only semantic CSS custom properties (`var(--action-primary)`, `var(--surface-quiet)`, `var(--canvas-fg)`, etc.).
 - The logo is brand-specific but lives at `libs/ui/src/logo/` and swaps via brand config — not via per-brand component duplication.

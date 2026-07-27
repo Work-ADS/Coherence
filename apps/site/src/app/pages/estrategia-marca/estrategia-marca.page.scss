@@ -1,0 +1,206 @@
+// =============================================================================
+// estrategia-marca.page.scss
+// =============================================================================
+// Internal brand-strategy narrative, built on the identity-v2 modern foundation.
+// data-foundation="modern" → IBM Plex Sans, the --type-* scale and --content-* /
+// --background-* semantic colours. Spacing, radius and content widths are
+// foundation-agnostic globals. Token-only — the clean-code hook blocks raw
+// values (hex / rgba / px) outside libs/tokens/; translucency comes from
+// color-mix() on tokens, and fluid/relative sizes use rem / em / vw.
+//
+// Only section 1 (the hero) has the new B&W treatment; sections 2–5 stay on the
+// original light editorial styling below.
+// =============================================================================
+
+.strategy {
+  font-family: var(--font-family-primary);
+  color: var(--content-primary);
+  background: var(--background-canvas);
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Section 1 — full-viewport hero, inverted (near-black canvas, white text).
+  // The modern set has no authored dark-neutral surface yet, so the two neutral
+  // endpoints are inverted here via component-scoped aliases.
+  // ───────────────────────────────────────────────────────────────────────
+  &__hero {
+    --ink: var(--content-inverse);
+    --paper: var(--content-primary);
+
+    min-block-size: 100svh;
+    padding: var(--space-xl);
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image: radial-gradient(
+      120% 90% at 28% 22%,
+      color-mix(in srgb, var(--ink) 9%, transparent),
+      transparent 62%
+    );
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__hero-inner {
+    inline-size: 100%;
+    max-inline-size: var(--content-prose-wide);
+    margin-inline: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-2xl);
+  }
+
+  &__eyebrow {
+    margin: 0;
+    color: color-mix(in srgb, var(--ink) 62%, transparent);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-section-label-weight);
+    line-height: var(--type-label-line-height);
+    text-transform: uppercase;
+  }
+
+  // Display headline — fluid so it fills the hero across widths.
+  &__display {
+    margin: 0;
+    color: var(--ink);
+    font-weight: var(--type-display-weight);
+    font-size: clamp(2.75rem, 9vw, 7.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  &__hero-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-md);
+    font-size: var(--type-label-size);
+    line-height: var(--type-label-line-height);
+  }
+
+  &__hero-tag {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  &__hero-tag-label {
+    color: color-mix(in srgb, var(--ink) 82%, transparent);
+    font-weight: var(--type-label-weight);
+  }
+
+  &__hero-tag-payoff {
+    color: color-mix(in srgb, var(--ink) 55%, transparent);
+    font-style: italic;
+  }
+
+  &__scroll {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    color: color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+
+  &__scroll-arrow {
+    display: inline-block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &__scroll-arrow {
+      animation: strategy-bob 1.8s ease-in-out infinite;
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Sections 2–5 — original light editorial styling (unchanged).
+  // ───────────────────────────────────────────────────────────────────────
+  &__main {
+    overflow-y: auto;
+  }
+
+  &__article {
+    max-inline-size: var(--content-prose-wide);
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-xl) var(--space-3xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xl);
+  }
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  &__statement {
+    margin: 0;
+    color: var(--content-primary);
+    font-size: var(--type-h1-size);
+    font-weight: var(--type-h1-weight);
+    line-height: var(--type-h1-line-height);
+    text-wrap: balance;
+  }
+
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-md);
+    padding-top: var(--space-sm);
+    border-top: thin solid var(--borders-default);
+    font-size: var(--type-label-size);
+    line-height: var(--type-label-line-height);
+  }
+
+  &__label {
+    color: var(--content-secondary);
+    font-weight: var(--type-label-weight);
+  }
+
+  &__payoff {
+    color: var(--content-tertiary);
+    font-weight: var(--type-body-small-weight);
+    font-style: italic;
+    text-align: right;
+  }
+
+  &__principles {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  &__principle {
+    padding-left: var(--space-md);
+    border-left: 0.125rem solid var(--borders-default);
+    color: var(--content-secondary);
+    font-size: var(--type-body-large-size);
+    line-height: var(--type-body-large-line-height);
+  }
+
+  &__principle-title {
+    color: var(--content-primary);
+    font-weight: var(--type-section-label-weight);
+  }
+
+  &__principle-desc {
+    font-weight: var(--type-body-large-weight);
+  }
+}
+
+@keyframes strategy-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(0.3rem);
+  }
+}

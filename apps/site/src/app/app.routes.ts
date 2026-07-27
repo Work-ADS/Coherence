@@ -40,6 +40,14 @@ export const routes: Routes = [
       import('./pages/blog/blog.landing').then((m) => m.BlogLandingPage),
     data: { collection: 'methodology' },
   },
+  // Brand strategy — internal brand-strategy narrative (modern foundation).
+  {
+    path: 'estrategia-marca',
+    loadComponent: () =>
+      import('./pages/estrategia-marca/estrategia-marca.page').then(
+        (m) => m.EstrategiaMarcaPage,
+      ),
+  },
   // Workbench — first-class nav destination (previously a demo route).
   {
     path: 'workbench',

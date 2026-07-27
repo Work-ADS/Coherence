@@ -1,0 +1,52 @@
+<div class="strategy" data-foundation="modern">
+  <!-- Section 1 — mission, redesigned as a full-viewport B&W hero. -->
+  <section class="strategy__hero">
+    <div class="strategy__hero-inner">
+      <p class="strategy__eyebrow">{{ content().eyebrow }}</p>
+
+      <h1 class="strategy__display">
+        {{ content().hero.pre }}{{ content().hero.glass }}{{ content().hero.post }}
+      </h1>
+
+      <div class="strategy__hero-foot">
+        <p class="strategy__hero-tag">
+          <span class="strategy__hero-tag-label">{{ content().hero.label }}</span>
+          <span class="strategy__hero-tag-payoff">{{ content().hero.payoff }}</span>
+        </p>
+        <p class="strategy__scroll">
+          {{ content().scrollCue }}
+          <span class="strategy__scroll-arrow" aria-hidden="true">↓</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sections 2–5 — unchanged editorial blocks (light). -->
+  <main class="strategy__main">
+    <article class="strategy__article">
+      @for (block of content().blocks; track block.label) {
+        <section class="strategy__block">
+          @if (block.statement) {
+            <p class="strategy__statement">{{ block.statement }}</p>
+          }
+
+          @if (block.principles) {
+            <ul class="strategy__principles">
+              @for (principle of block.principles; track principle.title) {
+                <li class="strategy__principle">
+                  <span class="strategy__principle-title">{{ principle.title }}</span>
+                  <span class="strategy__principle-desc"> — {{ principle.desc }}</span>
+                </li>
+              }
+            </ul>
+          }
+
+          <footer class="strategy__meta">
+            <span class="strategy__label">{{ block.label }}</span>
+            <span class="strategy__payoff">{{ block.payoff }}</span>
+          </footer>
+        </section>
+      }
+    </article>
+  </main>
+</div>

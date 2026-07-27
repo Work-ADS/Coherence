@@ -66,33 +66,35 @@ const POSTS: BlogPost[] = [
     },
     thumb: 'ia',
   },
-  // Hidden 2026-07-24 — brand-and-personas is AI-drafted and factually wrong;
-  // Richard is replacing it. The /blog/brand-and-personas route still resolves
-  // (direct URL), it's just delisted from the methodology landing. Restore by
-  // uncommenting once the rewrite lands.
-  // {
-  //   slug: 'brand-and-personas',
-  //   collection: 'methodology',
-  //   darkThumb: true,
-  //   eyebrow: {
-  //     es: 'ESTRATEGIA · MARCA',
-  //     en: 'STRATEGY · BRAND',
-  //   },
-  //   title: {
-  //     es: 'Estrategia de marca: la base que el moodboard no puede inventar',
-  //     en: 'Brand strategy: what the moodboard can\'t make up',
-  //   },
-  //   date: {
-  //     es: '25 junio 2026',
-  //     en: 'June 25, 2026',
-  //   },
-  //   intro: {
-  //     es: 'Antes de abrir Figma, el brief: seis campos de marca que hoy guían los simuladores y la nueva identidad. Por qué los demos en código nos dejan enseñar casos de uso de verdad, no sólo pantallas.',
-  //     en: 'Before opening Figma, the brief: six brand fields that now steer the simulators and the new identity. Why code-based demos let us show real use cases, not just screens.',
-  //   },
-  //   thumb: 'video',
-  //   videoSrc: 'assets/thumbnails/brand-and-personas.mp4',
-  // },
+  // Replaces the delisted brand-and-personas card (AI-drafted, factually wrong).
+  // The /blog/brand-and-personas route still resolves by direct URL.
+  {
+    slug: 'estrategia-marca',
+    collection: 'methodology',
+    darkThumb: true,
+    eyebrow: {
+      es: 'ESTRATEGIA · MARCA',
+      en: 'STRATEGY · BRAND',
+    },
+    title: {
+      es: 'Estrategia de marca: cinco ideas que nos definen',
+      en: 'Brand strategy: five ideas that define us',
+    },
+    date: {
+      es: '24 julio 2026',
+      en: 'July 24, 2026',
+    },
+    intro: {
+      es: 'Por qué existimos, qué somos, qué creemos y cómo trabajamos. La base de marca que guía el producto y el tono, antes de abrir Figma.',
+      en: 'Why we exist, what we are, what we believe, and how we work. The brand foundation that steers the product and the tone, before opening Figma.',
+    },
+    thumb: 'video',
+    videoSrc: {
+      es: 'assets/thumbnails/estrategia-marca-es.mp4',
+      en: 'assets/thumbnails/estrategia-marca-en.mp4',
+    },
+    to: '/estrategia-marca',
+  },
   {
     slug: 'ui-moderno-2026',
     collection: 'methodology',

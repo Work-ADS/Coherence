@@ -49,20 +49,20 @@ const POSTS: BlogPost[] = [
     collection: 'methodology',
     darkThumb: true,
     eyebrow: {
-      es: 'PRODUCTO · ARQUITECTURA DE LA INFORMACIÓN',
-      en: 'PRODUCT · INFORMATION ARCHITECTURE',
+      es: 'PROCESO · IDENTIDAD VISUAL',
+      en: 'PROCESS · VISUAL IDENTITY',
     },
     title: {
-      es: 'Wealth Planner: arquitectura de la información',
-      en: 'Wealth Planner: information architecture',
+      es: 'Cómo construimos la nueva identidad visual',
+      en: 'How we built the new visual identity',
     },
     date: {
-      es: '20 julio 2026',
-      en: 'July 20, 2026',
+      es: '27 julio 2026',
+      en: 'July 27, 2026',
     },
     intro: {
-      es: 'Puedes modernizar los componentes y seguir sin tener una plataforma moderna. Por qué el flujo del Wealth Planner refleja cómo se construye un plan — y no cómo lo usan los asesores.',
-      en: 'You can modernize the components and still not have a modern platform. Why the Wealth Planner\'s flow reflects how a plan gets built — not how advisors use it.',
+      es: 'De un encargo difuso a un sistema funcionando en código: moodboards, principios, tokens, componentes y los gráficos que quedan por delante.',
+      en: 'From a vague brief to a system running in code: moodboards, principles, tokens, components, and the charts still ahead.',
     },
     thumb: 'ia',
   },

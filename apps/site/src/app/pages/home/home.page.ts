@@ -54,21 +54,21 @@ export class HomePage {
   readonly expandGrowing = signal(false);
 
   // Brand-and-personas and Wealth Planner demo cards hidden — home features
-  // the redesign series: Modern UI (surface) + Information Architecture (structure).
+  // the redesign series: Modern UI (research) + the visual-identity build log (process).
   private readonly cards: WorkCard[] = [
     {
       routerLink: '/blog/arquitectura-informacion',
       eyebrow: {
-        es: 'PRODUCTO · ARQUITECTURA DE LA INFORMACIÓN',
-        en: 'PRODUCT · INFORMATION ARCHITECTURE',
+        es: 'PROCESO · IDENTIDAD VISUAL',
+        en: 'PROCESS · VISUAL IDENTITY',
       },
       title: {
-        es: 'Wealth Planner: arquitectura de la información',
-        en: 'Wealth Planner: information architecture',
+        es: 'Cómo construimos la nueva identidad visual',
+        en: 'How we built the new visual identity',
       },
       blurb: {
-        es: 'Puedes modernizar los componentes y seguir sin tener una plataforma moderna. Reorganizar el planificador en torno a cómo lo usan los asesores.',
-        en: 'You can modernize the components and still not have a modern platform. Reorganizing the planner around how advisors use it.',
+        es: 'De un encargo difuso a un sistema funcionando en código: moodboards, principios, tokens, componentes y los gráficos que quedan por delante.',
+        en: 'From a vague brief to a system running in code: moodboards, principles, tokens, components, and the charts still ahead.',
       },
       thumb: 'wealth-planner',
     },

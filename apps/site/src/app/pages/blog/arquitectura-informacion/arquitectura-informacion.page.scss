@@ -1,65 +1,24 @@
 // =============================================================================
 // arquitectura-informacion.page.scss
 // =============================================================================
-// BEM under `.post`, mirroring brand-and-personas. Token-only — the clean-code
-// hook blocks raw values outside libs/tokens/.
+// Part 3 of the redesign series, on the same identity-v2 modern skeleton as
+// ui-moderno-2026: the root carries data-foundation="modern", so COLOR and
+// TYPE resolve to the v2 set (IBM Plex Sans, per-role type scale, the
+// --content-* / --background-* / --borders-* semantic colors). Spacing, radius
+// and layout widths (--space-*, --radius-*, --content-prose) are
+// foundation-agnostic globals. Token-only — the clean-code hook blocks raw
+// values outside libs/tokens/.
 // =============================================================================
+
+@use '../../../../../../../libs/ui/src/styles/focus-ring' as *;
 
 .post {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: var(--canvas-base);
-
-  &__breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    height: var(--space-2xl);
-    padding: 0 var(--space-md);
-    background: var(--surface-quiet);
-    border-bottom: thin solid var(--border-hairline);
-    flex-shrink: 0;
-    font: var(--type-body-sm-400);
-  }
-
-  &__breadcrumb-back {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--space-lg);
-    height: var(--space-lg);
-    border-radius: var(--radius-sm);
-    color: var(--color-neutral-500);
-    transition: background-color var(--duration-fast) var(--easing-enter);
-
-    &:hover {
-      background-color: var(--color-neutral-100);
-    }
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 0.125rem var(--border-focus);
-    }
-  }
-
-  &__breadcrumb-parent {
-    color: var(--color-neutral-500);
-  }
-
-  &__breadcrumb-separator {
-    color: var(--color-neutral-400);
-  }
-
-  &__breadcrumb-current {
-    color: var(--canvas-fg);
-    font: var(--type-body-sm-500);
-  }
-
-  &__icon {
-    width: var(--space-md);
-    height: var(--space-md);
-  }
+  font-family: var(--font-family-primary);
+  color: var(--content-primary);
+  background: var(--background-canvas);
 
   &__main {
     flex: 1;
@@ -75,21 +34,57 @@
     gap: var(--space-xl);
   }
 
-  &__eyebrow {
-    font: var(--type-body-sm-500);
-    letter-spacing: var(--tracking-wider);
-    text-transform: uppercase;
-    color: var(--color-neutral-500);
+  // ─── Article hero (title block) — mirrors ui-moderno-2026. ───
+  &__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
   }
 
+  // Ghost "back to Design at Afi" button — persistent-label-alignment rule
+  // (AGENTS.md, LOCKED): the resting chevron anchors to the text column via a
+  // negative inline margin; on hover the ghost background bleeds left.
+  &__back {
+    align-self: flex-start;
+    margin-inline-start: calc(-1 * var(--pad-control-sm));
+    margin-bottom: var(--space-2xs);
+
+    // afi-button-v2 sizes only its own spinner; the slotted SVG needs an
+    // explicit box (viewBox cropped to the glyph, "7 0 13 20").
+    svg[slot='iconStart'] {
+      block-size: var(--icon-sm);
+      inline-size: auto;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    color: var(--content-primary);
+    font-size: var(--type-h1-size);
+    font-weight: var(--type-h1-weight);
+    line-height: var(--type-h1-line-height);
+  }
+
+  &__standfirst {
+    margin: 0;
+    color: var(--content-secondary);
+    font-size: var(--type-body-large-size);
+    font-weight: var(--type-body-large-weight);
+    line-height: var(--type-body-large-line-height);
+  }
+
+  // Series intro blockquote.
   &__lead {
     margin: 0;
     padding: var(--space-lg);
-    border-left: 0.1875rem solid var(--border-focus);
-    background: var(--surface-quiet);
+    border-left: 0.1875rem solid var(--borders-default);
+    background: var(--tag-background-default);
     border-radius: var(--radius-sm);
-    color: var(--canvas-fg);
-    font: var(--type-body-lg-400);
+    color: var(--content-secondary);
+    font-size: var(--type-body-large-size);
+    font-weight: var(--type-body-large-weight);
+    line-height: var(--type-body-large-line-height);
   }
 
   &__section {
@@ -98,32 +93,114 @@
     gap: var(--space-md);
   }
 
+  // Section heading — v2 H2 role.
   &__h2 {
     margin: 0;
-    color: var(--canvas-fg);
-    font: var(--type-display-sm);
+    color: var(--content-primary);
+    font-size: var(--type-h2-size);
+    font-weight: var(--type-h2-weight);
+    line-height: var(--type-h2-line-height);
+  }
+
+  // Subsection heading (section 1 sub-parts) — v2 H3 role.
+  &__h3 {
+    margin: var(--space-sm) 0 0;
+    color: var(--content-primary);
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-line-height);
   }
 
   &__p {
     margin: 0;
-    color: var(--canvas-fg);
-    font: var(--type-body);
+    color: var(--content-secondary);
+    font-size: var(--type-body-default-size);
+    font-weight: var(--type-body-default-weight);
+    line-height: var(--type-body-default-line-height);
   }
 
   &__link {
-    color: var(--canvas-fg);
+    color: var(--content-primary);
     text-decoration: underline;
     text-underline-offset: 0.1875rem;
 
     &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 0.125rem var(--border-focus);
-      border-radius: var(--radius-sm);
+      @include focus-ring-v2;
     }
+  }
+
+  &__code {
+    font-family: var(--font-family-mono);
+    font-size: var(--type-code-size);
+    padding: 0 var(--space-3xs);
+    border-radius: var(--radius-xs);
+    // Static tinted surface (not the --background-active interaction state).
+    background: var(--tag-background-default);
+    border: thin solid var(--borders-default);
+  }
+
+  // ─── Diagrams (same treatment as ui-moderno-2026) ───
+  &__figure {
+    margin: var(--space-sm) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    border: thin solid var(--borders-default);
+    // Static tinted placeholder (not the --background-hover interaction state).
+    background: var(--tag-background-default);
+  }
+
+  &__caption {
+    color: var(--content-tertiary);
+    font-size: var(--type-body-small-size);
+    font-weight: var(--type-body-small-weight);
+    line-height: var(--type-body-small-line-height);
+    font-style: italic;
+  }
+
+  // ─── Live component demos (sections 6 and 8): the article embeds the real
+  //     v2 primitives instead of screenshots — the system demonstrating itself. ───
+  &__demo {
+    margin: var(--space-sm) 0 0;
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border: thin solid var(--borders-default);
+    background: var(--background-canvas);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  &__demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  // Lets the demo input take the row's remaining width.
+  &__demo-grow {
+    flex: 1;
+  }
+
+  &__demo-caption {
+    margin: 0;
+    color: var(--content-tertiary);
+    font-size: var(--type-body-small-size);
+    font-weight: var(--type-body-small-weight);
+    line-height: var(--type-body-small-line-height);
+    font-style: italic;
   }
 }
 
-// ─── Discovery principles list ───
+// ─── Research-summary principle list — shared shape with ui-moderno-2026. ───
 .principles {
   margin: 0;
   padding: 0;
@@ -133,21 +210,27 @@
   gap: var(--space-md);
 
   &__item {
-    color: var(--canvas-fg);
-    font: var(--type-body);
+    color: var(--content-secondary);
+    font-size: var(--type-body-default-size);
+    font-weight: var(--type-body-default-weight);
+    line-height: var(--type-body-default-line-height);
     padding-left: var(--space-md);
-    border-left: 0.125rem solid var(--border-hairline);
+    border-left: 0.125rem solid var(--borders-default);
   }
-}
 
-// ─── Language toggle notice ───
-.lang-notice {
-  margin: 0;
-  padding: var(--space-md);
-  border-radius: var(--radius-sm);
-  background: var(--surface-quiet);
-  border: thin solid var(--border-hairline);
-  color: var(--color-neutral-700);
-  font: var(--type-body-sm-400);
-  text-align: center;
+  // Numbered variant (section 4's principles + anti-patterns) — CSS counter
+  // instead of list-style so the number sits inside the bordered item.
+  &--numbered {
+    counter-reset: principle;
+
+    .principles__item {
+      counter-increment: principle;
+
+      &::before {
+        content: counter(principle) '. ';
+        color: var(--content-primary);
+        font-weight: var(--type-label-weight);
+      }
+    }
+  }
 }

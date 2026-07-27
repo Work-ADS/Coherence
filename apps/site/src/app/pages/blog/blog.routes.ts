@@ -77,7 +77,8 @@ export const blog_routes: Routes = [
         (m) => m.BrandAndPersonasPage,
       ),
   },
-  // Wealth Planner information architecture — Part 3 of the redesign series
+  // How we built the new visual identity — Part 3 of the redesign series
+  // (slug kept as arquitectura-informacion: the URL already shipped)
   {
     path: 'arquitectura-informacion',
     loadComponent: () =>

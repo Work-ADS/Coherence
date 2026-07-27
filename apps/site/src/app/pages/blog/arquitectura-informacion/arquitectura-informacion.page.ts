@@ -1,18 +1,66 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { PageHeaderComponent } from '@coherence/ui';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import {
+  ButtonV2Component,
+  CheckboxV2Component,
+  InputV2Component,
+  RadioGroupV2Component,
+  RadioV2Component,
+  ToggleV2Component,
+} from '@coherence/ui';
 
+import { HyperTextDirective } from '../../../directives/hyper-text.directive';
 import { LanguageService } from '../../../services/language.service';
 
+/** States of the send-button motion demo (section 8). */
+type SendDemoState = 'idle' | 'sending' | 'sent';
+
+/**
+ * Part 3 of the redesign series — the build log of the modern visual identity.
+ * Same `.post` shell as ui-moderno-2026 (modern foundation, ghost back button,
+ * siteHyperText headings) so the series reads as one. Route slug stays
+ * `arquitectura-informacion`: the URL already shipped.
+ *
+ * Source of truth for the copy: docs/blog-drafts/visual-identity-process.en.md —
+ * edit there first, then sync here. Sections 6 and 8 embed live v2 primitives
+ * instead of screenshots: the article runs on the design system it describes.
+ */
 @Component({
   selector: 'site-arquitectura-informacion-page',
   standalone: true,
-  imports: [RouterLink, PageHeaderComponent],
+  imports: [
+    RouterLink,
+    ButtonV2Component,
+    CheckboxV2Component,
+    InputV2Component,
+    RadioGroupV2Component,
+    RadioV2Component,
+    ToggleV2Component,
+    HyperTextDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './arquitectura-informacion.page.html',
   styleUrls: ['./arquitectura-informacion.page.scss'],
 })
 export class ArquitecturaInformacionPage {
   private readonly language = inject(LanguageService);
+  private readonly router = inject(Router);
   readonly isEn = computed(() => this.language.lang() === 'en');
+
+  /** Send → sending → sent demo. Timers only run after a user click. */
+  readonly sendState = signal<SendDemoState>('idle');
+
+  /** Ghost back button → the methodology / Design at Afi series index. */
+  back(): void {
+    void this.router.navigate(['/metodologia']);
+  }
+
+  runSendDemo(): void {
+    if (this.sendState() !== 'idle') return;
+    this.sendState.set('sending');
+    setTimeout(() => {
+      this.sendState.set('sent');
+      setTimeout(() => this.sendState.set('idle'), 1600);
+    }, 1400);
+  }
 }

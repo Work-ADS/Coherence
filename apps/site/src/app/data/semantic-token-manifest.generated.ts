@@ -52,6 +52,30 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "color"
   },
   {
+    "name": "--surface-inverse-tint",
+    "kind": "color"
+  },
+  {
+    "name": "--surface-inverse-mark-default",
+    "kind": "color"
+  },
+  {
+    "name": "--surface-inverse-mark-subtle",
+    "kind": "color"
+  },
+  {
+    "name": "--surface-inverse-mark-faint",
+    "kind": "color"
+  },
+  {
+    "name": "--surface-inverse-mark-pending",
+    "kind": "color"
+  },
+  {
+    "name": "--surface-inverse-mark-pending-ink",
+    "kind": "color"
+  },
+  {
     "name": "--disabled-background",
     "kind": "color"
   },

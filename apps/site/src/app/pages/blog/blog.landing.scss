@@ -263,7 +263,7 @@
   padding: 8% 10%;
 
   &__spine {
-    stroke: var(--color-white-a25);
+    stroke: var(--surface-inverse-mark-faint);
     stroke-width: 1.25;
     stroke-linecap: round;
     stroke-dasharray: 1;
@@ -276,37 +276,37 @@
   // own gradient, so the node reads as a hole punched in the dark field.
   // The pending stage keeps the same fill and goes dashed.
   &__node {
-    stroke: var(--color-white-a55);
+    stroke: var(--surface-inverse-mark-subtle);
     stroke-width: 1.25;
     fill: var(--surface-inverse-default);
   }
 
   &__node--next {
-    stroke: var(--color-white-a35);
+    stroke: var(--surface-inverse-mark-pending);
     stroke-dasharray: 2 2;
   }
 
   &__pill {
-    stroke: var(--color-white-a55);
+    stroke: var(--surface-inverse-mark-subtle);
     stroke-width: 1.25;
-    fill: var(--color-white-a10);
+    fill: var(--surface-inverse-tint);
   }
 
   &__pill--next {
-    stroke: var(--color-white-a35);
+    stroke: var(--surface-inverse-mark-pending);
     stroke-dasharray: 3 3;
     fill: none;
   }
 
   &__label {
-    fill: var(--color-white-a78);
+    fill: var(--surface-inverse-mark-default);
     font-family: var(--font-family-primary);
     font-size: 9.5px;
     font-weight: var(--font-weight-medium);
   }
 
   &__label--next {
-    fill: var(--color-white-a40);
+    fill: var(--surface-inverse-mark-pending-ink);
   }
 
   // ── Shared ambient loop: one pass, a different window per stage ───────────

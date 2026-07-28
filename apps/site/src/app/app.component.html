@@ -19,17 +19,19 @@
                into the modern foundation (IBM Plex + v2 tokens) via
                data-foundation="modern". Fundamentos / Componentes / Patrones
                stay off the bar while the v2 primitives are in flight (routes
-               remain live). Labels match the Figma; 'Example' is a provisional
-               link to the demos index until the dashboard examples are defined. -->
+               remain live). EN labels match the Figma; ES swaps in 'Diseño en
+               Afi' / 'Laboratorio' ('Demos' is identical in both). 'Example' is
+               a provisional link to the demos index until the dashboard
+               examples are defined. -->
           <div slot="start" class="site-nav" data-foundation="modern">
             <coherence-logo [variant]="navOnDark() ? 'monochrome' : 'color'" size="sm" href="/" />
             <nav class="site-nav__menu" aria-label="Main navigation">
               <afi-navbar-item-v2
-                label="Design at Afi"
-                [selected]="isActive('/metodologia')"
-                (selectedChange)="navigate('/metodologia')" />
+                [label]="lang() === 'en' ? 'Design at Afi' : 'Diseño en Afi'"
+                [selected]="isActive('/design-at-afi')"
+                (selectedChange)="navigate('/design-at-afi')" />
               <afi-navbar-item-v2
-                label="Workbench"
+                [label]="lang() === 'en' ? 'Workbench' : 'Laboratorio'"
                 [selected]="isActive('/workbench')"
                 (selectedChange)="navigate('/workbench')" />
               <afi-navbar-item-v2

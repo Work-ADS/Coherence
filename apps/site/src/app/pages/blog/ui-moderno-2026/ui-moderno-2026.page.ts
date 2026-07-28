@@ -31,6 +31,6 @@ export class UiModerno2026Page {
 
   /** Ghost back button → the methodology / Design at Afi series index. */
   back(): void {
-    void this.router.navigate(['/metodologia']);
+    void this.router.navigate(['/design-at-afi']);
   }
 }

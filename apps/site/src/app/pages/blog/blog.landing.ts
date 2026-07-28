@@ -3,14 +3,15 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 
+import { HyperTextDirective } from '../../directives/hyper-text.directive';
 import { LanguageService } from '../../services/language.service';
 
-type Thumb = 'whitelabel' | 'ia' | 'video';
+type Thumb = 'proceso' | 'video';
 
 /**
  * Which landing surface a post belongs to. `methodology` = the redesign-series
  * narrative (Modern UI → Brand strategy → Visual identity), shown on
- * /metodologia. `blog` = everything else, shown on /blog. A single POSTS list
+ * /design-at-afi. `blog` = everything else, shown on /blog. A single POSTS list
  * feeds both landings; the route's `data.collection` selects the subset.
  */
 type Collection = 'methodology' | 'blog';
@@ -39,6 +40,13 @@ interface BlogPost {
    * scrolls behind it.
    */
   darkThumb?: boolean;
+  /**
+   * Framed/floating-media treatment: the card field is a light surface and the
+   * media insets with its own radius (Shopify-style), label below on the field.
+   * When set, the dark nav-flip is suppressed (the field behind the bar is now
+   * light). Applied to the methodology cards.
+   */
+  framed?: boolean;
 }
 
 // Trimmed to the three featured pieces. Other historical posts moved under
@@ -48,23 +56,24 @@ const POSTS: BlogPost[] = [
     slug: 'identidad-visual',
     collection: 'methodology',
     darkThumb: true,
+    framed: true,
     eyebrow: {
-      es: 'PROCESO · IDENTIDAD VISUAL',
-      en: 'PROCESS · VISUAL IDENTITY',
+      es: 'Proceso · Identidad visual',
+      en: 'Process · Visual identity',
     },
     title: {
       es: 'Cómo construimos la nueva identidad visual',
       en: 'How we built the new visual identity',
     },
     date: {
-      es: '27 julio 2026',
-      en: 'July 27, 2026',
+      es: 'julio 2026',
+      en: 'July 2026',
     },
     intro: {
       es: 'De un encargo difuso a un sistema funcionando en código: moodboards, principios, tokens, componentes y los gráficos que quedan por delante.',
       en: 'From a vague brief to a system running in code: moodboards, principles, tokens, components, and the charts still ahead.',
     },
-    thumb: 'ia',
+    thumb: 'proceso',
   },
   // Replaces the delisted brand-and-personas card (AI-drafted, factually wrong).
   // The /blog/brand-and-personas route still resolves by direct URL.
@@ -72,17 +81,18 @@ const POSTS: BlogPost[] = [
     slug: 'estrategia-marca',
     collection: 'methodology',
     darkThumb: true,
+    framed: true,
     eyebrow: {
-      es: 'ESTRATEGIA · MARCA',
-      en: 'STRATEGY · BRAND',
+      es: 'Estrategia · Marca',
+      en: 'Strategy · Brand',
     },
     title: {
       es: 'Estrategia de marca: cinco ideas que nos definen',
       en: 'Brand strategy: five ideas that define us',
     },
     date: {
-      es: '24 julio 2026',
-      en: 'July 24, 2026',
+      es: 'julio 2026',
+      en: 'July 2026',
     },
     intro: {
       es: 'Por qué existimos, qué somos, qué creemos y cómo trabajamos. La base de marca que guía el producto y el tono, antes de abrir Figma.',
@@ -99,17 +109,18 @@ const POSTS: BlogPost[] = [
     slug: 'ui-moderno-2026',
     collection: 'methodology',
     darkThumb: true,
+    framed: true,
     eyebrow: {
-      es: 'INVESTIGACIÓN · UI 2026',
-      en: 'RESEARCH · UI 2026',
+      es: 'Investigación · UI 2026',
+      en: 'Research · UI 2026',
     },
     title: {
       es: '¿Qué es UI moderna en 2026? La base de investigación del rediseño de Afi',
       en: 'What is modern UI in 2026? The research behind Afi\'s redesign',
     },
     date: {
-      es: '24 junio 2026',
-      en: 'June 24, 2026',
+      es: 'junio 2026',
+      en: 'June 2026',
     },
     intro: {
       es: 'El encargo decía «moderno»; fuimos a averiguar qué significa. Convertir un adjetivo en definición: cómo se ven las interfaces, cómo se comportan, qué las sostiene — y cinco compromisos que se nos pueden auditar.',
@@ -126,8 +137,8 @@ const POSTS: BlogPost[] = [
     slug: 'wealth-planner-2026',
     collection: 'blog',
     eyebrow: {
-      es: 'DEMO · DIGITAL SOLUTIONS',
-      en: 'DEMO · DIGITAL SOLUTIONS',
+      es: 'Demo · Digital Solutions',
+      en: 'Demo · Digital Solutions',
     },
     title: {
       es: 'Wealth Planner 2026',
@@ -159,12 +170,13 @@ interface ViewPost {
   videoPoster?: string;
   to?: string;
   darkThumb?: boolean;
+  framed?: boolean;
 }
 
 @Component({
   selector: 'site-blog-landing',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, HyperTextDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './blog.landing.html',
   styleUrl: './blog.landing.scss',
@@ -176,7 +188,7 @@ export class BlogLandingPage {
 
   /**
    * The landing this instance renders. Set via route `data.collection`
-   * (/metodologia → 'methodology'); defaults to 'blog'. One component, two
+   * (/design-at-afi → 'methodology'); defaults to 'blog'. One component, two
    * surfaces — filtered from the shared POSTS list.
    */
   private readonly collection = toSignal(
@@ -193,7 +205,7 @@ export class BlogLandingPage {
       // Design at Afi hero — Figma AFI-FOUNDATIONS-MODERN 2975:9948.
       return {
         eyebrow: '',
-        title: isEn ? 'Documenting our new era' : 'Documentamos nuestra nueva era',
+        title: isEn ? 'Documenting our new era' : 'Documentamos nuestra nueva etapa',
         intro: isEn
           ? 'We\'re entering a new chapter of technology, where design is what sets you apart. This is how the Afi design team works now, documented as it happens.'
           : 'Entramos en un nuevo capítulo de la tecnología, en el que el diseño es lo que marca la diferencia. Así trabaja ahora el equipo de diseño de Afi, documentado en tiempo real.',
@@ -222,6 +234,7 @@ export class BlogLandingPage {
       videoPoster: p.videoPoster,
       to: p.to,
       darkThumb: p.darkThumb,
+      framed: p.framed,
     }));
   });
 
@@ -234,6 +247,14 @@ export class BlogLandingPage {
   playMuted(event: Event): void {
     const video = event.target as HTMLVideoElement;
     video.muted = true;
+
+    // A thumb that loops forever is the one motion a reduced-motion user cannot
+    // escape (accessibility.md #8 / motion-skill §4.6, WCAG 2.2.2). Bail before
+    // play() and the video holds its first decoded frame — `preload="auto"`
+    // still fetches it, which is the only static fallback most of these posts
+    // have (they carry no `videoPoster`).
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     video.play().catch(() => {
       /* autoplay blocked: video will start on next user interaction */
     });

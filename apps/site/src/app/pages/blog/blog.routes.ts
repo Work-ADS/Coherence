@@ -78,12 +78,18 @@ export const blog_routes: Routes = [
       ),
   },
   // How we built the new visual identity — Part 3 of the redesign series
-  // (slug kept as arquitectura-informacion: the URL already shipped)
+  {
+    path: 'identidad-visual',
+    loadComponent: () =>
+      import('./identidad-visual/identidad-visual.page').then(
+        (m) => m.IdentidadVisualPage,
+      ),
+  },
+  // The post shipped first as an information-architecture piece; it was renamed
+  // once it became the full build log. Keep the original URL resolving.
   {
     path: 'arquitectura-informacion',
-    loadComponent: () =>
-      import('./arquitectura-informacion/arquitectura-informacion.page').then(
-        (m) => m.ArquitecturaInformacionPage,
-      ),
+    redirectTo: 'identidad-visual',
+    pathMatch: 'full',
   },
 ];

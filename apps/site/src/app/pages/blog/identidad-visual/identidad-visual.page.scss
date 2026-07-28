@@ -1,5 +1,5 @@
 // =============================================================================
-// arquitectura-informacion.page.scss
+// identidad-visual.page.scss
 // =============================================================================
 // Part 3 of the redesign series, on the same identity-v2 modern skeleton as
 // ui-moderno-2026: the root carries data-foundation="modern", so COLOR and
@@ -197,6 +197,162 @@
     font-weight: var(--type-body-small-weight);
     line-height: var(--type-body-small-line-height);
     font-style: italic;
+  }
+}
+
+// ─── Type test (section 5) — the number-width comparison, set in the real
+//     faces so the drift is visible rather than described. Self-hosted latin
+//     subsets so the page doesn't depend on a third-party font request, and
+//     namespaced ("TypeTest …") so they can't collide with the site families.
+//     Deliberately NOT font-variant-numeric: tabular figures would hide the
+//     exact defect the section is about. ───
+@font-face {
+  font-family: 'TypeTest Space Grotesk';
+  src: url('/assets/fonts/type-test/space-grotesk-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TypeTest Fira Sans';
+  src: url('/assets/fonts/type-test/fira-sans-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TypeTest Geist';
+  src: url('/assets/fonts/type-test/geist-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TypeTest IBM Plex Sans';
+  src: url('/assets/fonts/type-test/ibm-plex-sans-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+.type-test {
+  margin: var(--space-sm) 0 0;
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: thin solid var(--borders-default);
+  background: var(--background-canvas);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  &__name {
+    flex: 0 0 auto;
+    min-width: var(--space-3xl);
+    color: var(--content-secondary);
+    font-size: var(--type-body-small-size);
+    font-weight: var(--type-label-weight);
+    line-height: var(--type-body-small-line-height);
+  }
+
+  // The digits sit in a tinted box that hugs the text, so each line's rendered
+  // width is the box width — unequal boxes are the defect, made visible.
+  &__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3xs);
+  }
+
+  &__digits {
+    padding: 0 var(--space-2xs);
+    border-radius: var(--radius-xs);
+    background: var(--tag-background-default);
+    color: var(--content-primary);
+    font-size: var(--type-h3-size);
+    line-height: 1.5;
+  }
+
+  &__row--space-grotesk .type-test__digits {
+    font-family: 'TypeTest Space Grotesk', sans-serif;
+  }
+
+  &__row--fira .type-test__digits {
+    font-family: 'TypeTest Fira Sans', sans-serif;
+  }
+
+  &__row--geist .type-test__digits {
+    font-family: 'TypeTest Geist', sans-serif;
+  }
+
+  &__row--plex .type-test__digits {
+    font-family: 'TypeTest IBM Plex Sans', sans-serif;
+  }
+
+  &__verdict {
+    flex: 0 0 auto;
+    font-size: var(--type-body-small-size);
+    font-weight: var(--type-label-weight);
+    line-height: var(--type-body-small-line-height);
+    color: var(--content-tertiary);
+  }
+
+  &__verdict--holds {
+    color: var(--content-primary);
+  }
+}
+
+// ─── Moodboard gallery (section 3) — click-through of the Mobbin boards.
+//     The stage holds a fixed aspect so arrowing between screens of slightly
+//     different heights doesn't reflow the article. ───
+.gallery {
+  &__stage {
+    aspect-ratio: 1920 / 1325;
+    border-radius: var(--radius-md);
+    border: thin solid var(--borders-default);
+    // Static tinted surface behind letterboxed screens (not an interaction state).
+    background: var(--tag-background-default);
+    overflow: hidden;
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+  }
+
+  // Tabular figures so the counter doesn't jitter as the index changes.
+  &__counter {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2xs);
+    min-width: var(--space-3xl);
+    justify-content: center;
+    text-align: center;
+    color: var(--content-tertiary);
+    font-size: var(--type-body-small-size);
+    font-weight: var(--type-body-small-weight);
+    line-height: var(--type-body-small-line-height);
+    font-variant-numeric: tabular-nums;
+  }
+
+  // The product each screen comes from — makes the deliberate order legible.
+  &__app {
+    color: var(--content-primary);
+    font-weight: var(--type-label-weight);
   }
 }
 

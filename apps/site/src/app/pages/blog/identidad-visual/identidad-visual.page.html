@@ -1,0 +1,942 @@
+<div class="post" data-foundation="modern">
+  <main class="post__main">
+    <article class="post__article">
+      <!-- Shared hero — same skeleton as ui-moderno-2026: the back button
+           (label intentionally untranslated, matches the nav) renders once;
+           only title + standfirst switch per language.
+           Copy source of truth: docs/blog-drafts/visual-identity-process.{en,es}.md -->
+      <header class="post__hero">
+        <afi-button-v2 variant="ghost" size="sm" class="post__back" (clicked)="back()">
+          <svg slot="iconStart" viewBox="7 0 13 20" fill="currentColor" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Design at Afi
+        </afi-button-v2>
+        @if (isEn()) {
+          <h1 siteHyperText class="post__title">How we built the new visual identity</h1>
+          <p class="post__standfirst">
+            From a vague brief to a system running in code. This is our design process: what we did and why, because reconstructing context is where teams lose the most time and end up with preference-based design.
+          </p>
+        } @else {
+          <h1 siteHyperText class="post__title">Cómo construimos la nueva identidad visual</h1>
+          <p class="post__standfirst">
+            De un encargo difuso a un sistema funcionando en código. Este es nuestro proceso de diseño: qué hicimos y por qué, porque reconstruir el contexto es donde los equipos pierden más tiempo y acaban diseñando por preferencias.
+          </p>
+        }
+      </header>
+
+      @if (isEn()) {
+        <!-- 1. Context -->
+        <section class="post__section" aria-labelledby="context">
+          <h2 id="context" siteHyperText class="post__h2">1. Context and objectives</h2>
+
+          <h3 siteHyperText class="post__h3">Design at Afi is young</h3>
+          <p class="post__p">
+            Before Miguel joined Afi, the programming team received PNGs of designs from a graphic designer.
+          </p>
+          <p class="post__p">
+            Then Miguel joined, working only on Wealth Manager, a different product, at first. He introduced real flows in Figma, but the org still had no design systems in place. Design and development only collaborated when there was a visual question or an objection; the screens were designed by feel and the programmers took it from there.
+          </p>
+          <p class="post__p">There was no collaboration, definition, or strategy.</p>
+          <p class="post__p">
+            My first project when I joined was Bankinter. We designed a financial planner using the commercial visual line, with a lot of back and forth with the Bankinter team.
+          </p>
+          <p class="post__p">
+            After all that work it turned out the product was for private banking, a different visual line entirely, highlighting the importance of being aligned as a team.
+          </p>
+          <p class="post__p">
+            The Wealth Planner ran into the same problem during the Renta 4 project. New projects with zero context.
+          </p>
+          <p class="post__p">
+            When the Renta 4 project started, my brief was: change the name and make it red. No brand materials, no context on the size of the project, <strong>no plan</strong>. And the product itself had been built without components, meaning any iteration would take time that we didn't have.
+          </p>
+          <p class="post__p">
+            When the first round of iterations came in, I moved us onto components, using the Material library because that's what the team's code already used. It was a real step forward, and iteration got much faster.
+          </p>
+          <p class="post__p">
+            But then we learned what we'd missed by not working together and dedicating proper time to discovery: Material is deeply opinionated, and we had to hack it to create products that match our clients' brands. Systemizing the design was the right call, but doing it inside Material created more restrictions for us.
+          </p>
+          <p class="post__p">
+            After that, instead of improving the product my task was to create different versions of wealth planner for Afi and Unicaja, changing only fonts, colors, and logos with the goal of selling it to other clients.
+          </p>
+          <p class="post__p">
+            The workflow never gave anyone time to design. Because of this we ended up with an old-looking, static product.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/visual-identity/handoff-eras.svg"
+              alt="Four handoff eras at Afi: PNGs, Figma screens, Material components, and our own system in code"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Four handoff eras: PNGs from communications, Figma screens without a system, Material components, and now our own system in code.
+            </figcaption>
+          </figure>
+
+          <h3 siteHyperText class="post__h3">Our opportunity</h3>
+          <p class="post__p">
+            AI changed what's possible: we aren't restricted to opinionated Angular libraries anymore; we can build our own. That's why I took the Memorisely AI design-system course. It gives us the flexibility to create the products we want.
+          </p>
+          <p class="post__p">That's the context for this redesign. We want a wow factor, which we haven't had in a while.</p>
+          <p class="post__p">
+            To get there, we're doing things a bit differently. We are working <em>together</em> as a design team, implementing a design process, and documenting the work, because every project above started the same way: no alignment upfront.
+          </p>
+
+          <h3 siteHyperText class="post__h3">Wealth Planner</h3>
+          <p class="post__p">
+            The Afi Wealth Planner is a tool financial advisors use to build, simulate, and present wealth plans to clients. We have our version, mostly used for demos. We also white-label the product for Spanish banks, connecting their databases of client details.
+          </p>
+          <p class="post__p">The brief was one line: make it look more modern.</p>
+          <p class="post__p">
+            The real problem is we run everything on static Figma screens. Clients get lost during presentations because of those static screens and user experiences that were never thought through. Developers work screen by screen without understanding interactions. The UI looked dated no matter what color we put on it.
+          </p>
+          <p class="post__p">
+            So before touching anything we set three objectives: a lean, information-dense UI built for professionals; interactive code demos instead of Figma-only documentation, so developers inspect the real thing; and a system that scales.
+          </p>
+        </section>
+
+        <!-- 2. Defining modern -->
+        <section class="post__section" aria-labelledby="modern">
+          <h2 id="modern" siteHyperText class="post__h2">2. Defining "modern"</h2>
+          <p class="post__p">
+            Before opening Figma, we wanted to define what "modern" meant. Otherwise every review turns into a debate about what people like versus what they don't; without a shared definition, taste argues with taste and nothing gets decided.
+          </p>
+          <p class="post__p">
+            We synthesized the research in <a class="post__link" routerLink="/blog/ui-moderno-2026">Part 1 of this series</a>. The short version:
+          </p>
+          <ul class="principles">
+            <li class="principles__item">
+              <strong>Be intentional with visuals.</strong> Neutral tones, functional depth, bento grids for hierarchy. Color and animation carry information.
+            </li>
+            <li class="principles__item">
+              <strong>Dynamic instead of linear.</strong> Linear flows create boring experiences; what we need is to truly understand the user's objective and build the layout around it.
+            </li>
+            <li class="principles__item">
+              <strong>Systems, systems, systems.</strong> Semantic tokens as one source of truth, so decisions stay machine-readable.
+            </li>
+            <li class="principles__item">
+              <strong>Evidence over opinion.</strong> Because layouts can be dynamic there is more of an emphasis on tracking metrics and talking to users. Taste-only feedback, with no metrics or user input behind it, stunts creativity.
+            </li>
+            <li class="principles__item">
+              <strong>Pay attention to the small details.</strong> Now that building is so much faster, modern UI gives space to the details users wouldn't name but do feel. An arrow twisting or a button hugging its text used to be a nice-to-have; now it's how you show that, even with AI, someone paid attention.
+            </li>
+          </ul>
+        </section>
+
+        <!-- 3. Moodboards -->
+        <section class="post__section" aria-labelledby="moodboards">
+          <h2 id="moodboards" siteHyperText class="post__h2">3. Moodboards, then a shortlist</h2>
+          <p class="post__p">
+            After research, we each built a moodboard in Mobbin, separately, organized by component: buttons, inputs, menus, cards, dialogs, sidebar, filters. Three or four screens saved per component.
+          </p>
+          <p class="post__p">
+            Wise was the only reference from our own domain. It is the proof that a fintech can run almost entirely black and white and put color only where the data needs it.
+          </p>
+          <p class="post__p">Then we went through both collections, one component at a time.</p>
+          <p class="post__p">
+            Miguel noticed the pattern first: "We kept choosing the same apps over and over again. Maybe this is the vibe we want to go for." The same names surfaced in both boards, and that became the shortlist: Wise, Cursor, Shopify, Clerk, Notion, and Granola, with Linear, OpenAI, and Stack AI.
+          </p>
+          <p class="post__p">The session produced directions, not final designs.</p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">Buttons compact like Cursor's, with the barely-visible shadow Stack AI uses.</li>
+            <li class="principles__item">Inputs tight like OpenAI's, in two padding variants.</li>
+            <li class="principles__item">Menus like Clerk's: options only, no icons, strong shadow.</li>
+            <li class="principles__item">A Clerk-style breadcrumb navbar: workspace, client, simulation.</li>
+            <li class="principles__item">Shopify as the reference for graphs on cards.</li>
+            <li class="principles__item">Wise as the <strong>starting point</strong> on color usage.</li>
+          </ol>
+
+          <!-- Moodboard gallery — the real Mobbin boards, click-through. -->
+          <figure class="post__figure gallery">
+            <div class="gallery__stage">
+              <img
+                class="gallery__img"
+                [src]="moodboardSlide().src"
+                [alt]="moodboardSlide().app + ' — Mobbin moodboard screen ' + (moodboardIndex() + 1) + ' of ' + moodboardSlides.length"
+                loading="lazy"
+              />
+            </div>
+            <div class="gallery__controls">
+              <afi-icon-button-v2
+                variant="secondary"
+                size="sm"
+                ariaLabel="Previous screen"
+                (clicked)="moodboardStep(-1)"
+              >
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </afi-icon-button-v2>
+              <span class="gallery__counter">
+                <strong class="gallery__app">{{ moodboardSlide().app }}</strong>
+                {{ moodboardIndex() + 1 }} / {{ moodboardSlides.length }}
+              </span>
+              <afi-icon-button-v2
+                variant="secondary"
+                size="sm"
+                ariaLabel="Next screen"
+                (clicked)="moodboardStep(1)"
+              >
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </afi-icon-button-v2>
+            </div>
+            <figcaption class="post__caption">
+              The Mobbin inspiration, screen by screen. Use the arrows to go through them.
+            </figcaption>
+          </figure>
+
+          <p class="post__p">
+            One idea came out of the session itself: on press, the button sinks inward creating more of a life-like action. It sounds small, but it set the tone for how we'd treat micro-interactions later.
+          </p>
+        </section>
+
+        <!-- 4. Principles -->
+        <section class="post__section" aria-labelledby="principles-heading">
+          <h2 id="principles-heading" siteHyperText class="post__h2">4. Principles for the team</h2>
+          <p class="post__p">
+            After the moodboard session we took the patterns we kept choosing, connected them back to the research, and wrote them down as nine design principles.
+          </p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              <strong>Information density without visual density.</strong> Show a lot of information without the screen feeling busy, so the data is easy to read.
+            </li>
+            <li class="principles__item">
+              <strong>Compact controls.</strong> Buttons, inputs, and menus take up only the space they need. Every product we shortlisted (Cursor, OpenAI, Linear, Notion) works this way.
+            </li>
+            <li class="principles__item">
+              <strong>Functional minimalism.</strong> If an element doesn't do a job, it goes. Trust comes from the absence of decoration and highlighting what's actually important.
+            </li>
+            <li class="principles__item">
+              <strong>Progressive disclosure.</strong> Show the essentials first and reveal detail when the user asks for it. Everything else is one click away, not on the first screen.
+            </li>
+            <li class="principles__item">
+              <strong>Consistency above novelty.</strong> A user learns a pattern once and recognizes it everywhere, so they spend less effort figuring out new tasks.
+            </li>
+            <li class="principles__item">
+              <strong>Motion explains state, never decorates.</strong> Animation shows that something changed or directs attention. Anything else gets cut.
+            </li>
+            <li class="principles__item">
+              <strong>Color communicates meaning only.</strong> Surfaces stay neutral and color always means something, so users learn to read it without thinking. In charts that means one highlighted series against gray, with green and red reserved for up and down.
+            </li>
+            <li class="principles__item">
+              <strong>Build the system and flow, not screens.</strong> Every screen assembles from reusable blocks. Designing screen by screen is exactly how we end up with static, boring products.
+            </li>
+            <li class="principles__item">
+              <strong>Context over pages.</strong> Keep the user where they are: drawers, inline editing, and expandable cards instead of sending them to a new page.
+            </li>
+          </ol>
+          <p class="post__p">
+            We also wrote down what to avoid, because knowing what we are is incomplete without knowing what we're not:
+          </p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              <strong>Material Design.</strong> We lived inside its opinions and spent our time hacking around them.
+            </li>
+            <li class="principles__item">
+              <strong>Heavy glassmorphism.</strong> Blur that creates depth is fine; glass on top of dense data hurts legibility. Glass on the surfaces, solid backgrounds behind data.
+            </li>
+            <li class="principles__item">
+              <strong>Colorful enterprise dashboards.</strong> When everything is colorful, nothing stands out.
+            </li>
+            <li class="principles__item">
+              <strong>Playful consumer aesthetics.</strong> We aren't a B2C product. Our users are professionals making financial decisions. The wow factor comes from micro-moments of delight, the small places where we can add some style.
+            </li>
+          </ol>
+          <p class="post__p">
+            The principles exist so a review can argue against a principle instead of a preference. They now live alongside the <a class="post__link" routerLink="/estrategia-marca">brand strategy</a>, so any future designer inherits the reasoning along with the components.
+          </p>
+        </section>
+
+        <!-- 5. Foundations -->
+        <section class="post__section" aria-labelledby="foundations">
+          <h2 id="foundations" siteHyperText class="post__h2">5. Foundations in black and white</h2>
+          <p class="post__p">
+            We set up our primitive and semantic tokens in black and white. A token is a role, like "background canvas" or "background elevated," that does the same job everywhere it appears. Defining that vocabulary before the palette means that choosing colors later is a quick change: update the primitive, and every screen changes with it. Same for spacing decisions like nav-to-content. Set a base now, adjust as the brand matures, and it propagates everywhere.
+          </p>
+          <p class="post__p">
+            For typography we tested Space Grotesk, Fira Sans, and Geist, and none of them passed the width test across number patterns (0000 vs 4444). IBM Plex Sans held consistent, so it became the type family for the modern identity.
+          </p>
+          <!-- Type test — real faces, not a picture of them, so the drift is
+               visible in the browser the same way it was in Figma. -->
+          <figure class="post__figure">
+            <div class="type-test">
+              <div class="type-test__row type-test__row--space-grotesk">
+                <span class="type-test__name">Space Grotesk</span>
+                <div class="type-test__stack">
+                  <span class="type-test__digits">0000</span>
+                  <span class="type-test__digits">4444</span>
+                  <span class="type-test__digits">5555</span>
+                </div>
+                <span class="type-test__verdict">drifts</span>
+              </div>
+              <div class="type-test__row type-test__row--fira">
+                <span class="type-test__name">Fira Sans</span>
+                <div class="type-test__stack">
+                  <span class="type-test__digits">0000</span>
+                  <span class="type-test__digits">4444</span>
+                  <span class="type-test__digits">5555</span>
+                </div>
+                <span class="type-test__verdict">drifts</span>
+              </div>
+              <div class="type-test__row type-test__row--geist">
+                <span class="type-test__name">Geist</span>
+                <div class="type-test__stack">
+                  <span class="type-test__digits">0000</span>
+                  <span class="type-test__digits">4444</span>
+                  <span class="type-test__digits">5555</span>
+                </div>
+                <span class="type-test__verdict">drifts</span>
+              </div>
+              <div class="type-test__row type-test__row--plex">
+                <span class="type-test__name">IBM Plex Sans</span>
+                <div class="type-test__stack">
+                  <span class="type-test__digits">0000</span>
+                  <span class="type-test__digits">4444</span>
+                  <span class="type-test__digits">5555</span>
+                </div>
+                <span class="type-test__verdict type-test__verdict--holds">holds</span>
+              </div>
+            </div>
+            <figcaption class="post__caption">
+              The number-width test, set in the real faces. Every line is the same four digits, so the boxes should be identical. Where they aren't, tables and charts jitter as the data changes.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- 6. Build -->
+        <section class="post__section" aria-labelledby="build">
+          <h2 id="build" siteHyperText class="post__h2">6. Components in code, documentation in Figma</h2>
+          <p class="post__p">
+            With foundations set, we listed the primitive components and split them. I took chip, badge, card, and table; Miguel took tag, dialog, navbar, and tabs.
+          </p>
+          <p class="post__p">
+            We built buttons, inputs, checkboxes, and toggles together, so we could work out an efficient workflow and get similar outputs.
+          </p>
+          <p class="post__p">
+            We started with primitive components because they're the building blocks everything else assembles from; the more complex patterns only get built when we actually need them.
+          </p>
+          <p class="post__p">Our workflow:</p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              Lo-fi workarea: we build the primitive component in code based on our moodboard, then write a prompt for the Figma agent.
+            </li>
+            <li class="principles__item">
+              The AI builds the component in Figma using the correct variables, creating new ones where needed, and writes the documentation.
+            </li>
+            <li class="principles__item">We make any small adjustments.</li>
+            <li class="principles__item">
+              Then, once we're satisfied, we use the Figma MCP to build the component in our Afi component library.
+            </li>
+          </ol>
+          <p class="post__p">
+            We started building a component workbench page so during review we can show the team the interactions in an isolated environment.
+          </p>
+          <p class="post__p">To keep things consistent, we built two skills:</p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              /ds-cleanup skill audits a component or page, tells me where it's drifting from the system, and then, on a second prompt, fixes it.
+            </li>
+            <li class="principles__item">
+              /ship skill commits and pushes; I merge; then it hands back a Figma prompt for anything that changed in the variables, so Figma and code never drift apart.
+            </li>
+          </ol>
+          <div class="post__demo">
+            <div class="post__demo-row">
+              <afi-button-v2 variant="primary">Primary action</afi-button-v2>
+              <afi-button-v2 variant="secondary">Secondary</afi-button-v2>
+              <afi-button-v2 variant="ghost">Ghost</afi-button-v2>
+              <div class="post__demo-grow">
+                <afi-input-v2 label="Client" placeholder="Ana García" />
+              </div>
+            </div>
+            <p class="post__demo-caption">
+              Not a screenshot: these are the live components, running on the same tokens that style this article. Hover them.
+            </p>
+          </div>
+          <p class="post__p">
+            This workflow saved us a lot of time. Everything is connected to base variables and we have safeguards to update documentation as we go. That keeps the AI producing consistent outputs and gives the team the context behind each design decision.
+          </p>
+        </section>
+
+        <!-- 7. Micro-interactions -->
+        <section class="post__section" aria-labelledby="motion">
+          <h2 id="motion" siteHyperText class="post__h2">7. Micro-interactions</h2>
+          <p class="post__p">
+            With the primitive components done, motion became the next layer. The principle was already locked: motion explains state, never decorates. That didn't mean we couldn't get creative.
+          </p>
+          <p class="post__p">
+            We didn't invent most of the animations. We reverse-engineered the ones that inspired us, or took a React animation library, ported the code to Angular, and iterated from there. Some libraries we used:
+          </p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">Magic UI</li>
+            <li class="principles__item">Animate UI</li>
+            <li class="principles__item">shadcn</li>
+          </ol>
+          <div class="post__demo">
+            <div class="post__demo-row">
+              <afi-checkbox-v2 label="Include real estate" />
+              <afi-radio-group-v2 name="period" ariaLabel="Period" orientation="horizontal">
+                <afi-radio-v2 value="monthly" label="Monthly" />
+                <afi-radio-v2 value="annual" label="Annual" />
+              </afi-radio-group-v2>
+              <afi-toggle-v2 label="Auto-rebalance" />
+              <afi-button-v2
+                variant="primary"
+                [loading]="sendState() === 'sending'"
+                [disabled]="sendState() === 'sent'"
+                (clicked)="runSendDemo()"
+              >
+                @if (sendState() === 'sending') {
+                  Sending…
+                } @else if (sendState() === 'sent') {
+                  Sent ✓
+                } @else {
+                  Send
+                }
+              </afi-button-v2>
+            </div>
+            <p class="post__demo-caption">
+              Every state change explained by motion: the checkbox draw, the radio fill, the toggle flip, and a send flow that walks through send, sending, sent.
+            </p>
+          </div>
+        </section>
+
+        <!-- 8. Structure -->
+        <section class="post__section" aria-labelledby="structure">
+          <h2 id="structure" siteHyperText class="post__h2">8. The structure</h2>
+          <p class="post__p">
+            During our discovery, we found that most financial products didn't just have a single chart or table floating in whitespace, like we do. Most were insight-driven: a quick read at a glance, with room to dig deeper on demand.
+          </p>
+          <p class="post__p">
+            So we made a design decision: organize the product around the value each page delivers, not the order a plan gets built. Fewer, insight-driven screens. To get there, we mapped all ~15 screens to a user-value statement: what insight should a user reach within five seconds of looking at this page?
+          </p>
+          <p class="post__p">
+            Conclusiones is the clearest case: today Diagnóstico and Plan de acción are two separate pages, but the value statement is one question, "what's my situation and what do I do about it?", so it becomes one dashboard.
+          </p>
+        </section>
+
+        <!-- 9. Now -->
+        <section class="post__section" aria-labelledby="now">
+          <h2 id="now" siteHyperText class="post__h2">9. Where we are now: layout and charts</h2>
+          <p class="post__p">
+            In a fintech product the data visualization <em>is</em> the visual identity. Charts and cards are what a client actually looks at.
+          </p>
+          <p class="post__p">
+            So we ran the moodboard exercise a second time, and this time we collected layouts instead of components: how the page is organized, how a dashboard is composed, how a chart behaves and how color is used.
+          </p>
+          <p class="post__p">What we kept:</p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              <strong>A bento dashboard</strong> as the layout direction. Tight gaps, soft-rounded boxes, tags on the big numbers.
+            </li>
+            <li class="principles__item">
+              <strong>Google Finance</strong> for chart behavior. Extremely simple, the bare minimum on screen, and still enough. The compare control sits on top of the chart, and the tooltip updates a row of values instead of floating over the line, which solves a problem we have today: we show so much data on hover that the tooltip covers what you're trying to read.
+            </li>
+            <li class="principles__item">
+              <strong>shadcn's shaded line</strong> as the one variation on that baseline, so we have two to compare rather than one to defend.
+            </li>
+            <li class="principles__item">
+              <strong>Shopify</strong> again, for discipline. Boxes inside boxes inside boxes, and a chart style so plain it's accessible by default.
+            </li>
+          </ol>
+          <p class="post__p">The decisions that came out of it:</p>
+          <ul class="principles">
+            <li class="principles__item">
+              <strong>One layout system, several layouts.</strong> Pages can look different as long as they're assembled from the same modules and containers. A template removes parts; it doesn't invent new structure. As Miguel put it: "it doesn't feel like two different products."
+            </li>
+            <li class="principles__item">
+              <strong>Sections sit on a gray ground</strong>, each with a one-pixel border and padding. That single border does more for texture than any decoration would.
+            </li>
+            <li class="principles__item">
+              <strong>Charts start at the most basic accessible form and grow from there.</strong> My instinct was to pick three visual styles off the moodboard. Miguel argued for starting conservative and adding only what earns its place, and he was right. So Google Finance's chart is the baseline, shadcn's line is the first addition that earned its place, and anything beyond those two has to justify itself.
+            </li>
+            <li class="principles__item">
+              <strong>Color stops encoding categories.</strong> Series go gray with one highlighted color, and green and red stay reserved for up and down. Miguel's line: "we should just use completely different things that are not colored to differentiate stuff."
+            </li>
+            <li class="principles__item">
+              <strong>Hierarchy per page:</strong> the big insight on top, a row of small stats under it, the detailed table below.
+            </li>
+            <li class="principles__item">
+              <strong>Insight cards expand to full screen.</strong> Filters and heavy interaction live in the expanded view, not on the card.
+            </li>
+            <li class="principles__item">
+              <strong>Nothing heavier than semibold</strong>, and less differentiation overall: same font, same size, wherever we can get away with it.
+            </li>
+          </ul>
+          <p class="post__p">
+            Next we each rebuild the same page three ways from the real components, compare them, and pick. That's the current chapter. The next post starts with a chart.
+          </p>
+        </section>
+      } @else {
+        <!-- 1. Contexto -->
+        <section class="post__section" aria-labelledby="contexto">
+          <h2 id="contexto" siteHyperText class="post__h2">1. Contexto y objetivos</h2>
+
+          <h3 siteHyperText class="post__h3">El diseño en Afi es joven</h3>
+          <p class="post__p">
+            Antes de que Miguel entrara en Afi, el equipo de programación recibía PNG de los diseños de un diseñador gráfico.
+          </p>
+          <p class="post__p">
+            Miguel se incorporó y trabajó al principio solo en Wealth Manager, un producto distinto. Introdujo flujos reales en Figma, pero la organización seguía sin sistemas de diseño. Diseño y desarrollo solo colaboraban cuando había una duda visual o una objeción; las pantallas se diseñaban a ojo y los programadores tomaban el relevo.
+          </p>
+          <p class="post__p">No había colaboración, ni definición, ni estrategia.</p>
+          <p class="post__p">
+            Mi primer proyecto al incorporarme fue Bankinter. Diseñamos un planificador financiero con la línea visual comercial, con muchas idas y venidas con el equipo de Bankinter.
+          </p>
+          <p class="post__p">
+            Después de todo ese trabajo resultó que el producto era para banca privada, una línea visual completamente distinta, lo que subraya la importancia de estar alineados como equipo.
+          </p>
+          <p class="post__p">
+            El Wealth Planner se topó con el mismo problema durante el proyecto de Renta 4. Proyectos nuevos con cero contexto.
+          </p>
+          <p class="post__p">
+            Cuando arrancó el proyecto de Renta 4, mi encargo fue: cambia el nombre y ponlo en rojo. Sin materiales de marca, sin contexto sobre el tamaño del proyecto, <strong>sin plan</strong>. Y el producto se había construido sin componentes, así que cualquier iteración costaría un tiempo que no teníamos.
+          </p>
+          <p class="post__p">
+            Cuando llegó la primera ronda de iteraciones, pasé el equipo a componentes, con la librería de Material porque era lo que ya usaba el código del equipo. Fue un avance real y la iteración se aceleró bastante.
+          </p>
+          <p class="post__p">
+            Pero entonces aprendimos lo que se nos había escapado por no trabajar juntos y no dedicar tiempo al descubrimiento: Material tiene opiniones muy marcadas y tuvimos que forzarla para crear productos que encajaran con las marcas de nuestros clientes. Sistematizar el diseño fue la decisión correcta, pero hacerlo dentro de Material nos impuso más restricciones.
+          </p>
+          <p class="post__p">
+            Después, en lugar de mejorar el producto, mi tarea fue crear versiones distintas del Wealth Planner para Afi y Unicaja, cambiando solo tipografías, colores y logos, con el objetivo de vendérselo a otros clientes.
+          </p>
+          <p class="post__p">
+            El flujo de trabajo nunca dio a nadie tiempo para diseñar. Por eso acabamos con un producto estático y de aspecto anticuado.
+          </p>
+          <figure class="post__figure">
+            <img
+              class="post__img"
+              src="assets/blog/visual-identity/handoff-eras.es.svg"
+              alt="Cuatro eras de entrega en Afi: PNG, pantallas de Figma, componentes de Material y nuestro propio sistema en código"
+              loading="lazy"
+            />
+            <figcaption class="post__caption">
+              Cuatro eras de entrega: PNG desde comunicación, pantallas de Figma sin sistema, componentes de Material y ahora nuestro propio sistema en código.
+            </figcaption>
+          </figure>
+
+          <h3 siteHyperText class="post__h3">Nuestra oportunidad</h3>
+          <p class="post__p">
+            La IA cambió lo que es posible: ya no estamos limitados a librerías de Angular con opiniones ajenas; podemos construir la nuestra. Por eso hice el curso de sistemas de diseño con IA de Memorisely. Nos da la flexibilidad para crear los productos que queremos.
+          </p>
+          <p class="post__p">
+            Ese es el contexto de este rediseño. Queremos un efecto <em>wow</em>, algo que no tenemos desde hace tiempo.
+          </p>
+          <p class="post__p">
+            Para conseguirlo, lo estamos haciendo de otra manera. Trabajamos <em>juntos</em> como equipo de diseño, aplicamos un proceso de diseño y documentamos el trabajo, porque todos los proyectos anteriores empezaron igual: sin alineación previa.
+          </p>
+
+          <h3 siteHyperText class="post__h3">Wealth Planner</h3>
+          <p class="post__p">
+            El Wealth Planner de Afi es una herramienta con la que los asesores financieros construyen, simulan y presentan planes patrimoniales a sus clientes. Tenemos nuestra versión, que usamos sobre todo para demos. También lo ofrecemos en marca blanca a bancos españoles, conectando sus bases de datos de clientes.
+          </p>
+          <p class="post__p">El encargo fue una línea: que parezca más moderno.</p>
+          <p class="post__p">
+            El problema de fondo es que todo funciona sobre pantallas estáticas de Figma. Los clientes se pierden durante las presentaciones por culpa de esas pantallas estáticas y de experiencias que nunca se pensaron a fondo. Los desarrolladores trabajan pantalla a pantalla sin entender las interacciones. Por mucho color que le pusiéramos, la interfaz parecía anticuada.
+          </p>
+          <p class="post__p">
+            Así que antes de tocar nada fijamos tres objetivos: una interfaz ligera y densa en información, pensada para profesionales; demos interactivas en código en lugar de documentación solo en Figma, para que los desarrolladores inspeccionen el producto real; y un sistema que escale.
+          </p>
+        </section>
+
+        <!-- 2. Definir moderno -->
+        <section class="post__section" aria-labelledby="moderno">
+          <h2 id="moderno" siteHyperText class="post__h2">2. Definir «moderno»</h2>
+          <p class="post__p">
+            Antes de abrir Figma quisimos definir qué significa «moderno». Si no, cada revisión se convierte en un debate sobre lo que gusta y lo que no; sin una definición compartida, el gusto discute con el gusto y no se decide nada.
+          </p>
+          <p class="post__p">
+            Sintetizamos la investigación en la <a class="post__link" routerLink="/blog/ui-moderno-2026">primera parte de esta serie</a>. La versión corta:
+          </p>
+          <ul class="principles">
+            <li class="principles__item">
+              <strong>Intención en lo visual.</strong> Tonos neutros, profundidad funcional, retículas bento para la jerarquía. El color y la animación transmiten información.
+            </li>
+            <li class="principles__item">
+              <strong>Dinámico en lugar de lineal.</strong> Los flujos lineales crean experiencias aburridas; lo que necesitamos es entender de verdad el objetivo del usuario y construir el layout a su alrededor.
+            </li>
+            <li class="principles__item">
+              <strong>Sistemas, sistemas, sistemas.</strong> Tokens semánticos como única fuente de verdad, para que las decisiones sean legibles también por máquinas.
+            </li>
+            <li class="principles__item">
+              <strong>Evidencia por encima de opinión.</strong> Como los layouts pueden ser dinámicos, cobra más peso medir y hablar con los usuarios. Las opiniones basadas solo en gustos, sin métricas ni usuarios detrás, frenan la creatividad.
+            </li>
+            <li class="principles__item">
+              <strong>Atención a los pequeños detalles.</strong> Ahora que construir es mucho más rápido, la interfaz moderna deja espacio para los detalles que el usuario no sabría nombrar pero sí nota. Una flecha que gira o un botón que se ajusta a su texto eran antes un extra; hoy son la forma de demostrar que, incluso con IA, alguien prestó atención.
+            </li>
+          </ul>
+        </section>
+
+        <!-- 3. Moodboards -->
+        <section class="post__section" aria-labelledby="moodboards-es">
+          <h2 id="moodboards-es" siteHyperText class="post__h2">3. Moodboards y una lista corta</h2>
+          <p class="post__p">
+            Después de la investigación, cada uno construyó su moodboard en Mobbin, por separado y organizado por componente: botones, inputs, menús, tarjetas, diálogos, barra lateral, filtros. Tres o cuatro pantallas guardadas por componente.
+          </p>
+          <p class="post__p">
+            Wise fue la única referencia de nuestro propio sector. Es la prueba de que una fintech puede funcionar casi entera en blanco y negro y poner color solo donde los datos lo necesitan.
+          </p>
+          <p class="post__p">Después recorrimos las dos colecciones, componente a componente.</p>
+          <p class="post__p">
+            Miguel detectó el patrón primero: «Elegíamos las mismas aplicaciones una y otra vez. Quizá esa es la dirección que buscamos». Los mismos nombres aparecían en ambos tableros, y esa fue la lista corta: Wise, Cursor, Shopify, Clerk, Notion y Granola, con Linear, OpenAI y Stack AI.
+          </p>
+          <p class="post__p">La sesión produjo direcciones, no diseños finales.</p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">Botones compactos como los de Cursor, con la sombra casi invisible que usa Stack AI.</li>
+            <li class="principles__item">Inputs ajustados como los de OpenAI, en dos variantes de padding.</li>
+            <li class="principles__item">Menús como los de Clerk: solo opciones, sin iconos, sombra marcada.</li>
+            <li class="principles__item">Una barra de navegación con migas al estilo Clerk: espacio de trabajo, cliente, simulación.</li>
+            <li class="principles__item">Shopify como referencia de gráficas sobre tarjetas.</li>
+            <li class="principles__item">Wise como <strong>punto de partida</strong> en el uso del color.</li>
+          </ol>
+
+          <!-- Galería del moodboard — los tableros reales de Mobbin. -->
+          <figure class="post__figure gallery">
+            <div class="gallery__stage">
+              <img
+                class="gallery__img"
+                [src]="moodboardSlide().src"
+                [alt]="moodboardSlide().app + ' — pantalla ' + (moodboardIndex() + 1) + ' de ' + moodboardSlides.length + ' del moodboard de Mobbin'"
+                loading="lazy"
+              />
+            </div>
+            <div class="gallery__controls">
+              <afi-icon-button-v2
+                variant="secondary"
+                size="sm"
+                ariaLabel="Pantalla anterior"
+                (clicked)="moodboardStep(-1)"
+              >
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </afi-icon-button-v2>
+              <span class="gallery__counter">
+                <strong class="gallery__app">{{ moodboardSlide().app }}</strong>
+                {{ moodboardIndex() + 1 }} / {{ moodboardSlides.length }}
+              </span>
+              <afi-icon-button-v2
+                variant="secondary"
+                size="sm"
+                ariaLabel="Pantalla siguiente"
+                (clicked)="moodboardStep(1)"
+              >
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </afi-icon-button-v2>
+            </div>
+            <figcaption class="post__caption">
+              La inspiración de Mobbin, pantalla a pantalla. Usa las flechas para recorrerla.
+            </figcaption>
+          </figure>
+
+          <p class="post__p">
+            De la propia sesión salió una idea: al pulsar, el botón se hunde y gana una respuesta más física. Parece pequeño, pero marcó el tono de cómo trataríamos las microinteracciones después.
+          </p>
+        </section>
+
+        <!-- 4. Principios -->
+        <section class="post__section" aria-labelledby="principios">
+          <h2 id="principios" siteHyperText class="post__h2">4. Principios para el equipo</h2>
+          <p class="post__p">
+            Después de la sesión de moodboards cogimos los patrones que elegíamos una y otra vez, los conectamos con la investigación y los escribimos como nueve principios de diseño.
+          </p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              <strong>Densidad de información sin densidad visual.</strong> Mostrar mucha información sin que la pantalla resulte recargada, para que los datos se lean con facilidad.
+            </li>
+            <li class="principles__item">
+              <strong>Controles compactos.</strong> Botones, inputs y menús ocupan solo el espacio que necesitan. Todos los productos de nuestra lista corta (Cursor, OpenAI, Linear, Notion) funcionan así.
+            </li>
+            <li class="principles__item">
+              <strong>Minimalismo funcional.</strong> Si un elemento no cumple una función, se va. La confianza nace de la ausencia de decoración y de destacar lo que de verdad importa.
+            </li>
+            <li class="principles__item">
+              <strong>Revelado progresivo.</strong> Mostrar primero lo esencial y revelar el detalle cuando el usuario lo pide. Todo lo demás queda a un clic, no en la primera pantalla.
+            </li>
+            <li class="principles__item">
+              <strong>Consistencia por encima de novedad.</strong> El usuario aprende un patrón una vez y lo reconoce en todas partes, así dedica menos esfuerzo a entender tareas nuevas.
+            </li>
+            <li class="principles__item">
+              <strong>El movimiento explica estados, nunca decora.</strong> La animación muestra que algo ha cambiado o dirige la atención. Todo lo demás se elimina.
+            </li>
+            <li class="principles__item">
+              <strong>El color solo comunica significado.</strong> Las superficies se mantienen neutras y el color siempre significa algo, así el usuario aprende a leerlo sin pensar. En las gráficas eso implica una serie destacada sobre gris, con el verde y el rojo reservados para subidas y bajadas.
+            </li>
+            <li class="principles__item">
+              <strong>Construir el sistema y el flujo, no pantallas.</strong> Cada pantalla se monta con bloques reutilizables. Diseñar pantalla a pantalla es exactamente como se acaba en productos estáticos y aburridos.
+            </li>
+            <li class="principles__item">
+              <strong>Contexto por encima de páginas.</strong> Mantener al usuario donde está: drawers, edición en línea y tarjetas expandibles en lugar de mandarlo a otra página.
+            </li>
+          </ol>
+          <p class="post__p">
+            También escribimos qué evitar, porque saber qué somos está incompleto sin saber qué no somos:
+          </p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              <strong>Material Design.</strong> Vivimos dentro de sus opiniones y dedicamos el tiempo a sortearlas.
+            </li>
+            <li class="principles__item">
+              <strong>Glassmorphism pesado.</strong> El desenfoque que crea profundidad vale; el cristal sobre datos densos perjudica la legibilidad. Cristal en las superficies, fondos sólidos detrás de los datos.
+            </li>
+            <li class="principles__item">
+              <strong>Dashboards corporativos llenos de color.</strong> Cuando todo es colorido, nada destaca.
+            </li>
+            <li class="principles__item">
+              <strong>Estética de consumo lúdica.</strong> No somos un producto B2C. Nuestros usuarios son profesionales que toman decisiones financieras. El efecto <em>wow</em> viene de los micromomentos de deleite, esos pequeños lugares donde podemos añadir estilo.
+            </li>
+          </ol>
+          <p class="post__p">
+            Los principios existen para que una revisión pueda discutir contra un principio y no contra una preferencia. Ahora viven junto a la <a class="post__link" routerLink="/estrategia-marca">estrategia de marca</a>, para que cualquier diseñador futuro herede el razonamiento junto con los componentes.
+          </p>
+        </section>
+
+        <!-- 5. Fundamentos -->
+        <section class="post__section" aria-labelledby="fundamentos">
+          <h2 id="fundamentos" siteHyperText class="post__h2">5. Fundamentos en blanco y negro</h2>
+          <p class="post__p">
+            Montamos nuestros tokens primitivos y semánticos en blanco y negro. Un token es un rol, como «fondo lienzo» o «fondo elevado», que hace el mismo trabajo allá donde aparece. Definir ese vocabulario antes que la paleta hace que elegir colores después sea un cambio rápido: se actualiza el primitivo y todas las pantallas cambian con él. Igual con decisiones de espaciado como la distancia de la navegación al contenido: se fija una base ahora, se ajusta cuando la marca madure y se propaga a todas partes.
+          </p>
+          <p class="post__p">
+            En tipografía probamos Space Grotesk, Fira Sans y Geist, y ninguna superó la prueba de ancho entre patrones de cifras (0000 frente a 4444). IBM Plex Sans se mantuvo consistente, así que se convirtió en la familia tipográfica de la identidad moderna.
+          </p>
+          <!-- Prueba tipográfica — las fuentes reales, no una imagen de ellas. -->
+          <figure class="post__figure">
+            <div class="type-test">
+              <div class="type-test__row type-test__row--space-grotesk">
+                <span class="type-test__name">Space Grotesk</span>
+                <div class="type-test__stack">
+                  <span class="type-test__digits">0000</span>
+                  <span class="type-test__digits">4444</span>
+                  <span class="type-test__digits">5555</span>
+                </div>
+                <span class="type-test__verdict">varía</span>
+              </div>
+              <div class="type-test__row type-test__row--fira">
+                <span class="type-test__name">Fira Sans</span>
+                <div class="type-test__stack">
+                  <span class="type-test__digits">0000</span>
+                  <span class="type-test__digits">4444</span>
+                  <span class="type-test__digits">5555</span>
+                </div>
+                <span class="type-test__verdict">varía</span>
+              </div>
+              <div class="type-test__row type-test__row--geist">
+                <span class="type-test__name">Geist</span>
+                <div class="type-test__stack">
+                  <span class="type-test__digits">0000</span>
+                  <span class="type-test__digits">4444</span>
+                  <span class="type-test__digits">5555</span>
+                </div>
+                <span class="type-test__verdict">varía</span>
+              </div>
+              <div class="type-test__row type-test__row--plex">
+                <span class="type-test__name">IBM Plex Sans</span>
+                <div class="type-test__stack">
+                  <span class="type-test__digits">0000</span>
+                  <span class="type-test__digits">4444</span>
+                  <span class="type-test__digits">5555</span>
+                </div>
+                <span class="type-test__verdict type-test__verdict--holds">se mantiene</span>
+              </div>
+            </div>
+            <figcaption class="post__caption">
+              La prueba del ancho de cifras, con las tipografías reales. Todas las líneas tienen las mismas cuatro cifras, así que las cajas deberían ser idénticas. Donde no lo son, las tablas y las gráficas bailan cuando cambian los datos.
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- 6. Construcción -->
+        <section class="post__section" aria-labelledby="construccion">
+          <h2 id="construccion" siteHyperText class="post__h2">6. Componentes en código, documentación en Figma</h2>
+          <p class="post__p">
+            Con los fundamentos listos, hicimos la lista de componentes primitivos y nos la repartimos. Yo tomé chip, badge, tarjeta y tabla; Miguel, tag, diálogo, barra de navegación y pestañas.
+          </p>
+          <p class="post__p">
+            Botones, inputs, checkboxes y toggles los construimos juntos, para definir un flujo de trabajo eficiente y conseguir resultados parecidos.
+          </p>
+          <p class="post__p">
+            Empezamos por los componentes primitivos porque son los bloques con los que se monta todo lo demás; los patrones más complejos solo se construyen cuando de verdad hacen falta.
+          </p>
+          <p class="post__p">Nuestro flujo de trabajo:</p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              Área de trabajo en baja fidelidad: construimos el componente primitivo en código a partir del moodboard y escribimos un prompt para el agente de Figma.
+            </li>
+            <li class="principles__item">
+              La IA construye el componente en Figma con las variables correctas, crea las que falten y redacta la documentación.
+            </li>
+            <li class="principles__item">Hacemos los ajustes pequeños.</li>
+            <li class="principles__item">
+              Cuando estamos satisfechos, usamos el MCP de Figma para construir el componente en nuestra librería de Afi.
+            </li>
+          </ol>
+          <p class="post__p">
+            Empezamos a construir una página de trabajo de componentes para enseñar al equipo las interacciones en un entorno aislado durante las revisiones.
+          </p>
+          <p class="post__p">Para mantener la consistencia construimos dos skills:</p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              La skill /ds-cleanup audita un componente o una página, señala dónde se desvía del sistema y, con un segundo prompt, lo corrige.
+            </li>
+            <li class="principles__item">
+              La skill /ship hace commit y push; yo hago el merge; y devuelve un prompt de Figma con todo lo que cambió en las variables, para que Figma y el código nunca se separen.
+            </li>
+          </ol>
+          <div class="post__demo">
+            <div class="post__demo-row">
+              <afi-button-v2 variant="primary">Acción principal</afi-button-v2>
+              <afi-button-v2 variant="secondary">Secundaria</afi-button-v2>
+              <afi-button-v2 variant="ghost">Ghost</afi-button-v2>
+              <div class="post__demo-grow">
+                <afi-input-v2 label="Cliente" placeholder="Ana García" />
+              </div>
+            </div>
+            <p class="post__demo-caption">
+              No es una captura: son los componentes reales, funcionando con los mismos tokens que dan estilo a este artículo. Pasa el cursor por encima.
+            </p>
+          </div>
+          <p class="post__p">
+            Este flujo nos ahorró mucho tiempo. Todo está conectado a las variables base y tenemos salvaguardas para actualizar la documentación sobre la marcha. Eso hace que la IA siga produciendo resultados consistentes y da al equipo el contexto detrás de cada decisión de diseño.
+          </p>
+        </section>
+
+        <!-- 7. Microinteracciones -->
+        <section class="post__section" aria-labelledby="movimiento">
+          <h2 id="movimiento" siteHyperText class="post__h2">7. Microinteracciones</h2>
+          <p class="post__p">
+            Con los componentes primitivos terminados, el movimiento pasó a ser la siguiente capa. El principio ya estaba fijado: el movimiento explica estados, nunca decora. Eso no significaba que no pudiéramos ser creativos.
+          </p>
+          <p class="post__p">
+            No inventamos la mayoría de las animaciones. Recreamos, aplicando ingeniería inversa, las que nos inspiraban, o cogimos una librería de animación de React, portamos el código a Angular e iteramos desde ahí. Algunas librerías que usamos:
+          </p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">Magic UI</li>
+            <li class="principles__item">Animate UI</li>
+            <li class="principles__item">shadcn</li>
+          </ol>
+          <div class="post__demo">
+            <div class="post__demo-row">
+              <afi-checkbox-v2 label="Incluir inmuebles" />
+              <afi-radio-group-v2 name="periodo" ariaLabel="Periodo" orientation="horizontal">
+                <afi-radio-v2 value="mensual" label="Mensual" />
+                <afi-radio-v2 value="anual" label="Anual" />
+              </afi-radio-group-v2>
+              <afi-toggle-v2 label="Reajuste automático" />
+              <afi-button-v2
+                variant="primary"
+                [loading]="sendState() === 'sending'"
+                [disabled]="sendState() === 'sent'"
+                (clicked)="runSendDemo()"
+              >
+                @if (sendState() === 'sending') {
+                  Enviando…
+                } @else if (sendState() === 'sent') {
+                  Enviado ✓
+                } @else {
+                  Enviar
+                }
+              </afi-button-v2>
+            </div>
+            <p class="post__demo-caption">
+              Cada cambio de estado explicado con movimiento: el trazo del checkbox, el relleno del radio, el giro del toggle y un flujo de envío que recorre enviar, enviando, enviado.
+            </p>
+          </div>
+        </section>
+
+        <!-- 8. Estructura -->
+        <section class="post__section" aria-labelledby="estructura">
+          <h2 id="estructura" siteHyperText class="post__h2">8. La estructura</h2>
+          <p class="post__p">
+            Durante el descubrimiento vimos que la mayoría de los productos financieros no tienen una sola gráfica o tabla flotando en blanco, como nos pasa a nosotros. La mayoría van directos a la conclusión: una lectura rápida de un vistazo, con espacio para profundizar bajo demanda.
+          </p>
+          <p class="post__p">
+            Así que tomamos una decisión de diseño: organizar el producto en torno al valor que entrega cada página, no al orden en que se construye un plan. Menos pantallas y más orientadas a la conclusión. Para llegar ahí, mapeamos las ~15 pantallas a una declaración de valor: ¿a qué conclusión debería llegar el usuario en los cinco segundos siguientes a mirar esta página?
+          </p>
+          <p class="post__p">
+            Conclusiones es el caso más claro: hoy Diagnóstico y Plan de acción son dos páginas separadas, pero la declaración de valor es una sola pregunta, «¿cuál es mi situación y qué hago al respecto?», así que se convierte en un solo dashboard.
+          </p>
+        </section>
+
+        <!-- 9. Ahora -->
+        <section class="post__section" aria-labelledby="ahora">
+          <h2 id="ahora" siteHyperText class="post__h2">9. Dónde estamos ahora: layout y gráficas</h2>
+          <p class="post__p">
+            En un producto fintech, la visualización de datos <em>es</em> la identidad visual. Las gráficas y las tarjetas son lo que el cliente mira de verdad.
+          </p>
+          <p class="post__p">
+            Así que repetimos el ejercicio del moodboard, y esta vez recogimos layouts en lugar de componentes: cómo se organiza la página, cómo se compone un dashboard, cómo se comporta una gráfica y cómo se usa el color.
+          </p>
+          <p class="post__p">Lo que nos quedamos:</p>
+          <ol class="principles principles--numbered">
+            <li class="principles__item">
+              <strong>Un dashboard bento</strong> como dirección de layout. Huecos ajustados, cajas de esquinas suaves, etiquetas sobre las cifras grandes.
+            </li>
+            <li class="principles__item">
+              <strong>Google Finance</strong> para el comportamiento de las gráficas. Extremadamente simple, lo mínimo en pantalla y aun así suficiente. El control de comparación va sobre la gráfica y el tooltip actualiza una fila de valores en lugar de flotar sobre la línea, lo que resuelve un problema que tenemos hoy: mostramos tantos datos al pasar el cursor que el tooltip tapa justo lo que se quiere leer.
+            </li>
+            <li class="principles__item">
+              <strong>La línea sombreada de shadcn</strong> como única variación sobre esa base, para tener dos opciones que comparar en lugar de una que defender.
+            </li>
+            <li class="principles__item">
+              <strong>Shopify</strong> otra vez, por disciplina. Cajas dentro de cajas dentro de cajas, y un estilo de gráfica tan sencillo que resulta accesible por defecto.
+            </li>
+          </ol>
+          <p class="post__p">Las decisiones que salieron de ahí:</p>
+          <ul class="principles">
+            <li class="principles__item">
+              <strong>Un sistema de layout, varios layouts.</strong> Las páginas pueden verse distintas siempre que se monten con los mismos módulos y contenedores. Una plantilla quita partes; no inventa estructura nueva. Como lo dijo Miguel: «no parecen dos productos distintos».
+            </li>
+            <li class="principles__item">
+              <strong>Las secciones se apoyan sobre un fondo gris</strong>, cada una con un borde de un píxel y su padding. Ese borde hace más por la textura que cualquier decoración.
+            </li>
+            <li class="principles__item">
+              <strong>Las gráficas parten de la forma más básica y accesible y crecen desde ahí.</strong> Mi instinto era elegir tres estilos visuales del moodboard. Miguel defendió empezar conservador y añadir solo lo que se gane su sitio, y tenía razón. Así que la gráfica de Google Finance es la base, la línea de shadcn es la primera incorporación que se ganó su sitio, y cualquier cosa más allá de esas dos tiene que justificarse.
+            </li>
+            <li class="principles__item">
+              <strong>El color deja de codificar categorías.</strong> Las series van en gris con un color destacado, y el verde y el rojo quedan reservados para subidas y bajadas. La frase de Miguel: «deberíamos usar cosas completamente distintas del color para diferenciar».
+            </li>
+            <li class="principles__item">
+              <strong>Jerarquía por página:</strong> la conclusión grande arriba, una fila de cifras pequeñas debajo y la tabla detallada al final.
+            </li>
+            <li class="principles__item">
+              <strong>Las tarjetas de conclusión se expanden a pantalla completa.</strong> Los filtros y la interacción pesada viven en la vista expandida, no en la tarjeta.
+            </li>
+            <li class="principles__item">
+              <strong>Nada más pesado que semibold</strong>, y menos diferenciación en general: la misma tipografía y el mismo tamaño siempre que podamos.
+            </li>
+          </ul>
+          <p class="post__p">
+            El siguiente paso es que cada uno reconstruya la misma página de tres formas con los componentes reales, compararlas y elegir. Este es el capítulo actual. El siguiente artículo empieza con una gráfica.
+          </p>
+        </section>
+      }
+    </article>
+  </main>
+</div>

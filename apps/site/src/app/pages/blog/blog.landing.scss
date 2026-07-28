@@ -142,7 +142,7 @@
   }
 
   &--whitelabel {
-    background: linear-gradient(135deg, var(--color-thumb-dark-deep) 0%, var(--color-thumb-dark-medium) 100%);
+    background: linear-gradient(135deg, var(--surface-inverse-default) 0%, var(--surface-inverse-raised) 100%);
   }
 
   &--proceso {
@@ -151,7 +151,7 @@
 
   &--ia {
     // Black & white per the IA-reference style — neutral near-black, no blue.
-    background: linear-gradient(135deg, var(--color-thumb-dark-deep) 0%, var(--color-thumb-dark-medium) 100%);
+    background: linear-gradient(135deg, var(--surface-inverse-default) 0%, var(--surface-inverse-raised) 100%);
   }
 
   &--video {

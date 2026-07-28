@@ -233,8 +233,11 @@
   // Site illustration primitives — used in card thumbnails and decorative
   // backgrounds on the home/blog pages. Not part of the brand palette.
   // ---------------------------------------------------------------------------
-  --color-thumb-dark-deep:   #0E1117;  // whitelabel card bg (deep dark)
-  --color-thumb-dark-medium: #1F2530;  // whitelabel card bg (medium dark)
+  // The former --color-thumb-dark-deep (#0E1117) / --color-thumb-dark-medium
+  // (#1F2530) pair lived here. Both were within a few hex units of
+  // afi-control-950 / afi-control-800, so they never cleared the bar for a new
+  // primitive. Retired 2026-07-28 — the dark-field intent now lives in the
+  // semantic layer as --surface-inverse-default / --surface-inverse-raised.
   --color-thumb-wp-dark-navy:#0F2A44;  // wealth-planner card gradient from
 
 }

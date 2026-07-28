@@ -44,6 +44,14 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "color"
   },
   {
+    "name": "--surface-inverse-default",
+    "kind": "color"
+  },
+  {
+    "name": "--surface-inverse-raised",
+    "kind": "color"
+  },
+  {
     "name": "--disabled-background",
     "kind": "color"
   },

@@ -1,12 +1,16 @@
 <div class="strategy" data-foundation="modern">
-  <!-- Section 1 — mission, redesigned as a full-viewport B&W hero. -->
+  <!-- Section 1 — mission, a full-viewport B&W hero. -->
   <section class="strategy__hero">
     <div class="strategy__hero-inner">
       <p class="strategy__eyebrow">{{ content().eyebrow }}</p>
 
-      <h1 class="strategy__display">
-        {{ content().hero.pre }}{{ content().hero.glass }}{{ content().hero.post }}
-      </h1>
+      <!-- Keyed by locale so the element re-mounts on an ES↔EN toggle, which is
+           what fires the HyperText decode (it plays on mount once switched). -->
+      @for (l of [isEn()]; track l) {
+        <h1 class="strategy__display" siteHyperText>
+          {{ content().hero.pre }}{{ content().hero.glass }}{{ content().hero.post }}
+        </h1>
+      }
 
       <div class="strategy__hero-foot">
         <p class="strategy__hero-tag">
@@ -21,32 +25,188 @@
     </div>
   </section>
 
-  <!-- Sections 2–5 — unchanged editorial blocks (light). -->
+  <!-- The narrative + the reference boards. A v2 tab bar switches one panel. -->
   <main class="strategy__main">
-    <article class="strategy__article">
-      @for (block of content().blocks; track block.label) {
-        <section class="strategy__block">
-          @if (block.statement) {
-            <p class="strategy__statement">{{ block.statement }}</p>
-          }
+    <div class="strategy__tabwrap">
+      <afi-tabs-v2
+        [activeIndex]="activeTab()"
+        (activeIndexChange)="activeTab.set($event)"
+        [ariaLabel]="content().eyebrow"
+      >
+        <afi-tab-v2 [label]="content().tabs.brand" controls="strategy-panel-0" />
+        <afi-tab-v2 [label]="content().tabs.principles" controls="strategy-panel-1" />
+        <afi-tab-v2 [label]="content().tabs.benchmark" controls="strategy-panel-2" />
+        <afi-tab-v2 [label]="content().tabs.avoid" controls="strategy-panel-3" />
+      </afi-tabs-v2>
 
-          @if (block.principles) {
-            <ul class="strategy__principles">
-              @for (principle of block.principles; track principle.title) {
-                <li class="strategy__principle">
-                  <span class="strategy__principle-title">{{ principle.title }}</span>
-                  <span class="strategy__principle-desc"> — {{ principle.desc }}</span>
+      <!-- Panels stay mounted and toggle via [hidden], so switching tabs does NOT
+           re-mount them. The inner @for is keyed on the locale, so only an ES↔EN
+           toggle re-mounts the content — which is what fires the siteHyperText
+           decode on the headings (never on a tab change). -->
+
+      <!-- Brand strategy — the editorial narrative. -->
+      <div
+        class="strategy__panel"
+        id="strategy-panel-0"
+        role="tabpanel"
+        tabindex="0"
+        [hidden]="activeTab() !== 0"
+      >
+        @for (l of [isEn()]; track l) {
+          <article class="strategy__article">
+            @for (block of content().blocks; track block.label) {
+              <section class="strategy__block">
+                <header class="strategy__meta">
+                  <span class="strategy__label" siteHyperText>{{ block.label }}</span>
+                  <span class="strategy__meta-sep" aria-hidden="true">—</span>
+                  <span class="strategy__payoff">{{ block.payoff }}</span>
+                </header>
+
+                @if (block.statement) {
+                  <p class="strategy__statement" siteHyperText>{{ block.statement }}</p>
+                }
+
+                @if (block.principles) {
+                  <ul class="strategy__principles">
+                    @for (principle of block.principles; track principle.title) {
+                      <li class="strategy__principle">
+                        <span class="strategy__principle-title" siteHyperText>{{ principle.title }}</span>
+                        <span class="strategy__principle-desc"> — {{ principle.desc }}</span>
+                      </li>
+                    }
+                  </ul>
+                }
+              </section>
+            }
+          </article>
+        }
+      </div>
+
+      <!-- Principles — a concise getting-started, then the 11 principles. -->
+      <div
+        class="strategy__panel"
+        id="strategy-panel-1"
+        role="tabpanel"
+        tabindex="0"
+        [hidden]="activeTab() !== 1"
+      >
+        @for (l of [isEn()]; track l) {
+          <div class="strategy__panel-body">
+            <section class="strategy__gs">
+              <p class="strategy__gs-eyebrow">{{ content().designPrinciples.eyebrow }}</p>
+              <div class="strategy__gs-grid">
+                @for (qa of content().designPrinciples.gettingStarted; track qa.q) {
+                  <div class="strategy__gs-item">
+                    <h3 class="strategy__gs-q" siteHyperText>{{ qa.q }}</h3>
+                    <p class="strategy__gs-a">{{ qa.a }}</p>
+                  </div>
+                }
+              </div>
+            </section>
+
+            <ul class="strategy__dp-list">
+              @for (dp of content().designPrinciples.items; track dp.n) {
+                <li class="strategy__dp">
+                  <span class="strategy__dp-num" aria-hidden="true">{{ dp.n }}</span>
+                  <div class="strategy__dp-body">
+                    <h3 class="strategy__dp-title" siteHyperText>{{ dp.title }}</h3>
+                    <p class="strategy__dp-desc">{{ dp.desc }}</p>
+                  </div>
+                  @if (dp.asideItems) {
+                    <div class="strategy__dp-aside">
+                      <p class="strategy__aside-label">{{ dp.asideLabel }}</p>
+                      <ul class="strategy__aside-list">
+                        @for (item of dp.asideItems; track item) {
+                          <li class="strategy__aside-item">{{ item }}</li>
+                        }
+                      </ul>
+                    </div>
+                  }
                 </li>
               }
             </ul>
-          }
+          </div>
+        }
+      </div>
 
-          <footer class="strategy__meta">
-            <span class="strategy__label">{{ block.label }}</span>
-            <span class="strategy__payoff">{{ block.payoff }}</span>
-          </footer>
-        </section>
-      }
-    </article>
+      <!-- Benchmark — reference products. -->
+      <div
+        class="strategy__panel"
+        id="strategy-panel-2"
+        role="tabpanel"
+        tabindex="0"
+        [hidden]="activeTab() !== 2"
+      >
+        @for (l of [isEn()]; track l) {
+          <div class="strategy__panel-body">
+            <p class="strategy__panel-intro">{{ content().benchmark.intro }}</p>
+
+            <ul class="strategy__bench-list">
+              @for (product of content().benchmark.items; track product.name) {
+                <li class="strategy__bench">
+                  <h3 class="strategy__bench-name" siteHyperText>{{ product.name }}</h3>
+                  <div class="strategy__dp-aside">
+                    <p class="strategy__aside-label">{{ content().benchmark.referenceLabel }}</p>
+                    <ul class="strategy__aside-list">
+                      @for (ref of product.referenceFor; track ref) {
+                        <li class="strategy__aside-item">{{ ref }}</li>
+                      }
+                    </ul>
+                  </div>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+
+      <!-- What to avoid — anti-patterns + the decision filter. -->
+      <div
+        class="strategy__panel"
+        id="strategy-panel-3"
+        role="tabpanel"
+        tabindex="0"
+        [hidden]="activeTab() !== 3"
+      >
+        @for (l of [isEn()]; track l) {
+          <div class="strategy__panel-body">
+            <p class="strategy__panel-intro">{{ content().avoid.intro }}</p>
+
+            <ul class="strategy__avoid-list">
+              @for (anti of content().avoid.items; track anti.name) {
+                <li class="strategy__avoid">
+                  <div class="strategy__dp-body">
+                    <h3 class="strategy__avoid-name" siteHyperText>
+                      <span class="strategy__avoid-mark" aria-hidden="true">×</span>
+                      {{ anti.name }}
+                    </h3>
+                    <p class="strategy__dp-desc">{{ anti.desc }}</p>
+                  </div>
+                  @if (anti.items) {
+                    <div class="strategy__dp-aside">
+                      <ul class="strategy__aside-list">
+                        @for (item of anti.items; track item) {
+                          <li class="strategy__aside-item">{{ item }}</li>
+                        }
+                      </ul>
+                    </div>
+                  }
+                </li>
+              }
+            </ul>
+
+            <section class="strategy__filter">
+              <h3 class="strategy__filter-title" siteHyperText>{{ content().avoid.filterLabel }}</h3>
+              <p class="strategy__panel-intro">{{ content().avoid.filterIntro }}</p>
+              <ol class="strategy__filter-list">
+                @for (question of content().avoid.filter; track question) {
+                  <li class="strategy__filter-item">{{ question }}</li>
+                }
+              </ol>
+            </section>
+          </div>
+        }
+      </div>
+    </div>
   </main>
 </div>

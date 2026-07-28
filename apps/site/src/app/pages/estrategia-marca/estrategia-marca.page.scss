@@ -17,6 +17,9 @@
   color: var(--content-primary);
   background: var(--background-canvas);
 
+  // Language swap plays the DS HyperText decode on the headings (siteHyperText),
+  // fired by the locale-keyed @for re-mounting the text on an ES↔EN toggle.
+
   // ───────────────────────────────────────────────────────────────────────
   // Section 1 — full-viewport hero, inverted (near-black canvas, white text).
   // The modern set has no authored dark-neutral surface yet, so the two neutral
@@ -115,25 +118,102 @@
   }
 
   // ───────────────────────────────────────────────────────────────────────
-  // Sections 2–5 — original light editorial styling (unchanged).
+  // Below the hero — the narrative + reference boards, organised into tabs.
+  // The tabwrap owns the reading-column width, horizontal padding, and the
+  // container context; each panel body only owns its vertical rhythm.
   // ───────────────────────────────────────────────────────────────────────
   &__main {
     overflow-y: auto;
   }
 
-  &__article {
+  &__tabwrap {
+    container: strategy / inline-size;
     max-inline-size: var(--content-prose-wide);
-    margin: 0 auto;
+    margin-inline: auto;
     padding: var(--space-2xl) var(--space-xl) var(--space-3xl);
+  }
+
+  &__article {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3xl);
+    padding-block-start: var(--space-2xl);
+  }
+
+  &__panel-body {
+    padding-block-start: var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  &__panel-intro {
+    margin: 0;
+    max-inline-size: var(--content-prose);
+    color: var(--content-secondary);
+    font-size: var(--type-body-large-size);
+    line-height: var(--type-body-large-line-height);
+    text-wrap: pretty;
+  }
+
+  // The v2 tab bar owns only the triggers; this is the consumer-owned panel.
+  &__panel:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--space-2xs);
+    border-radius: var(--radius-sm);
+  }
+
+  // ─── Principles · getting-started 3-up ───
+  &__gs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  &__gs-eyebrow {
+    margin: 0;
+    color: var(--content-tertiary);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-section-label-weight);
+    line-height: var(--type-label-line-height);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__gs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-lg) var(--space-xl);
+  }
+
+  &__gs-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  &__gs-q {
+    margin: 0;
+    color: var(--content-primary);
+    font-size: var(--type-h4-size);
+    font-weight: var(--type-h4-weight);
+    line-height: var(--type-h4-line-height);
+    text-wrap: balance;
+  }
+
+  &__gs-a {
+    margin: 0;
+    color: var(--content-secondary);
+    font-size: var(--type-body-default-size);
+    line-height: var(--type-body-default-line-height);
+    text-wrap: pretty;
   }
 
   &__block {
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
+    padding-block: var(--space-2xl);
+    border-top: var(--border-width-hairline) solid var(--borders-default);
   }
 
   &__statement {
@@ -145,13 +225,12 @@
     text-wrap: balance;
   }
 
+  // Label — payoff, now a lead-in header above the statement.
   &__meta {
     display: flex;
-    justify-content: space-between;
     align-items: baseline;
-    gap: var(--space-md);
-    padding-top: var(--space-sm);
-    border-top: thin solid var(--borders-default);
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-xs);
     font-size: var(--type-label-size);
     line-height: var(--type-label-line-height);
   }
@@ -161,11 +240,14 @@
     font-weight: var(--type-label-weight);
   }
 
+  &__meta-sep {
+    color: var(--content-tertiary);
+  }
+
   &__payoff {
     color: var(--content-tertiary);
     font-weight: var(--type-body-small-weight);
     font-style: italic;
-    text-align: right;
   }
 
   &__principles {
@@ -179,7 +261,7 @@
 
   &__principle {
     padding-left: var(--space-md);
-    border-left: 0.125rem solid var(--borders-default);
+    border-left: var(--border-width-thick) solid var(--borders-default);
     color: var(--content-secondary);
     font-size: var(--type-body-large-size);
     line-height: var(--type-body-large-line-height);
@@ -192,6 +274,175 @@
 
   &__principle-desc {
     font-weight: var(--type-body-large-weight);
+  }
+
+  // ─── Shared editorial row primitives (design principles / benchmark / avoid) ───
+  &__aside-label {
+    margin: 0 0 var(--space-2xs);
+    color: var(--content-tertiary);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-section-label-weight);
+    line-height: var(--type-label-line-height);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__aside-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  &__aside-item {
+    color: var(--content-secondary);
+    font-size: var(--type-body-default-size);
+    line-height: var(--type-body-default-line-height);
+  }
+
+  // ─── Tab 2 · design principles ───
+  &__dp-list,
+  &__bench-list,
+  &__avoid-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__dp,
+  &__bench,
+  &__avoid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 16rem);
+    gap: var(--space-lg) var(--space-2xl);
+    padding-block: var(--space-xl);
+    border-top: var(--border-width-hairline) solid var(--borders-default);
+  }
+
+  &__dp {
+    grid-template-columns: min-content minmax(0, 1fr) minmax(0, 16rem);
+    align-items: start;
+  }
+
+  &__dp-num {
+    color: var(--content-tertiary);
+    font-size: 1.75rem;
+    font-weight: var(--type-h2-weight);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__dp-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  &__dp-title,
+  &__bench-name,
+  &__avoid-name {
+    margin: 0;
+    color: var(--content-primary);
+    font-size: var(--type-h2-size);
+    font-weight: var(--type-h2-weight);
+    line-height: var(--type-h2-line-height);
+    text-wrap: balance;
+  }
+
+  &__dp-desc {
+    margin: 0;
+    max-inline-size: var(--content-prose);
+    color: var(--content-secondary);
+    font-size: var(--type-body-large-size);
+    line-height: var(--type-body-large-line-height);
+    text-wrap: pretty;
+  }
+
+  &__dp-aside {
+    padding-top: var(--space-3xs);
+  }
+
+  // ─── Tab 4 · anti-patterns ───
+  &__avoid-name {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-xs);
+  }
+
+  &__avoid-mark {
+    color: var(--content-tertiary);
+    font-weight: var(--type-body-large-weight);
+  }
+
+  &__filter {
+    margin-top: var(--space-lg);
+    padding: var(--space-xl);
+    border: var(--border-width-hairline) solid var(--borders-default);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  &__filter-title {
+    margin: 0;
+    color: var(--content-primary);
+    font-size: var(--type-h2-size);
+    font-weight: var(--type-h2-weight);
+    line-height: var(--type-h2-line-height);
+  }
+
+  &__filter-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: filter;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm) var(--space-2xl);
+  }
+
+  &__filter-item {
+    counter-increment: filter;
+    display: flex;
+    gap: var(--space-sm);
+    color: var(--content-secondary);
+    font-size: var(--type-body-default-size);
+    line-height: var(--type-body-default-line-height);
+
+    &::before {
+      content: counter(filter, decimal-leading-zero);
+      color: var(--content-tertiary);
+      font-variant-numeric: tabular-nums;
+      font-weight: var(--type-section-label-weight);
+    }
+  }
+
+  // ─── Narrow: collapse the editorial rows to a single column ───
+  @container strategy (max-width: 40rem) {
+    &__dp,
+    &__bench,
+    &__avoid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-md);
+    }
+
+    &__dp {
+      grid-template-columns: min-content minmax(0, 1fr);
+    }
+
+    &__dp .strategy__dp-aside {
+      grid-column: 1 / -1;
+    }
+
+    &__filter-list,
+    &__gs-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 }
 

@@ -3,7 +3,15 @@
     <!-- Design at Afi hero — Figma AFI-FOUNDATIONS-MODERN 2975:9948:
          centered IBM Plex display + body/large, modern tokens. -->
     <header class="blog-landing__hero" data-foundation="modern">
-      <h1 class="blog-landing__hero-title">{{ headerCopy().title }}</h1>
+      <!-- Per-language branches so the heading re-mounts on an ES/EN toggle —
+           that mount is what fires the HyperText decode (motion-skill §4.10,
+           headings only). The header carries data-foundation="modern" so the
+           --motion-decode-* tokens the directive reads resolve. -->
+      @if (lang() === 'en') {
+        <h1 siteHyperText class="blog-landing__hero-title">{{ headerCopy().title }}</h1>
+      } @else {
+        <h1 siteHyperText class="blog-landing__hero-title">{{ headerCopy().title }}</h1>
+      }
       <p class="blog-landing__hero-intro">{{ headerCopy().intro }}</p>
     </header>
   } @else {
@@ -19,94 +27,67 @@
       <li class="blog-landing__item">
         <a
           class="blog-landing__card"
+          [class.blog-landing__card--framed]="post.framed"
           [routerLink]="post.to || ('/blog/' + post.slug)"
           [attr.aria-label]="post.title + ' — ' + post.eyebrow"
         >
           <div
             class="blog-landing__card-thumb blog-landing__card-thumb--{{ post.thumb }}"
-            [attr.data-nav-tone]="post.darkThumb ? 'dark' : null"
+            [attr.data-nav-tone]="post.darkThumb && !post.framed ? 'dark' : null"
             aria-hidden="true"
           >
-            <!-- Whitelabel: brand stripes that swap on hover -->
-            @if (post.thumb === 'whitelabel') {
-              <div class="thumb-wl">
-                <span class="thumb-wl__stripe thumb-wl__stripe--1"></span>
-                <span class="thumb-wl__stripe thumb-wl__stripe--2"></span>
-                <span class="thumb-wl__stripe thumb-wl__stripe--3"></span>
-                <span class="thumb-wl__stripe thumb-wl__stripe--4"></span>
-              </div>
-            }
-            <!-- IA: animated sitemap of the Wealth Planner's real information
-                 architecture (the case study's subject). Column-by-column
-                 build — root, then the four plan phases, then Situación's
-                 sections — followed by a highlight beat tracing the advisor's
-                 path (Planificación → Situación → Patrimonio). Pill nodes +
-                 elbow connectors per the IA-reference style. -->
-            @if (post.thumb === 'ia') {
-              <svg class="thumb-ia" viewBox="0 0 340 200" fill="none" aria-hidden="true" data-foundation="modern">
-                <!-- Root -->
-                <g class="thumb-ia__stage thumb-ia__stage--root">
-                  <rect class="thumb-ia__pill thumb-ia__pill--hl" x="4" y="88" width="96" height="20" rx="10" />
-                  <circle class="thumb-ia__dot" cx="16" cy="98" r="4" />
-                  <text class="thumb-ia__label thumb-ia__label--root" x="26" y="101.5">Planificación</text>
+            <!-- Proceso: the design process as a vertical stepper — the real
+                 arc of this case study (contexto → moodboards → principios →
+                 tokens → componentes), with "Gráficas" left dashed because it
+                 is still ahead. One shared 10s timeline: the spine draws
+                 top→bottom while each stage lands in sequence, everything
+                 holds, then fades for the loop reset. Same pill + connector
+                 language as the rest of the thumbs. -->
+            @if (post.thumb === 'proceso') {
+              <svg class="thumb-proc" viewBox="0 0 240 220" fill="none" aria-hidden="true" data-foundation="modern">
+                <!-- Spine: draws as the stages land -->
+                <path class="thumb-proc__spine" d="M14 22 L14 197" pathLength="1" />
+
+                <g class="thumb-proc__stage thumb-proc__stage--1">
+                  <circle class="thumb-proc__node" cx="14" cy="22" r="4.5" />
+                  <rect class="thumb-proc__pill" x="30" y="11.5" width="176" height="21" rx="10.5" />
+                  <text class="thumb-proc__label" x="42" y="25.5">Contexto</text>
                 </g>
 
-                <!-- Root → phases -->
-                <g class="thumb-ia__stage thumb-ia__stage--links1">
-                  <path class="thumb-ia__link" d="M100 98 C116 98 110 34 126 34" pathLength="1" />
-                  <path class="thumb-ia__link thumb-ia__link--hl" d="M100 98 C116 98 110 78 126 78" pathLength="1" />
-                  <path class="thumb-ia__link" d="M100 98 C116 98 110 122 126 122" pathLength="1" />
-                  <path class="thumb-ia__link" d="M100 98 C116 98 110 166 126 166" pathLength="1" />
+                <g class="thumb-proc__stage thumb-proc__stage--2">
+                  <circle class="thumb-proc__node" cx="14" cy="57" r="4.5" />
+                  <rect class="thumb-proc__pill" x="30" y="46.5" width="176" height="21" rx="10.5" />
+                  <text class="thumb-proc__label" x="42" y="60.5">Moodboards</text>
                 </g>
 
-                <!-- Phases -->
-                <g class="thumb-ia__stage thumb-ia__stage--phases">
-                  <rect class="thumb-ia__pill thumb-ia__pill--hl" x="126" y="68" width="92" height="20" rx="10" />
-                  <circle class="thumb-ia__dot" cx="138" cy="78" r="4" />
-                  <text class="thumb-ia__label thumb-ia__label--hl" x="148" y="81.5">Situación</text>
-
-                  <rect class="thumb-ia__pill" x="126" y="24" width="92" height="20" rx="10" />
-                  <circle class="thumb-ia__dot" cx="138" cy="34" r="4" />
-                  <text class="thumb-ia__label" x="148" y="37.5">Objetivos</text>
-
-                  <rect class="thumb-ia__pill" x="126" y="112" width="92" height="20" rx="10" />
-                  <circle class="thumb-ia__dot" cx="138" cy="122" r="4" />
-                  <text class="thumb-ia__label" x="148" y="125.5">Diagnóstico</text>
-
-                  <rect class="thumb-ia__pill" x="126" y="156" width="92" height="20" rx="10" />
-                  <circle class="thumb-ia__dot" cx="138" cy="166" r="4" />
-                  <text class="thumb-ia__label" x="148" y="169.5">Plan de acción</text>
+                <g class="thumb-proc__stage thumb-proc__stage--3">
+                  <circle class="thumb-proc__node" cx="14" cy="92" r="4.5" />
+                  <rect class="thumb-proc__pill" x="30" y="81.5" width="176" height="21" rx="10.5" />
+                  <text class="thumb-proc__label" x="42" y="95.5">Principios</text>
                 </g>
 
-                <!-- Situación → sections -->
-                <g class="thumb-ia__stage thumb-ia__stage--links2">
-                  <path class="thumb-ia__link" d="M218 78 C238 78 236 14 256 14" pathLength="1" />
-                  <path class="thumb-ia__link" d="M218 78 C238 78 236 58 256 58" pathLength="1" />
-                  <path class="thumb-ia__link" d="M218 78 C238 78 236 102 256 102" pathLength="1" />
-                  <path class="thumb-ia__link thumb-ia__link--hl" d="M218 78 C238 78 236 146 256 146" pathLength="1" />
+                <g class="thumb-proc__stage thumb-proc__stage--4">
+                  <circle class="thumb-proc__node" cx="14" cy="127" r="4.5" />
+                  <rect class="thumb-proc__pill" x="30" y="116.5" width="176" height="21" rx="10.5" />
+                  <text class="thumb-proc__label" x="42" y="130.5">Tokens</text>
                 </g>
 
-                <!-- Sections -->
-                <g class="thumb-ia__stage thumb-ia__stage--sections">
-                  <rect class="thumb-ia__pill" x="256" y="4" width="80" height="20" rx="10" />
-                  <circle class="thumb-ia__dot" cx="268" cy="14" r="4" />
-                  <text class="thumb-ia__label" x="278" y="17.5">Familia</text>
+                <g class="thumb-proc__stage thumb-proc__stage--5">
+                  <circle class="thumb-proc__node" cx="14" cy="162" r="4.5" />
+                  <rect class="thumb-proc__pill" x="30" y="151.5" width="176" height="21" rx="10.5" />
+                  <text class="thumb-proc__label" x="42" y="165.5">Componentes</text>
+                </g>
 
-                  <rect class="thumb-ia__pill" x="256" y="48" width="80" height="20" rx="10" />
-                  <circle class="thumb-ia__dot" cx="268" cy="58" r="4" />
-                  <text class="thumb-ia__label" x="278" y="61.5">Ingresos</text>
-
-                  <rect class="thumb-ia__pill" x="256" y="92" width="80" height="20" rx="10" />
-                  <circle class="thumb-ia__dot" cx="268" cy="102" r="4" />
-                  <text class="thumb-ia__label" x="278" y="105.5">Gastos</text>
-
-                  <rect class="thumb-ia__pill thumb-ia__pill--hl" x="256" y="136" width="80" height="20" rx="10" />
-                  <circle class="thumb-ia__dot" cx="268" cy="146" r="4" />
-                  <text class="thumb-ia__label thumb-ia__label--hl" x="278" y="149.5">Patrimonio</text>
+                <!-- Still ahead: dashed outline, dimmer label -->
+                <g class="thumb-proc__stage thumb-proc__stage--6">
+                  <circle class="thumb-proc__node thumb-proc__node--next" cx="14" cy="197" r="4.5" />
+                  <rect class="thumb-proc__pill thumb-proc__pill--next" x="30" y="186.5" width="176" height="21" rx="10.5" />
+                  <text class="thumb-proc__label thumb-proc__label--next" x="42" y="200.5">Gráficas</text>
                 </g>
               </svg>
             }
-            <!-- Video: looping MP4, autoplays muted -->
+            <!-- Video: looping MP4, autoplays muted. Under reduced motion
+                 `playMuted()` never starts it, so it rests on its first frame. -->
             @if (post.thumb === 'video' && post.videoSrc) {
               <video
                 class="thumb-video"
@@ -122,6 +103,15 @@
                 (pause)="playMuted($event)"
               ></video>
             }
+          </div>
+
+          <!-- Persistent footer: category + date, over the media. Gives context
+               at rest without a hover state. A bottom scrim keeps it legible on
+               bright video frames. The anchor's aria-label already carries
+               title + eyebrow, so this overlay is not re-announced. -->
+          <div class="blog-landing__card-footer" data-foundation="modern" aria-hidden="true">
+            <span class="blog-landing__card-label">{{ post.eyebrow }}</span>
+            <span class="blog-landing__card-when">{{ post.date }}</span>
           </div>
         </a>
       </li>

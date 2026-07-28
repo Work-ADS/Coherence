@@ -4,7 +4,7 @@ export const routes: Routes = [
   // Home = Design at Afi (the methodology landing) for now. The old hero
   // (pages/home) stays in the tree, just unrouted — restore by swapping this
   // redirect back to its loadComponent.
-  { path: '', pathMatch: 'full', redirectTo: '/metodologia' },
+  { path: '', pathMatch: 'full', redirectTo: '/design-at-afi' },
   {
     path: 'fundamentos',
     loadChildren: () =>
@@ -32,14 +32,16 @@ export const routes: Routes = [
     path: 'blog',
     loadChildren: () => import('./pages/blog/blog.routes').then((m) => m.blog_routes),
   },
-  // Methodology — the redesign-series narrative. Reuses BlogLandingPage,
+  // Design at Afi — the redesign-series narrative. Reuses BlogLandingPage,
   // filtered to the 'methodology' collection via route data.
   {
-    path: 'metodologia',
+    path: 'design-at-afi',
     loadComponent: () =>
       import('./pages/blog/blog.landing').then((m) => m.BlogLandingPage),
     data: { collection: 'methodology' },
   },
+  // Legacy slug — the surface was renamed to match its "Design at Afi" title.
+  { path: 'metodologia', redirectTo: '/design-at-afi' },
   // Brand strategy — internal brand-strategy narrative (modern foundation).
   {
     path: 'estrategia-marca',

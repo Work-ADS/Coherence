@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
+  BadgeV2Component,
   ButtonV2Component,
   CheckboxV2Component,
   IconButtonV2Component,
@@ -33,6 +34,7 @@ type SendDemoState = 'idle' | 'sending' | 'sent';
   standalone: true,
   imports: [
     RouterLink,
+    BadgeV2Component,
     ButtonV2Component,
     CheckboxV2Component,
     IconButtonV2Component,

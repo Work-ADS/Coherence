@@ -66,19 +66,7 @@
           <p class="post__p">
             The workflow never gave anyone time to design. Because of this we ended up with an old-looking, static product.
           </p>
-          <figure class="post__figure">
-            <img
-              class="post__img"
-              src="assets/blog/visual-identity/handoff-eras.svg"
-              alt="Four handoff eras at Afi: PNGs, Figma screens, Material components, and our own system in code"
-              loading="lazy"
-            />
-            <figcaption class="post__caption">
-              Four handoff eras: PNGs from communications, Figma screens without a system, Material components, and now our own system in code.
-            </figcaption>
-          </figure>
-
-          <h3 siteHyperText class="post__h3">Our opportunity</h3>
+          <h3 siteHyperText class="post__h3">Opportunity</h3>
           <p class="post__p">
             AI changed what's possible: we aren't restricted to opinionated Angular libraries anymore; we can build our own. That's why I took the Memorisely AI design-system course. It gives us the flexibility to create the products we want.
           </p>
@@ -86,6 +74,41 @@
           <p class="post__p">
             To get there, we're doing things a bit differently. We are working <em>together</em> as a design team, implementing a design process, and documenting the work, because every project above started the same way: no alignment upfront.
           </p>
+
+          <figure class="post__figure">
+            <div class="timeline">
+              <svg class="timeline-svg" viewBox="0 0 700 300" role="img" aria-label="How design reaches code at Afi">
+                <text class="timeline-svg__eyebrow" x="350" y="26" text-anchor="middle">FOUR HANDOFF ERAS</text>
+                <text class="timeline-svg__title" x="350" y="52" text-anchor="middle">How design reaches code at Afi</text>
+                <line class="timeline-svg__track" x1="110" y1="176" x2="590" y2="176"/>
+                <rect class="timeline-svg__tile" x="77" y="88" width="66" height="58" rx="10"/>
+                <g class="timeline-svg__glyph" transform="translate(110 117)"><rect x="-20" y="-15" width="40" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="-11" cy="-6" r="3" fill="currentColor"/><path d="M-18 11 L-6 0 L2 7 L10 -1 L18 11 Z" fill="currentColor"/></g>
+                <circle class="timeline-svg__dot" cx="110" cy="176" r="5"/>
+                <text class="timeline-svg__label" x="110" y="212" text-anchor="middle">PNGs</text>
+                <text class="timeline-svg__meta" x="110" y="230" text-anchor="middle">images by email</text>
+                <rect class="timeline-svg__tile" x="237" y="88" width="66" height="58" rx="10"/>
+                <g class="timeline-svg__glyph" transform="translate(270 117)"><line x1="-18" y1="-11" x2="18" y2="-11" stroke="currentColor" stroke-width="2"/><line x1="-18" y1="11" x2="18" y2="11" stroke="currentColor" stroke-width="2"/><line x1="-13" y1="-17" x2="-13" y2="17" stroke="currentColor" stroke-width="2"/><line x1="13" y1="-17" x2="13" y2="17" stroke="currentColor" stroke-width="2"/></g>
+                <circle class="timeline-svg__dot" cx="270" cy="176" r="5"/>
+                <text class="timeline-svg__label" x="270" y="212" text-anchor="middle">Figma screens</text>
+                <text class="timeline-svg__meta" x="270" y="230" text-anchor="middle">flows, no system</text>
+                <rect class="timeline-svg__tile" x="397" y="88" width="66" height="58" rx="10"/>
+                <g class="timeline-svg__glyph" transform="translate(430 117)"><rect x="-22" y="-17" width="44" height="34" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M-22 -13 a4 4 0 0 1 4 -4 h36 a4 4 0 0 1 4 4 v4 h-44 z" fill="currentColor" opacity=".22"/><line x1="-17" y1="3" x2="10" y2="3" stroke="currentColor" stroke-width="2"/><line x1="-17" y1="10" x2="0" y2="10" stroke="currentColor" stroke-width="2"/></g>
+                <circle class="timeline-svg__dot" cx="430" cy="176" r="5"/>
+                <text class="timeline-svg__label" x="430" y="212" text-anchor="middle">Material components</text>
+                <text class="timeline-svg__meta" x="430" y="230" text-anchor="middle">systemized, opinionated</text>
+                <rect class="timeline-svg__tile timeline-svg__tile--now" x="557" y="88" width="66" height="58" rx="10"/>
+                <g class="timeline-svg__glyph timeline-svg__glyph--now" transform="translate(590 117)"><path d="M-12 -11 L-22 0 L-12 11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 -11 L22 0 L12 11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="-13" x2="-4" y2="13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></g>
+                <circle class="timeline-svg__dot timeline-svg__dot--now" cx="590" cy="176" r="5"/>
+                <text class="timeline-svg__label timeline-svg__label--now" x="590" y="212" text-anchor="middle">Our own system</text>
+                <text class="timeline-svg__meta" x="590" y="230" text-anchor="middle">in code, with AI</text>
+                <rect class="timeline-svg__pill" x="556" y="250" width="68" height="22" rx="11"/>
+                <text class="timeline-svg__pill-text" x="590" y="265" text-anchor="middle">NOW</text>
+              </svg>
+            </div>
+            <figcaption class="post__caption">
+              Four handoff eras: PNGs from communications, Figma screens without a system, Material components, and now our own system in code.
+            </figcaption>
+          </figure>
 
           <h3 siteHyperText class="post__h3">Wealth Planner</h3>
           <p class="post__p">
@@ -228,10 +251,10 @@
               <strong>Consistency above novelty.</strong> A user learns a pattern once and recognizes it everywhere, so they spend less effort figuring out new tasks.
             </li>
             <li class="principles__item">
-              <strong>Motion explains state, never decorates.</strong> Animation shows that something changed or directs attention. Anything else gets cut.
+              <strong>Motion explains state.</strong> Animation shows that something changed or directs attention. Anything else gets cut.
             </li>
             <li class="principles__item">
-              <strong>Color communicates meaning only.</strong> Surfaces stay neutral and color always means something, so users learn to read it without thinking. In charts that means one highlighted series against gray, with green and red reserved for up and down.
+              <strong>Color communicates meaning.</strong> Surfaces stay neutral and color always means something, so users learn to read it without thinking. In charts that means one highlighted series against gray, with red and green for negative and positive.
             </li>
             <li class="principles__item">
               <strong>Build the system and flow, not screens.</strong> Every screen assembles from reusable blocks. Designing screen by screen is exactly how we end up with static, boring products.
@@ -265,8 +288,9 @@
         <!-- 5. Foundations -->
         <section class="post__section" aria-labelledby="foundations">
           <h2 id="foundations" siteHyperText class="post__h2">5. Foundations in black and white</h2>
+          <p class="post__p">We set up our primitive and semantic tokens in black and white.</p>
           <p class="post__p">
-            We set up our primitive and semantic tokens in black and white. A token is a role, like "background canvas" or "background elevated," that does the same job everywhere it appears. Defining that vocabulary before the palette means that choosing colors later is a quick change: update the primitive, and every screen changes with it. Same for spacing decisions like nav-to-content. Set a base now, adjust as the brand matures, and it propagates everywhere.
+            A token is a role, like "background canvas" or "background elevated." Defining that vocabulary before the palette means that choosing colors later is a quick change. Update the primitive, and every screen changes with it. Same for spacing decisions like nav-to-content or canvas padding.
           </p>
           <p class="post__p">
             For typography we tested Space Grotesk, Fira Sans, and Geist, and none of them passed the width test across number patterns (0000 vs 4444). IBM Plex Sans held consistent, so it became the type family for the modern identity.
@@ -275,41 +299,49 @@
                visible in the browser the same way it was in Figma. -->
           <figure class="post__figure">
             <div class="type-test">
-              <div class="type-test__row type-test__row--space-grotesk">
-                <span class="type-test__name">Space Grotesk</span>
+              <div class="type-test__card type-test__card--space-grotesk">
+                <div class="type-test__head">
+                  <span class="type-test__name">Space Grotesk</span>
+                  <afi-badge-v2 tone="critical" label="drifts" />
+                </div>
                 <div class="type-test__stack">
                   <span class="type-test__digits">0000</span>
                   <span class="type-test__digits">4444</span>
                   <span class="type-test__digits">5555</span>
                 </div>
-                <span class="type-test__verdict">drifts</span>
               </div>
-              <div class="type-test__row type-test__row--fira">
-                <span class="type-test__name">Fira Sans</span>
+              <div class="type-test__card type-test__card--fira">
+                <div class="type-test__head">
+                  <span class="type-test__name">Fira Sans</span>
+                  <afi-badge-v2 tone="critical" label="drifts" />
+                </div>
                 <div class="type-test__stack">
                   <span class="type-test__digits">0000</span>
                   <span class="type-test__digits">4444</span>
                   <span class="type-test__digits">5555</span>
                 </div>
-                <span class="type-test__verdict">drifts</span>
               </div>
-              <div class="type-test__row type-test__row--geist">
-                <span class="type-test__name">Geist</span>
+              <div class="type-test__card type-test__card--geist">
+                <div class="type-test__head">
+                  <span class="type-test__name">Geist</span>
+                  <afi-badge-v2 tone="critical" label="drifts" />
+                </div>
                 <div class="type-test__stack">
                   <span class="type-test__digits">0000</span>
                   <span class="type-test__digits">4444</span>
                   <span class="type-test__digits">5555</span>
                 </div>
-                <span class="type-test__verdict">drifts</span>
               </div>
-              <div class="type-test__row type-test__row--plex">
-                <span class="type-test__name">IBM Plex Sans</span>
+              <div class="type-test__card type-test__card--plex type-test__card--holds">
+                <div class="type-test__head">
+                  <span class="type-test__name">IBM Plex Sans</span>
+                  <afi-badge-v2 tone="success" label="holds" />
+                </div>
                 <div class="type-test__stack">
                   <span class="type-test__digits">0000</span>
                   <span class="type-test__digits">4444</span>
                   <span class="type-test__digits">5555</span>
                 </div>
-                <span class="type-test__verdict type-test__verdict--holds">holds</span>
               </div>
             </div>
             <figcaption class="post__caption">
@@ -377,7 +409,7 @@
         <section class="post__section" aria-labelledby="motion">
           <h2 id="motion" siteHyperText class="post__h2">7. Micro-interactions</h2>
           <p class="post__p">
-            With the primitive components done, motion became the next layer. The principle was already locked: motion explains state, never decorates. That didn't mean we couldn't get creative.
+            With the primitive components done, motion became the next layer. The principle was already locked: motion explains state. That didn't mean we couldn't get creative.
           </p>
           <p class="post__p">
             We didn't invent most of the animations. We reverse-engineered the ones that inspired us, or took a React animation library, ported the code to Angular, and iterated from there. Some libraries we used:
@@ -385,7 +417,7 @@
           <ol class="principles principles--numbered">
             <li class="principles__item">Magic UI</li>
             <li class="principles__item">Animate UI</li>
-            <li class="principles__item">shadcn</li>
+            <li class="principles__item">Shadcn</li>
           </ol>
           <div class="post__demo">
             <div class="post__demo-row">
@@ -448,7 +480,7 @@
               <strong>Google Finance</strong> for chart behavior. Extremely simple, the bare minimum on screen, and still enough. The compare control sits on top of the chart, and the tooltip updates a row of values instead of floating over the line, which solves a problem we have today: we show so much data on hover that the tooltip covers what you're trying to read.
             </li>
             <li class="principles__item">
-              <strong>shadcn's shaded line</strong> as the one variation on that baseline, so we have two to compare rather than one to defend.
+              <strong>Shadcn's shaded line</strong> as the one variation on that baseline, so we have two to compare rather than one to defend.
             </li>
             <li class="principles__item">
               <strong>Shopify</strong> again, for discipline. Boxes inside boxes inside boxes, and a chart style so plain it's accessible by default.
@@ -463,7 +495,7 @@
               <strong>Sections sit on a gray ground</strong>, each with a one-pixel border and padding. That single border does more for texture than any decoration would.
             </li>
             <li class="principles__item">
-              <strong>Charts start at the most basic accessible form and grow from there.</strong> My instinct was to pick three visual styles off the moodboard. Miguel argued for starting conservative and adding only what earns its place, and he was right. So Google Finance's chart is the baseline, shadcn's line is the first addition that earned its place, and anything beyond those two has to justify itself.
+              <strong>Charts start at the most basic accessible form and grow from there.</strong> My instinct was to pick three visual styles off the moodboard. Miguel argued for starting conservative and adding only what earns its place, and he was right. So Google Finance's chart is the baseline, Shadcn's line is the first addition that earned its place, and anything beyond those two has to justify itself.
             </li>
             <li class="principles__item">
               <strong>Color stops encoding categories.</strong> Series go gray with one highlighted color, and green and red stay reserved for up and down. Miguel's line: "we should just use completely different things that are not colored to differentiate stuff."
@@ -519,19 +551,7 @@
           <p class="post__p">
             El flujo de trabajo nunca dio a nadie tiempo para diseñar. Por eso acabamos con un producto estático y de aspecto anticuado.
           </p>
-          <figure class="post__figure">
-            <img
-              class="post__img"
-              src="assets/blog/visual-identity/handoff-eras.es.svg"
-              alt="Cuatro eras de entrega en Afi: PNG, pantallas de Figma, componentes de Material y nuestro propio sistema en código"
-              loading="lazy"
-            />
-            <figcaption class="post__caption">
-              Cuatro eras de entrega: PNG desde comunicación, pantallas de Figma sin sistema, componentes de Material y ahora nuestro propio sistema en código.
-            </figcaption>
-          </figure>
-
-          <h3 siteHyperText class="post__h3">Nuestra oportunidad</h3>
+          <h3 siteHyperText class="post__h3">Oportunidad</h3>
           <p class="post__p">
             La IA cambió lo que es posible: ya no estamos limitados a librerías de Angular con opiniones ajenas; podemos construir la nuestra. Por eso hice el curso de sistemas de diseño con IA de Memorisely. Nos da la flexibilidad para crear los productos que queremos.
           </p>
@@ -541,6 +561,41 @@
           <p class="post__p">
             Para conseguirlo, lo estamos haciendo de otra manera. Trabajamos <em>juntos</em> como equipo de diseño, aplicamos un proceso de diseño y documentamos el trabajo, porque todos los proyectos anteriores empezaron igual: sin alineación previa.
           </p>
+
+          <figure class="post__figure">
+            <div class="timeline">
+              <svg class="timeline-svg" viewBox="0 0 700 300" role="img" aria-label="Cómo llega el diseño al código en Afi">
+                <text class="timeline-svg__eyebrow" x="350" y="26" text-anchor="middle">CUATRO ERAS DE ENTREGA</text>
+                <text class="timeline-svg__title" x="350" y="52" text-anchor="middle">Cómo llega el diseño al código en Afi</text>
+                <line class="timeline-svg__track" x1="110" y1="176" x2="590" y2="176"/>
+                <rect class="timeline-svg__tile" x="77" y="88" width="66" height="58" rx="10"/>
+                <g class="timeline-svg__glyph" transform="translate(110 117)"><rect x="-20" y="-15" width="40" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="-11" cy="-6" r="3" fill="currentColor"/><path d="M-18 11 L-6 0 L2 7 L10 -1 L18 11 Z" fill="currentColor"/></g>
+                <circle class="timeline-svg__dot" cx="110" cy="176" r="5"/>
+                <text class="timeline-svg__label" x="110" y="212" text-anchor="middle">PNG</text>
+                <text class="timeline-svg__meta" x="110" y="230" text-anchor="middle">imágenes por correo</text>
+                <rect class="timeline-svg__tile" x="237" y="88" width="66" height="58" rx="10"/>
+                <g class="timeline-svg__glyph" transform="translate(270 117)"><line x1="-18" y1="-11" x2="18" y2="-11" stroke="currentColor" stroke-width="2"/><line x1="-18" y1="11" x2="18" y2="11" stroke="currentColor" stroke-width="2"/><line x1="-13" y1="-17" x2="-13" y2="17" stroke="currentColor" stroke-width="2"/><line x1="13" y1="-17" x2="13" y2="17" stroke="currentColor" stroke-width="2"/></g>
+                <circle class="timeline-svg__dot" cx="270" cy="176" r="5"/>
+                <text class="timeline-svg__label" x="270" y="212" text-anchor="middle">Pantallas de Figma</text>
+                <text class="timeline-svg__meta" x="270" y="230" text-anchor="middle">flujos, sin sistema</text>
+                <rect class="timeline-svg__tile" x="397" y="88" width="66" height="58" rx="10"/>
+                <g class="timeline-svg__glyph" transform="translate(430 117)"><rect x="-22" y="-17" width="44" height="34" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M-22 -13 a4 4 0 0 1 4 -4 h36 a4 4 0 0 1 4 4 v4 h-44 z" fill="currentColor" opacity=".22"/><line x1="-17" y1="3" x2="10" y2="3" stroke="currentColor" stroke-width="2"/><line x1="-17" y1="10" x2="0" y2="10" stroke="currentColor" stroke-width="2"/></g>
+                <circle class="timeline-svg__dot" cx="430" cy="176" r="5"/>
+                <text class="timeline-svg__label" x="430" y="212" text-anchor="middle">Componentes Material</text>
+                <text class="timeline-svg__meta" x="430" y="230" text-anchor="middle">sistematizado, con opiniones</text>
+                <rect class="timeline-svg__tile timeline-svg__tile--now" x="557" y="88" width="66" height="58" rx="10"/>
+                <g class="timeline-svg__glyph timeline-svg__glyph--now" transform="translate(590 117)"><path d="M-12 -11 L-22 0 L-12 11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 -11 L22 0 L12 11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="-13" x2="-4" y2="13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></g>
+                <circle class="timeline-svg__dot timeline-svg__dot--now" cx="590" cy="176" r="5"/>
+                <text class="timeline-svg__label timeline-svg__label--now" x="590" y="212" text-anchor="middle">Sistema propio</text>
+                <text class="timeline-svg__meta" x="590" y="230" text-anchor="middle">en código, con IA</text>
+                <rect class="timeline-svg__pill" x="556" y="250" width="68" height="22" rx="11"/>
+                <text class="timeline-svg__pill-text" x="590" y="265" text-anchor="middle">AHORA</text>
+              </svg>
+            </div>
+            <figcaption class="post__caption">
+              Cuatro eras de entrega: PNG desde comunicación, pantallas de Figma sin sistema, componentes de Material y ahora nuestro propio sistema en código.
+            </figcaption>
+          </figure>
 
           <h3 siteHyperText class="post__h3">Wealth Planner</h3>
           <p class="post__p">
@@ -683,10 +738,10 @@
               <strong>Consistencia por encima de novedad.</strong> El usuario aprende un patrón una vez y lo reconoce en todas partes, así dedica menos esfuerzo a entender tareas nuevas.
             </li>
             <li class="principles__item">
-              <strong>El movimiento explica estados, nunca decora.</strong> La animación muestra que algo ha cambiado o dirige la atención. Todo lo demás se elimina.
+              <strong>El movimiento explica estados.</strong> La animación muestra que algo ha cambiado o dirige la atención. Todo lo demás se elimina.
             </li>
             <li class="principles__item">
-              <strong>El color solo comunica significado.</strong> Las superficies se mantienen neutras y el color siempre significa algo, así el usuario aprende a leerlo sin pensar. En las gráficas eso implica una serie destacada sobre gris, con el verde y el rojo reservados para subidas y bajadas.
+              <strong>El color comunica significado.</strong> Las superficies se mantienen neutras y el color siempre significa algo, así el usuario aprende a leerlo sin pensar. En las gráficas eso implica una serie destacada sobre gris, con el rojo y el verde para lo negativo y lo positivo.
             </li>
             <li class="principles__item">
               <strong>Construir el sistema y el flujo, no pantallas.</strong> Cada pantalla se monta con bloques reutilizables. Diseñar pantalla a pantalla es exactamente como se acaba en productos estáticos y aburridos.
@@ -720,8 +775,9 @@
         <!-- 5. Fundamentos -->
         <section class="post__section" aria-labelledby="fundamentos">
           <h2 id="fundamentos" siteHyperText class="post__h2">5. Fundamentos en blanco y negro</h2>
+          <p class="post__p">Montamos nuestros tokens primitivos y semánticos en blanco y negro.</p>
           <p class="post__p">
-            Montamos nuestros tokens primitivos y semánticos en blanco y negro. Un token es un rol, como «fondo lienzo» o «fondo elevado», que hace el mismo trabajo allá donde aparece. Definir ese vocabulario antes que la paleta hace que elegir colores después sea un cambio rápido: se actualiza el primitivo y todas las pantallas cambian con él. Igual con decisiones de espaciado como la distancia de la navegación al contenido: se fija una base ahora, se ajusta cuando la marca madure y se propaga a todas partes.
+            Un token es un rol, como «fondo lienzo» o «fondo elevado». Definir ese vocabulario antes que la paleta hace que elegir colores después sea un cambio rápido. Se actualiza el primitivo y todas las pantallas cambian con él. Igual con decisiones de espaciado como la distancia de la navegación al contenido o el padding del lienzo.
           </p>
           <p class="post__p">
             En tipografía probamos Space Grotesk, Fira Sans y Geist, y ninguna superó la prueba de ancho entre patrones de cifras (0000 frente a 4444). IBM Plex Sans se mantuvo consistente, así que se convirtió en la familia tipográfica de la identidad moderna.
@@ -729,41 +785,49 @@
           <!-- Prueba tipográfica — las fuentes reales, no una imagen de ellas. -->
           <figure class="post__figure">
             <div class="type-test">
-              <div class="type-test__row type-test__row--space-grotesk">
-                <span class="type-test__name">Space Grotesk</span>
+              <div class="type-test__card type-test__card--space-grotesk">
+                <div class="type-test__head">
+                  <span class="type-test__name">Space Grotesk</span>
+                  <afi-badge-v2 tone="critical" label="varía" />
+                </div>
                 <div class="type-test__stack">
                   <span class="type-test__digits">0000</span>
                   <span class="type-test__digits">4444</span>
                   <span class="type-test__digits">5555</span>
                 </div>
-                <span class="type-test__verdict">varía</span>
               </div>
-              <div class="type-test__row type-test__row--fira">
-                <span class="type-test__name">Fira Sans</span>
+              <div class="type-test__card type-test__card--fira">
+                <div class="type-test__head">
+                  <span class="type-test__name">Fira Sans</span>
+                  <afi-badge-v2 tone="critical" label="varía" />
+                </div>
                 <div class="type-test__stack">
                   <span class="type-test__digits">0000</span>
                   <span class="type-test__digits">4444</span>
                   <span class="type-test__digits">5555</span>
                 </div>
-                <span class="type-test__verdict">varía</span>
               </div>
-              <div class="type-test__row type-test__row--geist">
-                <span class="type-test__name">Geist</span>
+              <div class="type-test__card type-test__card--geist">
+                <div class="type-test__head">
+                  <span class="type-test__name">Geist</span>
+                  <afi-badge-v2 tone="critical" label="varía" />
+                </div>
                 <div class="type-test__stack">
                   <span class="type-test__digits">0000</span>
                   <span class="type-test__digits">4444</span>
                   <span class="type-test__digits">5555</span>
                 </div>
-                <span class="type-test__verdict">varía</span>
               </div>
-              <div class="type-test__row type-test__row--plex">
-                <span class="type-test__name">IBM Plex Sans</span>
+              <div class="type-test__card type-test__card--plex type-test__card--holds">
+                <div class="type-test__head">
+                  <span class="type-test__name">IBM Plex Sans</span>
+                  <afi-badge-v2 tone="success" label="se mantiene" />
+                </div>
                 <div class="type-test__stack">
                   <span class="type-test__digits">0000</span>
                   <span class="type-test__digits">4444</span>
                   <span class="type-test__digits">5555</span>
                 </div>
-                <span class="type-test__verdict type-test__verdict--holds">se mantiene</span>
               </div>
             </div>
             <figcaption class="post__caption">
@@ -831,7 +895,7 @@
         <section class="post__section" aria-labelledby="movimiento">
           <h2 id="movimiento" siteHyperText class="post__h2">7. Microinteracciones</h2>
           <p class="post__p">
-            Con los componentes primitivos terminados, el movimiento pasó a ser la siguiente capa. El principio ya estaba fijado: el movimiento explica estados, nunca decora. Eso no significaba que no pudiéramos ser creativos.
+            Con los componentes primitivos terminados, el movimiento pasó a ser la siguiente capa. El principio ya estaba fijado: el movimiento explica estados. Eso no significaba que no pudiéramos ser creativos.
           </p>
           <p class="post__p">
             No inventamos la mayoría de las animaciones. Recreamos, aplicando ingeniería inversa, las que nos inspiraban, o cogimos una librería de animación de React, portamos el código a Angular e iteramos desde ahí. Algunas librerías que usamos:
@@ -839,7 +903,7 @@
           <ol class="principles principles--numbered">
             <li class="principles__item">Magic UI</li>
             <li class="principles__item">Animate UI</li>
-            <li class="principles__item">shadcn</li>
+            <li class="principles__item">Shadcn</li>
           </ol>
           <div class="post__demo">
             <div class="post__demo-row">
@@ -902,7 +966,7 @@
               <strong>Google Finance</strong> para el comportamiento de las gráficas. Extremadamente simple, lo mínimo en pantalla y aun así suficiente. El control de comparación va sobre la gráfica y el tooltip actualiza una fila de valores en lugar de flotar sobre la línea, lo que resuelve un problema que tenemos hoy: mostramos tantos datos al pasar el cursor que el tooltip tapa justo lo que se quiere leer.
             </li>
             <li class="principles__item">
-              <strong>La línea sombreada de shadcn</strong> como única variación sobre esa base, para tener dos opciones que comparar en lugar de una que defender.
+              <strong>La línea sombreada de Shadcn</strong> como única variación sobre esa base, para tener dos opciones que comparar en lugar de una que defender.
             </li>
             <li class="principles__item">
               <strong>Shopify</strong> otra vez, por disciplina. Cajas dentro de cajas dentro de cajas, y un estilo de gráfica tan sencillo que resulta accesible por defecto.
@@ -917,7 +981,7 @@
               <strong>Las secciones se apoyan sobre un fondo gris</strong>, cada una con un borde de un píxel y su padding. Ese borde hace más por la textura que cualquier decoración.
             </li>
             <li class="principles__item">
-              <strong>Las gráficas parten de la forma más básica y accesible y crecen desde ahí.</strong> Mi instinto era elegir tres estilos visuales del moodboard. Miguel defendió empezar conservador y añadir solo lo que se gane su sitio, y tenía razón. Así que la gráfica de Google Finance es la base, la línea de shadcn es la primera incorporación que se ganó su sitio, y cualquier cosa más allá de esas dos tiene que justificarse.
+              <strong>Las gráficas parten de la forma más básica y accesible y crecen desde ahí.</strong> Mi instinto era elegir tres estilos visuales del moodboard. Miguel defendió empezar conservador y añadir solo lo que se gane su sitio, y tenía razón. Así que la gráfica de Google Finance es la base, la línea de Shadcn es la primera incorporación que se ganó su sitio, y cualquier cosa más allá de esas dos tiene que justificarse.
             </li>
             <li class="principles__item">
               <strong>El color deja de codificar categorías.</strong> Las series van en gris con un color destacado, y el verde y el rojo quedan reservados para subidas y bajadas. La frase de Miguel: «deberíamos usar cosas completamente distintas del color para diferenciar».

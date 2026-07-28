@@ -77,6 +77,33 @@
   --surface-inverse-raised:  var(--color-afi-control-800);
   // Role: one step lifted on the dark field — gradient end, panel on dark.
 
+  // Marks drawn ON that field — the fixed-light counterpart the note above
+  // calls for. Same fixed polarity, same brand-neutrality: never re-bound in
+  // §3 or §4. An emphasis ladder (default → subtle → faint) plus a translucent
+  // plate and the pending state a stepper needs for a stage it hasn't reached.
+  //
+  // Field-agnostic: these serve the neutral pair above and equally a
+  // brand-tinted dark gradient. "Inverse" names the polarity, not a hue.
+  //
+  // For an opaque mark that must knock out what passes behind it, fill with
+  // --surface-inverse-default rather than white — it reads as a hole punched
+  // in the field instead of a bright blob.
+  --surface-inverse-tint: var(--color-white-a10);
+  // Role: translucent plate ON the field — outlined pill body, chip fill.
+
+  --surface-inverse-mark-default: var(--color-white-a78);
+  // Role: primary readable mark — labels, active nodes.
+  --surface-inverse-mark-subtle:  var(--color-white-a55);
+  // Role: secondary mark — node/pill outlines, connector strokes.
+  --surface-inverse-mark-faint:   var(--color-white-a25);
+  // Role: structural hairline — the spine/rail a diagram's nodes sit on.
+
+  --surface-inverse-mark-pending:     var(--color-white-a35);
+  // Role: outline of a mark for a step not yet reached (dashed node/pill).
+  --surface-inverse-mark-pending-ink: var(--color-white-a40);
+  // Role: label of that same not-yet step — a touch brighter than its dashed
+  // outline so the text still reads.
+
 
   // ===========================================================================
   // DISABLED (4) — referenced by other categories' disabled states.
@@ -837,10 +864,10 @@ body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__bac
   --surface-subtle:   var(--color-afi-control-800);
   --surface-raised:   var(--color-afi-control-800);   // slightly lifted
   --surface-selected: var(--color-afi-azul-profundo-800);
-  // --surface-inverse-* is intentionally NOT overridden here. It is the
-  // fixed dark field (dark chrome, illustration backgrounds); flipping it to
-  // light in dark mode would break every consumer that draws light marks on
-  // it. See the SURFACE block in §1.
+  // --surface-inverse-* is intentionally NOT overridden here — neither the
+  // field nor its mark tiers. It is the fixed dark field (dark chrome,
+  // illustration backgrounds); flipping it to light in dark mode would break
+  // every consumer that draws light marks on it. See the SURFACE block in §1.
 
   // ===== DISABLED — re-tint for dark =====
   --disabled-background: var(--color-afi-control-800);

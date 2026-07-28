@@ -65,7 +65,7 @@
 
 .blog-landing__title {
   margin: 0;
-  font: var(--type-display-md, var(--type-body-lg-600));
+  font: var(--type-body-lg-600);
   color: var(--foreground-primary-default);
 }
 
@@ -86,7 +86,7 @@
   margin: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-lg);
+  gap: var(--space-xs);
 
   @media (min-width: 768px) {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
@@ -102,7 +102,14 @@
   display: flex;
 }
 
+// Hand-rolled rather than composed from `afi-card-v2` (libs/ui/src/card-v2) —
+// the gap, per AGENTS.md § Reuse before building: card-v2 is deliberately a
+// non-interactive grouping surface (no link/button semantics), pads on all four
+// sides, and fixes a header/body/footer stack. This tile is a clickable anchor
+// with full-bleed media, a footer overlaid *on* that media, a --framed inset
+// variant, and page-level bento row-spanning — none of which card-v2 exposes.
 .blog-landing__card {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -141,16 +148,9 @@
     aspect-ratio: auto;
   }
 
-  &--whitelabel {
-    background: linear-gradient(135deg, var(--color-thumb-dark-deep) 0%, var(--color-thumb-dark-medium) 100%);
-  }
-
   &--proceso {
-    background: linear-gradient(135deg, var(--color-afi-azul-profundo-500) 0%, var(--color-afi-azul-500) 100%);
-  }
-
-  &--ia {
-    // Black & white per the IA-reference style — neutral near-black, no blue.
+    // Black & white — neutral near-black, no blue, so the stepper reads as
+    // documentation rather than branding.
     background: linear-gradient(135deg, var(--color-thumb-dark-deep) 0%, var(--color-thumb-dark-medium) 100%);
   }
 
@@ -169,136 +169,119 @@
   display: block;
 }
 
-.blog-landing__card-body {
-  padding: var(--space-md) var(--space-md) var(--space-lg);
+// ─── Persistent footer: category + date over the media ──────────────────────
+// Overlays the bottom of the card so context reads at rest — no hover needed.
+// The scrim (transparent → dark) guarantees the inverse-foreground text stays
+// legible over bright video frames as well as the dark IA field.
+.blog-landing__card-footer {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 1;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-2xl) var(--space-lg) var(--space-md);
+  background: linear-gradient(to top, var(--overlay-blanket) 0%, transparent 100%);
+  // Purely presentational; keep clicks flowing to the card anchor.
+  pointer-events: none;
 }
 
-.blog-landing__card-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.blog-landing__card-eyebrow {
+.blog-landing__card-label {
+  min-width: 0;
+  // Base size/weight from the type token; family forced to the modern
+  // primary (IBM Plex Sans) — the footer carries data-foundation="modern",
+  // otherwise --type-* resolves to the default serif face.
   font: var(--type-body-sm-500);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-  color: var(--foreground-tertiary-default);
+  font-family: var(--font-family-primary);
+  color: var(--foreground-inverse-default);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.blog-landing__card-date {
+.blog-landing__card-when {
+  flex-shrink: 0;
   font: var(--type-body-sm-400);
-  color: var(--foreground-tertiary-default);
+  font-family: var(--font-family-primary);
+  letter-spacing: var(--tracking-wide);
+  color: var(--foreground-inverse-secondary);
+}
 
-  &::before {
-    content: '·';
-    margin-right: var(--space-sm);
+// ─── Framed / floating-media variant (Shopify-style) ────────────────────────
+// The field becomes a light surface; the media insets with its own radius so
+// it reads as a contained object, and the label sits below it on the field
+// (dark text, no scrim).
+.blog-landing__card--framed {
+  background: var(--surface-subtle);
+  padding: var(--space-xs);
+  gap: var(--space-md);
+
+  // Media keeps the base sizing (fills the cell) but gains its own rounded
+  // corners + hairline so the light field reads as a frame — needed for
+  // light media (e.g. the white Modern-UI clip) that would otherwise blend
+  // into the light field.
+  .blog-landing__card-thumb {
+    border-radius: var(--radius-md);
+    border: var(--border-width-hairline) solid var(--border-hairline);
   }
-}
 
-.blog-landing__card-title {
-  font: var(--type-body-lg-600);
-  color: var(--foreground-primary-default);
-  line-height: 1.3;
-}
+  .blog-landing__card-footer {
+    position: static;
+    z-index: auto;
+    padding: 0 var(--space-2xs);
+    background: none;
+  }
 
-.blog-landing__card-intro {
-  font: var(--type-body-sm-400);
-  color: var(--foreground-secondary-default);
-  line-height: 1.5;
+  .blog-landing__card-label {
+    color: var(--foreground-primary-default);
+  }
+
+  .blog-landing__card-when {
+    color: var(--foreground-tertiary-default);
+  }
 }
 
 // =============================================================================
 // Thumbnails — abstract, brand-tinted, animate on card hover.
 // =============================================================================
 
-// ─── Whitelabel: 4 brand stripes ────────────────────────────────────────────
-.thumb-wl {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6%;
-  padding: 10% 12%;
-
-  &__stripe {
-    height: 12%;
-    border-radius: var(--radius-full);
-    transform-origin: left center;
-    transition: transform 380ms cubic-bezier(0.2, 0.7, 0.2, 1.1);
-
-    &--1 { width: 60%; background: linear-gradient(90deg, var(--color-afi-azul-500) 0%, var(--color-afi-azul-700) 100%); }
-    &--2 { width: 78%; background: linear-gradient(90deg, var(--color-laboral-kutxa-magenta-500) 0%, var(--color-laboral-kutxa-magenta-700) 100%); }
-    &--3 { width: 45%; background: linear-gradient(90deg, var(--color-laboral-kutxa-verde-500) 0%, var(--color-laboral-kutxa-verde-700) 100%); }
-    &--4 { width: 68%; background: linear-gradient(90deg, var(--color-laboral-kutxa-berenjena-400) 0%, var(--color-laboral-kutxa-berenjena-800) 100%); }
-  }
-}
-
-.blog-landing__card:hover .thumb-wl__stripe {
-  &--1 { transform: scaleX(1.3); }
-  &--2 { transform: scaleX(0.78); }
-  &--3 { transform: scaleX(1.55); }
-  &--4 { transform: scaleX(0.92); }
-}
-
-// ─── Proceso: 5 phase dots connected by a line, dots ripple on hover ────────
-.thumb-proceso {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 14%;
-
-  &__line {
-    position: absolute;
-    left: 14%;
-    right: 14%;
-    top: 50%;
-    height: var(--dimension-0-25);
-    background: var(--color-white-a25);
-  }
-
-  &__dot {
-    position: relative;
-    width: 10%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: var(--color-laboral-kutxa-magenta-0);
-    box-shadow: 0 0 0 var(--dimension-1) var(--color-white-a15);
-    transition: transform 380ms cubic-bezier(0.2, 0.7, 0.2, 1.1);
-
-    &--1, &--5 { background: var(--color-white-a55); }
-    &--2, &--4 { background: var(--color-white-a78); }
-  }
-}
-
-.blog-landing__card:hover .thumb-proceso__dot {
-  &--1 { transform: translateY(-12%) scale(1.1); transition-delay: 0ms; }
-  &--2 { transform: translateY(-12%) scale(1.1); transition-delay: 40ms; }
-  &--3 { transform: translateY(-12%) scale(1.25); transition-delay: 80ms; }
-  &--4 { transform: translateY(-12%) scale(1.1); transition-delay: 120ms; }
-  &--5 { transform: translateY(-12%) scale(1.1); transition-delay: 160ms; }
-}
-
-// ─── IA: animated sitemap of the Wealth Planner architecture ────────────────
-// Reference: the IA flowchart style — outlined pills with an icon dot, soft
-// elbow connectors, columns building left → right. One shared 10s timeline:
-// root appears → connectors draw → the four phases → Situación's sections →
-// a highlight beat traces the advisor's path (Planificación → Situación →
-// Patrimonio) → everything fades for the loop reset. Opacity / transform /
-// dashoffset / stroke only. The svg carries data-foundation="modern" so the
-// labels resolve to IBM Plex.
-.thumb-ia {
+// ─── Proceso: the design process as a vertical stepper ──────────────────────
+// The case study's real arc — contexto → moodboards → principios → tokens →
+// componentes — with "Gráficas" left dashed because it is still ahead. One
+// shared 10s timeline keeps every stage phase-locked: the spine draws
+// top→bottom while each stage lands in sequence, everything holds, then fades
+// for the loop reset. Opacity / transform / dashoffset only. The svg carries
+// data-foundation="modern" so the labels resolve to IBM Plex.
+.thumb-proc {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  padding: 10% 8%;
+  padding: 8% 10%;
+
+  &__spine {
+    stroke: var(--color-white-a25);
+    stroke-width: 1.25;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    animation: thumb-proc-spine 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
+  }
+
+  // Black fill (opaque, NOT an alpha white) so the spine running behind the
+  // node is hidden rather than showing through it; the gray border carries the
+  // node. The pending stage keeps the same fill and goes dashed.
+  &__node {
+    stroke: var(--color-white-a55);
+    stroke-width: 1.25;
+    fill: var(--color-base-black);
+  }
+
+  &__node--next {
+    stroke: var(--color-white-a35);
+    stroke-dasharray: 2 2;
+  }
 
   &__pill {
     stroke: var(--color-white-a55);
@@ -306,9 +289,9 @@
     fill: var(--color-white-a10);
   }
 
-  &__dot {
-    stroke: var(--color-white-a55);
-    stroke-width: 1;
+  &__pill--next {
+    stroke: var(--color-white-a35);
+    stroke-dasharray: 3 3;
     fill: none;
   }
 
@@ -317,113 +300,77 @@
     font-family: var(--font-family-primary);
     font-size: 9.5px;
     font-weight: var(--font-weight-medium);
-
-    &--root {
-      fill: var(--color-base-white);
-    }
   }
 
-  &__link {
-    stroke: var(--color-white-a55);
-    stroke-width: 1.25;
-    stroke-linecap: round;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 0;
+  &__label--next {
+    fill: var(--color-white-a40);
   }
 
-  // ── Shared timeline: every stage runs the same 10s loop ──────────────────
+  // ── Shared timeline: one 10s loop, a different window per stage ──────────
   &__stage {
     animation: 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
   }
 
-  &__stage--root { animation-name: thumb-ia-root; }
-  &__stage--links1 { animation-name: thumb-ia-links1; }
-  &__stage--phases { animation-name: thumb-ia-phases; }
-  &__stage--links2 { animation-name: thumb-ia-links2; }
-  &__stage--sections { animation-name: thumb-ia-sections; }
-
-  &__stage--links1 .thumb-ia__link {
-    animation: thumb-ia-draw1 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
-  }
-
-  &__stage--links2 .thumb-ia__link {
-    animation: thumb-ia-draw2 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
-  }
-
-  // Highlight beat — the advisor's path brightens mid-loop.
-  &__pill--hl,
-  &__link--hl {
-    animation: thumb-ia-hl-stroke 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
-  }
-
-  &__label--hl {
-    animation: thumb-ia-hl-fill 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
-  }
+  &__stage--1 { animation-name: thumb-proc-s1; }
+  &__stage--2 { animation-name: thumb-proc-s2; }
+  &__stage--3 { animation-name: thumb-proc-s3; }
+  &__stage--4 { animation-name: thumb-proc-s4; }
+  &__stage--5 { animation-name: thumb-proc-s5; }
+  &__stage--6 { animation-name: thumb-proc-s6; }
 }
 
-// Stage windows (columns enter left → right, everything exits at 92–100%).
-@keyframes thumb-ia-root {
-  0%, 2% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
-  7%, 91% { opacity: 1; transform: translateX(0); }
-  97%, 100% { opacity: 0; transform: translateX(0); }
+// Spine draws while the stages land, holds, then clears for the reset.
+@keyframes thumb-proc-spine {
+  0%, 4% { stroke-dashoffset: 1; }
+  52%, 90% { stroke-dashoffset: 0; }
+  96%, 100% { stroke-dashoffset: 1; }
 }
 
-@keyframes thumb-ia-links1 {
-  0%, 8% { opacity: 0; }
-  10%, 91% { opacity: 1; }
-  96%, 100% { opacity: 0; }
-}
-
-@keyframes thumb-ia-phases {
-  0%, 14% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
-  22%, 91% { opacity: 1; transform: translateX(0); }
+// Stage windows — each slides in off the spine, all hold, all exit together.
+@keyframes thumb-proc-s1 {
+  0%, 4% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
+  12%, 90% { opacity: 1; transform: translateX(0); }
   96%, 100% { opacity: 0; transform: translateX(0); }
 }
 
-@keyframes thumb-ia-links2 {
-  0%, 25% { opacity: 0; }
-  27%, 91% { opacity: 1; }
-  96%, 100% { opacity: 0; }
-}
-
-@keyframes thumb-ia-sections {
-  0%, 32% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
-  40%, 91% { opacity: 1; transform: translateX(0); }
+@keyframes thumb-proc-s2 {
+  0%, 12% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
+  20%, 90% { opacity: 1; transform: translateX(0); }
   96%, 100% { opacity: 0; transform: translateX(0); }
 }
 
-// Connector draw-ins (normalized via pathLength="1").
-@keyframes thumb-ia-draw1 {
-  0%, 8% { stroke-dashoffset: 1; }
-  18%, 100% { stroke-dashoffset: 0; }
+@keyframes thumb-proc-s3 {
+  0%, 20% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
+  28%, 90% { opacity: 1; transform: translateX(0); }
+  96%, 100% { opacity: 0; transform: translateX(0); }
 }
 
-@keyframes thumb-ia-draw2 {
-  0%, 25% { stroke-dashoffset: 1; }
-  36%, 100% { stroke-dashoffset: 0; }
+@keyframes thumb-proc-s4 {
+  0%, 28% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
+  36%, 90% { opacity: 1; transform: translateX(0); }
+  96%, 100% { opacity: 0; transform: translateX(0); }
 }
 
-// The advisor's path — stroke and label lift to full white, then settle.
-@keyframes thumb-ia-hl-stroke {
-  0%, 54% { stroke: var(--color-white-a55); }
-  60%, 74% { stroke: var(--color-base-white); }
-  82%, 100% { stroke: var(--color-white-a55); }
+@keyframes thumb-proc-s5 {
+  0%, 36% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
+  44%, 90% { opacity: 1; transform: translateX(0); }
+  96%, 100% { opacity: 0; transform: translateX(0); }
 }
 
-@keyframes thumb-ia-hl-fill {
-  0%, 54% { fill: var(--color-white-a78); }
-  60%, 74% { fill: var(--color-base-white); }
-  82%, 100% { fill: var(--color-white-a78); }
+@keyframes thumb-proc-s6 {
+  0%, 44% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
+  52%, 90% { opacity: 1; transform: translateX(0); }
+  96%, 100% { opacity: 0; transform: translateX(0); }
 }
 
-// Static full map when motion is reduced — no build-up, no highlight.
+// Static full stepper when motion is reduced — no build-up.
 @media (prefers-reduced-motion: reduce) {
-  .thumb-ia__stage,
-  .thumb-ia__stage--links1 .thumb-ia__link,
-  .thumb-ia__stage--links2 .thumb-ia__link,
-  .thumb-ia__pill--hl,
-  .thumb-ia__link--hl,
-  .thumb-ia__label--hl {
+  .thumb-proc__spine,
+  .thumb-proc__stage {
     animation: none;
+  }
+
+  .thumb-proc__spine {
+    stroke-dashoffset: 0;
   }
 }

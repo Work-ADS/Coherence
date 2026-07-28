@@ -74,6 +74,19 @@ Backs the `text-decode-scramble` pattern (§4.10). Two tokens, modern-layer only
 
 The envelope SHAPE (band width, peak position, easing) stays as directive code constants by design — those are curve-shape numbers, not brand values. Only the two knobs above are tokens. Both live only in the foundations-modern (v2) layer; there is no legacy `motion.scss` equivalent, so this pattern is v2-only.
 
+### Ambient loop (added 2026-07-28)
+
+Backs the `ambient-loop` pattern (§4.11). Two tokens, modern-layer only.
+
+| Token | Value | When |
+|---|---|---|
+| `--motion-duration-ambient-loop` | 10000ms | Full cycle length of a decorative, self-restarting loop. The whole choreography lives inside one pass of this. |
+| `--motion-easing-ambient` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Fast-out, long-settle curve for ambient motion. Calmer than `--motion-easing-enter`, no overshoot like `--motion-easing-spring`. |
+
+**Why these are outside the interaction ramp.** `--duration-fast|base|slow` are *response* durations — how long the UI takes to answer the user. 10s is not a response; it is the length of a piece of ambient choreography that runs whether or not anyone touches it. Putting it on the interaction ramp would misread it, so it gets its own role name. Same precedent as `--motion-duration-slower` (500ms) and `--motion-decode-duration` (1150ms): motion values that pair with a named pattern, not with a component's weight.
+
+Both live only in the foundations-modern (v2) layer — the current consumer's SVG carries `data-foundation="modern"`, and the legacy layer has no consumer. Added via `tools/figma-sync/foundations-modern.json` → regenerate with `node tools/figma-sync/generate-foundations.mjs`; never hand-edit `libs/tokens/foundations-modern/primitive-motion.scss`.
+
 ### Tailwind mapping
 
 `tailwind.config.js` (lines 209–220) maps these to utility classes (`duration-fast`, `ease-enter`, etc.). Use either layer — the values resolve to the same custom property.
@@ -350,6 +363,56 @@ State communication must still work — opacity-only fades stay; spatial choreog
 
 ---
 
+### 4.11 `ambient-loop`
+
+**When** — **decorative motion nobody triggered**: an illustrative thumbnail that draws itself, a diagram that builds and resets, a marketing glyph that breathes. The motion is content, not feedback — it carries no state, nothing waits on it, and clicking nothing starts it. It is the only pattern in the catalog that runs `infinite`.
+
+**When NOT to use** —
+- **Anything the user acted on.** A press, a hover, an open, a submit: those are one-shot patterns (§4.1–§4.5, §4.8). A loop as feedback reads as "still working" forever.
+- **Real progress or pending state.** A spinner or skeleton loops too, but it means *something is happening* — that is a loading affordance with its own timing, not ambient decoration. Do not borrow this 10s cadence for it.
+- **Anything in the reading path.** Ambient motion beside body copy competes with it. Keep it inside its own frame — a thumbnail, a card media slot, a hero panel.
+- **More than one at a time in view.** Two independent loops in the same viewport read as a glitch, not as craft. If a grid needs several, either give them one shared timeline or animate only the hovered one.
+
+**Properties** — `opacity`, `transform`, `stroke-dashoffset`, `stroke`, `fill`. Never `width`/`height`/`top`/`left` (layout thrash on an endless loop) and never `filter: blur()` for the full cycle (a permanently compositing blur is the most expensive thing you can loop).
+
+**Cadence** — the whole choreography fits inside ONE pass of `--motion-duration-ambient-loop`, with every stage a percentage window of that single keyframe timeline rather than its own duration. That is what keeps a multi-element build-up in sync: same duration, same easing, same start, different `%` windows. Reserve the last ~8% for the fade-out that hides the restart, so the loop has no visible seam.
+
+**Tokens** — `var(--motion-duration-ambient-loop) var(--motion-easing-ambient)` plus `infinite both`. Reuse the reveal tokens (`--motion-reveal-rise-*`) for any spatial travel inside the keyframes rather than inventing offsets.
+
+```scss
+.thumb__stage {
+  // one shared timeline; each stage differs only by its keyframe windows
+  animation: var(--motion-duration-ambient-loop) var(--motion-easing-ambient) infinite both;
+}
+
+.thumb__stage--first  { animation-name: thumb-loop-first; }
+.thumb__stage--second { animation-name: thumb-loop-second; }
+
+@keyframes thumb-loop-first {
+  0%, 2%    { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
+  7%, 91%   { opacity: 1; transform: translateX(0); }
+  97%, 100% { opacity: 0; transform: translateX(0); } // fade covers the restart
+}
+
+@keyframes thumb-loop-second {
+  0%, 14%   { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
+  22%, 91%  { opacity: 1; transform: translateX(0); }
+  96%, 100% { opacity: 0; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb__stage { animation: none; } // resting state must be the FINISHED artwork
+}
+```
+
+**Reduced motion** — `animation: none` on every looping selector, no fade-in substitute. Unlike the one-shot patterns, there is no state to communicate, so the collapsed variant is simply the artwork at rest. This only works if the un-animated DOM is already the complete, legible end state — build the markup that way (full diagram, `both` fill for the animated case) instead of hiding elements and revealing them by keyframe. An `opacity: 0` default plus a killed animation is an invisible thumbnail.
+
+**Currently used in** — the design-process stepper thumbnail on the Design at Afi landing ([blog.landing.scss](../../apps/site/src/app/pages/blog/blog.landing.scss), `.thumb-proc`): a spine that draws top→bottom plus six stage groups landing in sequence, all phase-locked to one shared pass. Its `@media (prefers-reduced-motion: reduce)` block is the reference implementation — it lists every animated selector, drops them to `none`, and restores `stroke-dashoffset: 0` so the spine is drawn rather than absent.
+
+**Prior art** — the retired IA-sitemap thumbnail ran the same cadence before commit `0b6ff3e` replaced it. Two consumers of the same improvised `10s` / `cubic-bezier(0.2, 0.8, 0.2, 1)` is what turned this from a one-off into a token.
+
+---
+
 ## 5. How to use this catalog
 
 1. **Designing a new primitive's motion** — open this file. If a pattern matches, copy the snippet, reference the section number in your build prompt.
@@ -382,6 +445,7 @@ These are not blockers for the catalog — they ARE the catalog's first targets.
 
 ## 8. Changelog
 
+- **2026-07-28** — Added `ambient-loop` (§4.11): the first `infinite` entry in the catalog — decorative, self-restarting motion in its own frame (illustrative thumbnails, self-drawing diagrams). Closes a token gap found by a DS audit of the Design at Afi landing, where the design-process stepper thumbnail had been improvising `10s cubic-bezier(0.2, 0.8, 0.2, 1)` in page code — as the retired IA-sitemap thumbnail did before it, which is what made the cadence worth naming. Two new modern-layer tokens, `--motion-duration-ambient-loop` (10000ms) + `--motion-easing-ambient` (`cubic-bezier(0.2, 0.8, 0.2, 1)`), added via `tools/figma-sync/foundations-modern.json` → `primitive-motion.scss`. Deliberately outside the `fast|base|slow` interaction ramp: a loop length is not a response time (see §3 "Ambient loop"). Reduced-motion variant is `animation: none` with no fade substitute, which only holds if the un-animated markup is already the finished artwork.
 - **2026-07-24** — Added `text-decode-scramble` (§4.10): the language-switch "decode" on blog headings, reworked so the blur travels per-character with the resolve front (was a single uniform whole-element blur). First Tier-3, JS-driven catalog entry. Two new modern-layer tokens, `--motion-decode-duration` (1150ms) + `--motion-decode-blur` (2.5px), added via `tools/figma-sync/foundations-modern.json` → `primitive-motion.scss` and consumed by the `[siteHyperText]` directive by reading the token values into JS — the first pattern to do so.
 - **2026-07-21 (later still)** — toggle-v2 joined the press-feedback family with two variations: the thumb slide moved to `--motion-easing-spring` (overshoot "thunk" into the track wall), and press-down flattens the thumb height-only (`scaleY(0.8)`, width holds — Fluid Functionalism switch recipe) composed with the slide via a `--_travel` var. If a third primitive wants the height-only squish, promote it to a named §4 pattern.
 - **2026-07-21 (later)** — `press-squish` retuned to the Animate UI checkbox recipe: press dips to `0.95` (was `0.9`) with an optional `1.05` hover-grow companion; checkbox-v2 also gained the delayed check draw (fill lands first, check draws one `--motion-duration-base` beat later, opacity fade riding along) and a `--motion-duration-slower` (500ms) colour fade (see §4.9 `control-fill-fade`). Source: animate-ui.com base checkbox (whileHover 1.05 / whileTap 0.95 / pathLength draw at .2s + .2s delay).

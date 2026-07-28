@@ -250,10 +250,11 @@
 // ─── Proceso: the design process as a vertical stepper ──────────────────────
 // The case study's real arc — contexto → moodboards → principios → tokens →
 // componentes — with "Gráficas" left dashed because it is still ahead. One
-// shared 10s timeline keeps every stage phase-locked: the spine draws
-// top→bottom while each stage lands in sequence, everything holds, then fades
-// for the loop reset. Opacity / transform / dashoffset only. The svg carries
-// data-foundation="modern" so the labels resolve to IBM Plex.
+// shared timeline on --motion-duration-ambient-loop keeps every stage
+// phase-locked: the spine draws top→bottom while each stage lands in sequence,
+// everything holds, then fades for the loop reset. Opacity / transform /
+// dashoffset only. The svg carries data-foundation="modern" so the labels and
+// motion tokens resolve to v2.
 .thumb-proc {
   position: absolute;
   inset: 0;
@@ -266,7 +267,7 @@
     stroke-width: 1.25;
     stroke-linecap: round;
     stroke-dasharray: 1;
-    animation: thumb-proc-spine 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
+    animation: thumb-proc-spine var(--motion-duration-ambient-loop) var(--motion-easing-ambient) infinite both;
   }
 
   // Black fill (opaque, NOT an alpha white) so the spine running behind the
@@ -306,9 +307,10 @@
     fill: var(--color-white-a40);
   }
 
-  // ── Shared timeline: one 10s loop, a different window per stage ──────────
+  // ── Shared ambient loop: one pass, a different window per stage ───────────
+  // Pattern: `ambient-loop` (docs/rules/motion-skill.md §4.11).
   &__stage {
-    animation: 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
+    animation: var(--motion-duration-ambient-loop) var(--motion-easing-ambient) infinite both;
   }
 
   &__stage--1 { animation-name: thumb-proc-s1; }

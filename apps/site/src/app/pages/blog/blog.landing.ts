@@ -9,7 +9,7 @@ type Thumb = 'whitelabel' | 'ia' | 'video';
 
 /**
  * Which landing surface a post belongs to. `methodology` = the redesign-series
- * narrative (Modern UI → Brand & personas → Information architecture), shown on
+ * narrative (Modern UI → Brand strategy → Visual identity), shown on
  * /metodologia. `blog` = everything else, shown on /blog. A single POSTS list
  * feeds both landings; the route's `data.collection` selects the subset.
  */
@@ -45,7 +45,7 @@ interface BlogPost {
 // their demo case studies — they aren't standalone editorial pieces.
 const POSTS: BlogPost[] = [
   {
-    slug: 'arquitectura-informacion',
+    slug: 'identidad-visual',
     collection: 'methodology',
     darkThumb: true,
     eyebrow: {

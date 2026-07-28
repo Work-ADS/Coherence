@@ -57,7 +57,7 @@ export class HomePage {
   // the redesign series: Modern UI (research) + the visual-identity build log (process).
   private readonly cards: WorkCard[] = [
     {
-      routerLink: '/blog/arquitectura-informacion',
+      routerLink: '/blog/identidad-visual',
       eyebrow: {
         es: 'PROCESO · IDENTIDAD VISUAL',
         en: 'PROCESS · VISUAL IDENTITY',

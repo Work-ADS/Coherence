@@ -12,5 +12,10 @@ dist/
 !apps/site/public/assets/thumbnails/**/*.jpg
 !apps/site/public/assets/thumbnails/**/*.jpeg
 
+# Blog images (moodboard gallery, diagrams) ship with the build too.
+!apps/site/public/assets/blog/**/*.png
+!apps/site/public/assets/blog/**/*.jpg
+!apps/site/public/assets/blog/**/*.jpeg
+
 # Local scratch for screenshots / working files
 scratch/

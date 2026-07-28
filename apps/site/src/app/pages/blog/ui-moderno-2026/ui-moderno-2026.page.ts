@@ -8,7 +8,7 @@ import { LanguageService } from '../../../services/language.service';
 /**
  * Part 1 of the redesign series — the research behind Afi's visual redesign.
  * Rebuilt on the shared `.post` article shell (see brand-and-personas and
- * arquitectura-informacion) so all three parts read as one series. Copy is the
+ * identidad-visual) so all three parts read as one series. Copy is the
  * edited bilingual draft (docs/blog-drafts/{ui-moderno-2026,modern-ui-2026.en}.md);
  * the six diagrams live under public/assets/blog/{ui-moderno-2026,modern-ui-2026}.
  *

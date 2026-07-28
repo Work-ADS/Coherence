@@ -4259,6 +4259,13 @@
           }
         },
         {
+          "name": "duration/ambient-loop",
+          "type": "number",
+          "values": {
+            "Modern": 10000
+          }
+        },
+        {
           "name": "easing/standard",
           "type": "text",
           "values": {
@@ -4284,6 +4291,13 @@
           "type": "text",
           "values": {
             "Modern": "cubic-bezier(0.34, 2, 0.64, 1)"
+          }
+        },
+        {
+          "name": "easing/ambient",
+          "type": "text",
+          "values": {
+            "Modern": "cubic-bezier(0.2, 0.8, 0.2, 1)"
           }
         },
         {

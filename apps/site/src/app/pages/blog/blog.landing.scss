@@ -287,12 +287,12 @@
 
 // ─── IA: animated sitemap of the Wealth Planner architecture ────────────────
 // Reference: the IA flowchart style — outlined pills with an icon dot, soft
-// elbow connectors, columns building left → right. One shared 10s timeline:
-// root appears → connectors draw → the four phases → Situación's sections →
-// a highlight beat traces the advisor's path (Planificación → Situación →
-// Patrimonio) → everything fades for the loop reset. Opacity / transform /
-// dashoffset / stroke only. The svg carries data-foundation="modern" so the
-// labels resolve to IBM Plex.
+// elbow connectors, columns building left → right. One shared timeline on
+// --motion-duration-ambient-loop: root appears → connectors draw → the four
+// phases → Situación's sections → a highlight beat traces the advisor's path
+// (Planificación → Situación → Patrimonio) → everything fades for the loop
+// reset. Opacity / transform / dashoffset / stroke only. The svg carries
+// data-foundation="modern" so the labels and motion tokens resolve to v2.
 .thumb-ia {
   position: absolute;
   inset: 0;
@@ -331,9 +331,10 @@
     stroke-dashoffset: 0;
   }
 
-  // ── Shared timeline: every stage runs the same 10s loop ──────────────────
+  // ── Shared timeline: every stage runs the same ambient loop ──────────────
+  // Pattern: `ambient-loop` (docs/rules/motion-skill.md §4.11).
   &__stage {
-    animation: 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
+    animation: var(--motion-duration-ambient-loop) var(--motion-easing-ambient) infinite both;
   }
 
   &__stage--root { animation-name: thumb-ia-root; }
@@ -343,21 +344,21 @@
   &__stage--sections { animation-name: thumb-ia-sections; }
 
   &__stage--links1 .thumb-ia__link {
-    animation: thumb-ia-draw1 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
+    animation: thumb-ia-draw1 var(--motion-duration-ambient-loop) var(--motion-easing-ambient) infinite both;
   }
 
   &__stage--links2 .thumb-ia__link {
-    animation: thumb-ia-draw2 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
+    animation: thumb-ia-draw2 var(--motion-duration-ambient-loop) var(--motion-easing-ambient) infinite both;
   }
 
   // Highlight beat — the advisor's path brightens mid-loop.
   &__pill--hl,
   &__link--hl {
-    animation: thumb-ia-hl-stroke 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
+    animation: thumb-ia-hl-stroke var(--motion-duration-ambient-loop) var(--motion-easing-ambient) infinite both;
   }
 
   &__label--hl {
-    animation: thumb-ia-hl-fill 10s cubic-bezier(0.2, 0.8, 0.2, 1) infinite both;
+    animation: thumb-ia-hl-fill var(--motion-duration-ambient-loop) var(--motion-easing-ambient) infinite both;
   }
 }
 

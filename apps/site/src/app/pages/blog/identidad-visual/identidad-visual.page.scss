@@ -166,7 +166,9 @@
   }
 
   // ─── Live component demos (sections 6 and 8): the article embeds the real
-  //     v2 primitives instead of screenshots — the system demonstrating itself. ───
+  //     v2 primitives instead of screenshots — the system demonstrating itself.
+  //     Flatter than afi-card-v2 by choice — no elevation, radius-md, canvas
+  //     background — so it reads as an editorial figure, not a product card. ───
   &__demo {
     margin: var(--space-sm) 0 0;
     padding: var(--space-lg);
@@ -197,6 +199,97 @@
     font-weight: var(--type-body-small-weight);
     line-height: var(--type-body-small-line-height);
     font-style: italic;
+  }
+}
+
+// ─── Handoff-eras timeline (section 1) — inline SVG rather than an <img>, so
+//     it inherits the page's type (IBM Plex Sans) and resolves v2 colour tokens
+//     instead of baking a second visual language into an asset. Monochrome by
+//     rule: the only emphasis is the current era (filled dot, stronger tile,
+//     solid NOW pill). ───
+.timeline {
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: thin solid var(--borders-default);
+  background: var(--background-canvas);
+}
+
+.timeline-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-family-primary);
+
+  &__eyebrow {
+    fill: var(--content-tertiary);
+    font-size: 0.6875rem;
+    font-weight: var(--type-label-weight);
+    letter-spacing: 0.0625rem;
+  }
+
+  &__title {
+    fill: var(--content-primary);
+    font-size: 1.0625rem;
+    font-weight: var(--type-h3-weight);
+  }
+
+  &__track {
+    stroke: var(--borders-default);
+    stroke-width: 1;
+  }
+
+  &__tile {
+    fill: var(--background-canvas);
+    stroke: var(--borders-default);
+    stroke-width: 1;
+  }
+
+  &__tile--now {
+    stroke: var(--borders-strong);
+  }
+
+  &__glyph {
+    color: var(--content-tertiary);
+  }
+
+  &__glyph--now {
+    color: var(--content-primary);
+  }
+
+  &__dot {
+    fill: var(--background-canvas);
+    stroke: var(--borders-default);
+    stroke-width: 1.5;
+  }
+
+  &__dot--now {
+    fill: var(--content-primary);
+    stroke: var(--content-primary);
+  }
+
+  &__label {
+    fill: var(--content-secondary);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+  }
+
+  &__label--now {
+    fill: var(--content-primary);
+  }
+
+  &__meta {
+    fill: var(--content-tertiary);
+    font-size: 0.6875rem;
+  }
+
+  &__pill {
+    fill: var(--content-primary);
+  }
+
+  &__pill-text {
+    fill: var(--background-canvas);
+    font-size: 0.6875rem;
+    font-weight: var(--type-label-weight);
   }
 }
 
@@ -234,34 +327,48 @@
   font-display: swap;
 }
 
+// 2×2 grid of cards, one per typeface. Each card sets the same three digit
+// patterns; a guide line dropped from the first row's right edge is what makes
+// the drift legible — the other rows either fall short of it or push past it.
 .type-test {
   margin: var(--space-sm) 0 0;
-  padding: var(--space-lg);
-  border-radius: var(--radius-md);
-  border: thin solid var(--borders-default);
-  background: var(--background-canvas);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
 
-  &__row {
+  @media (max-width: 40rem) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &__card {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    border: thin solid var(--borders-default);
+    background: var(--background-canvas);
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-md);
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  // Winner reads as the resolved choice, not just another sample.
+  &__card--holds {
+    border-color: var(--borders-strong);
+  }
+
+  &__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-sm);
   }
 
   &__name {
-    flex: 0 0 auto;
-    min-width: var(--space-3xl);
-    color: var(--content-secondary);
+    color: var(--content-primary);
     font-size: var(--type-body-small-size);
     font-weight: var(--type-label-weight);
     line-height: var(--type-body-small-line-height);
   }
 
-  // The digits sit in a tinted box that hugs the text, so each line's rendered
-  // width is the box width — unequal boxes are the defect, made visible.
   &__stack {
     display: flex;
     flex-direction: column;
@@ -269,41 +376,51 @@
     gap: var(--space-3xs);
   }
 
+  // Each row hugs its own rendered width, so the box IS the measurement.
   &__digits {
-    padding: 0 var(--space-2xs);
+    position: relative;
+    padding: var(--space-3xs) var(--space-2xs);
     border-radius: var(--radius-xs);
+    border: thin solid var(--borders-default);
     background: var(--tag-background-default);
     color: var(--content-primary);
     font-size: var(--type-h3-size);
-    line-height: 1.5;
+    // Stays a unitless multiplier: the guide-line height below is an em calc()
+    // built on this value, so it has to scale with the font size.
+    line-height: 1.4;
   }
 
-  &__row--space-grotesk .type-test__digits {
+  // The reference edge: a line at the end of "0000", carried down past the
+  // rows below it. Height covers three rows plus the two gaps between them.
+  // z-index lifts it above the later rows — they are positioned siblings and
+  // would otherwise paint over it, which reads as the line being misaligned
+  // exactly where the widths match (the winning face).
+  &__digits:first-child::after {
+    content: '';
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    z-index: 1;
+    width: var(--border-width-hairline);
+    height: calc((1.4em + var(--space-3xs) * 2) * 3 + var(--space-3xs) * 2);
+    background: var(--content-primary);
+    pointer-events: none;
+  }
+
+  &__card--space-grotesk .type-test__digits {
     font-family: 'TypeTest Space Grotesk', sans-serif;
   }
 
-  &__row--fira .type-test__digits {
+  &__card--fira .type-test__digits {
     font-family: 'TypeTest Fira Sans', sans-serif;
   }
 
-  &__row--geist .type-test__digits {
+  &__card--geist .type-test__digits {
     font-family: 'TypeTest Geist', sans-serif;
   }
 
-  &__row--plex .type-test__digits {
+  &__card--plex .type-test__digits {
     font-family: 'TypeTest IBM Plex Sans', sans-serif;
-  }
-
-  &__verdict {
-    flex: 0 0 auto;
-    font-size: var(--type-body-small-size);
-    font-weight: var(--type-label-weight);
-    line-height: var(--type-body-small-line-height);
-    color: var(--content-tertiary);
-  }
-
-  &__verdict--holds {
-    color: var(--content-primary);
   }
 }
 
@@ -339,6 +456,8 @@
     display: inline-flex;
     align-items: baseline;
     gap: var(--space-2xs);
+    // Spacing token reused as a min-width on purpose: it reserves the widest
+    // counter so the row doesn't shift as the index changes.
     min-width: var(--space-3xl);
     justify-content: center;
     text-align: center;
@@ -371,7 +490,7 @@
     font-weight: var(--type-body-default-weight);
     line-height: var(--type-body-default-line-height);
     padding-left: var(--space-md);
-    border-left: 0.125rem solid var(--borders-default);
+    border-left: var(--border-width-thick) solid var(--borders-default);
   }
 
   // Numbered variant (section 4's principles + anti-patterns) — CSS counter

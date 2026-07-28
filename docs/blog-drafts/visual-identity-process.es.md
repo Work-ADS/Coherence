@@ -93,8 +93,8 @@ Después de la sesión de moodboards cogimos los patrones que elegíamos una y o
 3. **Minimalismo funcional.** Si un elemento no cumple una función, se va. La confianza nace de la ausencia de decoración y de destacar lo que de verdad importa.
 4. **Revelado progresivo.** Mostrar primero lo esencial y revelar el detalle cuando el usuario lo pide. Todo lo demás queda a un clic, no en la primera pantalla.
 5. **Consistencia por encima de novedad.** El usuario aprende un patrón una vez y lo reconoce en todas partes, así dedica menos esfuerzo a entender tareas nuevas.
-6. **El movimiento explica estados, nunca decora.** La animación muestra que algo ha cambiado o dirige la atención. Todo lo demás se elimina.
-7. **El color solo comunica significado.** Las superficies se mantienen neutras y el color siempre significa algo, así el usuario aprende a leerlo sin pensar. En las gráficas eso implica una serie destacada sobre gris, con el verde y el rojo reservados para subidas y bajadas.
+6. **El movimiento explica estados.** La animación muestra que algo ha cambiado o dirige la atención. Todo lo demás se elimina.
+7. **El color comunica significado.** Las superficies se mantienen neutras y el color siempre significa algo, así el usuario aprende a leerlo sin pensar. En las gráficas eso implica una serie destacada sobre gris, con el rojo y el verde para lo negativo y lo positivo.
 8. **Construir el sistema y el flujo, no pantallas.** Cada pantalla se monta con bloques reutilizables. Diseñar pantalla a pantalla es exactamente como se acaba en productos estáticos y aburridos.
 9. **Contexto por encima de páginas.** Mantener al usuario donde está: drawers, edición en línea y tarjetas expandibles en lugar de mandarlo a otra página.
 
@@ -109,7 +109,9 @@ Los principios existen para que una revisión pueda discutir contra un principio
 
 ## 5. Fundamentos en blanco y negro
 
-Montamos nuestros tokens primitivos y semánticos en blanco y negro. Un token es un rol, como «fondo lienzo» o «fondo elevado», que hace el mismo trabajo allá donde aparece. Definir ese vocabulario antes que la paleta hace que elegir colores después sea un cambio rápido: se actualiza el primitivo y todas las pantallas cambian con él. Igual con decisiones de espaciado como la distancia de la navegación al contenido: se fija una base ahora, se ajusta cuando la marca madure y se propaga a todas partes.
+Montamos nuestros tokens primitivos y semánticos en blanco y negro.
+
+Un token es un rol, como «fondo lienzo» o «fondo elevado». Definir ese vocabulario antes que la paleta hace que elegir colores después sea un cambio rápido. Se actualiza el primitivo y todas las pantallas cambian con él. Igual con decisiones de espaciado como la distancia de la navegación al contenido o el padding del lienzo.
 
 En tipografía probamos Space Grotesk, Fira Sans y Geist, y ninguna superó la prueba de ancho entre patrones de cifras (0000 frente a 4444). IBM Plex Sans se mantuvo consistente, así que se convirtió en la familia tipográfica de la identidad moderna.
 
@@ -137,12 +139,12 @@ Este flujo nos ahorró mucho tiempo. Todo está conectado a las variables base y
 
 ## 7. Microinteracciones
 
-Con los componentes primitivos terminados, el movimiento pasó a ser la siguiente capa. El principio ya estaba fijado: el movimiento explica estados, nunca decora. Eso no significaba que no pudiéramos ser creativos.
+Con los componentes primitivos terminados, el movimiento pasó a ser la siguiente capa. El principio ya estaba fijado: el movimiento explica estados. Eso no significaba que no pudiéramos ser creativos.
 
 No inventamos la mayoría de las animaciones. Recreamos, aplicando ingeniería inversa, las que nos inspiraban, o cogimos una librería de animación de React, portamos el código a Angular e iteramos desde ahí. Algunas librerías que usamos:
 1. Magic UI
 2. Animate UI
-3. shadcn
+3. Shadcn
 
 ## 8. La estructura
 
@@ -162,14 +164,14 @@ Lo que nos quedamos:
 
 1. **Un dashboard bento** como dirección de layout. Huecos ajustados, cajas de esquinas suaves, etiquetas sobre las cifras grandes.
 2. **Google Finance** para el comportamiento de las gráficas. Extremadamente simple, lo mínimo en pantalla y aun así suficiente. El control de comparación va sobre la gráfica y el tooltip actualiza una fila de valores en lugar de flotar sobre la línea, lo que resuelve un problema que tenemos hoy: mostramos tantos datos al pasar el cursor que el tooltip tapa justo lo que se quiere leer.
-3. **La línea sombreada de shadcn** como única variación sobre esa base, para tener dos opciones que comparar en lugar de una que defender.
+3. **La línea sombreada de Shadcn** como única variación sobre esa base, para tener dos opciones que comparar en lugar de una que defender.
 4. **Shopify** otra vez, por disciplina. Cajas dentro de cajas dentro de cajas, y un estilo de gráfica tan sencillo que resulta accesible por defecto.
 
 Las decisiones que salieron de ahí:
 
 - **Un sistema de layout, varios layouts.** Las páginas pueden verse distintas siempre que se monten con los mismos módulos y contenedores. Una plantilla quita partes; no inventa estructura nueva. Como lo dijo Miguel: «no parecen dos productos distintos».
 - **Las secciones se apoyan sobre un fondo gris**, cada una con un borde de un píxel y su padding. Ese borde hace más por la textura que cualquier decoración.
-- **Las gráficas parten de la forma más básica y accesible y crecen desde ahí.** Mi instinto era elegir tres estilos visuales del moodboard. Miguel defendió empezar conservador y añadir solo lo que se gane su sitio, y tenía razón. Así que la gráfica de Google Finance es la base, la línea de shadcn es la primera incorporación que se ganó su sitio, y cualquier cosa más allá de esas dos tiene que justificarse.
+- **Las gráficas parten de la forma más básica y accesible y crecen desde ahí.** Mi instinto era elegir tres estilos visuales del moodboard. Miguel defendió empezar conservador y añadir solo lo que se gane su sitio, y tenía razón. Así que la gráfica de Google Finance es la base, la línea de Shadcn es la primera incorporación que se ganó su sitio, y cualquier cosa más allá de esas dos tiene que justificarse.
 - **El color deja de codificar categorías.** Las series van en gris con un color destacado, y el verde y el rojo quedan reservados para subidas y bajadas. La frase de Miguel: «deberíamos usar cosas completamente distintas del color para diferenciar».
 - **Jerarquía por página:** la conclusión grande arriba, una fila de cifras pequeñas debajo y la tabla detallada al final.
 - **Las tarjetas de conclusión se expanden a pantalla completa.** Los filtros y la interacción pesada viven en la vista expandida, no en la tarjeta.

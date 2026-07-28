@@ -12,7 +12,7 @@
 
 ## 1. Context and objectives
 
-> **Visual:** a four-stage timeline of the handoff eras — PNGs → Figma screens → Material components → our own system in code — drawn in the same diagram style as Part 1's maturity stages, so the series reads as one. Each stage gets a tiny artifact icon (an image file, a Figma frame, a Material card, a code component).
+> **Visual (built):** a four-stage timeline of the handoff eras — PNGs → Figma screens → Material components → our own system in code — built in markup on the v2 tokens, so it uses IBM Plex Sans and the monochrome palette. Only the current era carries weight (filled dot, NOW pill); no accent colour.
 
 ### Design at Afi is young
 
@@ -103,8 +103,8 @@ After the moodboard session we took the patterns we kept choosing, connected the
 3. **Functional minimalism.** If an element doesn't do a job, it goes. Trust comes from the absence of decoration and highlighting what's actually important.
 4. **Progressive disclosure.** Show the essentials first and reveal detail when the user asks for it. Everything else is one click away, not on the first screen.
 5. **Consistency above novelty.** A user learns a pattern once and recognizes it everywhere, so they spend less effort figuring out new tasks.
-6. **Motion explains state, never decorates.** Animation shows that something changed or directs attention. Anything else gets cut.
-7. **Color communicates meaning only.** Surfaces stay neutral and color always means something, so users learn to read it without thinking. In charts that means one highlighted series against gray, with green and red reserved for up and down.
+6. **Motion explains state.** Animation shows that something changed or directs attention. Anything else gets cut.
+7. **Color communicates meaning.** Surfaces stay neutral and color always means something, so users learn to read it without thinking. In charts that means one highlighted series against gray, with red and green for negative and positive.
 8. **Build the system and flow, not screens.** Every screen assembles from reusable blocks. Designing screen by screen is exactly how we end up with static, boring products.
 9. **Context over pages.** Keep the user where they are: drawers, inline editing, and expandable cards instead of sending them to a new page.
 
@@ -119,9 +119,11 @@ The principles exist so a review can argue against a principle instead of a pref
 
 ## 5. Foundations in black and white
 
-> **Visual (built):** the type test, shown, not told — "0000 vs 4444" in the three candidates that failed (Space Grotesk, Fira Sans, Geist) against IBM Plex Sans, which held. The most self-evident image in the post.
+> **Visual (built):** the type test, shown, not told — 0000 / 4444 / 5555 set in the real faces, as a 2×2 of cards. A guide line dropped from the first row's right edge is what makes the drift legible; verdict chips use the system's error/success pair. Not an image: live text, so the fonts do the arguing.
 
-We set up our primitive and semantic tokens in black and white. A token is a role, like "background canvas" or "background elevated," that does the same job everywhere it appears. Defining that vocabulary before the palette means that choosing colors later is a quick change: update the primitive, and every screen changes with it. Same for spacing decisions like nav-to-content. Set a base now, adjust as the brand matures, and it propagates everywhere.
+We set up our primitive and semantic tokens in black and white.
+
+A token is a role, like "background canvas" or "background elevated." Defining that vocabulary before the palette means that choosing colors later is a quick change. Update the primitive, and every screen changes with it. Same for spacing decisions like nav-to-content or canvas padding.
 
 For typography we tested Space Grotesk, Fira Sans, and Geist, and none of them passed the width test across number patterns (0000 vs 4444). IBM Plex Sans held consistent, so it became the type family for the modern identity.
 
@@ -155,12 +157,12 @@ This workflow saved us a lot of time. Everything is connected to base variables 
 
 > **Visual (built):** live components embedded in the article — checkbox (draw animation), radio group (fill), toggle (flip), and the send → sending → sent button. A static image here would contradict the section's own argument.
 
-With the primitive components done, motion became the next layer. The principle was already locked: motion explains state, never decorates. That didn't mean we couldn't get creative.
+With the primitive components done, motion became the next layer. The principle was already locked: motion explains state. That didn't mean we couldn't get creative.
 
 We didn't invent most of the animations. We reverse-engineered the ones that inspired us, or took a React animation library, ported the code to Angular, and iterated from there. Some libraries we used: 
 1. Magic UI
 2. Animate UI
-3. shadcn
+3. Shadcn
 
 ## 8. The structure
 
@@ -186,14 +188,14 @@ What we kept:
 
 1. **A bento dashboard** as the layout direction. Tight gaps, soft-rounded boxes, tags on the big numbers.
 2. **Google Finance** for chart behavior. Extremely simple, the bare minimum on screen, and still enough. The compare control sits on top of the chart, and the tooltip updates a row of values instead of floating over the line, which solves a problem we have today: we show so much data on hover that the tooltip covers what you're trying to read.
-3. **shadcn's shaded line** as the one variation on that baseline, so we have two to compare rather than one to defend.
+3. **Shadcn's shaded line** as the one variation on that baseline, so we have two to compare rather than one to defend.
 4. **Shopify** again, for discipline. Boxes inside boxes inside boxes, and a chart style so plain it's accessible by default.
 
 The decisions that came out of it:
 
 - **One layout system, several layouts.** Pages can look different as long as they're assembled from the same modules and containers. A template removes parts; it doesn't invent new structure. As Miguel put it: "it doesn't feel like two different products."
 - **Sections sit on a gray ground**, each with a one-pixel border and padding. That single border does more for texture than any decoration would.
-- **Charts start at the most basic accessible form and grow from there.** My instinct was to pick three visual styles off the moodboard. Miguel argued for starting conservative and adding only what earns its place, and he was right. So Google Finance's chart is the baseline, shadcn's line is the first addition that earned its place, and anything beyond those two has to justify itself.
+- **Charts start at the most basic accessible form and grow from there.** My instinct was to pick three visual styles off the moodboard. Miguel argued for starting conservative and adding only what earns its place, and he was right. So Google Finance's chart is the baseline, Shadcn's line is the first addition that earned its place, and anything beyond those two has to justify itself.
 - **Color stops encoding categories.** Series go gray with one highlighted color, and green and red stay reserved for up and down. Miguel's line: "we should just use completely different things that are not colored to differentiate stuff."
 - **Hierarchy per page:** the big insight on top, a row of small stats under it, the detailed table below.
 - **Insight cards expand to full screen.** Filters and heavy interaction live in the expanded view, not on the card.

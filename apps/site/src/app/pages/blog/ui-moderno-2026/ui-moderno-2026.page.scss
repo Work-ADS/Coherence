@@ -212,7 +212,7 @@
     font-weight: var(--type-body-default-weight);
     line-height: var(--type-body-default-line-height);
     padding-left: var(--space-md);
-    border-left: 0.125rem solid var(--borders-default);
+    border-left: var(--border-width-thick) solid var(--borders-default);
   }
 
   // Nested ordered list (Norman's three levels inside the checklist).

@@ -189,6 +189,8 @@ export class ColorPage {
         { token: '--surface-subtle', role: 'Panel secundario.' },
         { token: '--surface-raised', role: 'Modal, popover (+ sombra).' },
         { token: '--surface-selected', role: 'Fila activa.' },
+        { token: '--surface-inverse-default', role: 'Campo oscuro: chrome, ilustración.' },
+        { token: '--surface-inverse-raised', role: 'Campo oscuro, un paso elevado.' },
       ],
     },
     {

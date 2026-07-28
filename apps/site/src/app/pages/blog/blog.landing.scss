@@ -151,7 +151,7 @@
   &--proceso {
     // Black & white — neutral near-black, no blue, so the stepper reads as
     // documentation rather than branding.
-    background: linear-gradient(135deg, var(--color-thumb-dark-deep) 0%, var(--color-thumb-dark-medium) 100%);
+    background: linear-gradient(135deg, var(--surface-inverse-default) 0%, var(--surface-inverse-raised) 100%);
   }
 
   &--video {
@@ -270,13 +270,15 @@
     animation: thumb-proc-spine var(--motion-duration-ambient-loop) var(--motion-easing-ambient) infinite both;
   }
 
-  // Black fill (opaque, NOT an alpha white) so the spine running behind the
-  // node is hidden rather than showing through it; the gray border carries the
-  // node. The pending stage keeps the same fill and goes dashed.
+  // Opaque field-colored fill (NOT an alpha white) so the spine running behind
+  // the node is knocked out rather than showing through it; the gray border
+  // carries the node. --surface-inverse-default is the deep end of this thumb's
+  // own gradient, so the node reads as a hole punched in the dark field.
+  // The pending stage keeps the same fill and goes dashed.
   &__node {
     stroke: var(--color-white-a55);
     stroke-width: 1.25;
-    fill: var(--color-base-black);
+    fill: var(--surface-inverse-default);
   }
 
   &__node--next {

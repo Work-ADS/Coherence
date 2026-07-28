@@ -25,6 +25,11 @@ import { LanguageService } from '../services/language.service';
  * mounting-after-a-switch is exactly "the user flipped ES/EN" — the effect
  * never fires as a page-load entrance.
  *
+ * Layout-stable: each character box is pinned to its final glyph's width for the
+ * duration, so scramble glyphs of a different width can never re-center a line
+ * or change the line count. (Large centered multi-line headings otherwise
+ * re-wrap every frame and read as choppy despite a solid frame rate.)
+ *
  * Structure-preserving: it wraps only text-node characters in transient
  * per-character `<span>`s (element nodes such as `<em>Liquid Glass</em>` are
  * left in place), and unwraps them back to plain text nodes on completion, so
@@ -113,21 +118,60 @@ export class HyperTextDirective {
     // move per-character. Element nodes (<em>) stay put; only text nodes are
     // replaced. `groups` remembers how to restore each original text node so the
     // final DOM has no leftover spans.
+    //
+    // Words get an inline-block, nowrap wrapper. Character boxes are width-locked
+    // below, and width-locked boxes are atomic inlines the browser may break
+    // between — the wrapper keeps line breaks at spaces, never mid-word.
     const cells: { span: HTMLSpanElement; char: string; space: boolean }[] = [];
-    const groups: { parent: Node; spans: HTMLSpanElement[]; text: string }[] = [];
+    const groups: { parent: Node; created: HTMLSpanElement[]; text: string }[] = [];
     for (const { node, text } of textNodes) {
       const parent = node.parentNode;
       if (!parent) continue;
-      const spans: HTMLSpanElement[] = [];
-      for (const char of text) {
-        const span = document.createElement('span');
-        span.textContent = char;
-        parent.insertBefore(span, node);
-        spans.push(span);
-        cells.push({ span, char, space: /\s/.test(char) });
+      const created: HTMLSpanElement[] = [];
+      for (const token of text.match(/\s+|\S+/g) ?? []) {
+        if (/^\s/.test(token)) {
+          // Whitespace: never scrambled, left as a plain inline so it stays a
+          // line-break opportunity.
+          for (const char of token) {
+            const span = document.createElement('span');
+            span.textContent = char;
+            parent.insertBefore(span, node);
+            created.push(span);
+            cells.push({ span, char, space: true });
+          }
+          continue;
+        }
+        const word = document.createElement('span');
+        word.style.display = 'inline-block';
+        word.style.whiteSpace = 'nowrap';
+        for (const char of token) {
+          const span = document.createElement('span');
+          span.textContent = char;
+          word.appendChild(span);
+          cells.push({ span, char, space: false });
+        }
+        parent.insertBefore(word, node);
+        created.push(word);
       }
       parent.removeChild(node);
-      groups.push({ parent, spans, text });
+      groups.push({ parent, created, text });
+    }
+
+    // Freeze the layout: pin every character box to the width of its FINAL
+    // glyph, so swapping in a wider/narrower scramble glyph cannot re-center a
+    // line or change the line count. Without this, a large centered multi-line
+    // heading visibly re-wraps every frame — the animation reads as choppy even
+    // at a solid 60fps. Spans still hold their final characters here, so this
+    // measures the real end-state layout. Reads are batched before writes to
+    // keep it to a single layout pass.
+    const widths = cells.map((cell) =>
+      cell.space ? 0 : cell.span.getBoundingClientRect().width,
+    );
+    for (const [i, cell] of cells.entries()) {
+      if (cell.space) continue;
+      cell.span.style.display = 'inline-block';
+      cell.span.style.width = `${widths[i]}px`;
+      cell.span.style.textAlign = 'center';
     }
 
     let start = 0;
@@ -159,10 +203,11 @@ export class HyperTextDirective {
       if (progress < 1) {
         this.frameId = requestAnimationFrame(step);
       } else {
-        // Restore a clean DOM: swap each span group back to one plain text node.
-        for (const { parent, spans, text } of groups) {
-          parent.insertBefore(document.createTextNode(text), spans[0] ?? null);
-          for (const span of spans) parent.removeChild(span);
+        // Restore a clean DOM: swap each group's transient nodes (word wrappers
+        // and loose whitespace spans) back to one plain text node.
+        for (const { parent, created, text } of groups) {
+          parent.insertBefore(document.createTextNode(text), created[0] ?? null);
+          for (const node of created) parent.removeChild(node);
         }
       }
     };

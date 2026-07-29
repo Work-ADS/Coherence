@@ -164,6 +164,8 @@ We didn't invent most of the animations. We reverse-engineered the ones that ins
 2. Animate UI
 3. Shadcn
 
+> **Work in progress** — From here down, this is the active edge of the project: it will keep changing as we move forward.
+
 ## 8. The structure
 
 > **Visual:** a before/after IA map in Part 1's tree-vs-intent diagram style: the ~15 screens in build order on the left, the merged insight-first structure on the right, with Conclusiones highlighted absorbing Diagnóstico and Plan de acción.

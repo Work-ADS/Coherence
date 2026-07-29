@@ -50,23 +50,49 @@
             ></div>
           }
         </div>
-        <afi-chart-tooltip
-          [title]="tipTitle()"
-          [value]="tipValue()"
-          [secondary]="tipSecondary()"
-        />
+        <!-- Detail legend already surfaces the hovered value — no tooltip on top. -->
+        @if (legendVariant() !== 'detail') {
+          <afi-chart-tooltip
+            [title]="tipTitle()"
+            [value]="tipValue()"
+            [secondary]="tipSecondary()"
+          />
+        }
       </div>
 
       @if (showLegend()) {
-        <ul class="comp__legend">
+        <ul class="comp__legend" [class.comp__legend--detail]="legendVariant() === 'detail'">
           @for (seg of segments(); track seg.datum.key; let i = $index) {
             <li
               class="comp__legend-item"
+              [class.comp__legend-item--detail]="legendVariant() === 'detail'"
               [class.comp__legend-item--dim]="hovered() !== null && hovered() !== i"
+              [class.comp__legend-item--hot]="hovered() === i"
+              (pointerenter)="onSegmentFocus(i)"
+              (pointerleave)="onStripLeave()"
             >
-              <span class="comp__legend-swatch" [style.--_ink]="seg.ink" aria-hidden="true"></span>
-              <span class="comp__legend-label">{{ seg.datum.key }}</span>
-              <span class="comp__legend-pct">{{ formatPct(seg.fraction) }}</span>
+              @if (legendVariant() === 'detail') {
+                <span class="comp__legend-head">
+                  <span
+                    class="comp__legend-swatch"
+                    [style.--_ink]="seg.ink"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="comp__legend-label">{{ seg.datum.key }}</span>
+                </span>
+                <span class="comp__legend-value">{{ formatEurSymbol(seg.datum.value) }}</span>
+                @if (seg.datum.deltaLabel) {
+                  <span class="comp__legend-delta">{{ seg.datum.deltaLabel }}</span>
+                }
+              } @else {
+                <span
+                  class="comp__legend-swatch"
+                  [style.--_ink]="seg.ink"
+                  aria-hidden="true"
+                ></span>
+                <span class="comp__legend-label">{{ seg.datum.key }}</span>
+                <span class="comp__legend-pct">{{ formatPct(seg.fraction) }}</span>
+              }
             </li>
           }
         </ul>
@@ -76,21 +102,67 @@
     }
 
     <div class="comp__table">
-      <button
-        type="button"
-        class="comp__table-toggle"
-        [attr.aria-expanded]="tableOpen()"
-        (click)="onTableToggle()"
-      >
-        {{ tableOpen() ? 'Ocultar tabla de datos' : 'Ver datos en tabla' }}
-      </button>
-      @if (tableOpen()) {
-        <afi-table-v2
-          [columns]="tableColumns()"
-          [rows]="tableRows()"
-          trackByKey="key"
-          [rowHoverable]="false"
-        />
+      @if (dataTableDisplay() === 'peek') {
+        @if (!tableOpen()) {
+          <!--
+            Peek register: the table's first rows are real content, veiled by a
+            progressive blur; the pill expands to the full table. Screen readers
+            get the whole table either way — the veil is purely visual.
+          -->
+          <div class="comp__peek">
+            <afi-table-v2
+              [columns]="tableColumns()"
+              [rows]="tableRows()"
+              trackByKey="key"
+              [rowHoverable]="false"
+            />
+            <div class="comp__peek-veil" aria-hidden="true"></div>
+            <button
+              type="button"
+              class="comp__peek-nudge"
+              [attr.aria-expanded]="false"
+              (click)="onTableToggle()"
+            >
+              Ver tabla completa
+            </button>
+          </div>
+        } @else {
+          <afi-table-v2
+            [columns]="tableColumns()"
+            [rows]="tableRows()"
+            trackByKey="key"
+            [rowHoverable]="false"
+          />
+          <!--
+            Same pill, apron position — static flow, bottom-center under the
+            table — so the control the user just clicked doesn't jump.
+          -->
+          <button
+            type="button"
+            class="comp__peek-nudge comp__peek-nudge--apron"
+            [attr.aria-expanded]="true"
+            (click)="onTableToggle()"
+          >
+            Ocultar tabla
+          </button>
+        }
+      } @else {
+        <button
+          type="button"
+          class="comp__table-toggle"
+          [attr.aria-expanded]="tableOpen()"
+          (click)="onTableToggle()"
+        >
+          {{ tableOpen() ? 'Ocultar tabla de datos' : 'Ver datos en tabla' }}
+        </button>
+        @if (tableOpen()) {
+          <afi-table-v2
+            [columns]="tableColumns()"
+            [rows]="tableRows()"
+            trackByKey="key"
+            [rowHoverable]="false"
+          />
+        }
       }
     </div>
 

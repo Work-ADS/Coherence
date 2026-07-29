@@ -16,6 +16,15 @@ const currencyFmt = new Intl.NumberFormat('es-ES', {
   maximumFractionDigits: 2,
 });
 
+// Symbol register for headline/legend figures: "730.000 €" rather than the
+// code register's "730.000,00 EUR". Whole euros — decimals are axis/tooltip
+// territory, not display-figure territory.
+const currencySymbolFmt = new Intl.NumberFormat('es-ES', {
+  style: 'currency',
+  currency: 'EUR',
+  maximumFractionDigits: 0,
+});
+
 const percentFmt = new Intl.NumberFormat('es-ES', {
   style: 'percent',
   maximumFractionDigits: 2,
@@ -59,13 +68,27 @@ export function formatNumberFull(value: number, locale = 'es-ES'): string {
   return localeFmt(value, locale);
 }
 
-/** Format as currency (EUR). */
-export function formatCurrency(value: number, locale = 'es-ES'): string {
-  if (locale === 'es-ES') return currencyFmt.format(value);
+/**
+ * Format as currency (EUR).
+ *
+ * `display` picks the register: `'code'` (default — "730.000,00 EUR", axes,
+ * tooltips, data tables) or `'symbol'` ("730.000 €", whole euros — headline
+ * figures and value-bearing legends).
+ */
+export function formatCurrency(
+  value: number,
+  locale = 'es-ES',
+  display: 'code' | 'symbol' = 'code',
+): string {
+  if (locale === 'es-ES') {
+    return display === 'symbol' ? currencySymbolFmt.format(value) : currencyFmt.format(value);
+  }
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: 'EUR',
-    currencyDisplay: 'code',
+    ...(display === 'symbol'
+      ? { maximumFractionDigits: 0 }
+      : { currencyDisplay: 'code' as const }),
   }).format(value);
 }
 

@@ -7,6 +7,11 @@ export const demos_routes: Routes = [
   },
   // Identity v2 workbench moved to top-level /workbench (nav destination);
   // the old /demos/foundations-modern/workbench URL redirects in app.routes.ts.
+  // Demo 1 — dashboard bento, first pass. Standalone: no nav, no shell.
+  {
+    path: 'demo-1',
+    loadComponent: () => import('./demo-1/demo-1.page').then((m) => m.Demo1Page),
+  },
   // Nueva simulación · Overview — goal-driven client dashboard (concept surface)
   {
     path: 'nueva-simulacion-overview',

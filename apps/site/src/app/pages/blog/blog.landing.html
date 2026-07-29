@@ -48,42 +48,38 @@
                 <!-- Spine: draws as the stages land -->
                 <path class="thumb-proc__spine" d="M14 22 L14 197" pathLength="1" />
 
-                <g class="thumb-proc__stage thumb-proc__stage--1">
-                  <circle class="thumb-proc__node" cx="14" cy="22" r="4.5" />
-                  <rect class="thumb-proc__pill" x="30" y="11.5" width="176" height="21" rx="10.5" />
-                  <text class="thumb-proc__label" x="42" y="25.5">Contexto</text>
-                </g>
-
-                <g class="thumb-proc__stage thumb-proc__stage--2">
-                  <circle class="thumb-proc__node" cx="14" cy="57" r="4.5" />
-                  <rect class="thumb-proc__pill" x="30" y="46.5" width="176" height="21" rx="10.5" />
-                  <text class="thumb-proc__label" x="42" y="60.5">Moodboards</text>
-                </g>
-
-                <g class="thumb-proc__stage thumb-proc__stage--3">
-                  <circle class="thumb-proc__node" cx="14" cy="92" r="4.5" />
-                  <rect class="thumb-proc__pill" x="30" y="81.5" width="176" height="21" rx="10.5" />
-                  <text class="thumb-proc__label" x="42" y="95.5">Principios</text>
-                </g>
-
-                <g class="thumb-proc__stage thumb-proc__stage--4">
-                  <circle class="thumb-proc__node" cx="14" cy="127" r="4.5" />
-                  <rect class="thumb-proc__pill" x="30" y="116.5" width="176" height="21" rx="10.5" />
-                  <text class="thumb-proc__label" x="42" y="130.5">Tokens</text>
-                </g>
-
-                <g class="thumb-proc__stage thumb-proc__stage--5">
-                  <circle class="thumb-proc__node" cx="14" cy="162" r="4.5" />
-                  <rect class="thumb-proc__pill" x="30" y="151.5" width="176" height="21" rx="10.5" />
-                  <text class="thumb-proc__label" x="42" y="165.5">Componentes</text>
-                </g>
-
-                <!-- Still ahead: dashed outline, dimmer label -->
-                <g class="thumb-proc__stage thumb-proc__stage--6">
-                  <circle class="thumb-proc__node thumb-proc__node--next" cx="14" cy="197" r="4.5" />
-                  <rect class="thumb-proc__pill thumb-proc__pill--next" x="30" y="186.5" width="176" height="21" rx="10.5" />
-                  <text class="thumb-proc__label thumb-proc__label--next" x="42" y="200.5">Gráficas</text>
-                </g>
+                <!-- Stages come from procesoStages() so the labels follow the
+                     active locale. The --n class is what the stylesheet keys
+                     each stage's keyframes off, so it stays bound by index.
+                     The last stage is still ahead: dashed pill, dimmer label. -->
+                @for (stage of procesoStages(); track stage.n) {
+                  <g class="thumb-proc__stage thumb-proc__stage--{{ stage.n }}">
+                    <circle
+                      class="thumb-proc__node"
+                      [class.thumb-proc__node--next]="stage.next"
+                      cx="14"
+                      [attr.cy]="stage.cy"
+                      r="4.5"
+                    />
+                    <rect
+                      class="thumb-proc__pill"
+                      [class.thumb-proc__pill--next]="stage.next"
+                      x="30"
+                      [attr.y]="stage.pillY"
+                      width="176"
+                      height="21"
+                      rx="10.5"
+                    />
+                    <text
+                      class="thumb-proc__label"
+                      [class.thumb-proc__label--next]="stage.next"
+                      x="42"
+                      [attr.y]="stage.textY"
+                    >
+                      {{ stage.label }}
+                    </text>
+                  </g>
+                }
               </svg>
             }
             <!-- Video: looping MP4, autoplays muted. Under reduced motion

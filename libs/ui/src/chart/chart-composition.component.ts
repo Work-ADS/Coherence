@@ -84,6 +84,20 @@ export class ChartCompositionComponent {
   /** Key of the segment that anchors the darkest ink. Null → largest value. */
   readonly emphasis = input<string | null>(null);
   readonly showLegend = input(true);
+  /**
+   * Legend register. `inline` (default): swatch + label + percentage on one
+   * row. `detail`: one column per category — swatch + label, currency value
+   * (symbol register), and the datum's `deltaLabel` — for breakdown cards
+   * where the legend carries the figures and percentages stay in the table.
+   */
+  readonly legendVariant = input<'inline' | 'detail'>('inline');
+  /**
+   * How the data table offers itself. `toggle` (default): the text toggle,
+   * table hidden until asked. `peek`: the first rows show under a progressive
+   * blur with the expand affordance floating on top — the table nudges instead
+   * of hiding.
+   */
+  readonly dataTableDisplay = input<'toggle' | 'peek'>('toggle');
 
   // Outputs
   readonly dataPointActivated = output<{ index: number; datum: BarDatum }>();
@@ -185,6 +199,11 @@ export class ChartCompositionComponent {
 
   formatEur(value: number): string {
     return formatCurrency(value, this.locale());
+  }
+
+  /** Symbol register for the detail legend's figures ("730.000 €"). */
+  formatEurSymbol(value: number): string {
+    return formatCurrency(value, this.locale(), 'symbol');
   }
 
   formatPct(fraction: number): string {

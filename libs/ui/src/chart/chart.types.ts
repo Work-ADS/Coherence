@@ -13,6 +13,10 @@ export interface BarDatum {
   key: string;
   value: number;
   label?: string;
+  /** Display-only change annotation (e.g. "+0,9 %"). Rendered by the
+   *  composition strip's `detail` legend under each category's value;
+   *  ignored by every other chart. */
+  deltaLabel?: string;
 }
 
 export interface LineSeries {

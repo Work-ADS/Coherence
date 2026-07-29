@@ -1,0 +1,88 @@
+<!--
+  Demo 1 — standalone. data-foundation="modern" activates the foundations-modern
+  token scope (IBM Plex Sans, modern neutrals, the --chart-monochrome-* ramp the
+  segmented bar needs). No nav, no sidebar, no shell.
+-->
+<div class="d1" data-foundation="modern">
+  <!-- Hero row: the patrimonio card (wide) + one standing-in square (narrow). -->
+  <div class="d1__hero">
+    <afi-card-v2 [showHeader]="false">
+      <div class="pat">
+        <div class="pat__head">
+          <div class="pat__figure">
+            <p class="pat__label">Patrimonio total</p>
+            <p class="pat__value">{{ totalFormateado }}</p>
+            <p class="pat__delta">+12,09 % · últimos 12 meses</p>
+          </div>
+
+          <div class="pat__actions">
+            <afi-button-v2 variant="secondary" size="sm" ariaLabel="Añadir activo">
+              Añadir activo
+            </afi-button-v2>
+            <afi-button-v2 variant="secondary" size="sm" ariaLabel="Comparar patrimonio">
+              Comparar
+            </afi-button-v2>
+          </div>
+        </div>
+
+        <div class="pat__breakdown">
+          <p class="pat__section-label">Desglose del patrimonio</p>
+
+          <!--
+            All DS primitive: segmented bar (monochrome ramp), detail legend
+            (value + delta per category, hover-linked with the segments), and
+            the data table peeking under a progressive blur.
+          -->
+          <afi-chart-composition
+            [data]="composicion"
+            variant="segments"
+            legendVariant="detail"
+            dataTableDisplay="peek"
+            longDescription="Reparto del patrimonio total por categoría de activo."
+            structureNotes="Una banda horizontal; cada segmento es una categoría, con anchura proporcional a su valor."
+          />
+        </div>
+      </div>
+    </afi-card-v2>
+
+    <afi-card-v2 [showHeader]="false">
+      <div class="ph" [attr.aria-label]="heroPlaceholder.label">
+        <span class="ph__label">{{ heroPlaceholder.label }}</span>
+      </div>
+    </afi-card-v2>
+  </div>
+
+  <!--
+    Work-in-progress divider: everything below is being designed right now.
+    Deliberate demo chrome — this page is how the team follows the process,
+    so the boundary between shipped and in-flight is stated, not implied.
+  -->
+  <div class="d1__wip" role="note">
+    <afi-tag-v2 kind="system" label="En construcción" />
+    <p class="d1__wip-text">
+      Las secciones siguientes están en curso y cambiarán a medida que avancemos.
+    </p>
+  </div>
+
+  <!-- Three supporting blocks. -->
+  <div class="d1__row d1__row--three">
+    @for (block of filaMedia; track block.id) {
+      <afi-card-v2 [showHeader]="false">
+        <div class="ph" [attr.aria-label]="block.label">
+          <span class="ph__label">{{ block.label }}</span>
+        </div>
+      </afi-card-v2>
+    }
+  </div>
+
+  <!-- Two closing blocks, wide + narrow, mirroring the hero proportions. -->
+  <div class="d1__row d1__row--two">
+    @for (block of filaInferior; track block.id) {
+      <afi-card-v2 [showHeader]="false">
+        <div class="ph" [attr.aria-label]="block.label">
+          <span class="ph__label">{{ block.label }}</span>
+        </div>
+      </afi-card-v2>
+    }
+  </div>
+</div>

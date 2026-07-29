@@ -13,6 +13,7 @@ import {
   viewChild,
 } from '@angular/core';
 
+import { readMotionMs } from './motion-tokens';
 import { TabV2Component } from './tab-v2.component';
 
 let nextId = 0;
@@ -44,6 +45,11 @@ let nextId = 0;
  *  - The underline Smart-Animates its position (~200 ms ease-out); text and
  *    geometry stay static. Collapsed under `prefers-reduced-motion`.
  *
+ * The underline slide is the only motion this list owns. To animate the panel
+ * content as well — the lateral slide-and-blur swap ported from v1 `afi-tabs` —
+ * put `[afiTabPanelV2]="activeIndex"` on the consumer's panel element
+ * (`TabPanelV2Directive`, motion-skill §4.12).
+ *
  * `activeIndex` is a `model()` so it self-updates on interaction and supports
  * `[(activeIndex)]`; consumers can also listen to the implicit `activeIndexChange`.
  */
@@ -67,7 +73,21 @@ export class TabsV2Component implements AfterViewInit {
   /** The tablist container, measured for indicator positioning. */
   readonly listRef = viewChild<ElementRef<HTMLElement>>('list');
 
+  /** The sliding underline, animated imperatively — see `slideIndicator`. */
+  readonly indicatorRef = viewChild<ElementRef<HTMLElement>>('indicator');
+
+  /**
+   * Where in the run the bar sits at its farthest point past the target, and the
+   * share of a hop the overshoot may consume. Both are curve-shape numbers, not
+   * brand values — the overshoot DISTANCE is the token. The cap keeps a very
+   * short hop from flinging the full distance, which would read as a twitch.
+   */
+  private static readonly OVERSHOOT_AT = 0.62;
+  private static readonly OVERSHOOT_MAX_SHARE = 0.3;
+
   private readonly baseId = `afi-tabs-v2-${nextId++}`;
+  private slide: Animation | null = null;
+  private lastIndex: number | null = null;
 
   /** Requested index, clamped to the first enabled tab when the target is inert. */
   readonly resolvedIndex = computed(() => {
@@ -106,7 +126,18 @@ export class TabsV2Component implements AfterViewInit {
         tab.selected.set(i === active);
         tab.tabId.set(`${this.baseId}-tab-${i}`);
       });
+
+      // Animate only when the SELECTION moved. Geometry also changes on resize
+      // and on web-font reflow; bouncing the bar for those would be motion the
+      // user did not ask for. The first pass establishes the resting position.
+      const from = this.indicatorOffset();
+      const settled = this.lastIndex !== null;
+      const moved = this.lastIndex !== active;
+      this.lastIndex = active;
+
       this.updateIndicator();
+
+      if (settled && moved) this.slideIndicator(from, this.indicatorOffset());
     });
 
     // Measure again after the first render settles — fonts and layout are ready,
@@ -179,6 +210,63 @@ export class TabsV2Component implements AfterViewInit {
     event.preventDefault();
     this.activate(target);
     list[target]?.focus();
+  }
+
+  /**
+   * Slide the underline to the newly selected tab, overshooting it by a fixed
+   * distance and settling back — `selection-slide` (motion-skill §4.13).
+   *
+   * Driven by the Web Animations API rather than a CSS transition because the
+   * overshoot has to be a CONSTANT number of pixels. A CSS easing is normalised
+   * over the travel, so its overshoot is inescapably a percentage of it: the
+   * same curve that reads well across a wide tab bar is invisible on a narrow
+   * one. Follow-through is a property of the moving object, not of the distance.
+   *
+   * Motion values come from tokens (`readMotionMs`, and the reveal-rise family
+   * for spatial travel per motion-skill §4.11). Nothing animates if they do not
+   * resolve, or under `prefers-reduced-motion` — with no CSS transition on
+   * `transform`, skipping the animation lands the bar instantly, which is the
+   * correct collapsed behaviour.
+   */
+  private slideIndicator(from: number, to: number): void {
+    const el = this.indicatorRef()?.nativeElement;
+    if (!el) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Re-target mid-flight from where the bar actually IS, not from the last
+    // committed position — otherwise a fast second click snaps it back to the
+    // previous tab before starting again.
+    const running = this.slide?.playState === 'running';
+    const start = running
+      ? new DOMMatrix(getComputedStyle(el).transform).m41
+      : from;
+
+    const travel = to - start;
+    if (Math.abs(travel) < 1) return;
+
+    const styles = getComputedStyle(el);
+    const duration = readMotionMs(styles.getPropertyValue('--motion-duration-base'));
+    const easing = styles.getPropertyValue('--motion-easing-standard').trim();
+    const reach = parseFloat(styles.getPropertyValue('--motion-reveal-rise-light'));
+    if (easing === '' || Number.isNaN(duration) || Number.isNaN(reach)) return;
+
+    const overshoot =
+      Math.sign(travel) *
+      Math.min(reach, Math.abs(travel) * TabsV2Component.OVERSHOOT_MAX_SHARE);
+
+    this.slide?.cancel();
+    this.slide = el.animate(
+      [
+        { transform: `translateX(${start}px)`, easing },
+        {
+          transform: `translateX(${to + overshoot}px)`,
+          offset: TabsV2Component.OVERSHOOT_AT,
+          easing,
+        },
+        { transform: `translateX(${to}px)` },
+      ],
+      { duration },
+    );
   }
 
   private updateIndicator(): void {

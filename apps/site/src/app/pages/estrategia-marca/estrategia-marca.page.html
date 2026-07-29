@@ -51,6 +51,7 @@
         role="tabpanel"
         tabindex="0"
         [hidden]="activeTab() !== 0"
+        [afiTabPanelV2]="activeTab()"
       >
         @for (l of [isEn()]; track l) {
           <article class="strategy__article">
@@ -89,6 +90,7 @@
         role="tabpanel"
         tabindex="0"
         [hidden]="activeTab() !== 1"
+        [afiTabPanelV2]="activeTab()"
       >
         @for (l of [isEn()]; track l) {
           <div class="strategy__panel-body">
@@ -136,6 +138,7 @@
         role="tabpanel"
         tabindex="0"
         [hidden]="activeTab() !== 2"
+        [afiTabPanelV2]="activeTab()"
       >
         @for (l of [isEn()]; track l) {
           <div class="strategy__panel-body">
@@ -167,6 +170,7 @@
         role="tabpanel"
         tabindex="0"
         [hidden]="activeTab() !== 3"
+        [afiTabPanelV2]="activeTab()"
       >
         @for (l of [isEn()]; track l) {
           <div class="strategy__panel-body">

@@ -1,4 +1,12 @@
-import { Directive, ElementRef, afterNextRender, inject } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Injector,
+  afterNextRender,
+  effect,
+  inject,
+  input,
+} from '@angular/core';
 
 import { LanguageService } from '../services/language.service';
 
@@ -25,6 +33,11 @@ import { LanguageService } from '../services/language.service';
  * mounting-after-a-switch is exactly "the user flipped ES/EN" — the effect
  * never fires as a page-load entrance.
  *
+ * Hosts that are NOT re-created on a switch — a heading whose text arrives by
+ * interpolation, as on the workbench — bind `[siteHyperTextReplayOn]="lang()"`
+ * to get the same trigger without re-mounting. Either way the trigger is the
+ * user flipping the language, never a re-render.
+ *
  * Layout-stable: each character box is pinned to its final glyph's width for the
  * duration, so scramble glyphs of a different width can never re-center a line
  * or change the line count. (Large centered multi-line headings otherwise
@@ -44,6 +57,7 @@ import { LanguageService } from '../services/language.service';
 export class HyperTextDirective {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly language = inject(LanguageService);
+  private readonly injector = inject(Injector);
 
   /**
    * Width of the moving blur band, in characters. The band is a raised-cosine
@@ -82,17 +96,65 @@ export class HyperTextDirective {
     return n; // unitless — assume ms
   }
 
+  /**
+   * Optional replay trigger: pass a value that changes when the decode should
+   * run again — in practice the active language.
+   *
+   * The mount path above covers hosts that are RE-CREATED on a language switch
+   * (the blog's per-language `@if` branches). A heading whose text arrives by
+   * interpolation is never re-created, so it never re-mounts and the decode
+   * would never fire; binding this gives those hosts the same trigger without
+   * forcing them to re-mount. Leave it unbound and nothing changes.
+   *
+   * Still strictly user-initiated: the value only changes when the user flips
+   * the language. The first render is skipped — otherwise every page load would
+   * decode, which §4.10 explicitly rules out.
+   */
+  readonly replayOn = input<unknown>(undefined, { alias: 'siteHyperTextReplayOn' });
+
   private frameId = 0;
+  /** Undoes the transient per-character spans; set for the duration of a run. */
+  private restore: (() => void) | null = null;
+  private primed = false;
+  private replayToken: unknown;
 
   constructor() {
     afterNextRender(() => {
+      this.primed = true;
+      this.replayToken = this.replayOn();
       if (!this.language.switched()) return; // page load, not a toggle
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       this.play();
     });
+
+    effect(() => {
+      const token = this.replayOn();
+      if (!this.primed || token === this.replayToken) return;
+      this.replayToken = token;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      // Wait for the render to commit before snapshotting. A bare
+      // requestAnimationFrame is NOT enough: Angular's own scheduler also runs
+      // change detection from a frame callback, so a rAF queued here can land
+      // BEFORE the interpolation has written the new text — the decode then
+      // resolves back to the old language and the switch appears not to work.
+      afterNextRender(() => this.play(), { injector: this.injector });
+    });
+  }
+
+  /** Stop a run in flight and put the original text back. */
+  private abort(): void {
+    cancelAnimationFrame(this.frameId);
+    this.restore?.();
+    this.restore = null;
   }
 
   private play(): void {
+    // A replay can land while a run is still in flight (toggle ES→EN→ES quickly).
+    // Restore first: mid-run the DOM holds transient spans carrying SCRAMBLE
+    // glyphs, and snapshotting those would decode toward gibberish and leave it
+    // there.
+    this.abort();
+
     // Snapshot the text nodes so element nodes (e.g. <em>) are left untouched.
     const textNodes: { node: Text; text: string }[] = [];
     const walker = document.createTreeWalker(this.host.nativeElement, NodeFilter.SHOW_TEXT);
@@ -123,7 +185,7 @@ export class HyperTextDirective {
     // below, and width-locked boxes are atomic inlines the browser may break
     // between — the wrapper keeps line breaks at spaces, never mid-word.
     const cells: { span: HTMLSpanElement; char: string; space: boolean }[] = [];
-    const groups: { parent: Node; created: HTMLSpanElement[]; text: string }[] = [];
+    const groups: { parent: Node; node: Text; created: HTMLSpanElement[]; text: string }[] = [];
     for (const { node, text } of textNodes) {
       const parent = node.parentNode;
       if (!parent) continue;
@@ -154,8 +216,24 @@ export class HyperTextDirective {
         created.push(word);
       }
       parent.removeChild(node);
-      groups.push({ parent, created, text });
+      groups.push({ parent, node, created, text });
     }
+
+    // How to put this element back the way it was — used both on completion and
+    // by abort() if a replay interrupts the run.
+    //
+    // Re-inserts the ORIGINAL Text node object, never a fresh one. When the host
+    // text comes from an interpolation, Angular keeps a reference to the exact
+    // node it created and writes future updates straight into it; swapping in a
+    // replacement leaves Angular writing to a detached node, so the heading
+    // silently stops updating after the first decode.
+    this.restore = () => {
+      for (const { parent, node, created, text } of groups) {
+        node.nodeValue = text;
+        parent.insertBefore(node, created[0] ?? null);
+        for (const span of created) parent.removeChild(span);
+      }
+    };
 
     // Freeze the layout: pin every character box to the width of its FINAL
     // glyph, so swapping in a wider/narrower scramble glyph cannot re-center a
@@ -205,10 +283,8 @@ export class HyperTextDirective {
       } else {
         // Restore a clean DOM: swap each group's transient nodes (word wrappers
         // and loose whitespace spans) back to one plain text node.
-        for (const { parent, created, text } of groups) {
-          parent.insertBefore(document.createTextNode(text), created[0] ?? null);
-          for (const node of created) parent.removeChild(node);
-        }
+        this.restore?.();
+        this.restore = null;
       }
     };
     this.frameId = requestAnimationFrame(step);

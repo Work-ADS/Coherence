@@ -12,6 +12,14 @@ import { BadgeV2Tone } from './badge-v2.variants';
  * classification metadata), it encodes *state*. For a passive category label
  * use Tag; for a selectable filter use Chip; for an action use `afi-button-v2`.
  *
+ * One documented exception, and it belongs to the **neutral** tone only: a
+ * **count** attached to a label (`afi-tab-v2`'s supplementary quantity). A count
+ * is neither state nor category, but the neutral tone is the one tone that
+ * asserts nothing semantically — surface fill, hairline boundary, secondary
+ * text — which makes it the house treatment for a discrete value riding
+ * alongside a label. Do not reach for a *semantic* tone to carry a quantity:
+ * `success`/`warning`/`critical`/`info` mean something, and a number does not.
+ *
  * Consumes only `foundations-modern` tokens, so it renders correctly only
  * inside a `[data-foundation="modern"]` scope.
  *

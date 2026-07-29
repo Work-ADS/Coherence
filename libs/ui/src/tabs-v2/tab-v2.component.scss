@@ -9,9 +9,9 @@
 // bottom border.
 //
 // Colour map: label content/secondary (resting) → content/primary (selected) →
-// content/disabled (disabled). The icon inherits the label colour (currentColor);
-// the count stays content/secondary as a supplementary value, dropping to
-// content/disabled when the item is disabled.
+// content/disabled (disabled). The icon inherits the label colour (currentColor).
+// The count is an afi-badge-v2 (neutral tone) that owns its own colours; a
+// disabled item mutes the whole pill instead of recolouring its label.
 
 :host {
   display: inline-flex;
@@ -89,14 +89,16 @@
   color: inherit;
 }
 
+// The count is an `afi-badge-v2` in the neutral tone — the badge owns its own
+// geometry, fill, hairline and label type, so nothing here restyles it. A
+// disabled tab mutes the whole pill at once (fill, border and text together)
+// rather than reaching inside the child for its label colour; same opacity
+// treatment as v1 afi-tabs' disabled trigger.
 .afi-tab-v2__count {
-  font-size: var(--type-caption-size);
-  font-weight: var(--type-caption-weight);
-  line-height: var(--type-caption-line-height);
-  color: var(--content-secondary);
+  display: inline-flex;
 
   .afi-tab-v2[aria-disabled='true'] & {
-    color: var(--content-disabled);
+    opacity: 0.5;
   }
 }
 

@@ -10,6 +10,8 @@ import {
   viewChild,
 } from '@angular/core';
 
+import { BadgeV2Component } from '../badge-v2';
+
 import { TabsV2Component } from './tabs-v2.component';
 
 /**
@@ -29,13 +31,19 @@ import { TabsV2Component } from './tabs-v2.component';
  * 2 selection states × 4 interaction states. Only Selected and Disabled are
  * component state; Default / Hover / Focus are live CSS states. The Content row
  * is: optional leading icon (`icon/sm`) → label (`button` text style) → optional
- * count (`caption` text style, supplementary). Horizontal padding
- * `pad/control-lg`, content gap `gap/control-md`, fixed `navigation/tab/height`.
+ * count. Horizontal padding `pad/control-lg`, content gap `gap/control-md`,
+ * fixed `navigation/tab/height`.
+ *
+ * The count renders as an `afi-badge-v2` in the **neutral** tone rather than as
+ * loose caption text: it is a discrete value attached to the label, and the
+ * neutral badge is the house treatment for exactly that — surface fill, hairline
+ * boundary, `Label Small`. Reusing the primitive also means the count cannot
+ * drift from the badge's geometry the way a hand-styled span would.
  *
  * The sliding underline indicator and the shared baseline live on the parent
  * list, not here — the item only carries its label colour (`content/secondary`
- * unselected, `content/primary` selected, `content/disabled` disabled) and hover
- * fill. `selected`, `index`, and `tabId` are driven by the parent through public
+ * unselected, `content/primary` selected, `content/disabled` disabled), its hover
+ * fill, and (when disabled) a muted count pill. `selected`, `index`, and `tabId` are driven by the parent through public
  * signals; consumers never set them.
  *
  * A11y: the count is folded into the accessible name as "Documentos (3)" so it
@@ -48,6 +56,7 @@ import { TabsV2Component } from './tabs-v2.component';
 @Component({
   selector: 'afi-tab-v2',
   standalone: true,
+  imports: [BadgeV2Component],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tab-v2.component.html',
   styleUrls: ['./tab-v2.component.scss'],
@@ -86,6 +95,9 @@ export class TabV2Component {
     const count = this.count();
     return count === null ? this.label() : `${this.label()} (${count})`;
   });
+
+  /** The count as the badge's label. Never read when `count()` is null. */
+  readonly countLabel = computed(() => String(this.count() ?? ''));
 
   onClick(): void {
     if (this.disabled()) return;

@@ -151,6 +151,24 @@ export class HomePage {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => this.expandGrowing.set(true)),
     );
-    setTimeout(() => this.router.navigateByUrl(routerLink), 680);
+    // Release the morph latch if navigation doesn't happen. expandRect is what
+    // the guard above tests, so a navigation that never resolves — cancelled by
+    // a guard, a redirect, a failed lazy chunk — would otherwise leave it set
+    // and every later click would preventDefault and return, killing all the
+    // cards until a reload.
+    setTimeout(() => {
+      this.router.navigateByUrl(routerLink).then(
+        (ok) => {
+          if (!ok) this.resetMorph();
+        },
+        () => this.resetMorph(),
+      );
+    }, 680);
+  }
+
+  /** Clear the morph so the cards accept clicks again. */
+  private resetMorph(): void {
+    this.expandGrowing.set(false);
+    this.expandRect.set(null);
   }
 }

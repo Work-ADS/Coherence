@@ -10,6 +10,8 @@
 }
 
 .afi-navbar-item-v2 {
+  // Anchors the hit-area pseudo-element below.
+  position: relative;
   display: inline-grid;
   align-items: center;
   block-size: var(--navigation-sidebar-item-height);
@@ -17,6 +19,18 @@
   border: none;
   border-radius: var(--radius-md);
   background: transparent;
+
+  // Hit area raised to the WCAG 2.2 AA minimum target size (--dimension-11).
+  // The drawn box stays at --navigation-sidebar-item-height so nothing shifts;
+  // the target grows outward by half the difference on each block edge. Purely
+  // a pointer surface — no paint, and it can't cover a sibling because the gap
+  // between nav items is wider than the overhang.
+  &::after {
+    content: '';
+    position: absolute;
+    inset-block: calc((var(--dimension-11) - var(--navigation-sidebar-item-height)) / -2);
+    inset-inline: 0;
+  }
   color: var(--content-tertiary);
   font-family: var(--font-family-primary);
   font-size: var(--type-body-small-size);

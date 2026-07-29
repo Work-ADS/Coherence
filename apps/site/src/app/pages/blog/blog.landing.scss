@@ -115,6 +115,14 @@
   width: 100%;
   text-decoration: none;
   color: inherit;
+
+  // The whole card is one link. Nothing inside it is interactive, so no child
+  // may become the click target — a <video> can swallow the press, and the
+  // animating stepper can change what's under the cursor between press and
+  // release, which makes the browser drop the click entirely.
+  * {
+    pointer-events: none;
+  }
   border-radius: var(--radius-card);
   background: var(--surface-default);
   border: var(--border-width-hairline) solid var(--border-hairline);
@@ -167,6 +175,10 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  // A <video> is interactive media: as the hit target inside the card anchor it
+  // can absorb the press instead of passing it on. The thumb is decorative, so
+  // the anchor should always be what gets clicked.
+  pointer-events: none;
 }
 
 // ─── Persistent footer: category + date over the media ──────────────────────
@@ -261,6 +273,9 @@
   width: 100%;
   height: 100%;
   padding: 8% 10%;
+  // Decorative, and every stage is mid-animation on a 10s loop — never let an
+  // animating child be the click target inside the card anchor.
+  pointer-events: none;
 
   &__spine {
     stroke: var(--surface-inverse-mark-faint);
@@ -323,18 +338,20 @@
   &__stage--6 { animation-name: thumb-proc-s6; }
 }
 
-// Spine draws while the stages land, holds, then clears for the reset.
+// Spine draws while the stages land, holds, then retracts for the reset. It
+// starts just short of the first node so stage 1 reads as already placed.
 @keyframes thumb-proc-spine {
-  0%, 4% { stroke-dashoffset: 1; }
+  0%, 4% { stroke-dashoffset: 0.97; }
   52%, 90% { stroke-dashoffset: 0; }
-  96%, 100% { stroke-dashoffset: 1; }
+  96%, 100% { stroke-dashoffset: 0.97; }
 }
 
-// Stage windows — each slides in off the spine, all hold, all exit together.
+// Stage windows — each slides in off the spine, all hold, then the later ones
+// exit together. Stage 1 is the exception: it stays visible for the whole loop
+// so the card opens on "Contexto" instead of an empty dark field, and the reset
+// lands back on that same first bubble.
 @keyframes thumb-proc-s1 {
-  0%, 4% { opacity: 0; transform: translateX(calc(-1 * var(--motion-reveal-rise-light))); }
-  12%, 90% { opacity: 1; transform: translateX(0); }
-  96%, 100% { opacity: 0; transform: translateX(0); }
+  0%, 100% { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes thumb-proc-s2 {

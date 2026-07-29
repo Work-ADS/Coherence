@@ -9,6 +9,8 @@ import {
   formatCurrency,
 } from '@coherence/ui';
 
+import { PlannerNavbarV2Component } from '../shared/planner-navbar-v2.component';
+
 /** One patrimonio category: the bar segment plus its legend annotations. */
 interface Categoria {
   key: string;
@@ -65,7 +67,13 @@ function pct(value: number): string {
 @Component({
   selector: 'site-demo-1-page',
   standalone: true,
-  imports: [ButtonV2Component, CardV2Component, ChartCompositionComponent, TagV2Component],
+  imports: [
+    ButtonV2Component,
+    CardV2Component,
+    ChartCompositionComponent,
+    PlannerNavbarV2Component,
+    TagV2Component,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './demo-1.page.html',
   styleUrls: ['./demo-1.page.scss'],

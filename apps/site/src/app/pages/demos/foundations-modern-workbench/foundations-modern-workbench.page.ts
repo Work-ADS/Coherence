@@ -39,6 +39,15 @@ import {
   TagV2Component,
   ToggleV2Component,
 } from '@coherence/ui';
+
+import {
+  LogoComponent,
+  NavbarItemV2Component,
+  ToastV2Component,
+  TopBarComponent,
+} from '@coherence/ui';
+
+import { PlannerNavbarV2Component } from '../shared/planner-navbar-v2.component';
 import type {
   BadgeV2Tone,
   ButtonV2Size,
@@ -80,6 +89,12 @@ import type {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    PlannerNavbarV2Component,
+    ToastV2Component,
+    TopBarComponent,
+    LogoComponent,
+    NavbarItemV2Component,
+    SegmentedControlV2Component,
     BadgeV2Component,
     ButtonV2Component,
     CardV2Component,
@@ -100,7 +115,6 @@ import type {
     SelectV2Component,
     RadioGroupV2Component,
     RadioV2Component,
-    SegmentedControlV2Component,
     SidebarV2Component,
     TableApronComponent,
     TabsV2Component,
@@ -118,6 +132,49 @@ export class FoundationsModernWorkbenchPage {
   // Driven off the rendered group titles so the nav stays in sync as groups are
   // added — no hand-maintained list, no querySelector.
   readonly groupTitles = viewChildren<ElementRef<HTMLElement>>('wbGroup');
+  /** Frame widths for the navbar breakpoint specimens. */
+  readonly navbarBreakpoints = [
+    { label: 'ancho · > 64rem', width: '100%' },
+    { label: 'intermedio · 48–64rem', width: '52rem' },
+    { label: 'estrecho · < 48rem', width: '30rem' },
+  ];
+
+  /** Language options for the site-bar specimen (display-only). */
+  readonly langOptions = [
+    { value: 'es', label: 'ES' },
+    { value: 'en', label: 'EN' },
+  ];
+
+  /** Mirrors the live site's destinations (display-only here). */
+  readonly siteNavItems = [
+    { label: 'Diseño en Afi', selected: true },
+    { label: 'Laboratorio', selected: false },
+    { label: 'Demos', selected: false },
+  ];
+
+  // ── Toast demo state (the consumer owns visibility + timer) ───────────────
+  readonly toastVisible = signal(false);
+  readonly toastMessage = signal('');
+  readonly toastShowUndo = signal(true);
+  readonly toastShortcut = signal<string[]>([]);
+  private toastTimer?: ReturnType<typeof setTimeout>;
+
+  showToastDemo(kind: 'undo' | 'shortcut' | 'plain'): void {
+    this.toastShowUndo.set(kind !== 'plain');
+    this.toastShortcut.set(kind === 'shortcut' ? ['⌘', 'Z'] : []);
+    this.toastMessage.set(
+      kind === 'plain' ? 'Informe generado' : 'Estado cambiado a Aprobada',
+    );
+    this.toastVisible.set(true);
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => this.toastVisible.set(false), 5000);
+  }
+
+  hideToastDemo(): void {
+    clearTimeout(this.toastTimer);
+    this.toastVisible.set(false);
+  }
+
   readonly sections = signal<string[]>([]);
   readonly activeSection = signal(0);
 

@@ -357,3 +357,32 @@
     transform: translateX(-50%);
   }
 }
+
+// The navbar specimens respond to their frame, not the window: each frame
+// declares the `viewport` container the bar's @container rules query. Without
+// this the framed previews would all render the wide layout.
+.workbench__navbar-frame {
+  container-type: inline-size;
+  container-name: viewport;
+  // The base rule clips with overflow:hidden for the rounded corners; the
+  // navbar's menus are absolutely positioned and were being cut off, so this
+  // specimen lets them escape. Radius is kept by clipping the bar itself.
+  overflow: visible;
+
+  > * {
+    border-radius: inherit;
+  }
+}
+
+// Site-bar specimen chrome — mirrors app.component.html's start slot.
+.workbench__sitenav {
+  display: flex;
+  align-items: center;
+  gap: var(--layout-gap-default);
+}
+
+.workbench__sitenav-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-xs);
+}

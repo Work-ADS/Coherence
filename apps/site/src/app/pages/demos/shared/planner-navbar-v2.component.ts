@@ -9,12 +9,12 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 // internal (libs)
 import {
   BadgeV2Component,
-  EditableTextComponent,
+  InlineEditComponent,
   IconButtonV2Component,
   MenuDividerV2Component,
   MenuItemV2Component,
@@ -24,6 +24,7 @@ import {
 import type { BadgeV2Tone, Estado } from '@coherence/ui';
 
 // relative
+import { MobileDrawerService } from '../../../services/mobile-drawer.service';
 import type { PlanNote } from './notes-dropdown.component';
 import { NotesPanelV2Component } from './notes-panel-v2.component';
 import type { SimulationSettings } from './settings-dropdown.component';
@@ -66,7 +67,7 @@ const ESTADO_TONE: Record<Estado, BadgeV2Tone> = {
   imports: [
     RouterLink,
     BadgeV2Component,
-    EditableTextComponent,
+    InlineEditComponent,
     IconButtonV2Component,
     MenuV2Component,
     MenuItemV2Component,
@@ -81,6 +82,9 @@ const ESTADO_TONE: Record<Estado, BadgeV2Tone> = {
 })
 export class PlannerNavbarV2Component {
   private readonly el = inject(ElementRef);
+  private readonly router = inject(Router);
+  /** Shared with planner-sidebar: the hamburger toggles the same drawer. */
+  protected readonly drawer = inject(MobileDrawerService);
 
   readonly clientName = input.required<string>();
   readonly clientRoute = input<string>('/listado-planificaciones');
@@ -88,10 +92,29 @@ export class PlannerNavbarV2Component {
   readonly currentView = input<string>('Panel');
   readonly advisorName = input<string>('Marc Puig');
 
+  /** Where "Ir al listado" goes, and the client link's target. */
+  readonly listadoRoute = input<string>('/listado-planificaciones');
+  /** Nested-page trail after the simulation name. Empty renders nothing. */
+  readonly currentPath = input<{ label: string; route?: string }[]>([]);
+  /** Swaps the switcher menu from planificaciones to recent clients. */
+  readonly clientPickerMode = input<boolean>(false);
+  readonly clientList = input<{ id: string; name: string }[] | null>(null);
+  readonly activeClientId = input<string | null>(null);
+
   readonly estado = signal<Estado>('aprobada');
   readonly estadoOpen = signal(false);
   readonly notesOpen = signal(false);
   readonly settingsOpen = signal(false);
+  readonly plansOpen = signal(false);
+  /** Narrow-viewport overflow holding estado + notas + ajustes. */
+  readonly overflowOpen = signal(false);
+
+  readonly plans = [
+    { id: 'SIM-2025-0011', name: 'Plan 1 — Familia Torres' },
+    { id: 'SIM-2025-0010', name: 'Plan 2 — Escenario conservador' },
+    { id: 'SIM-2025-0009', name: 'Plan 3 — Pre-jubilación' },
+    { id: 'SIM-2025-0008', name: 'Plan 4 — Legado familiar' },
+  ];
 
   /** Local editable copy of the simulation name (seeded from the input). */
   readonly simNameValue = signal<string | null>(null);
@@ -144,35 +167,120 @@ export class PlannerNavbarV2Component {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (this.estadoOpen() && !this.el.nativeElement.contains(event.target)) {
-      this.estadoOpen.set(false);
-    }
+    if (this.el.nativeElement.contains(event.target)) return;
+    this.estadoOpen.set(false);
+    this.plansOpen.set(false);
+    this.overflowOpen.set(false);
   }
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
+    this.closeAllMenus();
+  }
+
+  /** Only one overlay at a time — every trigger closes its siblings first. */
+  private closeAllMenus(): void {
     this.estadoOpen.set(false);
+    this.plansOpen.set(false);
+    this.overflowOpen.set(false);
   }
 
   toggleEstado(event: MouseEvent): void {
     event.stopPropagation();
-    this.estadoOpen.update((v) => !v);
+    const next = !this.estadoOpen();
+    this.closeAllMenus();
     this.notesOpen.set(false);
     this.settingsOpen.set(false);
+    this.estadoOpen.set(next);
+  }
+
+  /** Plain-button variant of togglePlans — the switcher isn't an icon-button. */
+  togglePlansFromButton(event: MouseEvent): void {
+    this.togglePlans({ event });
+  }
+
+  togglePlans(payload: { event: MouseEvent }): void {
+    payload.event.stopPropagation();
+    const next = !this.plansOpen();
+    this.closeAllMenus();
+    this.notesOpen.set(false);
+    this.settingsOpen.set(false);
+    this.plansOpen.set(next);
+  }
+
+  toggleOverflow(payload: { event: MouseEvent }): void {
+    payload.event.stopPropagation();
+    const next = !this.overflowOpen();
+    this.closeAllMenus();
+    this.overflowOpen.set(next);
   }
 
   toggleNotes(payload: { event: MouseEvent }): void {
     payload.event.stopPropagation();
-    this.notesOpen.update((v) => !v);
+    const next = !this.notesOpen();
+    this.closeAllMenus();
     this.settingsOpen.set(false);
-    this.estadoOpen.set(false);
+    this.notesOpen.set(next);
   }
 
   toggleSettings(payload: { event: MouseEvent }): void {
     payload.event.stopPropagation();
-    this.settingsOpen.update((v) => !v);
+    const next = !this.settingsOpen();
+    this.closeAllMenus();
     this.notesOpen.set(false);
-    this.estadoOpen.set(false);
+    this.settingsOpen.set(next);
+  }
+
+  onHamburger(payload: { event: MouseEvent }): void {
+    payload.event.stopPropagation();
+    this.closeAllMenus();
+    this.drawer.toggle();
+  }
+
+  // ── Plan switcher ─────────────────────────────────────────────────────────
+
+  goToListado(): void {
+    this.plansOpen.set(false);
+    void this.router.navigateByUrl(this.listadoRoute());
+  }
+
+  selectPlan(id: string): void {
+    const previous = this.simNameShown();
+    this.plansOpen.set(false);
+    if (id === previous) return;
+    const picked = this.plans.find((p) => p.id === id);
+    this.simNameValue.set(id);
+    this.showToast(`Planificación ${picked?.name ?? id}`, () =>
+      this.simNameValue.set(previous),
+    );
+  }
+
+  selectClient(id: string): void {
+    this.plansOpen.set(false);
+    if (id === this.activeClientId()) return;
+    const picked = this.clientList()?.find((c) => c.id === id);
+    this.showToast(`Multi-cliente disponible próximamente — ${picked?.name ?? id}`, () => {
+      /* nothing to undo — the switch isn't wired yet */
+    });
+  }
+
+  // ── Narrow-viewport overflow entries ──────────────────────────────────────
+
+  changeEstadoFromOverflow(next: Estado): void {
+    this.overflowOpen.set(false);
+    this.onEstadoChange(next);
+  }
+
+  openNotesFromOverflow(): void {
+    this.overflowOpen.set(false);
+    this.settingsOpen.set(false);
+    this.notesOpen.set(true);
+  }
+
+  openSettingsFromOverflow(): void {
+    this.overflowOpen.set(false);
+    this.notesOpen.set(false);
+    this.settingsOpen.set(true);
   }
 
   onEstadoChange(next: Estado): void {

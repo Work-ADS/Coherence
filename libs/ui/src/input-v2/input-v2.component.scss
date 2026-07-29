@@ -141,6 +141,33 @@
   cursor: default;
 }
 
+// ── Affix icons ─────────────────────────────────────────────────────────────
+// Wrapped so the primitive owns their box, tone and weight rather than each
+// consumer restating it. An icon here is placeholder-weight furniture, not
+// content: the field's own text must outrank it.
+//
+// Contract for consumers: project a bare <svg> with a viewBox and
+// stroke="currentColor", and set NO width/height/stroke-width attributes. The
+// wrapper drives all three through inherited properties, because a projected
+// node carries the consumer's encapsulation attribute — this stylesheet cannot
+// select it, and an attribute on the SVG would outrank inherited CSS anyway.
+.afi-input-v2__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--content-placeholder);
+  // Inherited by the projected SVG. Hairline — the common 1.5 read heavy next
+  // to placeholder text.
+  stroke-width: 1.25;
+
+  &:empty {
+    display: none;
+  }
+}
+
 // ── Text affixes (€ / EUR) — icons project directly as flex children ────────
 .afi-input-v2__affix {
   flex-shrink: 0;

@@ -114,9 +114,62 @@
   }
 }
 
-// reduced-motion-collapse (motion-skill §4.6): drop the hover transition.
+// ---------------------------------------------------------------------------
+// Staggered reveal — phase 2 of the menu's extrude-on-open
+// ---------------------------------------------------------------------------
+// The panel (afi-menu-v2) grows out of its trigger first and lands empty; the
+// rows then fade + rise in top-to-bottom. Ordering is the whole point — the
+// container arrives, then it fills.
+//
+// The delay lives here rather than on the panel because projected content
+// carries the *consumer's* encapsulation attribute, so afi-menu-v2 can't select
+// its own projected children without deep style piercing (banned, clean-code
+// §5, and the reason this isn't one rule on the panel). Each
+// afi-menu-item-v2 is a real child element of the panel, so it can read its own
+// position with :host(:nth-child()) and derive its own delay.
+//
+// Base delay = the panel's extrude duration, so no row starts early. Dividers
+// count as children too, which is correct: a row's delay tracks its visual
+// position, not its index among items.
+
+:host {
+  animation: afi-menu-item-v2-reveal var(--motion-duration-base) var(--motion-easing-enter) both;
+  animation-delay: var(--motion-duration-fast);
+}
+
+@keyframes afi-menu-item-v2-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-reveal-rise-light));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Per-row stagger. Bounded at ten rows — beyond that the tail shares the last
+// step rather than making a long menu feel sluggish.
+@for $i from 1 through 10 {
+  :host(:nth-child(#{$i})) {
+    animation-delay: calc(
+      var(--motion-duration-fast) + #{$i - 1} * var(--motion-reveal-stagger-light)
+    );
+  }
+}
+
+:host(:nth-child(n + 11)) {
+  animation-delay: calc(var(--motion-duration-fast) + 9 * var(--motion-reveal-stagger-light));
+}
+
+// reduced-motion-collapse (motion-skill §4.6): drop the hover transition, and
+// land the rows immediately — present, just not travelling.
 @media (prefers-reduced-motion: reduce) {
   .afi-menu-item-v2 {
     transition: none;
+  }
+
+  :host {
+    animation: none;
   }
 }

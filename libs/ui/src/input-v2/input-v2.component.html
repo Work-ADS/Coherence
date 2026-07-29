@@ -11,7 +11,9 @@
   @if (prefix()) {
     <span class="afi-input-v2__affix afi-input-v2__affix--prefix" aria-hidden="true">{{ prefix() }}</span>
   }
-  <ng-content select="[slot=iconStart]" />
+  <span class="afi-input-v2__icon afi-input-v2__icon--start" aria-hidden="true">
+    <ng-content select="[slot=iconStart]" />
+  </span>
   <input
     [id]="inputId"
     class="afi-input-v2__control"
@@ -30,7 +32,9 @@
     (focus)="focused.emit($event)"
     (blur)="blurred.emit($event)"
   />
-  <ng-content select="[slot=iconEnd]" />
+  <span class="afi-input-v2__icon afi-input-v2__icon--end" aria-hidden="true">
+    <ng-content select="[slot=iconEnd]" />
+  </span>
   @if (suffix()) {
     <span class="afi-input-v2__affix afi-input-v2__affix--suffix" aria-hidden="true">{{ suffix() }}</span>
   }

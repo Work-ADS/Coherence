@@ -1,0 +1,43 @@
+@if (visible()) {
+  <div class="afi-toast-v2__anchor afi-toast-v2__anchor--{{ placement() }}">
+    <div class="afi-toast-v2__pill" role="status" aria-live="polite">
+      @if (showUndo()) {
+        <button
+          type="button"
+          class="afi-toast-v2__action"
+          [attr.aria-label]="undoLabel()"
+          (click)="undo.emit()"
+        >
+          <svg class="afi-toast-v2__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 14 4 9l5-5" />
+            <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11" />
+          </svg>
+          <span class="afi-toast-v2__action-label">{{ undoLabel() }}</span>
+          @if (shortcut().length > 0) {
+            <afi-kbd class="afi-toast-v2__shortcut" [keys]="shortcut()" size="sm" />
+          }
+        </button>
+        <span class="afi-toast-v2__divider" aria-hidden="true"></span>
+      }
+
+      <span
+        class="afi-toast-v2__message"
+        [class.afi-toast-v2__message--lead]="!showUndo()"
+        >{{ message() }}</span
+      >
+
+      <span class="afi-toast-v2__divider" aria-hidden="true"></span>
+      <button
+        type="button"
+        class="afi-toast-v2__dismiss"
+        [attr.aria-label]="dismissLabel()"
+        (click)="dismissed.emit()"
+      >
+        <svg class="afi-toast-v2__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+}

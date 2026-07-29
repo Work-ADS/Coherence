@@ -1,82 +1,134 @@
 <header class="pnb" data-foundation="modern">
-  <!-- ── Left: breadcrumb trail — cliente / simulación · estado / vista ── -->
-  <nav class="pnb__crumbs" aria-label="Contexto de la planificación">
-    <a class="pnb__client" [routerLink]="clientRoute()">
-      <span class="pnb__chip" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-      </span>
-      <span class="pnb__client-name">{{ clientName() }}</span>
-    </a>
+  <div class="pnb__rail">
+  <!-- ── Left: hamburger (narrow) · plan switcher · identity · estado ──────── -->
+  <div class="pnb__start">
+    <!-- Hamburger — narrow viewports only; opens the sidebar drawer. -->
+    <afi-icon-button-v2
+      class="pnb__hamburger"
+      variant="ghost"
+      size="sm"
+      ariaLabel="Abrir menú"
+      (clicked)="onHamburger($event)"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 6h18" /><path d="M3 12h18" /><path d="M3 18h18" />
+      </svg>
+    </afi-icon-button-v2>
 
-    <span class="pnb__sep" aria-hidden="true">/</span>
+    <!--
+      Plan switcher — chevron + list glyph in one trigger, as in v1. Opens a
+      menu with "Ir al listado" above the planificaciones, or the recent
+      clients when the host puts it in client-picker mode.
+    -->
+    <div class="pnb__anchor pnb__wide-only pnb__switcher-anchor">
+      <button
+        type="button"
+        class="pnb__switcher"
+        [attr.aria-expanded]="plansOpen()"
+        aria-haspopup="menu"
+        [attr.aria-label]="plansOpen() ? 'Cerrar cambio de planificación' : 'Cambiar planificación'"
+        (click)="togglePlansFromButton($event)"
+      >
+        <span class="pnb__nav-icons" aria-hidden="true">
+          <svg class="pnb__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          <svg class="pnb__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12h.01" /><path d="M3 18h.01" /><path d="M3 6h.01" />
+            <path d="M8 12h13" /><path d="M8 18h13" /><path d="M8 6h13" />
+          </svg>
+        </span>
+      </button>
 
-    <div class="pnb__sim">
-      <span class="pnb__chip pnb__chip--dark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="4" y="4" width="16" height="16" rx="2" />
-          <rect x="9" y="9" width="6" height="6" />
-          <path d="M15 2v2" /><path d="M15 20v2" /><path d="M2 15h2" /><path d="M2 9h2" />
-          <path d="M20 15h2" /><path d="M20 9h2" /><path d="M9 2v2" /><path d="M9 20v2" />
-        </svg>
-      </span>
+      @if (plansOpen()) {
+        <afi-menu-v2
+          class="pnb__menu pnb__menu--start"
+          [ariaLabel]="clientPickerMode() ? 'Clientes recientes' : 'Planificaciones'"
+        >
+          @if (clientPickerMode()) {
+            @for (c of clientList() ?? []; track c.id) {
+              <afi-menu-item-v2
+                [selected]="c.id === activeClientId()"
+                (clicked)="selectClient(c.id)"
+              >
+                {{ c.name }}
+              </afi-menu-item-v2>
+            }
+          } @else {
+            <afi-menu-item-v2 (clicked)="goToListado()">
+              <svg slot="iconStart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m12 19-7-7 7-7" /><path d="M19 12H5" />
+              </svg>
+              Ir al listado
+            </afi-menu-item-v2>
+            <afi-menu-divider-v2 />
+            @for (p of plans; track p.id) {
+              <afi-menu-item-v2
+                [selected]="p.id === simNameShown()"
+                (clicked)="selectPlan(p.id)"
+              >
+                {{ p.name }}
+              </afi-menu-item-v2>
+            }
+          }
+        </afi-menu-v2>
+      }
+    </div>
+
+    <!-- Identity: client + label + inline rename + nested path. -->
+    <div class="pnb__identity pnb__wide-only">
+      <a class="pnb__client" [routerLink]="clientRoute()">{{ clientName() }} planificación:</a>
       <afi-inline-edit
         class="pnb__sim-name"
         [value]="simNameShown()"
-        ariaLabel="nombre de la simulación"
+        ariaLabel="nombre de la planificación"
         (committed)="onRename($event)"
       />
 
-      <div class="pnb__estado">
-        <button
-          type="button"
-          class="pnb__estado-trigger"
-          [attr.aria-expanded]="estadoOpen()"
-          aria-haspopup="menu"
-          aria-label="Cambiar estado de la simulación"
-          (click)="toggleEstado($event)"
-        >
-          <afi-badge-v2 [label]="estadoLabel()" [tone]="estadoTone()" [dot]="true" />
-          <svg class="pnb__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </button>
-
-        @if (estadoOpen()) {
-          <afi-menu-v2 class="pnb__menu" ariaLabel="Estado de la simulación">
-            @for (opt of estados; track opt.value) {
-              <afi-menu-item-v2
-                [selected]="opt.value === estado()"
-                (clicked)="onEstadoChange(opt.value)"
-              >
-                {{ opt.label }}
-              </afi-menu-item-v2>
-            }
-          </afi-menu-v2>
+      @for (step of currentPath(); track step.label; let last = $last) {
+        <span class="pnb__path-sep" aria-hidden="true">/</span>
+        @if (step.route && !last) {
+          <a [routerLink]="step.route" class="pnb__path-step pnb__path-step--link">{{ step.label }}</a>
+        } @else {
+          <span class="pnb__path-step" aria-current="page">{{ step.label }}</span>
         }
-      </div>
+      }
     </div>
 
-    <span class="pnb__sep pnb__sep--view" aria-hidden="true">/</span>
-
-    <span class="pnb__view">
-      <span class="pnb__chip" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7" rx="1" />
-          <rect x="14" y="3" width="7" height="7" rx="1" />
-          <rect x="14" y="14" width="7" height="7" rx="1" />
-          <rect x="3" y="14" width="7" height="7" rx="1" />
+    <!-- Estado — badge trigger + menu. -->
+    <div class="pnb__anchor pnb__wide-only">
+      <button
+        type="button"
+        class="pnb__estado-trigger"
+        [attr.aria-expanded]="estadoOpen()"
+        aria-haspopup="menu"
+        aria-label="Cambiar estado de la simulación"
+        (click)="toggleEstado($event)"
+      >
+        <afi-badge-v2 [label]="estadoLabel()" [tone]="estadoTone()" [dot]="true" />
+        <svg class="pnb__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m6 9 6 6 6-6" />
         </svg>
-      </span>
-      <span class="pnb__view-name">{{ currentView() }}</span>
-    </span>
-  </nav>
+      </button>
 
-  <!-- ── Right: notas · ajustes · asesor ── -->
+      @if (estadoOpen()) {
+        <afi-menu-v2 class="pnb__menu pnb__menu--start" ariaLabel="Estado de la simulación">
+          @for (opt of estados; track opt.value) {
+            <afi-menu-item-v2
+              [selected]="opt.value === estado()"
+              (clicked)="onEstadoChange(opt.value)"
+            >
+              {{ opt.label }}
+            </afi-menu-item-v2>
+          }
+        </afi-menu-v2>
+      }
+    </div>
+  </div>
+
+  <!-- ── Right: notas · ajustes (wide) → single ⋮ overflow (narrow) ────────── -->
   <div class="pnb__actions">
-    <div class="pnb__action-anchor">
+    <div class="pnb__anchor pnb__wide-only">
       <afi-icon-button-v2
         variant="ghost"
         size="sm"
@@ -85,9 +137,7 @@
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z" />
-          <path d="M15 3v5h5" />
-          <path d="M8 13h8" />
-          <path d="M8 17h5" />
+          <path d="M15 3v5h5" /><path d="M8 13h8" /><path d="M8 17h5" />
         </svg>
       </afi-icon-button-v2>
       <site-notes-panel-v2
@@ -99,7 +149,7 @@
       />
     </div>
 
-    <div class="pnb__action-anchor">
+    <div class="pnb__anchor pnb__wide-only">
       <afi-icon-button-v2
         variant="ghost"
         size="sm"
@@ -119,9 +169,43 @@
       />
     </div>
 
+    <!--
+      Narrow-viewport overflow: holds what the wide bar shows inline and the
+      identity strip hides — estado, notas, ajustes.
+    -->
+    <div class="pnb__anchor pnb__narrow-only">
+      <afi-icon-button-v2
+        variant="ghost"
+        size="sm"
+        ariaLabel="Más acciones"
+        (clicked)="toggleOverflow($event)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="5" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="12" cy="19" r="1" />
+        </svg>
+      </afi-icon-button-v2>
+
+      @if (overflowOpen()) {
+        <afi-menu-v2 class="pnb__menu pnb__menu--end" ariaLabel="Más acciones">
+          @for (opt of estados; track opt.value) {
+            <afi-menu-item-v2
+              [selected]="opt.value === estado()"
+              (clicked)="changeEstadoFromOverflow(opt.value)"
+            >
+              {{ opt.label }}
+            </afi-menu-item-v2>
+          }
+          <afi-menu-divider-v2 />
+          <afi-menu-item-v2 (clicked)="openNotesFromOverflow()">Notas</afi-menu-item-v2>
+          <afi-menu-item-v2 (clicked)="openSettingsFromOverflow()">Ajustes</afi-menu-item-v2>
+        </afi-menu-v2>
+      }
+    </div>
+
     <span class="pnb__avatar" [attr.aria-label]="'Asesor: ' + advisorName()" role="img">
       {{ advisorInitials() }}
     </span>
+  </div>
   </div>
 </header>
 

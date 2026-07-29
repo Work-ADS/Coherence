@@ -146,6 +146,8 @@ No inventamos la mayoría de las animaciones. Recreamos, aplicando ingeniería i
 2. Animate UI
 3. Shadcn
 
+> **En construcción** — De aquí hacia abajo está el frente activo del proyecto: irá cambiando a medida que avancemos.
+
 ## 8. La estructura
 
 Durante el descubrimiento vimos que la mayoría de los productos financieros no tienen una sola gráfica o tabla flotando en blanco, como nos pasa a nosotros. La mayoría van directos a la conclusión: una lectura rápida de un vistazo, con espacio para profundizar bajo demanda.

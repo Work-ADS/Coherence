@@ -93,6 +93,25 @@
     gap: var(--space-md);
   }
 
+  // Work-in-progress divider — the stated boundary between shipped sections
+  // (above) and the active edge of the project (below).
+  &__wip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+    padding-block-start: var(--space-md);
+    border-block-start: var(--stroke-default) solid var(--borders-default);
+  }
+
+  &__wip-text {
+    margin: 0;
+    color: var(--content-tertiary);
+    font-size: var(--type-body-small-size);
+    font-weight: var(--type-body-small-weight);
+    line-height: var(--type-body-small-line-height);
+  }
+
   // Section heading — v2 H2 role.
   &__h2 {
     margin: 0;

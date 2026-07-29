@@ -21,50 +21,17 @@ const DEMOS: DemoCard[] = [
   // but it's hidden from the demos landing until the look is ready.
   // NOTE: the Sarevi demos (laboral-kutxa-sarevi, sarevi-unicaja) and AWM are
   // hidden from the landing (2026-07-22) — routes stay live for direct links.
+  // NOTE: the panel-asesor cards (hero-lab, producto, editorial, trazos) and the
+  // foundations-modern workbench are hidden from the landing (2026-07-28) while
+  // Demo 1 is the single v2 card — routes stay live for direct links.
   {
-    slug: 'panel-asesor-hero-lab',
-    title: 'Panel del asesor — hero lab',
+    slug: 'demo-1',
+    title: 'Demo 1',
     intro:
-      'Laboratorio del hero del panel: los tres tratamientos (Producto, Editorial, Trazos) lado a lado sobre el mismo dato, con pines de comentario para elegir registro.',
-    system: 'v2',
-    status: 'Identidad v2',
-    overviewRoute: '/demos/panel-asesor/hero-lab',
-  },
-  {
-    slug: 'panel-asesor-producto',
-    title: 'Panel del asesor · T1 Producto',
-    intro:
-      'El dashboard de marca en registro producto: tarjeta contenida, píldoras con hueco, cifra en display-metric.',
-    system: 'v2',
-    status: 'Identidad v2',
-    overviewRoute: '/demos/panel-asesor/producto',
-  },
-  {
-    slug: 'panel-asesor-editorial',
-    title: 'Panel del asesor · T2 Editorial',
-    intro:
-      'El dashboard de marca en registro editorial: cifra a gran cuerpo sobre el lienzo, bloques planos, voz de informe.',
-    system: 'v2',
-    status: 'Identidad v2',
-    overviewRoute: '/demos/panel-asesor/editorial',
-  },
-  {
-    slug: 'panel-asesor-trazos',
-    title: 'Panel del asesor · T3 Trazos',
-    intro:
-      'El dashboard de marca en la variante de autor: campo de trazos finos con banda sólida solo en el foco.',
-    system: 'v2',
-    status: 'Identidad v2',
-    overviewRoute: '/demos/panel-asesor/trazos',
-  },
-  {
-    slug: 'foundations-modern-workbench',
-    title: 'Identidad v2 — workbench',
-    intro:
-      'Banco de pruebas de la nueva identidad (foundations-modern): botón v2 con todas sus variantes, tamaños y estados. Crecerá hasta convertirse en el moodboard de componentes.',
+      'Primer dashboard de la reestructura: el desglose del patrimonio sobre la banda de composición, con el resto de bloques como marcadores.',
     system: 'v2',
     status: 'En curso',
-    overviewRoute: '/demos/foundations-modern/workbench',
+    overviewRoute: '/demos/demo-1',
   },
   {
     slug: 'wealth-planner-2026',

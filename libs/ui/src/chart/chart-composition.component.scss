@@ -68,7 +68,7 @@
   transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
 
   &--dim {
-    opacity: 0.35;
+    opacity: 0.25;
   }
 
   &:focus-visible {
@@ -151,6 +151,88 @@
   background: var(--_ink);
 }
 
+// Detail register: one column per category — swatch + label, currency value,
+// delta annotation. Container-independent (auto-fit) so the legend reflows
+// with the card, not the window.
+.comp__legend--detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--dimension-32), 1fr));
+  gap: var(--gap-control-md) var(--pad-control-lg);
+}
+
+// Hover linking speaks through ink, not opacity, in the detail register:
+// non-hovered categories drop to the disabled color, the hovered one steps
+// every line up to content-primary. Louder than the inline variant's fade —
+// this legend carries the figures, so the state change has to be unmissable.
+.comp__legend-item--detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-control-xs);
+  min-inline-size: 0;
+
+  .comp__legend-label,
+  .comp__legend-value,
+  .comp__legend-delta {
+    transition: color var(--motion-duration-fast) var(--motion-easing-standard);
+  }
+
+  .comp__legend-swatch {
+    transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
+  }
+
+  &.comp__legend-item--dim {
+    // Colors carry the state here; the inline variant's whole-item fade off.
+    opacity: 1;
+
+    .comp__legend-label,
+    .comp__legend-value,
+    .comp__legend-delta {
+      color: var(--content-disabled);
+    }
+
+    .comp__legend-swatch {
+      opacity: 0.25;
+    }
+  }
+
+  &.comp__legend-item--hot {
+    .comp__legend-label,
+    .comp__legend-delta {
+      color: var(--content-primary);
+    }
+  }
+}
+
+.comp__legend-head {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  max-inline-size: 100%;
+
+  .comp__legend-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.comp__legend-value {
+  font-size: var(--type-h4-size);
+  font-weight: var(--type-h4-weight);
+  line-height: var(--type-h4-line-height);
+  color: var(--content-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.comp__legend-delta {
+  font-size: var(--type-help-size);
+  font-weight: var(--type-help-weight);
+  line-height: var(--type-help-line-height);
+  color: var(--content-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
 .comp__legend-pct {
   font-weight: var(--type-section-label-weight);
   color: var(--content-primary);
@@ -191,9 +273,99 @@
   }
 }
 
+// Peek register: the first table rows show for real, then dissolve under a
+// two-step progressive blur (soft high, stronger low) into the card surface,
+// with the expand pill floating at the bottom. The veil is aria-hidden — the
+// full table stays in the accessibility tree.
+.comp__peek {
+  position: relative;
+  max-block-size: var(--dimension-36);
+  // clip, not hidden: hidden still allows focus-triggered programmatic
+  // scrolling, so clicking the pill scrolls the clipped table and the pill
+  // slides out from under the pointer before the click lands.
+  overflow: clip;
+}
+
+.comp__peek-veil {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 70%;
+  pointer-events: none;
+  // Bottom settles into the card surface so the pill sits on quiet ground.
+  background: linear-gradient(to bottom, transparent, var(--background-surface));
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+  }
+
+  // Step 1 — soft blur easing in across the veil's upper half.
+  &::before {
+    block-size: 100%;
+    backdrop-filter: blur(var(--blur-sm));
+    mask-image: linear-gradient(to bottom, transparent, black 60%);
+  }
+
+  // Step 2 — stronger blur pooled at the bottom.
+  &::after {
+    block-size: 55%;
+    backdrop-filter: blur(var(--blur-md));
+    mask-image: linear-gradient(to bottom, transparent, black 70%);
+  }
+}
+
+.comp__peek-nudge {
+  position: absolute;
+  inset-block-end: var(--pad-control-md);
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  border: var(--stroke-default) solid var(--borders-default);
+  border-radius: var(--radius-full);
+  background: var(--background-surface);
+  box-shadow: var(--elevation-card);
+  padding-block: var(--pad-control-sm);
+  padding-inline: var(--pad-control-lg);
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  color: var(--content-primary);
+  transition: box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &:hover {
+    box-shadow: var(--elevation-2);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--gap-control-xs) var(--borders-focus);
+  }
+
+  // Apron register: the close control sits where a table apron would — static
+  // flow, bottom-center under the expanded table — so the pill the user just
+  // clicked stays in the same place instead of jumping above the table.
+  &--apron {
+    position: static;
+    translate: none;
+    display: block;
+    margin-block-start: var(--gap-control-md);
+    margin-inline: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .comp__segment,
-  .comp__legend-item {
+  .comp__legend-item,
+  .comp__legend-item--detail .comp__legend-label,
+  .comp__legend-item--detail .comp__legend-value,
+  .comp__legend-item--detail .comp__legend-delta,
+  .comp__legend-item--detail .comp__legend-swatch,
+  .comp__peek-nudge {
     transition: none;
   }
 }

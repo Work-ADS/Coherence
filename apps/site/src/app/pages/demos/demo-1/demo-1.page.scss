@@ -1,0 +1,174 @@
+// Demo 1 — dashboard bento, first pass.
+//
+// Layout and tone only. Every colour, size, radius and spacing value resolves
+// through the foundations-modern semantic layer; nothing is hard-coded.
+// Responsive uses @container viewport per page-structure-skill §11.
+
+:host {
+  display: block;
+  // This page renders bare (no demo-shell), and demo-shell is the only place
+  // that declares the `viewport` container — without an ancestor container the
+  // @container rules below silently never fire. Declaring it here keeps one
+  // set of rules working both bare and (later) inside the shell's sizer.
+  container-type: inline-size;
+  container-name: viewport;
+}
+
+.d1 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--canvas-gap-section-to-section);
+  // Matches the panel-asesor / nueva-simulacion-overview precedent: the page
+  // field is --background-canvas and borders do the card separation. Layout 1's
+  // grey field would need a new semantic role (there is no canvas-subtle in
+  // foundations-modern) — flagged rather than invented.
+  background: var(--background-canvas);
+  padding-block: var(--canvas-padding-block);
+  padding-inline: var(--canvas-padding-inline);
+  min-block-size: 100vb;
+}
+
+// ── Rows ────────────────────────────────────────────────────────────────────
+// Single column until 48rem, then the reference proportions: wide + narrow for
+// the hero and closing rows, three equal blocks in the middle.
+
+.d1__hero,
+.d1__row {
+  display: grid;
+  // minmax(0, …) throughout: a bare fr is minmax(auto, fr), and the hero figure
+  // at display-metric size would otherwise refuse to shrink and overflow.
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--layout-gap-default);
+}
+
+@container viewport (min-width: 48rem) {
+  .d1__hero,
+  .d1__row--two {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+
+  .d1__row--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+// ── Patrimonio card ─────────────────────────────────────────────────────────
+
+.pat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap-header-to-content);
+}
+
+.pat__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--layout-gap-default);
+}
+
+.pat__figure {
+  display: flex;
+  flex-direction: column;
+  // Tighter than the row gap: label, figure and delta are one unit.
+  gap: var(--layout-gap-compact);
+  min-inline-size: 0;
+}
+
+.pat__label {
+  margin: 0;
+  color: var(--content-secondary);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+}
+
+.pat__value {
+  margin: 0;
+  color: var(--content-primary);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-display-metric-size);
+  font-weight: var(--type-display-metric-weight);
+  line-height: var(--type-display-metric-line-height);
+  // Figures must not reflow between renders or across sibling cards.
+  font-variant-numeric: tabular-nums;
+}
+
+// Neutral by request. The semantic positive/negative chart tokens are the
+// switch to flip when deltas should carry direction.
+.pat__delta {
+  margin: 0;
+  color: var(--content-secondary);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  font-variant-numeric: tabular-nums;
+}
+
+.pat__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--layout-gap-compact);
+}
+
+.pat__breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap-header-to-content);
+  padding-block-start: var(--section-gap-content-to-content);
+  border-block-start: var(--stroke-default) solid var(--borders-default);
+}
+
+.pat__section-label {
+  margin: 0;
+  color: var(--content-primary);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+}
+
+// ── Work-in-progress divider ────────────────────────────────────────────────
+// The stated boundary between shipped work (above) and in-flight work (below).
+
+.d1__wip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--layout-gap-compact);
+  padding-block-start: var(--section-gap-content-to-content);
+  border-block-start: var(--stroke-default) solid var(--borders-default);
+}
+
+.d1__wip-text {
+  margin: 0;
+  color: var(--content-tertiary);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+}
+
+// ── Placeholder blocks ──────────────────────────────────────────────────────
+// Squares standing in for sections not yet designed. Deliberately inert.
+
+.ph {
+  display: grid;
+  place-items: center;
+  // Keeps the bento reading as a grid of blocks rather than collapsing to text.
+  min-block-size: var(--dimension-40);
+  aspect-ratio: 1 / 1;
+  border: var(--stroke-default) dashed var(--borders-default);
+  border-radius: var(--radius-lg);
+}
+
+.ph__label {
+  color: var(--content-tertiary);
+  font-family: var(--font-family-primary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+}

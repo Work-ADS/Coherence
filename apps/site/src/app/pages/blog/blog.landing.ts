@@ -199,6 +199,31 @@ export class BlogLandingPage {
   /** Methodology renders the centered Design-at-Afi hero instead of the blog header. */
   readonly isMethodology = computed(() => this.collection() === 'methodology');
 
+  /**
+   * Stages of the `proceso` thumbnail stepper, in the active locale.
+   *
+   * Drives the SVG so the animation reads in the reader's language — the labels
+   * were hard-coded in Spanish. `y` is derived from the index (35px pitch, first
+   * node at 22) rather than repeated per stage; `next` marks the dashed
+   * still-ahead stage, and its animation order is unchanged (`--n` feeds the
+   * per-stage delay in the stylesheet).
+   */
+  readonly procesoStages = computed(() => {
+    const isEn = this.lang() === 'en';
+    const labels = isEn
+      ? ['Context', 'Moodboards', 'Principles', 'Tokens', 'Components', 'Charts']
+      : ['Contexto', 'Moodboards', 'Principios', 'Tokens', 'Componentes', 'Gráficas'];
+    return labels.map((label, i) => ({
+      label,
+      n: i + 1,
+      cy: 22 + i * 35,
+      pillY: 11.5 + i * 35,
+      textY: 25.5 + i * 35,
+      // Last stage is still ahead — dashed pill, dimmer label.
+      next: i === labels.length - 1,
+    }));
+  });
+
   readonly headerCopy = computed(() => {
     const isEn = this.lang() === 'en';
     if (this.collection() === 'methodology') {

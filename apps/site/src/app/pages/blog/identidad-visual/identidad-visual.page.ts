@@ -8,6 +8,7 @@ import {
   InputV2Component,
   RadioGroupV2Component,
   RadioV2Component,
+  TagV2Component,
   ToggleV2Component,
 } from '@coherence/ui';
 
@@ -41,6 +42,7 @@ type SendDemoState = 'idle' | 'sending' | 'sent';
     InputV2Component,
     RadioGroupV2Component,
     RadioV2Component,
+    TagV2Component,
     ToggleV2Component,
     HyperTextDirective,
   ],

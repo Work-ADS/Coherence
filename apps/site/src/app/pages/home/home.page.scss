@@ -134,6 +134,13 @@
   overflow: hidden;
   text-decoration: none;
   color: inherit;
+
+  // The whole card is one link — nothing inside it may take the click. A
+  // <video> can swallow the press, and animating glyphs can change what sits
+  // under the cursor between press and release, dropping the click.
+  * {
+    pointer-events: none;
+  }
   transition:
     border-color 200ms ease,
     transform 200ms ease,
@@ -161,6 +168,10 @@
   justify-content: center;
   flex: 1;
   min-height: 0;
+  // Decorative media (video, animated glyphs) sits inside the card anchor. A
+  // <video> is interactive media and the glyphs animate, so either can end up
+  // as the click target and absorb the press. The anchor takes every click.
+  pointer-events: none;
 
   // In bento (md breakpoint and up), drop the fixed aspect ratio so the thumb fills the cell.
   @media (min-width: 768px) {

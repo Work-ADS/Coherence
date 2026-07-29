@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
-import { TabsV2Component, TabV2Component } from '@coherence/ui';
+import { TabsV2Component, TabV2Component, TabPanelV2Directive } from '@coherence/ui';
 
 import { HyperTextDirective } from '../../directives/hyper-text.directive';
 import { LanguageService } from '../../services/language.service';
@@ -117,7 +117,7 @@ interface Copy {
 @Component({
   selector: 'site-estrategia-marca-page',
   standalone: true,
-  imports: [TabsV2Component, TabV2Component, HyperTextDirective],
+  imports: [TabsV2Component, TabV2Component, TabPanelV2Directive, HyperTextDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './estrategia-marca.page.html',
   styleUrls: ['./estrategia-marca.page.scss'],

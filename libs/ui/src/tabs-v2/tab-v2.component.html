@@ -15,6 +15,11 @@
   <span class="afi-tab-v2__icon"><ng-content select="[slot=iconStart]" /></span>
   <span class="afi-tab-v2__label">{{ label() }}</span>
   @if (count() !== null) {
-    <span class="afi-tab-v2__count" aria-hidden="true">{{ count() }}</span>
+    <afi-badge-v2
+      class="afi-tab-v2__count"
+      tone="neutral"
+      [label]="countLabel()"
+      aria-hidden="true"
+    />
   }
 </button>

@@ -53,6 +53,23 @@ Source: [libs/tokens/motion.scss](../../libs/tokens/motion.scss).
 
 Choreography pairing rule: **enters use `--easing-enter`, exits use `--easing-exit`, hover/active use `--easing-standard` or `--easing-enter`.** The full discipline is in [component-skill.md §11](./component-skill.md).
 
+### Overshoot: why distance decides the mechanism (added 2026-07-29)
+
+Follow-through — ending **past** the target and settling back — is what makes a move read as carrying weight instead of snapping to a stop. There are two ways to get it, and **the travel distance decides which one is even possible.**
+
+**A CSS easing curve overshoots by a PERCENTAGE, never by a distance.** An easing is normalised over whatever distance it is given, so `--motion-easing-spring` (`cubic-bezier(0.34, 2, 0.64, 1)`, ~25% past, peaking at 50%) resolves to:
+
+| Travel | Overshoot with `spring` |
+|---|---|
+| 16px (a toggle thumb) | 4px — tactile |
+| 235px (a tab bar hop) | 59px — absurd |
+
+That is why `--motion-easing-spring` is scoped to **short travel — roughly under 20px**: press feedback and small thumbs (§4.8, §4.9). It is not a general-purpose bounce.
+
+**For long travel, use a fixed-distance overshoot keyframe instead of a curve.** Aim for an overshoot the eye registers but cannot measure — **4–10px, constant, whatever the distance** — expressed as a three-keyframe animation (start → target + reach → target) with the reach taken from `--motion-reveal-rise-light` (6px) and both segments on `--motion-easing-standard`. See §4.13 for the implementation.
+
+The trap this replaced: reaching for a *tamer curve* (`cubic-bezier(0.34, 1.3, 0.64, 1)`, ~3%) looks like it solves the problem, and it does at one distance — 7px on a 235px hop. But it is still a percentage, so the same curve yields 2.4px across a narrow 81px tab bar (invisible) and 10.4px across a wide one. A curve cannot hold a distance constant. Do not re-add that token; **weight is a property of the moving object, not of how far it happened to travel.**
+
 ### Reveal / stagger (added 2026-07-17)
 
 Backs the `stagger-reveal` pattern (§4.7). Three intensity tiers — the tier tracks **element count**, not taste (see §4.7).
@@ -232,7 +249,7 @@ State communication must still work — opacity-only fades stay; spatial choreog
 
 **When** — **cold entries only**: first paint, app load, a hard refresh, an empty state filling for the first time. The moment the user is *arriving*, where a beat of choreography reads as considered.
 
-**When NOT to use** — **warm transitions** inside an active session: route changes, tab switches, filter/data refreshes, any in-place re-render while the user is heads-down working. There the blur + stagger stops being polish and becomes latency you are adding on purpose. Warm transitions get `opacity-fade` (§4.2) at `--duration-fast`, or nothing. **Rule of thumb: the more often a user will see a motion, the less of it it earns** — a first load happens once; a route change happens dozens of times an hour.
+**When NOT to use** — **warm transitions** inside an active session: route changes, tab switches, filter/data refreshes, any in-place re-render while the user is heads-down working. There the blur + stagger stops being polish and becomes latency you are adding on purpose. Warm transitions get `opacity-fade` (§4.2) at `--duration-fast`, `swap-slide-blur` (§4.12) when the user clicked through an *ordered* set and direction is worth encoding, or nothing. **Rule of thumb: the more often a user will see a motion, the less of it it earns** — a first load happens once; a route change happens dozens of times an hour.
 
 **Properties** — `opacity` (0→1) + `transform: translateY()` (rise→0) + `filter: blur()` (→0), sequenced per element via a `--index` (or `--col` for grids) multiplied by the tier's stagger delay.
 
@@ -413,6 +430,108 @@ State communication must still work — opacity-only fades stay; spatial choreog
 
 ---
 
+### 4.12 `swap-slide-blur`
+
+**When** — one region swaps its whole content for a peer view **on the user's click**: a tab panel, a step in a wizard, a paged carousel. The region's frame stays put and the content slides through it, so the swap reads as lateral movement along a strip rather than a hard cut. Direction carries meaning: forward through the set enters from the trailing edge, backward from the leading edge, which is what tells the user *which way* they moved.
+
+**When NOT to use** —
+- **Anything the user did not click.** A data refresh, a route change, a re-render: those are `opacity-fade` (§4.2) or nothing. This pattern's whole justification is that a deliberate lateral gesture deserves lateral feedback.
+- **A set with no order.** Filters, toggles, unordered switches — there is no forward or backward to encode, so the slide is decoration and the direction is a lie. Use `hover-tint` + an instant swap.
+- **Tall content.** A panel taller than the viewport slides its off-screen parts too; you get motion the user cannot see paid for at full cost. Cap it at content that fits in view.
+- **A frame that resizes with its content.** The slide assumes a stable box. If the panels differ in height, the frame jumps under the motion and the swap reads as a glitch — fix the height first.
+
+**Relationship to `stagger-reveal` (§4.7)** — §4.7 bars blur from *warm* transitions, and this pattern is warm. The distinction that lets both stand: §4.7 is a multi-element cascade at 400–600ms with per-element delays, which on a tab switch is latency you added on purpose. This is ONE element at `--motion-duration-base` (200ms) with a light 4px blur — inside the interaction-response budget of component-skill §11 rule 4, and short enough that the blur reads as a soft edge on the movement rather than as a load. If you find yourself staggering the contents of a swapped panel, you have left this pattern and §4.7's prohibition applies again.
+
+**Properties** — `opacity` (0→1) + `transform: translateX()` (±travel→0) + `filter: blur()` (→0), on the container only. Container-first (component-skill §11 rule 1): the panel moves as one unit, never its children individually.
+
+**Tokens** — `var(--motion-duration-base)` + `var(--motion-easing-standard)` (back-and-forth movement, per §3), `var(--motion-reveal-rise-normal)` for the lateral travel, `var(--motion-reveal-blur-light)` for the blur peak. No new tokens: `reveal-rise` carries any spatial travel in this family (same reuse rule as §4.11), and the light blur tier is the softest one in the set.
+
+```scss
+// CSS form — for a panel INSIDE the primitive's own style scope.
+.panel--swap-forward { animation: swap-slide-blur-forward var(--motion-duration-base) var(--motion-easing-standard) both; }
+.panel--swap-back    { animation: swap-slide-blur-back    var(--motion-duration-base) var(--motion-easing-standard) both; }
+
+@keyframes swap-slide-blur-forward {
+  from { opacity: 0; filter: blur(var(--motion-reveal-blur-light)); transform: translateX(var(--motion-reveal-rise-normal)); }
+  to   { opacity: 1; filter: blur(0);                               transform: translateX(0); }
+}
+
+@keyframes swap-slide-blur-back {
+  from { opacity: 0; filter: blur(var(--motion-reveal-blur-light)); transform: translateX(calc(-1 * var(--motion-reveal-rise-normal))); }
+  to   { opacity: 1; filter: blur(0);                               transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel--swap-forward,
+  .panel--swap-back { animation: none; }
+}
+```
+
+**Replay caveat** — a CSS class cannot replay an animation it is already carrying. v1 `afi-tabs` solved that with an `animationKey % 2` parity hack that doubles every keyframe block (`--enter-left` / `--enter-left-alt`); do not copy it. Either re-mount the element, or drive the pattern from the Web Animations API, where each `element.animate()` call is a fresh replay — see the directive below.
+
+**Reduced motion** — skip the animation entirely. The content still changes, instantly; selection is already communicated by the tab label colour and the underline. No opacity-only substitute — a fade here would be motion the user asked not to have, on a transition they trigger dozens of times a session.
+
+**Currently used in** — [tab-panel-v2.directive.ts](../../libs/ui/src/tabs-v2/tab-panel-v2.directive.ts), the WAAPI form: `[afiTabPanelV2]="activeIndex"` on the consumer's panel element. `afi-tabs-v2` is bar-only, so the panel lives outside the primitive's style scope where scoped keyframes cannot reach it and `::ng-deep` is banned — the directive reads the four tokens with `getComputedStyle` and calls `element.animate()`, the same read-tokens-into-JS approach as §4.10. Consumers: the brand-strategy page ([estrategia-marca](../../apps/site/src/app/pages/estrategia-marca/estrategia-marca.page.html), four panels kept mounted and toggled with `[hidden]`) and the [foundations-modern workbench](../../apps/site/src/app/pages/demos/foundations-modern-workbench/foundations-modern-workbench.page.html) (a single swapping panel).
+
+**Prior art** — v1 [afi-tabs](../../libs/ui/src/tabs/tabs.component.scss), which invented this motion inline with spacing tokens standing in for motion distances (`--space-sm` travel, `--space-2xs` blur). The v2 port is what turned it into a named pattern.
+
+---
+
+### 4.13 `selection-slide`
+
+**When** — a **single marker shared by a set of options** travels to whichever one the user just picked: the tab underline, the segmented-control pill, a nav rail highlight. One marker moving is the whole point — it says *the selection moved from there to here*, which N independent fade-in/fade-out markers cannot say.
+
+**When NOT to use** — a set whose options each own their own indicator (checkboxes, a multi-select filter bar). Nothing travels between them, so there is no path to animate; those get `control-fill-fade` (§4.9).
+
+**Properties** — `transform: translateX()` for position + `width` for size, both measured off the target's bounding rect by the component. Never `left`/`inset-inline-start` for the travel: `transform` composites, `left` re-layouts every frame.
+
+**Tokens** — `var(--motion-duration-base)` for both properties, `var(--motion-easing-standard)` for both animation segments, and `var(--motion-reveal-rise-light)` (6px) as the overshoot reach (reveal-rise carries spatial travel in this family, per §4.11).
+
+**The position overshoots by a fixed distance; the width does not overshoot at all.** Three calls, each of which cost something to learn:
+
+- **Fixed distance, not a curve** — see §3. A CSS easing's overshoot is a percentage of the travel, so it collapses to nothing on a narrow bar and goes loose on a wide one. Drive the position with a three-keyframe WAAPI animation whose middle keyframe is `target + reach`, and the bounce feels identical in a 3-tab bar and an 8-tab one.
+- **Position vs width** — overshooting the width alongside the position lets the trailing edge cross the leading one on a hop to a narrower target. That reads as a wobble, not as weight. Width stays a plain CSS transition on the standard curve, so the box arrives clean while the position does the follow-through.
+- **Open marker vs bounded marker** — a hairline underline sits on an open baseline with nothing to hit, so it can overshoot freely. A **filled pill inside a track** (segmented-control) has hard walls a few pixels away; overshooting drives it into the track edge or clips it. Bounded markers get no overshoot — plain transitions on both properties.
+
+```scss
+// Width only. Position is animated by the component (WAAPI) — with no transform
+// transition here, skipping that animation lands the marker instantly, which is
+// exactly the reduced-motion behaviour.
+.indicator {
+  will-change: transform, width;
+  transition: width var(--motion-duration-base) var(--motion-easing-standard);
+
+  @media (prefers-reduced-motion: reduce) { transition: none; }
+}
+```
+
+```ts
+// reach = --motion-reveal-rise-light; capped so a very short hop does not fling
+// the full distance. OVERSHOOT_AT (0.62) and the 0.3 cap are curve-shape
+// constants, not brand values — the reach is the token.
+const overshoot = Math.sign(travel) * Math.min(reach, Math.abs(travel) * 0.3);
+el.animate(
+  [
+    { transform: `translateX(${start}px)`, easing },
+    { transform: `translateX(${to + overshoot}px)`, offset: 0.62, easing },
+    { transform: `translateX(${to}px)` },
+  ],
+  { duration },
+);
+```
+
+**Re-target mid-flight from where the marker actually is** (`getComputedStyle(el).transform` → `DOMMatrix.m41`) rather than from the last committed position, or a fast second click snaps the marker back to the previous item before starting again.
+
+**Animate on selection change only.** A measured marker also moves on resize and on web-font reflow. Bouncing for those is motion nobody asked for — gate the animation on the index having changed, and let the first pass establish the resting position. (`segmented-control-v2` solves the same first-paint problem with an `--animated` class so its pill lands under the initial selection instead of growing in from zero width.)
+
+**Measure the overshoot, don't eyeball it.** CSS transitions and WAAPI animations are both `Animation` objects, so `element.getAnimations()` returns them — pause and scrub `currentTime` to read the exact travel at any instant. Do that across the narrowest AND widest hop the bar allows; a single measurement is what hides a percentage-based bounce.
+
+**Reduced motion** — no animation, no transition. The marker jumps straight to the new selection, which still communicates the state; the travel is the non-essential part.
+
+**Currently used in** — [tabs-v2](../../libs/ui/src/tabs-v2/tabs-v2.component.ts) (`slideIndicator`; underline on an open baseline → fixed-distance overshoot on the position, width on a plain CSS transition) and [segmented-control-v2](../../libs/ui/src/segmented-control-v2/segmented-control-v2.component.scss) (pill inside a track → plain transitions, no overshoot). v1 [afi-tabs](../../libs/ui/src/tabs/tabs.component.scss) predates the pattern and runs `--easing-standard` on both properties.
+
+---
+
 ## 5. How to use this catalog
 
 1. **Designing a new primitive's motion** — open this file. If a pattern matches, copy the snippet, reference the section number in your build prompt.
@@ -445,6 +564,8 @@ These are not blockers for the catalog — they ARE the catalog's first targets.
 
 ## 8. Changelog
 
+- **2026-07-29 (later)** — Added `selection-slide` (§4.13): the travelling selection marker now has follow-through, and §3 gained the rule that **travel distance decides the overshoot mechanism**. Went the wrong way first, which is why §3 says what it says: the initial attempt was a new easing token (`cubic-bezier(0.34, 1.3, 0.64, 1)`, ~3%), reached for because `--motion-easing-spring`'s 25% is fine on a 16px thumb but throws a 235px tab hop 59px past its mark. Measured, the tamer curve gave a clean 7px there — and 2.4px across the narrow 3-tab bar on the same page, i.e. invisible. A CSS easing is normalised, so its overshoot is *always* a percentage of the travel; no curve can hold a distance constant. The token was reverted (never shipped) and the position moved to a three-keyframe WAAPI animation overshooting a fixed `--motion-reveal-rise-light` (6px), which reads identically at every hop length. Width stays a plain CSS transition — overshooting it lets the trailing edge cross the leading one on a narrowing hop. Overshoot applies only to OPEN markers: `segmented-control-v2`'s pill is bounded by its track and keeps plain transitions.
+- **2026-07-29** — Added `swap-slide-blur` (§4.12): the tab-panel content swap — a lateral slide + light blur whose direction encodes which way the user moved through an ordered set. Ported from v1 `afi-tabs`, where it had been improvising motion distances out of spacing tokens (`--space-sm`, `--space-2xs`) and replaying itself with an `animationKey % 2` parity hack that doubled every keyframe block. No new tokens — reuses `--motion-reveal-rise-normal` + `--motion-reveal-blur-light` on `--motion-duration-base`. First consumer is `TabPanelV2Directive`, the WAAPI form, because `afi-tabs-v2` is bar-only and the panel sits outside its style scope. §4.7's blur-on-warm-transitions prohibition is narrowed rather than broken: it governs multi-element cascades at 400–600ms, not a single 200ms container swap — both entries now say so.
 - **2026-07-28** — Added `ambient-loop` (§4.11): the first `infinite` entry in the catalog — decorative, self-restarting motion in its own frame (illustrative thumbnails, self-drawing diagrams). Closes a token gap found by a DS audit of the Design at Afi landing, where the design-process stepper thumbnail had been improvising `10s cubic-bezier(0.2, 0.8, 0.2, 1)` in page code — as the retired IA-sitemap thumbnail did before it, which is what made the cadence worth naming. Two new modern-layer tokens, `--motion-duration-ambient-loop` (10000ms) + `--motion-easing-ambient` (`cubic-bezier(0.2, 0.8, 0.2, 1)`), added via `tools/figma-sync/foundations-modern.json` → `primitive-motion.scss`. Deliberately outside the `fast|base|slow` interaction ramp: a loop length is not a response time (see §3 "Ambient loop"). Reduced-motion variant is `animation: none` with no fade substitute, which only holds if the un-animated markup is already the finished artwork.
 - **2026-07-24** — Added `text-decode-scramble` (§4.10): the language-switch "decode" on blog headings, reworked so the blur travels per-character with the resolve front (was a single uniform whole-element blur). First Tier-3, JS-driven catalog entry. Two new modern-layer tokens, `--motion-decode-duration` (1150ms) + `--motion-decode-blur` (2.5px), added via `tools/figma-sync/foundations-modern.json` → `primitive-motion.scss` and consumed by the `[siteHyperText]` directive by reading the token values into JS — the first pattern to do so.
 - **2026-07-21 (later still)** — toggle-v2 joined the press-feedback family with two variations: the thumb slide moved to `--motion-easing-spring` (overshoot "thunk" into the track wall), and press-down flattens the thumb height-only (`scaleY(0.8)`, width holds — Fluid Functionalism switch recipe) composed with the slide via a `--_travel` var. If a third primitive wants the height-only squish, promote it to a named §4 pattern.

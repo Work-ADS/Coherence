@@ -35,9 +35,17 @@
   inset-inline-start: 0;
   block-size: var(--stroke-strong);
   background: var(--content-primary);
-  transition:
-    transform var(--motion-duration-base) var(--motion-easing-standard),
-    width var(--motion-duration-base) var(--motion-easing-standard);
+  // selection-slide (motion-skill §4.13). Only WIDTH transitions here. The
+  // POSITION is animated by the component via the Web Animations API, because
+  // its follow-through overshoots by a FIXED distance — and a CSS easing cannot
+  // express that: an easing is normalised, so its overshoot is always a
+  // percentage of the travel. That made the bounce scale with the width of the
+  // tab bar — imperceptible across a narrow one, loose across a wide one.
+  // Weight is a property of the object, not of how far it went.
+  //
+  // With no `transform` transition here, a position change with no animation
+  // running is instant — which is exactly the reduced-motion behaviour.
+  transition: width var(--motion-duration-base) var(--motion-easing-standard);
   will-change: transform, width;
 
   // Edge case: a disabled tab is the active one → mute the indicator.

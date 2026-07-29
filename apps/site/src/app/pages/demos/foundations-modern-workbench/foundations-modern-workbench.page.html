@@ -2,7 +2,7 @@
      first-class site destination (top-bar "Workbench" at /workbench), so it
      lives under the site glass nav instead of the demo feedback chrome. -->
 <div class="workbench" data-foundation="modern">
-  <nav class="workbench__nav" aria-label="Índice de componentes">
+  <nav class="workbench__nav" [attr.aria-label]="t().navLabel">
     <ul class="workbench__nav-list">
       @for (label of sections(); track label; let i = $index) {
         <li class="workbench__nav-item">
@@ -22,13 +22,11 @@
 
   <div class="workbench__main">
     <header class="workbench__header">
-      <h1 class="workbench__title">Identidad v2 — workbench</h1>
-      <p class="workbench__subtitle">
-        Primitivas foundations-modern · IBM Plex Sans · tokens scoped [data-foundation="modern"]
-      </p>
+      <h1 class="workbench__title" siteHyperText [siteHyperTextReplayOn]="lang()">{{ t().title }}</h1>
+      <p class="workbench__subtitle">{{ t().subtitle }}</p>
     </header>
 
-    <h2 #wbGroup class="workbench__group-title">Botón</h2>
+    <h2 #wbGroup class="workbench__group-title">Button</h2>
 
     @for (variant of variants; track variant) {
       <section class="workbench__section">
@@ -39,27 +37,24 @@
               <span class="workbench__cell-label">size="{{ size }}"</span>
               <div class="workbench__cell">
                 <afi-button-v2 [variant]="variant" [size]="size">
-                  {{ labels[variant] }}
+                  {{ labels()[variant] }}
                 </afi-button-v2>
                 <afi-button-v2 [variant]="variant" [size]="size" [disabled]="true">
-                  {{ labels[variant] }}
+                  {{ labels()[variant] }}
                 </afi-button-v2>
                 <afi-button-v2 [variant]="variant" [size]="size" [loading]="true">
-                  {{ labels[variant] }}
+                  {{ labels()[variant] }}
                 </afi-button-v2>
               </div>
             </div>
           }
         </div>
-        <p class="workbench__hint">
-          Interactúe para ver el resto de estados: pase el cursor (hover), mantenga pulsado
-          (pressed) y navegue con Tab (focus).
-        </p>
+        <p class="workbench__hint">{{ t().buttonStatesHint }}</p>
       </section>
     }
 
     <section class="workbench__section">
-      <h2 class="workbench__section-title">Slots de icono · ancho completo · carga interactiva</h2>
+      <h2 class="workbench__section-title">{{ t().buttonSlotsTitle }}</h2>
       <div class="workbench__row">
         <afi-button-v2 variant="secondary">
           <svg
@@ -74,10 +69,10 @@
           >
             <path d="M8 3v10M3 8h10" />
           </svg>
-          Añadir sociedad
+          {{ t().btnAddCompany }}
         </afi-button-v2>
         <afi-button-v2 variant="ghost">
-          Siguiente
+          {{ t().btnNext }}
           <svg
             slot="iconEnd"
             class="workbench__icon"
@@ -93,11 +88,11 @@
           </svg>
         </afi-button-v2>
         <afi-button-v2 [loading]="simulating()" (clicked)="onSimulate()">
-          Simular carga
+          {{ t().btnSimulateLoading }}
         </afi-button-v2>
       </div>
       <div class="workbench__row workbench__row--stretch">
-        <afi-button-v2 [fullWidth]="true">Continuar</afi-button-v2>
+        <afi-button-v2 [fullWidth]="true">{{ t().btnContinue }}</afi-button-v2>
       </div>
     </section>
 
@@ -111,7 +106,7 @@
             <div class="workbench__cell">
               <span class="workbench__cell-label">size="{{ size }}"</span>
               <div class="workbench__row">
-                <afi-icon-button-v2 [variant]="variant" [size]="size" ariaLabel="Buscar">
+                <afi-icon-button-v2 [variant]="variant" [size]="size" [ariaLabel]="t().search">
                   <svg
                     class="workbench__icon workbench__icon--fill"
                     viewBox="0 0 16 16"
@@ -130,7 +125,7 @@
                   [variant]="variant"
                   [size]="size"
                   [disabled]="true"
-                  ariaLabel="Buscar (deshabilitado)"
+                  [ariaLabel]="t().searchDisabled"
                 >
                   <svg
                     class="workbench__icon workbench__icon--fill"
@@ -150,10 +145,7 @@
             </div>
           }
         </div>
-        <p class="workbench__hint">
-          Botón cuadrado, solo icono. Pase el cursor (hover), mantenga pulsado (pressed) y
-          navegue con Tab (focus) para ver el resto de estados. SM usa icono de 16; MD y LG, 20.
-        </p>
+        <p class="workbench__hint">{{ t().iconButtonHint }}</p>
       </section>
     }
 
@@ -166,38 +158,38 @@
           <afi-input-v2
             class="workbench__input"
             [size]="size"
-            label="Nombre"
-            placeholder="Escriba su nombre"
-            hint="Tal como aparece en su DNI."
+            [label]="t().fieldName"
+            [placeholder]="t().fieldNamePlaceholder"
+            [hint]="t().fieldNameHint"
           />
           <afi-input-v2
             class="workbench__input"
             [size]="size"
-            label="Nombre"
+            [label]="t().fieldName"
             value="María García"
-            hint="Tal como aparece en su DNI."
+            [hint]="t().fieldNameHint"
           />
           <afi-input-v2
             class="workbench__input"
             [size]="size"
-            label="Nombre"
+            [label]="t().fieldName"
             value="María"
-            error="Este campo es obligatorio."
+            [error]="t().fieldRequiredError"
           />
           <afi-input-v2
             class="workbench__input"
             [size]="size"
-            label="Nombre"
+            [label]="t().fieldName"
             value="María García"
-            hint="No editable en este contexto."
+            [hint]="t().fieldNotEditable"
             [disabled]="true"
           />
           <afi-input-v2
             class="workbench__input"
             [size]="size"
-            label="Nombre"
+            [label]="t().fieldName"
             value="María García"
-            hint="Solo lectura."
+            [hint]="t().fieldReadOnly"
             [readonly]="true"
           />
         </div>
@@ -205,22 +197,22 @@
     }
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Adornos · prefijo, sufijo e iconos</h3>
+      <h3 class="workbench__section-title">{{ t().affixesTitle }}</h3>
       <div class="workbench__row workbench__row--inputs">
         <afi-input-v2
           class="workbench__input"
-          label="Importe"
+          [label]="t().fieldAmount"
           type="number"
           suffix="EUR"
           placeholder="0,00"
-          hint="Importe en euros."
+          [hint]="t().fieldAmountHint"
         />
         <afi-input-v2
           class="workbench__input"
-          label="Filtrar"
+          [label]="t().fieldFilter"
           type="search"
-          placeholder="Nombre o NIF"
-          hint="Filtra las filas de la tabla. No hay lista desplegable: el resultado se aplica sobre lo que ya está en pantalla."
+          [placeholder]="t().fieldFilterPlaceholder"
+          [hint]="t().fieldFilterHint"
         >
           <svg
             slot="iconStart"
@@ -237,10 +229,10 @@
         </afi-input-v2>
         <afi-input-v2
           class="workbench__input"
-          label="Correo electrónico"
+          [label]="t().fieldEmail"
           type="email"
-          placeholder="nombre@dominio.com"
-          hint="Le enviaremos la confirmación aquí."
+          [placeholder]="t().fieldEmailPlaceholder"
+          [hint]="t().fieldEmailHint"
         >
           <svg
             slot="iconEnd"
@@ -256,17 +248,15 @@
           </svg>
         </afi-input-v2>
       </div>
-      <p class="workbench__hint">
-        Interactúe para ver el resto de estados: pase el cursor (hover) y navegue con Tab (focus).
-      </p>
+      <p class="workbench__hint">{{ t().inputHint }}</p>
     </section>
 
     <h2 #wbGroup class="workbench__group-title">Menu item</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">6 estados · en el panel afi-menu-v2 con separador</h3>
+      <h3 class="workbench__section-title">{{ t().menuItemTitle }}</h3>
       <div class="workbench__menu-demo">
-        <afi-menu-v2 class="workbench__menu" ariaLabel="Acciones del documento">
+        <afi-menu-v2 class="workbench__menu" [ariaLabel]="t().menuAriaLabel">
           <afi-menu-item-v2>
             <svg
               slot="iconStart"
@@ -281,7 +271,7 @@
             >
               <path d="M11 2.5l2.5 2.5L6 12.5 3 13l.5-3z" />
             </svg>
-            Editar
+            {{ t().edit }}
           </afi-menu-item-v2>
           <afi-menu-item-v2 shortcut="⌘D">
             <svg
@@ -298,10 +288,10 @@
               <rect x="5" y="5" width="8" height="8" rx="1.5" />
               <path d="M3 11V4a1 1 0 011-1h7" />
             </svg>
-            Duplicar
+            {{ t().duplicate }}
           </afi-menu-item-v2>
-          <afi-menu-item-v2 [selected]="true">Fijar arriba</afi-menu-item-v2>
-          <afi-menu-item-v2 [disabled]="true">Renombrar</afi-menu-item-v2>
+          <afi-menu-item-v2 [selected]="true">{{ t().menuPinTop }}</afi-menu-item-v2>
+          <afi-menu-item-v2 [disabled]="true">{{ t().menuRename }}</afi-menu-item-v2>
           <afi-menu-divider-v2 />
           <afi-menu-item-v2 variant="destructive">
             <svg
@@ -317,13 +307,13 @@
             >
               <path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.5 8h6l.5-8" />
             </svg>
-            Eliminar
+            {{ t().remove }}
           </afi-menu-item-v2>
         </afi-menu-v2>
         <!-- State tags: one child per panel child, same height + gap tokens, so
              the column stays row-aligned with the menu without magic numbers. -->
         <ul class="workbench__menu-tags" aria-hidden="true">
-          <li class="workbench__menu-tag">por defecto · icono</li>
+          <li class="workbench__menu-tag">{{ t().menuTagDefault }}</li>
           <li class="workbench__menu-tag">shortcut="⌘D"</li>
           <li class="workbench__menu-tag">[selected]="true"</li>
           <li class="workbench__menu-tag">[disabled]="true"</li>
@@ -331,10 +321,7 @@
           <li class="workbench__menu-tag">variant="destructive"</li>
         </ul>
       </div>
-      <p class="workbench__hint">
-        Interactúe para ver hover y foco: pase el cursor y navegue con Tab. La fila destructiva
-        tiñe con la superficie de peligro; la seleccionada muestra la marca de verificación.
-      </p>
+      <p class="workbench__hint">{{ t().menuItemHint }}</p>
     </section>
 
     <h2 #wbGroup class="workbench__group-title">Select</h2>
@@ -346,183 +333,156 @@
           <afi-select-v2
             class="workbench__input"
             [size]="size"
-            [options]="selectOptions"
-            label="Tipo de sociedad"
-            hint="Elija la forma jurídica."
+            [options]="selectOptions()"
+            [label]="t().fieldCompanyType"
+            [hint]="t().fieldCompanyTypeHint"
           />
           <afi-select-v2
             class="workbench__input"
             [size]="size"
-            [options]="selectOptions"
+            [options]="selectOptions()"
             value="sa"
-            label="Tipo de sociedad"
+            [label]="t().fieldCompanyType"
           />
           <afi-select-v2
             class="workbench__input"
             [size]="size"
-            [options]="selectOptions"
-            label="Tipo de sociedad"
-            error="Seleccione una opción."
+            [options]="selectOptions()"
+            [label]="t().fieldCompanyType"
+            [error]="t().selectAnOption"
           />
           <afi-select-v2
             class="workbench__input"
             [size]="size"
-            [options]="selectOptions"
+            [options]="selectOptions()"
             value="sl"
-            label="Tipo de sociedad"
+            [label]="t().fieldCompanyType"
             [disabled]="true"
           />
         </div>
       </section>
     }
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Lista larga · se desplaza pasadas 8 opciones</h3>
+      <h3 class="workbench__section-title">{{ t().longListTitle }}</h3>
       <div class="workbench__row workbench__row--inputs">
         <afi-select-v2
           class="workbench__input"
           [options]="provinceOptions"
-          label="Provincia"
-          hint="Más de 8 opciones: el panel limita a 8 filas y se desplaza."
+          [label]="t().fieldProvince"
+          [hint]="t().fieldProvinceHint"
         />
       </div>
     </section>
-    <p class="workbench__hint">
-      Estados: por defecto (marcador) · con valor · error · deshabilitado. Abra con clic o con
-      Enter / Flecha abajo; navegue con las flechas, escriba para buscar, Intro para elegir, Esc para
-      cerrar. El desplegable reutiliza afi-menu-v2 (role="listbox") con filas afi-menu-item-v2
-      (role="option").
-    </p>
+    <p class="workbench__hint">{{ t().selectHint }}</p>
 
     <h2 #wbGroup class="workbench__group-title">Toggle</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">2 valores × 4 estados · tamaño fijo</h3>
+      <h3 class="workbench__section-title">{{ t().toggleTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
-        <afi-toggle-v2 label="Notificaciones" />
-        <afi-toggle-v2 label="Notificaciones" [checked]="true" />
-        <afi-toggle-v2 label="Notificaciones" [disabled]="true" />
-        <afi-toggle-v2 label="Notificaciones" [checked]="true" [disabled]="true" />
-        <afi-toggle-v2 ariaLabel="Activar sin etiqueta" />
+        <afi-toggle-v2 [label]="t().notifications" />
+        <afi-toggle-v2 [label]="t().notifications" [checked]="true" />
+        <afi-toggle-v2 [label]="t().notifications" [disabled]="true" />
+        <afi-toggle-v2 [label]="t().notifications" [checked]="true" [disabled]="true" />
+        <afi-toggle-v2 [ariaLabel]="t().toggleNoLabel" />
       </div>
     </section>
-    <p class="workbench__hint">
-      Aplica al instante (sin Guardar). La etiqueta va a la izquierda del control
-      (convención de fila de ajustes). El pulgar se desliza 150 ms; en Deshabilitado la
-      sombra del pulgar se aplana. Actívelo con clic, Intro o Espacio.
-    </p>
+    <p class="workbench__hint">{{ t().toggleHint }}</p>
 
-    <h2 #wbGroup class="workbench__group-title">Control segmentado</h2>
+    <h2 #wbGroup class="workbench__group-title">Segmented control</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">2–4 segmentos · una opción siempre activa · tamaño fijo</h3>
+      <h3 class="workbench__section-title">{{ t().segmentedTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
         <afi-segmented-control-v2
-          [options]="segmentedPeriodo"
+          [options]="segmentedPeriodo()"
           [(value)]="segPeriodo"
-          ariaLabel="Periodo"
+          [ariaLabel]="t().period"
         />
         <afi-segmented-control-v2
-          [options]="segmentedVista"
+          [options]="segmentedVista()"
           [(value)]="segVista"
-          ariaLabel="Vista"
+          [ariaLabel]="t().viewLabel"
         />
         <afi-segmented-control-v2
-          [options]="segmentedEstado"
+          [options]="segmentedEstado()"
           [(value)]="segEstado"
-          ariaLabel="Estado"
+          [ariaLabel]="t().statusLabel"
         />
         <afi-segmented-control-v2
-          [options]="segmentedFrecuencia"
+          [options]="segmentedFrecuencia()"
           [(value)]="segFrecuencia"
-          ariaLabel="Frecuencia"
+          [ariaLabel]="t().frequency"
         />
       </div>
     </section>
-    <p class="workbench__hint">
-      Cambia un modo o ajuste de la vista actual; la navegación entre vistas son las
-      pestañas. La píldora se desliza al segmento activo (200 ms) y se detiene al
-      instante con «reduced motion». Muévase con las flechas, Inicio y Fin; los
-      segmentos deshabilitados se omiten.
-    </p>
+    <p class="workbench__hint">{{ t().segmentedHint }}</p>
 
     <h2 #wbGroup class="workbench__group-title">Checkbox</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">3 valores × 4 estados · tamaño fijo</h3>
+      <h3 class="workbench__section-title">{{ t().checkboxTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
-        <afi-checkbox-v2 label="Sin marcar" />
-        <afi-checkbox-v2 label="Marcado" [checked]="true" />
-        <afi-checkbox-v2 label="Indeterminado" [indeterminate]="true" />
-        <afi-checkbox-v2 label="Deshabilitado" [disabled]="true" />
-        <afi-checkbox-v2 label="Marcado · deshab." [checked]="true" [disabled]="true" />
+        <afi-checkbox-v2 [label]="t().unchecked" />
+        <afi-checkbox-v2 [label]="t().checked" [checked]="true" />
+        <afi-checkbox-v2 [label]="t().indeterminate" [indeterminate]="true" />
+        <afi-checkbox-v2 [label]="t().disabled" [disabled]="true" />
+        <afi-checkbox-v2 [label]="t().checkedDisabled" [checked]="true" [disabled]="true" />
         <afi-checkbox-v2
-          label="Indet. · deshab."
+          [label]="t().indeterminateDisabled"
           [indeterminate]="true"
           [disabled]="true"
         />
-        <afi-checkbox-v2 ariaLabel="Marcar sin etiqueta" />
+        <afi-checkbox-v2 [ariaLabel]="t().checkboxNoLabel" />
       </div>
     </section>
-    <p class="workbench__hint">
-      Control de formulario: el valor se recoge al Guardar, no se aplica al instante. La
-      etiqueta va a la derecha del control. Estados Hover y Focus en vivo (Tab para el aro
-      de foco). Indeterminado es un tercer estado que gobierna el padre —el clic solo pasa
-      a Marcado—. Actívelo con clic o Espacio.
-    </p>
+    <p class="workbench__hint">{{ t().checkboxHint }}</p>
 
     <h2 #wbGroup class="workbench__group-title">Radio</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">
-        Selección única · 2 valores × 5 estados · tamaño fijo
-      </h3>
+      <h3 class="workbench__section-title">{{ t().radioTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
-        <afi-radio-group-v2 legend="Perfil de riesgo" [value]="'moderado'">
-          <afi-radio-v2 value="conservador" label="Conservador" />
-          <afi-radio-v2 value="moderado" label="Moderado" />
-          <afi-radio-v2 value="dinamico" label="Dinámico" />
+        <afi-radio-group-v2 [legend]="t().riskProfile" [value]="'moderado'">
+          <afi-radio-v2 value="conservador" [label]="t().conservative" />
+          <afi-radio-v2 value="moderado" [label]="t().moderate" />
+          <afi-radio-v2 value="dinamico" [label]="t().dynamic" />
         </afi-radio-group-v2>
 
-        <afi-radio-group-v2 legend="Con opción deshabilitada" [value]="'a'">
-          <afi-radio-v2 value="a" label="Opción A" />
-          <afi-radio-v2 value="b" label="Opción B" />
-          <afi-radio-v2 value="c" label="Opción C (deshab.)" [disabled]="true" />
+        <afi-radio-group-v2 [legend]="t().withDisabledOption" [value]="'a'">
+          <afi-radio-v2 value="a" [label]="t().optionA" />
+          <afi-radio-v2 value="b" [label]="t().optionB" />
+          <afi-radio-v2 value="c" [label]="t().optionCDisabled" [disabled]="true" />
         </afi-radio-group-v2>
 
         <afi-radio-group-v2
-          legend="Grupo deshabilitado"
+          [legend]="t().disabledGroup"
           [value]="'x'"
           [disabled]="true"
         >
-          <afi-radio-v2 value="x" label="Opción X" />
-          <afi-radio-v2 value="y" label="Opción Y" />
+          <afi-radio-v2 value="x" [label]="t().optionX" />
+          <afi-radio-v2 value="y" [label]="t().optionY" />
         </afi-radio-group-v2>
 
         <afi-radio-group-v2
-          legend="En horizontal"
+          [legend]="t().horizontal"
           orientation="horizontal"
           [value]="'si'"
         >
-          <afi-radio-v2 value="si" label="Sí" />
-          <afi-radio-v2 value="no" label="No" />
+          <afi-radio-v2 value="si" [label]="t().yes" />
+          <afi-radio-v2 value="no" [label]="t().no" />
         </afi-radio-group-v2>
       </div>
     </section>
-    <p class="workbench__hint">
-      Control de formulario de selección única: el valor se recoge al Guardar, no se
-      aplica al instante. La etiqueta va a la derecha del aro y el punto interior entra
-      con un muelle al seleccionar. Tab entra en el grupo por la opción marcada; las
-      flechas mueven foco y selección entre opciones habilitadas (con vuelta al
-      principio) y Espacio selecciona. Las opciones deshabilitadas no reciben foco.
-    </p>
+    <p class="workbench__hint">{{ t().radioHint }}</p>
 
     <h2 #wbGroup class="workbench__group-title">Tag</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">2 tipos × icono no/sí · tamaño fijo</h3>
+      <h3 class="workbench__section-title">{{ t().tagTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
-        <afi-tag-v2 label="Renta fija" />
-        <afi-tag-v2 label="Renta fija">
+        <afi-tag-v2 [label]="t().fixedIncome" />
+        <afi-tag-v2 [label]="t().fixedIncome">
           <svg
             slot="iconStart"
             class="workbench__icon"
@@ -541,7 +501,7 @@
           </svg>
         </afi-tag-v2>
         <afi-tag-v2 kind="system" label="Beta" />
-        <afi-tag-v2 kind="system" label="Importado">
+        <afi-tag-v2 kind="system" [label]="t().imported">
           <svg
             slot="iconStart"
             class="workbench__icon"
@@ -560,21 +520,15 @@
         </afi-tag-v2>
       </div>
     </section>
-    <p class="workbench__hint">
-      Metadatos pasivos: clasifican; no seleccionan ni accionan. «Category» (relleno neutro,
-      texto primario) para clases de activo —Renta fija, Alternativos—; «System» (borde
-      discontinuo, texto secundario) para el origen en la plataforma —Beta, Importado—. Sin
-      estados de interacción: ni hover, ni foco, ni deshabilitado. El icono es decorativo.
-      Para selección use Chip; para estado use Badge.
-    </p>
+    <p class="workbench__hint">{{ t().tagHint }}</p>
 
     <h2 #wbGroup class="workbench__group-title">Chip</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">2 selecciones × icono no/sí · quitable · tamaño fijo</h3>
+      <h3 class="workbench__section-title">{{ t().chipTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
-        <afi-chip-v2 label="Renta fija" />
-        <afi-chip-v2 label="Renta fija">
+        <afi-chip-v2 [label]="t().fixedIncome" />
+        <afi-chip-v2 [label]="t().fixedIncome">
           <svg
             slot="iconStart"
             class="workbench__icon"
@@ -591,8 +545,8 @@
             <path d="M10 18h4" />
           </svg>
         </afi-chip-v2>
-        <afi-chip-v2 label="Renta fija" [selected]="true" />
-        <afi-chip-v2 label="Renta fija" [selected]="true">
+        <afi-chip-v2 [label]="t().fixedIncome" [selected]="true" />
+        <afi-chip-v2 [label]="t().fixedIncome" [selected]="true">
           <svg
             slot="iconStart"
             class="workbench__icon"
@@ -609,19 +563,17 @@
             <path d="M10 18h4" />
           </svg>
         </afi-chip-v2>
-        <afi-chip-v2 label="Renta fija" [removable]="true" />
-        <afi-chip-v2 label="Renta fija" [disabled]="true" />
-        <afi-chip-v2 label="Renta fija" [selected]="true" [removable]="true" [disabled]="true" />
+        <afi-chip-v2 [label]="t().fixedIncome" [removable]="true" />
+        <afi-chip-v2 [label]="t().fixedIncome" [disabled]="true" />
+        <afi-chip-v2 [label]="t().fixedIncome" [selected]="true" [removable]="true" [disabled]="true" />
       </div>
     </section>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">
-        Estado en vivo · clic o Espacio para alternar · Tab para el aro de foco
-      </h3>
+      <h3 class="workbench__section-title">{{ t().chipLiveTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
         <afi-chip-v2
-          label="Alternativos"
+          [label]="t().alternatives"
           [selected]="chipSelected()"
           [removable]="true"
           (selectedChange)="chipSelected.set($event)"
@@ -644,7 +596,7 @@
         </afi-chip-v2>
         @if (chipRemovableVisible()) {
           <afi-chip-v2
-            label="Quítame"
+            [label]="t().removeMe"
             [removable]="true"
             (removed)="chipRemovableVisible.set(false)"
           />
@@ -653,85 +605,72 @@
     </section>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">
-        Con valor aplicado · «×» borra el valor y vuelve al chip vacío
-      </h3>
+      <h3 class="workbench__section-title">{{ t().chipValueTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
-        <afi-chip-v2 label="Clase" value="Renta variable" [selected]="true" />
-        <afi-chip-v2 label="Clase" value="Renta variable" [selected]="true" [disabled]="true" />
+        <afi-chip-v2 [label]="t().assetClass" [value]="t().equities" [selected]="true" />
+        <afi-chip-v2 [label]="t().assetClass" [value]="t().equities" [selected]="true" [disabled]="true" />
         <afi-chip-v2
-          label="Divisa"
+          [label]="t().currency"
           [selected]="chipValueSelected()"
           [value]="chipValue()"
           (selectedChange)="chipValueSelected.set($event)"
-          (cleared)="chipValue.set(null)"
+          (cleared)="clearChipValue()"
         />
       </div>
     </section>
-    <p class="workbench__hint">
-      Control interactivo de filtro/selección. El cuerpo alterna Seleccionado (aria-pressed);
-      la «×» es una acción aparte que descarta el chip (removed). Con un valor aplicado y el
-      chip seleccionado aparece el segmento de valor —separador, valor en content/tertiary y
-      una «×» que borra el valor (cleared) y deja de nuevo el chip vacío—. Hover, foco y pulsado
-      son estados CSS en vivo —pase el ratón o use Tab—. El icono va en content/secondary;
-      deshabilitado sale del orden de tabulación. Para metadatos pasivos use Tag; para estado,
-      Badge.
-    </p>
+    <p class="workbench__hint">{{ t().chipHint }}</p>
 
     <h2 #wbGroup class="workbench__group-title">Badge</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">5 tonos · sin punto · tamaño fijo</h3>
+      <h3 class="workbench__section-title">{{ t().badgeTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
-        @for (badge of badgeTones; track badge.tone) {
+        @for (badge of badgeTones(); track badge.tone) {
           <afi-badge-v2 [tone]="badge.tone" [label]="badge.label" />
         }
       </div>
     </section>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">5 tonos · con punto de estado</h3>
+      <h3 class="workbench__section-title">{{ t().badgeDotTitle }}</h3>
       <div class="workbench__row workbench__row--toggles">
-        @for (badge of badgeTones; track badge.tone) {
+        @for (badge of badgeTones(); track badge.tone) {
           <afi-badge-v2 [tone]="badge.tone" [label]="badge.label" [dot]="true" />
         }
       </div>
     </section>
-    <p class="workbench__hint">
-      Estado no interactivo: comunica la situación de un objeto —Borrador, Activo, Pendiente,
-      Vencido, En revisión—. La etiqueta lleva el significado por sí sola; el punto es una
-      pista visual redundante (aria-hidden), nunca el único indicador. «Critical» usa el rol
-      error/*; solo «Neutral» tiene borde, el resto son rellenos tintados sin borde. Sin
-      estados de interacción. Todas las parejas texto/fondo cumplen WCAG AA 4.5:1 (warning usa
-      warning/900). Para clasificación pasiva use Tag; para selección, Chip.
-    </p>
+    <p class="workbench__hint">{{ t().badgeHint }}</p>
 
     <h2 #wbGroup class="workbench__group-title">Tabs</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">
-        Barra interactiva · seleccionada / no seleccionada / contador / deshabilitada
-      </h3>
+      <h3 class="workbench__section-title">{{ t().tabsBarTitle }}</h3>
       <afi-tabs-v2
-        ariaLabel="Vistas del cliente"
+        [ariaLabel]="t().clientViews"
         [activeIndex]="tabsActive()"
         (activeIndexChange)="tabsActive.set($event)"
       >
-        <afi-tab-v2 label="Resumen" controls="workbench-tabs-panel" />
-        <afi-tab-v2 label="Cartera" controls="workbench-tabs-panel" />
-        <afi-tab-v2 label="Flujo de caja" controls="workbench-tabs-panel" />
-        <afi-tab-v2 label="Documentos" [count]="8" controls="workbench-tabs-panel" />
-        <afi-tab-v2 label="Archivado" [disabled]="true" />
+        <afi-tab-v2 [label]="t().summary" controls="workbench-tabs-panel" />
+        <afi-tab-v2 [label]="t().portfolio" controls="workbench-tabs-panel" />
+        <afi-tab-v2 [label]="t().cashFlow" controls="workbench-tabs-panel" />
+        <afi-tab-v2 [label]="t().documents" [count]="8" controls="workbench-tabs-panel" />
+        <afi-tab-v2 [label]="t().archived" [disabled]="true" />
       </afi-tabs-v2>
-      <div class="workbench__tabs-panel" id="workbench-tabs-panel" role="tabpanel" tabindex="0">
-        {{ tabPanels[tabsActive()] }}
+      <div
+        class="workbench__tabs-panel"
+        id="workbench-tabs-panel"
+        role="tabpanel"
+        tabindex="0"
+        [afiTabPanelV2]="tabsActive()"
+      >
+        {{ activeTabPanel() }}
       </div>
     </section>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Icono inicial · contador suplementario</h3>
-      <afi-tabs-v2 ariaLabel="Secciones del informe">
-        <afi-tab-v2 label="General">
+      <h3 class="workbench__section-title">{{ t().tabsIconTitle }}</h3>
+      <afi-tabs-v2 [ariaLabel]="t().reportSections">
+        <afi-tab-v2 [label]="t().general">
           <svg
             slot="iconStart"
             class="workbench__icon"
@@ -748,9 +687,9 @@
             <rect x="3" y="14" width="7" height="7" rx="1" />
             <rect x="14" y="14" width="7" height="7" rx="1" />
           </svg>
-          General
+          {{ t().general }}
         </afi-tab-v2>
-        <afi-tab-v2 label="Rendimiento">
+        <afi-tab-v2 [label]="t().performance">
           <svg
             slot="iconStart"
             class="workbench__icon"
@@ -765,9 +704,9 @@
             <path d="M3 17l6-6 4 4 8-8" />
             <path d="M17 7h4v4" />
           </svg>
-          Rendimiento
+          {{ t().performance }}
         </afi-tab-v2>
-        <afi-tab-v2 label="Riesgo" [count]="2">
+        <afi-tab-v2 [label]="t().risk" [count]="2">
           <svg
             slot="iconStart"
             class="workbench__icon"
@@ -783,75 +722,59 @@
             <path d="M12 9v4" />
             <path d="M12 16h.01" />
           </svg>
-          Riesgo
+          {{ t().risk }}
         </afi-tab-v2>
       </afi-tabs-v2>
     </section>
-    <p class="workbench__hint">
-      Navegación entre vistas hermanas del mismo contexto: cada pestaña revela un panel
-      distinto; no cambia un ajuste ni filtra (para eso, Segmented control). Siempre hay
-      exactamente una seleccionada —la primera activa por defecto—. La etiqueta seleccionada
-      sube a content/primary y el subrayado se desliza bajo ella (200 ms); hover y foco son
-      estados en vivo (pase el ratón o use Tab). Las flechas ←/→ y Inicio/Fin mueven foco y
-      selección a la vez, saltando las deshabilitadas. El contador es cantidad, no estado; el
-      icono de encabezado es decorativo y nunca sustituye a la etiqueta.
-    </p>
+    <p class="workbench__hint">{{ t().tabsHint }}</p>
 
     <h2 #wbGroup class="workbench__group-title">Card</h2>
 
     <section class="workbench__section">
-      <h2 class="workbench__section-title">Matriz de estados · Header × Footer × acción</h2>
+      <h2 class="workbench__section-title">{{ t().cardTitle }}</h2>
       <div class="workbench__grid">
         <div class="workbench__cell">
-          <span class="workbench__cell-label">Default (header, sin footer)</span>
+          <span class="workbench__cell-label">{{ t().cardDefaultLabel }}</span>
           <afi-card-v2
-            heading="Resumen de cartera"
-            supportingText="Rendimiento acumulado del trimestre"
+            [heading]="t().cardPortfolioHeading"
+            [supportingText]="t().cardPortfolioSupport"
           >
-            <p class="workbench__card-body">
-              Contenido libre del cuerpo: texto, KPI, formulario o gráfico. La tarjeta
-              aporta solo la superficie y el ritmo; el contenido gestiona su propio alto.
-            </p>
+            <p class="workbench__card-body">{{ t().cardPortfolioBody }}</p>
           </afi-card-v2>
         </div>
 
         <div class="workbench__cell">
-          <span class="workbench__cell-label">Header + Footer</span>
+          <span class="workbench__cell-label">{{ t().cardHeaderFooterLabel }}</span>
           <afi-card-v2
-            heading="Confirmar traspaso"
-            supportingText="Revisa los datos antes de continuar"
+            [heading]="t().cardTransferHeading"
+            [supportingText]="t().cardTransferSupport"
             [showFooter]="true"
           >
-            <p class="workbench__card-body">Se moverán 12.500 € del fondo A al fondo B.</p>
-            <afi-button-v2 slot="footer" variant="ghost" size="sm">Cancelar</afi-button-v2>
-            <afi-button-v2 slot="footer" variant="primary" size="sm">Confirmar</afi-button-v2>
+            <p class="workbench__card-body">{{ t().cardTransferBody }}</p>
+            <afi-button-v2 slot="footer" variant="ghost" size="sm">{{ t().cancel }}</afi-button-v2>
+            <afi-button-v2 slot="footer" variant="primary" size="sm">{{ t().confirm }}</afi-button-v2>
           </afi-card-v2>
         </div>
 
         <div class="workbench__cell">
-          <span class="workbench__cell-label">Footer only (sin header)</span>
+          <span class="workbench__cell-label">{{ t().cardFooterOnlyLabel }}</span>
           <afi-card-v2 [showHeader]="false" [showFooter]="true">
-            <p class="workbench__card-body">
-              Sin encabezado: el cuerpo abre la tarjeta y el pie la cierra con acciones.
-            </p>
-            <afi-button-v2 slot="footer" variant="ghost" size="sm">Descartar</afi-button-v2>
-            <afi-button-v2 slot="footer" variant="primary" size="sm">Guardar</afi-button-v2>
+            <p class="workbench__card-body">{{ t().cardFooterOnlyBody }}</p>
+            <afi-button-v2 slot="footer" variant="ghost" size="sm">{{ t().discard }}</afi-button-v2>
+            <afi-button-v2 slot="footer" variant="primary" size="sm">{{ t().save }}</afi-button-v2>
           </afi-card-v2>
         </div>
 
         <div class="workbench__cell">
-          <span class="workbench__cell-label">Body only</span>
+          <span class="workbench__cell-label">{{ t().cardBodyOnlyLabel }}</span>
           <afi-card-v2 [showHeader]="false">
-            <p class="workbench__card-body">
-              Solo cuerpo: contenedor mínimo para envolver contenido a medida (KPI, media,
-              gráfico) sin encabezado ni pie.
-            </p>
+            <p class="workbench__card-body">{{ t().cardBodyOnlyBody }}</p>
           </afi-card-v2>
         </div>
 
         <div class="workbench__cell">
-          <span class="workbench__cell-label">Header + acción</span>
-          <afi-card-v2 heading="Notificaciones" supportingText="3 sin leer">
+          <span class="workbench__cell-label">{{ t().cardHeaderActionLabel }}</span>
+          <afi-card-v2 [heading]="t().notifications" [supportingText]="t().cardNotificationsSupport">
             <!--
               TODO(icon-button-v2): the header action wants a compact icon button
               (kebab / "más acciones"). afi-button-v2 excludes icon-only usage by
@@ -860,50 +783,39 @@
               header-action slot here (and in the "Header + Footer + acción" card
               below) to it.
             -->
-            <afi-button-v2 slot="header-action" variant="ghost" size="sm">Ver</afi-button-v2>
-            <p class="workbench__card-body">
-              La acción del encabezado es un afi-button-v2 proyectado, con foco propio e
-              independiente de la superficie de la tarjeta.
-            </p>
+            <afi-button-v2 slot="header-action" variant="ghost" size="sm">{{ t().view }}</afi-button-v2>
+            <p class="workbench__card-body">{{ t().cardNotificationsBody }}</p>
           </afi-card-v2>
         </div>
 
         <div class="workbench__cell">
-          <span class="workbench__cell-label">Header + Footer + acción</span>
+          <span class="workbench__cell-label">{{ t().cardAllLabel }}</span>
           <afi-card-v2
-            heading="Documento pendiente"
-            supportingText="Vence en 2 días"
+            [heading]="t().cardDocumentHeading"
+            [supportingText]="t().cardDocumentSupport"
             [showFooter]="true"
           >
             <!-- TODO(icon-button-v2): switch this header action to afi-icon-button-v2 when it exists (see the note in the "Header + acción" card above). -->
-            <afi-button-v2 slot="header-action" variant="ghost" size="sm">Ver</afi-button-v2>
-            <p class="workbench__card-body">Firma el contrato para completar el alta.</p>
-            <afi-button-v2 slot="footer" variant="ghost" size="sm">Más tarde</afi-button-v2>
-            <afi-button-v2 slot="footer" variant="primary" size="sm">Firmar</afi-button-v2>
+            <afi-button-v2 slot="header-action" variant="ghost" size="sm">{{ t().view }}</afi-button-v2>
+            <p class="workbench__card-body">{{ t().cardDocumentBody }}</p>
+            <afi-button-v2 slot="footer" variant="ghost" size="sm">{{ t().later }}</afi-button-v2>
+            <afi-button-v2 slot="footer" variant="primary" size="sm">{{ t().sign }}</afi-button-v2>
           </afi-card-v2>
         </div>
       </div>
-      <p class="workbench__hint">
-        La tarjeta es una superficie de agrupación, no una interacción: sin role, sin
-        tabindex y sin evento de click en el contenedor. Las acciones viven en los hijos
-        proyectados —el botón de icono del encabezado y los botones del pie— que conservan
-        su propio foco. Header (por defecto activo) y Footer (por defecto inactivo) se
-        controlan con showHeader / showFooter, reflejo de los booleanos de Figma. La acción
-        de encabezado no tiene efecto si el header está oculto. El cuerpo ocupa el ancho que
-        le da el padre y nunca recorta ni desplaza su contenido.
-      </p>
+      <p class="workbench__hint">{{ t().cardHint }}</p>
     </section>
 
-    <h2 #wbGroup class="workbench__group-title">Tabla</h2>
+    <h2 #wbGroup class="workbench__group-title">Table</h2>
 
     <section class="workbench__section">
-      <h2 class="workbench__section-title">Interactiva · selección + orden + acciones</h2>
+      <h2 class="workbench__section-title">{{ t().tableInteractiveTitle }}</h2>
       <div class="workbench__apron-frame">
         <afi-table-v2
-          ariaLabel="Carteras de clientes"
-          [columns]="tableColumns"
+          [ariaLabel]="t().tableAriaLabel"
+          [columns]="tableColumns()"
           [rows]="tableRows()"
-          [rowActions]="tableActions"
+          [rowActions]="tableActions()"
           [selectable]="true"
           [selected]="tableSelected()"
           [sortBy]="tableSort()"
@@ -915,26 +827,18 @@
         <div class="workbench__apron-float">
           <afi-table-apron
             [shown]="tableRows().length"
-            [total]="tableData.length"
-            noun="cartera"
-            nounPlural="carteras"
+            [total]="tableData().length"
+            [noun]="t().apronPortfolio"
+            [nounPlural]="t().apronPortfolioPlural"
             [selectedCount]="tableSelected().length"
-            [selectedText]="tableSelected().length + ' seleccionadas'"
-            [selectionActions]="bulkActions"
+            [selectedText]="tableSelected().length + ' ' + t().apronSelectedSuffix"
+            [selectionActions]="bulkActions()"
             (selectionCleared)="onTableSelected([])"
             (selectionAction)="onCarterasBulk($event)"
           />
         </div>
       </div>
-      <p class="workbench__hint">
-        Pase el cursor sobre una fila: la casilla y las acciones aparecen (en reposo están
-        ocultas). La casilla de la cabecera siempre es visible y pasa a indeterminada con
-        selección parcial. Ordene por Cliente, Posiciones o Valor (ciclo ninguno → asc → desc);
-        pase el cursor por una cabecera ordenable para ver la pista de orden. Esta tabla ordena
-        en el consumidor (patrón headless, reacciona a «sortChange»).
-        «Editar» (primaria) es una acción en línea; el menú ⋯ ofrece «Duplicar» y «Eliminar».
-        Seleccionadas: {{ tableSelected().length }} · Última acción: {{ tableLastAction() }}.
-      </p>
+      <p class="workbench__hint">{{ t().tableHint }} {{ t().tableSelectedCount }}: {{ tableSelected().length }} · {{ t().tableLastAction }}: {{ tableLastAction() }}.</p>
     </section>
 
     @for (density of tableDensities; track density) {
@@ -942,9 +846,9 @@
         <h3 class="workbench__section-title">density="{{ density }}"</h3>
         <div class="workbench__apron-frame">
           <afi-table-v2
-            [columns]="tableColumns"
-            [rows]="tableData"
-            [rowActions]="tableActions"
+            [columns]="tableColumns()"
+            [rows]="tableData()"
+            [rowActions]="tableActions()"
             [selectable]="true"
             [density]="density"
             autoSort
@@ -953,13 +857,13 @@
           />
           <div class="workbench__apron-float">
             <afi-table-apron
-              [shown]="tableData.length"
-              [total]="tableData.length"
-              noun="cartera"
-              nounPlural="carteras"
+              [shown]="tableData().length"
+              [total]="tableData().length"
+              [noun]="t().apronPortfolio"
+              [nounPlural]="t().apronPortfolioPlural"
               [selectedCount]="densitySel(density).length"
-              [selectedText]="densitySel(density).length + ' seleccionadas'"
-              [selectionActions]="bulkActions"
+              [selectedText]="densitySel(density).length + ' ' + t().apronSelectedSuffix"
+              [selectionActions]="bulkActions()"
               (selectionCleared)="clearDensitySelection(density)"
               (selectionAction)="onDensityBulk(density, $event)"
             />
@@ -967,35 +871,31 @@
         </div>
       </section>
     }
-    <p class="workbench__hint">
-      Las tablas por densidad usan «autoSort»: la propia tabla ordena sus filas al pulsar
-      una cabecera —texto por orden alfabético; numérico y monetario por valor— sin escuchar
-      «sortChange».
-    </p>
+    <p class="workbench__hint">{{ t().tableDensityHint }}</p>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Estado vacío · con acción</h3>
+      <h3 class="workbench__section-title">{{ t().tableEmptyTitle }}</h3>
       <afi-table-v2
-        [columns]="tableColumns"
+        [columns]="tableColumns()"
         [rows]="[]"
-        emptyText="No hay carteras que mostrar"
-        emptyActionLabel="Añadir cartera"
+        [emptyText]="t().tableEmptyText"
+        [emptyActionLabel]="t().tableEmptyAction"
       />
     </section>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Estado de carga · filas atenuadas + spinner</h3>
-      <afi-table-v2 [columns]="tableColumns" [rows]="tableData" [loading]="true" />
+      <h3 class="workbench__section-title">{{ t().tableLoadingTitle }}</h3>
+      <afi-table-v2 [columns]="tableColumns()" [rows]="tableData()" [loading]="true" />
     </section>
 
     <h2 #wbGroup class="workbench__group-title">Table apron</h2>
 
     <section class="workbench__section">
-      <h2 class="workbench__section-title">Buscar + filtrar · recuento en vivo con tokens</h2>
+      <h2 class="workbench__section-title">{{ t().apronTitle }}</h2>
 
       <div class="workbench__apron-controls">
-        <div class="workbench__apron-filters" role="group" aria-label="Filtrar pedidos por estado">
-          @for (filter of orderStatusFilters; track filter.key) {
+        <div class="workbench__apron-filters" role="group" [attr.aria-label]="t().apronFilterAria">
+          @for (filter of orderStatusFilters(); track filter.key) {
             <afi-chip-v2
               [label]="filter.label"
               [selected]="orderStatus() === filter.key"
@@ -1005,8 +905,8 @@
         </div>
         <afi-search-v2
           class="workbench__apron-search"
-          placeholder="Buscar por cliente o pedido"
-          ariaLabel="Buscar pedidos"
+          [placeholder]="t().apronSearchPlaceholder"
+          [ariaLabel]="t().apronSearchAria"
           [value]="orderSearch()"
           [suggestions]="orderSuggestions()"
           (valueChange)="setOrderSearch($event)"
@@ -1016,41 +916,32 @@
 
       <div class="workbench__apron-frame">
         <afi-table-v2
-          ariaLabel="Pedidos"
-          [columns]="orderColumns"
+          [ariaLabel]="t().ordersAria"
+          [columns]="orderColumns()"
           [rows]="visibleOrders()"
           reveal="stagger"
           [revealKey]="orderRevealKey()"
           density="default"
-          emptyText="No hay pedidos que coincidan con la búsqueda"
+          [emptyText]="t().ordersEmptyText"
         />
         <div class="workbench__apron-float">
           <afi-table-apron
             [shown]="visibleOrders().length"
-            [total]="orderData.length"
-            noun="pedido"
+            [total]="orderData().length"
+            [noun]="t().apronOrder"
             [tokens]="apronTokens()"
             (tokenDismissed)="onApronDismiss($event)"
           />
         </div>
       </div>
 
-      <p class="workbench__hint">
-        La página filtra; la tabla solo pinta las filas resueltas y reproduce la cascada
-        (blur + desvanecido) en cada cambio de filtro vía <code>revealKey</code>. El apron
-        (recuento en vivo <code>role="status"</code> + tokens de filtro retirables) flota sobre
-        el borde inferior. Filtre por estado, escriba en la búsqueda y retire un token con su ×.
-        Excepción de motion deliberada: la cascada se reproduce en transiciones «calientes»;
-        colapsa a un desvanecido breve con <code>prefers-reduced-motion</code>.
-      </p>
+      <p class="workbench__hint">{{ t().apronHint }}</p>
     </section>
 
     <h2 #wbGroup class="workbench__group-title">Sidebar</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">
-        Expandido ↔ colapsado · grupo estático + dinámico · seleccione y contraiga
-      </h3>
+      <h3 class="workbench__section-title">{{ t().sidebarTitle }}</h3>
       <div class="workbench__sidebar-row">
         <div class="workbench__sidebar-frame">
           <afi-sidebar-v2
@@ -1058,26 +949,26 @@
             (collapsedChange)="sidebarCollapsedMain.set($event)"
             homeHref="/"
           >
-            <afi-nav-section-v2 label="Planificación">
-              <afi-nav-item-v2 label="Resumen" href="#" [selected]="true">
+            <afi-nav-section-v2 [label]="t().navPlanning">
+              <afi-nav-item-v2 [label]="t().summary" href="#" [selected]="true">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>
               </afi-nav-item-v2>
-              <afi-nav-item-v2 label="Cartera" href="#">
+              <afi-nav-item-v2 [label]="t().portfolio" href="#">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
               </afi-nav-item-v2>
-              <afi-nav-item-v2 label="Flujo de caja" href="#">
+              <afi-nav-item-v2 [label]="t().cashFlow" href="#">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></svg>
               </afi-nav-item-v2>
-              <afi-nav-item-v2 label="Documentos" href="#" [disabled]="true">
+              <afi-nav-item-v2 [label]="t().documents" href="#" [disabled]="true">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
               </afi-nav-item-v2>
             </afi-nav-section-v2>
 
-            <afi-nav-section-v2 label="Recientes">
-              <afi-nav-item-v2 label="Estrategia Q3" href="#">
+            <afi-nav-section-v2 [label]="t().navRecents">
+              <afi-nav-item-v2 [label]="t().navQ3Strategy" href="#">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
               </afi-nav-item-v2>
-              <afi-nav-item-v2 label="Plan de marketing" href="#">
+              <afi-nav-item-v2 [label]="t().navMarketingPlan" href="#">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>
               </afi-nav-item-v2>
             </afi-nav-section-v2>
@@ -1089,14 +980,14 @@
             [collapsed]="sidebarCollapsedRail()"
             (collapsedChange)="sidebarCollapsedRail.set($event)"
           >
-            <afi-nav-section-v2 label="Planificación">
-              <afi-nav-item-v2 label="Resumen" href="#" [selected]="true">
+            <afi-nav-section-v2 [label]="t().navPlanning">
+              <afi-nav-item-v2 [label]="t().summary" href="#" [selected]="true">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>
               </afi-nav-item-v2>
-              <afi-nav-item-v2 label="Cartera" href="#">
+              <afi-nav-item-v2 [label]="t().portfolio" href="#">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
               </afi-nav-item-v2>
-              <afi-nav-item-v2 label="Flujo de caja" href="#">
+              <afi-nav-item-v2 [label]="t().cashFlow" href="#">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></svg>
               </afi-nav-item-v2>
             </afi-nav-section-v2>
@@ -1106,20 +997,24 @@
     </section>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Grupo dinámico vacío · estado sin elementos</h3>
+      <h3 class="workbench__section-title">{{ t().sidebarEmptyTitle }}</h3>
       <div class="workbench__sidebar-row">
         <div class="workbench__sidebar-frame">
           <afi-sidebar-v2>
-            <afi-nav-section-v2 label="Planificación">
-              <afi-nav-item-v2 label="Resumen" href="#" [selected]="true">
+            <afi-nav-section-v2 [label]="t().navPlanning">
+              <afi-nav-item-v2 [label]="t().summary" href="#" [selected]="true">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>
               </afi-nav-item-v2>
-              <afi-nav-item-v2 label="Cartera" href="#">
+              <afi-nav-item-v2 [label]="t().portfolio" href="#">
                 <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
               </afi-nav-item-v2>
             </afi-nav-section-v2>
 
-            <afi-nav-section-v2 label="Recientes" [empty]="true" />
+            <afi-nav-section-v2
+              [label]="t().navRecents"
+              [empty]="true"
+              [emptyText]="t().navEmptyRecents"
+            />
           </afi-sidebar-v2>
         </div>
       </div>
@@ -1128,7 +1023,7 @@
     <h2 #wbGroup class="workbench__group-title">Dialog</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Tamaños · plantilla de contenido</h3>
+      <h3 class="workbench__section-title">{{ t().sizesTitle }}</h3>
       <div class="workbench__row">
         @for (size of dialogSizes; track size) {
           <afi-button-v2 variant="secondary" size="sm" (clicked)="openDialog(size)">
@@ -1136,59 +1031,51 @@
           </afi-button-v2>
         }
       </div>
-      <p class="workbench__hint">
-        Base template: cabecera (título + descripción + cerrar), cuerpo proyectado
-        y footer de acciones. Último cierre: <strong>{{ dialogClosedReason() }}</strong>.
-      </p>
+      <p class="workbench__hint">{{ t().dialogHint }} {{ t().lastClose }}: <strong>{{ dialogClosedReason() }}</strong>.</p>
 
       <afi-dialog-v2
         [open]="dialogOpen()"
         [size]="dialogSize()"
-        title="Título del diálogo"
-        description="Texto de descripción opcional que aporta contexto adicional."
+        [title]="t().dialogTitle"
+        [description]="t().dialogDescription"
         (openChange)="dialogOpen.set($event)"
         (closed)="onDialogClose($event)"
       >
-        <p class="workbench__dialog-body">
-          El contenido del cuerpo va aquí. Esta área admite cualquier contenido
-          proyectado a través del slot por defecto, permitiendo composiciones
-          flexibles sin modificar el componente base.
-        </p>
+        <p class="workbench__dialog-body">{{ t().dialogBody }}</p>
         <afi-button-v2 slot="footer" variant="secondary" size="sm" (clicked)="onDialogClose('button')">
-          Cancelar
+          {{ t().cancel }}
         </afi-button-v2>
         <afi-button-v2 slot="footer" variant="primary" size="sm" (clicked)="onDialogClose('button')">
-          Guardar
+          {{ t().save }}
         </afi-button-v2>
       </afi-dialog-v2>
     </section>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Confirmación destructiva · eliminar</h3>
+      <h3 class="workbench__section-title">{{ t().deleteTitle }}</h3>
       <div class="workbench__row">
         <afi-button-v2 variant="destructive" size="sm" (clicked)="deleteDialogOpen.set(true)">
-          Eliminar cliente
+          {{ t().deleteClient }}
         </afi-button-v2>
       </div>
-      <p class="workbench__hint">Resultado: <strong>{{ deleteOutcome() }}</strong>.</p>
+      <p class="workbench__hint">{{ t().outcome }}: <strong>{{ deleteOutcome() }}</strong>.</p>
 
       <afi-dialog-v2
         [open]="deleteDialogOpen()"
         size="sm"
-        title="Eliminar cliente"
-        description="Esta acción no se puede deshacer. Se eliminarán la ficha del cliente y todas sus posiciones asociadas."
+        [title]="t().deleteClient"
+        [description]="t().deleteDescription"
         (openChange)="deleteDialogOpen.set($event)"
         (closed)="onCancelDelete()"
       >
         <p class="workbench__dialog-body">
-          ¿Seguro que quieres eliminar a <strong>María García</strong>? No podrás
-          recuperar sus datos una vez confirmada la eliminación.
+          {{ t().deleteBodyBefore }} <strong>María García</strong>{{ t().deleteBodyAfter }}
         </p>
         <afi-button-v2 slot="footer" variant="secondary" size="sm" (clicked)="onCancelDelete()">
-          Cancelar
+          {{ t().cancel }}
         </afi-button-v2>
         <afi-button-v2 slot="footer" variant="destructive" size="sm" (clicked)="onConfirmDelete()">
-          Eliminar
+          {{ t().remove }}
         </afi-button-v2>
       </afi-dialog-v2>
     </section>
@@ -1196,7 +1083,7 @@
     <h2 #wbGroup class="workbench__group-title">Drawer</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Tamaños · plantilla de contenido</h3>
+      <h3 class="workbench__section-title">{{ t().sizesTitle }}</h3>
       <div class="workbench__row">
         @for (size of drawerSizes; track size) {
           <afi-button-v2 variant="secondary" size="sm" (clicked)="openDrawer(size)">
@@ -1204,95 +1091,86 @@
           </afi-button-v2>
         }
       </div>
-      <p class="workbench__hint">
-        Panel anclado a la derecha, altura completa: cabecera fija (título +
-        descripción + cerrar), cuerpo con scroll independiente y footer de
-        acciones. Último cierre: <strong>{{ drawerClosedReason() }}</strong>.
-      </p>
+      <p class="workbench__hint">{{ t().drawerHint }} {{ t().lastClose }}: <strong>{{ drawerClosedReason() }}</strong>.</p>
 
       <afi-drawer-v2
         [open]="drawerOpen()"
         [size]="drawerSize()"
-        title="Título del panel"
-        description="Texto de descripción opcional que aporta contexto adicional."
+        [title]="t().drawerTitle"
+        [description]="t().drawerDescription"
         (openChange)="drawerOpen.set($event)"
         (closed)="onDrawerClose($event)"
       >
-        <p class="workbench__dialog-body">
-          El contenido del cuerpo va aquí. Esta área admite cualquier contenido
-          proyectado a través del slot por defecto y hace scroll de forma
-          independiente cuando supera la altura del viewport, mientras la
-          cabecera y el footer permanecen fijos.
-        </p>
+        <p class="workbench__dialog-body">{{ t().drawerBody }}</p>
         <afi-button-v2 slot="footer" variant="secondary" size="sm" (clicked)="onDrawerClose('button')">
-          Cancelar
+          {{ t().cancel }}
         </afi-button-v2>
         <afi-button-v2 slot="footer" variant="primary" size="sm" (clicked)="onDrawerClose('button')">
-          Guardar
+          {{ t().save }}
         </afi-button-v2>
       </afi-drawer-v2>
     </section>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">Panel de filtros · contenido proyectado</h3>
+      <h3 class="workbench__section-title">{{ t().filterPanelTitle }}</h3>
       <div class="workbench__row">
         <afi-button-v2 variant="secondary" size="sm" (clicked)="filterDrawerOpen.set(true)">
-          Abrir filtros
+          {{ t().openFilters }}
         </afi-button-v2>
       </div>
-      <p class="workbench__hint">Resultado: <strong>{{ filterOutcome() }}</strong>.</p>
+      <p class="workbench__hint">{{ t().outcome }}: <strong>{{ filterOutcome() }}</strong>.</p>
 
       <afi-drawer-v2
         [open]="filterDrawerOpen()"
         size="sm"
-        title="Filtros"
-        description="Ajusta los criterios para acotar los resultados."
+        [title]="t().filtersHeading"
+        [description]="t().filtersDescription"
         (openChange)="filterDrawerOpen.set($event)"
         (closed)="onCancelFilters()"
       >
         <div class="workbench__drawer-filters">
           <div class="workbench__filter-group">
-            <span class="workbench__cell-label">Estado</span>
+            <span class="workbench__cell-label">{{ t().statusLabel }}</span>
             <div class="workbench__row">
-              @for (label of statusFilters; track label) {
+              @for (f of statusFilters(); track f.id) {
                 <afi-chip-v2
-                  [label]="label"
-                  [selected]="selectedFilters().has(label)"
-                  (selectedChange)="toggleFilter(label)"
+                  [label]="f.label"
+                  [selected]="selectedFilters().has(f.id)"
+                  (selectedChange)="toggleFilter(f.id)"
                 />
               }
             </div>
           </div>
           <div class="workbench__filter-group">
-            <span class="workbench__cell-label">Categoría</span>
+            <span class="workbench__cell-label">{{ t().categoryLabel }}</span>
             <div class="workbench__row">
-              @for (label of categoryFilters; track label) {
+              @for (f of categoryFilters(); track f.id) {
                 <afi-chip-v2
-                  [label]="label"
-                  [selected]="selectedFilters().has(label)"
-                  (selectedChange)="toggleFilter(label)"
+                  [label]="f.label"
+                  [selected]="selectedFilters().has(f.id)"
+                  (selectedChange)="toggleFilter(f.id)"
                 />
               }
             </div>
           </div>
           <div class="workbench__filter-group">
-            <span class="workbench__cell-label">Rango de fechas</span>
+            <span class="workbench__cell-label">{{ t().dateRangeLabel }}</span>
             <div class="workbench__row">
-              @for (label of dateFilters; track label) {
+              @for (f of dateFilters(); track f.id) {
                 <afi-chip-v2
-                  [label]="label"
-                  [selected]="selectedFilters().has(label)"
-                  (selectedChange)="toggleFilter(label)"
+                  [label]="f.label"
+                  [selected]="selectedFilters().has(f.id)"
+                  (selectedChange)="toggleFilter(f.id)"
                 />
               }
             </div>
           </div>
         </div>
         <afi-button-v2 slot="footer" variant="ghost" size="sm" (clicked)="onCancelFilters()">
-          Limpiar
+          {{ t().clear }}
         </afi-button-v2>
         <afi-button-v2 slot="footer" variant="primary" size="sm" (clicked)="onApplyFilters()">
-          Aplicar
+          {{ t().apply }}
         </afi-button-v2>
       </afi-drawer-v2>
     </section>
@@ -1300,38 +1178,27 @@
     <h2 #wbGroup class="workbench__group-title">Toast</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">
-        Aviso con deshacer · atajo · sin acción
-      </h3>
+      <h3 class="workbench__section-title">{{ t().toastTitle }}</h3>
       <div class="workbench__row">
         <afi-button-v2 variant="secondary" size="sm" (clicked)="showToastDemo('undo')">
-          Con deshacer
+          {{ t().toastWithUndo }}
         </afi-button-v2>
         <afi-button-v2 variant="secondary" size="sm" (clicked)="showToastDemo('shortcut')">
-          Con atajo
+          {{ t().toastWithShortcut }}
         </afi-button-v2>
         <afi-button-v2 variant="secondary" size="sm" (clicked)="showToastDemo('plain')">
-          Solo mensaje
+          {{ t().toastMessageOnly }}
         </afi-button-v2>
       </div>
-      <p class="workbench__hint">
-        El componente no gestiona su propio temporizador: la visibilidad y el
-        autocierre son del consumidor.
-      </p>
+      <p class="workbench__hint">{{ t().toastHint }}</p>
     </section>
 
     <h2 #wbGroup class="workbench__group-title">Navbar</h2>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">
-        Navbar de producto · Wealth Planner
-      </h3>
-      <p class="workbench__hint">
-        Cada marco declara el contenedor `viewport`, así que la barra responde al
-        ancho del marco y no al de la ventana: los tres puntos de ruptura se ven
-        a la vez.
-      </p>
-      @for (bp of navbarBreakpoints; track bp.label) {
+      <h3 class="workbench__section-title">{{ t().navbarProductTitle }}</h3>
+      <p class="workbench__hint">{{ t().navbarProductHint }}</p>
+      @for (bp of navbarBreakpoints(); track bp.label) {
         <div class="workbench__navbar-demo">
           <span class="workbench__cell-label">{{ bp.label }}</span>
           <div class="workbench__navbar-frame" [style.max-inline-size]="bp.width">
@@ -1349,21 +1216,15 @@
     </section>
 
     <section class="workbench__section">
-      <h3 class="workbench__section-title">
-        Navbar de sitio · design.afi.es
-      </h3>
-      <p class="workbench__hint">
-        La barra del sitio tal y como se compone hoy en `app.component.html`:
-        afi-top-bar en cristal, logo, destinos con navbar-item-v2 y el selector
-        de idioma.
-      </p>
+      <h3 class="workbench__section-title">{{ t().navbarSiteTitle }}</h3>
+      <p class="workbench__hint">{{ t().navbarSiteHint }}</p>
       <div class="workbench__navbar-demo">
         <span class="workbench__cell-label">afi-top-bar + navbar-item-v2</span>
         <div class="workbench__navbar-frame">
           <afi-top-bar variant="glass">
             <coherence-logo slot="start" variant="color" size="sm" href="/" />
-            <nav slot="center" class="workbench__sitenav-menu" aria-label="Destinos del sitio">
-              @for (item of siteNavItems; track item.label) {
+            <nav slot="center" class="workbench__sitenav-menu" [attr.aria-label]="t().siteNavAria">
+              @for (item of siteNavItems(); track item.label) {
                 <afi-navbar-item-v2 [label]="item.label" [selected]="item.selected" />
               }
             </nav>
@@ -1371,7 +1232,7 @@
               <afi-segmented-control-v2
                 [options]="langOptions"
                 [value]="'es'"
-                ariaLabel="Idioma"
+                [ariaLabel]="t().languageLabel"
                 size="sm"
               />
             </div>

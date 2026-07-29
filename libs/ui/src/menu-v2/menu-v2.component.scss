@@ -16,4 +16,40 @@
   border: var(--stroke-default) solid var(--borders-default);
   border-radius: var(--radius-xl);
   box-shadow: var(--elevation-2);
+
+  // Extrude-on-open (motion-skill: container first, contents second).
+  //
+  // The panel grows downward out of its trigger rather than fading in as a
+  // finished block. clip-path rather than scaleY so the chrome — radius,
+  // border, shadow — and the projected rows are never distorted mid-flight;
+  // scaleY would squash the text. The small negative translateY starts the
+  // panel tucked against the trigger and releases it to its resting offset,
+  // which is what reads as "emerging from" instead of "appearing below".
+  //
+  // The rows stagger in separately, in menu-item-v2 — deliberately after this
+  // finishes, so the container lands empty and then fills.
+  animation: afi-menu-v2-extrude var(--motion-duration-fast) var(--motion-easing-enter) both;
+  transform-origin: top center;
+  will-change: clip-path, transform;
+}
+
+@keyframes afi-menu-v2-extrude {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(calc(-1 * var(--gap-control-xs)));
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+
+// Reduced motion: the panel still appears, it just doesn't travel. Respect as
+// respect, not disable (motion-skill §reduced-motion).
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+    clip-path: none;
+    transform: none;
+  }
 }

@@ -3,7 +3,18 @@
   token scope (IBM Plex Sans, modern neutrals, the --chart-monochrome-* ramp the
   segmented bar needs). No nav, no sidebar, no shell.
 -->
-<div class="d1" data-foundation="modern">
+<div class="d1-shell" data-foundation="modern">
+  <!-- Product chrome, full-bleed: the tint runs edge to edge while the bar's
+       own rail keeps the controls on the content edges. -->
+  <site-planner-navbar-v2
+    clientName="Marco Fernández Castro"
+    simName="SIM-2025-0011"
+    currentView="Patrimonio"
+    advisorName="Richard Griner"
+  />
+
+  <div class="d1">
+
   <!-- Hero row: the patrimonio card (wide) + one standing-in square (narrow). -->
   <div class="d1__hero">
     <afi-card-v2 [showHeader]="false">
@@ -85,4 +96,5 @@
       </afi-card-v2>
     }
   </div>
+</div>
 </div>

@@ -39,6 +39,8 @@ import {
   TagV2Component,
   ToggleV2Component,
 } from '@coherence/ui';
+
+import { PlannerNavbarV2Component } from '../shared/planner-navbar-v2.component';
 import type {
   BadgeV2Tone,
   ButtonV2Size,
@@ -80,6 +82,7 @@ import type {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    PlannerNavbarV2Component,
     BadgeV2Component,
     ButtonV2Component,
     CardV2Component,

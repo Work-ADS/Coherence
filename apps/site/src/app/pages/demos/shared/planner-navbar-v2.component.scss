@@ -11,20 +11,34 @@
   z-index: 40;
 }
 
+// Full-bleed chrome: the tint runs edge to edge, the controls sit on the same
+// rail as the content below (see .pnb__rail).
 .pnb {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-control-md);
-  padding-block: var(--gap-control-sm);
-  padding-inline: var(--canvas-padding-inline);
-  // The coherence glass: translucent surface tint over a token blur.
+  display: block;
+  // Ported from v1 (.ptb): a fixed height that lines up with the sidebar's
+  // logo row.
+  block-size: var(--shell-header-height);
+  // The coherence glass: translucent surface tint over a token blur, the same
+  // recipe as afi-top-bar[variant=glass]. Content frosts through as it scrolls
+  // under the bar.
   background: color-mix(in srgb, var(--background-surface) 55%, transparent);
   backdrop-filter: blur(var(--blur-lg));
   -webkit-backdrop-filter: blur(var(--blur-lg));
   border-block-end: var(--stroke-hairline) solid var(--borders-default);
   font-family: var(--font-family-primary);
   color: var(--content-primary);
+}
+
+// The rail carries the same inline padding as the page canvas, so the back
+// button's left edge and the avatar's right edge land on the content edges.
+.pnb__rail {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--layout-gap-default);
+  block-size: 100%;
+  padding-inline: var(--canvas-padding-inline);
 }
 
 // ---------------------------------------------------------------------------
@@ -67,6 +81,17 @@
   text-decoration: none;
   color: var(--content-primary);
   border-radius: var(--radius-sm);
+  // The bar is a single row: the identity truncates rather than wrapping, or a
+  // narrow container turns "<cliente> planificación:" into three stacked lines.
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-inline-size: 0;
+  // The client is context; the simulation name is the subject.
+  color: var(--content-secondary);
+  font-size: var(--type-body-default-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--type-body-default-line-height);
   transition: color var(--motion-duration-fast) var(--motion-easing-standard);
 
   &:hover .pnb__client-name {
@@ -102,6 +127,9 @@
 }
 
 .pnb__sim-name {
+  white-space: nowrap;
+  color: var(--content-primary);
+  font-weight: var(--font-weight-medium);
   font-size: var(--type-body-default-size);
   font-weight: var(--font-weight-semibold);
 }
@@ -150,22 +178,148 @@
   white-space: nowrap;
 }
 
-// Narrow viewports: the current-view crumb is the first thing to yield —
-// client + simulation + estado are the load-bearing context.
-@media (max-width: 56rem) {
-  .pnb__view,
-  .pnb__sep--view {
-    display: none;
+// ---------------------------------------------------------------------------
+// Layout clusters
+// ---------------------------------------------------------------------------
+
+.pnb__start {
+  display: flex;
+  align-items: center;
+  // Client · simulación · estado read as one phrase, so they sit tight.
+  gap: var(--gap-control-sm);
+  min-inline-size: 0;
+}
+
+// The switcher is a control, not part of the phrase — it keeps v1's spacing.
+.pnb__switcher-anchor {
+  margin-inline-end: var(--gap-control-md);
+}
+
+// Plain button rather than afi-icon-button-v2: that primitive is strictly
+// square with a fixed icon size, so a two-glyph trigger overflowed its box and
+// the hover tint sat off-centre. Same approach as .pnb__estado-trigger.
+.pnb__switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-xs);
+  block-size: var(--height-component-sm);
+  padding-inline: var(--gap-control-sm);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--content-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-easing-standard),
+    color var(--motion-duration-fast) var(--motion-easing-standard);
+
+  &:hover {
+    background: var(--background-hover);
+    color: var(--content-primary);
   }
 
-  .pnb__client-name {
-    max-inline-size: 9rem;
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--gap-control-xs) var(--borders-focus);
+  }
+}
+
+// Flat identity line: "<cliente> planificación: <SIM-id> / <ruta>".
+.pnb__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  min-inline-size: 0;
+  // Shrinks before the switcher and estado, which are fixed-size controls.
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.pnb__path-sep {
+  color: var(--content-tertiary);
+}
+
+.pnb__path-step {
+  color: var(--content-secondary);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+  white-space: nowrap;
+
+  &--link {
+    color: var(--content-primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Plan switcher trigger: chevron + list glyph sharing one button.
+.pnb__nav-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-xs);
+}
+
+.pnb__nav-icon {
+  inline-size: var(--dimension-4);
+  block-size: var(--dimension-4);
+}
+
+// Anchors every popover to its own trigger.
+.pnb__anchor {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+// ---------------------------------------------------------------------------
+// Responsive: one switch, so a control is never visible in both registers
+// ---------------------------------------------------------------------------
+// Wide (default): hamburger and overflow hidden, everything inline.
+// Narrow (<48rem, tablet + mobile): the identity strip, plan switcher, estado
+// and the two icon actions all yield to the hamburger (chrome) plus the ⋮
+// overflow (actions), which is where their entries move.
+
+.pnb__hamburger,
+.pnb__narrow-only {
+  display: none;
+}
+
+@media (max-width: 48rem) {
+  .pnb__hamburger {
+    display: inline-flex;
+  }
+
+  .pnb__narrow-only {
+    display: inline-flex;
+  }
+
+  .pnb__wide-only {
+    display: none;
+  }
+}
+
+// Between tablet and desktop the nested path is the first thing to yield —
+// client, simulation and estado are the load-bearing context.
+@media (max-width: 64rem) and (min-width: 48.0625rem) {
+  .pnb__path-sep,
+  .pnb__path-step {
+    display: none;
   }
 }
 
 // ---------------------------------------------------------------------------
 // Menus (component-local overlay until menu-v2 grows its shared harness)
 // ---------------------------------------------------------------------------
+
+// End-aligned variant for the right cluster; the start-aligned default
+// would run off the viewport edge.
+.pnb__menu--end {
+  inset-inline: auto 0;
+}
 
 .pnb__menu {
   position: absolute;
@@ -186,7 +340,7 @@
   flex-shrink: 0;
 }
 
-.pnb__action-anchor {
+.pnb__anchor--legacy {
   position: relative;
   display: inline-flex;
 }

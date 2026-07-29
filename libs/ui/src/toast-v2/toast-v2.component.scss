@@ -1,0 +1,174 @@
+// afi-toast-v2 — identity v2 (foundations-modern tokens only).
+//
+// Same anatomy as v1 `afi-toast`; every value re-pointed at the modern semantic
+// layer. The notable swap is the pill surface: v1 reached for the
+// --color-neutral-900 primitive directly, which this layer forbids, so v2 reads
+// --background-inverse — the surface partner to the pre-existing
+// --content-inverse. Renders correctly only inside [data-foundation="modern"].
+
+:host {
+  // The anchor is fixed-position, so the host itself must not create a box.
+  display: contents;
+}
+
+.afi-toast-v2__anchor {
+  position: fixed;
+  inset-block-end: var(--layout-gap-default);
+  z-index: 70;
+  // The anchor spans nothing and catches nothing; only the pill is interactive,
+  // so the rest of the page stays clickable underneath.
+  pointer-events: none;
+
+  &--bottom-center {
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+  }
+
+  &--bottom-end {
+    inset-inline-end: var(--layout-gap-default);
+  }
+}
+
+.afi-toast-v2__pill {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-sm);
+  block-size: var(--height-component-lg);
+  // Symmetric: the leading control and the trailing dismiss are both pill-
+  // shaped and inset the same, so one value keeps every variant balanced —
+  // including message-only, where there is no leading control at all.
+  padding-inline: var(--gap-control-xs);
+  border-radius: var(--radius-full);
+  background: var(--background-inverse);
+  color: var(--content-inverse);
+  box-shadow: var(--elevation-2);
+  font-family: var(--font-family-primary);
+  animation: afi-toast-v2-enter var(--motion-duration-base) var(--motion-easing-enter);
+}
+
+// Rises into place — the toast arrives from the edge it is anchored to.
+@keyframes afi-toast-v2-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-reveal-rise-light));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Action (undo) ──────────────────────────────────────────────────────────
+
+.afi-toast-v2__action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-xs);
+  block-size: var(--height-component-sm);
+  padding-inline: var(--gap-control-sm);
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--content-inverse);
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--type-body-small-line-height);
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-enter);
+
+  // On an inverse field the hover lift comes from the foreground colour at low
+  // alpha, not a lighter neutral — the modern layer has no inverse-hover role.
+  &:hover {
+    background: color-mix(in srgb, var(--content-inverse) 12%, transparent);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--stroke-focus) var(--content-inverse);
+  }
+}
+
+.afi-toast-v2__action-label {
+  white-space: nowrap;
+}
+
+// Tunnel the inverse palette into the embedded <afi-kbd> so the keycaps read
+// light-on-dark rather than inheriting the page's light styling. afi-kbd has no
+// v2 twin yet; these are its documented custom properties, not style piercing.
+.afi-toast-v2__shortcut {
+  --kbd-fg: var(--content-inverse);
+  --kbd-bg: color-mix(in srgb, var(--content-inverse) 16%, transparent);
+  --kbd-border: color-mix(in srgb, var(--content-inverse) 28%, transparent);
+}
+
+// ─── Message ────────────────────────────────────────────────────────────────
+
+.afi-toast-v2__message {
+  // Optical inset from the dividers. The pill supplies the outer padding, so
+  // the message only needs breathing room against its neighbours.
+  padding-inline: var(--gap-control-sm);
+  font-size: var(--type-body-small-size);
+  font-weight: var(--type-body-small-weight);
+  line-height: var(--type-body-small-line-height);
+}
+
+// ─── Divider ────────────────────────────────────────────────────────────────
+
+// Message-only: nothing precedes it, so it takes the leading inset a control
+// would have occupied and the pill stays optically centred.
+.afi-toast-v2__message--lead {
+  padding-inline-start: var(--gap-control-md);
+}
+
+.afi-toast-v2__divider {
+  flex: none;
+  inline-size: var(--stroke-default);
+  block-size: var(--icon-sm);
+  background: color-mix(in srgb, var(--content-inverse) 20%, transparent);
+}
+
+// ─── Dismiss ────────────────────────────────────────────────────────────────
+
+.afi-toast-v2__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--height-component-sm);
+  block-size: var(--height-component-sm);
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--content-inverse);
+  cursor: pointer;
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-enter);
+
+  &:hover {
+    background: color-mix(in srgb, var(--content-inverse) 12%, transparent);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--stroke-focus) var(--content-inverse);
+  }
+}
+
+.afi-toast-v2__icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+// reduced-motion-collapse (motion-skill §4.6): the toast still appears, it just
+// doesn't travel.
+@media (prefers-reduced-motion: reduce) {
+  .afi-toast-v2__pill {
+    animation: none;
+  }
+
+  .afi-toast-v2__action,
+  .afi-toast-v2__dismiss {
+    transition: none;
+  }
+}

@@ -114,6 +114,10 @@ export { BadgeComponent } from './src/badge';
 export type { BadgeIntent, BadgeSize } from './src/badge';
 export { LoadingOverlayComponent } from './src/loading-overlay';
 export type { LoadingOverlayVariant } from './src/loading-overlay';
+export { ToastV2Component } from './src/toast-v2';
+export { TOAST_V2_TOKEN_USAGE } from './src/toast-v2';
+export type { ToastV2Placement } from './src/toast-v2';
+
 export { PageHeaderComponent } from './src/page-header';
 export type { PageHeaderDensity, PageHeaderLevel } from './src/page-header';
 export { ShellComponent, ShellWorkspaceComponent, ShellAuthComponent, ShellDocsComponent, ShellFocusComponent, ShellCanvasComponent, shellTypeFromRoute, coerceShellType } from './src/shell';

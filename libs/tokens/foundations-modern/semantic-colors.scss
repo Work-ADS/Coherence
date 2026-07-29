@@ -16,6 +16,11 @@
   --background-hover: var(--color-neutral-25);
   --background-active: var(--color-neutral-50);
   --background-selected: var(--color-neutral-100);
+  // Inverse field — the dark surface that --content-inverse was authored to sit
+  // on (it already exists; its surface partner does not). Used by toast-v2's
+  // pill. TODO(tokens): author this in Figma as a background role so the next
+  // sync keeps it instead of dropping it.
+  --background-inverse: var(--color-neutral-900);
 
   // control
   --control-background-default: var(--color-control-50);

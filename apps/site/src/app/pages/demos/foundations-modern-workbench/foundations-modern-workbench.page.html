@@ -37,7 +37,7 @@
           @for (size of sizes; track size) {
             <div class="workbench__cell">
               <span class="workbench__cell-label">size="{{ size }}"</span>
-              <div class="workbench__row">
+              <div class="workbench__cell">
                 <afi-button-v2 [variant]="variant" [size]="size">
                   {{ labels[variant] }}
                 </afi-button-v2>
@@ -217,18 +217,16 @@
         />
         <afi-input-v2
           class="workbench__input"
-          label="Buscar"
+          label="Filtrar"
           type="search"
-          placeholder="Buscar cliente"
-          hint="Filtra por nombre o NIF."
+          placeholder="Nombre o NIF"
+          hint="Filtra las filas de la tabla. No hay lista desplegable: el resultado se aplica sobre lo que ya está en pantalla."
         >
           <svg
             slot="iconStart"
-            class="workbench__icon"
             viewBox="0 0 16 16"
             fill="none"
             stroke="currentColor"
-            stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
             aria-hidden="true"
@@ -246,11 +244,9 @@
         >
           <svg
             slot="iconEnd"
-            class="workbench__icon"
             viewBox="0 0 16 16"
             fill="none"
             stroke="currentColor"
-            stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
             aria-hidden="true"
@@ -1301,103 +1297,96 @@
       </afi-drawer-v2>
     </section>
 
+    <h2 #wbGroup class="workbench__group-title">Toast</h2>
+
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">
+        Aviso con deshacer · atajo · sin acción
+      </h3>
+      <div class="workbench__row">
+        <afi-button-v2 variant="secondary" size="sm" (clicked)="showToastDemo('undo')">
+          Con deshacer
+        </afi-button-v2>
+        <afi-button-v2 variant="secondary" size="sm" (clicked)="showToastDemo('shortcut')">
+          Con atajo
+        </afi-button-v2>
+        <afi-button-v2 variant="secondary" size="sm" (clicked)="showToastDemo('plain')">
+          Solo mensaje
+        </afi-button-v2>
+      </div>
+      <p class="workbench__hint">
+        El componente no gestiona su propio temporizador: la visibilidad y el
+        autocierre son del consumidor.
+      </p>
+    </section>
+
     <h2 #wbGroup class="workbench__group-title">Navbar</h2>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">
-        Navbar de producto · planificación
+        Navbar de producto · Wealth Planner
       </h3>
-      <div class="workbench__navbar-demo">
-        <span class="workbench__cell-label">site-planner-navbar-v2</span>
-        <div class="workbench__navbar-frame">
-          <site-planner-navbar-v2
-            clientName="Carmen y Andrés Ortega"
-            simName="Plan patrimonial 2026"
-            currentView="Workbench"
-            advisorName="Richard Griner"
-          />
+      <p class="workbench__hint">
+        Cada marco declara el contenedor `viewport`, así que la barra responde al
+        ancho del marco y no al de la ventana: los tres puntos de ruptura se ven
+        a la vez.
+      </p>
+      @for (bp of navbarBreakpoints; track bp.label) {
+        <div class="workbench__navbar-demo">
+          <span class="workbench__cell-label">{{ bp.label }}</span>
+          <div class="workbench__navbar-frame" [style.max-inline-size]="bp.width">
+            <site-planner-navbar-v2
+              clientName="Carmen y Andrés Ortega"
+              simName="Plan patrimonial 2026"
+              clientRoute="/design-at-afi"
+              listadoRoute="/design-at-afi"
+              currentView="Workbench"
+              advisorName="Richard Griner"
+            />
+          </div>
         </div>
-      </div>
+      }
     </section>
 
     <section class="workbench__section">
       <h3 class="workbench__section-title">
-        Tres disposiciones · desktop · compact · mobile
+        Navbar de sitio · design.afi.es
       </h3>
-      <div class="workbench__navbar-stack">
-        <div class="workbench__navbar-demo">
-          <span class="workbench__cell-label">layout="desktop"</span>
-          <div class="workbench__navbar-frame">
-            <afi-navbar-v2
-              layout="desktop"
-              currentPage="Plan"
-              userName="María Ruiz"
-              (activated)="onNavbarAction($event)"
-            />
-          </div>
-        </div>
-
-        <div class="workbench__navbar-demo workbench__navbar-demo--compact">
-          <span class="workbench__cell-label">layout="compact"</span>
-          <div class="workbench__navbar-frame">
-            <afi-navbar-v2
-              layout="compact"
-              currentPage="Plan"
-              userName="María Ruiz"
-              (activated)="onNavbarAction($event)"
-            />
-          </div>
-        </div>
-
-        <div class="workbench__navbar-demo workbench__navbar-demo--mobile">
-          <span class="workbench__cell-label">layout="mobile"</span>
-          <div class="workbench__navbar-frame">
-            <afi-navbar-v2
-              layout="mobile"
-              currentPage="Plan"
-              userName="María Ruiz"
-              (activated)="onNavbarAction($event)"
-            />
-          </div>
+      <p class="workbench__hint">
+        La barra del sitio tal y como se compone hoy en `app.component.html`:
+        afi-top-bar en cristal, logo, destinos con navbar-item-v2 y el selector
+        de idioma.
+      </p>
+      <div class="workbench__navbar-demo">
+        <span class="workbench__cell-label">afi-top-bar + navbar-item-v2</span>
+        <div class="workbench__navbar-frame">
+          <afi-top-bar variant="glass">
+            <coherence-logo slot="start" variant="color" size="sm" href="/" />
+            <nav slot="center" class="workbench__sitenav-menu" aria-label="Destinos del sitio">
+              @for (item of siteNavItems; track item.label) {
+                <afi-navbar-item-v2 [label]="item.label" [selected]="item.selected" />
+              }
+            </nav>
+            <div slot="end" class="workbench__sitenav-end">
+              <afi-segmented-control-v2
+                [options]="langOptions"
+                [value]="'es'"
+                ariaLabel="Idioma"
+                size="sm"
+              />
+            </div>
+          </afi-top-bar>
         </div>
       </div>
-      <p class="workbench__hint">
-        Última acción emitida:
-        <strong>{{ navbarLastAction() ?? '—' }}</strong>. La barra es un
-        disparador: el buscador abre la paleta de comandos (no filtra). Botones de
-        icono siempre en variante ghost. Pulse el menú (☰) en compact o mobile
-        para abrir la navegación.
-      </p>
-
-      <!-- Off-canvas navigation: the menu toggle opens afi-sidebar-v2 inside a
-           left-anchored afi-drawer-v2 (no new component). -->
-      <afi-drawer-v2
-        anchor="left"
-        size="sm"
-        ariaLabel="Navegación"
-        [open]="navDrawerOpen()"
-        (openChange)="navDrawerOpen.set($event)"
-      >
-        <afi-sidebar-v2 ariaLabel="Navegación principal">
-          <afi-nav-section-v2 label="Planificación">
-            <afi-nav-item-v2 label="Resumen" href="#" [selected]="true">
-              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>
-            </afi-nav-item-v2>
-            <afi-nav-item-v2 label="Cartera" href="#">
-              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
-            </afi-nav-item-v2>
-            <afi-nav-item-v2 label="Flujo de caja" href="#">
-              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></svg>
-            </afi-nav-item-v2>
-          </afi-nav-section-v2>
-
-          <afi-nav-section-v2 label="Recientes">
-            <afi-nav-item-v2 label="Estrategia Q3" href="#">
-              <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
-            </afi-nav-item-v2>
-          </afi-nav-section-v2>
-        </afi-sidebar-v2>
-      </afi-drawer-v2>
     </section>
+
   </div>
+  <afi-toast-v2
+    [message]="toastMessage()"
+    [visible]="toastVisible()"
+    [showUndo]="toastShowUndo()"
+    [shortcut]="toastShortcut()"
+    (undo)="hideToastDemo()"
+    (dismissed)="hideToastDemo()"
+  />
 </div>

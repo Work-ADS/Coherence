@@ -1241,6 +1241,61 @@
       </div>
     </section>
 
+    <h2 #wbGroup class="workbench__group-title">{{ t().chartGroupTitle }}</h2>
+
+    <!--
+      Compact form on purpose. Every bar is direct-labelled, so the measured axis
+      would be duplicate information — the one thing the data-viz skill says to
+      strip. What stays is the zero rule, and only on the series that crosses zero:
+      that reference cannot be inferred from a label.
+    -->
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">orientation="vertical" · {{ t().chartPatrimonioTitle }}</h3>
+      <div class="workbench__chart">
+        <afi-chart-bar
+          [data]="patrimonioData"
+          hideAxisTicks
+          valueLabelInside
+          unit="€"
+          [referenceValue]="patrimonioAverage"
+          [referenceLabel]="t().chartPatrimonioAverage"
+          [title]="t().chartPatrimonioTitle"
+          [subtitle]="t().chartPatrimonioSubtitle"
+          [longDescription]="t().chartPatrimonioLongDesc"
+          [statisticalNotes]="t().chartPatrimonioStats"
+          [structureNotes]="t().chartPatrimonioStructure"
+          [locale]="lang() === 'es' ? 'es-ES' : 'en-GB'"
+        />
+      </div>
+      <p class="workbench__hint">{{ t().chartPatrimonioHint }}</p>
+    </section>
+
+    <!-- Horizontal bar chart parked 2026-07-30. The Figma ideas for charts
+         (AFI-FOUNDATIONS-MODERN, node 3308:17639) are all vertical stacked
+         bars, so horizontal is out of scope until that lands. Kept here rather
+         than deleted because the primitive supports it and the markup is correct.
+    <section class="workbench__section">
+      <h3 class="workbench__section-title">orientation="horizontal" · {{ t().chartBreakdownTitle }}</h3>
+      <div class="workbench__chart">
+        <afi-chart-bar
+          [data]="breakdownData()"
+          orientation="horizontal"
+          sort="desc"
+          hideAxisTicks
+          valueLabelInside
+          unit="€"
+          [title]="t().chartBreakdownTitle"
+          [subtitle]="t().chartBreakdownSubtitle"
+          [longDescription]="t().chartBreakdownLongDesc"
+          [statisticalNotes]="t().chartBreakdownStats"
+          [structureNotes]="t().chartBreakdownStructure"
+          [locale]="lang() === 'es' ? 'es-ES' : 'en-GB'"
+        />
+      </div>
+      <p class="workbench__hint">{{ t().chartBreakdownHint }}</p>
+    </section>
+    -->
+
   </div>
   <afi-toast-v2
     [message]="toastMessage()"

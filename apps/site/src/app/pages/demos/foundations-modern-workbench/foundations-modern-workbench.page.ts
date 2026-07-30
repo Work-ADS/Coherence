@@ -43,11 +43,13 @@ import {
 } from '@coherence/ui';
 
 import {
+  ChartBarComponent,
   LogoComponent,
   NavbarItemV2Component,
   ToastV2Component,
   TopBarComponent,
 } from '@coherence/ui';
+import type { BarDatum } from '@coherence/ui';
 
 import { PlannerNavbarV2Component } from '../shared/planner-navbar-v2.component';
 import type {
@@ -118,6 +120,7 @@ interface FilterOption {
     TopBarComponent,
     LogoComponent,
     NavbarItemV2Component,
+    ChartBarComponent,
     SegmentedControlV2Component,
     BadgeV2Component,
     ButtonV2Component,
@@ -194,6 +197,40 @@ export class FoundationsModernWorkbenchPage {
     { value: 'es', label: 'ES' },
     { value: 'en', label: 'EN' },
   ];
+
+  /**
+   * Net worth per year — the mixed-sign specimen. Values in thousands so the
+   * direct labels stay short; three years close below zero, which is what puts
+   * the zero rule and the below-zero red to work.
+   */
+  readonly patrimonioData: BarDatum[] = [
+    { key: '2019', value: 412 },
+    { key: '2020', value: -186 },
+    { key: '2021', value: 298 },
+    { key: '2022', value: -94 },
+    { key: '2023', value: 341 },
+    { key: '2024', value: -27 },
+    { key: '2025', value: 587 },
+  ];
+
+  /**
+   * Mean of the series, so the reference line always describes the data actually
+   * plotted rather than a number pasted in beside it.
+   */
+  readonly patrimonioAverage =
+    this.patrimonioData.reduce((sum, d) => sum + d.value, 0) / this.patrimonioData.length;
+
+  /**
+   * Wealth by asset class — the horizontal specimen. Long category names and no
+   * time dimension, which is exactly when Visa calls for horizontal bars.
+   */
+  readonly breakdownData = computed<BarDatum[]>(() => [
+    { key: this.t().equities, value: 1284 },
+    { key: this.t().realEstate, value: 862 },
+    { key: this.t().fixedIncome, value: 549 },
+    { key: this.t().alternatives, value: 218 },
+    { key: this.t().cash, value: 143 },
+  ]);
 
   /** Mirrors the live site's destinations (display-only here). */
   readonly siteNavItems = computed(() => [

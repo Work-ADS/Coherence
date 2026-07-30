@@ -21,28 +21,44 @@
 
     <!-- SVG chart -->
     @if (sortedData().length > 0) {
-      <svg #chartRoot [attr.width]="'100%'" [attr.height]="height()" [attr.viewBox]="viewBox()"
+      <svg #chartRoot [attr.width]="'100%'" [attr.height]="svgHeight()" [attr.viewBox]="viewBox()"
            role="group" [attr.aria-labelledby]="titleElId" [attr.aria-describedby]="a11yId"
            [attr.tabindex]="nav.rootTabIndex()"
            (keydown)="onKeydown($event)"
            class="block">
-        <g [attr.transform]="'translate(' + margins.left + ',' + margins.top + ')'">
-          <!-- Y axis -->
-          <g afi-chart-axis orientation="y" [min]="0" [max]="yMax()" [length]="plotHeight()" [locale]="locale()" />
-          <!-- X axis ticks (categorical) -->
-          <g [attr.transform]="'translate(0,' + plotHeight() + ')'">
-            <line x1="0" [attr.x2]="plotWidth()" stroke="var(--border-hairline)" stroke-width="1" />
-            @for (bar of bars(); track bar.datum.key; let i = $index) {
-              <text
-                [attr.x]="bar.x + bar.width / 2"
-                y="16"
-                text-anchor="middle"
-                class="fill-neutral-500"
-                style="font-size: var(--font-size-body-sm)"
-              >{{ bar.datum.key }}</text>
+        <g [attr.transform]="'translate(' + margins().left + ',' + margins().top + ')'">
+          @if (isHorizontal()) {
+            <!-- Value axis along the bottom, drawn here rather than by afi-chart-axis -->
+            <g [attr.transform]="'translate(0,' + plotHeight() + ')'">
+              <line x1="0" [attr.x2]="plotWidth()" stroke="var(--border-hairline)" stroke-width="1" />
+              @for (tick of valueTicks(); track tick.value) {
+                <text
+                  [attr.x]="tick.offset"
+                  y="16"
+                  text-anchor="middle"
+                  class="fill-neutral-500"
+                  style="font-size: var(--font-size-body-sm)"
+                >{{ tick.label }}</text>
+              }
+            </g>
+          } @else {
+            <!-- Measured axis. Ticks suppressed leaves the bare line: the anatomy
+                 still requires the axis, only its numbers were duplicated. -->
+            @if (hideAxisTicks()) {
+              <line x1="0" x2="0" y1="0" [attr.y2]="plotHeight()"
+                    stroke="var(--border-hairline)" stroke-width="1" />
+            } @else {
+              <g afi-chart-axis orientation="y"
+                 [min]="valueDomain().min" [max]="valueDomain().max"
+                 [length]="plotHeight()" [locale]="locale()" />
             }
-          </g>
-          <!-- Bars -->
+            <!-- Categorical baseline -->
+            <g [attr.transform]="'translate(0,' + plotHeight() + ')'">
+              <line x1="0" [attr.x2]="plotWidth()" stroke="var(--border-hairline)" stroke-width="1" />
+            </g>
+          }
+
+          <!-- Bars + their category and value labels -->
           @for (bar of bars(); track bar.datum.key; let i = $index) {
             <rect
               #mark
@@ -50,21 +66,85 @@
               [attr.x]="bar.x"
               [attr.y]="bar.y"
               [attr.width]="bar.width"
-              [attr.height]="bar.barHeight"
+              [attr.height]="bar.height"
               [attr.fill]="bar.fill"
               [attr.tabindex]="nav.markTabIndex(0, i)"
               [attr.role]="'graphics-symbol'"
               [attr.aria-label]="bar.datum.key + ': ' + formatFull(bar.datum.value)"
               (click)="onBarClick(i, bar.datum)"
             />
+            <!-- dy centres the label against its row; vertical labels sit under the
+                 baseline and are already positioned, so it would shift them. -->
+            <text
+              [attr.x]="bar.catX"
+              [attr.y]="bar.catY"
+              [attr.text-anchor]="bar.catAnchor"
+              [attr.dy]="isHorizontal() ? '0.32em' : null"
+              class="fill-neutral-500"
+              style="font-size: var(--font-size-body-sm)"
+            >{{ bar.datum.key }}</text>
             @if (bar.datum.label || bar.showLabel) {
               <text
-                [attr.x]="bar.x + bar.width / 2"
-                [attr.y]="bar.y - 4"
-                text-anchor="middle"
-                class="fill-neutral-700"
+                [attr.x]="bar.valueX"
+                [attr.y]="bar.valueY"
+                [attr.text-anchor]="bar.valueAnchor"
+                [attr.dy]="isHorizontal() ? '0.32em' : null"
+                [class]="bar.valueInside ? 'bar-value bar-value--inside' : 'bar-value'"
                 style="font-size: var(--font-size-body-sm)"
-              >{{ bar.datum.label ?? formatShort(bar.datum.value) }}</text>
+              >{{ labelFor(bar.datum) }}</text>
+            }
+          }
+
+          <!--
+            Zero rule, drawn after the bars so they cannot paint over it. It is the
+            axis, not a gridline: solid and full strength, because "where is zero"
+            is the one question a direct label cannot answer. Only drawn when the
+            series actually crosses zero.
+          -->
+          @if (hasNegative()) {
+            @if (isHorizontal()) {
+              <line class="bar-zero"
+                    [attr.x1]="zeroOffset()" [attr.x2]="zeroOffset()"
+                    y1="0" [attr.y2]="plotHeight()" />
+            } @else {
+              <line class="bar-zero"
+                    x1="0" [attr.x2]="plotWidth()"
+                    [attr.y1]="zeroOffset()" [attr.y2]="zeroOffset()" />
+            }
+          }
+
+          <!--
+            Reference line last, so it sits above the bars. Dashed to read as an
+            annotation rather than data, and labelled — an unexplained rule across
+            a chart is worse than no rule at all.
+          -->
+          @if (reference(); as ref) {
+            @if (isHorizontal()) {
+              <line class="bar-reference"
+                    [attr.x1]="ref.offset" [attr.x2]="ref.offset"
+                    y1="0" [attr.y2]="plotHeight()" />
+              @if (ref.label) {
+                <text class="bar-reference-label"
+                      [attr.x]="ref.labelX" y="0" dy="-0.4em"
+                      text-anchor="start"
+                      style="font-size: var(--font-size-body-sm)"
+                >{{ ref.label }}</text>
+              }
+            } @else {
+              <line class="bar-reference"
+                    x1="0" [attr.x2]="plotWidth()"
+                    [attr.y1]="ref.offset" [attr.y2]="ref.offset" />
+              <!-- In the right margin, outside the plot, vertically centred on the
+                   line. Anywhere inside the plot it eventually lands on a bar and
+                   reads as an overlay hiding data. No backing plate needed out
+                   here, because nothing sits behind it. -->
+              @if (ref.label) {
+                <text class="bar-reference-label"
+                      [attr.x]="ref.labelX" [attr.y]="ref.offset" dy="0.32em"
+                      text-anchor="start"
+                      style="font-size: var(--font-size-body-sm)"
+                >{{ ref.label }}</text>
+              }
             }
           }
         </g>

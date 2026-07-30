@@ -125,6 +125,13 @@
     color: var(--content-secondary);
   }
 
+  // Charts are measured drawings: capped so the bars keep a sane aspect ratio on
+  // a wide viewport rather than stretching into a flat smear.
+  &__chart {
+    width: 100%;
+    max-width: var(--layout-width-readable, 48rem);
+  }
+
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(var(--width-menu-min), 1fr));

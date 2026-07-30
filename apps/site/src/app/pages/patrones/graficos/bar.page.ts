@@ -32,6 +32,15 @@ const SAMPLE_DATA: BarDatum[] = [
   { key: 'Jun', value: 89000 },
 ];
 
+/** Mixed-sign series for the negative-values section — zero sits inside the plot. */
+const SIGNED_DATA: BarDatum[] = [
+  { key: '2021', value: 128000 },
+  { key: '2022', value: -42000 },
+  { key: '2023', value: 61000 },
+  { key: '2024', value: -18000 },
+  { key: '2025', value: 154000 },
+];
+
 const ORIENTATIONS: BarOrientation[] = ['vertical', 'horizontal'];
 const SORTS: (BarSort | 'none')[] = ['none', 'asc', 'desc'];
 
@@ -130,12 +139,23 @@ const SORTS: (BarSort | 'none')[] = ['none', 'asc', 'desc'];
             pérdida, sin escala ni variantes por categoría. La magnitud se
             lee por la longitud, no por el tono.
           </p>
-          <p class="text-body-md text-neutral-500 mb-space-8">
-            Primitiva pendiente — el <code class="font-mono">&lt;afi-chart-bar&gt;</code>
-            todavía asume <code class="font-mono">value &gt;= 0</code>; el soporte
-            de eje cero centrado llega en una iteración posterior. Hasta entonces,
-            la regla queda registrada como contrato del DS.
+          <p class="text-body-md text-neutral-600 mb-space-3">
+            Cuando la serie cruza el cero, la primitiva coloca el cero dentro del
+            dominio en lugar de en el suelo: así el cruce es veraz y las longitudes
+            siguen siendo comparables. La regla del cero solo se dibuja en ese caso
+            — es la única referencia que el lector no puede deducir de una etiqueta
+            directa, por lo que se mantiene incluso en una vista compacta.
           </p>
+          <div class="mb-space-8">
+            <afi-chart-bar
+              [data]="signedData"
+              title="Resultado anual"
+              subtitle="Aportaciones netas por ejercicio"
+              longDescription="Gráfico de barras del resultado neto anual entre 2021 y 2025, con dos ejercicios en negativo."
+              statisticalNotes="2022 y 2024 cierran en negativo; 2025 es el mejor ejercicio de la serie."
+              structureNotes="Orden cronológico. Las barras bajo cero se pintan en rojo plano."
+            />
+          </div>
           <h3 id="ejemplo-real" class="text-body-md font-medium text-canvas-fg mb-space-3">Ejemplo real</h3>
           <afi-code-block [code]="realWorldCode" language="html" />
         </section>
@@ -235,6 +255,7 @@ export class BarChartPage {
   readonly sortVal = signal<BarSort | 'none'>('none');
   readonly loading = signal(false);
   readonly sampleData = SAMPLE_DATA;
+  readonly signedData = SIGNED_DATA;
   readonly orientations = ORIENTATIONS;
   readonly sorts = SORTS;
   readonly tokenRows = BAR_TOKENS;
@@ -274,7 +295,7 @@ import type { BarDatum } from '@coherence/ui/chart';`;
     { name: 'title', type: 'string | null', default: 'null', notes: 'Título del gráfico' },
     { name: 'subtitle', type: 'string | null', default: 'null', notes: 'Subtítulo' },
     { name: 'locale', type: 'string', default: "'es-ES'", notes: 'Locale para formateo de números' },
-    { name: 'height', type: 'string', default: "'320px'", notes: 'Altura del SVG' },
+    { name: 'height', type: 'string', default: "'20rem'", notes: 'Altura del SVG. En horizontal se calcula por número de categorías' },
     { name: 'focus', type: 'number | string | null', default: 'null', notes: 'Resalta una barra (índice o key)' },
     { name: 'longDescription', type: 'string', default: "''", notes: 'Descripción sr-only para lectoras' },
   ];

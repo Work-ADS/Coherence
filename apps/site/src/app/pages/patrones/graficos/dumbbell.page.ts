@@ -206,7 +206,7 @@ import type { DumbbellDatum } from '@coherence/ui/chart';`;
     { name: 'title', type: 'string | null', default: 'null', notes: 'Título' },
     { name: 'subtitle', type: 'string | null', default: 'null', notes: 'Subtítulo' },
     { name: 'locale', type: 'string', default: "'es-ES'", notes: 'Locale para formateo' },
-    { name: 'height', type: 'string', default: "'320px'", notes: 'Altura del SVG' },
+    { name: 'height', type: 'string', default: "'20rem'", notes: 'Altura del SVG' },
     { name: 'focus', type: 'number | string | null', default: 'null', notes: 'Resalta una fila' },
   ];
 

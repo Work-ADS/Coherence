@@ -325,6 +325,25 @@ export interface WorkbenchCopy {
   navDesignAtAfi: string;
   navLab: string;
   navDemos: string;
+
+  // ── Bar chart ────────────────────────────────────────────────────────────
+  /** Asset classes the breakdown needs beyond the ones Tag and Chip already name. */
+  realEstate: string;
+  cash: string;
+  chartGroupTitle: string;
+  chartPatrimonioTitle: string;
+  chartPatrimonioSubtitle: string;
+  chartPatrimonioLongDesc: string;
+  chartPatrimonioStats: string;
+  chartPatrimonioStructure: string;
+  chartPatrimonioAverage: string;
+  chartPatrimonioHint: string;
+  chartBreakdownTitle: string;
+  chartBreakdownSubtitle: string;
+  chartBreakdownLongDesc: string;
+  chartBreakdownStats: string;
+  chartBreakdownStructure: string;
+  chartBreakdownHint: string;
 }
 
 const ES: WorkbenchCopy = {
@@ -635,6 +654,32 @@ const ES: WorkbenchCopy = {
   navDesignAtAfi: 'Diseño en Afi',
   navLab: 'Workbench',
   navDemos: 'Demos',
+
+  // ── Bar chart ────────────────────────────────────────────────────────────
+  realEstate: 'Inmobiliario',
+  cash: 'Liquidez',
+  chartGroupTitle: 'Bar chart',
+  chartPatrimonioTitle: 'Patrimonio neto por ejercicio',
+  chartPatrimonioSubtitle: 'Variación anual, 2019-2025. Miles de euros.',
+  chartPatrimonioLongDesc:
+    'Gráfico de barras verticales con la variación del patrimonio neto por ejercicio entre 2019 y 2025. Tres ejercicios cierran por debajo de cero.',
+  chartPatrimonioStats:
+    '2020 y 2022 son los dos ejercicios en negativo más acusados; 2025 acumula el mayor avance de la serie. La caída de 2020 se recupera en dos ejercicios.',
+  chartPatrimonioStructure:
+    'Orden cronológico. Las barras bajo cero se pintan en rojo plano y la regla del cero marca el cruce.',
+  chartPatrimonioAverage: 'Media del periodo',
+  chartPatrimonioHint:
+    'La serie cruza el cero, así que la regla del cero se mantiene: es la única referencia que no se puede deducir de una etiqueta directa. Cada barra va etiquetada, por lo que el eje vertical no hace falta.',
+  chartBreakdownTitle: 'Composición del patrimonio',
+  chartBreakdownSubtitle: 'Por clase de activo, a 30 jun 2025.',
+  chartBreakdownLongDesc:
+    'Gráfico de barras horizontales con el reparto del patrimonio por clase de activo a 30 de junio de 2025.',
+  chartBreakdownStats:
+    'Renta variable concentra el mayor peso, por delante de inmobiliario. Liquidez y alternativos quedan por debajo del diez por ciento cada uno.',
+  chartBreakdownStructure:
+    'Ordenado de mayor a menor peso. Orientación horizontal para que los nombres de cada clase se lean completos.',
+  chartBreakdownHint:
+    'Horizontal porque las categorías no son una serie temporal y los nombres son largos. Ordenado por valor: el ranking es la pregunta que responde.',
 };
 
 const EN: WorkbenchCopy = {
@@ -945,6 +990,32 @@ const EN: WorkbenchCopy = {
   navDesignAtAfi: 'Design at Afi',
   navLab: 'Lab',
   navDemos: 'Demos',
+
+  // ── Bar chart ────────────────────────────────────────────────────────────
+  realEstate: 'Real estate',
+  cash: 'Cash',
+  chartGroupTitle: 'Bar chart',
+  chartPatrimonioTitle: 'Net worth by year',
+  chartPatrimonioSubtitle: 'Annual change, 2019-2025. Thousands of euros.',
+  chartPatrimonioLongDesc:
+    'Vertical bar chart of the annual change in net worth between 2019 and 2025. Three years close below zero.',
+  chartPatrimonioStats:
+    '2020 and 2022 are the two sharpest negative years; 2025 posts the largest gain in the series. The 2020 drop is recovered within two years.',
+  chartPatrimonioStructure:
+    'Chronological order. Bars below zero are painted flat red and the zero rule marks the crossing.',
+  chartPatrimonioAverage: 'Period average',
+  chartPatrimonioHint:
+    'The series crosses zero, so the zero rule stays: it is the one reference a reader cannot infer from a direct label. Every bar is labelled, so the vertical axis is not needed.',
+  chartBreakdownTitle: 'Wealth breakdown',
+  chartBreakdownSubtitle: 'By asset class, at 30 Jun 2025.',
+  chartBreakdownLongDesc:
+    'Horizontal bar chart of how wealth is split across asset classes at 30 June 2025.',
+  chartBreakdownStats:
+    'Equities carry the largest weight, ahead of real estate. Cash and alternatives each sit below ten per cent.',
+  chartBreakdownStructure:
+    'Sorted from largest to smallest weight. Horizontal so each class name reads in full.',
+  chartBreakdownHint:
+    'Horizontal because the categories are not a time series and the names are long. Sorted by value: ranking is the question it answers.',
 };
 
 export const WORKBENCH_COPY: Record<Lang, WorkbenchCopy> = { es: ES, en: EN };

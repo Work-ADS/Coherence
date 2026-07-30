@@ -16,3 +16,38 @@
 @media (prefers-reduced-motion: reduce) {
   .bar-rect { transition-duration: 0ms; }
 }
+
+// Value labels. Outside sits on the canvas; inside sits on the bar itself and so
+// switches to the inverse foreground. Inside placement therefore assumes a dark
+// fill — see valueLabelInside on the component.
+.bar-value {
+  fill: var(--foreground-secondary-default);
+}
+
+.bar-value--inside {
+  fill: var(--content-inverse, var(--foreground-inverse-default));
+  font-weight: var(--font-weight-medium);
+}
+
+// Reference line — an annotation, not data, so it is dashed and quieter than a
+// series. pointer-events off so it never intercepts a click meant for a bar.
+.bar-reference {
+  stroke: var(--border-default);
+  stroke-width: var(--border-width-hairline);
+  stroke-dasharray: 6 4;
+  pointer-events: none;
+}
+
+.bar-reference-label {
+  fill: var(--foreground-secondary-default);
+  pointer-events: none;
+}
+
+// Zero rule — the axis where the series crosses zero, not a gridline. Solid and
+// at full border strength: "where is zero" is the one thing a direct value label
+// cannot tell you.
+.bar-zero {
+  stroke: var(--border-strong, var(--border-default));
+  stroke-width: var(--border-width-thick);
+  pointer-events: none;
+}

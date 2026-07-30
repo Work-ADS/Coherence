@@ -69,6 +69,23 @@ export function formatNumberFull(value: number, locale = 'es-ES'): string {
 }
 
 /**
+ * Append a unit to an already-formatted figure: `1,8 k` → `1,8 k €`.
+ *
+ * The unit always follows the number after a space — RAE for the euro sign and
+ * for the percent sign alike, and the same shape reads correctly for plain units
+ * like "tx". This is the symbol register documented on `formatCurrency`: compact
+ * display figures take `€`, while axes, tooltips and data tables take the `EUR`
+ * code register.
+ *
+ * The space is non-breaking so a chart label can never wrap between the number
+ * and its unit.
+ */
+export function withUnit(formatted: string, unit: string | null): string {
+  if (!unit) return formatted;
+  return `${formatted} ${unit}`;
+}
+
+/**
  * Format as currency (EUR).
  *
  * `display` picks the register: `'code'` (default — "730.000,00 EUR", axes,

@@ -2,13 +2,17 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   input,
   output,
+  viewChild,
+  viewChildren,
 } from '@angular/core';
 
 import { LoadingOverlayComponent } from '../loading-overlay';
 import { ChartInstructionsComponent } from './chart-instructions.component';
 import { ChartDataTableComponent } from './chart-data-table.component';
+import { ChartNavController, EMPTY_NAV_SHAPE, type ChartNavShape } from './chart-keyboard';
 import type { DumbbellDatum, DumbbellOrientation, ChartMargins } from './chart.types';
 import { resolveSeriesVisual } from './chart.variants';
 import { formatNumberFull } from './chart-format';
@@ -34,113 +38,8 @@ const MARGINS: ChartMargins = { top: 16, right: 24, bottom: 48, left: 120 };
     ChartDataTableComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    :host { display: block; position: relative; }
-    .dumbbell-dot {
-      cursor: pointer;
-      transition: r 120ms ease-out;
-    }
-    .dumbbell-dot:hover, .dumbbell-dot:focus-visible { r: 7; }
-    .dumbbell-dot:focus-visible {
-      outline: 2px solid var(--border-focus);
-      outline-offset: 2px;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .dumbbell-dot { transition-duration: 0ms; }
-    }
-  `,
-  template: `
-    <afi-loading-overlay variant="quiet-spinner" [visible]="loading()">
-      <figure class="relative" role="figure" [attr.aria-labelledby]="titleElId">
-        <div class="flex items-start justify-between mb-space-3">
-          <div>
-            @if (title()) {
-              <figcaption [id]="titleElId" class="text-section text-canvas-fg">{{ title() }}</figcaption>
-            }
-            @if (subtitle()) {
-              <p class="text-body-sm text-neutral-500 mt-space-1">{{ subtitle() }}</p>
-            }
-          </div>
-          <div class="flex items-center gap-space-2">
-            <ng-content select="[slot=action]" />
-            <afi-chart-instructions (opened)="instructionsOpened.emit()" />
-          </div>
-        </div>
-
-        <div [id]="a11yId" class="sr-only">{{ a11yText() }}</div>
-
-        @if (data().length > 0) {
-          <svg [attr.width]="'100%'" [attr.height]="svgHeight()" [attr.viewBox]="viewBox()"
-               role="img" [attr.aria-labelledby]="titleElId" [attr.aria-describedby]="a11yId"
-               class="block">
-            <g [attr.transform]="'translate(' + margins.left + ',' + margins.top + ')'">
-              <!-- X axis (value axis for horizontal) -->
-              <line x1="0" [attr.x2]="plotWidth()" [attr.y1]="plotHeight()" [attr.y2]="plotHeight()"
-                    stroke="var(--border-hairline)" stroke-width="1" />
-              <!-- Category labels + dumbbells -->
-              @for (row of rows(); track row.datum.key; let i = $index) {
-                <!-- Category label -->
-                <text [attr.x]="-8" [attr.y]="row.cy" dy="0.35em" text-anchor="end"
-                      class="fill-neutral-600" style="font-size: var(--font-size-body-sm, 12px)">
-                  {{ row.datum.key }}
-                </text>
-                <!-- Connecting line -->
-                <line [attr.x1]="row.xA" [attr.x2]="row.xB" [attr.y1]="row.cy" [attr.y2]="row.cy"
-                      stroke="var(--color-neutral-300)" stroke-width="2" />
-                <!-- Dot A -->
-                <circle
-                  class="dumbbell-dot"
-                  [attr.cx]="row.xA" [attr.cy]="row.cy" r="5"
-                  [attr.fill]="visualA.color"
-                  [attr.tabindex]="0"
-                  role="graphics-symbol"
-                  [attr.aria-label]="(row.datum.labelA ?? 'A') + ': ' + fmtFull(row.datum.valueA)"
-                  (click)="onDotClick(i, row.datum, 'A')"
-                  (keydown.enter)="onDotClick(i, row.datum, 'A')"
-                />
-                <!-- Dot B -->
-                <circle
-                  class="dumbbell-dot"
-                  [attr.cx]="row.xB" [attr.cy]="row.cy" r="5"
-                  [attr.fill]="visualB.color"
-                  [attr.tabindex]="0"
-                  role="graphics-symbol"
-                  [attr.aria-label]="(row.datum.labelB ?? 'B') + ': ' + fmtFull(row.datum.valueB)"
-                  (click)="onDotClick(i, row.datum, 'B')"
-                  (keydown.enter)="onDotClick(i, row.datum, 'B')"
-                />
-              }
-            </g>
-          </svg>
-
-          <!-- Legend for A/B -->
-          <div class="flex gap-space-4 mt-space-2 text-body-sm text-neutral-600">
-            <span class="inline-flex items-center gap-space-1">
-              <svg width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="5" [attr.fill]="visualA.color" /></svg>
-              {{ data()[0]?.labelA ?? 'A' }}
-            </span>
-            <span class="inline-flex items-center gap-space-1">
-              <svg width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="5" [attr.fill]="visualB.color" /></svg>
-              {{ data()[0]?.labelB ?? 'B' }}
-            </span>
-          </div>
-        } @else {
-          <div class="flex items-center justify-center text-neutral-500 text-body-sm" [style.height]="'200px'" aria-live="polite">
-            Sin datos para mostrar
-          </div>
-        }
-
-        <afi-chart-data-table
-          [columns]="tableColumns()"
-          [rows]="tableRows()"
-          trackByKey="key"
-          (toggled)="dataTableToggled.emit($event)"
-        />
-
-        <ng-content select="[slot=footer]" />
-      </figure>
-    </afi-loading-overlay>
-  `,
+  styleUrls: ['./chart-dumbbell.component.scss'],
+  templateUrl: './chart-dumbbell.component.html',
 })
 export class ChartDumbbellComponent {
   readonly data = input<DumbbellDatum[]>([]);
@@ -152,7 +51,7 @@ export class ChartDumbbellComponent {
   readonly contextExplanation = input('');
   readonly structureNotes = input('');
   readonly locale = input('es-ES');
-  readonly height = input('320px');
+  readonly height = input('20rem');
   readonly focus = input<number | string | null>(null);
   readonly orientation = input<DumbbellOrientation>('horizontal');
 
@@ -167,6 +66,21 @@ export class ChartDumbbellComponent {
 
   readonly visualA = resolveSeriesVisual(0);
   readonly visualB = resolveSeriesVisual(1);
+
+  private readonly chartRoot = viewChild<ElementRef<SVGSVGElement>>('chartRoot');
+  private readonly marks = viewChildren<ElementRef<SVGCircleElement>>('mark');
+
+  /**
+   * One flat group of two nodes per row, no vertical arrows. Matches Visa, which
+   * documents no `↑ ↓` for dumbbell plots.
+   */
+  private readonly navShape = computed<ChartNavShape>(() => {
+    const count = this.data().length * 2;
+    if (count === 0) return EMPTY_NAV_SHAPE;
+    return { groupCount: 1, datumCounts: [count], crossGroup: false };
+  });
+
+  protected readonly nav = new ChartNavController(this.navShape);
 
   readonly a11yText = computed(() => buildA11yRegion({
     longDescription: this.longDescription(),
@@ -233,5 +147,39 @@ export class ChartDumbbellComponent {
 
   onDotClick(index: number, datum: DumbbellDatum, _side: 'A' | 'B'): void {
     this.dataPointActivated.emit({ index, datum });
+  }
+
+  /**
+   * Single keydown listener on the SVG root. Events from the focused node bubble
+   * up to here, so both navigation levels share one handler.
+   */
+  onKeydown(event: KeyboardEvent): void {
+    if (!this.nav.handleKey(event)) return;
+    event.preventDefault();
+    this.moveFocus();
+
+    // Enter on a node activates its row, replacing the old per-dot keydown.enter.
+    const active = this.nav.active();
+    if (event.key === 'Enter' && !event.shiftKey && active !== null) {
+      const rowIndex = Math.floor(active.datum / 2);
+      const datum = this.data()[rowIndex];
+      if (datum) {
+        this.onDotClick(rowIndex, datum, active.datum % 2 === 0 ? 'A' : 'B');
+      }
+    }
+  }
+
+  /**
+   * Follow the cursor with real DOM focus. `ElementRef` rather than the CDK
+   * (clean-code.md rule 7) because no CDK manager models a two-axis cursor over
+   * SVG marks; this mirrors the roving-tabindex idiom in segmented-control-v2.
+   */
+  private moveFocus(): void {
+    const active = this.nav.active();
+    if (active === null) {
+      this.chartRoot()?.nativeElement.focus();
+      return;
+    }
+    this.marks()[active.flat]?.nativeElement.focus();
   }
 }

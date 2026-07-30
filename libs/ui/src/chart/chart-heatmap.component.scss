@@ -1,0 +1,20 @@
+// =============================================================================
+// afi-chart-heatmap — component styles
+// Moved out of the component decorator; values unchanged.
+// =============================================================================
+
+:host { display: block; position: relative; }
+.heatmap-cell {
+  transition: opacity 180ms ease-out;
+  cursor: pointer;
+  stroke: var(--surface-base, white);
+  stroke-width: 1;
+}
+.heatmap-cell:hover, .heatmap-cell:focus-visible { opacity: 0.8; }
+.heatmap-cell:focus-visible {
+  outline: var(--border-width-thick) solid var(--border-focus);
+  outline-offset: var(--space-3xs);
+}
+@media (prefers-reduced-motion: reduce) {
+  .heatmap-cell { transition-duration: 0ms; }
+}

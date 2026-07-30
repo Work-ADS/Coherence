@@ -1,0 +1,98 @@
+<afi-loading-overlay variant="quiet-spinner" [visible]="loading()">
+  <figure class="relative" role="figure" [attr.aria-labelledby]="titleElId">
+    <div class="flex items-start justify-between mb-space-3">
+      <div>
+        @if (title()) {
+          <figcaption [id]="titleElId" class="text-section text-canvas-fg">{{ title() }}</figcaption>
+        }
+        @if (subtitle()) {
+          <p class="text-body-sm text-neutral-500 mt-space-1">{{ subtitle() }}</p>
+        }
+      </div>
+      <div class="flex items-center gap-space-2">
+        <ng-content select="[slot=action]" />
+        <afi-chart-instructions chartKind="dumbbell" (opened)="instructionsOpened.emit()" />
+      </div>
+    </div>
+
+    <div [id]="a11yId" class="sr-only">{{ a11yText() }}</div>
+
+    @if (data().length > 0) {
+      <svg #chartRoot [attr.width]="'100%'" [attr.height]="svgHeight()" [attr.viewBox]="viewBox()"
+           role="group" [attr.aria-labelledby]="titleElId" [attr.aria-describedby]="a11yId"
+           [attr.tabindex]="nav.rootTabIndex()"
+           (keydown)="onKeydown($event)"
+           class="block">
+        <g [attr.transform]="'translate(' + margins.left + ',' + margins.top + ')'">
+          <!-- X axis (value axis for horizontal) -->
+          <line x1="0" [attr.x2]="plotWidth()" [attr.y1]="plotHeight()" [attr.y2]="plotHeight()"
+                stroke="var(--border-hairline)" stroke-width="1" />
+          <!-- Category labels + dumbbells -->
+          @for (row of rows(); track row.datum.key; let i = $index) {
+            <!-- Category label -->
+            <text [attr.x]="-8" [attr.y]="row.cy" dy="0.35em" text-anchor="end"
+                  class="fill-neutral-600" style="font-size: var(--font-size-body-sm)">
+              {{ row.datum.key }}
+            </text>
+            <!-- Connecting line -->
+            <line [attr.x1]="row.xA" [attr.x2]="row.xB" [attr.y1]="row.cy" [attr.y2]="row.cy"
+                  stroke="var(--color-neutral-300)" stroke-width="2" />
+            <!--
+              Both nodes are one flat sequence: A then B of each row, in row
+              order. Visa documents only the horizontal arrows for dumbbells,
+              so navigation walks every node in turn rather than treating
+              rows as a second axis.
+            -->
+            <!-- Dot A -->
+            <circle
+              #mark
+              class="dumbbell-dot"
+              [attr.cx]="row.xA" [attr.cy]="row.cy" r="5"
+              [attr.fill]="visualA.color"
+              [attr.tabindex]="nav.markTabIndex(0, i * 2)"
+              role="graphics-symbol"
+              [attr.aria-label]="(row.datum.labelA ?? 'A') + ': ' + fmtFull(row.datum.valueA)"
+              (click)="onDotClick(i, row.datum, 'A')"
+            />
+            <!-- Dot B -->
+            <circle
+              #mark
+              class="dumbbell-dot"
+              [attr.cx]="row.xB" [attr.cy]="row.cy" r="5"
+              [attr.fill]="visualB.color"
+              [attr.tabindex]="nav.markTabIndex(0, i * 2 + 1)"
+              role="graphics-symbol"
+              [attr.aria-label]="(row.datum.labelB ?? 'B') + ': ' + fmtFull(row.datum.valueB)"
+              (click)="onDotClick(i, row.datum, 'B')"
+            />
+          }
+        </g>
+      </svg>
+
+      <!-- Legend for A/B -->
+      <div class="flex gap-space-4 mt-space-2 text-body-sm text-neutral-600">
+        <span class="inline-flex items-center gap-space-1">
+          <svg width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="5" [attr.fill]="visualA.color" /></svg>
+          {{ data()[0]?.labelA ?? 'A' }}
+        </span>
+        <span class="inline-flex items-center gap-space-1">
+          <svg width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="5" [attr.fill]="visualB.color" /></svg>
+          {{ data()[0]?.labelB ?? 'B' }}
+        </span>
+      </div>
+    } @else {
+      <div class="flex items-center justify-center text-neutral-500 text-body-sm" [style.height]="'12.5rem'" aria-live="polite">
+        Sin datos para mostrar
+      </div>
+    }
+
+    <afi-chart-data-table
+      [columns]="tableColumns()"
+      [rows]="tableRows()"
+      trackByKey="key"
+      (toggled)="dataTableToggled.emit($event)"
+    />
+
+    <ng-content select="[slot=footer]" />
+  </figure>
+</afi-loading-overlay>

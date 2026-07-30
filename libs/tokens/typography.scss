@@ -74,6 +74,27 @@
   --type-button:        500 14px/14px var(--font-family-serif);
   --type-informe:       400 12px/14px var(--font-family-serif);
 
+  // ---------------------------------------------------------------------------
+  // Standalone font-size tokens
+  //
+  // The `--type-*` tokens above are `font` shorthands, which set family and
+  // weight as well as size. SVG <text> in the chart primitives needs size only —
+  // family and weight are inherited from the chart's container — so a shorthand
+  // would over-specify and change how the labels render.
+  //
+  // The chart templates have referenced `--font-size-body-sm` since they were
+  // written, but it was never defined, so every one of them silently fell
+  // through to a hardcoded `12px` fallback. Defining it here removes twelve raw
+  // px values from component code.
+  //
+  // Deliberately 12px (--dimension-3), not the modern foundation's 13px
+  // (--dimension-3-25) used by `--type-body-small-size`: that token is scoped to
+  // [data-foundation="modern"] and unavailable here, and matching it would
+  // resize every existing v1 chart label. v1 is frozen under the parity-gated
+  // cutover, so this preserves what ships today.
+  // ---------------------------------------------------------------------------
+  --font-size-body-sm:  var(--dimension-3);
+
   // afi-section header text tokens. Pinned non-responsive to match Figma
   // section spec (file pajleACyFdm5y, node 466:28470): eyebrow 12/16 all-caps,
   // title 16/20 medium, subtitle 14/16 regular.

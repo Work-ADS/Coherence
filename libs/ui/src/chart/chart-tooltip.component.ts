@@ -16,40 +16,8 @@ import {
   selector: 'afi-chart-tooltip',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    :host { pointer-events: none; position: absolute; z-index: 20; }
-    .tooltip {
-      background: var(--surface-elevated, white);
-      border: 1px solid var(--border-hairline, #e5e5e5);
-      border-radius: var(--radius-md, 6px);
-      box-shadow: var(--elevation-md, 0 2px 8px rgba(0,0,0,0.08));
-      padding: var(--spacing-8, 8px) var(--spacing-12, 12px);
-      font-size: var(--font-size-body-sm, 12px);
-      color: var(--canvas-fg, #1a1a1a);
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 120ms ease-out;
-    }
-    .tooltip--visible { opacity: 1; }
-    @media (prefers-reduced-motion: reduce) {
-      .tooltip { transition-duration: 0ms; }
-    }
-  `,
-  template: `
-    @if (visible()) {
-      <div class="tooltip" [class.tooltip--visible]="visible()"
-           [style.left.px]="x()" [style.top.px]="y()"
-           role="tooltip" [attr.id]="tooltipId()">
-        <div class="font-medium">{{ title() }}</div>
-        @if (value()) {
-          <div class="text-neutral-600">{{ value() }}</div>
-        }
-        @if (secondary()) {
-          <div class="text-neutral-500 mt-1">{{ secondary() }}</div>
-        }
-      </div>
-    }
-  `,
+  styleUrls: ['./chart-tooltip.component.scss'],
+  templateUrl: './chart-tooltip.component.html',
 })
 export class ChartTooltipComponent {
   readonly visible = signal(false);

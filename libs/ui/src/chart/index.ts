@@ -7,6 +7,9 @@ export { ChartAxisComponent } from './chart-axis.component';
 export { ChartLegendComponent } from './chart-legend.component';
 export { ChartTooltipComponent } from './chart-tooltip.component';
 export { ChartInstructionsComponent } from './chart-instructions.component';
+export type { ChartKind } from './chart-instructions.component';
+export { ChartNavController, EMPTY_NAV_SHAPE } from './chart-keyboard';
+export type { ChartNavLevel, ChartNavPosition, ChartNavShape } from './chart-keyboard';
 export { ChartDataTableComponent } from './chart-data-table.component';
 export type {
   BarDatum,

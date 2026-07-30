@@ -141,3 +141,41 @@
   --chart-legacy-v3-6: #7FA5C4;
   --chart-legacy-v3-7: #A6C2D9;
 }
+
+// =============================================================================
+// Chart bridge — v1 chart primitives, modern values
+// =============================================================================
+// The chart primitives in libs/ui/src/chart are still v1 and read the token names
+// below (see PALETTE in chart.variants.ts). The modern foundation names its
+// equivalents differently, so without this bridge a chart dropped onto a modern
+// page renders in v1 colours while everything around it is modern.
+//
+// This is the token layer doing its job: components keep consuming semantic names
+// and the foundation swaps the values underneath. No component changes.
+//
+// It lives HERE, not in foundations-modern/semantic-colors.scss, because that file
+// is generated from tools/figma-sync/foundations-modern.json — a hand-edit there is
+// silently wiped by the next `node tools/figma-sync/generate-foundations.mjs`. This
+// file is hand-authored and already owns the v1 chart tokens being remapped.
+//
+// Deliberately temporary: it disappears when chart-bar-v2 reads modern names
+// directly. These are v1-compatibility aliases, NOT design intent — Figma should
+// not adopt them.
+//
+// The palette maps onto the monochrome ramp rather than the categorical series,
+// per the data-viz skill: one neutral colour by default, the highlight reserved for
+// the focus element. Index 0 is every ordinary bar and index 1 is the highlighted
+// one, so 1 must read stronger than 0 — hence medium before strong.
+[data-foundation='modern'] {
+  --data-neutral-strong: var(--chart-monochrome-medium);
+  --data-highlight-primary: var(--chart-monochrome-strong);
+  --data-neutral-medium: var(--chart-monochrome-soft);
+  // Slots 4 and 5 only come into play above three series, where a monochrome ramp
+  // has run out of distinguishable steps anyway; direct labelling carries it.
+  --data-highlight-secondary: var(--chart-monochrome-faint);
+  --data-neutral-muted: var(--chart-monochrome-faint);
+
+  // v1 spells this without the -default suffix, and the primitive's below-zero
+  // contract (above, locked 2026-06-01) reads the v1 name.
+  --chart-negative: var(--chart-negative-default);
+}

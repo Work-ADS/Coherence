@@ -2,14 +2,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   input,
   output,
+  viewChild,
+  viewChildren,
 } from '@angular/core';
 
 import { LoadingOverlayComponent } from '../loading-overlay';
 import { ChartInstructionsComponent } from './chart-instructions.component';
 import { ChartDataTableComponent } from './chart-data-table.component';
 import { ChartLegendComponent } from './chart-legend.component';
+import { ChartNavController, EMPTY_NAV_SHAPE, type ChartNavShape } from './chart-keyboard';
 import type { LineSeries, ChartMargins } from './chart.types';
 import { resolveSeriesVisual } from './chart.variants';
 import { formatNumber, formatNumberFull, formatDate } from './chart-format';
@@ -37,123 +41,8 @@ const VIEWBOX_HEIGHT = 320;
     ChartLegendComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    :host { display: block; position: relative; }
-    .line-path {
-      fill: none;
-      stroke-width: 2;
-      transition: opacity 180ms ease-out;
-    }
-    .line-marker {
-      cursor: pointer;
-      transition: r 120ms ease-out;
-    }
-    .line-marker:hover, .line-marker:focus-visible { r: 5; }
-    .line-marker:focus-visible {
-      outline: var(--border-width-thick) solid var(--border-focus);
-      outline-offset: var(--space-3xs);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .line-path, .line-marker { transition-duration: 0ms; }
-    }
-  `,
-  template: `
-    <afi-loading-overlay variant="quiet-spinner" [visible]="loading()">
-      <figure class="relative" role="figure" [attr.aria-labelledby]="titleElId">
-        @if (!hideHeader()) {
-          <div class="flex items-start justify-between mb-space-3">
-            <div>
-              @if (title()) {
-                <figcaption [id]="titleElId" class="text-section text-canvas-fg">{{ title() }}</figcaption>
-              }
-              @if (subtitle()) {
-                <p class="text-body-sm text-neutral-500 mt-space-1">{{ subtitle() }}</p>
-              }
-            </div>
-            <div class="flex items-center gap-space-2">
-              <ng-content select="[slot=action]" />
-              @if (!hideInstructions()) {
-                <afi-chart-instructions (opened)="instructionsOpened.emit()" />
-              }
-            </div>
-          </div>
-        }
-
-        <div [id]="a11yId" class="sr-only">{{ a11yText() }}</div>
-
-        @if (hasData()) {
-          <svg [attr.viewBox]="viewBox()"
-               role="img" [attr.aria-labelledby]="titleElId" [attr.aria-describedby]="a11yId"
-               class="block w-full h-auto" [style.max-height]="height()">
-            <g [attr.transform]="'translate(' + margins.left + ',' + margins.top + ')'">
-              <!-- Grid lines -->
-              @for (tick of yTicks(); track tick) {
-                <line x1="0" [attr.x2]="plotWidth()"
-                      [attr.y1]="scaleY(tick)" [attr.y2]="scaleY(tick)"
-                      stroke="var(--border-hairline)" stroke-width="1" opacity="0.5" />
-                <text x="-8" [attr.y]="scaleY(tick)" dy="0.32em" text-anchor="end"
-                      class="fill-neutral-500" style="font-size: var(--font-size-body-sm, 12.0px)">
-                  {{ fmtNum(tick) }}
-                </text>
-              }
-              <!-- X axis -->
-              <line x1="0" [attr.x2]="plotWidth()" [attr.y1]="plotHeight()" [attr.y2]="plotHeight()"
-                    stroke="var(--border-hairline)" stroke-width="1" />
-              <!-- X axis tick labels -->
-              @for (tick of xTicks(); track tick.value) {
-                <text
-                  [attr.x]="tick.cx"
-                  [attr.y]="plotHeight() + 20"
-                  text-anchor="middle"
-                  class="fill-neutral-500"
-                  style="font-size: var(--font-size-body-sm, 12.0px)"
-                >{{ tick.label }}</text>
-              }
-              <!-- Lines + markers per series -->
-              @for (series of renderedSeries(); track series.key; let si = $index) {
-                <path [attr.d]="series.path" class="line-path" [attr.stroke]="series.visual.color" />
-                @if (showMarkers()) {
-                  @for (pt of series.points; track pt.idx) {
-                    @if (pt.y !== null) {
-                      <circle
-                        class="line-marker"
-                        [attr.cx]="pt.cx" [attr.cy]="pt.cy" r="3"
-                        [attr.fill]="series.visual.color"
-                        [attr.tabindex]="0"
-                        role="graphics-symbol"
-                        [attr.aria-label]="pt.label"
-                        (click)="onPointClick(si, pt.idx)"
-                        (keydown.enter)="onPointClick(si, pt.idx)"
-                      />
-                    }
-                  }
-                }
-              }
-            </g>
-          </svg>
-
-          @if (!hideLegend()) {
-            <afi-chart-legend [items]="legendItems()" [hidden]="data().length <= 1" />
-          }
-        } @else {
-          <div class="flex items-center justify-center text-neutral-500 text-body-sm" [style.height]="height()" aria-live="polite">
-            Sin datos para mostrar
-          </div>
-        }
-
-        @if (!hideDataTable()) {
-          <afi-chart-data-table
-            [columns]="tableColumns()"
-            [rows]="tableRows()"
-            trackByKey="key"
-            (toggled)="dataTableToggled.emit($event)"
-          />
-        }
-
-        <ng-content select="[slot=footer]" />
-      </figure>
-    </afi-loading-overlay>
-  `,
+  styleUrls: ['./chart-line.component.scss'],
+  templateUrl: './chart-line.component.html',
 })
 export class ChartLineComponent {
   readonly data = input<LineSeries[]>([]);
@@ -187,6 +76,25 @@ export class ChartLineComponent {
   readonly titleElId = chartTitleId(this.id);
   readonly a11yId = chartA11yId(this.id);
   protected readonly margins = MARGINS;
+
+  private readonly chartRoot = viewChild<ElementRef<SVGSVGElement>>('chartRoot');
+  private readonly marks = viewChildren<ElementRef<SVGCircleElement>>('mark');
+
+  /**
+   * Series are groups, so `↑ ↓` moves between lines while `← →` walks along one.
+   * Matches Visa, which documents both axes for line charts.
+   */
+  private readonly navShape = computed<ChartNavShape>(() => {
+    const series = this.renderedSeries();
+    if (series.length === 0) return EMPTY_NAV_SHAPE;
+    return {
+      groupCount: series.length,
+      datumCounts: series.map((s) => s.navPoints.length),
+      crossGroup: true,
+    };
+  });
+
+  protected readonly nav = new ChartNavController(this.navShape);
 
   readonly a11yText = computed(() => buildA11yRegion({
     longDescription: this.longDescription(),
@@ -325,7 +233,16 @@ export class ChartLineComponent {
         }
       }
 
-      return { key: series.key, path, points, visual };
+      return {
+        key: series.key,
+        path,
+        points,
+        // Only non-null points are rendered and navigable. Keeping this list
+        // separate means the DOM order of markers, and therefore the flat index
+        // the nav controller computes, always lines up.
+        navPoints: points.filter((p) => p.y !== null),
+        visual,
+      };
     });
   });
 
@@ -371,5 +288,36 @@ export class ChartLineComponent {
     const series = this.data()[seriesIndex];
     const point = series?.points[pointIndex];
     this.dataPointActivated.emit({ index: pointIndex, datum: point });
+  }
+
+  /**
+   * Single keydown listener on the SVG root. Events from the focused marker
+   * bubble up to here, so both navigation levels share one handler.
+   */
+  onKeydown(event: KeyboardEvent): void {
+    if (!this.nav.handleKey(event)) return;
+    event.preventDefault();
+    this.moveFocus();
+
+    // Enter on a point activates it, replacing the old per-marker keydown.enter.
+    const active = this.nav.active();
+    if (event.key === 'Enter' && !event.shiftKey && active !== null) {
+      const point = this.renderedSeries()[active.group]?.navPoints[active.datum];
+      if (point) this.onPointClick(active.group, point.idx);
+    }
+  }
+
+  /**
+   * Follow the cursor with real DOM focus. `ElementRef` rather than the CDK
+   * (clean-code.md rule 7) because no CDK manager models a two-axis cursor over
+   * SVG marks; this mirrors the roving-tabindex idiom in segmented-control-v2.
+   */
+  private moveFocus(): void {
+    const active = this.nav.active();
+    if (active === null) {
+      this.chartRoot()?.nativeElement.focus();
+      return;
+    }
+    this.marks()[active.flat]?.nativeElement.focus();
   }
 }

@@ -17,5 +17,14 @@ dist/
 !apps/site/public/assets/blog/**/*.jpg
 !apps/site/public/assets/blog/**/*.jpeg
 
+# Reference and working material that lives in the repo folder but is not repo
+# content: talks, screen recordings, research PDFs. Kept out of history because a
+# single recording is tens of megabytes and git cannot forget it once pushed. If
+# any of these ever needs versioning, that is a Git LFS decision, not a commit.
+*.m4a
+*.mov
+*.mp4
+*.pdf
+
 # Local scratch for screenshots / working files
 scratch/

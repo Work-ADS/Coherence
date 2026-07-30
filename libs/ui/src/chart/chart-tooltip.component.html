@@ -1,0 +1,13 @@
+@if (visible()) {
+  <div class="tooltip" [class.tooltip--visible]="visible()"
+       [style.left.px]="x()" [style.top.px]="y()"
+       role="tooltip" [attr.id]="tooltipId()">
+    <div class="font-medium">{{ title() }}</div>
+    @if (value()) {
+      <div class="text-neutral-600">{{ value() }}</div>
+    }
+    @if (secondary()) {
+      <div class="text-neutral-500 mt-1">{{ secondary() }}</div>
+    }
+  </div>
+}

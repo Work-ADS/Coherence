@@ -22,47 +22,7 @@ import { formatNumber } from './chart-format';
   standalone: true,
   schemas: [NO_ERRORS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    @if (orientation() === 'x') {
-      <g [attr.transform]="'translate(0,' + length() + ')'">
-        <line x1="0" [attr.x2]="length()" stroke="var(--border-hairline)" stroke-width="1" />
-        @for (tick of ticks(); track tick.value) {
-          <g [attr.transform]="'translate(' + scaleX(tick.value) + ',0)'">
-            <line y2="4" stroke="var(--color-neutral-400)" stroke-width="1" />
-            <text y="16" text-anchor="middle" class="fill-neutral-500" style="font-size: var(--font-size-body-sm, 12px)">
-              {{ tick.label }}
-            </text>
-          </g>
-        }
-        @if (label()) {
-          <text [attr.x]="length() / 2" y="36" text-anchor="middle"
-                class="fill-neutral-600" style="font-size: var(--font-size-body-sm, 12px)">
-            {{ label() }}
-          </text>
-        }
-      </g>
-    } @else {
-      <g>
-        <line y1="0" [attr.y2]="length()" stroke="var(--border-hairline)" stroke-width="1" />
-        @for (tick of ticks(); track tick.value) {
-          <g [attr.transform]="'translate(0,' + scaleY(tick.value) + ')'">
-            <line x2="-4" stroke="var(--color-neutral-400)" stroke-width="1" />
-            <text x="-8" dy="0.32em" text-anchor="end" class="fill-neutral-500"
-                  style="font-size: var(--font-size-body-sm, 12px)">
-              {{ tick.label }}
-            </text>
-          </g>
-        }
-        @if (label()) {
-          <text [attr.transform]="'translate(-48,' + (length() / 2) + ') rotate(-90)'"
-                text-anchor="middle" class="fill-neutral-600"
-                style="font-size: var(--font-size-body-sm, 12px)">
-            {{ label() }}
-          </text>
-        }
-      </g>
-    }
-  `,
+  templateUrl: './chart-axis.component.html',
 })
 export class ChartAxisComponent {
   readonly orientation = input<'x' | 'y'>('x');

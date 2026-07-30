@@ -1,0 +1,80 @@
+<afi-loading-overlay variant="quiet-spinner" [visible]="loading()">
+  <figure class="relative" role="figure" [attr.aria-labelledby]="titleElId">
+    <div class="flex items-start justify-between mb-space-3">
+      <div>
+        @if (title()) {
+          <figcaption [id]="titleElId" class="text-section text-canvas-fg">{{ title() }}</figcaption>
+        }
+        @if (subtitle()) {
+          <p class="text-body-sm text-neutral-500 mt-space-1">{{ subtitle() }}</p>
+        }
+      </div>
+      <div class="flex items-center gap-space-2">
+        <ng-content select="[slot=action]" />
+        <afi-chart-instructions chartKind="heatmap" (opened)="instructionsOpened.emit()" />
+      </div>
+    </div>
+
+    <div [id]="a11yId" class="sr-only">{{ a11yText() }}</div>
+
+    @if (data().length > 0) {
+      <svg #chartRoot [attr.width]="'100%'" [attr.height]="height()" [attr.viewBox]="viewBox()"
+           role="group" [attr.aria-labelledby]="titleElId" [attr.aria-describedby]="a11yId"
+           [attr.tabindex]="nav.rootTabIndex()"
+           (keydown)="onKeydown($event)"
+           class="block">
+        <g [attr.transform]="'translate(' + marginLeft + ',' + marginTop + ')'">
+          <!-- Y labels -->
+          @for (yLabel of yLabels(); track yLabel; let yi = $index) {
+            <text [attr.x]="-8" [attr.y]="yi * cellH() + cellH() / 2"
+                  dy="0.35em" text-anchor="end"
+                  class="fill-neutral-500" style="font-size: var(--font-size-body-sm)">
+              {{ yLabel }}
+            </text>
+          }
+          <!-- X labels -->
+          @for (xLabel of xLabels(); track xLabel; let xi = $index) {
+            <text [attr.x]="xi * cellW() + cellW() / 2" [attr.y]="gridHeight() + 14"
+                  text-anchor="middle"
+                  class="fill-neutral-500" style="font-size: var(--font-size-body-sm)">
+              {{ xLabel }}
+            </text>
+          }
+          <!-- Cells, row-major so DOM order matches the drawn grid -->
+          @for (row of renderedRows(); track row.label; let ri = $index) {
+            @for (cell of row.cells; track cell.id; let ci = $index) {
+              <rect
+                #mark
+                class="heatmap-cell"
+                [attr.x]="cell.cx"
+                [attr.y]="cell.cy"
+                [attr.width]="cellW()"
+                [attr.height]="cellH()"
+                [attr.fill]="cell.color"
+                [attr.tabindex]="nav.markTabIndex(ri, ci)"
+                role="graphics-symbol"
+                [attr.aria-label]="cell.ariaLabel"
+                (click)="onCellClick(cell)"
+              />
+              @if (showCellLabels()) {
+                <text
+                  [attr.x]="cell.cx + cellW() / 2"
+                  [attr.y]="cell.cy + cellH() / 2"
+                  dy="0.35em" text-anchor="middle"
+                  class="fill-canvas-fg" style="font-size: var(--font-size-body-sm)"
+                  pointer-events="none"
+                >{{ cell.label }}</text>
+              }
+            }
+          }
+        </g>
+      </svg>
+    } @else {
+      <div class="flex items-center justify-center text-neutral-500 text-body-sm" [style.height]="height()" aria-live="polite">
+        Sin datos para mostrar
+      </div>
+    }
+
+    <ng-content select="[slot=footer]" />
+  </figure>
+</afi-loading-overlay>

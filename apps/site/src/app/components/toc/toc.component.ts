@@ -92,8 +92,10 @@ export class TocComponent implements AfterViewInit, OnDestroy {
           }
         }
       },
-      // IntersectionObserver rootMargin accepts unit-less 0 (no px).
-      { rootMargin: '-20% 0 -70% 0' },
+      // Every rootMargin component needs an explicit unit — a bare 0 makes the
+      // constructor throw, which silently killed scroll-spy on every page.
+      // Percent throughout, so no raw pixel value is needed here.
+      { rootMargin: '-20% 0% -70% 0%' },
     );
 
     headings.forEach((h: HTMLElement) => this.#observer!.observe(h));

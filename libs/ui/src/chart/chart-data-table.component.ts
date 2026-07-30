@@ -22,30 +22,7 @@ import type { TableColumn } from '../table/table.types';
   standalone: true,
   imports: [TableComponent, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div class="mt-space-2">
-      <afi-button
-        variant="ghost"
-        size="sm"
-        [ariaLabel]="isOpen() ? 'Ocultar tabla de datos' : 'Ver datos en tabla'"
-        (clicked)="toggle()"
-      >
-        {{ isOpen() ? 'Ocultar tabla de datos' : 'Ver datos en tabla' }}
-      </afi-button>
-
-      @if (isOpen()) {
-        <div class="mt-space-3" role="region" aria-label="Datos del gráfico">
-          <afi-table
-            [columns]="columns()"
-            [rows]="rows()"
-            [trackByKey]="trackByKey()"
-            density="compact"
-            emptyText="Sin datos para mostrar"
-          />
-        </div>
-      }
-    </div>
-  `,
+  templateUrl: './chart-data-table.component.html',
 })
 export class ChartDataTableComponent {
   readonly columns = input<TableColumn[]>([]);

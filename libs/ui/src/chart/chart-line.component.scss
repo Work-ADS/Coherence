@@ -1,0 +1,33 @@
+// =============================================================================
+// afi-chart-line — component styles
+// Moved out of the component decorator; values unchanged.
+// =============================================================================
+
+:host { display: block; position: relative; }
+.line-path {
+  fill: none;
+  stroke-width: 2;
+  transition: opacity 180ms ease-out;
+}
+.line-marker {
+  r: 3;
+  cursor: pointer;
+  transition: r 120ms ease-out;
+}
+/* Hidden markers stay in the DOM as focus targets — see the template. */
+.line-marker--quiet { r: 0; }
+/*
+  The keyboard cursor is driven by the nav controller rather than
+  :focus-visible, whose heuristics don't fire reliably for programmatic
+  focus. Without this a hidden marker would be focused but invisible,
+  leaving a sighted keyboard user with no indication of where they are.
+*/
+.line-marker--quiet.line-marker--active { r: 5; }
+.line-marker:hover, .line-marker:focus-visible { r: 5; }
+.line-marker:focus-visible {
+  outline: var(--border-width-thick) solid var(--border-focus);
+  outline-offset: var(--space-3xs);
+}
+@media (prefers-reduced-motion: reduce) {
+  .line-path, .line-marker { transition-duration: 0ms; }
+}

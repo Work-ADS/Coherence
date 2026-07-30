@@ -1,0 +1,18 @@
+// =============================================================================
+// afi-chart-dumbbell — component styles
+// Moved out of the component decorator; values unchanged.
+// =============================================================================
+
+:host { display: block; position: relative; }
+.dumbbell-dot {
+  cursor: pointer;
+  transition: r 120ms ease-out;
+}
+.dumbbell-dot:hover, .dumbbell-dot:focus-visible { r: 7; }
+.dumbbell-dot:focus-visible {
+  outline: var(--border-width-thick) solid var(--border-focus);
+  outline-offset: var(--space-3xs);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dumbbell-dot { transition-duration: 0ms; }
+}

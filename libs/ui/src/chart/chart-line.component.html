@@ -1,0 +1,102 @@
+<afi-loading-overlay variant="quiet-spinner" [visible]="loading()">
+  <figure class="relative" role="figure" [attr.aria-labelledby]="titleElId">
+    @if (!hideHeader()) {
+      <div class="flex items-start justify-between mb-space-3">
+        <div>
+          @if (title()) {
+            <figcaption [id]="titleElId" class="text-section text-canvas-fg">{{ title() }}</figcaption>
+          }
+          @if (subtitle()) {
+            <p class="text-body-sm text-neutral-500 mt-space-1">{{ subtitle() }}</p>
+          }
+        </div>
+        <div class="flex items-center gap-space-2">
+          <ng-content select="[slot=action]" />
+          @if (!hideInstructions()) {
+            <afi-chart-instructions chartKind="line" (opened)="instructionsOpened.emit()" />
+          }
+        </div>
+      </div>
+    }
+
+    <div [id]="a11yId" class="sr-only">{{ a11yText() }}</div>
+
+    @if (hasData()) {
+      <svg #chartRoot [attr.viewBox]="viewBox()"
+           role="group" [attr.aria-labelledby]="titleElId" [attr.aria-describedby]="a11yId"
+           [attr.tabindex]="nav.rootTabIndex()"
+           (keydown)="onKeydown($event)"
+           class="block w-full h-auto" [style.max-height]="height()">
+        <g [attr.transform]="'translate(' + margins.left + ',' + margins.top + ')'">
+          <!-- Grid lines -->
+          @for (tick of yTicks(); track tick) {
+            <line x1="0" [attr.x2]="plotWidth()"
+                  [attr.y1]="scaleY(tick)" [attr.y2]="scaleY(tick)"
+                  stroke="var(--border-hairline)" stroke-width="1" opacity="0.5" />
+            <text x="-8" [attr.y]="scaleY(tick)" dy="0.32em" text-anchor="end"
+                  class="fill-neutral-500" style="font-size: var(--font-size-body-sm)">
+              {{ fmtNum(tick) }}
+            </text>
+          }
+          <!-- X axis -->
+          <line x1="0" [attr.x2]="plotWidth()" [attr.y1]="plotHeight()" [attr.y2]="plotHeight()"
+                stroke="var(--border-hairline)" stroke-width="1" />
+          <!-- X axis tick labels -->
+          @for (tick of xTicks(); track tick.value) {
+            <text
+              [attr.x]="tick.cx"
+              [attr.y]="plotHeight() + 20"
+              text-anchor="middle"
+              class="fill-neutral-500"
+              style="font-size: var(--font-size-body-sm)"
+            >{{ tick.label }}</text>
+          }
+          <!-- Lines + markers per series -->
+          @for (series of renderedSeries(); track series.key; let si = $index) {
+            <path [attr.d]="series.path" class="line-path" [attr.stroke]="series.visual.color" />
+            <!--
+              Markers always render, even when showMarkers() is false: they
+              are the only focusable targets, so hiding them would make the
+              chart keyboard-unreachable. When hidden they collapse to zero
+              radius and reappear on keyboard focus, which doubles as the
+              focus indicator.
+            -->
+            @for (pt of series.navPoints; track pt.idx; let pi = $index) {
+              <circle
+                #mark
+                class="line-marker"
+                [class.line-marker--quiet]="!showMarkers()"
+                [class.line-marker--active]="nav.isActive(si, pi)"
+                [attr.cx]="pt.cx" [attr.cy]="pt.cy"
+                [attr.fill]="series.visual.color"
+                [attr.tabindex]="nav.markTabIndex(si, pi)"
+                role="graphics-symbol"
+                [attr.aria-label]="pt.label"
+                (click)="onPointClick(si, pt.idx)"
+              />
+            }
+          }
+        </g>
+      </svg>
+
+      @if (!hideLegend()) {
+        <afi-chart-legend [items]="legendItems()" [hidden]="data().length <= 1" />
+      }
+    } @else {
+      <div class="flex items-center justify-center text-neutral-500 text-body-sm" [style.height]="height()" aria-live="polite">
+        Sin datos para mostrar
+      </div>
+    }
+
+    @if (!hideDataTable()) {
+      <afi-chart-data-table
+        [columns]="tableColumns()"
+        [rows]="tableRows()"
+        trackByKey="key"
+        (toggled)="dataTableToggled.emit($event)"
+      />
+    }
+
+    <ng-content select="[slot=footer]" />
+  </figure>
+</afi-loading-overlay>

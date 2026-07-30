@@ -11,7 +11,7 @@ Agent lineup lives in `docs/agents/`:
 - **Tester**: `docs/agents/tester.md` verifies completed work against the brief, pre-flight, a11y, copy, and clean-code rules.
 - **Token Guardian**: `docs/agents/ds-token-guardian.md` reviews token additions/references.
 
-`Design.md` at the repo root is the entry-point overview — what Coherence is, brand soul, principles, foundations index. It points at the deep skills; it never duplicates them. Deep rules live in `docs/rules/`: `page-structure-skill.md` (page composition — anatomy, wrapper, slots, responsive baseline, empty state), `component-skill.md` (build), `component-design-skill.md` (design — upstream of build), `motion-skill.md` (named motion patterns + tokens), `token-skill.md`, `clean-code.md`, `accessibility.md`, and `copy-skill.md`.
+`Design.md` at the repo root is the entry-point overview — what Coherence is, brand soul, principles, foundations index. It points at the deep skills; it never duplicates them. Deep rules live in `docs/rules/`: `page-structure-skill.md` (page composition — anatomy, wrapper, slots, responsive baseline, empty state), `component-skill.md` (build), `component-design-skill.md` (design — upstream of build), `motion-skill.md` (named motion patterns + tokens), `token-skill.md`, `clean-code.md`, `accessibility.md`, `copy-skill.md`, and `data-viz-skill.md` (charts — selection, anatomy, labeling, chart a11y).
 
 ## Required read order
 
@@ -28,6 +28,8 @@ Before any coding work, read in order:
 9. `docs/rules/motion-skill.md`
 10. `docs/rules/page-structure-skill.md` — page composition (anatomy, sections, wrapper, responsive baseline, empty state)
 11. `docs/build-prompts/_pre-flight.md`
+
+Then, only when the work touches a chart: `docs/rules/data-viz-skill.md`. It is the source of truth for chart selection, anatomy, labeling, number formatting and chart keyboard/screen-reader behaviour. Vendored Visa PDS reference sits under `docs/reference/visa-pds/data-visualization/` — consult it for Visa's own wording, never as the rule.
 
 If those files conflict, use this precedence:
 

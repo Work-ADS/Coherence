@@ -1,0 +1,46 @@
+<afi-button
+  variant="ghost"
+  size="sm"
+  ariaLabel="Instrucciones de teclado"
+  (clicked)="open()"
+>
+  <svg
+    slot="iconStart"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    class="chart-instructions__icon"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <rect width="20" height="16" x="2" y="4" rx="2" />
+    <path d="M6 8h.001" /><path d="M10 8h.001" /><path d="M14 8h.001" /><path d="M18 8h.001" />
+    <path d="M8 12h.001" /><path d="M12 12h.001" /><path d="M16 12h.001" />
+    <path d="M7 16h10" />
+  </svg>
+</afi-button>
+
+<afi-modal
+  [open]="isOpen()"
+  title="Atajos de teclado"
+  size="sm"
+  (openChange)="onModalChange($event)"
+>
+  <dl class="chart-instructions__list">
+    @for (shortcut of shortcuts(); track shortcut.id) {
+      <dt class="chart-instructions__term">
+        <afi-kbd [keys]="shortcut.keys" [separator]="shortcut.separator" size="sm" />
+      </dt>
+      <dd class="chart-instructions__description">{{ shortcut.description }}</dd>
+    }
+  </dl>
+
+  <div slot="footer">
+    <afi-button variant="secondary" size="sm" (clicked)="close()">
+      Cerrar
+    </afi-button>
+  </div>
+</afi-modal>

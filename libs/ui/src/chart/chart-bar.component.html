@@ -1,0 +1,87 @@
+<afi-loading-overlay variant="quiet-spinner" [visible]="loading()">
+  <figure class="relative" role="figure" [attr.aria-labelledby]="titleElId">
+    <!-- Header -->
+    <div class="flex items-start justify-between mb-space-3">
+      <div>
+        @if (title()) {
+          <figcaption [id]="titleElId" class="text-section text-canvas-fg">{{ title() }}</figcaption>
+        }
+        @if (subtitle()) {
+          <p class="text-body-sm text-neutral-500 mt-space-1">{{ subtitle() }}</p>
+        }
+      </div>
+      <div class="flex items-center gap-space-2">
+        <ng-content select="[slot=action]" />
+        <afi-chart-instructions chartKind="bar" (opened)="instructionsOpened.emit()" />
+      </div>
+    </div>
+
+    <!-- sr-only a11y region -->
+    <div [id]="a11yId" class="sr-only">{{ a11yText() }}</div>
+
+    <!-- SVG chart -->
+    @if (sortedData().length > 0) {
+      <svg #chartRoot [attr.width]="'100%'" [attr.height]="height()" [attr.viewBox]="viewBox()"
+           role="group" [attr.aria-labelledby]="titleElId" [attr.aria-describedby]="a11yId"
+           [attr.tabindex]="nav.rootTabIndex()"
+           (keydown)="onKeydown($event)"
+           class="block">
+        <g [attr.transform]="'translate(' + margins.left + ',' + margins.top + ')'">
+          <!-- Y axis -->
+          <g afi-chart-axis orientation="y" [min]="0" [max]="yMax()" [length]="plotHeight()" [locale]="locale()" />
+          <!-- X axis ticks (categorical) -->
+          <g [attr.transform]="'translate(0,' + plotHeight() + ')'">
+            <line x1="0" [attr.x2]="plotWidth()" stroke="var(--border-hairline)" stroke-width="1" />
+            @for (bar of bars(); track bar.datum.key; let i = $index) {
+              <text
+                [attr.x]="bar.x + bar.width / 2"
+                y="16"
+                text-anchor="middle"
+                class="fill-neutral-500"
+                style="font-size: var(--font-size-body-sm)"
+              >{{ bar.datum.key }}</text>
+            }
+          </g>
+          <!-- Bars -->
+          @for (bar of bars(); track bar.datum.key; let i = $index) {
+            <rect
+              #mark
+              class="bar-rect"
+              [attr.x]="bar.x"
+              [attr.y]="bar.y"
+              [attr.width]="bar.width"
+              [attr.height]="bar.barHeight"
+              [attr.fill]="bar.fill"
+              [attr.tabindex]="nav.markTabIndex(0, i)"
+              [attr.role]="'graphics-symbol'"
+              [attr.aria-label]="bar.datum.key + ': ' + formatFull(bar.datum.value)"
+              (click)="onBarClick(i, bar.datum)"
+            />
+            @if (bar.datum.label || bar.showLabel) {
+              <text
+                [attr.x]="bar.x + bar.width / 2"
+                [attr.y]="bar.y - 4"
+                text-anchor="middle"
+                class="fill-neutral-700"
+                style="font-size: var(--font-size-body-sm)"
+              >{{ bar.datum.label ?? formatShort(bar.datum.value) }}</text>
+            }
+          }
+        </g>
+      </svg>
+    } @else {
+      <div class="flex items-center justify-center text-neutral-500 text-body-sm" [style.height]="height()" aria-live="polite">
+        Sin datos para mostrar
+      </div>
+    }
+
+    <afi-chart-data-table
+      [columns]="tableColumns()"
+      [rows]="tableRows()"
+      trackByKey="key"
+      (toggled)="dataTableToggled.emit($event)"
+    />
+
+    <ng-content select="[slot=footer]" />
+  </figure>
+</afi-loading-overlay>

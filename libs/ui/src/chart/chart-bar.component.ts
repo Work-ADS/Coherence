@@ -2,15 +2,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   input,
   output,
-  signal,
+  viewChild,
+  viewChildren,
 } from '@angular/core';
 
 import { LoadingOverlayComponent } from '../loading-overlay';
 import { ChartAxisComponent } from './chart-axis.component';
 import { ChartInstructionsComponent } from './chart-instructions.component';
 import { ChartDataTableComponent } from './chart-data-table.component';
+import { ChartNavController, EMPTY_NAV_SHAPE, type ChartNavShape } from './chart-keyboard';
 import type { BarDatum, BarOrientation, BarSort, ChartMargins } from './chart.types';
 import { resolveSeriesVisual } from './chart.variants';
 import { formatNumber, formatNumberFull } from './chart-format';
@@ -36,108 +39,8 @@ const MARGINS: ChartMargins = { top: 16, right: 16, bottom: 48, left: 56 };
     ChartDataTableComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    :host { display: block; position: relative; }
-    .bar-rect {
-      transition: opacity 180ms ease-out;
-      cursor: pointer;
-    }
-    .bar-rect:hover, .bar-rect:focus-visible { opacity: 0.8; }
-    .bar-rect:focus-visible {
-      outline: 2px solid var(--border-focus);
-      outline-offset: 2px;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .bar-rect { transition-duration: 0ms; }
-    }
-  `,
-  template: `
-    <afi-loading-overlay variant="quiet-spinner" [visible]="loading()">
-      <figure class="relative" role="figure" [attr.aria-labelledby]="titleElId">
-        <!-- Header -->
-        <div class="flex items-start justify-between mb-space-3">
-          <div>
-            @if (title()) {
-              <figcaption [id]="titleElId" class="text-section text-canvas-fg">{{ title() }}</figcaption>
-            }
-            @if (subtitle()) {
-              <p class="text-body-sm text-neutral-500 mt-space-1">{{ subtitle() }}</p>
-            }
-          </div>
-          <div class="flex items-center gap-space-2">
-            <ng-content select="[slot=action]" />
-            <afi-chart-instructions (opened)="instructionsOpened.emit()" />
-          </div>
-        </div>
-
-        <!-- sr-only a11y region -->
-        <div [id]="a11yId" class="sr-only">{{ a11yText() }}</div>
-
-        <!-- SVG chart -->
-        @if (sortedData().length > 0) {
-          <svg [attr.width]="'100%'" [attr.height]="height()" [attr.viewBox]="viewBox()"
-               role="img" [attr.aria-labelledby]="titleElId" [attr.aria-describedby]="a11yId"
-               class="block">
-            <g [attr.transform]="'translate(' + margins.left + ',' + margins.top + ')'">
-              <!-- Y axis -->
-              <g afi-chart-axis orientation="y" [min]="0" [max]="yMax()" [length]="plotHeight()" [locale]="locale()" />
-              <!-- X axis ticks (categorical) -->
-              <g [attr.transform]="'translate(0,' + plotHeight() + ')'">
-                <line x1="0" [attr.x2]="plotWidth()" stroke="var(--border-hairline)" stroke-width="1" />
-                @for (bar of bars(); track bar.datum.key; let i = $index) {
-                  <text
-                    [attr.x]="bar.x + bar.width / 2"
-                    y="16"
-                    text-anchor="middle"
-                    class="fill-neutral-500"
-                    style="font-size: var(--font-size-body-sm, 12px)"
-                  >{{ bar.datum.key }}</text>
-                }
-              </g>
-              <!-- Bars -->
-              @for (bar of bars(); track bar.datum.key; let i = $index) {
-                <rect
-                  class="bar-rect"
-                  [attr.x]="bar.x"
-                  [attr.y]="bar.y"
-                  [attr.width]="bar.width"
-                  [attr.height]="bar.barHeight"
-                  [attr.fill]="bar.fill"
-                  [attr.tabindex]="0"
-                  [attr.role]="'graphics-symbol'"
-                  [attr.aria-label]="bar.datum.key + ': ' + formatFull(bar.datum.value)"
-                  (click)="onBarClick(i, bar.datum)"
-                  (keydown.enter)="onBarClick(i, bar.datum)"
-                />
-                @if (bar.datum.label || bar.showLabel) {
-                  <text
-                    [attr.x]="bar.x + bar.width / 2"
-                    [attr.y]="bar.y - 4"
-                    text-anchor="middle"
-                    class="fill-neutral-700"
-                    style="font-size: var(--font-size-body-sm, 12px)"
-                  >{{ bar.datum.label ?? formatShort(bar.datum.value) }}</text>
-                }
-              }
-            </g>
-          </svg>
-        } @else {
-          <div class="flex items-center justify-center text-neutral-500 text-body-sm" [style.height]="height()" aria-live="polite">
-            Sin datos para mostrar
-          </div>
-        }
-
-        <afi-chart-data-table
-          [columns]="tableColumns()"
-          [rows]="tableRows()"
-          trackByKey="key"
-          (toggled)="dataTableToggled.emit($event)"
-        />
-
-        <ng-content select="[slot=footer]" />
-      </figure>
-    </afi-loading-overlay>
-  `,
+  styleUrls: ['./chart-bar.component.scss'],
+  templateUrl: './chart-bar.component.html',
 })
 export class ChartBarComponent {
   // Shared inputs
@@ -150,7 +53,7 @@ export class ChartBarComponent {
   readonly contextExplanation = input('');
   readonly structureNotes = input('');
   readonly locale = input('es-ES');
-  readonly height = input('320px');
+  readonly height = input('20rem');
   readonly focus = input<number | string | null>(null);
 
   // Bar-specific inputs
@@ -167,6 +70,21 @@ export class ChartBarComponent {
   readonly a11yId = chartA11yId(this.id);
 
   protected readonly margins = MARGINS;
+
+  private readonly chartRoot = viewChild<ElementRef<SVGSVGElement>>('chartRoot');
+  private readonly marks = viewChildren<ElementRef<SVGRectElement>>('mark');
+
+  /**
+   * Bars are one-dimensional: a single group, no vertical arrows. Matches Visa,
+   * which documents no `↑ ↓` for bar charts.
+   */
+  private readonly navShape = computed<ChartNavShape>(() => {
+    const count = this.bars().length;
+    if (count === 0) return EMPTY_NAV_SHAPE;
+    return { groupCount: 1, datumCounts: [count], crossGroup: false };
+  });
+
+  protected readonly nav = new ChartNavController(this.navShape);
 
   readonly a11yText = computed(() => buildA11yRegion({
     longDescription: this.longDescription(),
@@ -251,5 +169,36 @@ export class ChartBarComponent {
 
   onBarClick(index: number, datum: BarDatum): void {
     this.dataPointActivated.emit({ index, datum });
+  }
+
+  /**
+   * Single keydown listener on the SVG root. Events from the focused bar bubble
+   * up to here, so both navigation levels share one handler.
+   */
+  onKeydown(event: KeyboardEvent): void {
+    if (!this.nav.handleKey(event)) return;
+    event.preventDefault();
+    this.moveFocus();
+
+    // Enter on a bar activates it, replacing the old per-bar `keydown.enter`.
+    const active = this.nav.active();
+    if (event.key === 'Enter' && !event.shiftKey && active !== null) {
+      const datum = this.sortedData()[active.datum];
+      if (datum) this.dataPointActivated.emit({ index: active.datum, datum });
+    }
+  }
+
+  /**
+   * Follow the cursor with real DOM focus. `ElementRef` rather than the CDK
+   * (clean-code.md rule 7) because no CDK manager models a two-axis cursor over
+   * SVG marks; this mirrors the roving-tabindex idiom in segmented-control-v2.
+   */
+  private moveFocus(): void {
+    const active = this.nav.active();
+    if (active === null) {
+      this.chartRoot()?.nativeElement.focus();
+      return;
+    }
+    this.marks()[active.flat]?.nativeElement.focus();
   }
 }

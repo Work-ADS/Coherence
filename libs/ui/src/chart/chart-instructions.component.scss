@@ -1,0 +1,37 @@
+// =============================================================================
+// afi-chart-instructions — keyboard-shortcut modal for the chart primitives.
+//
+// Layout only. The keycaps are `afi-kbd`, so their surface, border and radius
+// come from that primitive rather than being restyled here.
+// =============================================================================
+
+:host {
+  display: inline-block;
+}
+
+.chart-instructions {
+  &__icon {
+    flex-shrink: 0;
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    column-gap: var(--space-md);
+    row-gap: var(--space-sm);
+    margin: 0;
+  }
+
+  &__term {
+    margin: 0;
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--foreground-secondary-default);
+    font: var(--type-body-sm);
+  }
+}

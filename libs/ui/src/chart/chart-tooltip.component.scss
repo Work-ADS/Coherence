@@ -1,0 +1,24 @@
+// =============================================================================
+// afi-chart-tooltip — component styles
+// Moved out of the component decorator; values unchanged.
+// =============================================================================
+
+:host { pointer-events: none; position: absolute; z-index: 20; }
+// Every value below carried a hardcoded fallback alongside the token. The tokens
+// all exist, so the fallbacks were dead weight that also bypassed the token gate.
+.tooltip {
+  background: var(--surface-elevated);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-md);
+  padding: var(--spacing-8) var(--spacing-12);
+  font-size: var(--font-size-body-sm);
+  color: var(--canvas-fg);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+.tooltip--visible { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .tooltip { transition-duration: 0ms; }
+}

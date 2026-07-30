@@ -1,0 +1,18 @@
+// =============================================================================
+// afi-chart-bar — component styles
+// Moved out of the component decorator; values unchanged.
+// =============================================================================
+
+:host { display: block; position: relative; }
+.bar-rect {
+  transition: opacity 180ms ease-out;
+  cursor: pointer;
+}
+.bar-rect:hover, .bar-rect:focus-visible { opacity: 0.8; }
+.bar-rect:focus-visible {
+  outline: var(--border-width-thick) solid var(--border-focus);
+  outline-offset: var(--space-3xs);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar-rect { transition-duration: 0ms; }
+}

@@ -1,12 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  model,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
+
+import { AFI_UI_COPY } from '../copy';
 
 /**
  * Chip — identity v2 (foundations-modern).
@@ -64,6 +59,10 @@ import {
   styleUrls: ['./chip-v2.component.scss'],
 })
 export class ChipV2Component {
+
+  /** Optional page-level chrome copy; per-instance inputs still win. */
+  private readonly uiCopy = inject(AFI_UI_COPY, { optional: true });
+
   readonly label = input.required<string>();
   readonly selected = model<boolean>(false);
   readonly disabled = input<boolean>(false);
@@ -92,12 +91,26 @@ export class ChipV2Component {
     return parts.join(' ');
   });
 
+  /**
+   * Verbs prefixed to the chip's label on its two × controls — "Quitar Renta
+   * fija", "Borrar Renta fija". Separate from `removeLabel` / `clearLabel`,
+   * which replace the WHOLE accessible name: those are per-chip, so translating
+   * a page through them means rebuilding the phrase at every call site. These
+   * are one word each, set once.
+   */
+  readonly removeVerb = input<string | null>(null);
+  readonly clearVerb = input<string | null>(null);
+
   readonly removeAccessibleName = computed(
-    () => this.removeLabel() ?? `Quitar ${this.label()}`,
+    () =>
+      this.removeLabel() ??
+      `${this.removeVerb() ?? this.uiCopy?.()?.remove ?? 'Quitar'} ${this.label()}`,
   );
 
   readonly clearAccessibleName = computed(
-    () => this.clearLabel() ?? `Borrar ${this.label()}`,
+    () =>
+      this.clearLabel() ??
+      `${this.clearVerb() ?? this.uiCopy?.()?.clear ?? 'Borrar'} ${this.label()}`,
   );
 
   onToggle(): void {

@@ -1,16 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  contentChildren,
-  effect,
-  input,
-  model,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, contentChildren, effect, inject, input, model } from '@angular/core';
 
 import { ButtonV2Component } from '../button-v2';
 import { IconButtonV2Component } from '../icon-button-v2';
 import { LogoV2Component } from '../logo-v2';
 import { NavItemV2Component } from '../nav-item-v2/nav-item-v2.component';
+
+import { AFI_UI_COPY } from '../copy';
 
 let nextId = 0;
 
@@ -63,11 +58,23 @@ let nextId = 0;
   styleUrls: ['./sidebar-v2.component.scss'],
 })
 export class SidebarV2Component {
+
+  /** Optional page-level chrome copy; per-instance inputs still win. */
+  private readonly uiCopy = inject(AFI_UI_COPY, { optional: true });
+
   /** Controlled + self-updating collapsed layout. `[(collapsed)]`-bindable. */
   readonly collapsed = model<boolean>(false);
 
   /** Accessible label for the navigation landmark. RAE Spanish default. */
-  readonly ariaLabel = input<string>('Navegación principal');
+  readonly ariaLabel = input<string | null>(null);
+  readonly ariaLabelText = computed(
+    () => this.ariaLabel() ?? this.uiCopy?.()?.mainNav ?? 'Navegación principal',
+  );
+
+  readonly expandLabel = input<string | null>(null);
+  readonly expandLabelText = computed(
+    () => this.expandLabel() ?? this.uiCopy?.()?.expandSidebar ?? 'Expandir barra lateral',
+  );
 
   /** When set, the header logo becomes a link to this destination. */
   readonly homeHref = input<string | null>(null);

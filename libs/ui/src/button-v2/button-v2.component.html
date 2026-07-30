@@ -12,7 +12,7 @@
   <span class="btn-v2__icon"><ng-content select="[slot=iconStart]" /></span>
   @if (loading()) {
     <span class="btn-v2__spinner" aria-hidden="true"></span>
-    <span class="btn-v2__sr-only">Cargando…</span>
+    <span class="btn-v2__sr-only">{{ loadingLabelText() }}</span>
   } @else {
     <span class="btn-v2__label"><ng-content /></span>
   }

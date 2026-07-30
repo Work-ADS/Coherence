@@ -1,16 +1,4 @@
-import {
-  booleanAttribute,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  HostListener,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, computed, effect, ElementRef, HostListener, inject, input, output, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 import { BadgeV2Component } from '../badge-v2';
@@ -31,6 +19,8 @@ import type {
   TableV2RowAction,
   TableV2SortState,
 } from './table-v2.variants';
+
+import { AFI_UI_COPY } from '../copy';
 
 /**
  * Gap (px) between the trailing ⋯ button and its anchored overflow menu. JS
@@ -106,6 +96,10 @@ interface MenuCoords {
   host: { class: 'afi-table-v2' },
 })
 export class TableV2Component {
+
+  /** Optional page-level chrome copy; per-instance inputs still win. */
+  private readonly uiCopy = inject(AFI_UI_COPY, { optional: true });
+
   readonly columns = input<TableV2Column[]>([]);
   readonly rows = input<Record<string, unknown>[]>([]);
   readonly trackByKey = input<string>('id');
@@ -123,6 +117,28 @@ export class TableV2Component {
    */
   readonly autoSort = input(false, { transform: booleanAttribute });
   readonly loading = input<boolean>(false);
+
+  readonly selectAllLabel = input<string | null>(null);
+  readonly selectAllLabelText = computed(
+    () => this.selectAllLabel() ?? this.uiCopy?.()?.selectAllRows ?? 'Seleccionar todas las filas',
+  );
+  readonly rowActionsLabel = input<string | null>(null);
+  readonly rowActionsLabelText = computed(
+    () => this.rowActionsLabel() ?? this.uiCopy?.()?.moreActions ?? 'Más acciones',
+  );
+  readonly rowMenuLabel = input<string | null>(null);
+  readonly rowMenuLabelText = computed(
+    () => this.rowMenuLabel() ?? this.uiCopy?.()?.rowActions ?? 'Acciones de fila',
+  );
+  /** Accessible name for a row's select checkbox; the row's name is appended. */
+  readonly selectRowLabel = input<string | null>(null);
+  readonly selectRowLabelText = computed(
+    () => this.selectRowLabel() ?? this.uiCopy?.()?.selectRow ?? 'Seleccionar fila',
+  );
+  readonly loadingLabel = input<string | null>(null);
+  readonly loadingLabelText = computed(
+    () => this.loadingLabel() ?? this.uiCopy?.()?.loading ?? 'Cargando\u2026',
+  );
   readonly density = input<TableV2Density>('default');
   readonly rowHoverable = input<boolean>(true);
   readonly rowActions = input<TableV2RowAction[]>([]);
@@ -398,7 +414,8 @@ export class TableV2Component {
     const cols = this.visibleColumns();
     const labelCol = cols.find((c) => (c.kind ?? 'text') === 'text') ?? cols[0];
     const name = labelCol ? this.cellText(row, labelCol).trim() : '';
-    return name ? `Seleccionar fila: ${name}` : 'Seleccionar fila';
+    const base = this.selectRowLabelText();
+    return name ? `${base}: ${name}` : base;
   }
 
   /** Badge tone for a status cell: per-row `toneKey` → column `badgeTone` → neutral. */

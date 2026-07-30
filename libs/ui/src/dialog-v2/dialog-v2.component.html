@@ -39,7 +39,7 @@
             <afi-icon-button-v2
               variant="ghost"
               size="sm"
-              ariaLabel="Cerrar"
+              [ariaLabel]="closeLabelText()"
               (clicked)="close('button')"
             >
               <svg

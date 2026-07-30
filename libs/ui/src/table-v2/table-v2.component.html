@@ -15,7 +15,7 @@
             (click)="onHeaderSelectClick($event)"
           >
             <afi-checkbox-v2
-              ariaLabel="Seleccionar todas las filas"
+              [ariaLabel]="selectAllLabelText()"
               [checked]="allSelected()"
               [indeterminate]="someSelected()"
               (checkedChange)="onHeaderSelectChange()"
@@ -136,7 +136,7 @@
                     <afi-icon-button-v2
                       size="sm"
                       variant="ghost"
-                      ariaLabel="Más acciones"
+                      [ariaLabel]="rowActionsLabelText()"
                       ariaHasPopup="menu"
                       [ariaExpanded]="isMenuOpen(row)"
                       (clicked)="toggleMenu(row, $event.event)"
@@ -154,7 +154,7 @@
                         [style.left.px]="menuCoords()?.left"
                         (keydown)="onMenuKeydown($event)"
                       >
-                        <afi-menu-v2 ariaLabel="Acciones de fila">
+                        <afi-menu-v2 [ariaLabel]="rowMenuLabelText()">
                           @for (action of overflowStandardActionsFor(row); track action.key) {
                             <afi-menu-item-v2 (clicked)="onOverflowAction(action, row, $event.event)">
                               @if (action.icon) {
@@ -203,7 +203,7 @@
   @if (state() === 'loading') {
     <div class="afi-table-v2__loader" aria-live="polite">
       <span class="afi-table-v2__spinner" aria-hidden="true"></span>
-      <span class="afi-table-v2__sr-only">Cargando…</span>
+      <span class="afi-table-v2__sr-only">{{ loadingLabelText() }}</span>
     </div>
   }
 </div>

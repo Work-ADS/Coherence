@@ -2,9 +2,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   HostListener,
-  computed,
   inject,
   input,
   signal,
@@ -21,6 +21,7 @@ import {
   MenuV2Component,
   ToastComponent,
 } from '@coherence/ui';
+import { AFI_UI_COPY } from '@coherence/ui';
 import type { BadgeV2Tone, Estado } from '@coherence/ui';
 
 // relative
@@ -81,6 +82,19 @@ const ESTADO_TONE: Record<Estado, BadgeV2Tone> = {
   styleUrls: ['./planner-navbar-v2.component.scss'],
 })
 export class PlannerNavbarV2Component {
+  /**
+   * Chrome copy from the host page, when it provides any. The Wealth Planner
+   * demos are Spanish-only and provide nothing, so they keep the defaults; the
+   * bilingual workbench renders this same bar in English.
+   */
+  private readonly uiCopy = inject(AFI_UI_COPY, { optional: true });
+  readonly moreActionsLabel = computed(
+    () => this.uiCopy?.()?.moreActions ?? 'Más acciones',
+  );
+  readonly openMenuLabel = computed(
+    () => this.uiCopy?.()?.openNav ?? 'Abrir menú',
+  );
+
   private readonly el = inject(ElementRef);
   private readonly router = inject(Router);
   /** Shared with planner-sidebar: the hamburger toggles the same drawer. */

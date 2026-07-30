@@ -39,6 +39,7 @@ import {
   TabPanelV2Directive,
   TagV2Component,
   ToggleV2Component,
+  provideAfiUiCopy,
 } from '@coherence/ui';
 
 import {
@@ -75,7 +76,7 @@ import type {
 
 import { HyperTextDirective } from '../../../directives/hyper-text.directive';
 import { LanguageService } from '../../../services/language.service';
-import { WORKBENCH_COPY } from './foundations-modern-workbench.copy';
+import { WORKBENCH_COPY, WORKBENCH_UI_CHROME } from './foundations-modern-workbench.copy';
 
 /** A filter option: a stable id for state, a translated label for display. */
 interface FilterOption {
@@ -149,6 +150,14 @@ interface FilterOption {
   ],
   templateUrl: './foundations-modern-workbench.page.html',
   styleUrls: ['./foundations-modern-workbench.page.scss'],
+  // The primitives' own chrome (× buttons, "Cargando…", select-all) follows the
+  // page language through one provider instead of ~50 per-instance bindings.
+  providers: [
+    provideAfiUiCopy(() => {
+      const language = inject(LanguageService);
+      return computed(() => WORKBENCH_UI_CHROME[language.lang()]);
+    }),
+  ],
 })
 export class FoundationsModernWorkbenchPage {
   private readonly destroyRef = inject(DestroyRef);

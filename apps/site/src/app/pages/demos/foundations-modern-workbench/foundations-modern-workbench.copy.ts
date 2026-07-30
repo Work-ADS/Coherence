@@ -1,3 +1,5 @@
+import type { AfiUiCopy } from '@coherence/ui';
+
 import type { Lang } from '../../../services/language.service';
 
 /**
@@ -946,3 +948,52 @@ const EN: WorkbenchCopy = {
 };
 
 export const WORKBENCH_COPY: Record<Lang, WorkbenchCopy> = { es: ES, en: EN };
+
+/**
+ * The chrome strings `libs/ui` primitives render themselves — the × on a chip,
+ * "Cargando…", a table's select-all. Provided once through AFI_UI_COPY rather
+ * than bound per instance: the workbench has 32 primitive instances that would
+ * otherwise need ~50 attributes, and every missed one ships a Spanish
+ * aria-label into the English page.
+ */
+export const WORKBENCH_UI_CHROME: Record<Lang, Partial<AfiUiCopy>> = {
+  es: {
+    loading: 'Cargando\u2026',
+    close: 'Cerrar',
+    remove: 'Quitar',
+    clear: 'Borrar',
+    clearSearch: 'Borrar búsqueda',
+    clearSelection: 'Quitar selección',
+    selectAllRows: 'Seleccionar todas las filas',
+    selectRow: 'Seleccionar fila',
+    moreActions: 'Más acciones',
+    rowActions: 'Acciones de fila',
+    search: 'Buscar',
+    help: 'Ayuda',
+    notifications: 'Notificaciones',
+    openNav: 'Abrir menú de navegación',
+    expandSidebar: 'Expandir barra lateral',
+    topNav: 'Navegación superior',
+    mainNav: 'Navegación principal',
+  },
+  en: {
+    loading: 'Loading\u2026',
+    close: 'Close',
+    remove: 'Remove',
+    clear: 'Clear',
+    clearSearch: 'Clear search',
+    clearSelection: 'Clear selection',
+    selectAllRows: 'Select all rows',
+    selectRow: 'Select row',
+    moreActions: 'More actions',
+    rowActions: 'Row actions',
+    search: 'Search',
+    help: 'Help',
+    notifications: 'Notifications',
+    openNav: 'Open navigation menu',
+    expandSidebar: 'Expand sidebar',
+    topNav: 'Top navigation',
+    mainNav: 'Main navigation',
+  },
+};
+

@@ -633,7 +633,7 @@ const ES: WorkbenchCopy = {
   siteNavAria: 'Destinos del sitio',
   languageLabel: 'Idioma',
   navDesignAtAfi: 'Diseño en Afi',
-  navLab: 'Laboratorio',
+  navLab: 'Workbench',
   navDemos: 'Demos',
 };
 

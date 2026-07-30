@@ -76,6 +76,97 @@
   max-width: var(--content-prose);
 }
 
+// Workbench band — a full-width row between the hero and the card grid.
+//
+// Reads as a peer of the cards, never as a banner: no tint, no dismiss, same
+// hairline and radius as the surfaces around it, sitting in the flow rather
+// than above it. It stays visually SEPARATE from .blog-landing__card on
+// purpose — a card in that grid means "an article, with a date", and this is a
+// live tool. Same reason it is one row, not a grid cell.
+.blog-landing__band {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  // Sit the band the same distance from the grid that the cards sit from each
+  // other, so it reads as another row of the same rhythm rather than a floating
+  // slab. The margin has to CANCEL the parent's flex gap first (.blog-landing
+  // is a column with --space-xl between children) — otherwise the two stack and
+  // the band sits five times further from the grid than the grid's own rows sit
+  // from each other.
+  margin-block-end: calc(var(--space-xs) - var(--space-xl));
+  padding: var(--space-sm) var(--space-md);
+  // Surface, border and radius are the CARD's tokens, not the modern ones: the
+  // band has to sit level with the grid it introduces, and sharing the tokens
+  // means the two can never drift apart when the card surface changes. The
+  // element keeps data-foundation="modern" for the badge it hosts.
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  background: var(--surface-subtle);
+  // The page still runs the legacy serif identity; the band is modern chrome,
+  // so it names its family the same way .blog-landing__hero-intro does rather
+  // than inheriting the serif from the surrounding page.
+  font-family: var(--font-family-primary);
+  text-decoration: none;
+  // Border-only hover, like the card — no lift and no shadow: the band is a
+  // quiet signpost, and matching the card's full hover would make it compete
+  // with the grid for attention.
+  transition: border-color var(--duration-fast) var(--easing-enter);
+
+  &:hover {
+    border-color: var(--border-default);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid var(--border-focus);
+    outline-offset: var(--border-width-thick);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.blog-landing__band-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-control-xs);
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.blog-landing__band-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-control-md);
+}
+
+.blog-landing__band-name {
+  font-size: var(--type-body-default-size);
+  font-weight: var(--type-button-weight);
+  color: var(--content-primary);
+}
+
+.blog-landing__band-desc {
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line-height);
+  color: var(--content-secondary);
+}
+
+.blog-landing__band-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-control-xs);
+  flex-shrink: 0;
+  font-size: var(--type-caption-size);
+  color: var(--content-primary);
+}
+
+// Sized in em so it tracks the action's font-size instead of pinning a px box.
+.blog-landing__band-arrow {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
 // ─── Bento grid: hero + two stacked side tiles ────────────────────────────────
 //
 // Mobile: single column, equal heights.

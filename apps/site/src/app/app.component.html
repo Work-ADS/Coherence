@@ -20,7 +20,8 @@
                data-foundation="modern". Fundamentos / Componentes / Patrones
                stay off the bar while the v2 primitives are in flight (routes
                remain live). EN labels match the Figma; ES swaps in 'Diseño en
-               Afi' / 'Laboratorio' ('Demos' is identical in both). 'Example' is
+               Afi'; 'Workbench' and 'Demos' are identical in both — a surface
+               name, like the component names inside it. 'Example' is
                a provisional link to the demos index until the dashboard
                examples are defined. -->
           <div slot="start" class="site-nav" data-foundation="modern">
@@ -31,7 +32,7 @@
                 [selected]="isActive('/design-at-afi')"
                 (selectedChange)="navigate('/design-at-afi')" />
               <afi-navbar-item-v2
-                [label]="lang() === 'en' ? 'Workbench' : 'Laboratorio'"
+                label="Workbench"
                 [selected]="isActive('/workbench')"
                 (selectedChange)="navigate('/workbench')" />
               <afi-navbar-item-v2

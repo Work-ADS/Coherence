@@ -1,14 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 
 import { IconButtonV2Component } from '../icon-button-v2/icon-button-v2.component';
 import type { NavbarV2Action, NavbarV2Layout } from './navbar-v2.variants';
+
+import { AFI_UI_COPY } from '../copy';
 
 /**
  * Navbar — identity v2 (foundations-modern).
@@ -70,6 +66,10 @@ import type { NavbarV2Action, NavbarV2Layout } from './navbar-v2.variants';
   styleUrls: ['./navbar-v2.component.scss'],
 })
 export class NavbarV2Component {
+
+  /** Optional page-level chrome copy; per-instance inputs still win. */
+  private readonly uiCopy = inject(AFI_UI_COPY, { optional: true });
+
   /** Responsive layout. Host-driven (bind to a container query). */
   readonly layout = input<NavbarV2Layout>('desktop');
 
@@ -84,6 +84,24 @@ export class NavbarV2Component {
 
   /** Search field placeholder (desktop). RAE Spanish default. */
   readonly searchPlaceholder = input<string>('Buscar');
+
+  /** Accessible names for the bar's icon controls. */
+  readonly helpLabel = input<string | null>(null);
+  readonly helpLabelText = computed(
+    () => this.helpLabel() ?? this.uiCopy?.()?.help ?? 'Ayuda',
+  );
+  readonly menuLabel = input<string | null>(null);
+  readonly menuLabelText = computed(
+    () => this.menuLabel() ?? this.uiCopy?.()?.openNav ?? 'Abrir menú de navegación',
+  );
+  readonly searchLabel = input<string | null>(null);
+  readonly searchLabelText = computed(
+    () => this.searchLabel() ?? this.uiCopy?.()?.search ?? 'Buscar',
+  );
+  readonly notificationsLabel = input<string | null>(null);
+  readonly notificationsLabelText = computed(
+    () => this.notificationsLabel() ?? this.uiCopy?.()?.notifications ?? 'Notificaciones',
+  );
 
   /** Keyboard-shortcut hint shown in the desktop trigger. Empty → omitted. */
   readonly searchShortcut = input<string>('⌘K');
@@ -101,7 +119,15 @@ export class NavbarV2Component {
   readonly userName = input<string>('');
 
   /** Accessible name for the navigation landmark. */
-  readonly ariaLabel = input<string>('Navegación superior');
+  readonly ariaLabel = input<string | null>(null);
+  readonly ariaLabelText = computed(
+    () => this.ariaLabel() ?? this.uiCopy?.()?.topNav ?? 'Navegación superior',
+  );
+
+  readonly overflowLabel = input<string | null>(null);
+  readonly overflowLabelText = computed(
+    () => this.overflowLabel() ?? this.uiCopy?.()?.moreActions ?? 'Más acciones',
+  );
 
   /** A control was interacted with — the app shell routes it to its overlay. */
   readonly activated = output<NavbarV2Action>();

@@ -1,4 +1,4 @@
-<nav [class]="classes()" [attr.aria-label]="ariaLabel()">
+<nav [class]="classes()" [attr.aria-label]="ariaLabelText()">
   @switch (layout()) {
     <!-- ── Desktop: menu + label · search field · help · bell · avatar ──────── -->
     @case ('desktop') {
@@ -32,7 +32,7 @@
           <afi-icon-button-v2
             variant="ghost"
             size="md"
-            ariaLabel="Ayuda"
+            [ariaLabel]="helpLabelText()"
             (clicked)="emit('help')"
           >
             <ng-container [ngTemplateOutlet]="iconHelp" />
@@ -79,7 +79,7 @@
           <afi-icon-button-v2
             variant="ghost"
             size="md"
-            ariaLabel="Más acciones"
+            [ariaLabel]="overflowLabelText()"
             ariaHasPopup="menu"
             (clicked)="emit('overflow')"
           >
@@ -97,7 +97,7 @@
   <afi-icon-button-v2
     variant="ghost"
     size="md"
-    ariaLabel="Abrir menú de navegación"
+    [ariaLabel]="menuLabelText()"
     (clicked)="emit('menu')"
   >
     <ng-container [ngTemplateOutlet]="iconMenu" />
@@ -112,7 +112,7 @@
   <afi-icon-button-v2
     variant="ghost"
     size="md"
-    ariaLabel="Buscar"
+    [ariaLabel]="searchLabelText()"
     (clicked)="emit('search')"
   >
     <ng-container [ngTemplateOutlet]="iconSearch" />
@@ -123,7 +123,7 @@
   <afi-icon-button-v2
     variant="ghost"
     size="md"
-    ariaLabel="Notificaciones"
+    [ariaLabel]="notificationsLabelText()"
     (clicked)="emit('notifications')"
   >
     <ng-container [ngTemplateOutlet]="iconBell" />

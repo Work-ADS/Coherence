@@ -4,6 +4,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 
 import { HyperTextDirective } from '../../directives/hyper-text.directive';
+import { BadgeV2Component } from '@coherence/ui';
+
 import { LanguageService } from '../../services/language.service';
 
 type Thumb = 'proceso' | 'video';
@@ -176,7 +178,7 @@ interface ViewPost {
 @Component({
   selector: 'site-blog-landing',
   standalone: true,
-  imports: [RouterLink, HyperTextDirective],
+  imports: [RouterLink, HyperTextDirective, BadgeV2Component],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './blog.landing.html',
   styleUrl: './blog.landing.scss',
@@ -242,6 +244,26 @@ export class BlogLandingPage {
       intro: isEn
         ? 'Design and architecture decisions, written when the work ships. Per-demo case studies live inside their corresponding /demos/… page.'
         : 'Decisiones de diseño y arquitectura, escritas al cerrar la entrega. Los casos de estudio por demo viven dentro de su /demos/… correspondiente.',
+    };
+  });
+
+  /**
+   * The workbench band — shown on Design at Afi only.
+   *
+   * "Workbench" is not translated: it is the surface's name, the same rule the
+   * workbench applies to the component names inside it. The description is what
+   * carries the meaning for a Spanish reader, which is the whole reason the band
+   * exists rather than relying on the nav item alone.
+   */
+  readonly bandCopy = computed(() => {
+    const isEn = this.lang() === 'en';
+    return {
+      name: 'Workbench',
+      tag: isEn ? 'Live' : 'En vivo',
+      description: isEn
+        ? 'Every v2 component, with all its states, in the browser.'
+        : 'Cada componente v2, con todos sus estados, en el navegador.',
+      action: isEn ? 'Open' : 'Abrir',
     };
   });
 

@@ -1,18 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  input,
-  isDevMode,
-  OnDestroy,
-  output,
-  viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, isDevMode, OnDestroy, output, viewChild } from '@angular/core';
 
 import { IconButtonV2Component } from '../icon-button-v2/icon-button-v2.component';
 import type { DialogV2CloseReason, DialogV2Size } from './dialog-v2.variants';
+
+import { AFI_UI_COPY } from '../copy';
 
 let nextId = 0;
 
@@ -72,6 +63,9 @@ let nextId = 0;
   styleUrls: ['./dialog-v2.component.scss'],
 })
 export class DialogV2Component implements OnDestroy {
+
+  /** Optional page-level chrome copy; per-instance inputs still win. */
+  private readonly uiCopy = inject(AFI_UI_COPY, { optional: true });
   /** Controlled open state. The consumer owns it; the dialog mirrors it. */
   readonly open = input<boolean>(false);
 
@@ -83,6 +77,11 @@ export class DialogV2Component implements OnDestroy {
 
   /** Body/default description under the title. Empty/null → omitted. */
   readonly description = input<string | null>(null);
+
+  readonly closeLabel = input<string | null>(null);
+  readonly closeLabelText = computed(
+    () => this.closeLabel() ?? this.uiCopy?.()?.close ?? 'Cerrar',
+  );
 
   /** Show the trailing close button in the header. */
   readonly showClose = input<boolean>(true);

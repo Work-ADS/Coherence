@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 
 import { IconButtonV2Component } from '../icon-button-v2';
 import type {
@@ -6,6 +6,8 @@ import type {
   TableApronSize,
   TableApronToken,
 } from './table-apron.variants';
+
+import { AFI_UI_COPY } from '../copy';
 
 /**
  * Table apron — identity v2 (foundations-modern).
@@ -37,6 +39,10 @@ import type {
   styleUrls: ['./table-apron.component.scss'],
 })
 export class TableApronComponent {
+
+  /** Optional page-level chrome copy; per-instance inputs still win. */
+  private readonly uiCopy = inject(AFI_UI_COPY, { optional: true });
+
   /** Rows currently shown (after filter/search). */
   readonly shown = input.required<number>();
   /** Total rows before any filter. */
@@ -71,6 +77,28 @@ export class TableApronComponent {
    */
   readonly selectionActions = input<TableApronSelectionAction[]>([]);
 
+  /**
+   * Override the screen-reader count phrase. Defaults to `{shown} de {total}
+   * {noun}` — a whole SENTENCE, not a word, so it cannot be translated by
+   * swapping the noun alone: "5 de 5 portfolios" mixes languages. An English
+   * surface passes the full phrase (`5 of 5 portfolios`).
+   */
+  readonly countText = input<string | null>(null);
+  /** Accessible name for the selection chip's × (clears the selection). */
+  readonly clearSelectionLabel = input<string | null>(null);
+  readonly clearSelectionLabelText = computed(
+    () => this.clearSelectionLabel() ?? this.uiCopy?.()?.clearSelection ?? 'Quitar selección',
+  );
+  /**
+   * Verb prefixed to a token's label on its × button — "Quitar Nuevos".
+   * Prefix-plus-label holds in both languages ("Remove Nuevos"); a language
+   * that needs another word order would need the whole string instead.
+   */
+  readonly dismissLabel = input<string | null>(null);
+  readonly dismissLabelText = computed(
+    () => this.dismissLabel() ?? this.uiCopy?.()?.remove ?? 'Quitar',
+  );
+
   /** Emitted when a token's × is activated. Consumer clears that filter. */
   readonly tokenDismissed = output<TableApronToken>();
   /** Emitted when the selection chip's × is activated. Consumer clears selection. */
@@ -84,7 +112,9 @@ export class TableApronComponent {
   );
 
   /** Screen-reader phrase for the live region — RAE "de", never the "/" glyph. */
-  readonly statusText = computed(() => `${this.shown()} de ${this.total()} ${this.nounForm()}`);
+  readonly statusText = computed(
+    () => this.countText() ?? `${this.shown()} de ${this.total()} ${this.nounForm()}`,
+  );
 
   readonly rootClasses = computed(() => `afi-table-apron afi-table-apron--${this.size()}`);
 

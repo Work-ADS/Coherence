@@ -1,6 +1,6 @@
 <nav
   [attr.id]="navId"
-  [attr.aria-label]="ariaLabel()"
+  [attr.aria-label]="ariaLabelText()"
   [class]="'afi-sidebar-v2' + (collapsed() ? ' afi-sidebar-v2--collapsed' : '')"
   (keydown)="onKeydown($event)"
 >
@@ -23,7 +23,7 @@
       <afi-icon-button-v2
         variant="ghost"
         size="md"
-        ariaLabel="Expandir barra lateral"
+        [ariaLabel]="expandLabelText()"
         [ariaExpanded]="false"
         [ariaControls]="navId"
         (clicked)="toggle()"

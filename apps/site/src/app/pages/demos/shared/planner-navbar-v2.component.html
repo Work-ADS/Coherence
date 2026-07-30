@@ -7,7 +7,7 @@
       class="pnb__hamburger"
       variant="ghost"
       size="sm"
-      ariaLabel="Abrir menú"
+      [ariaLabel]="openMenuLabel()"
       (clicked)="onHamburger($event)"
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -177,7 +177,7 @@
       <afi-icon-button-v2
         variant="ghost"
         size="sm"
-        ariaLabel="Más acciones"
+        [ariaLabel]="moreActionsLabel()"
         (clicked)="toggleOverflow($event)"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -186,7 +186,7 @@
       </afi-icon-button-v2>
 
       @if (overflowOpen()) {
-        <afi-menu-v2 class="pnb__menu pnb__menu--end" ariaLabel="Más acciones">
+        <afi-menu-v2 class="pnb__menu pnb__menu--end" [ariaLabel]="moreActionsLabel()">
           @for (opt of estados; track opt.value) {
             <afi-menu-item-v2
               [selected]="opt.value === estado()"

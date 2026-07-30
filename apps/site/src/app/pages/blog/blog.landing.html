@@ -14,6 +14,37 @@
       }
       <p class="blog-landing__hero-intro">{{ headerCopy().intro }}</p>
     </header>
+
+    <!-- Workbench band — a peer surface, not a post. Deliberately NOT a card in
+         the list below: every card there is something you read, with a date, and
+         putting a live tool among them would make the grid mean two things. It
+         sits between the intro and the grid so it reads as "the other kind of
+         thing here", and it carries a one-line description because that is what
+         the nav item alone cannot say. -->
+    <a class="blog-landing__band" routerLink="/workbench" data-foundation="modern">
+      <span class="blog-landing__band-body">
+        <span class="blog-landing__band-head">
+          <span class="blog-landing__band-name">{{ bandCopy().name }}</span>
+          <afi-badge-v2 tone="success" [label]="bandCopy().tag" />
+        </span>
+        <span class="blog-landing__band-desc">{{ bandCopy().description }}</span>
+      </span>
+      <span class="blog-landing__band-action">
+        {{ bandCopy().action }}
+        <svg
+          class="blog-landing__band-arrow"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M3 8h10M9 4l4 4-4 4" />
+        </svg>
+      </span>
+    </a>
   } @else {
     <header class="blog-landing__header">
       <p class="blog-landing__eyebrow">{{ headerCopy().eyebrow }}</p>

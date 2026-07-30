@@ -1,12 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 
 import type { ButtonV2Size, ButtonV2Variant } from './button-v2.variants';
+
+import { AFI_UI_COPY } from '../copy';
 
 /**
  * Action button — identity v2 (foundations-modern).
@@ -35,11 +31,20 @@ import type { ButtonV2Size, ButtonV2Variant } from './button-v2.variants';
   styleUrls: ['./button-v2.component.scss'],
 })
 export class ButtonV2Component {
+
+  /** Optional page-level chrome copy; per-instance inputs still win. */
+  private readonly uiCopy = inject(AFI_UI_COPY, { optional: true });
+
   readonly variant = input<ButtonV2Variant>('primary');
   readonly size = input<ButtonV2Size>('md');
   readonly type = input<'button' | 'submit' | 'reset'>('button');
   readonly disabled = input<boolean>(false);
   readonly loading = input<boolean>(false);
+
+  readonly loadingLabel = input<string | null>(null);
+  readonly loadingLabelText = computed(
+    () => this.loadingLabel() ?? this.uiCopy?.()?.loading ?? 'Cargando\u2026',
+  );
   readonly fullWidth = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
 

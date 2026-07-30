@@ -1,20 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  HostListener,
-  inject,
-  input,
-  isDevMode,
-  model,
-  OnInit,
-  output,
-  signal,
-  viewChild,
-  viewChildren,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, HostListener, inject, input, isDevMode, model, OnInit, output, signal, viewChild, viewChildren } from '@angular/core';
+
+import { AFI_UI_COPY } from '../copy';
 
 import { MenuV2Component } from '../menu-v2/menu-v2.component';
 import { MenuItemV2Component } from '../menu-v2/menu-item-v2.component';
@@ -67,6 +53,9 @@ interface PanelCoords {
   styleUrls: ['./search-v2.component.scss'],
 })
 export class SearchV2Component implements OnInit {
+
+  /** Optional page-level chrome copy; per-instance inputs still win. */
+  private readonly uiCopy = inject(AFI_UI_COPY, { optional: true });
   readonly size = input<SearchV2Size>('md');
   readonly value = model<string>('');
   readonly placeholder = input<string>('Buscar');
@@ -75,6 +64,11 @@ export class SearchV2Component implements OnInit {
   readonly disabled = input<boolean>(false);
   readonly suggestions = input<readonly SearchV2Suggestion[]>([]);
   readonly emptyMessage = input<string>('Sin coincidencias.');
+  /** Accessible name for the clear (×) button. */
+  readonly clearLabel = input<string | null>(null);
+  readonly clearLabelText = computed(
+    () => this.clearLabel() ?? this.uiCopy?.()?.clearSearch ?? 'Borrar búsqueda',
+  );
 
   readonly searched = output<string>();
   readonly cleared = output<void>();

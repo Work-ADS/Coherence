@@ -250,7 +250,8 @@ async function typeText(text, perChar = 115) {
 }
 
 const SEARCH_INPUT = '#clip-target afi-search-v2 input';
-const CHIP = '#clip-target afi-chip-v2';
+const TOKEN_REMOVE_SEL =
+  '#clip-target .afi-table-apron__tokens .afi-table-apron__token-remove';
 
 console.log('→ recording');
 await client.send('Page.startScreencast', {
@@ -263,60 +264,66 @@ await client.send('Page.startScreencast', {
 
 // --- CHOREOGRAPHY (component-specific — rewrite this block for another clip) --
 //
-// Cut as a seamless loop: the clip opens and closes on the identical state —
-// All selected, search empty, 12/12 rows, cursor parked on the All chip. So it
-// is placed there before capture starts rather than flying in from off-screen,
-// and the clip ends the moment that state is restored. No dead air at either
-// end, because in a loop the tail and the head play back to back.
-const allChip = await boxOf(CHIP, 0);
-await page.evaluate(([x, y]) => window.__moveCursor(x, y, 0), [allChip.x, allChip.y]);
-// Park the *real* pointer there too. The clip ends with it hovering this chip,
-// so without this the opening frame lacks the hover fill and the loop pops.
-await page.mouse.move(allChip.x, allChip.y);
+// One idea, one loop: type a client name, then clear it from the apron token
+// rather than the search field's own x. The status chips are deliberately left
+// alone — the point is that the apron is interactive, and a second filter only
+// splits attention.
+//
+// Cut to loop: it opens and closes on an identical state — search empty,
+// unfocused, 12/12 rows, cursor resting where the token's x will appear. In a
+// loop the tail and head play back to back, so neither end can carry dead air.
+
+// The token only exists while a filter is active, so drive the filter once
+// before capture to learn where its dismiss control will land, then reset.
+await page.click(SEARCH_INPUT);
+await page.type(SEARCH_INPUT, 'Tessa', { delay: 10 });
+await page.keyboard.press('Escape');
+await sleep(800);
+const tokenClose = await page.evaluate((SEL) => {
+  const el = document.querySelector(SEL);
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+}, TOKEN_REMOVE_SEL);
+if (!tokenClose) throw new Error('apron token dismiss control not found');
+
+for (let i = 0; i < 6; i++) await page.keyboard.press('Backspace');
+await page.evaluate(() => document.activeElement?.blur()); // no focus ring at the seam
+await sleep(1000);
+
+// Rest position: empty space in the controls row, left of the search field.
+// The cursor cannot be left where it clicks — dismissing the token expands the
+// table, the apron slides down, and the pointer would be stranded over a row,
+// hovering it. Resting on dead space keeps both ends of the loop identical.
+const searchBox = await boxOf(SEARCH_INPUT);
+const rest = { x: searchBox.x - 300, y: searchBox.y };
+
+await page.evaluate(([x, y]) => window.__moveCursor(x, y, 0), [rest.x, rest.y]);
+await page.mouse.move(rest.x, rest.y);
 await sleep(600);
 
 armed = true;
-await sleep(350);
+await sleep(450);
 
 // 1 — type a client name
-const sp = await moveTo(SEARCH_INPUT, 0, 500);
+const sp = await moveTo(SEARCH_INPUT, 0, 520);
 await clickAt(sp);
 await sleep(200);
 await typeText('Tessa', 100);
 await sleep(450); // typeahead reads for a beat...
 await page.keyboard.press('Escape'); // ...then gets out of the table's way
-await sleep(1150); // filter + apron token land
+await sleep(1350); // filter lands, apron token appears
 
-// 2 — compound with a status chip
-const chip = await moveTo(CHIP, 3, 500); // Closed
-await clickAt(chip);
-await sleep(1250);
+// 2 — clear it from the apron, not the search field
+await page.evaluate(([x, y]) => window.__moveCursor(x, y, 540), [tokenClose.x, tokenClose.y]);
+await sleep(630);
+await clickAt(tokenClose);
+await sleep(1400); // rows cascade back in — the beat worth the most room
 
-// 3 — clear the search, rows cascade back in (the beat worth the most room)
-const clearBtn = await page.evaluate(() => {
-  const el = document.querySelector('#clip-target afi-search-v2 button');
-  if (!el) return null;
-  const r = el.getBoundingClientRect();
-  return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
-});
-if (clearBtn) {
-  await page.evaluate(([x, y]) => window.__moveCursor(x, y, 480), [clearBtn.x, clearBtn.y]);
-  await sleep(570);
-  await clickAt(clearBtn);
-} else {
-  const p = await moveTo(SEARCH_INPUT, 0, 480);
-  await clickAt(p);
-  for (let i = 0; i < 6; i++) {
-    await page.keyboard.press('Backspace');
-    await sleep(95);
-  }
-}
-await sleep(1450);
-
-// 4 — back to All, landing exactly on the opening frame
-await moveTo(CHIP, 0, 500);
-await clickAt(allChip);
-await sleep(1250);
+// 3 — hand back to rest, landing on the opening frame
+await page.evaluate(([x, y]) => window.__moveCursor(x, y, 480), [rest.x, rest.y]);
+await page.mouse.move(rest.x, rest.y);
+await sleep(1000);
 
 await client.send('Page.stopScreencast');
 console.log(`→ captured ${frames.length} frames over ${(frames.at(-1).t / 1000).toFixed(1)}s`);

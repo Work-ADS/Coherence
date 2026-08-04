@@ -164,7 +164,27 @@ await page.evaluate(() => {
     transform: 'translate(-100px,-100px) scale(.3)',
     willChange: 'transform,opacity',
   });
-  document.body.append(c, ring);
+  // CDP screencast emits a frame only when Chrome paints, so a page sitting
+  // still produces nothing and a "hold" silently collapses to zero frames.
+  // This ticker keeps the compositor busy. It sits in the bottom-right corner,
+  // outside the crop region, so it never reaches the video.
+  const ticker = document.createElement('div');
+  Object.assign(ticker.style, {
+    position: 'fixed',
+    right: '0',
+    bottom: '0',
+    width: '4px',
+    height: '4px',
+    background: 'rgba(0,0,0,.01)',
+    zIndex: '2147483645',
+    pointerEvents: 'none',
+    animation: '__tick 400ms linear infinite',
+  });
+  const kf = document.createElement('style');
+  kf.textContent = '@keyframes __tick{0%{opacity:.01}50%{opacity:.02}100%{opacity:.01}}';
+  document.head.append(kf);
+
+  document.body.append(c, ring, ticker);
   window.__cur = { x: -100, y: -100 };
   window.__moveCursor = (x, y, ms = 480) => {
     c.style.transitionDuration = ms + 'ms';
@@ -242,25 +262,37 @@ await client.send('Page.startScreencast', {
 });
 
 // --- CHOREOGRAPHY (component-specific — rewrite this block for another clip) --
-await sleep(700);
+//
+// Cut as a seamless loop: the clip opens and closes on the identical state —
+// All selected, search empty, 12/12 rows, cursor parked on the All chip. So it
+// is placed there before capture starts rather than flying in from off-screen,
+// and the clip ends the moment that state is restored. No dead air at either
+// end, because in a loop the tail and the head play back to back.
+const allChip = await boxOf(CHIP, 0);
+await page.evaluate(([x, y]) => window.__moveCursor(x, y, 0), [allChip.x, allChip.y]);
+// Park the *real* pointer there too. The clip ends with it hovering this chip,
+// so without this the opening frame lacks the hover fill and the loop pops.
+await page.mouse.move(allChip.x, allChip.y);
+await sleep(600);
+
 armed = true;
-await sleep(1200); // hold on the resting state
+await sleep(350);
 
 // 1 — type a client name
-const sp = await moveTo(SEARCH_INPUT, 0, 620);
+const sp = await moveTo(SEARCH_INPUT, 0, 500);
 await clickAt(sp);
-await sleep(320);
-await typeText('Tessa', 130);
-await sleep(800); // let the typeahead show...
-await page.keyboard.press('Escape'); // ...then get out of the table's way
-await sleep(1500); // filter + apron token land
+await sleep(200);
+await typeText('Tessa', 100);
+await sleep(450); // typeahead reads for a beat...
+await page.keyboard.press('Escape'); // ...then gets out of the table's way
+await sleep(1150); // filter + apron token land
 
 // 2 — compound with a status chip
-const chip = await moveTo(CHIP, 3, 560); // Closed
+const chip = await moveTo(CHIP, 3, 500); // Closed
 await clickAt(chip);
-await sleep(1700);
+await sleep(1250);
 
-// 3 — clear the search, rows animate back
+// 3 — clear the search, rows cascade back in (the beat worth the most room)
 const clearBtn = await page.evaluate(() => {
   const el = document.querySelector('#clip-target afi-search-v2 button');
   if (!el) return null;
@@ -268,8 +300,8 @@ const clearBtn = await page.evaluate(() => {
   return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
 });
 if (clearBtn) {
-  await page.evaluate(([x, y]) => window.__moveCursor(x, y, 520), [clearBtn.x, clearBtn.y]);
-  await sleep(620);
+  await page.evaluate(([x, y]) => window.__moveCursor(x, y, 480), [clearBtn.x, clearBtn.y]);
+  await sleep(570);
   await clickAt(clearBtn);
 } else {
   const p = await moveTo(SEARCH_INPUT, 0, 480);
@@ -279,15 +311,12 @@ if (clearBtn) {
     await sleep(95);
   }
 }
-await sleep(1700);
+await sleep(1450);
 
-// 4 — back to All
-const all = await moveTo(CHIP, 0, 560);
-await clickAt(all);
-await sleep(2100);
-
-await page.evaluate(() => window.__moveCursor(window.innerWidth + 80, window.innerHeight + 80, 600));
-await sleep(900);
+// 4 — back to All, landing exactly on the opening frame
+await moveTo(CHIP, 0, 500);
+await clickAt(allChip);
+await sleep(1250);
 
 await client.send('Page.stopScreencast');
 console.log(`→ captured ${frames.length} frames over ${(frames.at(-1).t / 1000).toFixed(1)}s`);

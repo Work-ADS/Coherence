@@ -13,6 +13,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 // import { BrandPickerComponent } from './components/brand-picker/brand-picker.component'; // hidden 2026-05-26 — see app.component.html
 import { LanguageToggleComponent } from './components/language-toggle/language-toggle.component';
 import { FeedbackOverlayComponent } from './components/feedback-overlay/feedback-overlay.component';
+import { EmbedService } from './services/embed.service';
 import { LanguageService } from './services/language.service';
 import { LogoComponent, TopBarComponent, NavbarItemV2Component } from '@coherence/ui';
 
@@ -36,6 +37,13 @@ import { LogoComponent, TopBarComponent, NavbarItemV2Component } from '@coherenc
 export class App {
   private readonly router = inject(Router);
   private readonly language = inject(LanguageService);
+  /**
+   * `?embed=1` — the site is inside someone else's iframe, so the glass top bar
+   * and the feedback overlay come off. Separate from `isFullScreenRoute`, which
+   * is about a route bringing its own product chrome; a route can be neither,
+   * either, or both.
+   */
+  protected readonly embed = inject(EmbedService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 

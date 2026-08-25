@@ -1,26 +1,31 @@
-<div class="doc-page">
-  <!-- Breadcrumb -->
-  <nav class="doc-page__breadcrumb" aria-label="Breadcrumb">
-    <ng-content select="[slot=breadcrumb]" />
-  </nav>
+<!-- `--embed` (?embed=1) drops everything that isn't the playground: the prose
+     around it reads at full width but buries the controls and the token table in
+     an iframe. See EmbedService. -->
+<div class="doc-page" [class.doc-page--embed]="embed.on()">
+  @if (!embed.on()) {
+    <!-- Breadcrumb -->
+    <nav class="doc-page__breadcrumb" aria-label="Breadcrumb">
+      <ng-content select="[slot=breadcrumb]" />
+    </nav>
 
-  <!-- Overline (e.g. COMPONENTS, PATTERNS) -->
-  @if (overline()) {
-    <p class="doc-page__overline">{{ overline() }}</p>
+    <!-- Overline (e.g. COMPONENTS, PATTERNS) -->
+    @if (overline()) {
+      <p class="doc-page__overline">{{ overline() }}</p>
+    }
+
+    <!-- Title -->
+    <h1 class="doc-page__title">{{ title() }}</h1>
+
+    <!-- Description -->
+    @if (description()) {
+      <p class="doc-page__description">{{ description() }}</p>
+    }
+
+    <!-- Use cases -->
+    <div class="doc-page__section doc-page__section--use-cases">
+      <ng-content select="[slot=use-cases]" />
+    </div>
   }
-
-  <!-- Title -->
-  <h1 class="doc-page__title">{{ title() }}</h1>
-
-  <!-- Description -->
-  @if (description()) {
-    <p class="doc-page__description">{{ description() }}</p>
-  }
-
-  <!-- Use cases -->
-  <div class="doc-page__section doc-page__section--use-cases">
-    <ng-content select="[slot=use-cases]" />
-  </div>
 
   <!-- Controls (Marca + per-page filters: variant, size, level, mode, etc.) -->
   <div class="doc-page__controls">
@@ -44,16 +49,18 @@
     <ng-content select="[slot=tokens]" />
   </div>
 
-  <!-- Accessibility -->
-  <div class="doc-page__section doc-page__section--accessibility">
-    <ng-content select="[slot=accessibility]" />
-  </div>
+  @if (!embed.on()) {
+    <!-- Accessibility -->
+    <div class="doc-page__section doc-page__section--accessibility">
+      <ng-content select="[slot=accessibility]" />
+    </div>
 
-  <!-- Dos & Don'ts -->
-  <div class="doc-page__section doc-page__section--dos-donts">
-    <ng-content select="[slot=dos-donts]" />
-  </div>
+    <!-- Dos & Don'ts -->
+    <div class="doc-page__section doc-page__section--dos-donts">
+      <ng-content select="[slot=dos-donts]" />
+    </div>
 
-  <!-- Any additional content -->
-  <ng-content />
+    <!-- Any additional content -->
+    <ng-content />
+  }
 </div>

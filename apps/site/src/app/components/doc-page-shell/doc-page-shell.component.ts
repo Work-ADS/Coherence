@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 
 import { BrandContextRowComponent } from '../brand-context-row';
+import { EmbedService } from '../../services/embed.service';
 import { ScopedBrandService } from '../../services/scoped-brand.service';
 
 /**
@@ -29,6 +30,13 @@ import { ScopedBrandService } from '../../services/scoped-brand.service';
  * sweep.
  *
  * Each section is a named slot. Empty slots are hidden automatically.
+ *
+ * 2026-08-25: `?embed=1` collapses the page to controls → preview → tokens.
+ * Everything else here is prose written for someone reading the docs at full
+ * width; in a narrow iframe it pushes the playground and the token table below the
+ * fold, and a cross-origin frame can't be scrolled by the host page. The preview
+ * div stays unconditional so the `#preview` viewChild below always resolves.
+ * See `EmbedService` for why it's a query param and not a frame check.
  */
 @Component({
   selector: 'site-doc-page-shell',
@@ -49,6 +57,7 @@ export class DocPageShellComponent {
   readonly variant = input<string | null>(null);
 
   protected readonly brandSvc = inject(ScopedBrandService);
+  protected readonly embed = inject(EmbedService);
 
   /**
    * Direct element access is unavoidable here: the scoped brand exists only

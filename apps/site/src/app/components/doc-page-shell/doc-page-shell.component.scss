@@ -108,3 +108,19 @@
     display: none;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Embed mode (?embed=1)
+// ---------------------------------------------------------------------------
+// The page is inside someone else's iframe, so every pixel of chrome is a pixel
+// the playground doesn't get. Vertical padding drops to the small step and the
+// last child loses its bottom margin, which is what stops a narrow frame from
+// opening on empty space and closing on it too.
+.doc-page--embed {
+  padding-block: var(--space-md);
+
+  .doc-page__section:last-child,
+  .doc-page__preview:last-child {
+    margin-bottom: 0;
+  }
+}

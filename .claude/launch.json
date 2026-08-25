@@ -39,6 +39,32 @@
         "4204"
       ],
       "port": 4204
+    },
+    {
+      "name": "site-4206",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "start",
+        "--prefix",
+        "apps/site",
+        "--",
+        "--port",
+        "4206"
+      ],
+      "port": 4206
+    },
+    {
+      "name": "site-4205",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "start",
+        "--prefix",
+        "apps/site",
+        "--",
+        "--port",
+        "4205"
+      ],
+      "port": 4205
     }
   ]
 }

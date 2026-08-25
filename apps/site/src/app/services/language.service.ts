@@ -8,7 +8,9 @@ const DEFAULT_LANG: Lang = 'es';
 
 /**
  * App-wide language signal for the Coherence DS site chrome (nav, home,
- * landing pages). Demo pages under /demos/* stay Spanish regardless.
+ * landing pages — /demos included, since the landing is chrome). The demo
+ * surfaces themselves, under /demos/<slug>, stay Spanish regardless: they
+ * stand in for real client products, and those ship in Spanish.
  *
  * Persists to localStorage and mirrors onto `<html lang="…">` so the
  * browser / screen readers / spellcheck see the right value.

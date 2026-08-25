@@ -1,0 +1,177 @@
+.graficos {
+  max-inline-size: var(--content-lg);
+  margin-inline: auto;
+  padding: var(--space-xl);
+
+  &__kicker {
+    font: var(--type-body-sm-500);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--action-700);
+    margin-block-end: var(--space-xs);
+  }
+
+  &__title {
+    font: var(--type-subtitle);
+    color: var(--canvas-fg);
+    margin-block-end: var(--space-sm);
+  }
+
+  &__intro {
+    max-inline-size: 40rem;
+    font: var(--type-body);
+    color: var(--foreground-secondary-default);
+    margin-block-end: var(--space-xl);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+}
+
+.anatomy {
+  margin-block-start: var(--space-3xl);
+
+  &__title {
+    font: var(--type-section);
+    color: var(--canvas-fg);
+    margin-block-end: var(--space-sm);
+  }
+
+  &__subtitle {
+    font: var(--type-body-lg-600);
+    color: var(--canvas-fg);
+    margin-block: var(--space-xl) var(--space-sm);
+  }
+
+  &__intro {
+    max-inline-size: 40rem;
+    font: var(--type-body);
+    color: var(--foreground-secondary-default);
+    margin-block-end: var(--space-lg);
+  }
+
+  // The figure has a FIXED width inside a scroll container: the badge
+  // coordinates are hand-tuned against real rendered positions, and a fluid
+  // width would detach them from the parts they name (the header is rem-fixed
+  // while the SVG scales). Narrow viewports scroll the figure horizontally,
+  // same as any wide table.
+  &__figure-scroll {
+    overflow-x: auto;
+  }
+
+  &__figure {
+    position: relative;
+    inline-size: 45rem;
+    padding: var(--space-lg);
+    border: var(--border-width-hairline) solid var(--border-hairline);
+    border-radius: var(--radius-card);
+  }
+
+  &__badge {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--space-lg);
+    block-size: var(--space-lg);
+    border-radius: var(--radius-pill);
+    background: var(--canvas-fg);
+    color: var(--foreground-inverse-default);
+    font: var(--type-body-sm-600);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+
+    &--inline {
+      position: static;
+      flex: none;
+      transform: none;
+    }
+
+    // Coordinates measured against the rendered 45rem figure. Top-anchored
+    // parts (header) and bottom-anchored parts (legend, table button) use rem
+    // so they hold if the SVG's height changes; mid-plot parts use %.
+    &--titulo { inset-block-start: 2.3rem; inset-inline-start: 0.9rem; }
+    &--subtitulo { inset-block-start: 3.8rem; inset-inline-start: 0.9rem; }
+    &--instrucciones { inset-block-start: 2.95rem; inset-inline-end: 3.9rem; transform: translate(50%, -50%); }
+    &--eje-y { inset-block-start: 45%; inset-inline-start: 0.9rem; }
+    &--lienzo { inset-block-start: 35%; inset-inline-start: 35%; }
+    &--marcadores { inset-block-start: 52.5%; inset-inline-start: 57%; }
+    &--eje-x { inset-block-end: 7.5rem; inset-inline-start: 54%; transform: translate(-50%, 50%); }
+    &--leyenda { inset-block-end: 5.3rem; inset-inline-start: 49%; transform: translate(-50%, 50%); }
+    &--tabla { inset-block-end: 2.95rem; inset-inline-start: 11rem; transform: translate(-50%, 50%); }
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm) var(--space-lg);
+    margin-block-start: var(--space-lg);
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    gap: var(--space-xs);
+    font: var(--type-body-md-400);
+    color: var(--foreground-secondary-default);
+
+    strong {
+      font: var(--type-body-md-600);
+      color: var(--canvas-fg);
+    }
+  }
+
+  &__table-wrap {
+    overflow-x: auto;
+    border: var(--border-width-hairline) solid var(--border-hairline);
+    border-radius: var(--radius-card);
+  }
+
+  &__table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font: var(--type-body-sm-400);
+
+    th,
+    td {
+      padding: var(--space-sm) var(--space-md);
+      text-align: start;
+      border-block-end: var(--border-width-hairline) solid var(--border-hairline);
+    }
+
+    thead th {
+      font: var(--type-body-sm-500);
+      color: var(--foreground-secondary-default);
+      background: var(--surface-quiet);
+    }
+
+    tbody th {
+      font: var(--type-body-sm-500);
+      color: var(--canvas-fg);
+    }
+
+    tbody td {
+      color: var(--foreground-secondary-default);
+    }
+
+    tbody tr:last-child th,
+    tbody tr:last-child td {
+      border-block-end: none;
+    }
+  }
+
+  &__cell--required {
+    color: var(--canvas-fg);
+  }
+
+  &__footnote {
+    max-inline-size: 40rem;
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+    margin-block-start: var(--space-sm);
+  }
+}

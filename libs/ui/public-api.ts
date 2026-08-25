@@ -134,7 +134,6 @@ export type { AvatarSize } from './src/avatar';
 export { SegmentedControlComponent } from './src/segmented-control';
 export type {
   SegmentedControlSize,
-  SegmentedControlVariant,
   SegmentedOption,
 } from './src/segmented-control';
 export { DropdownPanelComponent } from './src/dropdown-panel';

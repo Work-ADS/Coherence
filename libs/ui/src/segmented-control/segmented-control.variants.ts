@@ -4,17 +4,6 @@
 
 export type SegmentedControlSize = 'sm' | 'md' | 'lg';
 
-/**
- * Visual treatment of the option set.
- *
- * - `pill`  — options share one track and a sliding indicator marks the
- *   selection. The default, and the right answer for view/mode switching.
- * - `cards` — each option becomes a full-width card with its own radio mark.
- *   For question-shaped choices that need room for longer labels. Brand
- *   agnostic: Unicaja's design calls for it, but any brand can opt in.
- */
-export type SegmentedControlVariant = 'pill' | 'cards';
-
 export const tokenUsage = [
   { property: 'Track background', token: 'var(--surface-subtle)' },
   { property: 'Indicator background', token: 'var(--surface-default)' },

@@ -109,83 +109,89 @@
 }
 
 // =============================================================================
-// Card appearance (variant="cards")
+// Unicaja — radio cards
 // -----------------------------------------------------------------------------
-// Structural variant: every option becomes a full-width selectable card that
-// carries its own radio mark, instead of a pill inside a shared track. Nothing
-// here is brand-specific — each value reads the semantic control/border layer,
-// so any brand whose design calls for radio-card selection opts in through the
-// `variant` input rather than through a brand selector.
+// Unicaja's Sarevi design answers every "pick one" question with radio cards
+// instead of a pill inside a shared track, so the treatment is keyed on the
+// brand: every option becomes a selectable card carrying its own radio mark.
+//
+// A structure change, not a token swap — but the values are still semantic.
+// This block reads the control/border/surface layer only; it never reaches into
+// --color-unicaja-* the way it used to. Each token resolves through Unicaja's
+// own brand block, so the rendering is unchanged and no other brand is touched.
 // =============================================================================
 
-:host:has(.seg-control--cards) {
+:host-context([data-brand="unicaja"]) {
   display: block;
 }
 
-.seg-control--cards {
+:host-context([data-brand="unicaja"]) .seg-control {
   display: flex;
   gap: var(--dimension-3);
   width: 100%;
   padding: 0;
   border-radius: 0;
   background: transparent;
-}
 
-.seg-control--cards .seg-control__indicator {
-  display: none;
-}
+  // Cards mark selection with their own radio dot — the shared pill has no job
+  // here. Hidden rather than gated out of the DOM: the treatment is decided by
+  // the cascade, which the component cannot see.
+  &__indicator {
+    display: none;
+  }
 
-.seg-control--cards .seg-control__option {
-  justify-content: space-between;
-  gap: var(--dimension-4);
-  min-width: min(100%, var(--dimension-56));
-  border: var(--border-width-hairline) solid var(--border-subtle);
-  border-radius: var(--dimension-2);
-  background: var(--surface-default);
-  color: var(--control-foreground-default);
-  font: var(--type-body-lg-600);
-  text-align: left;
-  box-shadow: none;
-
-  // Radio mark. The ring reads as the selected-control colour at rest too —
-  // it is the affordance that says "pick one", not a selection state.
-  &::after {
-    content: "";
-    width: var(--dimension-6);
-    height: var(--dimension-6);
-    flex: 0 0 auto;
-    border: var(--border-width-hairline) solid var(--control-foreground-selected);
-    border-radius: var(--radius-full);
+  &__option {
+    justify-content: space-between;
+    gap: var(--dimension-4);
+    min-width: min(100%, var(--dimension-56));
+    border: var(--border-width-hairline) solid var(--border-subtle);
+    border-radius: var(--dimension-2);
     background: var(--surface-default);
-    box-shadow: inset 0 0 0 var(--dimension-1) var(--surface-default);
-  }
-
-  &:hover:not(.seg-control__option--active):not(.seg-control__option--disabled) {
-    border-color: var(--control-border-hover);
-    color: var(--control-foreground-hover);
-  }
-
-  &.seg-control__option--active {
-    border-color: var(--border-subtle);
     color: var(--control-foreground-default);
     font: var(--type-body-lg-600);
+    text-align: left;
+    box-shadow: none;
 
+    // Radio mark. The ring reads as the selected-control colour at rest too —
+    // it is the affordance that says "pick one", not a selection state.
     &::after {
-      background: var(--control-foreground-selected);
+      content: "";
+      width: var(--dimension-6);
+      height: var(--dimension-6);
+      flex: 0 0 auto;
+      border: var(--border-width-hairline) solid var(--control-foreground-selected);
+      border-radius: var(--radius-full);
+      background: var(--surface-default);
+      box-shadow: inset 0 0 0 var(--dimension-1) var(--surface-default);
+    }
+
+    &:hover:not(.seg-control__option--active):not(.seg-control__option--disabled) {
+      border-color: var(--control-border-hover);
+      color: var(--control-foreground-hover);
+    }
+
+    &--active {
+      border-color: var(--border-subtle);
+      color: var(--control-foreground-default);
+      font: var(--type-body-lg-600);
+
+      &::after {
+        background: var(--control-foreground-selected);
+      }
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
     }
   }
 
-  &:focus-visible {
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  // Cards set their own rhythm — the pill height scale does not apply.
+  &--sm .seg-control__option,
+  &--md .seg-control__option,
+  &--lg .seg-control__option {
+    min-height: var(--dimension-18);
+    height: auto;
+    padding: var(--dimension-4) var(--dimension-5);
+    font: var(--type-body-lg-600);
   }
-}
-
-// Cards set their own rhythm — the pill height scale does not apply.
-.seg-control--cards.seg-control--sm .seg-control__option,
-.seg-control--cards.seg-control--md .seg-control__option,
-.seg-control--cards.seg-control--lg .seg-control__option {
-  min-height: var(--dimension-18);
-  height: auto;
-  padding: var(--dimension-4) var(--dimension-5);
-  font: var(--type-body-lg-600);
 }

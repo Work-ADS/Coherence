@@ -1,0 +1,87 @@
+<div class="graficos">
+  <p class="graficos__kicker">PATTERNS / CHARTS</p>
+  <h1 class="graficos__title">Gráficos</h1>
+  <p class="graficos__intro">
+    Cuatro primitivos de visualización de datos: bar, line, heatmap y dumbbell. SVG nativo, sin
+    dependencias externas, doble codificación color + textura.
+  </p>
+
+  <div class="graficos__grid">
+    @for (c of charts; track c.slug) {
+      <site-teaser-tile
+        [title]="c.name"
+        [href]="'/patrones/graficos/' + c.slug"
+        [description]="c.description"
+      />
+    }
+  </div>
+
+  <section class="anatomy" aria-labelledby="anatomia">
+    <h2 id="anatomia" class="anatomy__title">Anatomía</h2>
+    <p class="anatomy__intro">
+      Todos los gráficos del sistema se ensamblan con las mismas partes. El ejemplo muestra un
+      gráfico de líneas completo — el único primitivo que usa leyenda — con cada parte numerada;
+      la tabla indica qué partes exige cada tipo de gráfico.
+    </p>
+
+    <div class="anatomy__figure-scroll">
+      <div class="anatomy__figure">
+        <afi-chart-line
+          [data]="anatomySeries"
+          [showMarkers]="true"
+          title="Proyección de cartera por perfil"
+          subtitle="Aportación inicial de 100.000 € a los 35 años, por edad del titular"
+          longDescription="Gráfico de líneas con tres series que proyectan la evolución de una cartera de 100.000 € entre los 35 y los 60 años del titular según el perfil de riesgo."
+          statisticalNotes="El perfil dinámico casi triplica la aportación inicial al final del horizonte; el conservador crece un tercio."
+          contextExplanation="Datos de ejemplo estáticos para ilustrar la anatomía; sin filtros activos."
+          locale="es-ES"
+        />
+        @for (c of callouts; track c.n) {
+          <span
+            class="anatomy__badge anatomy__badge--{{ c.slug }}"
+            aria-hidden="true"
+          >{{ c.n }}</span>
+        }
+      </div>
+    </div>
+
+    <ol class="anatomy__list">
+      @for (c of callouts; track c.n) {
+        <li class="anatomy__item">
+          <span class="anatomy__badge anatomy__badge--inline" aria-hidden="true">{{ c.n }}</span>
+          <span><strong>{{ c.name }}.</strong> {{ c.detail }}</span>
+        </li>
+      }
+    </ol>
+
+    <h3 class="anatomy__subtitle">Partes por tipo de gráfico</h3>
+    <div class="anatomy__table-wrap">
+      <table class="anatomy__table">
+        <thead>
+          <tr>
+            <th scope="col">Parte</th>
+            <th scope="col">Bar</th>
+            <th scope="col">Line</th>
+            <th scope="col">Heatmap</th>
+            <th scope="col">Dumbbell</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of anatomyRows; track row.part) {
+            <tr>
+              <th scope="row">{{ row.part }}</th>
+              @for (cell of row.cells; track $index) {
+                <td [class.anatomy__cell--required]="cell.startsWith('Requerido')">{{ cell }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="anatomy__footnote">
+      Desviación intencional respecto a Visa PDS: allí el botón de tabla de datos es opcional en
+      los cuatro gráficos. Coherence lo exige en bar, line y dumbbell porque la tabla es nuestra
+      alternativa accesible a la información que de otro modo viviría solo en el tooltip.
+    </p>
+  </section>
+</div>

@@ -28,3 +28,7 @@ dist/
 
 # Local scratch for screenshots / working files
 scratch/
+
+# Vercel CLI local link/build artifacts
+.vercel
+.env*

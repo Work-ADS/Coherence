@@ -13,10 +13,6 @@
   transition: background-color var(--duration-base) var(--easing-enter),
               color var(--duration-base) var(--easing-enter);
 
-  &--dark {
-    background: var(--color-neutral-950);
-    color: var(--color-neutral-50);
-  }
 
   &__panel {
     padding: var(--space-lg);

@@ -45,13 +45,12 @@
   }
 
   // Compact segmented controls across the Unicaja Sarevi surface. The
-  // component's default Unicaja sizing is tuned for primary-CTA-scale
-  // controls but feels oversized inside this simulator — every radio
-  // question (Tipo de vivienda, Certificado) now uses the same compact
-  // height. `!important` is unavoidable: the segmented control's
-  // :host[data-brand="unicaja"] block inside the component beats any
-  // external selector on specificity thanks to Angular encapsulation
-  // attributes.
+  // segmented control's `variant="cards"` sizing is tuned for
+  // primary-CTA-scale controls but feels oversized inside this simulator —
+  // every radio question (Tipo de vivienda, Certificado) now uses the same
+  // compact height. `!important` is unavoidable: the component's own
+  // .seg-control--cards block beats any external selector on specificity
+  // thanks to Angular encapsulation attributes.
   &[data-brand="unicaja"] .seg-control__option {
     min-height: var(--dimension-10) !important;
     padding: var(--space-sm) var(--space-md) !important;

@@ -14,8 +14,4 @@
   color: var(--foreground-primary-default);
   transition: background-color var(--duration-base) var(--easing-enter);
 
-  &--dark {
-    background: var(--color-neutral-900);
-    color: var(--color-neutral-50);
-  }
 }

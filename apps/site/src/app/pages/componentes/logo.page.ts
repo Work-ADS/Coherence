@@ -5,7 +5,6 @@ import {
   LogoComponent,
   SelectComponent,
   SegmentedControlComponent,
-  IconButtonComponent,
 } from '@coherence/ui';
 import type { LogoVariant, SelectOption } from '@coherence/ui';
 
@@ -13,7 +12,6 @@ import type { TokenRow } from '../../components/tokens-table';
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
 
-type ThemeMode = 'light' | 'dark';
 type LogoShape = 'wordmark' | 'icon';
 
 @Component({
@@ -24,7 +22,6 @@ type LogoShape = 'wordmark' | 'icon';
     LogoComponent,
     SelectComponent,
     SegmentedControlComponent,
-    IconButtonComponent,
     DocPageShellComponent,
     DocTokensComponent,
   ],
@@ -35,7 +32,6 @@ type LogoShape = 'wordmark' | 'icon';
 export class LogoPage {
   readonly shape = signal<LogoShape>('wordmark');
   readonly variant = signal<LogoVariant>('color');
-  readonly mode = signal<ThemeMode>('light');
   readonly size = signal<string>('md');
 
   readonly shapeOptions = [
@@ -55,9 +51,6 @@ export class LogoPage {
     { value: 'xl', label: 'xl (64px)' },
   ];
 
-  toggleMode(): void {
-    this.mode.set(this.mode() === 'light' ? 'dark' : 'light');
-  }
 
   readonly tokenCategories = computed<DocTokenCategory[]>(() => {
     const v = this.variant();

@@ -9,7 +9,7 @@
     <!-- Top bar — hidden on demo / insights routes (they bring their own chrome).
          On the homepage we render the bar with only the right-side controls
          (no nav links) so language/brand/theme stay reachable from the hero. -->
-    @if (!isFullScreenRoute()) {
+    @if (!isFullScreenRoute() && !embed.on()) {
       <!-- .on-dark: adaptive contrast — flips the bar to the inverse palette
            while content tagged data-nav-tone="dark" scrolls behind the frost. -->
       <afi-top-bar variant="glass" [class.on-dark]="navOnDark()">
@@ -56,12 +56,12 @@
     }
 
     <!-- Main content -->
-    <main class="content" [class.content--offset]="!isFullScreenRoute()" id="main-content">
+    <main class="content" [class.content--offset]="!isFullScreenRoute() && !embed.on()" id="main-content">
       <router-outlet />
     </main>
   </div>
 </div>
 
-@if (!isFullScreenRoute()) {
+@if (!isFullScreenRoute() && !embed.on()) {
   <site-feedback-overlay />
 }

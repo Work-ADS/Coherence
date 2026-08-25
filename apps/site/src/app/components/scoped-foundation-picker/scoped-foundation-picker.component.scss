@@ -1,0 +1,22 @@
+// =============================================================================
+// scoped-foundation-picker.component.scss
+//
+// Renders inline inside the doc-page-shell controls row, next to Marca and the
+// per-page filters. Mirrors brand-context-row so the two pickers read as one
+// row of controls rather than two different kinds of thing.
+// =============================================================================
+
+:host {
+  display: contents; // host is invisible — children participate in parent flex
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+
+  &__label {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default);
+  }
+}

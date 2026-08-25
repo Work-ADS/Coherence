@@ -5,14 +5,12 @@ import {
   TabsComponent,
   TabItemComponent,
   SelectComponent,
-  IconButtonComponent,
 } from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
 
-type ThemeMode = 'light' | 'dark';
 
 const TOKEN_CATEGORIES: DocTokenCategory[] = [
   {
@@ -92,7 +90,6 @@ const TOKEN_CATEGORIES: DocTokenCategory[] = [
     TabsComponent,
     TabItemComponent,
     SelectComponent,
-    IconButtonComponent,
     DocPageShellComponent,
     DocTokensComponent,
   ],
@@ -104,7 +101,6 @@ export class TabsPage {
   readonly activeTab = signal(0);
   readonly size = signal<string>('md');
   readonly count = signal<string>('3');
-  readonly mode = signal<ThemeMode>('light');
 
   readonly sizeOptions: SelectOption[] = [
     { value: 'sm', label: 'sm' },
@@ -133,9 +129,6 @@ export class TabsPage {
 
   readonly tokenCategories = TOKEN_CATEGORIES;
 
-  toggleMode(): void {
-    this.mode.set(this.mode() === 'light' ? 'dark' : 'light');
-  }
 
   onCountChange(val: string): void {
     this.count.set(val);

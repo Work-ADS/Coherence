@@ -1,0 +1,10 @@
+<div class="control-group">
+  <span class="control-group__label">Identidad</span>
+  <afi-segmented-control
+    size="sm"
+    ariaLabel="Cambiar identidad de la vista previa"
+    [options]="options"
+    [value]="svc.foundation()"
+    (valueChange)="onChange($event)"
+  />
+</div>

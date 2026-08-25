@@ -13,7 +13,10 @@ import {
   viewChildren,
 } from '@angular/core';
 
-import { SegmentedControlSize } from './segmented-control.variants';
+import {
+  SegmentedControlSize,
+  SegmentedControlVariant,
+} from './segmented-control.variants';
 
 export interface SegmentedOption {
   value: string;
@@ -22,9 +25,9 @@ export interface SegmentedOption {
 }
 
 /**
- * Segmented Control — a set of mutually exclusive options rendered as a
- * pill-style toggle bar with a sliding indicator that animates to the
- * active option.
+ * Segmented Control — a set of mutually exclusive options rendered either as
+ * a pill-style toggle bar with a sliding indicator (`variant="pill"`, the
+ * default) or as a stack of radio cards (`variant="cards"`).
  *
  * Uses semantic tokens for all visual values. Respects prefers-reduced-motion.
  *
@@ -62,6 +65,12 @@ export class SegmentedControlComponent implements AfterViewInit {
 
   /** Size variant (sm | md | lg). */
   readonly size = input<SegmentedControlSize>('md');
+
+  /**
+   * Visual treatment (pill | cards). `cards` swaps the shared track for one
+   * radio card per option — opt in per surface; it is not brand-driven.
+   */
+  readonly variant = input<SegmentedControlVariant>('pill');
 
   /** Accessible label for the radiogroup. */
   readonly ariaLabel = input<string>('');

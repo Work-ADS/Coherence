@@ -3,20 +3,18 @@
   [class.seg-control--sm]="size() === 'sm'"
   [class.seg-control--md]="size() === 'md'"
   [class.seg-control--lg]="size() === 'lg'"
-  [class.seg-control--cards]="variant() === 'cards'"
   role="radiogroup"
   [attr.aria-label]="ariaLabel()"
 >
-  <!-- Sliding pill indicator — cards mark selection with their own radio dot -->
-  @if (variant() === 'pill') {
-    <div
-      class="seg-control__indicator"
-      [style.transform]="indicatorTransform()"
-      [style.width.px]="indicatorWidth()"
-      [style.height.px]="indicatorHeight()"
-      aria-hidden="true"
-    ></div>
-  }
+  <!-- Sliding pill indicator. Hidden by the stylesheet where the brand renders
+       radio cards instead — those mark selection with their own radio dot. -->
+  <div
+    class="seg-control__indicator"
+    [style.transform]="indicatorTransform()"
+    [style.width.px]="indicatorWidth()"
+    [style.height.px]="indicatorHeight()"
+    aria-hidden="true"
+  ></div>
 
   <!-- Options -->
   @for (option of options(); track option.value) {

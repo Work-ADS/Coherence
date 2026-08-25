@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
   SegmentedControlComponent,
   SelectComponent,
 } from '@coherence/ui';
-import type { SegmentedControlVariant, SelectOption } from '@coherence/ui';
+import type { SelectOption } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
+import { ScopedBrandService } from '../../services/scoped-brand.service';
 
 const ALL_LABELS = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
@@ -73,10 +74,10 @@ const PILL_TOKEN_CATEGORIES: DocTokenCategory[] = [
 ];
 
 /**
- * `variant="cards"` restructures the control into radio cards, so it consumes a
- * different slice of the token set — border and control-foreground roles the
- * pill track never touches. Kept as its own list so the table always describes
- * what is actually on screen.
+ * Under Unicaja the stylesheet restructures the control into radio cards, so it
+ * consumes a different slice of the token set — border and control-foreground
+ * roles the pill track never touches. Kept as its own list so the table always
+ * describes what the brand picker is actually rendering.
  */
 const CARDS_TOKEN_CATEGORIES: DocTokenCategory[] = [
   {
@@ -84,27 +85,27 @@ const CARDS_TOKEN_CATEGORIES: DocTokenCategory[] = [
     label: 'Background',
     rows: [
       { property: 'Track', token: 'transparent', value: 'transparent', note: 'no track in cards' },
-      { property: 'Card', token: '--surface-default', semantic: '--surface-default', primitive: '--color-afi-white-25' },
-      { property: 'Radio mark (inner ring)', token: '--surface-default', semantic: '--surface-default', primitive: '--color-afi-white-25' },
-      { property: 'Radio mark (selected)', token: '--control-foreground-selected', semantic: '--control-foreground-selected', primitive: '--color-afi-azul-profundo-700' },
+      { property: 'Card', token: '--surface-default', semantic: '--surface-default', primitive: '--color-base-white' },
+      { property: 'Radio mark (inner ring)', token: '--surface-default', semantic: '--surface-default', primitive: '--color-base-white' },
+      { property: 'Radio mark (selected)', token: '--control-foreground-selected', semantic: '--control-foreground-selected', primitive: '--color-unicaja-primary-500' },
     ],
   },
   {
     value: 'foreground',
     label: 'Foreground',
     rows: [
-      { property: 'Card label', token: '--control-foreground-default', semantic: '--control-foreground-default', primitive: '--color-afi-white-900' },
-      { property: 'Card label (hover)', token: '--control-foreground-hover', semantic: '--control-foreground-hover', primitive: '--color-afi-white-800' },
-      { property: 'Focus ring', token: '--border-focus', semantic: '--border-focus', primitive: '--color-afi-control-500' },
+      { property: 'Card label', token: '--control-foreground-default', semantic: '--control-foreground-default', primitive: '--color-unicaja-primary-500' },
+      { property: 'Card label (hover)', token: '--control-foreground-hover', semantic: '--control-foreground-hover', primitive: '--color-unicaja-primary-600' },
+      { property: 'Focus ring', token: '--border-focus', semantic: '--border-focus', primitive: '--color-unicaja-primary-500' },
     ],
   },
   {
     value: 'border',
     label: 'Border',
     rows: [
-      { property: 'Card border', token: '--border-subtle', semantic: '--border-subtle', primitive: '--color-afi-control-200' },
-      { property: 'Card border (hover)', token: '--control-border-hover', semantic: '--control-border-hover', primitive: '--color-afi-control-300' },
-      { property: 'Radio mark ring', token: '--control-foreground-selected', semantic: '--control-foreground-selected', primitive: '--color-afi-azul-profundo-700' },
+      { property: 'Card border', token: '--border-subtle', semantic: '--border-subtle', primitive: '--color-unicaja-neutral-variant-100' },
+      { property: 'Card border (hover)', token: '--control-border-hover', semantic: '--control-border-hover', primitive: '--color-unicaja-primary-300' },
+      { property: 'Radio mark ring', token: '--control-foreground-selected', semantic: '--control-foreground-selected', primitive: '--color-unicaja-primary-500' },
       { property: 'Border width', token: '--border-width-hairline', semantic: '--border-width-hairline', primitive: '--dimension-0-25 (1px)' },
       { property: 'Focus ring width', token: '--border-width-thick', semantic: '--border-width-thick', primitive: '--dimension-0-5 (2px)' },
     ],
@@ -155,10 +156,11 @@ const CARDS_TOKEN_CATEGORIES: DocTokenCategory[] = [
   styleUrl: './segmented-control.page.scss',
 })
 export class SegmentedControlPage {
+  private readonly brandSvc = inject(ScopedBrandService);
+
   readonly selected = signal('daily');
   readonly size = signal<string>('md');
   readonly count = signal<string>('3');
-  readonly variant = signal<SegmentedControlVariant>('pill');
 
   readonly demoOptions = computed(() => {
     const n = parseInt(this.count(), 10);
@@ -174,11 +176,6 @@ export class SegmentedControlPage {
     { value: 'lg', label: 'lg' },
   ];
 
-  readonly variantOptions: SelectOption[] = [
-    { value: 'pill', label: 'pill' },
-    { value: 'cards', label: 'cards' },
-  ];
-
   readonly countOptions: SelectOption[] = [
     { value: '2', label: '2 options' },
     { value: '3', label: '3 options' },
@@ -186,13 +183,15 @@ export class SegmentedControlPage {
     { value: '5', label: '5 options' },
   ];
 
+  /**
+   * Follows the brand picker, not a control of its own: the card treatment is a
+   * brand decision, so the table has to read the brand to describe the preview.
+   */
   readonly tokenCategories = computed(() =>
-    this.variant() === 'cards' ? CARDS_TOKEN_CATEGORIES : PILL_TOKEN_CATEGORIES,
+    this.brandSvc.brand() === 'unicaja'
+      ? CARDS_TOKEN_CATEGORIES
+      : PILL_TOKEN_CATEGORIES,
   );
-
-  onVariantChange(val: string): void {
-    this.variant.set(val === 'cards' ? 'cards' : 'pill');
-  }
 
   onSizeChange(val: string): void {
     this.size.set(val);

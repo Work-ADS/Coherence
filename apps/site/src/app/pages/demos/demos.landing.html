@@ -1,13 +1,11 @@
 <section class="demos-landing" data-foundation="modern">
   <header class="demos-landing__header">
-    <h1 class="demos-landing__title">Productos</h1>
-    <p class="demos-landing__subtitle">
-      Flujos completos. Cada demo muestra diseños interactivos.
-    </p>
+    <h1 class="demos-landing__title">{{ headerCopy().title }}</h1>
+    <p class="demos-landing__subtitle">{{ headerCopy().subtitle }}</p>
   </header>
 
   <ul class="demos-landing__grid">
-    @for (demo of v2Demos; track demo.slug) {
+    @for (demo of v2Demos(); track demo.slug) {
       <li>
         <a class="demos-landing__card-link" [routerLink]="demo.overviewRoute">
           <afi-card-v2 [showHeader]="false">
@@ -24,13 +22,17 @@
     }
   </ul>
 
-  @if (traditionalDemos.length > 0) {
-    <div class="demos-landing__divider" role="separator" aria-label="AFI tradicional">
-      <span class="demos-landing__divider-label">AFI tradicional</span>
+  @if (traditionalDemos().length > 0) {
+    <div
+      class="demos-landing__divider"
+      role="separator"
+      [attr.aria-label]="headerCopy().traditional"
+    >
+      <span class="demos-landing__divider-label">{{ headerCopy().traditional }}</span>
     </div>
 
     <ul class="demos-landing__grid">
-      @for (demo of traditionalDemos; track demo.slug) {
+      @for (demo of traditionalDemos(); track demo.slug) {
         <li>
           <a class="demos-landing__card-link" [routerLink]="demo.overviewRoute">
             <afi-card-v2 [showHeader]="false">

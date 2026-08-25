@@ -126,3 +126,20 @@ When the user says **plan project**, follow that file:
 - guide step by step
 - ask one question at a time
 - help define problem, main journey, first simple version, key UI pieces, and what can be shown quickly
+
+## Git remotes (push policy)
+
+Three remotes, three different jobs. They are not interchangeable, and none of
+them is `origin` — that remote was removed and must not be re-added.
+
+| Remote | Role | How work gets there |
+|---|---|---|
+| `origin-afi` (Azure DevOps) | Canonical. | **Push the branch, never `main`** — `main` is PR-only and rejects direct pushes. Richard merges the PR in the Azure web UI. |
+| `github` (Work-ADS) | What Vercel builds. | Mirrors `origin-afi/main` **exactly** — reviewed work only. Pushing here deploys publicly, so never push local WIP. |
+| `richgriner1` (personal) | Off-laptop copy. | Mirrors local `main`, including commits not yet merged on Azure. Direct push allowed. |
+
+`npm run sync:remotes` does all three correctly; prefer it over pushing by hand.
+Every push is fast-forward-only — a rejection is a human decision, never a force.
+
+Any shipping workflow (e.g. the portable `/ship` command) must follow this table
+rather than defaulting to a single remote.

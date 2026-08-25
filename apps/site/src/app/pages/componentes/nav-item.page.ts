@@ -4,14 +4,12 @@ import { RouterLink } from '@angular/router';
 import {
   NavItemComponent,
   SelectComponent,
-  IconButtonComponent,
 } from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
 
-type ThemeMode = 'light' | 'dark';
 
 const NEUTRAL_CATEGORIES: DocTokenCategory[] = [
   {
@@ -141,7 +139,6 @@ function sharedCategories(): DocTokenCategory[] {
     RouterLink,
     NavItemComponent,
     SelectComponent,
-    IconButtonComponent,
     DocPageShellComponent,
     DocTokensComponent,
   ],
@@ -152,7 +149,6 @@ function sharedCategories(): DocTokenCategory[] {
 export class NavItemPage {
   readonly state = signal('default');
   readonly badgeChoice = signal('none');
-  readonly mode = signal<ThemeMode>('dark');
   readonly variant = signal<string>('neutral');
 
   readonly variantOptions: SelectOption[] = [
@@ -184,7 +180,10 @@ export class NavItemPage {
     const v = this.variant();
     if (v === 'brand') return 'var(--brand-secondary-background-default)';
     if (v === 'brand-neutral') return 'var(--brand-secondary-neutral-background-default)';
-    return this.mode() === 'dark' ? 'var(--color-afi-control-900)' : 'var(--color-afi-white-25)';
+    // Nav items live in a dark sidebar, which is what the removed Mode toggle
+    // defaulted to. Keeping that backdrop rather than the light one it could
+    // never reach without a control.
+    return 'var(--color-afi-control-900)';
   });
 
   readonly previewTokenOverrides = computed(() => {
@@ -231,7 +230,4 @@ export class NavItemPage {
     return NEUTRAL_CATEGORIES;
   });
 
-  toggleMode(): void {
-    this.mode.set(this.mode() === 'light' ? 'dark' : 'light');
-  }
 }

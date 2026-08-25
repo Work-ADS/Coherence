@@ -4,14 +4,12 @@ import { RouterLink } from '@angular/router';
 import {
   SegmentedControlComponent,
   SelectComponent,
-  IconButtonComponent,
 } from '@coherence/ui';
 import type { SelectOption } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
 
-type ThemeMode = 'light' | 'dark';
 const ALL_LABELS = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
 const TOKEN_CATEGORIES: DocTokenCategory[] = [
@@ -81,7 +79,6 @@ const TOKEN_CATEGORIES: DocTokenCategory[] = [
     RouterLink,
     SegmentedControlComponent,
     SelectComponent,
-    IconButtonComponent,
     DocPageShellComponent,
     DocTokensComponent,
   ],
@@ -93,7 +90,6 @@ export class SegmentedControlPage {
   readonly selected = signal('daily');
   readonly size = signal<string>('md');
   readonly count = signal<string>('3');
-  readonly mode = signal<ThemeMode>('light');
 
   readonly demoOptions = computed(() => {
     const n = parseInt(this.count(), 10);
@@ -118,9 +114,6 @@ export class SegmentedControlPage {
 
   readonly tokenCategories = TOKEN_CATEGORIES;
 
-  toggleMode(): void {
-    this.mode.set(this.mode() === 'light' ? 'dark' : 'light');
-  }
 
   onSizeChange(val: string): void {
     this.size.set(val);

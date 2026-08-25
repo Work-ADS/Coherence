@@ -13,7 +13,4 @@
   background: var(--surface-primary);
   transition: background-color var(--duration-base) var(--easing-enter);
 
-  &--dark {
-    background: var(--color-neutral-950);
-  }
 }

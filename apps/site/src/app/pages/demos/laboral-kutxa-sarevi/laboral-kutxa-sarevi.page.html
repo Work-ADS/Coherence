@@ -197,6 +197,7 @@
               />
             } @else {
               <afi-segmented-control
+                [variant]="segVariant()"
                 [options]="tipoOptions"
                 [value]="data().tipoVivienda"
                 (valueChange)="setTipoVivienda($event)"
@@ -267,6 +268,7 @@
               <div>
                 <label class="field-label">¿Buscar dirección automáticamente?</label>
                 <afi-segmented-control
+                  [variant]="segVariant()"
                   class="sarevi-radio-inline"
                   [options]="siNoOptions"
                   [value]="data().buscarDir"
@@ -296,6 +298,7 @@
               />
             } @else {
               <afi-segmented-control
+                [variant]="segVariant()"
                 class="seg-control--sm-bool"
                 [options]="siNoOptions"
                 [value]="data().certificado"
@@ -315,6 +318,7 @@
                   />
                 } @else {
                   <afi-segmented-control
+                    [variant]="segVariant()"
                     [options]="etiquetaOptions"
                     [value]="data().etiqueta"
                     (valueChange)="setEtiqueta($event)"
@@ -460,6 +464,7 @@
             </h2>
 
             <afi-segmented-control
+              [variant]="segVariant()"
               [options]="variantOptions()"
               [value]="variant()"
               (valueChange)="setVariant($event)"

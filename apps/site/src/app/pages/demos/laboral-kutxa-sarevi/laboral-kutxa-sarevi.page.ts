@@ -20,6 +20,7 @@ import {
   TabItemComponent,
   TabsComponent,
   type ChartColumn,
+  type SegmentedControlVariant,
   type SegmentedOption,
   type SelectOption,
   type StepperItem,
@@ -207,6 +208,15 @@ export class LaboralKutxaSareviPage {
     })(),
   );
   readonly brandConfig = computed(() => BRAND_CONFIG[this.brand()]);
+
+  /**
+   * Unicaja's Sarevi design answers every "pick one" question with radio
+   * cards; the other two brands keep the pill track. The choice is a surface
+   * decision, so it lives here rather than inside the primitive.
+   */
+  readonly segVariant = computed<SegmentedControlVariant>(() =>
+    this.brand() === 'unicaja' ? 'cards' : 'pill',
+  );
 
   readonly route = signal<Route>('welcome');
   readonly refCode = computed(() => this.brandConfig().refCode);

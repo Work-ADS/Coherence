@@ -1,7 +1,7 @@
 <site-doc-page-shell
   title="Segmented Control"
   overline="COMPONENTS"
-  description="A pill-style toggle bar for mutually exclusive options. A sliding indicator animates to the active selection, providing clear visual feedback. Ideal for switching between views or modes within the same context without navigating away."
+  description="A toggle bar for mutually exclusive options. The default pill treatment slides an indicator to the active selection — ideal for switching views or modes without navigating away. The cards treatment gives each option its own radio card, for question-shaped choices with longer labels; Unicaja's Sarevi surface uses it, and any brand can opt in."
   componentName="segmented-control"
 >
   <!-- Breadcrumb -->
@@ -18,10 +18,21 @@
     <li><span class="use-cases__label">Mode selection</span> — Grid vs List, Map vs Table.</li>
     <li><span class="use-cases__label">Doc page navigation</span> — switching between Diseño / Code tabs.</li>
     <li><span class="use-cases__label">Small option sets (2–5)</span> — where all labels fit without scrolling.</li>
+    <li><span class="use-cases__label">Radio-card questions</span> — <code>variant="cards"</code> for form questions whose options need room to breathe.</li>
   </ul>
 
   <!-- Controls -->
   <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Appearance</span>
+      <afi-select
+        [options]="variantOptions"
+        [value]="variant()"
+        (valueChange)="onVariantChange($event + '')"
+        size="sm"
+        ariaLabel="Appearance"
+      />
+    </div>
     <div class="control-group">
       <span class="control-group__label">Size</span>
       <afi-select
@@ -50,12 +61,13 @@
       [options]="demoOptions()"
       [(value)]="selected"
       [size]="$any(size())"
+      [variant]="variant()"
       ariaLabel="Demo segmented control"
     />
   </div>
 
   <!-- Tokens -->
-  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories()" />
 
   <!-- Accessibility -->
   <section slot="accessibility" class="prose-section">
@@ -80,6 +92,7 @@
           <li>Keep labels short (1–2 words).</li>
           <li>Use when all options should be visible at once.</li>
           <li>Pair with external content that reacts to the selection.</li>
+          <li>Reach for <code>variant="cards"</code> when the choice is a form question, not a view switch.</li>
         </ul>
       </div>
       <div class="dos-donts__card dos-donts__card--dont">
@@ -89,6 +102,7 @@
           <li>Don't use when options have their own panel content — use tabs.</li>
           <li>Don't nest segmented controls inside each other.</li>
           <li>Don't truncate labels — if they don't fit, reconsider the pattern.</li>
+          <li>Don't branch the treatment on the brand in your own CSS — pass <code>variant</code> instead.</li>
         </ul>
       </div>
     </div>

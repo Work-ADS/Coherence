@@ -5,14 +5,14 @@ import {
   SegmentedControlComponent,
   SelectComponent,
 } from '@coherence/ui';
-import type { SelectOption } from '@coherence/ui';
+import type { SegmentedControlVariant, SelectOption } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
 
 const ALL_LABELS = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'];
 
-const TOKEN_CATEGORIES: DocTokenCategory[] = [
+const PILL_TOKEN_CATEGORIES: DocTokenCategory[] = [
   {
     value: 'background',
     label: 'Background',
@@ -72,6 +72,74 @@ const TOKEN_CATEGORIES: DocTokenCategory[] = [
   },
 ];
 
+/**
+ * `variant="cards"` restructures the control into radio cards, so it consumes a
+ * different slice of the token set — border and control-foreground roles the
+ * pill track never touches. Kept as its own list so the table always describes
+ * what is actually on screen.
+ */
+const CARDS_TOKEN_CATEGORIES: DocTokenCategory[] = [
+  {
+    value: 'background',
+    label: 'Background',
+    rows: [
+      { property: 'Track', token: 'transparent', value: 'transparent', note: 'no track in cards' },
+      { property: 'Card', token: '--surface-default', semantic: '--surface-default', primitive: '--color-afi-white-25' },
+      { property: 'Radio mark (inner ring)', token: '--surface-default', semantic: '--surface-default', primitive: '--color-afi-white-25' },
+      { property: 'Radio mark (selected)', token: '--control-foreground-selected', semantic: '--control-foreground-selected', primitive: '--color-afi-azul-profundo-700' },
+    ],
+  },
+  {
+    value: 'foreground',
+    label: 'Foreground',
+    rows: [
+      { property: 'Card label', token: '--control-foreground-default', semantic: '--control-foreground-default', primitive: '--color-afi-white-900' },
+      { property: 'Card label (hover)', token: '--control-foreground-hover', semantic: '--control-foreground-hover', primitive: '--color-afi-white-800' },
+      { property: 'Focus ring', token: '--border-focus', semantic: '--border-focus', primitive: '--color-afi-control-500' },
+    ],
+  },
+  {
+    value: 'border',
+    label: 'Border',
+    rows: [
+      { property: 'Card border', token: '--border-subtle', semantic: '--border-subtle', primitive: '--color-afi-control-200' },
+      { property: 'Card border (hover)', token: '--control-border-hover', semantic: '--control-border-hover', primitive: '--color-afi-control-300' },
+      { property: 'Radio mark ring', token: '--control-foreground-selected', semantic: '--control-foreground-selected', primitive: '--color-afi-azul-profundo-700' },
+      { property: 'Border width', token: '--border-width-hairline', semantic: '--border-width-hairline', primitive: '--dimension-0-25 (1px)' },
+      { property: 'Focus ring width', token: '--border-width-thick', semantic: '--border-width-thick', primitive: '--dimension-0-5 (2px)' },
+    ],
+  },
+  {
+    value: 'type',
+    label: 'Type',
+    rows: [
+      { property: 'Card label', token: '--type-body-lg-600', semantic: '--type-body-lg-600', primitive: '18px/1.5 600', note: 'same at sm / md / lg' },
+    ],
+  },
+  {
+    value: 'spacing',
+    label: 'Spacing',
+    rows: [
+      { property: 'Gap between cards', token: '--dimension-3', semantic: '--dimension-3', primitive: '12px' },
+      { property: 'Gap label to radio', token: '--dimension-4', semantic: '--dimension-4', primitive: '16px' },
+      { property: 'Card padding-block', token: '--dimension-4', semantic: '--dimension-4', primitive: '16px' },
+      { property: 'Card padding-inline', token: '--dimension-5', semantic: '--dimension-5', primitive: '20px' },
+      { property: 'Card min-height', token: '--dimension-18', semantic: '--dimension-18', primitive: '72px' },
+      { property: 'Card min-width', token: '--dimension-56', semantic: '--dimension-56', primitive: '224px' },
+      { property: 'Radio mark size', token: '--dimension-6', semantic: '--dimension-6', primitive: '24px' },
+    ],
+  },
+  {
+    value: 'radius',
+    label: 'Border Radius',
+    rows: [
+      { property: 'Card radius', token: '--dimension-2', semantic: '--dimension-2', primitive: '8px' },
+      { property: 'Radio mark radius', token: '--radius-full', semantic: '--radius-full', primitive: '9999px' },
+    ],
+  },
+];
+
+
 @Component({
   selector: 'app-segmented-control-page',
   standalone: true,
@@ -90,6 +158,7 @@ export class SegmentedControlPage {
   readonly selected = signal('daily');
   readonly size = signal<string>('md');
   readonly count = signal<string>('3');
+  readonly variant = signal<SegmentedControlVariant>('pill');
 
   readonly demoOptions = computed(() => {
     const n = parseInt(this.count(), 10);
@@ -105,6 +174,11 @@ export class SegmentedControlPage {
     { value: 'lg', label: 'lg' },
   ];
 
+  readonly variantOptions: SelectOption[] = [
+    { value: 'pill', label: 'pill' },
+    { value: 'cards', label: 'cards' },
+  ];
+
   readonly countOptions: SelectOption[] = [
     { value: '2', label: '2 options' },
     { value: '3', label: '3 options' },
@@ -112,8 +186,13 @@ export class SegmentedControlPage {
     { value: '5', label: '5 options' },
   ];
 
-  readonly tokenCategories = TOKEN_CATEGORIES;
+  readonly tokenCategories = computed(() =>
+    this.variant() === 'cards' ? CARDS_TOKEN_CATEGORIES : PILL_TOKEN_CATEGORIES,
+  );
 
+  onVariantChange(val: string): void {
+    this.variant.set(val === 'cards' ? 'cards' : 'pill');
+  }
 
   onSizeChange(val: string): void {
     this.size.set(val);

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  afterNextRender,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
 
 import { BrandContextRowComponent } from '../brand-context-row';
 import { ScopedBrandService } from '../../services/scoped-brand.service';
@@ -40,4 +49,20 @@ export class DocPageShellComponent {
   readonly variant = input<string | null>(null);
 
   protected readonly brandSvc = inject(ScopedBrandService);
+
+  /**
+   * Direct element access is unavoidable here: the scoped brand exists only
+   * as a `data-brand` attribute on this node, and the tokens table has to
+   * read resolved custom-property values out of that node's cascade.
+   */
+  private readonly preview = viewChild.required<ElementRef<HTMLElement>>('preview');
+  private readonly destroyRef = inject(DestroyRef);
+
+  constructor() {
+    afterNextRender(() => {
+      const element = this.preview().nativeElement;
+      this.brandSvc.registerScope(element);
+      this.destroyRef.onDestroy(() => this.brandSvc.releaseScope(element));
+    });
+  }
 }

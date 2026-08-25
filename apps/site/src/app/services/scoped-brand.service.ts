@@ -36,9 +36,37 @@ export class ScopedBrandService {
     this.brand() === DEFAULT_BRAND ? null : this.brand(),
   );
 
+  /**
+   * The node the scoped `data-brand` attribute is written to — the doc
+   * shell's preview frame. Registered by `DocPageShellComponent`.
+   *
+   * Anything that has to READ a resolved token value (the `Tokens
+   * consumidos` table) must read it out of the same cascade the preview
+   * renders in. Reading `<html>` instead always returns the default brand,
+   * which is how the table used to show AFI hexes under Laboral Kutxa.
+   *
+   * Null when no scoped preview is mounted — pattern pages that show a
+   * tokens table without a shell. Readers fall back to the document root.
+   */
+  private readonly scopeElement = signal<HTMLElement | null>(null);
+
+  readonly scope = this.scopeElement.asReadonly();
+
   set(next: ScopedBrand): void {
     this.brand.set(next);
     this.persist(next);
+  }
+
+  registerScope(element: HTMLElement): void {
+    this.scopeElement.set(element);
+  }
+
+  /**
+   * Clears the scope only if `element` is still the registered one, so a
+   * shell being destroyed can never unregister its replacement.
+   */
+  releaseScope(element: HTMLElement): void {
+    if (this.scopeElement() === element) this.scopeElement.set(null);
   }
 
   private readInitial(): ScopedBrand {

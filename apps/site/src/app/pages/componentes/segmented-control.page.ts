@@ -5,7 +5,7 @@ import {
   SegmentedControlComponent,
   SelectComponent,
 } from '@coherence/ui';
-import type { SelectOption } from '@coherence/ui';
+import type { SegmentedOption, SelectOption } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
@@ -159,21 +159,26 @@ export class SegmentedControlPage {
   private readonly brandSvc = inject(ScopedBrandService);
 
   readonly selected = signal('daily');
-  readonly size = signal<string>('md');
-  readonly count = signal<string>('3');
+  readonly count = signal<string>('2');
+  readonly state = signal<'default' | 'disabled'>('default');
 
+  /**
+   * Disables the LAST option rather than a fixed one, so the state stays
+   * visible at every option count.
+   */
   readonly demoOptions = computed(() => {
     const n = parseInt(this.count(), 10);
-    return ALL_LABELS.slice(0, n).map(l => ({
-      value: l.toLowerCase(),
-      label: l,
+    const disableLast = this.state() === 'disabled';
+    return ALL_LABELS.slice(0, n).map((label, i) => ({
+      value: label.toLowerCase(),
+      label,
+      disabled: disableLast && i === n - 1,
     }));
   });
 
-  readonly sizeOptions: SelectOption[] = [
-    { value: 'sm', label: 'sm' },
-    { value: 'md', label: 'md' },
-    { value: 'lg', label: 'lg' },
+  readonly stateOptions: SegmentedOption[] = [
+    { value: 'default', label: 'Default' },
+    { value: 'disabled', label: 'Disabled' },
   ];
 
   readonly countOptions: SelectOption[] = [
@@ -193,8 +198,16 @@ export class SegmentedControlPage {
       : PILL_TOKEN_CATEGORIES,
   );
 
-  onSizeChange(val: string): void {
-    this.size.set(val);
+  /**
+   * Selection can be sitting on the option that is about to be disabled, which
+   * would leave an active-and-disabled segment on screen. Fall back to the first.
+   */
+  onStateChange(val: string): void {
+    const next = val === 'disabled' ? 'disabled' : 'default';
+    this.state.set(next);
+    if (next === 'disabled' && this.selected() === this.lastOptionValue()) {
+      this.selected.set(this.demoOptions()[0]?.value ?? 'daily');
+    }
   }
 
   onCountChange(val: string): void {
@@ -204,5 +217,13 @@ export class SegmentedControlPage {
     if (!opts.includes(this.selected())) {
       this.selected.set(opts[0] ?? 'daily');
     }
+    if (this.state() === 'disabled' && this.selected() === this.lastOptionValue()) {
+      this.selected.set(opts[0] ?? 'daily');
+    }
+  }
+
+  private lastOptionValue(): string {
+    const n = parseInt(this.count(), 10);
+    return (ALL_LABELS[n - 1] ?? '').toLowerCase();
   }
 }

@@ -24,13 +24,13 @@
   <!-- Controls -->
   <div slot="controls" class="controls">
     <div class="control-group">
-      <span class="control-group__label">Size</span>
-      <afi-select
-        [options]="sizeOptions"
-        [value]="size()"
-        (valueChange)="onSizeChange($event + '')"
+      <span class="control-group__label">State</span>
+      <afi-segmented-control
+        [options]="stateOptions"
+        [value]="state()"
+        (valueChange)="onStateChange($event)"
         size="sm"
-        ariaLabel="Size"
+        ariaLabel="State"
       />
     </div>
     <div class="control-group">
@@ -50,7 +50,6 @@
     <afi-segmented-control
       [options]="demoOptions()"
       [(value)]="selected"
-      [size]="$any(size())"
       ariaLabel="Demo segmented control"
     />
   </div>

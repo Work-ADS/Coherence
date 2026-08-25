@@ -27,9 +27,12 @@
     </div>
   }
 
-  <!-- Controls (Marca + per-page filters: variant, size, level, mode, etc.) -->
+  <!-- Controls (Marca + Identidad + per-page filters: variant, size, level, …) -->
   <div class="doc-page__controls">
     <site-brand-context-row />
+    @if (hasModern()) {
+      <site-scoped-foundation-picker />
+    }
     <ng-content select="[slot=controls]" />
   </div>
 
@@ -40,6 +43,7 @@
     #preview
     class="doc-page__preview"
     [attr.data-brand]="brandSvc.attr()"
+    [attr.data-foundation]="foundationSvc.attr()"
   >
     <ng-content select="[slot=preview]" />
   </div>

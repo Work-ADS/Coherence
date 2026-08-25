@@ -10,8 +10,10 @@ import {
 } from '@angular/core';
 
 import { BrandContextRowComponent } from '../brand-context-row';
+import { ScopedFoundationPickerComponent } from '../scoped-foundation-picker';
 import { EmbedService } from '../../services/embed.service';
 import { ScopedBrandService } from '../../services/scoped-brand.service';
+import { ScopedFoundationService } from '../../services/scoped-foundation.service';
 
 /**
  * Reusable shell for component/pattern documentation pages.
@@ -41,7 +43,7 @@ import { ScopedBrandService } from '../../services/scoped-brand.service';
 @Component({
   selector: 'site-doc-page-shell',
   standalone: true,
-  imports: [BrandContextRowComponent],
+  imports: [BrandContextRowComponent, ScopedFoundationPickerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './doc-page-shell.component.html',
   styleUrl: './doc-page-shell.component.scss',
@@ -56,7 +58,17 @@ export class DocPageShellComponent {
   /** Kept for backward compatibility with existing pages; no longer wired. */
   readonly variant = input<string | null>(null);
 
+  /**
+   * Whether this component has a v2 (foundations-modern) counterpart worth
+   * showing. Opt-in per page, because most pages don't: a v2 primitive is a
+   * different component with its own API, not a restyle of the v1 one, so a
+   * page can only offer the switch once someone has written the v2 branch of
+   * its preview and its token table.
+   */
+  readonly hasModern = input<boolean>(false);
+
   protected readonly brandSvc = inject(ScopedBrandService);
+  protected readonly foundationSvc = inject(ScopedFoundationService);
   protected readonly embed = inject(EmbedService);
 
   /**

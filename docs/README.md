@@ -15,10 +15,11 @@ Start here if you are new to the project. The docs are organized by what you are
 | Folder | Purpose |
 |---|---|
 | [`strategy/`](strategy/) | Why Coherence exists, what is in scope, and how the repo is laid out. |
-| [`workflow/`](workflow/) | Human process docs: messy notes to brief, brief to build, Git basics, release writing. |
+| [`workflow/`](workflow/) | Human process docs: messy notes to brief, brief to build, Git basics, release writing, Claude Design sync. |
 | [`rules/`](rules/) | Build rules for components, tokens, accessibility, copy, charts, and code quality. |
 | [`agents/`](agents/) | AI session harnesses: Planner, Builder, Tester, Token Guardian, Case-study. |
 | [`build-prompts/`](build-prompts/) | Executable work orders for building Coherence primitives, pages, and site surfaces. |
+| [`claude-design-prompts/`](claude-design-prompts/) | Motion briefs written for Claude Design, which cannot read this repo. Export format of `rules/motion-skill.md`, never a second standard. |
 | [`briefs/`](briefs/) | Project briefs created from the workflow. Empty is fine; new briefs land here. |
 | [`archive/`](archive/) | Old experiments, session briefs, code examples, and design review material. Useful context, not source of truth. |
 
@@ -44,6 +45,12 @@ Read the relevant files in [`rules/`](rules/), especially:
 - [`rules/token-skill.md`](rules/token-skill.md)
 - [`rules/accessibility.md`](rules/accessibility.md)
 - [`rules/clean-code.md`](rules/clean-code.md)
+
+### I changed a component and want Claude Design to match (or the other way round)
+
+Use [`workflow/claude-design-sync.md`](workflow/claude-design-sync.md). Code is the source of truth; the doc has one procedure per direction. Spanish version for the team: [`workflow/claude-design-sync.es.md`](workflow/claude-design-sync.es.md).
+
+For motion specifically, hand Claude Design a brief from [`claude-design-prompts/`](claude-design-prompts/) — prepend `_foundation.md`, then the pattern file.
 
 ### I found something old or confusing
 

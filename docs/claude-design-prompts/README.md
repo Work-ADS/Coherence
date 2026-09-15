@@ -54,13 +54,19 @@ the rows to appear before the panel does not want this system.
 | [`overlay-extrude-reveal.md`](./overlay-extrude-reveal.md) | Dropdown / menu / select open | §4.7 + uncataloged, see note |
 | [`selection-slide.md`](./selection-slide.md) | Tabs + segmented control indicator | §4.12, §4.13 |
 | [`selection-controls.md`](./selection-controls.md) | Checkbox, radio, switch feedback | §4.8, §4.9 |
+| [`search-typeahead-reveal.md`](./search-typeahead-reveal.md) | Search field + typeahead panel + result cascade | §4.7, **exception uncataloged** |
 | [`tooltip-shared-morph.md`](./tooltip-shared-morph.md) | Tooltip reveal + shared morph | **proposed, uncataloged** |
 
 Files marked **proposed** describe motion we have not built. They are inbound
 references kept in the house format, and they do not describe Coherence until
 they ship and get a catalog entry.
 
-**Open gap:** the two-phase extrude that opens `afi-menu-v2` ships in code but
-has no entry in `motion-skill.md`. `overlay-extrude-reveal.md` is currently the
-only written description of it. Cataloguing it properly is the fix; until then
-this folder is load-bearing in a way it should not be.
+**Open gaps.** Two patterns here ship in code with no catalog entry, which makes
+this folder load-bearing in a way it should not be. Cataloguing them is the fix.
+
+1. The two-phase extrude that opens `afi-menu-v2`. `overlay-extrude-reveal.md` is
+   currently its only written description.
+2. The warm-transition `stagger-reveal` that `afi-table-v2` runs on every filter
+   change. §4.7 prescribes a plain fade there; the exception is argued on
+   `TableV2Reveal` in code and in `search-typeahead-reveal.md`, but §4.7 itself
+   does not mention that an opt-in override exists.

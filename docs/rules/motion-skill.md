@@ -532,6 +532,72 @@ el.animate(
 
 ---
 
+### 4.14 `list-exit` (decided 2026-09-16 — not yet implemented)
+
+**When** — one item leaves a row or list the user is looking at, and the items after it would otherwise jump into its place: a filter chip removed from a filter bar, a token dismissed from the table apron, a section that drops out when the filters leave it empty, a deleted table row. Two beats: the item leaves, then the row closes over the gap.
+
+**When NOT to use** —
+- **Replacing the whole set.** A filter refresh that re-keys every row is a new set arriving, not items leaving. That is `opacity-fade` (§4.2), or the opt-in cascade on `afi-table-v2`. Never run a leave per row.
+- **Overlays.** A toast, menu, tooltip or dialog has nothing behind it to close. It leaves with the exit half of `opacity-fade` (§4.2) — `--motion-duration-fast` on `--motion-easing-exit` — and nothing else moves.
+
+**Beat 1 — the item leaves.** `opacity` 1→0 over `--motion-duration-fast` (150ms) on `--motion-easing-exit`. Small inline items (chips, tokens, pills) also shrink, `scale(1)`→`scale(0.95)`: the same 0.95 as the press dip in §4.8, so a removed chip reads as pressed away. Wide blocks (rows, sections) fade only. A 0.95 scale on a 1000px box pulls its edges in by 25px and reads as a zoom.
+
+**Beat 2 — the row closes.** When beat 1 ends, the item leaves the layout and every following sibling slides from its old position to its new one: `transform: translate()` over `--motion-duration-base` (200ms) on `--motion-easing-standard` (movement between two positions, per §3). Use FLIP: measure the siblings, remove the item, measure again, and animate each sibling from the difference back to zero. **Never animate `width`, `height`, `margin` or `gap` to close the space** — they re-layout every frame.
+
+**Sequenced, not overlapped.** Beat 2 starts when beat 1 ends, 350ms in total. Overlapping them slides the neighbours underneath a half-visible chip.
+
+**Wrapping rows.** A sibling that moves to the previous line slides diagonally. The FLIP difference already covers it; don't special-case it. The last item in a row has no followers, so it only fades.
+
+**Rapid removals.** A second removal while siblings are still sliding measures them where they are *now* (`getBoundingClientRect` includes the in-flight transform). Never snap them to their settled position first — the same retarget rule as §4.13.
+
+**Focus moves before the item leaves.** If the leaving item or its × had focus, move focus when beat 1 starts: to the next item, else the previous one, else the control that owns the row. Focus never rides a node that is about to disappear.
+
+**State first, motion after.** The data changes immediately; the leaving node is a ghost kept for 150ms. A live count or announcement reflects the removal at once, not 350ms later.
+
+**Tokens** — beat 1: `var(--motion-duration-fast) var(--motion-easing-exit)`. Beat 2: `var(--motion-duration-base) var(--motion-easing-standard)`. The v1 layer has the same values under `--duration-fast`, `--easing-exit`, `--duration-base`, `--easing-standard`. No new tokens.
+
+```scss
+// Beat 1 — the owner keeps the leaving node for one --motion-duration-fast.
+.is-leaving {
+  animation: list-exit-leave var(--motion-duration-fast) var(--motion-easing-exit) forwards;
+  pointer-events: none;
+}
+
+.is-leaving--inline {
+  animation-name: list-exit-leave-shrink;
+}
+
+@keyframes list-exit-leave        { to { opacity: 0; } }
+@keyframes list-exit-leave-shrink { to { opacity: 0; transform: scale(0.95); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .is-leaving { animation: none; }
+}
+```
+
+```ts
+// Beat 2 — FLIP the following siblings once the leaving node is gone.
+// duration + easing are read from the two tokens via getComputedStyle.
+const before = new Map(siblings.map((el) => [el, el.getBoundingClientRect()]));
+leaving.remove();
+for (const el of siblings) {
+  const was = before.get(el)!;
+  const now = el.getBoundingClientRect();
+  const dx = was.left - now.left;
+  const dy = was.top - now.top;
+  if (dx === 0 && dy === 0) continue;
+  el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration, easing });
+}
+```
+
+In Angular, beat 1 needs the node to outlive its `@if` / `@for` removal for 150ms. Angular 21 does that with `animate.leave` on the leaving element; beat 2 runs from the owner after removal.
+
+**Reduced motion** — neither beat. The item is removed and the row closes in the same frame. The change is carried by the item's absence and any live count.
+
+**Currently used in** — nothing yet. Decided 2026-09-16 for the filter chip (`afi-chip-v2`); it applies equally to table-apron tokens, filtered-out page sections and deleted rows. Until a primitive ships it, all of those still leave instantly (see §6).
+
+---
+
 ## 5. How to use this catalog
 
 1. **Designing a new primitive's motion** — open this file. If a pattern matches, copy the snippet, reference the section number in your build prompt.
@@ -550,6 +616,7 @@ These are not blockers for the catalog — they ARE the catalog's first targets.
 | `--duration-normal` referenced but not defined | [toast.component.scss:26](../../libs/ui/src/toast/toast.component.scss) | HIGH | Rename usage to `--duration-base`, or add `--duration-normal` as an alias in `motion.scss`. |
 | Drawer uses Tailwind `transition-colors duration-fast` instead of SCSS + CSS custom properties | [drawer.component.ts:63,76,89](../../libs/ui/src/drawer/drawer.component.ts) | MEDIUM | Migrate to BEM SCSS with `transition: background-color var(--duration-fast) var(--easing-enter)`. |
 | Most primitives lack a `prefers-reduced-motion` block | [libs/ui/src/**/*.component.scss](../../libs/ui/src/) | MEDIUM | Audit during next primitive review wave. |
+| No component animates an exit — `opacity-fade`'s exit half (§4.2) and `list-exit` (§4.14) are specified but unbuilt, so dialogs, drawers, toasts, menus, chips and apron tokens vanish on removal | [libs/ui/src/](../../libs/ui/src/) | MEDIUM | Build `list-exit` into `afi-chip-v2` + `afi-table-apron` first (decided 2026-09-16), then the overlay exits. Angular 21 `animate.leave` keeps the node alive for the leave. |
 
 ---
 
@@ -564,6 +631,7 @@ These are not blockers for the catalog — they ARE the catalog's first targets.
 
 ## 8. Changelog
 
+- **2026-09-16** — Added `list-exit` (§4.14), decided with Richard and not yet built: when one item leaves a row or list (a removed filter chip, a dismissed apron token, a section filtered out, a deleted row), it fades — and, when small and inline, shrinks to `0.95` — over `--motion-duration-fast` on `--motion-easing-exit`, then the following siblings slide into the gap over `--motion-duration-base` on `--motion-easing-standard`, FLIP-driven so nothing animates layout. Surfaced while writing the Claude Design layout brief: the catalog has always paired enters with `--easing-exit` exits (§3, §4.2), but no component implements an exit, so everything vanishes and its neighbours jump. Logged in §6.
 - **2026-07-29 (later)** — Added `selection-slide` (§4.13): the travelling selection marker now has follow-through, and §3 gained the rule that **travel distance decides the overshoot mechanism**. Went the wrong way first, which is why §3 says what it says: the initial attempt was a new easing token (`cubic-bezier(0.34, 1.3, 0.64, 1)`, ~3%), reached for because `--motion-easing-spring`'s 25% is fine on a 16px thumb but throws a 235px tab hop 59px past its mark. Measured, the tamer curve gave a clean 7px there — and 2.4px across the narrow 3-tab bar on the same page, i.e. invisible. A CSS easing is normalised, so its overshoot is *always* a percentage of the travel; no curve can hold a distance constant. The token was reverted (never shipped) and the position moved to a three-keyframe WAAPI animation overshooting a fixed `--motion-reveal-rise-light` (6px), which reads identically at every hop length. Width stays a plain CSS transition — overshooting it lets the trailing edge cross the leading one on a narrowing hop. Overshoot applies only to OPEN markers: `segmented-control-v2`'s pill is bounded by its track and keeps plain transitions.
 - **2026-07-29** — Added `swap-slide-blur` (§4.12): the tab-panel content swap — a lateral slide + light blur whose direction encodes which way the user moved through an ordered set. Ported from v1 `afi-tabs`, where it had been improvising motion distances out of spacing tokens (`--space-sm`, `--space-2xs`) and replaying itself with an `animationKey % 2` parity hack that doubled every keyframe block. No new tokens — reuses `--motion-reveal-rise-normal` + `--motion-reveal-blur-light` on `--motion-duration-base`. First consumer is `TabPanelV2Directive`, the WAAPI form, because `afi-tabs-v2` is bar-only and the panel sits outside its style scope. §4.7's blur-on-warm-transitions prohibition is narrowed rather than broken: it governs multi-element cascades at 400–600ms, not a single 200ms container swap — both entries now say so.
 - **2026-07-28** — Added `ambient-loop` (§4.11): the first `infinite` entry in the catalog — decorative, self-restarting motion in its own frame (illustrative thumbnails, self-drawing diagrams). Closes a token gap found by a DS audit of the Design at Afi landing, where the design-process stepper thumbnail had been improvising `10s cubic-bezier(0.2, 0.8, 0.2, 1)` in page code — as the retired IA-sitemap thumbnail did before it, which is what made the cadence worth naming. Two new modern-layer tokens, `--motion-duration-ambient-loop` (10000ms) + `--motion-easing-ambient` (`cubic-bezier(0.2, 0.8, 0.2, 1)`), added via `tools/figma-sync/foundations-modern.json` → `primitive-motion.scss`. Deliberately outside the `fast|base|slow` interaction ramp: a loop length is not a response time (see §3 "Ambient loop"). Reduced-motion variant is `animation: none` with no fade substitute, which only holds if the un-animated markup is already the finished artwork.

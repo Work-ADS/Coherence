@@ -42,6 +42,7 @@ layer.
 |---|---|---|
 | `--motion-easing-standard` | `cubic-bezier(0.4, 0, 0.2, 1)` | Symmetric moves — anything that slides between two positions |
 | `--motion-easing-enter` | `cubic-bezier(0.16, 1, 0.3, 1)` | Things arriving — a heavy decelerating curve that lands softly |
+| `--motion-easing-exit` | `cubic-bezier(0.7, 0, 0.84, 0)` | Things leaving — slow to start, fast to finish |
 | `--motion-easing-spring` | `cubic-bezier(0.34, 2, 0.64, 1)` | Things settling — overshoots its endpoint, then returns |
 
 The enter curve is the one that does most of the perceived "smoothness". It
@@ -51,6 +52,10 @@ arrive under its own momentum rather than being placed.
 The spring curve is the opposite tool. It deliberately overshoots, so use it on
 small objects that should feel physical — a thumb hitting the end of its track, a
 dot dropping into a ring. On anything large it reads as a glitch.
+
+The exit curve mirrors the enter curve. It starts slowly and finishes fast, so
+a leaving element is gone before the eye settles on it. A leaving element
+always runs at the fast duration: going away never takes longer than arriving.
 
 ### Spatial
 

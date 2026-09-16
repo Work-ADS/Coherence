@@ -30,7 +30,7 @@ If a page follows these rules, the title aligns, actions sit in the right place,
 - **Not the tokens themselves.** Token taxonomy lives in [token-skill.md](token-skill.md). This skill names the tokens it depends on; it does not redefine them.
 - **Not Angular structure.** OnPush, signals, the 3-file convention, BEM, `templateUrl` rules — [component-skill.md](component-skill.md).
 - **Not a11y.** Focus rings, keyboard, ARIA — [accessibility.md](accessibility.md).
-- **Not motion.** Durations, easings, named patterns — [motion-skill.md](motion-skill.md).
+- **Not motion.** Durations, easings, named patterns — [motion-skill.md](motion-skill.md). §17 only says which of those patterns a page-level change uses.
 - **Not copy.** Voice, tone, register — [copy-skill.md](copy-skill.md).
 - **Not a primitive spec.** The `<afi-page-header>` API lives in [libs/ui/src/page-header/](../../libs/ui/src/page-header/). This skill governs the *use of* the primitive, not its internals.
 - **Not a grid framework.** Form layout, table internals, chart composition — those have their own pattern docs.
@@ -60,8 +60,8 @@ Slot stacking order inside `<afi-page-header>` is **cards → tabs → filters �
 | Level | Heading | Box chrome | Padding | When |
 |---|---|---|---|---|
 | `level="page"` | `<h1>` | none | 0 | Top of the page; sticky-capable; one per page. |
-| `level="section"` | `<h2>` | outline box, `--section-radius` (12px) | `--space-lg` (16px) | A sibling block on a multi-section page that owns its own actions/cards/filters. |
-| `level="subsection"` | `<h3>` | outline box | `--space-lg` (16px) | A logical group inside a section that owns its own actions or is collapsible. |
+| `level="section"` | `<h2>` | outline box, `--section-radius` (12px) | `--space-lg` (24px) | A sibling block on a multi-section page that owns its own actions/cards/filters. |
+| `level="subsection"` | `<h3>` | outline box | `--space-lg` (24px) | A logical group inside a section that owns its own actions or is collapsible. |
 
 Density and slot APIs are documented in the primitive itself; this skill governs the *which level, and when*.
 
@@ -96,7 +96,9 @@ Use `--content-xl` (1140px) for product pages, `--content-lg` (960px) for readin
 
 **The body's first content column must sit at the same x as the title's left edge.**
 
-The mechanic: at `level="page"` the page-header host carries `padding-inline: var(--space-lg)` (16px — see [page-header.component.scss:42](../../libs/ui/src/page-header/page-header.component.scss:42)). The title is inset 16px from the host's left edge. The body underneath must match that inset, or the title drifts right of the body content.
+The mechanic: at `level="page"` the page-header host carries `padding-inline: var(--space-lg)` (24px — see [page-header.component.scss:42](../../libs/ui/src/page-header/page-header.component.scss:42)). The title is inset 24px from the host's left edge. The body underneath must match that inset, or the title drifts right of the body content.
+
+One equivalent mechanism is allowed: [objetivos-page-shell](../../apps/site/src/app/pages/demos/wealth-planner-2026/shared/objetivos-page-shell.component.scss) sets `--page-header-padding-inline: 0` on its wrapper and pads the wrapper itself by `--space-lg`. The title lands at the same 24px, measured identical to Patrimonial on 2026-09-16. What is never allowed is both at once: a padded wrapper *and* a padded host puts the title 48px in (Familia and Sociedades today, §15).
 
 Two valid shapes:
 
@@ -106,7 +108,7 @@ Two valid shapes:
 <div class="page__wrap">
   <afi-page-header title="Sociedades" subtitle="…" [sticky]="false">
     <afi-button slot="actions" …>+ Añadir sociedad</afi-button>
-    <!-- body lives HERE — inherits the 16px inline padding -->
+    <!-- body lives HERE — inherits the 24px inline padding -->
     <afi-table [columns]="cols" [rows]="rows()" />
   </afi-page-header>
 </div>
@@ -129,7 +131,7 @@ Two valid shapes:
 
 Shape A is the default. Shape B only when sticky behaviour requires it — and the matching `padding-inline: var(--space-lg)` is mandatory, not optional.
 
-**What this rule catches.** [sociedades.page.html:19-49](../../apps/site/src/app/pages/demos/sociedades/sociedades.page.html:19) wraps the page-header in `<div class="relative">` and then renders the table in a sibling `<div class="mt-space-6">` outside the page-header. The table skips the 16px inline padding while the title carries it, so the title sits 16px to the right of "Nombre" / "Inversiones Siglo XXI, SL". Fix: drop the table into the page-header's default slot (Shape A), and remove the absolute-positioned version toggle by projecting it into `[slot="actions"]` per §5.
+**What this rule caught.** [sociedades.page.html](../../apps/site/src/app/pages/demos/sociedades/sociedades.page.html:19) used to render its table in a sibling `<div class="mt-space-6">` outside the page-header. The table skipped the 24px inline padding while the title carried it, so the title sat 24px to the right of "Nombre" / "Inversiones Siglo XXI, SL". The table now lives in the default slot (Shape A) and aligns. What remains is the wrapper: the page still wraps the header in `<div class="relative">` for an absolutely positioned version toggle, which belongs in `[slot="actions"]` per §5 — see §15.
 
 ---
 
@@ -157,16 +159,20 @@ A `slot="primaryAction"` exists for the rare case where one CTA must visually ou
 
 ---
 
-## 6. 1-section vs multi-section pages (LOCKED 2026-06-15)
+## 6. 1-section vs multi-section pages (LOCKED 2026-06-15, rhythm updated 2026-09-16)
 
 | Shape | Wrapping | Example |
 |---|---|---|
-| **1-section** — title + a single body surface (table, form, empty state) | No section container. Title sits directly above the body, separated by `--section-gap` (24px). | Sociedades (title → table). |
-| **Multi-section** — two or more independent surfaces, each with its own actions/cards/filters | Each section wrapped in `<afi-page-header level="section">`. Siblings separated by `--section-gap` (24px) by default. | Patrimonial (filters + table + drag-to-reorder). |
+| **1-section** — title + a single body surface (table, form, empty state) | No section container. The body sits 12px (`--space-sm`) under the last header row — the primitive's own body margin, not something the page adds. | Sociedades (title → table). |
+| **Multi-section** — two or more independent surfaces, each with its own actions/cards/filters | Each section wrapped in `<afi-page-header level="section">`. Siblings separated by **12px (`--space-sm`)** — LOCKED 2026-09-16. | Patrimonial (filters + table + drag-to-reorder). |
 
 **Trigger question.** When you reach for a section container, ask: *does this surface need its own actions, cards, or filters?* If no, the surface is body content — no container. If yes, `level="section"` is right.
 
 A single-section page with no body actions and no body cards never needs a section container. Wrapping it adds visual noise (an outline box) without earning it.
+
+**Why 12px (LOCKED 2026-09-16).** Every stacked row inside the page header — cards, tabs, filters, body — already sits 12px below the one above it. Sections use the same 12px, so the whole page reads as one vertical rhythm, and the section's outline, not extra space, is what separates one surface from the next. Patrimonial set this on 2026-06-10; Richard made it the house rule over the 24px `--section-gap` and the 16px Familia uses.
+
+**Section boxes start at the title's x.** The box's outer border sits on the page title's left edge; its content is inset a further 24px (`--space-lg`) inside the box. A section box that starts right of the title is an alignment bug (§13).
 
 ---
 
@@ -270,21 +276,22 @@ Patrimonial uses **both** `@media (max-width: 640px)` and `@container viewport (
 
 ---
 
-## 12. Spacing rhythm (LOCKED 2026-06-15)
+## 12. Spacing rhythm (LOCKED 2026-06-15, updated 2026-09-16)
 
 All page-level spacing comes from the base-4 token scale ([token-skill.md](token-skill.md) §3). No raw px, no Tailwind arbitrary values, no `gap: 18px`.
 
 | Token | Value | Use |
 |---|---|---|
-| `--section-gap` | 24px | Between sibling sections on a multi-section page. Between page-header and first body element on a 1-section page. |
-| `--section-padding-inline` | 16px | Inside a `level="section"` / `level="subsection"` box. (Set on the primitive — don't override.) |
-| `--section-padding-block` | 16px | Inside a section box, block axis. |
+| `--space-sm` | 12px | Between sibling sections on a multi-section page (LOCKED 2026-09-16). Between stacked page-header rows and before the body — the primitive already applies it; pages don't add their own. |
+| `--space-lg` | 24px | Inside a `level="section"` / `level="subsection"` box, all four sides; also the page-header host's inline padding. (Set on the primitive — don't override.) |
+| `--section-gap` | 24px | **Not the section rhythm any more.** Kept only until a token decision re-points or retires it; don't reach for it to space sections. |
+| `--section-padding-inline` / `-block` | 16px | **Not consumed by the primitive**, which pads with `--space-lg`. Listed here so nobody reads them as the box padding. |
 | `--section-radius` | 12px | Section box corner radius. (Set on the primitive — don't override.) |
 | `--space-xl` | (see token) | Vertical padding inside the page wrapper. |
 | `--space-md` | (see token) | Compact padding inside the page wrapper at `@container viewport (max-width: 40rem)`. |
 | `--gap-card-to-card` | 8px | Between sibling metric cards in the cards row (§8). |
 
-Pick one rhythm per page. Don't mix `--space-lg` (16px) gaps with `--section-gap` (24px) gaps in the same stack — the eye reads the change as a hierarchy that isn't there.
+One rhythm per page, and it is 12px. Don't mix a 12px stack with 16px or 24px gaps — the eye reads the change as a hierarchy that isn't there.
 
 ---
 
@@ -313,7 +320,9 @@ Before opening a PR that touches a page, walk this:
 - [ ] If the body can be empty: empty state uses the §10 anatomy (h2 title declarative, p hint with opt-out, primary action button), lives inside the page-header's default slot, copy uses the canonical `<afi-empty-state>` primitive (or one of the converged `.{prefix}-empty` hand-rolls until the primitive ships).
 - [ ] Layout responds at 375px inside the demo-shell preview. Sidebar collapses to drawer at `@container viewport (max-width: 48rem)`. No `@media` query is driving sidebar/grid/padding decisions.
 - [ ] Spacing scale is base-4. No raw px, no `max-w-[1180px]`, no `gap: 18px`.
-- [ ] Title's left edge aligns with everything persistent below it.
+- [ ] Title's left edge aligns with everything persistent below it — section boxes included.
+- [ ] Sibling sections are 12px apart (`--space-sm`), not `--section-gap`.
+- [ ] Anything that leaves a row or list (chip, token, section, row) follows `list-exit` (motion-skill §4.14); see §17.
 
 ---
 
@@ -323,10 +332,11 @@ Migration is a separate session brief — this list captures the starting backlo
 
 | Page | File | Rule | Fix sketch |
 |---|---|---|---|
-| **Sociedades** | [sociedades.page.html:21-86](../../apps/site/src/app/pages/demos/sociedades/sociedades.page.html:21) | §4a, §4b, §5 | Delete `<div class="relative">` wrapper and `<div class="absolute top-0 right-space-8">`. Project `<site-version-toggle>` into `[slot="actions"]` next to the existing button. Move the table + empty-state block from the sibling `<div class="mt-space-6">` into the page-header's default content slot so it inherits the host's `--space-lg` inline padding (Shape A in §4b). Title and "Nombre"/"Inversiones Siglo XXI, SL" then share the same left edge. |
+| **Sociedades** | [sociedades.page.html:19-86](../../apps/site/src/app/pages/demos/sociedades/sociedades.page.html:19) | §4a, §4b, §5 | *Partly fixed:* the table and empty state now live in the default slot, so they align with the title. Still open: the `max-w-[1180px] px-space-6` wrapper doubles the inset (title 48px in, measured 2026-09-16), and the version toggle is still absolutely positioned in a `<div class="relative">`. Move to the 1140px wrapper with no inline padding, and project the toggle into `[slot="actions"]`. |
 | **Protección familiar** | [proteccion-familiar.page.html:9-24](../../apps/site/src/app/pages/demos/proteccion-familiar/proteccion-familiar.page.html:9) | §5, §7 | Move `<afi-switch>` "¿Has establecido…" into `[slot="actions"]` of the page-header. Replace `<section class="pf-section">` blocks with `<afi-page-header level="section">`. |
-| **Familia** | [familia.page.scss](../../apps/site/src/app/pages/demos/familia/familia.page.scss) | §11 | Replace `@media (max-width: 1023px)` / `@media (max-width: 767px)` with `@container viewport (max-width: 64rem)` / `(max-width: 48rem)`. Mirror Patrimonial's dual-block if production refinement is also wanted. |
-| **Hardcoded `max-w-[1180px]`** | Multiple demo pages | §4, §12 | Migrate to `max-inline-size: var(--content-xl)` (1140px) in a shared `.page__wrap` SCSS class, or codify the 1180px drift as a new token. Pick one; don't leave both. |
+| **Familia** | [familia.page.scss](../../apps/site/src/app/pages/demos/familia/familia.page.scss), [familia.page.html:19](../../apps/site/src/app/pages/demos/familia/familia.page.html:19) | §4, §6, §11, §13 | Replace `@media (max-width: 1023px)` / `@media (max-width: 767px)` with `@container viewport (max-width: 64rem)` / `(max-width: 48rem)`. Also (measured 2026-09-16): the 1180px padded wrapper puts the title 48px in; section boxes inside the tab panels start 12px right of the title; sections are 16px apart. Move to the 1140px wrapper, align the boxes to the title, space them 12px. |
+| **Gastos** | [gastos.page.html:26](../../apps/site/src/app/pages/demos/gastos/gastos.page.html:26) | §6, §10 | Sections are 24px apart (`gap-space-6`); move to 12px. The empty state is drawn as a whole `level="section"` box titled "Aún no hay gastos registrados"; §10 puts a page-level empty state straight in the body, unboxed. |
+| **Hardcoded `max-w-[1180px]`** | Familia and Sociedades (the only two left, 2026-09-16) | §4, §12 | Migrate to `max-inline-size: var(--content-xl)` (1140px) in a shared `.page__wrap` SCSS class, or codify the 1180px drift as a new token. Pick one; don't leave both. |
 | **Triplicated empty state** | sociedades, desinversiones-futuras, inversiones-futuras (`.sociedades-empty`, `.df-empty`, `.if-empty`) | §10 | Three pages hand-rolled the same shape with different prefixes. Build `<afi-empty-state>` in `libs/ui/src/empty-state/` (slots: `title`, `hint`, `action`). All three migrate in the primitive's first PR. |
 
 Audit candidates (not yet confirmed): `evolucion-patrimonial`, `listado-planificaciones`, `clientes`. They use the same Tailwind wrapper pattern and may need a §4 + §11 pass.
@@ -337,15 +347,39 @@ Audit candidates (not yet confirmed): `evolucion-patrimonial`, `listado-planific
 
 - **`<afi-empty-state>` primitive build** — three pages have converged on the shape; the primitive is the next session brief. Slots: `title`, `hint`, `action`. Open: does `__action` accept only `<afi-button>` or also link patterns? Decide when scoping.
 - **Canonical wrapper class** — codify `.page__wrap` as a shared SCSS class shipped from `libs/ui/`, or keep page-local? Lock in v2 once the migration brief lands.
-- **Page wrapper width drift** — `--content-xl` is 1140px; pages currently use 1180px. Pick one and migrate. Default recommendation: 1140px (the existing token wins).
-- **Dense vs relaxed section rhythm** — Patrimonial uses `--space-sm` (12px) between dense sections; default here is `--section-gap` (24px). Decide whether "dense" is an opt-in mode or a per-page choice.
-- **Drawer / dialog anatomy** — currently out of scope. When the dialog refactor lands, add a §17 for floating-surface composition.
+- **Page wrapper width drift** — `--content-xl` is 1140px; Familia and Sociedades still use 1180px. Pick one and migrate. Default recommendation: 1140px (the existing token wins, and the layout brief for Claude Design already says so).
+- ~~**Dense vs relaxed section rhythm**~~ — **Resolved 2026-09-16:** one rhythm, 12px (§6). Open follow-up: re-point or retire the `--section-gap` token (a token decision — see [token-skill.md](token-skill.md)).
+- **Drawer / dialog anatomy** — currently out of scope. When the dialog refactor lands, add a §19 for floating-surface composition.
 - **Figma companion** — out of scope for v1; this skill is canonical. Revisit when a Figma source-of-truth is set up.
 
 ---
 
-## 17. Changelog
+## 17. Page- and section-level interaction (LOCKED 2026-09-16)
 
+§3–§13 define the structure; this section defines how it behaves. Primitive-level motion (a checkbox, a menu) lives in [motion-skill.md](motion-skill.md). This table names the pattern each page-level change uses, so pages stop improvising.
+
+| Change | Behaviour | Status |
+|---|---|---|
+| Page header on scroll | `[sticky]` pins it; after 8px of scroll it gains a background blur and a hairline bottom border (150ms). Wealth Planner pages set `[sticky]="false"`, so the header scrolls away with the content. | Ships |
+| Sidebar → drawer at `@container viewport (max-width: 48rem)` | The drawer (`min(18rem, 80cqi)`) slides in from the leading edge and the backdrop fades, both over 150ms on the enter curve. Closing reverses the transition. | Ships |
+| Tab panel swap | `swap-slide-blur` (motion-skill §4.12). The underline is `selection-slide` (§4.13). v1 `afi-tabs` travels 12px instead of the catalog's 10px. | Ships |
+| Collapsible section | The whole title column is the toggle, including Enter and Space. The chevron turns 180° over 150ms; the body shows or hides instantly, with no height animation. Actions in the title row never toggle it. | Ships |
+| Table row inside a section | The hover band extends 24px into the box's leading padding. The selection checkbox sits in that gutter, invisible at rest, and fades in over 150ms on hover or selection. No layout shift. | Ships |
+| A newly added row | Patrimonial's highlight: the row enters 8px high with a tinted fill and a 2px leading accent bar, settles at 45% of 1400ms, and the tint fades out by the end. | Ships, page-local |
+| Filters change | Results swap instantly. The blur cascade is opt-in (`afi-table-v2` `reveal="stagger"`) and a documented exception to §4.7, not the default. | Ships |
+| A chip, apron token, section or row leaves | `list-exit` (motion-skill §4.14): a fade (plus a 0.95 shrink for small inline items) over 150ms on the exit curve, then the following siblings slide into the gap over 200ms. | **Decided, not built** — everything still vanishes |
+| A section comes back as filters widen | `opacity-fade` enter (§4.2), 150ms. Siblings make room instantly. | Catalog rule, not built |
+| Bulk actions appear in `slot="filterActions"` | `opacity-fade` enter (§4.2). Nothing else moves, because the group is pinned to the row's trailing edge. | Catalog rule, not built |
+| Everything is filtered out | The filtered-empty block (§10) fades in with `opacity-fade`. | Catalog rule, not built |
+| Toast after an action | Bottom-centre pill. It enters with a 12px rise and a fade (180ms `ease-out`, hand-rolled — should become §4.4) and leaves with the exit half of `opacity-fade`. | Enter ships; exit not built |
+
+**Reduced motion.** Every row collapses per its pattern: no slide, no blur, no rise. State changes land in the same frame.
+
+---
+
+## 18. Changelog
+
+- **2026-09-16 (v1.3)** — Section rhythm LOCKED at 12px (§6, §12), resolving the dense-vs-relaxed question in §16. Corrected px labels that had drifted from the tokens: `--space-lg` is 24px, so the page-header host inset and the section box padding are 24px, not 16px. Documented the objetivos-shell padding mechanism as equivalent (§4b), and that section boxes start at the title's x (§6). Added §17 *Page- and section-level interaction*, including the decided-but-unbuilt `list-exit` for anything leaving a row or list (motion-skill §4.14). Refreshed §15 from measurements at 1440px: Sociedades half-fixed, Familia and Gastos rows added. Written alongside the Claude Design layout brief, which exports this document.
 - **2026-06-15 (v1.2)** — Renamed from root-level `Design.md` to `docs/rules/page-structure-skill.md`. Root-level `Design.md` is now the traditional design overview (principles, brand soul, foundations index) and links here for the deep page-composition rules.
 - **2026-06-15 (v1.1)** — Added §10 *Empty state* (LOCKED) with anatomy table, primitive gap note, and multi-section guidance. Updated §3 anatomy to mention empty state alongside 1-section / multi-section. Renumbered §10→§11 onward. Added triplicated empty-state row to §15 known violations and the missing-primitive item to §16 open questions.
 - **2026-06-15** — V1 LOCKED. Twelve rules (§4–§13), pre-build checklist (§14), four known violations (§15). Inserted into AGENTS.md required-read order, immediately after the index.

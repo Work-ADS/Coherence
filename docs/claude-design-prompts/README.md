@@ -55,11 +55,18 @@ the rows to appear before the panel does not want this system.
 | [`selection-slide.md`](./selection-slide.md) | Tabs + segmented control indicator | §4.12, §4.13 |
 | [`selection-controls.md`](./selection-controls.md) | Checkbox, radio, switch feedback | §4.8, §4.9 |
 | [`search-typeahead-reveal.md`](./search-typeahead-reveal.md) | Search field + typeahead panel + result cascade | §4.7, **exception uncataloged** |
+| [`filter-chip.md`](./filter-chip.md) | Filter pill — toggle, removable, applied value | §4.1, §4.3, §4.6 |
+| [`multi-select-menu.md`](./multi-select-menu.md) | Pill trigger + checkbox menu | **composed, not yet a v2 primitive** |
 | [`tooltip-shared-morph.md`](./tooltip-shared-morph.md) | Tooltip reveal + shared morph | **proposed, uncataloged** |
 
 Files marked **proposed** describe motion we have not built. They are inbound
 references kept in the house format, and they do not describe Coherence until
 they ship and get a catalog entry.
+
+Files marked **composed** describe an assembly of shipped v2 parts that no single
+primitive owns yet. Every motion in them exists in code; the combination does not.
+They also record the decisions the assembly needs before it can be built — read
+those before pasting.
 
 **Open gaps.** Two patterns here ship in code with no catalog entry, which makes
 this folder load-bearing in a way it should not be. Cataloguing them is the fix.

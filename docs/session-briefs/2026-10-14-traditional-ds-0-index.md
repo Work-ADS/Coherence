@@ -11,7 +11,7 @@ The traditional AFI brand (the default `:root` layer) brought in line with the W
 
 1. **Font:** traditional moves from Roboto Serif to Roboto (single sans family). `font-family-serif` stays defined but unused until we confirm nothing reads it.
 2. **Warning ramp:** the zip's orange (`#f97316` at 500) is intentional and replaces our amber (`#ffc107`).
-3. **White-label is frozen, not deleted.** The five `colors-*.scss` brand files and the Sarevi / AWM demos stay as they are. We don't test new tokens against them. Case studies still show them.
+3. **White-label is frozen, not deleted.** The five `colors-*.scss` brand files and the Sarevi / AWM demos stay as they are. We don't test new tokens against them. Case studies still show them. We build for AFI only. We have no brand manuals for the other brands, so unfreezing would mean guessing at their skins. The one brand check is the segmented-control playground (`componentes/segmented-control`): at the end of any chunk that touches that primitive (chunk 5), switching to Unicaja must still render radio cards.
 4. **Modern stays scoped.** `[data-foundation="modern"]` is untouched. Nothing in this project edits `libs/tokens/foundations-modern/`.
 5. **The zip's tests and templates stay out of the repo.** The `tools/*-tests.html` pages are mined for acceptance criteria per primitive. The three templates are a reference for the page-migration chunk.
 6. **Primitives before semantic.** Order inside tokens: primitive → semantic (update existing, then create new). Order inside components: audit → update existing → create new.

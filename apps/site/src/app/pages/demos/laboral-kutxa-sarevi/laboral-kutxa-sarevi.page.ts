@@ -28,6 +28,7 @@ import {
 import { BcFooterComponent } from '../../../components/bc-footer';
 import { RadioCardGroupComponent } from '../../../components/radio-card-group';
 import { DemoShellComponent } from '../demo-shell/demo-shell.component';
+import { LaboralKutxaSareviGlobalStylesComponent } from './laboral-kutxa-sarevi-global-styles.component';
 import { MUNICIPIOS_ES } from './municipios-es';
 
 type Route = 'welcome' | 'datos' | 'medidas' | 'resumen';
@@ -190,6 +191,7 @@ const BRAND_CONFIG: Record<SareviBrand, {
     DemoShellComponent,
     BcFooterComponent,
     RadioCardGroupComponent,
+    LaboralKutxaSareviGlobalStylesComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './laboral-kutxa-sarevi.page.html',

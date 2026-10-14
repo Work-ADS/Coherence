@@ -24,6 +24,25 @@
   // ---------------------------------------------------------------------------
   --font-family-serif: 'Roboto Serif', serif;
 
+  // Roboto, single sans family (Wealth Planner DS, 2026-10-14). Defined here and
+  // not read yet: the --type-* roles below still point at serif until the
+  // semantic pass repoints them.
+  //
+  // --font-brand-display / --font-brand-text are NOT defined here yet. Components
+  // read them with a serif fallback (button, insights header, bc-footer) and the
+  // brand mixin falls back through them, so defining them at :root would switch
+  // those to Roboto before the semantic pass. They arrive with the --type-*
+  // repoint.
+  --font-family-sans: 'Roboto', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+  // ⚠ Every --type-* role is a `font` shorthand. `font:` resets
+  // font-variant-numeric to `normal`. A rule that applies one of these roles to
+  // an element carrying figures MUST re-assert `font-variant-numeric:
+  // tabular-nums` in the same rule, or the digits stop lining up between rows
+  // and nothing reports it. Applies to table numeric and group cells, totals
+  // rows, footers, value pills, metric and verdict figures, chart and sparkline
+  // labels.
+
   // (sans + mono families are referenced by tailwind.config.js but not yet
   //  in the token system. Add as primitives if brands need them differentiated.)
 
@@ -72,7 +91,14 @@
   --type-body-sm-500:   500 12px/16px var(--font-family-serif);
   --type-body-sm-400:   400 12px/16px var(--font-family-serif);
   --type-button:        500 14px/14px var(--font-family-serif);
+  --type-button-400:    400 14px/14px var(--font-family-serif);
   --type-informe:       400 12px/14px var(--font-family-serif);
+
+  // Section heading-row figure: a total sat beside the H2 (e.g. "1.142.300 €").
+  // Same 18/28 box as the zip's --type-section so figure and heading share a
+  // baseline; weight 400 against the heading's 500 is what reads it as data.
+  // Follows --type-section: if that changes size, so does this.
+  --type-section-figure: 400 18px/28px var(--font-family-serif);
 
   // ---------------------------------------------------------------------------
   // Standalone font-size tokens
@@ -116,4 +142,5 @@
   --tracking-normal:  0;
   --tracking-wide:    0.025em;
   --tracking-wider:   0.06em;
+  --tracking-control: 0.5px;  // absolute: control labels stay at 0.5px across sizes
 }

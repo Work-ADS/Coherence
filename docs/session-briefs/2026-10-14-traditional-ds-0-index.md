@@ -28,7 +28,7 @@ The traditional AFI brand (the default `:root` layer) brought in line with the W
 | # | Chunk | Touches | Depends on |
 |---|---|---|---|
 | 1 | [Primitive tokens](2026-10-14-traditional-ds-1-primitive-tokens.md) | `libs/tokens/`, `apps/site/src/styles.scss` | — |
-| 2 | Semantic: update existing (Roboto lands, warning orange, nav/sidebar, shape, overlay) | `libs/tokens/semantic.scss` | 1 |
+| 2 | [Semantic: update existing](2026-10-14-traditional-ds-2-semantic-update-existing.md) (Roboto lands, warning orange, nav/sidebar, shape, overlay) | `libs/tokens/semantic.scss` | 1 |
 | 3 | Semantic: create new, cross-cutting only (chart, canvas, layout, color) | `libs/tokens/` | 2 |
 | 4 | Components: audit every existing primitive against the zip (read-only report) | none | 2 |
 | 5 | Components: update existing to the zip's look | `libs/ui/src/*` | 2, 4 |

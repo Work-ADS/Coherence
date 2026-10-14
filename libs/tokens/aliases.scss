@@ -100,7 +100,7 @@
   --surface-overlay:  var(--overlay-blanket);
 
   // Old `--border-{hairline,focus}` → new border-* roles.
-  --border-hairline: var(--border-subtle);
+  --border-hairline: var(--color-afi-control-200);
   // --border-focus stays the same name; new value is already set.
 
   // Old `--control-{bg,fg,border,placeholder,disabled-bg,disabled-fg}` (flat)
@@ -192,8 +192,8 @@
   --status-draft-fg:     var(--feedback-disabled-foreground);
   --status-draft-dot:    var(--color-afi-control-500);
   --status-pending-bg:   var(--feedback-warning-background);
-  --status-pending-fg:   var(--feedback-warning-foreground);
-  --status-pending-dot:  var(--color-warning-500);
+  --status-pending-fg:   var(--feedback-warning-text);
+  --status-pending-dot:  var(--feedback-warning-foreground);
   --status-approved-bg:  var(--feedback-success-background);
   --status-approved-fg:  var(--feedback-success-foreground);
   --status-approved-dot: var(--color-success-500);

@@ -512,6 +512,14 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "color"
   },
   {
+    "name": "--nav-navbar",
+    "kind": "color"
+  },
+  {
+    "name": "--nav-toolbar",
+    "kind": "color"
+  },
+  {
     "name": "--nav-item-background-default",
     "kind": "color"
   },
@@ -621,6 +629,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--feedback-warning-foreground",
+    "kind": "color"
+  },
+  {
+    "name": "--feedback-warning-text",
     "kind": "color"
   },
   {

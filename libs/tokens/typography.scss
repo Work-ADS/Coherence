@@ -24,16 +24,16 @@
   // ---------------------------------------------------------------------------
   --font-family-serif: 'Roboto Serif', serif;
 
-  // Roboto, single sans family (Wealth Planner DS, 2026-10-14). Defined here and
-  // not read yet: the --type-* roles below still point at serif until the
-  // semantic pass repoints them.
+  // Roboto, single sans family (Wealth Planner DS, 2026-10-14). Every --type-*
+  // role below reads it; --font-family-serif stays defined but unused.
   //
-  // --font-brand-display / --font-brand-text are NOT defined here yet. Components
-  // read them with a serif fallback (button, insights header, bc-footer) and the
-  // brand mixin falls back through them, so defining them at :root would switch
-  // those to Roboto before the semantic pass. They arrive with the --type-*
-  // repoint.
+  // --font-brand-display / --font-brand-text point at sans: components read
+  // them with a serif fallback (button, insights header, bc-footer) and the
+  // brand mixin falls back through them, so defining them here moves all of
+  // those to Roboto together with the --type-* roles below.
   --font-family-sans: 'Roboto', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-brand-display: var(--font-family-sans);
+  --font-brand-text: var(--font-family-sans);
 
   // ⚠ Every --type-* role is a `font` shorthand. `font:` resets
   // font-variant-numeric to `normal`. A rule that applies one of these roles to
@@ -53,52 +53,52 @@
   // Mobile-first values scale up at `lg` (992px). Uses responsive-token mixin.
   // ---------------------------------------------------------------------------
   @include responsive-token(--type-display, (
-    base: 400 48px/56px var(--font-family-serif),
-    lg:   400 96px/112px var(--font-family-serif),
+    base: 400 48px/56px var(--font-family-sans),
+    lg:   400 96px/112px var(--font-family-sans),
   ));
 
   @include responsive-token(--type-title, (
-    base: 500 24px/32px var(--font-family-serif),
-    lg:   500 32px/40px var(--font-family-serif),
+    base: 400 24px/32px var(--font-family-sans),
+    lg:   400 24px/32px var(--font-family-sans),
   ));
 
   @include responsive-token(--type-subtitle, (
-    base: 500 20px/28px var(--font-family-serif),
-    lg:   500 24px/32px var(--font-family-serif),
+    base: 500 20px/28px var(--font-family-sans),
+    lg:   500 24px/32px var(--font-family-sans),
   ));
 
   @include responsive-token(--type-section, (
-    base: 500 18px/24px var(--font-family-serif),
-    lg:   500 20px/24px var(--font-family-serif),
+    base: 500 18px/28px var(--font-family-sans),
+    lg:   500 18px/28px var(--font-family-sans),
   ));
 
   @include responsive-token(--type-subtitle-body, (
-    base: 400 18px/20px var(--font-family-serif),
-    lg:   400 20px/20px var(--font-family-serif),
+    base: 400 18px/20px var(--font-family-sans),
+    lg:   400 20px/20px var(--font-family-sans),
   ));
 
 
   // ---------------------------------------------------------------------------
   // Type-scale — body + utility tokens (fixed, not responsive)
   // ---------------------------------------------------------------------------
-  --type-body:          400 16px/24px var(--font-family-serif);
-  --type-body-lg-600:   600 16px/24px var(--font-family-serif);
-  --type-body-lg-500:   500 16px/24px var(--font-family-serif);
-  --type-body-md-600:   600 14px/20px var(--font-family-serif);
-  --type-body-md-500:   500 14px/20px var(--font-family-serif);
-  --type-body-md-400:   400 14px/20px var(--font-family-serif);
-  --type-body-sm-600:   600 12px/16px var(--font-family-serif);
-  --type-body-sm-500:   500 12px/16px var(--font-family-serif);
-  --type-body-sm-400:   400 12px/16px var(--font-family-serif);
-  --type-button:        500 14px/14px var(--font-family-serif);
-  --type-button-400:    400 14px/14px var(--font-family-serif);
-  --type-informe:       400 12px/14px var(--font-family-serif);
+  --type-body:          400 16px/24px var(--font-family-sans);
+  --type-body-lg-600:   600 16px/24px var(--font-family-sans);
+  --type-body-lg-500:   500 16px/24px var(--font-family-sans);
+  --type-body-md-600:   600 14px/20px var(--font-family-sans);
+  --type-body-md-500:   500 14px/20px var(--font-family-sans);
+  --type-body-md-400:   400 14px/20px var(--font-family-sans);
+  --type-body-sm-600:   600 12px/16px var(--font-family-sans);
+  --type-body-sm-500:   500 12px/16px var(--font-family-sans);
+  --type-body-sm-400:   400 12px/16px var(--font-family-sans);
+  --type-button:        500 14px/14px var(--font-family-sans);
+  --type-button-400:    400 14px/14px var(--font-family-sans);
+  --type-informe:       400 12px/14px var(--font-family-sans);
 
   // Section heading-row figure: a total sat beside the H2 (e.g. "1.142.300 €").
   // Same 18/28 box as the zip's --type-section so figure and heading share a
   // baseline; weight 400 against the heading's 500 is what reads it as data.
   // Follows --type-section: if that changes size, so does this.
-  --type-section-figure: 400 18px/28px var(--font-family-serif);
+  --type-section-figure: 400 18px/28px var(--font-family-sans);
 
   // ---------------------------------------------------------------------------
   // Standalone font-size tokens
@@ -125,9 +125,9 @@
   // section spec (file pajleACyFdm5y, node 466:28470): eyebrow 12/16 all-caps,
   // title 16/20 medium, subtitle 14/16 regular.
   // Eyebrow weight is 600 to match the canonical dialog/banner treatment.
-  --type-section-eyebrow:  600 12px/16px var(--font-family-serif);
-  --type-section-title:    500 16px/20px var(--font-family-serif);
-  --type-section-subtitle: 400 14px/16px var(--font-family-serif);
+  --type-section-eyebrow:  600 12px/16px var(--font-family-sans);
+  --type-section-title:    500 16px/24px var(--font-family-sans);
+  --type-section-subtitle: 400 14px/16px var(--font-family-sans);
 
 
   // ---------------------------------------------------------------------------

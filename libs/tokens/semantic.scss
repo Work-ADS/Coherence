@@ -48,7 +48,7 @@
   // SURFACE (7) — mid-level surfaces (cards, panels, modals)
   // ===========================================================================
 
-  --surface-default:  var(--color-afi-white-25);
+  --surface-default:  var(--color-afi-white-0);
   // Role: default surface — cards, panels, basic containers.
   --surface-subtle:   var(--color-afi-gris-50);
   // Role: subtle tinted surface — secondary panels, filter rails.
@@ -279,8 +279,8 @@
   // Role: border on any disabled element.
 
   // Border widths (sizes, not colors)
-  --border-width-hairline: var(--dimension-0-25);  // 1px
-  --border-width-thick:    var(--dimension-0-5);   // 2px
+  --border-width-hairline: 1px;  // 1px
+  --border-width-thick:    2px;   // 2px
 
 
   // ===========================================================================
@@ -315,9 +315,9 @@
   // INPUT (11) — text inputs, selects, textareas
   // ===========================================================================
 
-  --input-background-default:  var(--canvas-secondary);
+  --input-background-default:  var(--color-afi-white-0);
   // Role: input bg at rest.
-  --input-background-disabled: var(--disabled-background);
+  --input-background-disabled: var(--color-afi-control-100);
 
   --input-foreground-default:     var(--foreground-secondary-default);
   // Role: typed-in text.
@@ -340,28 +340,30 @@
   // NAV (19) — sidebar, navbar, toolbar + nav items
   // ===========================================================================
 
-  --nav-sidebar: var(--control-background-default);
+  --nav-sidebar: var(--color-afi-white-0);
+  --nav-navbar:  var(--color-afi-white-0);
+  --nav-toolbar: var(--color-afi-white-0);
 
 
-  --nav-item-background-default:  transparent;
+  --nav-item-background-default:  var(--color-afi-white-0);
   // Role: nav-item bg at rest — same as sidebar, invisible until interaction.
-  --nav-item-background-hover:    var(--control-background-hover);
-  --nav-item-background-active:   var(--control-background-active);
-  --nav-item-background-selected: var(--control-background-selected);
+  --nav-item-background-hover:    var(--color-afi-white-50);
+  --nav-item-background-active:   var(--color-afi-white-100);
+  --nav-item-background-selected: var(--color-afi-white-100);
   --nav-item-background-disabled: var(--disabled-background);
 
-  --nav-item-foreground-default:  var(--control-foreground-default);
+  --nav-item-foreground-default:  var(--foreground-primary-default);
   // Role: nav-item label/icon text at rest.
-  --nav-item-foreground-hover:    var(--control-foreground-hover);
-  --nav-item-foreground-active:   var(--control-foreground-active);
-  --nav-item-foreground-selected: var(--control-foreground-selected);
+  --nav-item-foreground-hover:    var(--foreground-primary-hover);
+  --nav-item-foreground-active:   var(--color-afi-azul-700);
+  --nav-item-foreground-selected: var(--color-afi-azul-700);
   --nav-item-foreground-disabled: var(--disabled-foreground);
 
-  --nav-item-icon-default:  var(--control-foreground-default);
+  --nav-item-icon-default:  var(--color-afi-control-500);
   // Role: nav-item leading/trailing icon at rest.
-  --nav-item-icon-hover:    var(--control-foreground-hover);
-  --nav-item-icon-active:   var(--control-foreground-active);
-  --nav-item-icon-selected: var(--control-foreground-selected);
+  --nav-item-icon-hover:    var(--color-afi-control-700);
+  --nav-item-icon-active:   var(--color-afi-control-500);
+  --nav-item-icon-selected: var(--color-afi-control-500);
   --nav-item-icon-disabled: var(--disabled-icon);
 
   --nav-item-border-selected: var(--color-afi-control-300);
@@ -372,11 +374,11 @@
   // OVERLAY (4) — modal scrim + floating surface backgrounds
   // ===========================================================================
 
-  --overlay-blanket:  hsla(215, 25%, 6%, 0.60);
+  --overlay-blanket:  hsla(215, 25%, 6%, 0.6);
   // Role: modal scrim — dims the page under a blocking dialog.
   --overlay-modal:    var(--color-afi-white-0);
   // Role: modal dialog body bg.
-  --overlay-popover:  var(--color-afi-white-0);
+  --overlay-popover:  var(--overlay-dropdown);
   // Role: popover body bg (tooltips that ARE clickable, mini dropdowns).
   --overlay-dropdown: var(--color-afi-white-0);
   // Role: dropdown menu / select-option-list body bg.
@@ -399,6 +401,7 @@
   --feedback-warning-background: var(--color-warning-50);
   // Role: warning notification bg, warning status chip bg.
   --feedback-warning-foreground: var(--color-warning-700);
+  --feedback-warning-text:       var(--color-warning-900);
   --feedback-warning-border:     var(--color-warning-300);
 
   --feedback-info-background:    var(--color-info-50);
@@ -484,7 +487,7 @@
   // -----------------------------------------------------------------------
   --top-bar-height:      var(--dimension-14);   // 56 px — Coherence DS site top bar
   --shell-header-height: var(--dimension-12);   // 48 px — product shell header (planner top bar + sidebar logo row align here)
-  --sidebar-width:       var(--dimension-16);   // 64 px
+  --sidebar-width:       var(--dimension-65);   // 260 px
 
   // -----------------------------------------------------------------------
   // CANVAS chrome (page-level padding) — grows with viewport.
@@ -508,7 +511,7 @@
   --section-padding-inline: var(--dimension-4);  // 16 px (static, per Figma 466:28470)
   --section-padding-block:  var(--dimension-4);  // 16 px
   --section-gap:            var(--dimension-6);  // 24 px header → body
-  --section-radius:         var(--radius-lg);    // 12 px
+  --section-radius:         var(--radius-xl);    // 16 px
 
   // -----------------------------------------------------------------------
   // GAP — semantic spacing-between roles.
@@ -555,7 +558,7 @@
   // -----------------------------------------------------------------------
   // RADIUS semantic roles.
   // -----------------------------------------------------------------------
-  --radius-control: var(--radius-sm);   // buttons, inputs, chips
+  --radius-control: var(--radius-ml);   // buttons, inputs, chips: 10 px
   --radius-card:    var(--radius-md);   // cards, panels
   --radius-modal:   var(--radius-lg);   // modals, drawers
   --radius-pill:    var(--radius-full); // status chips, pills
@@ -930,22 +933,22 @@ body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__bac
   --input-border-default:      var(--color-afi-control-700);
 
   // ===== NAV — sidebar/navbar/toolbar on dark =====
-  --nav-sidebar: var(--control-background-default);
+  --nav-sidebar: var(--color-afi-control-900);
   --nav-navbar:  var(--color-afi-control-900);
   --nav-toolbar: var(--color-afi-control-900);
   --nav-item-background-default:  transparent;
-  --nav-item-background-hover:    var(--control-background-hover);
-  --nav-item-background-selected: var(--control-background-selected);
+  --nav-item-background-hover:    var(--color-afi-control-800);
+  --nav-item-background-selected: var(--color-afi-control-700);
   --nav-item-foreground-default:  var(--control-foreground-default);
   --nav-item-foreground-hover:    var(--control-foreground-hover);
-  --nav-item-foreground-active:   var(--control-foreground-active);
-  --nav-item-foreground-selected: var(--control-foreground-selected);
-  --nav-item-icon-default:        var(--control-foreground-default);
+  --nav-item-foreground-active:   var(--color-afi-azul-300);
+  --nav-item-foreground-selected: var(--color-afi-azul-300);
+  --nav-item-icon-default:        var(--color-afi-control-400);
 
   // ===== OVERLAY — darker scrim, dark surface bodies =====
-  --overlay-blanket:  hsla(0, 0%, 0%, 0.70);
+  --overlay-blanket:  hsla(0, 0%, 0%, 0.7);
   --overlay-modal:    var(--color-afi-control-900);
-  --overlay-popover:  var(--color-afi-control-900);
+  --overlay-popover:  var(--overlay-dropdown);
   --overlay-dropdown: var(--color-afi-control-900);
 
   // ===== FEEDBACK — bg goes -900 (dark tinted), fg goes -200 (light tinted) =====
@@ -957,6 +960,7 @@ body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__bac
   --feedback-error-border:       var(--color-error-700);
   --feedback-warning-background: var(--color-warning-900);
   --feedback-warning-foreground: var(--color-warning-200);
+  --feedback-warning-text:       var(--color-warning-200);
   --feedback-warning-border:     var(--color-warning-700);
   --feedback-info-background:    var(--color-info-900);
   --feedback-info-foreground:    var(--color-info-200);

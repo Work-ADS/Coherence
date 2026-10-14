@@ -279,8 +279,8 @@
   // Role: border on any disabled element.
 
   // Border widths (sizes, not colors)
-  --border-width-hairline: 1px;  // 1px
-  --border-width-thick:    2px;   // 2px
+  --border-width-hairline: var(--dimension-0-25);  // 1px
+  --border-width-thick:    var(--dimension-0-5);   // 2px
 
 
   // ===========================================================================
@@ -944,6 +944,11 @@ body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__bac
   --nav-item-foreground-active:   var(--color-afi-azul-300);
   --nav-item-foreground-selected: var(--color-afi-azul-300);
   --nav-item-icon-default:        var(--color-afi-control-400);
+  --nav-item-background-active:   var(--color-afi-control-700);
+  --nav-item-icon-hover:          var(--color-afi-control-200);
+  --nav-item-icon-active:         var(--color-afi-control-400);
+  --nav-item-icon-selected:       var(--color-afi-control-400);
+  --input-background-disabled:    var(--disabled-background);
 
   // ===== OVERLAY — darker scrim, dark surface bodies =====
   --overlay-blanket:  hsla(0, 0%, 0%, 0.7);

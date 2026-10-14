@@ -490,20 +490,13 @@
   --sidebar-width:       var(--dimension-65);   // 260 px
 
   // -----------------------------------------------------------------------
-  // CANVAS chrome (page-level padding) — grows with viewport.
+  // CANVAS chrome (page-level padding) — 16 px, then 32 px from lg.
   // -----------------------------------------------------------------------
   @include responsive-token(--canvas-padding-inline, (
-    base: var(--dimension-4),    // 16 px on mobile
-    sm:   var(--dimension-5),    // 20 px
-    md:   var(--dimension-6),    // 24 px
+    base: var(--dimension-4),    // 16 px below lg
     lg:   var(--dimension-8),    // 32 px
-    xl:   var(--dimension-10),   // 40 px
-    xxl:  var(--dimension-12),   // 48 px
   ));
-  @include responsive-token(--canvas-padding-block, (
-    base: var(--dimension-4),
-    sm:   var(--dimension-5),
-  ));
+  --canvas-padding-block: var(--dimension-4);   // 16 px
 
   // -----------------------------------------------------------------------
   // SECTION chrome (mid-level padding + radius + gaps) — partially responsive.
@@ -518,10 +511,7 @@
   // -----------------------------------------------------------------------
   --gap-card-to-card:       var(--dimension-2);  // 8 px  — KPI / metric cards in a row
   --gap-content-to-content: var(--dimension-4);
-  @include responsive-token(--gap-section-to-section, (
-    base: var(--dimension-8),    // 32 px
-    md:   var(--dimension-10),   // 40 px
-  ));
+  --gap-section-to-section: var(--dimension-8);  // 32 px
   --gap-content-to-footer:  var(--dimension-6);
 
   // -----------------------------------------------------------------------
@@ -867,6 +857,7 @@ body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__bac
   --surface-subtle:   var(--color-afi-control-800);
   --surface-raised:   var(--color-afi-control-800);   // slightly lifted
   --surface-selected: var(--color-afi-azul-profundo-800);
+  --surface-hover:    var(--color-afi-control-800);
   // --surface-inverse-* is intentionally NOT overridden here — neither the
   // field nor its mark tiers. It is the fixed dark field (dark chrome,
   // illustration backgrounds); flipping it to light in dark mode would break
@@ -948,6 +939,7 @@ body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__bac
   --nav-item-icon-hover:          var(--color-afi-control-200);
   --nav-item-icon-active:         var(--color-afi-control-400);
   --nav-item-icon-selected:       var(--color-afi-control-400);
+  --nav-item-border-selected:     var(--color-afi-control-700);
   --input-background-disabled:    var(--disabled-background);
 
   // ===== OVERLAY — darker scrim, dark surface bodies =====

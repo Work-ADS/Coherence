@@ -788,6 +788,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "length"
   },
   {
+    "name": "--canvas-padding-block",
+    "kind": "length"
+  },
+  {
     "name": "--section-padding-inline",
     "kind": "length"
   },
@@ -809,6 +813,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--gap-content-to-content",
+    "kind": "length"
+  },
+  {
+    "name": "--gap-section-to-section",
     "kind": "length"
   },
   {
@@ -953,14 +961,6 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--canvas-padding-inline",
-    "kind": "length"
-  },
-  {
-    "name": "--canvas-padding-block",
-    "kind": "length"
-  },
-  {
-    "name": "--gap-section-to-section",
     "kind": "length"
   }
 ] as const;

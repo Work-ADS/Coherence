@@ -53,6 +53,20 @@ Guardian review at the end of 5b-1.
 10. **Filter-chip and MultiSelect.** New `libs/ui/src/multi-select/` (accumulating panel, `summary`, `selectAll`, `trigger`). Filter-chip: wrapper plus two sibling buttons (no nested interactive), `value`, `appearance=outline`, `asTrigger/expanded/onReset`, toggle mode on `aria-pressed`.
 11. **Close.** `/componentes/*` doc pages for every touched primitive, findings into this brief, final guardian review, Unicaja check.
 
+## 5b-2 plan (approved 2026-10-15)
+
+Scope: steps 5 and 6 above. Every step is API growth; the restyle shipped in 5b-1.
+
+1. **Button.** `warning-ghost` variant; sizes `xl` and `2xl` (36 and 40, padding `--space-md`, `--control-label-font-lg`). `iconStart`/`iconEnd` become `IconName | null` rendered through `afi-icon` (the string-gated slot has no v1 consumers: the slot uses in the repo are `afi-button-v2`). Spinner becomes an `afi-icon` `loader` glyph (new, data-only registry entry), sr-only text and reduced-motion rule kept.
+2. **Icon-button.** `quiet`, `quiet-destruction`, sizes `xl` and `2xl`; glyph steps 16/16/16/18/20 (sm stays 16: no 14 px token). The declared-but-unrendered `badge` input is removed (no consumers).
+3. **Tooltip, additive.** `openOnClick`, `multiline` (max width `--dimension-60`), Escape closes, closes on mouseleave and focusout. Defaults unchanged for the 56 existing uses. Still absolutely positioned; the portal waits for 5d.
+4. **FieldHelp.** New `libs/ui/src/field-help/`: `afi-field-help` (tooltip + icon-button quiet sm + `info` glyph, click never reaches the field, named by `helpLabel`, described by a hidden node) and `afi-field-label` (label row: `<label for>`, required marker, help; the required marker is folded in here instead of a separate RequiredMark). Doc page `/componentes/field-help`.
+5. **Input.** `help`/`helpLabel`, `shape="pill"`, `iconStart`/`iconEnd` as `IconName`, `numeric`. ARIA: no `role="alert"` on the error, label text carries the name, hint/error ids merged into `aria-describedby`.
+
+Decisions: `numeric` is added but `type="number"` keeps its implicit right-align for now (58 consumers; migrate later, deprecation note). `unit` is not added: `suffix` already renders a trailing static unit (5 consumers); recorded as a deliberate difference from the zip. Tooltip portal deferred to 5d.
+
+Done when: acceptance below for Button, Icon-button, Input and Field help; `clean-code-check.sh`, `tsc`, `npm run build` green; guardian review; before/after, 375 px, dark and the modern `/workbench` hash check; pushed to both remotes.
+
 ## Acceptance per primitive (from appendix A)
 
 - **Button / icon-button:** keyboard focus ring visible and absent on mouse focus; ring >= 3:1 against surface-default and surface-subtle in light and dark; disabled opacity .5, not-allowed; dev-mode icon-only warning kept; hit area 44 px by `touch-area`.

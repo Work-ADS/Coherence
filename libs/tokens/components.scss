@@ -87,10 +87,11 @@
   // ===========================================================================
 
   --status-chip-height-sm: var(--dimension-5);         // 20px
-  --status-chip-height-md: var(--dimension-6);         // 24px
+  --status-chip-height-md: var(--dimension-5-5);       // 22px (the zip's single size)
   --status-chip-padding-x: var(--space-xs);
+  --status-chip-padding-x-end: var(--dimension-2-5);   // 10px: room after the label
   --status-chip-radius: var(--radius-pill);
-  --status-chip-dot-size: var(--space-2xs);            // 4px
+  --status-chip-dot-size: var(--dimension-1-5);        // 6px
   --status-chip-dot-radius: var(--radius-full);
   --status-chip-chevron-size: var(--icon-sm);          // 16px
   --status-chip-gap: var(--space-2xs);

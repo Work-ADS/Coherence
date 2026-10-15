@@ -30,7 +30,7 @@ The traditional AFI brand (the default `:root` layer) brought in line with the W
 | 1 | [Primitive tokens](2026-10-14-traditional-ds-1-primitive-tokens.md) | `libs/tokens/`, `apps/site/src/styles.scss` | — |
 | 2 | [Semantic: update existing](2026-10-14-traditional-ds-2-semantic-update-existing.md) (Roboto lands, warning orange, nav/sidebar, shape, overlay) | `libs/tokens/semantic.scss` | 1 |
 | 3 | [Semantic: create new, cross-cutting only](2026-10-14-traditional-ds-3-semantic-create-cross-cutting.md) (chart, canvas, layout, color) | `libs/tokens/semantic.scss` | 2 |
-| 4 | Components: audit every existing primitive against the zip (read-only report) | none | 2 |
+| 4 | [Components: audit every existing primitive against the zip](2026-10-15-traditional-ds-4-components-audit.md) (read-only; [report](2026-10-15-traditional-ds-4-components-audit-report.md)) | none | 2 |
 | 5 | Components: update existing to the zip's look | `libs/ui/src/*` | 2, 4 |
 | 6a | New components: data and charts (DataSection, FigureStrip, RankedBars, ReturnRuler, Sparkline, SummaryPanel, Meter) | `libs/ui/src/` | 3, 5 |
 | 6b | New components: forms (ControlBar, FormGrid, ValueField, PercentageSplit, MultiSelect, DatePicker, FieldReveal, ExpandableCheckRow, FieldHelp) | `libs/ui/src/` | 5 |
@@ -39,7 +39,8 @@ The traditional AFI brand (the default `:root` layer) brought in line with the W
 | 7 | Wealth Planner pages: swap demo-local pieces for the new primitives | `apps/site/.../wealth-planner-2026/` | 6a–6d |
 
 Rules for 3 and 6:
-- Component-scoped tokens (sidebar 26, table 26, insight 15, tour 10, statuspill 9) are created with their component in chunk 6, not in chunk 3.
+- Component-scoped tokens are created with their component, not in chunk 3. Button, checkbox, menu, sidebar and table tokens go in chunk 5 (decided 2026-10-15, because existing primitives consume them); insight 15, tour 10, statuspill 9 and meter go in chunk 6.
+- `--radius-section` (12px) stays; `--section-radius` (16px) is retired in chunk 5c (decided 2026-10-15).
 - Each new primitive follows the 3-file convention and `_pre-flight.md`, and its brief lists the regressions mined from the matching zip test page.
 - Chunks 6a–6d are outlined only. We sharpen each brief once its predecessor lands, because the audit in chunk 4 will change the list.
 

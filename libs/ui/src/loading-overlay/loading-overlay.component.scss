@@ -1,0 +1,73 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+// Scoped to the surface it covers (position: absolute), not the viewport, so it
+// sits on a local layer rather than the global ladder.
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-dropdown);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: var(--surface-subtle);
+  opacity: 0.85;
+  animation: fade-in var(--duration-fast) var(--easing-enter) forwards;
+}
+
+.overlay--transparent {
+  pointer-events: none;
+}
+
+.overlay__message {
+  margin-block-start: var(--space-sm);
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+.spinner {
+  inline-size: var(--dimension-8);
+  block-size: var(--dimension-8);
+  border: var(--dimension-0-75) solid var(--control-track-background);
+  border-top-color: var(--brand-secondary-background-default);
+  border-radius: var(--radius-full);
+  // One turn takes as long as the line reveal plus a beat.
+  animation: spin calc(var(--duration-reveal-light) + var(--duration-slow)) linear infinite;
+}
+
+.line-reveal-bar {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: var(--dimension-0-75);
+  background: var(--brand-secondary-background-default);
+  transform-origin: left;
+  animation: line-grow var(--duration-reveal-light) var(--easing-enter) forwards;
+}
+
+.line-reveal-content {
+  opacity: 0;
+  animation: content-reveal var(--duration-base) var(--easing-enter) var(--duration-reveal-light) forwards;
+}
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 0.85; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes line-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes content-reveal { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner,
+  .overlay,
+  .line-reveal-bar {
+    animation-duration: 0.01ms;
+  }
+
+  .line-reveal-content {
+    animation-duration: 0.01ms;
+    animation-delay: 0ms;
+  }
+}

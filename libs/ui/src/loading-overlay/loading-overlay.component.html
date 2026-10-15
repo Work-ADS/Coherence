@@ -1,0 +1,24 @@
+@if (showOverlay()) {
+  @if (variant() === 'quiet-spinner') {
+    <div class="overlay" [class.overlay--transparent]="!blocking()" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      @if (message()) {
+        <span class="overlay__message">{{ message() }}</span>
+      } @else {
+        <span class="sr-only">Cargando…</span>
+      }
+    </div>
+  } @else {
+    <div class="line-reveal-bar" aria-hidden="true"></div>
+    <div role="status" aria-live="polite">
+      <span class="sr-only">Cargando…</span>
+    </div>
+  }
+}
+@if (variant() === 'line-reveal' && !showOverlay()) {
+  <div class="line-reveal-content">
+    <ng-content />
+  </div>
+} @else {
+  <ng-content />
+}

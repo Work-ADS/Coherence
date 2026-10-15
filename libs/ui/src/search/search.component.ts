@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   ElementRef,
   inject,
   input,
   isDevMode,
+  OnDestroy,
   OnInit,
   output,
   signal,
@@ -13,6 +15,7 @@ import {
 } from '@angular/core';
 
 import { FieldLabelComponent } from '../field-label';
+import { FloatingPanel, onOverlayEscape } from '../floating-panel';
 import { IconComponent } from '../icon';
 
 import type { SearchShape, SearchSize, SearchSuggestion } from './search.variants';
@@ -51,7 +54,7 @@ let nextId = 0;
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   readonly size = input<SearchSize>('sm');
   /** `pill` is the filter-row shape: fully rounded. */
   readonly shape = input<SearchShape>('rect');
@@ -91,6 +94,10 @@ export class SearchComponent implements OnInit {
 
   readonly inputEl = viewChild<ElementRef<HTMLInputElement>>('inputEl');
   private readonly host = inject(ElementRef);
+  private readonly rootEl = viewChild<ElementRef<HTMLElement>>('rootEl');
+  private readonly panelEl = viewChild<ElementRef<HTMLElement>>('panelEl');
+  private readonly floating = new FloatingPanel();
+  private disposeEscape: (() => void) | null = null;
 
   readonly rootClasses = computed(
     () =>
@@ -138,6 +145,25 @@ export class SearchComponent implements OnInit {
   readonly comboboxExpanded = computed(
     () => this.showSuggestions() || this.showEmptyMessage(),
   );
+
+  constructor() {
+    // The suggestions (or the empty message) render in the template; the
+    // floating panel portals them under the field so no clipping ancestor cuts them.
+    effect(() => {
+      const panel = this.panelEl()?.nativeElement;
+      const anchor = this.rootEl()?.nativeElement;
+      if (panel && anchor) {
+        this.floating.attach(panel, anchor, { side: 'bottom', align: 'start' });
+        this.disposeEscape ??= onOverlayEscape(() => this.closeList());
+      } else {
+        this.release();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.release();
+  }
 
   ngOnInit(): void {
     if (isDevMode() && !this.label() && !this.ariaLabel()) {
@@ -197,11 +223,18 @@ export class SearchComponent implements OnInit {
       // With a row highlighted, Home and End move the highlight; otherwise they move the caret.
       event.preventDefault();
       this.activeIndex.set(event.key === 'Home' ? 0 : this.visibleSuggestions().length - 1);
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      this.focused.set(false);
-      this.activeIndex.set(-1);
     }
+  }
+
+  private closeList(): void {
+    this.focused.set(false);
+    this.activeIndex.set(-1);
+  }
+
+  private release(): void {
+    this.floating.detach();
+    this.disposeEscape?.();
+    this.disposeEscape = null;
   }
 
   onPick(suggestion: SearchSuggestion): void {

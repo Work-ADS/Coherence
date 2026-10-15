@@ -9,7 +9,7 @@
   />
 }
 
-<div [class]="rootClasses()">
+<div #rootEl [class]="rootClasses()">
   <afi-icon class="afi-search__icon" name="search" />
 
   <input
@@ -53,6 +53,7 @@
 
 @if (showSuggestions()) {
   <div
+    #panelEl
     [id]="suggestionsId"
     role="listbox"
     class="afi-search__suggestions"
@@ -93,7 +94,7 @@
     }
   </div>
 } @else if (showEmptyMessage()) {
-  <div class="afi-search__suggestions afi-search__suggestions--empty">
+  <div #panelEl class="afi-search__suggestions afi-search__suggestions--empty">
     {{ emptyMessage() }}
   </div>
 }

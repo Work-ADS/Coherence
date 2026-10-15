@@ -18,8 +18,15 @@
 
   <div slot="preview" class="preview">
     <div class="dropdown-panel-demo">
-      <afi-dropdown-panel [open]="true">
-        <div class="dropdown-panel-demo__content">
+      <afi-button variant="secondary" size="md" (clicked)="open.set(!open())">Abrir panel ▾</afi-button>
+      <afi-dropdown-panel
+        [open]="open()"
+        placement="start"
+        ariaLabel="Panel de ejemplo"
+        (closed)="open.set(false)"
+      >
+        <span slot="header">Filtros</span>
+        <div slot="body" class="dropdown-panel-demo__content">
           Contenido del panel
         </div>
       </afi-dropdown-panel>

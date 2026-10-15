@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  // Full-bleed: runs the whole panel width, through its padding.
+  margin: var(--space-3xs) calc(-1 * var(--space-2xs));
+}
+
+.divider {
+  height: var(--border-width-hairline);
+  background: var(--border-subtle);
+}

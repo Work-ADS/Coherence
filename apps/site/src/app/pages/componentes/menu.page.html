@@ -44,10 +44,10 @@
         ariaLabel="Opciones"
         (openChange)="open.set($event)"
       >
-        <afi-menu-item (clicked)="close()">Editar</afi-menu-item>
-        <afi-menu-item (clicked)="close()">Duplicar</afi-menu-item>
-        <afi-menu-item (clicked)="close()">Archivar</afi-menu-item>
-        <afi-menu-item variant="danger" (clicked)="close()">Eliminar</afi-menu-item>
+        <afi-menu-item label="Editar" (clicked)="close()" />
+        <afi-menu-item label="Duplicar" (clicked)="close()" />
+        <afi-menu-item label="Archivar" (clicked)="close()" />
+        <afi-menu-item label="Eliminar" variant="danger" (clicked)="close()" />
       </afi-menu>
     </div>
   </div>

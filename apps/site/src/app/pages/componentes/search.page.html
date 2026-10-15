@@ -1,0 +1,66 @@
+<site-doc-page-shell
+  title="Search"
+  overline="COMPONENTS"
+  description="Campo de búsqueda con borrado y, opcionalmente, sugerencias con teclado. Sin sugerencias filtra en el sitio; con ellas es un combobox."
+  componentName="search"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Search</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Filtrar una tabla o lista</span> — sin <code>typeahead</code>, solo cuadro y borrado.</li>
+    <li><span class="use-cases__label">Buscar con sugerencias</span> — <code>typeahead</code> y <code>suggestions</code> (el consumidor filtra; el campo muestra como máximo diez filas).</li>
+    <li><span class="use-cases__label">Fila de filtros</span> — <code>shape="pill"</code> junto a chips y selects.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control [options]="sizeOptions" [(value)]="size" size="sm" ariaLabel="Search size" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Shape</span>
+      <afi-segmented-control [options]="shapeOptions" [(value)]="shape" size="sm" ariaLabel="Search shape" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Extras</span>
+      <afi-segmented-control [options]="extraOptions" [(value)]="extra" size="sm" ariaLabel="Search extras" />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-search
+      [size]="size()"
+      [shape]="shape()"
+      label="Buscar activo"
+      placeholder="Vivienda, cuenta, fondo…"
+      [required]="extra() === 'required'"
+      [help]="extra() === 'help' ? 'Busque por nombre o por tipo de activo.' : null"
+      [typeahead]="true"
+      [value]="query()"
+      [suggestions]="suggestions()"
+      (valueChange)="query.set($event)"
+      (cleared)="picked.set(null)"
+      (suggestionPicked)="onPicked($event)"
+    />
+    @if (picked(); as p) {
+      <p class="preview__picked">Seleccionado: {{ p }}</p>
+    }
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Con sugerencias el campo es un <code>combobox</code> con <code>aria-controls</code>, <code>aria-expanded</code> y <code>aria-activedescendant</code>; el foco no sale del campo.</li>
+      <li>Flechas arriba y abajo recorren la lista; Inicio y Fin saltan a la primera y a la última fila cuando hay una resaltada; Intro elige; Escape cierra.</li>
+      <li>Mientras se compone un carácter (IME) las teclas no mueven la lista.</li>
+      <li>La lista muestra como máximo diez filas, así que <code>aria-activedescendant</code> nunca apunta a una fila que no existe.</li>
+      <li><code>help</code> añade un ⓘ tras la etiqueta; <code>required</code> añade el asterisco y <code>aria-required</code>.</li>
+    </ul>
+  </section>
+</site-doc-page-shell>

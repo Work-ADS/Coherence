@@ -10,13 +10,6 @@
   position: relative;
 }
 
-.afi-search__label {
-  display: block;
-  margin-block-end: var(--space-2xs);
-  font: var(--type-body-md-400);
-  color: var(--foreground-secondary-default);
-}
-
 .afi-search {
   display: inline-flex;
   align-items: center;
@@ -47,6 +40,11 @@
 
   // Heights follow the field scale, so a search sits level with input and
   // select at the same size. One type size at every size.
+  // Filter-row shape: fully rounded.
+  &--pill {
+    border-radius: var(--radius-full);
+  }
+
   &--sm {
     height: var(--control-h-sm);
     padding-inline: var(--space-sm);
@@ -67,8 +65,7 @@
 }
 
 .afi-search__icon {
-  width: var(--dimension-4);
-  height: var(--dimension-4);
+  --afi-icon-size: var(--icon-sm);
   color: var(--input-icon-default);
   flex-shrink: 0;
 }
@@ -126,9 +123,8 @@
     outline-offset: var(--border-width-thick);
   }
 
-  svg {
-    width: var(--dimension-3);
-    height: var(--dimension-3);
+  afi-icon {
+    --afi-icon-size: var(--icon-xs);
   }
 }
 
@@ -189,8 +185,7 @@
 }
 
 .afi-search__suggestion-icon {
-  width: var(--dimension-4);
-  height: var(--dimension-4);
+  --afi-icon-size: var(--icon-sm);
   color: var(--foreground-tertiary-default);
   flex-shrink: 0;
 }

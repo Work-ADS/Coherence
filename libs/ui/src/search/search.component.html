@@ -1,23 +1,16 @@
-@if (label()) {
-  <label [for]="inputId" [id]="labelId" class="afi-search__label">
-    {{ label() }}
-  </label>
+@if (label(); as labelText) {
+  <afi-field-label
+    [text]="labelText"
+    [forId]="inputId"
+    [labelId]="labelId"
+    [required]="required()"
+    [help]="help()"
+    [helpLabel]="helpLabel()"
+  />
 }
 
 <div [class]="rootClasses()">
-  <svg
-    class="afi-search__icon"
-    viewBox="0 0 20 20"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-  >
-    <circle cx="9" cy="9" r="6" />
-    <line x1="14" y1="14" x2="17" y2="17" />
-  </svg>
+  <afi-icon class="afi-search__icon" name="search" />
 
   <input
     #inputEl
@@ -41,7 +34,8 @@
     (input)="onInput($event)"
     (keydown)="onKeydown($event)"
     (focus)="onFocus()"
-    (blur)="onBlur()"
+    [attr.aria-required]="required() ? 'true' : null"
+    (blur)="onBlur($event)"
   />
 
   @if (hasValue() && !disabled()) {
@@ -52,13 +46,7 @@
       (mousedown)="$event.preventDefault()"
       (click)="clear()"
     >
-      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path
-          fill-rule="evenodd"
-          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-          clip-rule="evenodd"
-        />
-      </svg>
+      <afi-icon name="x" />
     </button>
   }
 </div>
@@ -70,7 +58,7 @@
     class="afi-search__suggestions"
   >
     @for (
-      suggestion of suggestions();
+      suggestion of visibleSuggestions();
       let i = $index;
       track suggestionKey(i, suggestion)
     ) {
@@ -87,19 +75,7 @@
         (mouseenter)="activeIndex.set(i)"
         (click)="onPick(suggestion)"
       >
-        <svg
-          class="afi-search__suggestion-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.75"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
+        <afi-icon class="afi-search__suggestion-icon" name="search" />
         <span class="afi-search__suggestion-text">
           <span class="afi-search__suggestion-label">{{ suggestion.label }}</span>
           @if (suggestion.description) {

@@ -54,7 +54,7 @@ export type {
   TableApronTokenIcon,
 } from './src/table-apron';
 export { SearchComponent } from './src/search';
-export type { SearchSize, SearchSuggestion } from './src/search';
+export type { SearchShape, SearchSize, SearchSuggestion } from './src/search';
 export { SearchV2Component } from './src/search-v2';
 export type { SearchV2Size, SearchV2Suggestion } from './src/search-v2';
 export { FilterChipComponent } from './src/filter-chip';

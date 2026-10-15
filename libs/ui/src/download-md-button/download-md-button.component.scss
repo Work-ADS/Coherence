@@ -5,7 +5,7 @@
   height: var(--control-h-sm);
   padding: var(--space-xs) var(--space-sm);
   /* TODO(semantic-border): replace --color-neutral-200 with --color-border once that semantic alias exists */
-  border: var(--border-thin) solid var(--color-neutral-200);
+  border: var(--border-width-hairline) solid var(--color-neutral-200);
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-neutral-700);
@@ -23,8 +23,8 @@
   }
 
   &:focus-visible {
-    outline: var(--border-base) solid var(--color-action-500);
-    outline-offset: var(--border-base);
+    outline: var(--border-width-thick) solid var(--color-action-500);
+    outline-offset: var(--border-width-thick);
   }
 
   &__icon {

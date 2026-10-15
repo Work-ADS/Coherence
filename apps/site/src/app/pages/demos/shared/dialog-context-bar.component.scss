@@ -5,8 +5,8 @@
 .context-bar {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
   background: var(--surface-subtle);
 }
@@ -15,7 +15,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: var(--space-3);
+  gap: var(--space-sm);
 }
 
 .context-bar__title {
@@ -56,7 +56,7 @@
 .context-bar__legend {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-xs);
   font: var(--type-body-sm-500);
   color: var(--foreground-secondary);
 }

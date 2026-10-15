@@ -16,7 +16,7 @@ export const tokenUsage = [
   { property: 'Border radius (list)', token: 'var(--radius-lg)' },
   { property: 'Border radius (indicator)', token: 'var(--radius-md)' },
   { property: 'Focus ring', token: 'var(--border-focus)' },
-  { property: 'Transition (indicator)', token: 'var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1)' },
+  { property: 'Transition (indicator)', token: 'var(--duration-base) var(--easing-standard)' },
   { property: 'Transition (color)', token: 'var(--duration-fast) ease-out' },
   { property: 'Badge background', token: 'var(--brand-primary-background-default)' },
   { property: 'Badge text', token: 'var(--brand-primary-foreground-default)' },

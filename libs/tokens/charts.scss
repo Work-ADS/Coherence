@@ -31,6 +31,15 @@
   // debt / loss / below zero" and it must read identically regardless of
   // asset class, position in the stack, or active palette. Locked 2026-06-01.
 
+  // Divergent heatmap ramp. Three steps per side, light to strong, read by
+  // resolveDivergentColor in libs/ui/src/chart/chart.variants.ts.
+  --data-diverge-pos-300: var(--chart-positive-subtle);
+  --data-diverge-pos-500: var(--chart-positive-default);
+  --data-diverge-pos-700: var(--chart-positive-strong);
+  --data-diverge-neg-300: var(--chart-negative-subtle);
+  --data-diverge-neg-500: var(--chart-negative-default);
+  --data-diverge-neg-700: var(--chart-negative-strong);
+
   --chart-deuda: var(--chart-negative);
   // Back-compat alias. "Deuda" is the seniors' vocabulary in the
   // evolución-patrimonial chart; the canonical name is --chart-negative.

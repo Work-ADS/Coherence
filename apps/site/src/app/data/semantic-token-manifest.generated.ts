@@ -408,6 +408,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "length"
   },
   {
+    "name": "--focus-ring",
+    "kind": "length"
+  },
+  {
     "name": "--control-background-default",
     "kind": "color"
   },
@@ -992,7 +996,27 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "color"
   },
   {
-    "name": "--control-h-lg",
+    "name": "--control-size-sm",
+    "kind": "length"
+  },
+  {
+    "name": "--control-size-md",
+    "kind": "length"
+  },
+  {
+    "name": "--control-size-lg",
+    "kind": "length"
+  },
+  {
+    "name": "--control-size-xl",
+    "kind": "length"
+  },
+  {
+    "name": "--control-size-2xl",
+    "kind": "length"
+  },
+  {
+    "name": "--touch-target-min",
     "kind": "length"
   },
   {
@@ -1204,6 +1228,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "length"
   },
   {
+    "name": "--radius-xs",
+    "kind": "length"
+  },
+  {
     "name": "--radius-control",
     "kind": "length"
   },
@@ -1285,6 +1313,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--control-h-md",
+    "kind": "length"
+  },
+  {
+    "name": "--control-h-lg",
     "kind": "length"
   },
   {

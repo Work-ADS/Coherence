@@ -3,6 +3,8 @@
 // Uses component tokens from libs/tokens/components.scss
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+
 :host {
   display: inline-flex;
 }
@@ -35,8 +37,7 @@
     }
 
     &:focus-visible {
-      outline: none;
-      box-shadow: var(--focus-ring);
+      @include focus-ring;
     }
   }
 }

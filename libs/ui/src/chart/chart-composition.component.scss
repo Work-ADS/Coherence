@@ -338,7 +338,7 @@
   transition: box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
 
   &:hover {
-    box-shadow: var(--elevation-2);
+    box-shadow: var(--elevation-md);
   }
 
   &:focus-visible {

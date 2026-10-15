@@ -19,9 +19,11 @@
   // ===========================================================================
 
   // Sizes (container dimensions)
-  --icon-button-size-sm: var(--avatar-sm);   // 32px
-  --icon-button-size-md: var(--avatar-md);   // 40px
-  --icon-button-size-lg: var(--avatar-lg);   // 48px
+  --icon-button-size-sm:  var(--control-size-sm);    // 24px
+  --icon-button-size-md:  var(--control-size-md);    // 28px
+  --icon-button-size-lg:  var(--control-size-lg);    // 32px
+  --icon-button-size-xl:  var(--control-size-xl);    // 36px
+  --icon-button-size-2xl: var(--control-size-2xl);   // 40px
 
   // Icon size inside button (always consistent)
   --icon-button-icon-size: var(--icon-sm);   // 16px
@@ -136,4 +138,79 @@
   --dropdown-enter-duration: var(--duration-fast);
   --dropdown-enter-easing: var(--easing-enter);
   --dropdown-enter-distance: var(--space-2xs);        // 4px translateY
+
+  // ===========================================================================
+  // BUTTON — interaction fills (colour only; no elevation change). AFI-only:
+  // primary and danger bind AFI ramps directly, so a white-label brand must
+  // override these (white-label is frozen). Ported from
+  // the Wealth Planner zip. AFI action is brand-secondary, so primary fills use
+  // the azul-profundo ramp directly, as the zip does.
+  // ===========================================================================
+
+  --button-primary-background-default: var(--color-afi-azul-profundo-500);
+  --button-primary-background-hover:   var(--color-afi-azul-profundo-450);
+  --button-primary-background-active:  var(--color-afi-azul-profundo-700);
+
+  // Untinted hover/active for secondary and ghost
+  --button-neutral-background-hover:  var(--color-afi-control-100);
+  --button-neutral-background-active: var(--color-afi-control-200);
+
+  --button-danger-background-default: var(--color-error-700);
+  --button-danger-background-hover:   var(--color-error-500);
+  --button-danger-background-active:  var(--color-error-900);
+  --button-danger-ghost-background-hover:  var(--color-error-50);
+  --button-danger-ghost-background-active: var(--color-error-200);
+
+  // Warning ghost: transparent at rest with a warning hairline. Ink is the 900
+  // step (9.37:1 on white); the border keeps 700 (non-text, 5.18:1 on white).
+  --button-warning-ghost-foreground:        var(--color-warning-900);
+  --button-warning-ghost-border:            var(--color-warning-700);
+  --button-warning-ghost-background-hover:  var(--feedback-warning-background);
+  --button-warning-ghost-background-active: var(--color-warning-100);
+
+  // Label type shared by button, icon-button wide and filter-chip
+  --control-label-font-sm: var(--type-body-sm-400);
+  --control-label-font-lg: var(--type-button-400);
+  --control-label-tracking: var(--tracking-control);
+
+
+  // ===========================================================================
+  // CHECKBOX / RADIO — box and glyph sizes. The box is exactly this size; the
+  // hit area extends past it (accessibility.md rule 7).
+  // ===========================================================================
+
+  --checkbox-size-md:  var(--dimension-4-5);   // 18px
+  --checkbox-size-sm:  var(--dimension-4);     // 16px
+  --checkbox-size-xs:  var(--dimension-3-5);   // 14px — dense data tables
+  --checkbox-glyph-md: var(--dimension-3);     // 12px
+  --checkbox-glyph-sm: var(--dimension-2-5);   // 10px
+  --checkbox-glyph-xs: var(--dimension-2);     // 8px
+
+
+  // ===========================================================================
+  // MENU ITEM — shared by menu, select options and search suggestions
+  // ===========================================================================
+
+  --menu-item-font:           var(--type-body-md-400);
+  --menu-item-font-current:   var(--type-body-md-500);
+  --menu-item-min-height:     var(--dimension-10);   // 40px
+  --menu-item-padding-block:  var(--space-xs);
+  --menu-item-padding-inline: var(--space-md);
+  --menu-item-gap:            var(--space-xs);
+}
+
+
+// Dark values for the tokens above. Same specificity as :root, so this block
+// sits after it; semantic.scss's dark block would lose the cascade here.
+[data-theme="dark"] {
+  --button-neutral-background-hover:  var(--color-afi-control-800);
+  --button-neutral-background-active: var(--color-afi-control-700);
+  --button-primary-background-default: var(--color-afi-azul-profundo-300);
+  --button-primary-background-hover:   var(--color-afi-azul-profundo-200);
+  --button-primary-background-active:  var(--color-afi-azul-profundo-100);
+  --button-danger-ghost-background-hover:  var(--color-error-900);
+  --button-danger-ghost-background-active: var(--color-error-700);
+  --button-warning-ghost-foreground:        var(--color-warning-200);
+  --button-warning-ghost-background-hover:  var(--color-warning-900);
+  --button-warning-ghost-background-active: var(--color-warning-700);
 }

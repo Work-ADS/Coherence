@@ -1,12 +1,10 @@
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   computed,
   contentChild,
+  effect,
   ElementRef,
-  HostListener,
-  inject,
   input,
   isDevMode,
   OnDestroy,
@@ -19,6 +17,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 
 import { FieldLabelComponent } from '../field-label';
+import { FloatingPanel, onOverlayEscape } from '../floating-panel';
 import { IconComponent } from '../icon';
 
 import type {
@@ -64,7 +63,7 @@ type Row =
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
 })
-export class MultiSelectComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class MultiSelectComponent implements OnInit, OnDestroy {
   readonly label = input<string | null>(null);
   readonly help = input<string | null>(null);
   readonly helpLabel = input<string | null>(null);
@@ -107,11 +106,13 @@ export class MultiSelectComponent implements OnInit, AfterViewChecked, OnDestroy
 
   readonly open = signal(false);
   readonly activeIndex = signal(-1);
-  readonly panelStyle = signal<Record<string, string>>({});
 
-  private readonly el = inject(ElementRef);
   readonly triggerEl = viewChild<ElementRef<HTMLElement>>('triggerEl');
   readonly anchorEl = viewChild<ElementRef<HTMLElement>>('anchorEl');
+  private readonly panelRoot = viewChild<ElementRef<HTMLElement>>('panelRoot');
+
+  private readonly floating = new FloatingPanel();
+  private disposeEscape: (() => void) | null = null;
 
   private readonly picked = computed(() => new Set(this.value()));
 
@@ -232,6 +233,21 @@ export class MultiSelectComponent implements OnInit, AfterViewChecked, OnDestroy
     return { $implicit: state };
   });
 
+  constructor() {
+    // The panel is rendered by the template; the floating panel portals it,
+    // positions it against the trigger and drops it when the list closes.
+    effect(() => {
+      const panel = this.panelRoot()?.nativeElement;
+      const anchor = (this.anchorEl() ?? this.triggerEl())?.nativeElement;
+      if (panel && anchor) {
+        this.floating.attach(panel, anchor, { side: 'bottom', align: 'start', onOutside: () => this.close() });
+        this.disposeEscape ??= onOverlayEscape(() => this.close());
+      } else {
+        this.release();
+      }
+    });
+  }
+
   ngOnInit(): void {
     if (isDevMode() && !this.label() && !this.ariaLabel()) {
       console.warn(
@@ -257,8 +273,6 @@ export class MultiSelectComponent implements OnInit, AfterViewChecked, OnDestroy
   openPanel(): void {
     if (this.disabled()) return;
     this.open.set(true);
-    this.recomputePanelPosition();
-    document.addEventListener('scroll', this.onAncestorScroll, true);
     this.activeIndex.set(this.rows().findIndex((r) => !r.disabled));
   }
 
@@ -266,7 +280,6 @@ export class MultiSelectComponent implements OnInit, AfterViewChecked, OnDestroy
     if (!this.open()) return;
     this.open.set(false);
     this.activeIndex.set(-1);
-    document.removeEventListener('scroll', this.onAncestorScroll, true);
     this.focusTrigger();
   }
 
@@ -341,46 +354,21 @@ export class MultiSelectComponent implements OnInit, AfterViewChecked, OnDestroy
         }
         break;
       }
-      case 'Escape':
-        event.preventDefault();
-        event.stopPropagation();
-        this.close();
-        break;
       case 'Tab':
         this.close();
         break;
     }
   }
 
-  @HostListener('window:resize')
-  @HostListener('window:scroll')
-  onViewportChange(): void {
-    if (this.open()) this.recomputePanelPosition();
-  }
-
-  /** Portal the panel and backdrop out of the component (body, or the open dialog), as Select does. */
-  ngAfterViewChecked(): void {
-    if (!this.open()) return;
-    const host = this.el.nativeElement as HTMLElement;
-    const panelEl = host.querySelector('.afi-ms__panel') as HTMLElement | null;
-    const backdropEl = host.querySelector('.afi-ms__backdrop') as HTMLElement | null;
-    const dialog = host.closest('dialog') as HTMLDialogElement | null;
-    const target: HTMLElement = dialog && dialog.open ? dialog : document.body;
-    if (panelEl && panelEl.parentElement !== target) target.appendChild(panelEl);
-    if (backdropEl && backdropEl.parentElement !== target) target.appendChild(backdropEl);
-  }
-
   ngOnDestroy(): void {
-    document.removeEventListener('scroll', this.onAncestorScroll, true);
-    document.querySelectorAll(`[data-ms="${this.msId}"]`).forEach((el) => el.remove());
+    this.release();
   }
 
-  private readonly onAncestorScroll = (event: Event): void => {
-    if (!this.open()) return;
-    const target = event.target as Element | null;
-    if (target && 'closest' in target && target.closest('.afi-ms__panel')) return;
-    this.recomputePanelPosition();
-  };
+  private release(): void {
+    this.floating.detach();
+    this.disposeEscape?.();
+    this.disposeEscape = null;
+  }
 
   private optionRow(option: MultiSelectOption, grouped: boolean): Row {
     return { kind: 'option', id: `${this.msId}-opt-${option.value}`, option, disabled: option.disabled ?? false, grouped };
@@ -415,25 +403,5 @@ export class MultiSelectComponent implements OnInit, AfterViewChecked, OnDestroy
     }
     // A custom trigger: return focus to its first focusable control.
     this.anchorEl()?.nativeElement.querySelector<HTMLElement>('button, [tabindex]')?.focus();
-  }
-
-  private recomputePanelPosition(): void {
-    const anchor = (this.anchorEl() ?? this.triggerEl())?.nativeElement;
-    if (!anchor) return;
-    const rect = anchor.getBoundingClientRect();
-    const viewportH = window.innerHeight;
-    // 288 and 256 below mirror --dimension-72 (panel max height) and --dimension-64 (panel minimum
-    // width) in multi-select.component.scss; keep them in step.
-    const panelMaxH = 288;
-    const gap = 4;
-    const openUp = viewportH - rect.bottom < Math.min(panelMaxH, 160) && rect.top > viewportH - rect.bottom;
-    const rightEdge = rect.right + 256 > document.documentElement.clientWidth; // mirrors --dimension-64 (the panel's minimum width)
-    const edge = rightEdge
-      ? { right: `${document.documentElement.clientWidth - rect.right}px`, left: 'auto' }
-      : { left: `${rect.left}px`, right: 'auto' };
-    const vertical = openUp
-      ? { bottom: `${viewportH - rect.top + gap}px`, top: 'auto' }
-      : { top: `${rect.bottom + gap}px`, bottom: 'auto' };
-    this.panelStyle.set({ ...edge, ...vertical, '--ms-anchor-width': `${rect.width}px` });
   }
 }

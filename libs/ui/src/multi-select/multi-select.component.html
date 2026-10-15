@@ -50,8 +50,7 @@
   }
 
   @if (open()) {
-    <div class="afi-ms__backdrop" [attr.data-ms]="msId" (click)="close()" aria-hidden="true"></div>
-    <div class="afi-ms__panel" [attr.data-ms]="msId" [style]="panelStyle()">
+    <div #panelRoot class="afi-ms__panel">
       <div
         role="listbox"
         [id]="listboxId"

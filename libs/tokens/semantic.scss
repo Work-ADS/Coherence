@@ -443,6 +443,15 @@
   // Search): above Drawer (901), its scrim (900) and Modal (1000), so a field
   // inside a drawer or modal opens its list on top; below Tooltip (1100).
   --z-floating: 1050;
+  // The full ladder, lowest first: Drawer scrim 900 and panel 901, Modal 1000,
+  // floating lists 1050, Tooltip 1100, Toast, then the one full-screen wait.
+  // A Modal is a native <dialog> in the top layer, which z-index cannot beat, so
+  // a layer that must show above one is portalled INTO it (see floating-panel).
+  --z-drawer: 900;
+  --z-modal: 1000;
+  --z-tooltip: 1100;
+  --z-toast: 1150;
+  --z-overlay: 1200;
 
 
   // ===========================================================================

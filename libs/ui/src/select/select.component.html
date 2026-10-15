@@ -50,9 +50,7 @@
   }
 
   @if (open()) {
-    <div class="afi-select__backdrop" (click)="close()" aria-hidden="true"></div>
-
-    <div class="afi-select__panel" [style]="panelStyle()">
+    <div #panelRoot class="afi-select__panel">
       @if (searchable()) {
         <div class="afi-select__search">
           <afi-icon class="afi-select__search-icon" name="search" />

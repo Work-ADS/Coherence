@@ -121,17 +121,13 @@
 }
 
 // ─── Panel ────────────────────────────────────────────────────────────────
-.afi-ms__backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: calc(var(--z-floating) - 1);
-}
-
 .afi-ms__panel {
+  // Fixed, portalled and placed by FloatingPanel; the margin is its gap to the trigger.
   position: fixed;
   z-index: var(--z-floating);
+  margin-block: var(--space-2xs);
   // Never narrower than the trigger or the minimum: an option you cannot read is not a filter.
-  min-inline-size: max(var(--ms-anchor-width, 0), var(--dimension-64));
+  min-inline-size: max(var(--floating-anchor-width, 0), var(--dimension-64));
   max-inline-size: calc(100vw - var(--space-xl));
   max-block-size: var(--dimension-72);
   display: flex;

@@ -121,22 +121,17 @@
 }
 
 // ─── Dropdown panel ───────────────────────────────────────────────────────
-.afi-select__backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: calc(var(--z-floating) - 1);
-}
-
 .afi-select__panel {
-  // Fixed positioning lets the panel escape clipping ancestors
-  // (overflow:hidden on afi-tabs panels, border-radius on cards, etc.).
-  // The component computes top / left / width from the trigger's
-  // bounding rect on every open + scroll/resize.
+  // Fixed, portalled and placed by FloatingPanel, so no clipping ancestor
+  // (overflow:hidden on tabs, a card's radius) can cut it. The margin is the
+  // gap to the trigger; FloatingPanel reads it.
   position: fixed;
   z-index: var(--z-floating);
-  // Never narrower than the trigger (inline min-width) and grows to the longest
-  // option up to the cap; --select-panel-max overrides the cap.
+  margin-block: var(--space-2xs);
+  // Never narrower than the trigger and grows to the longest option up to the
+  // cap; --select-panel-max overrides the cap.
   inline-size: max-content;
+  min-inline-size: var(--floating-anchor-width, 0);
   max-inline-size: min(var(--select-panel-max, var(--dimension-80)), calc(100vw - var(--space-xl)));
   background: var(--overlay-dropdown);
   border: var(--border-width-hairline) solid var(--border-subtle);

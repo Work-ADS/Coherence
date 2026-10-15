@@ -84,6 +84,18 @@
         <afi-button slot="actions" variant="secondary" size="md">Añadir</afi-button>
       </afi-page-header>
     </div>
+
+    <div class="page-header-demo page-header-demo--section page-header-demo--narrow">
+      <afi-page-header
+        level="subsection"
+        appearance="plain"
+        actionsPlacement="end"
+        title="Titulares y beneficiarios de la cuenta conjunta"
+        [sticky]="false"
+      >
+        <afi-button slot="actions" variant="ghost" size="md">Editar</afi-button>
+      </afi-page-header>
+    </div>
   </div>
 
   <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
@@ -94,6 +106,7 @@
       <li>Title se renderiza como <code>&lt;h1&gt;</code> — un solo Page Header por página.</li>
       <li>Subtitle (o <code>description</code>) como párrafo asociado al heading via DOM order; ancho máximo de 84 caracteres.</li>
       <li><code>meta</code> es una línea de estado bajo el título, fuera del <code>&lt;h1&gt;</code>: no es una región en vivo y no va en el subtítulo. Las acciones nunca quedan entre el título y la línea de meta.</li>
+      <li>Section y subsection: <code>appearance="framed"</code> (por defecto, la caja con borde) o <code>"plain"</code> (sin caja, lo que hacía <code>borderless</code>); <code>actionsPlacement="end"</code> mantiene título y acciones en una fila y el título se recorta con puntos suspensivos.</li>
       <li>Solo la cabecera de página (<code>level="page"</code>) lleva <code>role="banner"</code>; las de sección y subsección no son landmarks.</li>
       <li>Los slots <code>backAction</code>, <code>secondaryActions</code>, <code>actions</code> y <code>primaryAction</code> ordenan de menos a más fuerte; cada botón conserva su variante (ghost, secondary, primary).
       <li>Acciones contextuales viven en el slot <code>actions</code> y mantienen su semántica de botón.</li>

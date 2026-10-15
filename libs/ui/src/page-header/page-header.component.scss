@@ -456,3 +456,19 @@
     @include actions-last;
   }
 }
+
+// actionsPlacement="end": title and actions stay on one row at every width; the
+// title ellipsizes instead of the actions wrapping below it.
+@media (max-width: 640px) {
+  :host(.page-header--actions-end) .page-header__title-row {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+}
+
+@container viewport (max-width: 40rem) {
+  :host(.page-header--actions-end) .page-header__title-row {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+}

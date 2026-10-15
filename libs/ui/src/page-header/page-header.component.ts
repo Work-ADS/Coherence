@@ -19,6 +19,8 @@ import type { IconName } from '../icon';
 import { StatusChipComponent } from '../status-chip';
 import type { Estado } from '../status-chip/status-chip.labels';
 import type {
+  PageHeaderActionsPlacement,
+  PageHeaderAppearance,
   PageHeaderCompactPlacement,
   PageHeaderDensity,
   PageHeaderLevel,
@@ -77,11 +79,16 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
   readonly complete = input<boolean>(false);
 
   /**
+   * @deprecated Use `appearance="plain"`.
    * When true, removes the border outline for section / subsection levels.
    * Useful inside dialogs where the surrounding modal panel already defines
    * the visual boundary — the extra box border feels heavy.
    */
   readonly borderless = input<boolean>(false);
+  /** Section and subsection: `framed` (default) is the outline box, `plain` removes it. */
+  readonly appearance = input<PageHeaderAppearance>('framed');
+  /** Section and subsection: `end` keeps title and actions on one row at every width. */
+  readonly actionsPlacement = input<PageHeaderActionsPlacement>('inline');
 
   /**
    * Body bleeds to the box's inline + bottom edges instead of being inset
@@ -138,8 +145,11 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
     if (this.compactActionPlacement() === 'after-description') {
       parts.push('page-header--actions-last');
     }
-    if (this.borderless() && this.level() !== 'page') {
+    if ((this.appearance() === 'plain' || this.borderless()) && this.level() !== 'page') {
       parts.push('page-header--borderless');
+    }
+    if (this.actionsPlacement() === 'end' && this.level() !== 'page') {
+      parts.push('page-header--actions-end');
     }
     return parts.join(' ');
   });

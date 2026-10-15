@@ -33,7 +33,7 @@
   flex: none;
   border: 0;
   border-radius: var(--radius-full);
-  background: var(--control-background-active);
+  background: var(--switch-track-off);
   cursor: inherit;
   padding-inline: var(--dimension-0-75);
   transition: background-color var(--duration-base) var(--easing-standard);
@@ -73,7 +73,7 @@
 .afi-switch__thumb {
   display: inline-block;
   border-radius: var(--radius-full);
-  background: var(--color-base-white);
+  background: var(--switch-thumb);
   box-shadow: var(--elevation-sm);
   transform: translateX(0);
   transition:

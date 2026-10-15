@@ -75,3 +75,14 @@ Zip regressions to mine per primitive: `tools/focus-ring-tests.html`, `field-hel
 ## Findings from the session
 
 - **2026-10-15, planning only.** Zip extracted to a scratch directory outside the repo; no code written. Consumer counts and the Tooltip gap are recorded in "Facts that shape the work". All tokens this brief names resolve in `libs/tokens` (checked by grep: `--control-size-*`, `--control-h-*`, `--button-*`, `--checkbox-*`, `--menu-item-*`, `--control-label-*`, `--input-*`, `--radius-control`, `--radius-panel`, `--overlay-dropdown`, `--z-floating`, `--touch-target-min`, `--surface-raised`, `--nav-item-background-hover`).
+
+### 5b-1 (restyle pass, 2026-10-15)
+
+Commits: Button and Icon Button, Input/Select/Search, Switch/Segmented/Filter-chip, Checkbox/Radio rewrite, then the guardian fixes. Unicaja check passed in the browser after step 3 (72 px cards, 8 px radius, radio mark, thumb hidden); `tsc`, `clean-code-check.sh` and `npm run build` green.
+
+- **Two tokens added.** `--button-danger-foreground` (the danger label was 1.85:1 on the fill in dark; closes the 5a danger-fill item) and `--easing-overshoot` (switch thumb only). The guardian wants Planner sign-off on a fourth easing and a line in `motion-skill.md`: open.
+- **Danger hover deviates from the zip.** The zip's error-500 hover gives the label 3.6:1 (light) and 3.9:1 (dark). Hover is now error-900. Hover and active are therefore the same fill.
+- **Guardian fixes.** Dark segmented thumb was the same colour as its track and the dark switch off-track stayed light grey (`--control-background-active` has no dark value). Fixed with component tokens `--seg-thumb-background`, `--switch-track-off`, `--switch-thumb` in `components.scss`, with dark values. The switch thumb no longer reads a primitive.
+- **Still open.** `--type-caption-400` undefined in search and filter-chip scss (carried from before; fix with the 5a sweep list). Input's adorned shell hand-writes the focus ring rather than the mixin (cosmetic). Danger-foreground light value aliases `--feedback-error-background` (naming wobble). Icon-button glyph stays 16 px at every size until the `xl`/`2xl` step (no 14 px token). Unicaja blocks in input/select now carry redundant overrides; white-label stays frozen.
+- **Layout shifts to expect.** Checkbox, radio and switch rows lost their 44 px wrappers (hit area is now an invisible `::after`); fields and segmented tracks are 4 to 8 px shorter on desktop; buttons are 24/28/32 instead of 32/40/48.
+- **Not done in 5b-1.** Before/after screenshots, a 375 px pass and a modern pixel-identical check were not captured; do them before the 5b-1 handover to Richard.

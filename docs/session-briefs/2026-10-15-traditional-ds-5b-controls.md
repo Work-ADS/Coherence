@@ -81,6 +81,17 @@ Decisions: no `defaultChecked`/uncontrolled mode on any control (every consumer 
 
 Done when: acceptance for Select, Search, Switch, Checkbox and Radio; clean-code check and build green after each commit; guardian review; doc pages updated; browser, dark and 375 px checks; pushed to both remotes.
 
+## 5b-4 plan (approved 2026-10-15)
+
+Scope: steps 9 and 10, the Select `trigger` hook, and the close of 5b. Every API step ends with `npm run build`. Consumers: Segmented Control 40 files (all controlled), Filter Chip 1 (`legado-retiro`, dropdown mode). `@angular/cdk` is not installed, so panels are portalled by hand as Select does.
+
+1. **Segmented Control (additive).** `appearance="raised|solid"`; option `icon`/`ariaLabel`/`count`/`dot`/`meta`; `fullWidth`; whole-control `disabled`; field props (`label`, `help`, `hint`, `error`, `required`) that wrap the control in a fieldset only when `label` is set. Keyboard: roving tabindex, arrows move and select with wrap, Home/End, skip disabled. Thumb re-measured on `document.fonts.ready`, no transition on first paint, `nothumb` fallback. Unicaja block untouched.
+2. **Filter Chip.** Wrapper with sibling buttons (no nested interactive), fill driven from the wrapper; toggle mode on `aria-pressed`; `value`, `appearance="outline"`, `removable`/`removed`, `cleared`, trigger mode (`asTrigger`, `expanded`, `toggled`, leading `reset`). `dismissable` stays as an alias, `count` stays, dropdown mode stays deprecated.
+3. **MultiSelect + Select `trigger`.** New `afi-multi-select` (field anatomy, grouped options, `selectAll` tri-state, `tools`, `summary` modes, `shape`, portalled panel, full keyboard). The closed control is replaceable through a `TemplateRef` with a state context (`open`, `toggle`, `selected`, `count`, `total`, `allSelected`, `labels`, `clear`); Select gets the same hook (`open`, `toggle`, `value`, `option`, `clear`). `legado-retiro` is not migrated.
+4. **Close.** Doc pages (Segmented, Filter Chip, new `/componentes/multi-select`), Unicaja check, dark and 375 px sweep of all ten controls, guardian, findings into this brief and chunk 5, push.
+
+Decisions: one session, with commits 1 and 2 first; if MultiSelect runs long it ships as a short 5b-5 rather than rushed. Segmented roving tabindex changes Tab behaviour in 40 files (ARIA-correct; accepted). Filter Chip dropdown mode stays until its consumer migrates. Trigger hook is a `TemplateRef` with state, not a slot. Shared floating panel extraction waits for 5d.
+
 ## Acceptance per primitive (from appendix A)
 
 - **Button / icon-button:** keyboard focus ring visible and absent on mouse focus; ring >= 3:1 against surface-default and surface-subtle in light and dark; disabled opacity .5, not-allowed; dev-mode icon-only warning kept; hit area 44 px by `touch-area`.

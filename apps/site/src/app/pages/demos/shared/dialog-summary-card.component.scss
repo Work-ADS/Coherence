@@ -6,8 +6,8 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
   background: var(--surface-subtle);
   border: var(--border-width-hairline) solid var(--border-hairline);
@@ -28,11 +28,11 @@
 .summary-card__delta {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2xs);
   font: var(--type-body-sm-500);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-2xs) var(--space-xs);
   border-radius: var(--radius-pill);
 
   &--up {

@@ -1,9 +1,9 @@
 .edt__trigger {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 2px 4px;
-  margin: 0 -4px;
+  gap: var(--space-xs);
+  padding: var(--space-3xs) var(--space-2xs);
+  margin: 0 calc(-1 * var(--space-2xs));
   border: none;
   border-radius: var(--radius-control);
   background: transparent;
@@ -25,12 +25,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 200px;
+  max-width: var(--dimension-50);
 }
 
 .edt__icon {
-  height: 14px;
-  width: 14px;
+  height: var(--dimension-3-5);
+  width: var(--dimension-3-5);
   color: var(--foreground-tertiary-default);
   opacity: 0;
   transition: opacity var(--duration-fast) var(--easing-enter);
@@ -40,21 +40,21 @@
 .edt__form {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-2xs);
 }
 
 .edt__input {
   height: var(--control-h-sm);
-  padding: 0 8px;
+  padding: 0 var(--space-xs);
   border-radius: var(--radius-control);
-  border: 1px solid var(--border-hairline);
+  border: var(--border-width-hairline) solid var(--border-hairline);
   background: var(--surface-primary-default);
-  font: var(--type-body-sm);
+  font: var(--type-body-sm-400);
   color: var(--foreground-primary-default);
   outline: none;
 
   &:focus {
-    box-shadow: 0 0 0 2px var(--border-focus);
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
   }
 }
 
@@ -62,8 +62,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 24px;
-  width: 24px;
+  height: var(--control-size-sm);
+  width: var(--control-size-sm);
   border: none;
   border-radius: var(--radius-control);
   background: transparent;
@@ -76,6 +76,6 @@
 }
 
 .edt__action-icon {
-  height: 16px;
-  width: 16px;
+  height: var(--icon-sm);
+  width: var(--icon-sm);
 }

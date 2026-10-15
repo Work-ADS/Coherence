@@ -3,6 +3,8 @@
 // Matches production planner-top-bar styling with component tokens.
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+
 .edt__trigger {
   display: inline-flex;
   align-items: center;
@@ -61,7 +63,7 @@
 
   &:focus-visible {
     border-color: var(--inline-edit-input-focus-ring);
-    box-shadow: var(--focus-ring);
+    @include focus-ring;
   }
 }
 

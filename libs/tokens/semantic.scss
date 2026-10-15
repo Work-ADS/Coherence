@@ -305,6 +305,11 @@
   --border-width-hairline: var(--dimension-0-25);  // 1px
   --border-width-thick:    var(--dimension-0-5);   // 2px
 
+  // Keyboard focus ring as a box-shadow. Instant, never transitioned; only
+  // :focus-visible applies it (see the focus-ring mixin in libs/ui/src/styles).
+  // Resolves at :root only; components use the mixin, which resolves on the element.
+  --focus-ring: 0 0 0 var(--border-width-thick) var(--border-focus);
+
 
   // ===========================================================================
   // CONTROL (17) — generic interactive control surfaces (buttons, switches, etc.)
@@ -637,17 +642,36 @@
 
   // -----------------------------------------------------------------------
   // CONTROL HEIGHT — generic scale every interactive element reaches for.
-  // Responsive: mobile floor 44 px (WCAG AA touch target). Densifies on lg+.
+  // Field scale, ported from the Wealth Planner zip: 40/44/48 below lg,
+  // 28/32/40 from lg. The visible height is not the touch area; controls
+  // under 44 px extend their hit area (docs/rules/accessibility.md rule 7).
   // -----------------------------------------------------------------------
   @include responsive-token(--control-h-sm, (
-    base: var(--dimension-11),   // 44 px
-    lg:   var(--dimension-8),    // 32 px on desktop
+    base: var(--dimension-10),   // 40 px
+    lg:   var(--dimension-7),    // 28 px on desktop
   ));
   @include responsive-token(--control-h-md, (
     base: var(--dimension-11),   // 44 px
+    lg:   var(--dimension-8),    // 32 px on desktop
+  ));
+  @include responsive-token(--control-h-lg, (
+    base: var(--dimension-12),   // 48 px
     lg:   var(--dimension-10),   // 40 px on desktop
   ));
-  --control-h-lg: var(--dimension-12);   // 48 px — same across breakpoints
+
+  // -----------------------------------------------------------------------
+  // CONTROL SIZE — fixed chrome scale for buttons, icon buttons and chips.
+  // Does not step up on mobile; the hit area does that job.
+  // -----------------------------------------------------------------------
+  --control-size-sm:  var(--dimension-6);    // 24 px
+  --control-size-md:  var(--dimension-7);    // 28 px
+  --control-size-lg:  var(--dimension-8);    // 32 px
+  --control-size-xl:  var(--dimension-9);    // 36 px
+  --control-size-2xl: var(--dimension-10);   // 40 px
+
+  // Touch-area floor: controls smaller than this extend an invisible hit area
+  // to it (touch-area mixin in libs/ui/src/styles).
+  --touch-target-min: var(--dimension-11);   // 44 px
 
   // -----------------------------------------------------------------------
   // COMPONENT HEIGHT ALIASES — reference the generic control scale.
@@ -770,6 +794,7 @@
   // -----------------------------------------------------------------------
   // RADIUS semantic roles.
   // -----------------------------------------------------------------------
+  --radius-xs:      var(--radius-sm);       // 4 px — inline code, small swatches, tiny marks (the kbd doc page already documents 4 px)
   --radius-control: var(--radius-ml);   // buttons, inputs, chips: 10 px
   --radius-card:    var(--radius-md);   // cards, panels
   --radius-modal:   var(--radius-lg);   // modals, drawers

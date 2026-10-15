@@ -5,7 +5,7 @@
 ## Baseline (LOCKED 2026-04-16)
 
 - **WCAG 2.2 AA minimum, AAA where text + touch are involved.**
-- **44×44pt minimum touch target** on anything clickable. Desktop-only dense-mode components opt out and document the reason.
+- **44×44pt minimum touch area** on anything clickable. The area is not the visible size: a 24 to 40 px control keeps its look and extends an invisible hit area to `--touch-target-min` (see rule 7).
 - **Contrast AA for body, AAA for small text.** The DS site pair-contrast checker enforces.
 - **Keyboard-operable everything.** If it's clickable, it's reachable via Tab and actuatable via Enter or Space.
 
@@ -23,7 +23,7 @@
 
 6. **Color is never the only cue.** Error = red border + error icon + text. Success = green check + text. Required = asterisk + `aria-required`. Color-blind users pass through unaffected.
 
-7. **Touch targets ≥ 44×44pt.** Dense desktop components (`control-h-sm`) opt out with a documented comment **and** an `aria-label` that stays compact but unambiguous.
+7. **Touch areas ≥ 44×44pt (LOCKED 2026-10-15).** 44 px is the size of the area that takes a tap, not of the visible control. Buttons and icon buttons keep the 24 to 40 px chrome scale (`--control-size-sm..2xl`); anything under 44 px includes the `touch-area` mixin (`libs/ui/src/styles/_touch-area.scss`), which grows an invisible `::after` to `--touch-target-min`. Fields step up on small screens through the token layer: `--control-h-sm/md/lg` are 40/44/48 below `lg` and 28/32/40 from `lg`, so no component needs its own media query for it. A control that cannot take the extra area (adjacent targets closer than the overshoot, such as dense table rows) opts out with a comment in its SCSS naming the dense context, plus an `aria-label` that stays compact but unambiguous. Where the product is touch-first, use the `xl`/`2xl` sizes.
 
 8. **Reduced motion respected.** Any animation > 200ms or > 4px translation checks `prefers-reduced-motion: reduce` and collapses to fade-only or instant. Applies to Angular `@keyframes` and CDK portal transitions.
 
@@ -103,7 +103,7 @@
 - [ ] All interactive elements have visible focus via `--focus-ring`
 - [ ] All non-text content has a text alternative
 - [ ] Contrast AA (body) / AAA (small) — verified via pair-contrast tool
-- [ ] Touch targets ≥ 44×44pt unless opted out with reason
+- [ ] Touch areas ≥ 44×44pt (hit area via `touch-area` mixin when the visible size is smaller), or opted out with reason
 - [ ] `prefers-reduced-motion` handled for any motion > 200ms
 - [ ] Live regions announce dynamic content (toasts, form errors, loading)
 - [ ] Tested with VoiceOver (macOS) + NVDA (Windows) for at least the golden flow

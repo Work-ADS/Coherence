@@ -73,13 +73,13 @@
 :host(.page-header--borderless) {
   border: none;
   border-radius: 0;
-  padding: var(--space-3) 0;
+  padding: var(--space-sm) 0;
 }
 
 // When borderless, increase the gap between the title row and the body
 // so the collapsed/expanded transition doesn't look hairline-tight.
 :host(.page-header--borderless) .page-header__body {
-  margin-top: var(--space-3);
+  margin-top: var(--space-sm);
 }
 
 // Subtle hairline separator between adjacent borderless subsections so

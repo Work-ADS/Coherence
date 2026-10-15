@@ -42,6 +42,7 @@ export const componentes_routes: Routes = [
   { path: 'page-header', loadComponent: () => import('./page-header.page').then(m => m.PageHeaderPage) },
   { path: 'status-chip', loadComponent: () => import('./status-chip.page').then(m => m.StatusChipPage) },
   { path: 'filter-chip', loadComponent: () => import('./filter-chip.page').then(m => m.FilterChipPage) },
+  { path: 'icon', loadComponent: () => import('./icon.page').then(m => m.IconPage) },
   { path: 'kbd', loadComponent: () => import('./kbd.page').then(m => m.KbdPage) },
   { path: 'shell', loadComponent: () => import('./shell.page').then(m => m.ShellPage) },
   { path: 'nav-item', loadComponent: () => import('./nav-item.page').then(m => m.NavItemPage) },

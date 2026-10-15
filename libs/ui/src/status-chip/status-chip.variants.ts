@@ -43,6 +43,6 @@ export const tokenUsage = [
   { property: 'Radio', token: 'rounded-full' },
   { property: 'Altura (sm)', token: 'h-5 (20px)' },
   { property: 'Altura (md)', token: 'h-6 (24px)' },
-  { property: 'Tipografía', token: 'var(--type-body-sm), font-medium' },
+  { property: 'Tipografía', token: 'var(--type-body-sm-400), font-medium' },
   { property: 'Transición', token: 'var(--duration-fast) ease-out' },
 ];

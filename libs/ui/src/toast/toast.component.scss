@@ -22,8 +22,8 @@
   border-radius: var(--radius-full);
   background: var(--color-neutral-900);
   color: var(--color-base-white);
-  box-shadow: var(--elevation-2);
-  animation: toast-enter var(--duration-normal) var(--easing-enter);
+  box-shadow: var(--elevation-md);
+  animation: toast-enter var(--duration-base) var(--easing-enter);
 }
 
 @keyframes toast-enter {
@@ -81,7 +81,7 @@
 
 // ─── Message ─────────────────────────────────────────────────────────────────
 .toast__message {
-  font: var(--type-body-sm);
+  font: var(--type-body-sm-400);
   padding: 0 var(--space-2xs);
 }
 

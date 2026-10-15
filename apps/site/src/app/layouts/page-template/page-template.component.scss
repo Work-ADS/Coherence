@@ -14,7 +14,7 @@
 .pt-hero {
   padding-bottom: var(--space-2xl);
   margin-bottom: var(--space-xl);
-  border-bottom: var(--border-thin) solid var(--color-neutral-200); /* TODO(semantic-border) */
+  border-bottom: var(--border-width-hairline) solid var(--color-neutral-200); /* TODO(semantic-border) */
 
   &__eyebrow {
     display: block;
@@ -67,7 +67,7 @@
 .pt-related {
   margin-top: var(--space-3xl);
   padding-top: var(--space-xl);
-  border-top: var(--border-thin) solid var(--color-neutral-200); /* TODO(semantic-border) */
+  border-top: var(--border-width-hairline) solid var(--color-neutral-200); /* TODO(semantic-border) */
 
   &:empty {
     display: none;

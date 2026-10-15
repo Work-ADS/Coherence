@@ -130,15 +130,16 @@
 
 // =============================================================================
 // Suggestions dropdown — typeahead autocomplete panel.
-// Anchored to the search root via :host { position: relative }. Renders
-// only while focused AND suggestions are present.
+// Portalled and placed under the field by FloatingPanel. Renders only while
+// focused AND suggestions are present.
 // =============================================================================
 
 .afi-search__suggestions {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: calc(100% + var(--space-2xs));
+  position: fixed;
   z-index: var(--z-floating);
+  // The margin is the gap to the field; FloatingPanel reads it.
+  margin-block: var(--space-2xs);
+  inline-size: var(--floating-anchor-width);
   max-block-size: 20rem;
   overflow-y: auto;
   padding: var(--space-2xs);

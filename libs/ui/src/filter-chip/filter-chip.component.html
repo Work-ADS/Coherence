@@ -60,7 +60,7 @@
 </span>
 
 @if (isDropdown() && menuOpen()) {
-  <div role="menu" [attr.aria-label]="dropdownAriaLabel()" class="afi-chip__menu">
+  <div #panelEl role="menu" [attr.aria-label]="dropdownAriaLabel()" class="afi-chip__menu">
     @if (showSelectAll()) {
       <button
         type="button"

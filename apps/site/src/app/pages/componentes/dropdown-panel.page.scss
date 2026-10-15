@@ -15,8 +15,8 @@
 
 .dropdown-panel-demo {
   position: relative;
-  width: var(--dimension-60);
-  height: var(--dimension-40);
+  display: inline-flex;
+  align-items: flex-start;
 
   &__content {
     padding: var(--space-sm);

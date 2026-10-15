@@ -2,14 +2,17 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   ElementRef,
-  HostListener,
   inject,
   input,
+  OnDestroy,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 
+import { FloatingPanel, onOverlayEscape } from '../floating-panel';
 import { IconComponent } from '../icon';
 
 import type {
@@ -47,7 +50,7 @@ import type {
   templateUrl: './filter-chip.component.html',
   styleUrls: ['./filter-chip.component.scss'],
 })
-export class FilterChipComponent {
+export class FilterChipComponent implements OnDestroy {
   // ── Shared inputs ───────────────────────────────────────────────────
   readonly label = input.required<string>();
   readonly size = input<FilterChipSize>('md');
@@ -100,6 +103,37 @@ export class FilterChipComponent {
   readonly selectedValuesChange = output<ReadonlySet<string>>();
 
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly panelEl = viewChild<ElementRef<HTMLElement>>('panelEl');
+  private readonly floating = new FloatingPanel();
+  private disposeEscape: (() => void) | null = null;
+
+  constructor() {
+    // The built-in dropdown renders in the template; the floating panel portals
+    // it under the chip, and closes it on an outside press or Escape.
+    effect(() => {
+      const panel = this.panelEl()?.nativeElement;
+      if (panel) {
+        this.floating.attach(panel, this.host.nativeElement, {
+          side: 'bottom',
+          align: 'start',
+          onOutside: () => this.closeMenu(),
+        });
+        this.disposeEscape ??= onOverlayEscape(() => this.closeMenu());
+      } else {
+        this.release();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.release();
+  }
+
+  private release(): void {
+    this.floating.detach();
+    this.disposeEscape?.();
+    this.disposeEscape = null;
+  }
 
   // ── Dropdown panel state ───────────────────────────────────────────
   readonly menuOpen = signal<boolean>(false);
@@ -245,18 +279,5 @@ export class FilterChipComponent {
 
   closeMenu(): void {
     if (this.menuOpen()) this.menuOpen.set(false);
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    if (!this.menuOpen()) return;
-    const target = event.target as Node | null;
-    if (target && this.host.nativeElement.contains(target)) return;
-    this.closeMenu();
-  }
-
-  @HostListener('document:keydown.escape')
-  onEscape(): void {
-    this.closeMenu();
   }
 }

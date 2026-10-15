@@ -250,10 +250,10 @@
 //     uses when the dropdown has a selection)
 //   - count badges render as hairline pills, not plain text
 .afi-chip__menu {
-  position: absolute;
-  inset-block-start: calc(100% + var(--space-2xs));
-  inset-inline-start: 0;
+  // Portalled and placed under the chip by FloatingPanel; the margin is the gap.
+  position: fixed;
   z-index: var(--z-floating);
+  margin-block: var(--space-2xs);
   min-inline-size: 17.5rem;
   padding: var(--space-xs);
   background: var(--overlay-dropdown);

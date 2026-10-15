@@ -4,26 +4,17 @@
 }
 
 .panel {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  z-index: 50;
-  margin-top: var(--space-2xs);
+  // Portalled and placed by FloatingPanel; the margin is the gap to the trigger.
+  position: fixed;
+  z-index: var(--z-floating);
+  margin-block: var(--space-2xs);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-panel);
   border: var(--border-width-hairline) solid var(--border-subtle);
-  background: var(--surface-default);
+  background: var(--overlay-dropdown);
   box-shadow: var(--elevation-lg);
-
-  // Anchor-start variant: align the panel's left edge with the trigger's
-  // left edge so the panel extends to the right. Use when the trigger
-  // sits at the left side of the viewport.
-  &--start {
-    right: auto;
-    left: 0;
-  }
 }
 
 .panel__header {

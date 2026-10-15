@@ -34,7 +34,7 @@ const PLACEMENT: Record<MenuPlacement, { side: FloatingSide; align: FloatingAlig
  * **Anchor.** Pass `[anchor]="triggerElement"` (the element that opened it) so
  * the panel lines up with it and a click on the trigger toggles instead of
  * dismissing and reopening. Without `anchor` the panel sits against the menu
- * host, and the host's parent counts as the trigger area.
+ * host, and the element just before the menu counts as the trigger.
  *
  * Keyboard: opens with focus on the first enabled row; arrows wrap, Home/End,
  * Enter/Space activate the row, Tab dismisses. Escape closes only this menu
@@ -131,11 +131,12 @@ export class MenuComponent implements OnDestroy {
     rows[next]?.focus();
   }
 
-  // The trigger (or, without an anchor, the host's parent) is not "outside": its
-  // own click toggles the menu, and dismissing on mousedown would reopen it.
+  // The trigger is not "outside": its own click toggles the menu, and dismissing
+  // on mousedown would reopen it. Without an anchor the trigger is taken to be the
+  // element just before the menu.
   private onOutside(event: MouseEvent): void {
     const target = event.target as Node | null;
-    if (!this.anchor() && target && this.host.parentElement?.contains(target)) return;
+    if (!this.anchor() && target && this.host.previousElementSibling?.contains(target)) return;
     this.dismiss('click-outside');
   }
 

@@ -3,6 +3,8 @@
 // BEM classes, DS tokens via CSS custom properties only.
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+
 :host {
   display: block;
   position: relative;
@@ -11,8 +13,8 @@
 .afi-search__label {
   display: block;
   margin-block-end: var(--space-2xs);
-  font: var(--type-body-sm-500);
-  color: var(--foreground-primary-default);
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
 }
 
 .afi-search {
@@ -20,52 +22,46 @@
   align-items: center;
   gap: var(--space-xs);
   width: 100%;
-  border-radius: var(--radius-md);
-  // Resting surface = the white Tailwind `bg-surface` resolves to
-  // (--surface-base). --surface-default sits a step lower on AFI and
-  // muddies the field against the page card.
-  background: var(--surface-base);
-  border: var(--border-width-hairline) solid var(--border-hairline);
-  color: var(--foreground-primary-default);
+  box-sizing: border-box;
+  border-radius: var(--radius-control);
+  // The input surface is shared with input and select (--input-*).
+  background: var(--input-background-default);
+  border: var(--border-width-hairline) solid var(--input-border-default);
+  color: var(--input-foreground-default);
   // Single transition declaration so border + shadow + background ease in
   // together — matches the Patrimonio bespoke "smoothness" feel.
+  // Colour and border only: a focus signal that fades in arrives late.
   transition:
     border-color var(--duration-fast) var(--easing-enter),
-    box-shadow var(--duration-fast) var(--easing-enter),
     background-color var(--duration-fast) var(--easing-enter);
 
   &:hover:not(:focus-within) {
-    border-color: var(--border-default);
+    border-color: var(--input-border-hover);
   }
 
+  // Inset ring: the clear button and suggestion panel sit against it.
   &:focus-within {
-    border-color: var(--border-focus);
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
-    outline-offset: var(--border-width-thick);
+    border-color: var(--input-border-focus);
+    box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
   }
 
-  // sm/md heights stay constant across viewports so the search aligns
-  // visually with `afi-filter-chip` in a filters row (chip uses a fixed
-  // --dimension-8 for `md`, not the responsive --control-h-sm). Patrimonio
-  // is the precedent — its bespoke search uses a hardcoded chip-height.
+  // Heights follow the field scale, so a search sits level with input and
+  // select at the same size. One type size at every size.
   &--sm {
-    height: var(--dimension-8);
-    // Asymmetric padding: the icon hugs the left edge (--space-xs) while
-    // the clear button gets --space-sm breathing room on the right.
-    padding-inline-start: var(--space-xs);
-    padding-inline-end: var(--space-sm);
-    font: var(--type-body-sm-400);
+    height: var(--control-h-sm);
+    padding-inline: var(--space-sm);
+    font: var(--type-body-md-400);
   }
 
   &--md {
-    height: var(--dimension-10);
-    padding-inline: var(--space-md);
+    height: var(--control-h-md);
+    padding-inline: var(--space-sm);
     font: var(--type-body-md-400);
   }
 
   &--lg {
-    height: var(--dimension-12);
-    padding-inline: var(--space-md);
+    height: var(--control-h-lg);
+    padding-inline: var(--space-sm);
     font: var(--type-body-md-400);
   }
 }
@@ -73,10 +69,7 @@
 .afi-search__icon {
   width: var(--dimension-4);
   height: var(--dimension-4);
-  // Light-grey "decorative chrome" icon — its shape conveys the search
-  // affordance, not its color. Matches the Patrimonio bespoke search
-  // (Tailwind `text-neutral-400`, which resolves to afi-control-400).
-  color: var(--color-afi-control-400);
+  color: var(--input-icon-default);
   flex-shrink: 0;
 }
 
@@ -90,7 +83,7 @@
   outline: none;
 
   &::placeholder {
-    color: var(--foreground-tertiary-default);
+    color: var(--input-foreground-placeholder);
   }
 
   // Hide native clear button — we render our own.
@@ -100,7 +93,8 @@
   }
 
   &:disabled {
-    opacity: 0.5;
+    color: var(--input-foreground-disabled);
+    -webkit-text-fill-color: var(--input-foreground-disabled);
     cursor: not-allowed;
   }
 }
@@ -113,7 +107,7 @@
   height: var(--dimension-5);
   padding: 0;
   border: 0;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   background: transparent;
   color: var(--foreground-tertiary-default);
   cursor: pointer;
@@ -123,13 +117,12 @@
     color var(--duration-fast) var(--easing-enter);
 
   &:hover {
-    background: var(--surface-muted);
+    background: var(--control-background-hover);
     color: var(--foreground-primary-default);
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    @include focus-ring;
     outline-offset: var(--border-width-thick);
   }
 
@@ -149,13 +142,14 @@
   position: absolute;
   inset-inline: 0;
   inset-block-start: calc(100% + var(--space-2xs));
-  z-index: 50;
+  z-index: var(--z-floating);
   max-block-size: 20rem;
   overflow-y: auto;
   padding: var(--space-2xs);
-  background: var(--surface-elevated);
-  border: var(--border-width-hairline) solid var(--border-hairline);
-  border-radius: var(--radius-md);
+  background: var(--overlay-dropdown);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  // Concentric with the rows: row radius plus the panel's inner gap.
+  border-radius: calc(var(--radius-control) + var(--space-2xs));
   box-shadow: var(--elevation-lg);
   font: var(--type-body-sm-400);
   color: var(--foreground-primary-default);
@@ -172,11 +166,12 @@
   align-items: center;
   gap: var(--space-sm);
   width: 100%;
-  padding-block: var(--space-2xs);
-  padding-inline: var(--space-xs);
+  min-height: var(--menu-item-min-height);
+  padding-block: var(--menu-item-padding-block);
+  padding-inline: var(--menu-item-padding-inline);
   border: 0;
   background: transparent;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-control);
   text-align: start;
   color: inherit;
   font: inherit;
@@ -185,12 +180,11 @@
 
   &:hover,
   &--active {
-    background: var(--surface-muted);
+    background: var(--control-background-hover);
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    @include focus-ring;
   }
 }
 

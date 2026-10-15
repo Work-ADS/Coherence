@@ -26,6 +26,15 @@
         ariaLabel="Page header density"
       />
     </div>
+    <div class="control-group">
+      <span class="control-group__label">Compact actions</span>
+      <afi-segmented-control
+        [options]="placementOptions"
+        [(value)]="placement"
+        size="sm"
+        ariaLabel="Compact action placement"
+      />
+    </div>
   </div>
 
   <div slot="preview" class="preview">
@@ -38,6 +47,43 @@
         <afi-button slot="actions" variant="primary" size="md">Nueva operación</afi-button>
       </afi-page-header>
     </div>
+
+    <!-- Icon, meta, accessory and ranked actions: back, secondary, then primary. -->
+    <div class="page-header-demo">
+      <afi-page-header
+        title="Plan de jubilación"
+        description="Resumen del plan y de sus hipótesis."
+        icon="retirement"
+        [density]="density()"
+        [sticky]="false"
+      >
+        <afi-badge slot="meta" tone="success" size="sm" [indicator]="true">Al día</afi-badge>
+        <span slot="meta" class="page-header-demo__meta">Actualizado hoy</span>
+        <afi-badge slot="titleAccessory" tone="neutral" size="sm">v3</afi-badge>
+        <afi-button slot="backAction" variant="ghost" size="md">Volver</afi-button>
+        <afi-button slot="secondaryActions" variant="secondary" size="md">Compartir</afi-button>
+        <afi-button slot="primaryAction" variant="primary" size="md">Guardar</afi-button>
+      </afi-page-header>
+    </div>
+
+    <!-- A narrow container: at the compact width the actions drop below the title, or below the description. -->
+    <div class="page-header-demo page-header-demo--narrow">
+      <afi-page-header
+        title="Operaciones"
+        description="Listado de todas las operaciones del mes."
+        [compactActionPlacement]="placement()"
+        [sticky]="false"
+      >
+        <afi-button slot="actions" variant="primary" size="md">Nueva operación</afi-button>
+      </afi-page-header>
+    </div>
+
+    <!-- A section header: framed (the box) or plain, actions at the end on one row. -->
+    <div class="page-header-demo page-header-demo--section">
+      <afi-page-header level="section" title="Cuentas" subtitle="Saldos al cierre del mes." [sticky]="false">
+        <afi-button slot="actions" variant="secondary" size="md">Añadir</afi-button>
+      </afi-page-header>
+    </div>
   </div>
 
   <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
@@ -46,7 +92,10 @@
     <h2 class="prose-section__title">Accessibility</h2>
     <ul class="prose-section__list">
       <li>Title se renderiza como <code>&lt;h1&gt;</code> — un solo Page Header por página.</li>
-      <li>Subtitle como párrafo asociado al heading via DOM order.</li>
+      <li>Subtitle (o <code>description</code>) como párrafo asociado al heading via DOM order; ancho máximo de 84 caracteres.</li>
+      <li><code>meta</code> es una línea de estado bajo el título, fuera del <code>&lt;h1&gt;</code>: no es una región en vivo y no va en el subtítulo. Las acciones nunca quedan entre el título y la línea de meta.</li>
+      <li>Solo la cabecera de página (<code>level="page"</code>) lleva <code>role="banner"</code>; las de sección y subsección no son landmarks.</li>
+      <li>Los slots <code>backAction</code>, <code>secondaryActions</code>, <code>actions</code> y <code>primaryAction</code> ordenan de menos a más fuerte; cada botón conserva su variante (ghost, secondary, primary).
       <li>Acciones contextuales viven en el slot <code>actions</code> y mantienen su semántica de botón.</li>
     </ul>
   </section>

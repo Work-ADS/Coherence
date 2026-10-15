@@ -26,15 +26,28 @@
 >
   <div class="page-header__title-row">
     <div class="page-header__title-leading">
-      @switch (level()) {
-        @case ('page') { <h1 class="page-header__title">{{ title() }}</h1> }
-        @case ('section') { <h2 class="page-header__title">{{ title() }}</h2> }
-        @case ('subsection') { <h3 class="page-header__title">{{ title() }}</h3> }
+      @if (icon(); as iconName) {
+        <span class="page-header__icon" aria-hidden="true">
+          <afi-icon [name]="iconName" />
+        </span>
       }
+      <!-- Heading column: the title, and the meta line under it when one is projected.
+           Meta is a sibling of the heading, never inside it, so the accessible
+           name of the heading is the title alone. -->
+      <div class="page-header__heading">
+        @switch (level()) {
+          @case ('page') { <h1 class="page-header__title">{{ title() }}</h1> }
+          @case ('section') { <h2 class="page-header__title">{{ title() }}</h2> }
+          @case ('subsection') { <h3 class="page-header__title">{{ title() }}</h3> }
+        }
+        <div class="page-header__meta">
+          <ng-content select="[slot=meta]" />
+        </div>
+      </div>
       @if (estado()) {
         <afi-status-chip [estado]="estado()!" size="sm" />
       }
-      <ng-content select="[slot=extraInfo]" />
+      <ng-content select="[slot=extraInfo],[slot=titleAccessory]" />
     </div>
 
     <!-- Right side decorations + actions, inline with the title. -->
@@ -60,7 +73,13 @@
       #actionsWrapper
       (click)="$event.stopPropagation()"
     >
-      <ng-content select="[slot=actions],[slot=primaryAction]" />
+      <!-- Ranked weakest to strongest: the way out, what else you can do, the
+           main actions, then the one that outranks them. The consumer still
+           picks each button's variant (ghost, secondary, primary). -->
+      <ng-content select="[slot=backAction]" />
+      <ng-content select="[slot=secondaryActions]" />
+      <ng-content select="[slot=actions]" />
+      <ng-content select="[slot=primaryAction]" />
     </div>
     @if (collapsible()) {
       <span class="page-header__chevron" aria-hidden="true">
@@ -78,8 +97,8 @@
     }
   </div>
 
-  @if (subtitle()) {
-    <p class="page-header__subtitle">{{ subtitle() }}</p>
+  @if (descriptionText(); as text) {
+    <p class="page-header__subtitle">{{ text }}</p>
   }
 </div>
 

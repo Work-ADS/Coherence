@@ -212,6 +212,56 @@
   flex-wrap: wrap;
 }
 
+.page-header__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--dimension-8);
+  block-size: var(--dimension-8);
+  border-radius: var(--radius-full);
+  background: var(--brand-secondary-neutral-background-default);
+  color: var(--foreground-primary-default);
+
+  afi-icon {
+    --afi-icon-size: var(--icon-sm);
+  }
+}
+
+// The heading column holds the title and, when projected, the meta line. A
+// header with no meta is just the title in a column: same geometry as before.
+.page-header__heading {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+// Meta: a compact status or metadata line directly under the title. It never
+// goes in the subtitle and is not a live region.
+.page-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+  min-width: 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+// With meta the title block top-aligns, so an icon or accessory keeps the
+// title line's position instead of centring on the whole block.
+.page-header__title-leading:has(.page-header__meta:not(:empty)) {
+  align-items: flex-start;
+}
+
+.page-header__title-leading:has(.page-header__meta:not(:empty)) > [slot='extraInfo'],
+.page-header__title-leading:has(.page-header__meta:not(:empty)) > [slot='titleAccessory'] {
+  align-self: flex-start;
+}
+
 .page-header__title {
   margin: 0;
   color: var(--foreground-primary-default);
@@ -240,6 +290,8 @@
 .page-header__subtitle {
   margin: 0;
   color: var(--foreground-secondary-default);
+  max-inline-size: 84ch;
+  text-wrap: pretty;
 }
 
 :host(.page-header--page) .page-header__subtitle {
@@ -364,5 +416,43 @@
   &:empty {
     display: none;
     margin: 0;
+  }
+}
+
+// compactActionPlacement="after-description": at the compact width the title row
+// dissolves into the main column and CSS order places title, description, then
+// the actions. The same actions node moves; nothing is duplicated.
+@mixin actions-last {
+  .page-header__main {
+    flex-direction: column;
+  }
+
+  .page-header__title-row {
+    display: contents;
+  }
+
+  .page-header__title-leading {
+    order: 0;
+  }
+
+  .page-header__subtitle {
+    order: 1;
+  }
+
+  .page-header__actions {
+    order: 2;
+    margin-top: var(--space-md);
+  }
+}
+
+@media (max-width: 640px) {
+  :host(.page-header--actions-last) {
+    @include actions-last;
+  }
+}
+
+@container viewport (max-width: 40rem) {
+  :host(.page-header--actions-last) {
+    @include actions-last;
   }
 }

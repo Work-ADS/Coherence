@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
+  BadgeComponent,
   PageHeaderComponent,
   ButtonComponent,
   SegmentedControlComponent,
 } from '@coherence/ui';
-import type { PageHeaderDensity } from '@coherence/ui';
+import type { PageHeaderCompactPlacement, PageHeaderDensity } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
@@ -44,6 +45,7 @@ const DENSITY_OPTIONS = [
   standalone: true,
   imports: [
     RouterLink,
+    BadgeComponent,
     PageHeaderComponent,
     ButtonComponent,
     SegmentedControlComponent,
@@ -56,6 +58,12 @@ const DENSITY_OPTIONS = [
 })
 export class PageHeaderPage {
   readonly density = signal<PageHeaderDensity>('default');
+  readonly placement = signal<PageHeaderCompactPlacement>('after-title');
+
+  readonly placementOptions = [
+    { value: 'after-title', label: 'after-title' },
+    { value: 'after-description', label: 'after-description' },
+  ];
 
   readonly densityOptions = DENSITY_OPTIONS;
   readonly tokenCategories = TOKEN_CATEGORIES;

@@ -14,16 +14,22 @@ import {
   isDevMode,
   viewChild,
 } from '@angular/core';
+import { IconComponent } from '../icon';
+import type { IconName } from '../icon';
 import { StatusChipComponent } from '../status-chip';
 import type { Estado } from '../status-chip/status-chip.labels';
-import type { PageHeaderLevel, PageHeaderDensity } from './page-header.variants';
+import type {
+  PageHeaderCompactPlacement,
+  PageHeaderDensity,
+  PageHeaderLevel,
+} from './page-header.variants';
 
 let nextId = 0;
 
 @Component({
   selector: 'afi-page-header',
   standalone: true,
-  imports: [StatusChipComponent],
+  imports: [IconComponent, StatusChipComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
@@ -39,6 +45,15 @@ let nextId = 0;
 export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnDestroy {
   readonly title = input.required<string>();
   readonly subtitle = input<string | null>(null);
+  /** The zip's name for `subtitle`; either works. */
+  readonly description = input<string | null>(null);
+  /** Glyph from the `afi-icon` set, in a 32 px medallion before the title. */
+  readonly icon = input<IconName | null>(null);
+  /**
+   * Compact width only: `after-title` (default) wraps the actions below the title;
+   * `after-description` moves them under the description instead.
+   */
+  readonly compactActionPlacement = input<PageHeaderCompactPlacement>('after-title');
   readonly level = input<PageHeaderLevel>('page');
   readonly estado = input<Estado | null>(null);
   readonly sticky = input(true);
@@ -88,6 +103,8 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
   #scrollHandler: (() => void) | null = null;
   #warnedActions = false;
 
+  protected readonly descriptionText = computed(() => this.description() ?? this.subtitle());
+
   protected readonly computedId = computed(() =>
     this.level() === 'page' ? 'page-header' : null,
   );
@@ -117,6 +134,9 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
     // class so DOM inspection is consistent.
     if (this.bodyFlush() && this.level() !== 'page') {
       parts.push('page-header--body-flush');
+    }
+    if (this.compactActionPlacement() === 'after-description') {
+      parts.push('page-header--actions-last');
     }
     if (this.borderless() && this.level() !== 'page') {
       parts.push('page-header--borderless');

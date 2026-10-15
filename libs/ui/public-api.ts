@@ -143,7 +143,7 @@ export { TOAST_V2_TOKEN_USAGE } from './src/toast-v2';
 export type { ToastV2Placement } from './src/toast-v2';
 
 export { PageHeaderComponent } from './src/page-header';
-export type { PageHeaderDensity, PageHeaderLevel } from './src/page-header';
+export type { PageHeaderCompactPlacement, PageHeaderDensity, PageHeaderLevel } from './src/page-header';
 export { ShellComponent, ShellWorkspaceComponent, ShellAuthComponent, ShellDocsComponent, ShellFocusComponent, ShellCanvasComponent, shellTypeFromRoute, coerceShellType } from './src/shell';
 export type { ShellType } from './src/shell';
 export { ChartBarComponent, ChartCompositionComponent, ChartLineComponent, ChartHeatmapComponent, ChartDumbbellComponent, ChartAxisComponent, ChartLegendComponent, ChartTooltipComponent, ChartInstructionsComponent, ChartDataTableComponent } from './src/chart';

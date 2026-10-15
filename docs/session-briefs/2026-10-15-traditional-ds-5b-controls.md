@@ -67,6 +67,20 @@ Decisions: `numeric` is added but `type="number"` keeps its implicit right-align
 
 Done when: acceptance below for Button, Icon-button, Input and Field help; `clean-code-check.sh`, `tsc`, `npm run build` green; guardian review; before/after, 375 px, dark and the modern `/workbench` hash check; pushed to both remotes.
 
+## 5b-3 plan (approved 2026-10-15)
+
+Scope: step 7 and 8 above (Select and Search, then Switch, Checkbox and Radio Group). Every API step ends with `npm run build`, because `tsc` does not check templates. Consumers (html files): Select 23, Switch 9, Checkbox 7, Radio 7, Search 2.
+
+1. **Select.** Label through `afi-field-label` (`help`, `helpLabel`, required marker); `shape="pill"`; `align="start|end"`; the trigger becomes `role="combobox"` with `aria-controls`, so `aria-activedescendant` is valid; the panel grows to its longest option between the trigger width and `--select-panel-max` (320 fallback); chevron and check through `afi-icon`; no `role="alert"` on the error. No `unit` (see 5b-2). The `trigger` slot waits for 5b-4 (needs the chip's `asTrigger` mode and MultiSelect).
+2. **Search.** Label through `afi-field-label` (`help`, `required`); `shape="pill"`; icons through `afi-icon` (new `search` glyph); Home/End, IME guard, 10-row cap, blur close without the microtask race. Default `size` stays `sm` (two consumers).
+3. **Switch.** `help`/`helpLabel` inside the label row via `afi-field-help`; `hint` stays.
+4. **Checkbox.** Size `xs` (14 px, glyph 8, stroke 3.5) for dense tables.
+5. **Radio Group.** The item injects the group optionally: inside a group it reads the group's `name` and `value`, outside it keeps its own `name`/`selected` inputs, so the seven hand-wired consumer files keep working. New group `options` (`{value,label,description,disabled}`), `hint`, `error` (`aria-invalid`, `aria-describedby`), `help`/`helpLabel` on the legend, and a row stack rule at the compact container width.
+
+Decisions: no `defaultChecked`/uncontrolled mode on any control (every consumer is controlled; it is a cross-cutting API, deliberate difference from the zip); Search default size, suggestions-as-function and write-the-label-back are skipped (breaking for little gain); Radio supports `options` and hand-wired items side by side.
+
+Done when: acceptance for Select, Search, Switch, Checkbox and Radio; clean-code check and build green after each commit; guardian review; doc pages updated; browser, dark and 375 px checks; pushed to both remotes.
+
 ## Acceptance per primitive (from appendix A)
 
 - **Button / icon-button:** keyboard focus ring visible and absent on mouse focus; ring >= 3:1 against surface-default and surface-subtle in light and dark; disabled opacity .5, not-allowed; dev-mode icon-only warning kept; hit area 44 px by `touch-area`.

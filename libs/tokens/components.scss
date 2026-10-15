@@ -87,10 +87,11 @@
   // ===========================================================================
 
   --status-chip-height-sm: var(--dimension-5);         // 20px
-  --status-chip-height-md: var(--dimension-6);         // 24px
+  --status-chip-height-md: var(--dimension-5-5);       // 22px (the zip's single size)
   --status-chip-padding-x: var(--space-xs);
+  --status-chip-padding-x-end: var(--dimension-2-5);   // 10px: room after the label
   --status-chip-radius: var(--radius-pill);
-  --status-chip-dot-size: var(--space-2xs);            // 4px
+  --status-chip-dot-size: var(--dimension-1-5);        // 6px
   --status-chip-dot-radius: var(--radius-full);
   --status-chip-chevron-size: var(--icon-sm);          // 16px
   --status-chip-gap: var(--space-2xs);
@@ -156,8 +157,11 @@
   --button-neutral-background-active: var(--color-afi-control-200);
 
   --button-danger-background-default: var(--color-error-700);
-  --button-danger-background-hover:   var(--color-error-500);
+  // Hover goes darker than the zip's error-500: the label read 3.6:1 there, under AA.
+  --button-danger-background-hover:   var(--color-error-900);
   --button-danger-background-active:  var(--color-error-900);
+  // Label on the danger fill: --feedback-error-background flips dark in dark mode (1.85:1 on the fill), so the label has its own token.
+  --button-danger-foreground:         var(--feedback-error-background);
   --button-danger-ghost-background-hover:  var(--color-error-50);
   --button-danger-ghost-background-active: var(--color-error-200);
 
@@ -193,6 +197,12 @@
 
   --menu-item-font:           var(--type-body-md-400);
   --menu-item-font-current:   var(--type-body-md-500);
+  // Switch and segmented control: dark-aware surfaces the generic control tokens do not carry.
+  --switch-track-off:       var(--control-background-active);
+  --switch-thumb:           var(--color-base-white);
+  --seg-thumb-background:   var(--surface-raised);
+  --seg-track-disabled:     var(--control-background-disabled);
+
   --menu-item-min-height:     var(--dimension-10);   // 40px
   --menu-item-padding-block:  var(--space-xs);
   --menu-item-padding-inline: var(--space-md);
@@ -203,11 +213,20 @@
 // Dark values for the tokens above. Same specificity as :root, so this block
 // sits after it; semantic.scss's dark block would lose the cascade here.
 [data-theme="dark"] {
+  --switch-track-off:       var(--color-afi-control-600);
+  --input-icon-default:     var(--color-afi-control-400);
+  --seg-thumb-background:   var(--color-afi-control-700);
+  // The generic disabled fill equals the enabled track in dark; one step deeper tells them apart.
+  --seg-track-disabled:     var(--color-afi-control-900);
+  // Card lift: the light shadows (18 % black) vanish against the dark canvas.
+  --elevation-card-hover:   0 16px 32px -20px hsla(0, 0%, 0%, 0.7);
+  --elevation-card-on-brand: 0 1px 2px 0 hsla(0, 0%, 0%, 0.5), 0 24px 48px -16px hsla(0, 0%, 0%, 0.7);
   --button-neutral-background-hover:  var(--color-afi-control-800);
   --button-neutral-background-active: var(--color-afi-control-700);
   --button-primary-background-default: var(--color-afi-azul-profundo-300);
   --button-primary-background-hover:   var(--color-afi-azul-profundo-200);
   --button-primary-background-active:  var(--color-afi-azul-profundo-100);
+  --button-danger-foreground:         var(--color-base-white);
   --button-danger-ghost-background-hover:  var(--color-error-900);
   --button-danger-ghost-background-active: var(--color-error-700);
   --button-warning-ghost-foreground:        var(--color-warning-200);

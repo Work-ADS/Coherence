@@ -59,9 +59,9 @@ Slot stacking order inside `<afi-page-header>` is **cards → tabs → filters �
 
 | Level | Heading | Box chrome | Padding | When |
 |---|---|---|---|---|
-| `level="page"` | `<h1>` | none | 0 | Top of the page; sticky-capable; one per page. |
-| `level="section"` | `<h2>` | outline box, `--section-radius` (12px) | `--space-lg` (24px) | A sibling block on a multi-section page that owns its own actions/cards/filters. |
-| `level="subsection"` | `<h3>` | outline box | `--space-lg` (24px) | A logical group inside a section that owns its own actions or is collapsible. |
+| `level="page"` | `<h1>` | none | 0 | Top of the page; sticky-capable; one per page. The only level that is a `banner` landmark. Optional `icon` (32 px medallion) and a `[slot=meta]` line directly under the h1 (see §5.1). |
+| `level="section"` | `<h2>` | outline box, `--radius-section` (12px); `appearance="plain"` removes the box | `--space-lg` (24px) | A sibling block on a multi-section page that owns its own actions/cards/filters. |
+| `level="subsection"` | `<h3>` | outline box (or `appearance="plain"`) | `--space-lg` (24px) | A logical group inside a section that owns its own actions or is collapsible. |
 
 Density and slot APIs are documented in the primitive itself; this skill governs the *which level, and when*.
 
@@ -148,9 +148,19 @@ Shape A is the default. Shape B only when sticky behaviour requires it — and t
 </afi-page-header>
 ```
 
-Multiple action elements all go in `slot="actions"`. The primitive warns in dev mode when more than `maxInlineActions` (default 3) are projected — wrap overflow into an `afi-menu` instead of stacking. See [page-header.component.ts:149](../../libs/ui/src/page-header/page-header.component.ts:149).
+Multiple action elements all go in `slot="actions"`. The primitive warns in dev mode when more than `maxInlineActions` (default 3) are projected — wrap overflow into an `afi-menu` instead of stacking. See `page-header.component.ts` (`ngAfterContentInit`).
 
-A `slot="primaryAction"` exists for the rare case where one CTA must visually outrank the rest; it renders alongside `slot="actions"` and counts toward the same overflow rule.
+A `slot="primaryAction"` exists for the rare case where one CTA must visually outrank the rest; it renders after `slot="actions"` and counts toward the same overflow rule.
+
+### 5.1 Role slots, meta and the title row (added 2026-10-15, chunk 5c-2)
+
+The page header ranks its actions weakest to strongest, left to right: `slot="backAction"` (the way out), `slot="secondaryActions"`, `slot="actions"`, `slot="primaryAction"`. These are **layout slots only**: the consumer still sets each button's variant (ghost, secondary, primary). The §5 overflow rule counts all four.
+
+- **`slot="meta"`** is a compact status or metadata line directly under the h1, in the same column as the title text. It is never part of the h1, never goes in the subtitle, and is not a live region. The actions never sit between the title and its meta line.
+- **`slot="titleAccessory"`** (alias of `extraInfo`) is for small inline controls tied to the title, right after the h1.
+- **`description`** is an alias of `subtitle` (max 84 characters wide).
+- **`compactActionPlacement="after-description"`** moves the actions below the description at the compact width; the default wraps them below the title.
+- Sections and subsections are not `banner` landmarks and the host carries no `aria-label`. A collapsible one names its toggle button from `ariaLabel`, defaulting to the title.
 
 **What this rule catches:**
 
@@ -186,7 +196,7 @@ A single-section page with no body actions and no body cards never needs a secti
 
 If none of those hold, the content stays inline in the parent section's body. Don't reach for a subsection container just to introduce a heading — use the body's own typography.
 
-Inside dialogs, `level="subsection" borderless` removes the outline since the surrounding modal panel already defines the visual boundary. Patrimonial's add-modal is the canonical example.
+Inside dialogs, `level="subsection" appearance="plain"` (formerly `borderless`) removes the outline since the surrounding modal panel already defines the visual boundary. Patrimonial's add-modal is the canonical example.
 
 **Banned: bespoke section divs.** `<section class="pf-section">`, `<section class="pf-gate">` and other hand-rolled divs styled to mimic a section — all banned. If you reach for one, the primitive you're avoiding is `<afi-page-header level="section">` or `<afi-section>`. Use it, or document the gap in a session brief before rolling your own. (Note: `.{prefix}-empty` divs are not section masquerades — they are the placeholder for the missing `<afi-empty-state>` primitive. See §10.)
 
@@ -286,7 +296,7 @@ All page-level spacing comes from the base-4 token scale ([token-skill.md](token
 | `--space-lg` | 24px | Inside a `level="section"` / `level="subsection"` box, all four sides; also the page-header host's inline padding. (Set on the primitive — don't override.) |
 | `--section-gap` | 24px | **Not the section rhythm any more.** Kept only until a token decision re-points or retires it; don't reach for it to space sections. |
 | `--section-padding-inline` / `-block` | 16px | **Not consumed by the primitive**, which pads with `--space-lg`. Listed here so nobody reads them as the box padding. |
-| `--section-radius` | 12px | Section box corner radius. (Set on the primitive — don't override.) |
+| `--radius-section` | 12px | Section box corner radius. (Set on the primitive — don't override.) `--section-radius` (16px) is deprecated: only the deprecated `afi-section` reads it. |
 | `--space-xl` | (see token) | Vertical padding inside the page wrapper. |
 | `--space-md` | (see token) | Compact padding inside the page wrapper at `@container viewport (max-width: 40rem)`. |
 | `--gap-card-to-card` | 8px | Between sibling metric cards in the cards row (§8). |
@@ -378,6 +388,8 @@ Audit candidates (not yet confirmed): `evolucion-patrimonial`, `listado-planific
 ---
 
 ## 18. Changelog
+
+- **2026-10-15 (v1.4)** — Chunk 5c-2: page header `icon`, `meta`, `titleAccessory`, ranked role slots, `compactActionPlacement`, `description`; section `appearance`/`actionsPlacement`; radius is `--radius-section` (the doc said `--section-radius` (12px), which is a 16px token the code never used); banner role only at the page level. See §3 and §5.1.
 
 - **2026-09-16 (v1.3)** — Section rhythm LOCKED at 12px (§6, §12), resolving the dense-vs-relaxed question in §16. Corrected px labels that had drifted from the tokens: `--space-lg` is 24px, so the page-header host inset and the section box padding are 24px, not 16px. Documented the objetivos-shell padding mechanism as equivalent (§4b), and that section boxes start at the title's x (§6). Added §17 *Page- and section-level interaction*, including the decided-but-unbuilt `list-exit` for anything leaving a row or list (motion-skill §4.14). Refreshed §15 from measurements at 1440px: Sociedades half-fixed, Familia and Gastos rows added. Written alongside the Claude Design layout brief, which exports this document.
 - **2026-06-15 (v1.2)** — Renamed from root-level `Design.md` to `docs/rules/page-structure-skill.md`. Root-level `Design.md` is now the traditional design overview (principles, brand soul, foundations index) and links here for the deep page-composition rules.

@@ -1,0 +1,129 @@
+// =============================================================================
+// afi-radio-group-item — native radio, drawn ring. BEM classes, DS tokens only.
+// =============================================================================
+
+@use '../styles/focus-ring-v1' as *;
+@use '../styles/touch-area' as *;
+
+:host {
+  display: inline-block;
+}
+
+.afi-radio {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  cursor: pointer;
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  // Dense context: the ring carries no extra hit area (rule 7 opt-out).
+  &--compact {
+    align-items: center;
+  }
+}
+
+.afi-radio__native {
+  position: absolute;
+  inline-size: 0;
+  block-size: 0;
+  opacity: 0;
+}
+
+// ─── Ring ─────────────────────────────────────────────────────────────────
+// The ring is the checkbox box size with the same thick border. The selected
+// dot is an outline style: the ring stays on the input surface and the dot
+// takes the action colour (never a filled ring with a white dot). The inset
+// around the dot equals the border, so it stays on whole pixels.
+.afi-radio__ring {
+  position: relative;
+  box-sizing: border-box;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--checkbox-size-md);
+  block-size: var(--checkbox-size-md);
+  margin-block-start: var(--dimension-0-25);
+  border: var(--border-width-thick) solid var(--input-border-default);
+  border-radius: var(--radius-full);
+  background: var(--input-background-default);
+  transition: border-color var(--duration-fast) var(--easing-enter);
+
+  &::before {
+    content: '';
+    flex: none;
+    inline-size: var(--dimension-2-5);
+    block-size: var(--dimension-2-5);
+    border-radius: var(--radius-full);
+    background: var(--brand-secondary-background-default);
+    transform: scale(0);
+    transition: transform var(--duration-fast) var(--easing-enter);
+  }
+}
+
+// The hit area is the label row; touch-area grows it to the 44 px floor.
+.afi-radio:not(.afi-radio--compact) .afi-radio__ring {
+  @include touch-area;
+}
+
+.afi-radio--sm .afi-radio__ring {
+  inline-size: var(--checkbox-size-sm);
+  block-size: var(--checkbox-size-sm);
+  margin-block-start: var(--dimension-0-5);
+
+  &::before {
+    inline-size: var(--dimension-2);
+    block-size: var(--dimension-2);
+  }
+}
+
+.afi-radio--compact .afi-radio__ring {
+  margin-block-start: 0;
+}
+
+.afi-radio:hover:not(.afi-radio--disabled) .afi-radio__ring {
+  border-color: var(--input-border-hover);
+}
+
+.afi-radio__native:focus-visible + .afi-radio__ring {
+  @include focus-ring;
+}
+
+.afi-radio__native:checked + .afi-radio__ring {
+  border-color: var(--brand-secondary-background-default);
+
+  &::before {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afi-radio__ring,
+  .afi-radio__ring::before {
+    transition: none;
+  }
+}
+
+// ─── Text ─────────────────────────────────────────────────────────────────
+.afi-radio__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.afi-radio__label {
+  font: var(--type-body-md-400);
+  color: var(--foreground-primary-default);
+}
+
+.afi-radio--compact .afi-radio__label {
+  font: var(--type-body-sm-400);
+}
+
+.afi-radio__hint {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}

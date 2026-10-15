@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
   ElementRef,
   HostListener,
   inject,
@@ -12,10 +13,21 @@ import {
   OnInit,
   output,
   signal,
+  TemplateRef,
   viewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 
-import type { SelectOption, SelectSize } from './select.types';
+import { FieldLabelComponent } from '../field-label';
+import { IconComponent } from '../icon';
+
+import type {
+  SelectAlign,
+  SelectOption,
+  SelectShape,
+  SelectSize,
+  SelectTriggerContext,
+} from './select.types';
 
 let nextId = 0;
 
@@ -33,12 +45,21 @@ let nextId = 0;
 @Component({
   selector: 'afi-select',
   standalone: true,
+  imports: [FieldLabelComponent, IconComponent, NgTemplateOutlet],
+  host: { '[class.afi-select--pill]': "shape() === 'pill'" },
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
 })
 export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
   readonly size = input<SelectSize>('md');
+  /** `pill` is the filter-row shape: rounded and sized to its content. */
+  readonly shape = input<SelectShape>('rect');
+  /** Which trigger edge the open panel lines up with. */
+  readonly align = input<SelectAlign>('start');
+  /** ⓘ after the label: help text in a tooltip (see `afi-field-help`). */
+  readonly help = input<string | null>(null);
+  readonly helpLabel = input<string | null>(null);
   readonly options = input<SelectOption[]>([]);
   readonly value = input<string | number | null>(null);
   readonly label = input<string | null>(null);
@@ -75,6 +96,23 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   private readonly el = inject(ElementRef);
   readonly triggerEl = viewChild<ElementRef<HTMLButtonElement>>('triggerEl');
+
+  /** Replaces the closed control (typically an `afi-filter-chip` with `asTrigger`); the panel is unchanged. */
+  readonly triggerTpl = contentChild<TemplateRef<SelectTriggerContext>>('trigger');
+  readonly anchorEl = viewChild<ElementRef<HTMLElement>>('anchorEl');
+
+  /** State for a custom trigger template. */
+  readonly triggerContext = computed<SelectTriggerContext>(() => ({
+    $implicit: {
+      open: this.open(),
+      toggle: () => this.toggle(),
+      value: this.value(),
+      option: this.selectedOption(),
+      clear: () => this.valueChange.emit(null),
+      listboxId: this.listboxId,
+      activeId: this.open() && this.focusedIndex() >= 0 ? this.optionId(this.focusedIndex()) : null,
+    },
+  }));
   readonly searchInputEl = viewChild<ElementRef<HTMLInputElement>>('searchInputEl');
 
   private typeAheadBuffer = '';
@@ -116,6 +154,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     ];
     if (this.error()) parts.push('afi-select__trigger--error');
     if (this.open()) parts.push('afi-select__trigger--open');
+    if (this.shape() === 'pill') parts.push('afi-select__trigger--pill');
     return parts.join(' ');
   });
 
@@ -234,11 +273,10 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   /**
    * Anchor the floating panel to the trigger. Flips upward when there's
-   * more room above than below the viewport edge. Matches the trigger's
-   * width so options align visually.
+   * more room above than below the viewport edge.
    */
   private recomputePanelPosition(): void {
-    const trigger = this.triggerEl()?.nativeElement;
+    const trigger = (this.anchorEl() ?? this.triggerEl())?.nativeElement;
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
     const viewportH = window.innerHeight;
@@ -248,21 +286,16 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     const spaceAbove = rect.top;
     const openUp = spaceBelow < Math.min(panelMaxH, 160) && spaceAbove > spaceBelow;
 
-    if (openUp) {
-      this.panelStyle.set({
-        left: `${rect.left}px`,
-        width: `${rect.width}px`,
-        bottom: `${viewportH - rect.top + gap}px`,
-        top: 'auto',
-      });
-    } else {
-      this.panelStyle.set({
-        left: `${rect.left}px`,
-        width: `${rect.width}px`,
-        top: `${rect.bottom + gap}px`,
-        bottom: 'auto',
-      });
-    }
+    // The panel is never narrower than the trigger and grows to its longest
+    // option up to the cap in the stylesheet; `align="end"` pins its right edge.
+    const edge =
+      this.align() === 'end'
+        ? { right: `${document.documentElement.clientWidth - rect.right}px`, left: 'auto' }
+        : { left: `${rect.left}px`, right: 'auto' };
+    const vertical = openUp
+      ? { bottom: `${viewportH - rect.top + gap}px`, top: 'auto' }
+      : { top: `${rect.bottom + gap}px`, bottom: 'auto' };
+    this.panelStyle.set({ ...edge, ...vertical, 'min-width': `${rect.width}px` });
   }
 
   @HostListener('window:resize')
@@ -279,7 +312,8 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     document.removeEventListener('scroll', this.onAncestorScroll, true);
     this.closed.emit();
-    this.triggerEl()?.nativeElement?.focus();
+    const trigger = this.triggerEl()?.nativeElement ?? this.anchorEl()?.nativeElement.querySelector<HTMLElement>('button, [tabindex]');
+    trigger?.focus();
   }
 
   onSearchInput(event: Event): void {

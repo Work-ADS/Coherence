@@ -45,6 +45,12 @@
       (checkedChange)="onCheckedChange($event)"
       label="Activar notificaciones"
     />
+    <afi-switch
+      [size]="size()"
+      [disabled]="disabled()"
+      label="Compartir con el asesor"
+      help="El asesor verá su plan, no sus datos bancarios."
+    />
   </div>
 
   <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
@@ -55,6 +61,7 @@
       <li>Renderiza <code>role="switch"</code> + <code>aria-checked</code> para que lectores anuncien el estado correcto.</li>
       <li><code>Space</code> y <code>Enter</code> activan / desactivan; <code>Tab</code> enfoca.</li>
       <li>Label asociado vía <code>id</code> + <code>for</code> — pulsar el texto activa el switch.</li>
+      <li><code>help</code> añade un ⓘ tras la etiqueta; el switch se nombra solo con el texto de la etiqueta y pulsar el ⓘ nunca lo activa.</li>
       <li>Cambio se aplica inmediatamente — no esperar a guardar.</li>
     </ul>
   </section>

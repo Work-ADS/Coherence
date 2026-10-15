@@ -5,6 +5,7 @@
     [id]="switchId"
     [attr.aria-checked]="checked()"
     [attr.aria-label]="!label() ? ariaLabel() : null"
+    [attr.aria-labelledby]="label() ? labelTextId : null"
     [attr.aria-describedby]="describedBy()"
     [disabled]="disabled()"
     [class]="trackClasses()"
@@ -16,7 +17,12 @@
   @if (label() || hint()) {
     <span class="afi-switch__label-group">
       @if (label()) {
-        <span class="afi-switch__label">{{ label() }}</span>
+        <span class="afi-switch__label-row">
+          <span [id]="labelTextId" class="afi-switch__label">{{ label() }}</span>
+          @if (help(); as helpText) {
+            <afi-field-help [help]="helpText" [helpLabel]="helpLabel()" [label]="label()" />
+          }
+        </span>
       }
       @if (hint()) {
         <span [id]="hintId" class="afi-switch__hint">{{ hint() }}</span>

@@ -3,54 +3,45 @@
 // BEM classes, DS tokens via CSS custom properties only.
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+
 :host {
   display: block;
-}
-
-.afi-input__label {
-  display: block;
-  margin-block-end: var(--space-2xs);
-  font: var(--type-body-sm-500);
-  color: var(--foreground-primary-default);
-}
-
-.afi-input__required {
-  color: var(--feedback-error-foreground);
 }
 
 .afi-input__field {
   display: block;
   width: 100%;
-  border-radius: var(--radius-md);
-  // Use the control surface so form fields are visually distinct from
-  // the section/card background. Same rule applies to select, checkbox,
-  // radio, switch, segmented-control.
-  background: var(--control-background-default);
-  color: var(--foreground-primary-default);
-  border: var(--border-width-hairline) solid var(--border-hairline);
+  box-sizing: border-box;
+  border-radius: var(--radius-control);
+  // The input surface is white (--input-*), shared with select and search.
+  background: var(--input-background-default);
+  color: var(--input-foreground-default);
+  border: var(--border-width-hairline) solid var(--input-border-default);
   font: var(--type-body-md-400);
   transition:
     border-color var(--duration-fast) var(--easing-enter),
+    box-shadow var(--duration-fast) var(--easing-enter),
     background-color var(--duration-fast) var(--easing-enter);
 
   &::placeholder {
-    color: var(--foreground-tertiary-default);
+    color: var(--input-foreground-placeholder);
   }
 
   &:hover:not(:disabled):not([readonly]) {
-    border-color: var(--border-default);
+    border-color: var(--input-border-hover);
   }
 
   &:focus-visible {
-    outline: none;
-    // Inset focus ring — stays inside the input's own bounds so it never
-    // gets clipped by an `overflow: hidden` parent (e.g. afi-tabs panels).
-    box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
-    border-color: var(--border-focus);
+    @include focus-ring;
+    border-color: var(--input-border-focus);
   }
 
   &:disabled {
-    opacity: 0.5;
+    background: var(--input-background-disabled);
+    border-color: var(--input-border-disabled);
+    color: var(--input-foreground-disabled);
+    -webkit-text-fill-color: var(--input-foreground-disabled);
     cursor: not-allowed;
   }
 
@@ -66,23 +57,27 @@
     &:hover:not(:disabled) {
       border-color: var(--feedback-error-foreground);
     }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 var(--border-width-thick) var(--feedback-error-border);
+    }
   }
 
   // ─── Sizes (input only — textarea uses --textarea below) ────────────────
   &--sm {
     height: var(--control-h-sm, var(--dimension-8));
     padding-inline: var(--space-sm);
-    font: var(--type-body-sm-400);
   }
 
+  // sm, md and lg differ in height only: one type size and one inset.
   &--md {
     height: var(--control-h-md, var(--dimension-10));
-    padding-inline: var(--space-md);
+    padding-inline: var(--space-sm);
   }
 
   &--lg {
     height: var(--control-h-lg, var(--dimension-12));
-    padding-inline: var(--space-lg);
+    padding-inline: var(--space-sm);
   }
 
   // ─── Textarea variant ───────────────────────────────────────────────────
@@ -90,16 +85,22 @@
     height: auto;
     min-height: var(--dimension-24);
     padding-block: var(--space-xs);
-    padding-inline: var(--space-md);
+    padding-inline: var(--space-sm);
     resize: vertical;
   }
 
   // Numeric inputs right-align by convention (calculator / spreadsheet /
   // financial UIs read magnitudes right-to-left). Logical `end` so RTL
   // locales still align toward the reading flow.
-  &[data-type='number'] {
+  &[data-type='number'],
+  &--numeric {
     text-align: end;
     font-variant-numeric: tabular-nums;
+  }
+
+  // Filter-row shape: fully rounded, for fields on open canvas.
+  &--pill {
+    border-radius: var(--radius-full);
   }
 
   // ─── Adorned variant — border/bg moves to the shell ─────────────────────
@@ -130,20 +131,22 @@
   display: flex;
   align-items: stretch;
   width: 100%;
-  border-radius: var(--radius-md);
-  background: var(--control-background-default);
-  border: var(--border-width-hairline) solid var(--border-hairline);
+  box-sizing: border-box;
+  border-radius: var(--radius-control);
+  background: var(--input-background-default);
+  border: var(--border-width-hairline) solid var(--input-border-default);
   transition:
     border-color var(--duration-fast) var(--easing-enter),
+    box-shadow var(--duration-fast) var(--easing-enter),
     background-color var(--duration-fast) var(--easing-enter);
 
   &:hover:not(&--disabled):not(&--readonly) {
-    border-color: var(--border-default);
+    border-color: var(--input-border-hover);
   }
 
   &:focus-within {
-    box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
-    border-color: var(--border-focus);
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    border-color: var(--input-border-focus);
   }
 
   &--error {
@@ -152,16 +155,26 @@
     &:hover {
       border-color: var(--feedback-error-foreground);
     }
+
+    &:focus-within {
+      box-shadow: 0 0 0 var(--border-width-thick) var(--feedback-error-border);
+    }
   }
 
   &--disabled {
-    opacity: 0.5;
+    background: var(--input-background-disabled);
+    border-color: var(--input-border-disabled);
+    color: var(--input-foreground-disabled);
     cursor: not-allowed;
   }
 
   &--readonly {
     background: var(--control-background-hover);
     cursor: default;
+  }
+
+  &--pill {
+    border-radius: var(--radius-full);
   }
 
   &--sm {
@@ -177,13 +190,28 @@
   }
 }
 
+// Icons drawn inside the shell, at the icon size, in the input icon ink.
+.afi-input__icon {
+  --afi-icon-size: var(--icon-sm);
+  align-self: center;
+  color: var(--input-icon-default);
+
+  &--start {
+    margin-inline-start: var(--space-sm);
+  }
+
+  &--end {
+    margin-inline-end: var(--space-sm);
+  }
+}
+
 .afi-input__prefix,
 .afi-input__suffix {
   display: inline-flex;
   align-items: center;
-  padding-inline: var(--space-md);
+  padding-inline: var(--space-sm);
   color: var(--foreground-tertiary-default);
-  font: var(--type-body-md-500);
+  font: var(--type-body-md-400);
   font-variant-numeric: tabular-nums;
   user-select: none;
   pointer-events: none;
@@ -210,10 +238,6 @@
   margin-block-start: var(--space-2xs);
   font: var(--type-body-sm-400);
   color: var(--feedback-error-foreground);
-}
-
-:host-context([data-brand="unicaja"]) .afi-input__label {
-  font: var(--unicaja-field-label-font, var(--type-body-md-500));
 }
 
 :host-context([data-brand="unicaja"]) .afi-input__field {

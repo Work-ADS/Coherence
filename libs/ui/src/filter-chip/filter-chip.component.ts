@@ -10,7 +10,10 @@ import {
   signal,
 } from '@angular/core';
 
+import { IconComponent } from '../icon';
+
 import type {
+  FilterChipAppearance,
   FilterChipMode,
   FilterChipOption,
   FilterChipSize,
@@ -39,6 +42,7 @@ import type {
 @Component({
   selector: 'afi-filter-chip',
   standalone: true,
+  imports: [IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './filter-chip.component.html',
   styleUrls: ['./filter-chip.component.scss'],
@@ -53,10 +57,31 @@ export class FilterChipComponent {
 
   // ── Toggle-mode inputs/outputs ─────────────────────────────────────
   readonly selected = input<boolean>(false);
+  /** The value this filter applied (shown after a divider while `selected`; the owner holds it). */
+  readonly value = input<string | null>(null);
+  readonly appearance = input<FilterChipAppearance>('default');
+  /** Trailing × that removes the chip (`removed`); selection is left alone. */
+  readonly removable = input<boolean>(false);
+  /** Menu-trigger mode: the body opens a panel owned by the consumer (a Select or MultiSelect `trigger`). */
+  readonly asTrigger = input<boolean>(false);
+  /** Panel open state, for `asTrigger`. */
+  readonly expanded = input<boolean>(false);
+  /** Trigger mode: id of the panel's listbox (`aria-controls`). */
+  readonly controls = input<string | null>(null);
+  /** Trigger mode: id of the highlighted row while the panel is open (`aria-activedescendant`). */
+  readonly activeId = input<string | null>(null);
   readonly count = input<number | null>(null);
   readonly dismissable = input<boolean>(false);
   readonly selectedChange = output<boolean>();
+  /** @deprecated Use `removed`. */
   readonly dismissed = output<void>();
+  readonly removed = output<void>();
+  /** The × beside an applied value: clears it. */
+  readonly cleared = output<void>();
+  /** Trigger mode: the body was pressed (open or close the panel). */
+  readonly toggled = output<void>();
+  /** Trigger mode: the leading ⊗ cleared this one filter. Never opens the panel. */
+  readonly reset = output<void>();
 
   // ── Dropdown-mode inputs/outputs ───────────────────────────────────
   /** Options shown inside the dropdown panel. Ignored in toggle mode. */
@@ -93,6 +118,39 @@ export class FilterChipComponent {
 
   readonly isDropdown = computed<boolean>(() => this.mode() === 'dropdown');
 
+  /** The body opens something (the built-in menu, or a panel the consumer owns). */
+  readonly isTrigger = computed<boolean>(() => this.isDropdown() || this.asTrigger());
+
+  readonly isOpen = computed<boolean>(() =>
+    this.isDropdown() ? this.menuOpen() : this.asTrigger() && this.expanded(),
+  );
+
+  /** The text shown after the divider while a value is applied. */
+  readonly appliedText = computed<string | null>(() => {
+    if (this.isDropdown()) return this.hasSelection() ? this.triggerSummary() : null;
+    const v = this.value();
+    return this.selected() && v !== null && v.length > 0 ? v : null;
+  });
+
+  /** Leading ⊗ (trigger modes): clears that one filter without opening the panel. */
+  readonly showReset = computed<boolean>(
+    () => this.isTrigger() && this.triggerActive() && !this.disabled(),
+  );
+
+  /** × beside an applied value in toggle mode: clears it. */
+  readonly showClear = computed<boolean>(
+    () => !this.isTrigger() && this.appliedText() !== null && !this.disabled(),
+  );
+
+  /** Trailing remove ×; replaced by the clear × while a value shows. */
+  readonly showRemove = computed<boolean>(
+    () =>
+      !this.isTrigger() &&
+      (this.removable() || this.dismissable()) &&
+      !this.showClear() &&
+      !this.disabled(),
+  );
+
   /** Trigger pill is "active" when any value is selected (dropdown mode)
    *  OR the chip itself is selected (toggle mode). Drives the
    *  highlighted styling on the trigger. */
@@ -106,11 +164,12 @@ export class FilterChipComponent {
     const parts = [
       'afi-chip',
       `afi-chip--${this.size()}`,
+      `afi-chip--${this.appearance()}`,
       this.isDropdown() ? 'afi-chip--mode-dropdown' : 'afi-chip--mode-toggle',
     ];
     if (this.triggerActive()) parts.push('afi-chip--selected');
     if (this.disabled()) parts.push('afi-chip--disabled');
-    if (this.menuOpen()) parts.push('afi-chip--open');
+    if (this.isOpen()) parts.push('afi-chip--open');
     return parts.join(' ');
   });
 
@@ -123,28 +182,40 @@ export class FilterChipComponent {
     return sel.size === 0 || opts.every((o) => sel.has(o.value));
   });
 
-  // ── Trigger handler — same click target for both modes ─────────────
+  // ── Body click: toggles, or opens the panel in trigger modes ───────
   onToggle(): void {
     if (this.disabled()) return;
     if (this.isDropdown()) {
       this.menuOpen.update((v) => !v);
       return;
     }
+    if (this.asTrigger()) {
+      this.toggled.emit();
+      return;
+    }
     this.selectedChange.emit(!this.selected());
   }
 
-  // ── Toggle-mode handlers ───────────────────────────────────────────
-  onDismiss(event: Event): void {
+  onRemove(): void {
     if (this.disabled()) return;
-    event.stopPropagation();
+    this.removed.emit();
     this.dismissed.emit();
   }
 
-  // ── Dropdown-mode handlers ─────────────────────────────────────────
-  onClear(event: Event): void {
+  /** The × beside an applied value. */
+  onClearValue(): void {
     if (this.disabled()) return;
-    event.stopPropagation();
-    this.selectedValuesChange.emit(new Set());
+    this.cleared.emit();
+  }
+
+  /** The leading ⊗: clears this filter only; it never reaches the body. */
+  onReset(): void {
+    if (this.disabled()) return;
+    if (this.isDropdown()) {
+      this.selectedValuesChange.emit(new Set());
+      return;
+    }
+    this.reset.emit();
   }
 
   toggleOption(value: string, event?: Event): void {

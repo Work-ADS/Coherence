@@ -1,0 +1,227 @@
+// =============================================================================
+// afi-checkbox — native input, drawn box. BEM classes, DS tokens only.
+// =============================================================================
+
+@use '../styles/focus-ring-v1' as *;
+@use '../styles/touch-area' as *;
+
+:host {
+  display: inline-block;
+}
+
+.afi-check {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  cursor: pointer;
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  // Dense context (table gutters, toolbars): the box carries no extra hit area
+  // and the label row stays on one line. A compact checkbox needs a compact,
+  // unambiguous aria-label or label (docs/rules/accessibility.md rule 7).
+  &--compact {
+    align-items: center;
+  }
+}
+
+// The native input stays in the tab order and the accessibility tree.
+.afi-check__native {
+  position: absolute;
+  inline-size: 0;
+  block-size: 0;
+  opacity: 0;
+}
+
+// ─── Box ──────────────────────────────────────────────────────────────────
+// border-box: the border is inside the declared size, so the square draws at
+// its token with or without a global reset. The top margin centres it on the
+// first label line.
+.afi-check__box {
+  position: relative;
+  box-sizing: border-box;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--checkbox-size-md);
+  block-size: var(--checkbox-size-md);
+  margin-block-start: var(--dimension-0-25);
+  border: var(--border-width-thick) solid var(--input-border-default);
+  border-radius: var(--radius-sm);
+  background: var(--input-background-default);
+  color: var(--brand-secondary-foreground-default);
+  transition:
+    background-color var(--duration-fast) var(--easing-enter),
+    border-color var(--duration-fast) var(--easing-enter);
+
+  svg {
+    flex: none;
+    inline-size: var(--checkbox-glyph-md);
+    block-size: var(--checkbox-glyph-md);
+    stroke: currentColor;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity var(--duration-fast) var(--easing-enter),
+      transform var(--duration-fast) var(--easing-enter);
+  }
+}
+
+// The hit area is the label row; touch-area grows it to the 44 px floor.
+.afi-check:not(.afi-check--compact) .afi-check__box {
+  @include touch-area;
+}
+
+.afi-check--sm .afi-check__box {
+  inline-size: var(--checkbox-size-sm);
+  block-size: var(--checkbox-size-sm);
+  margin-block-start: var(--dimension-0-5);
+
+  svg {
+    inline-size: var(--checkbox-glyph-sm);
+    block-size: var(--checkbox-glyph-sm);
+  }
+}
+
+.afi-check--xs .afi-check__box {
+  inline-size: var(--checkbox-size-xs);
+  block-size: var(--checkbox-size-xs);
+  margin-block-start: var(--dimension-0-5);
+
+  svg {
+    inline-size: var(--checkbox-glyph-xs);
+    block-size: var(--checkbox-glyph-xs);
+    stroke-width: 3.5;
+  }
+}
+
+.afi-check--xs .afi-check__label {
+  font: var(--type-body-sm-400);
+}
+
+// A 14 px box beside a label keeps a 24 px row and centres in it.
+.afi-check--xs:has(.afi-check__label) {
+  align-items: center;
+  min-block-size: var(--control-size-sm);
+
+  .afi-check__box {
+    margin-block-start: 0;
+  }
+}
+
+.afi-check--compact .afi-check__box {
+  margin-block-start: 0;
+}
+
+.afi-check:hover:not(.afi-check--disabled) .afi-check__box {
+  border-color: var(--input-border-hover);
+}
+
+.afi-check__native:focus-visible + .afi-check__box {
+  @include focus-ring;
+}
+
+.afi-check--error .afi-check__box {
+  border-color: var(--feedback-error-foreground);
+}
+
+.afi-check__native:checked + .afi-check__box,
+.afi-check__native:indeterminate + .afi-check__box {
+  border-color: var(--brand-secondary-background-default);
+  background: var(--brand-secondary-background-default);
+  animation: afi-check-pop var(--duration-base) var(--easing-enter);
+}
+
+.afi-check__native:checked + .afi-check__box .afi-check__tick,
+.afi-check__native:indeterminate + .afi-check__box .afi-check__dash {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.afi-check__native:checked + .afi-check__box .afi-check__dash,
+.afi-check__native:indeterminate + .afi-check__box .afi-check__tick {
+  display: none;
+}
+
+// The tick draws itself: the dash offset runs to 0, so the mark is written
+// rather than faded in, and the box settles once on commit.
+.afi-check__tick path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  transition: stroke-dashoffset var(--duration-base) var(--easing-enter) 40ms;
+}
+
+.afi-check__native:checked + .afi-check__box .afi-check__tick path {
+  stroke-dashoffset: 0;
+}
+
+@keyframes afi-check-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(0.88);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afi-check__box,
+  .afi-check__box svg,
+  .afi-check__tick path {
+    transition: none;
+    animation: none;
+  }
+
+  .afi-check__native:checked + .afi-check__box,
+  .afi-check__native:indeterminate + .afi-check__box {
+    animation: none;
+  }
+
+  .afi-check__native:checked + .afi-check__box .afi-check__tick path {
+    stroke-dashoffset: 0;
+  }
+}
+
+// ─── Text ─────────────────────────────────────────────────────────────────
+.afi-check__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.afi-check__label {
+  font: var(--type-body-md-400);
+  color: var(--foreground-primary-default);
+}
+
+.afi-check--compact .afi-check__label {
+  font: var(--type-body-sm-400);
+}
+
+.afi-check__required {
+  color: var(--feedback-error-foreground);
+  margin-inline-start: var(--border-width-thick);
+}
+
+.afi-check__hint,
+.afi-check__error {
+  font: var(--type-body-sm-400);
+}
+
+.afi-check__hint {
+  color: var(--foreground-tertiary-default);
+}
+
+.afi-check__error {
+  color: var(--feedback-error-foreground);
+}

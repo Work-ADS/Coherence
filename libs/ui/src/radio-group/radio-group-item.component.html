@@ -1,0 +1,23 @@
+<label [class]="rootClasses()">
+  <!-- Hidden native radio carries the semantics; the ring below is its picture. -->
+  <input
+    type="radio"
+    class="afi-radio__native"
+    [id]="radioId"
+    [name]="groupedName()"
+    [value]="value()"
+    [checked]="isSelected()"
+    [disabled]="isDisabled()"
+    [attr.aria-describedby]="hint() ? hintId : null"
+    (change)="onSelect()"
+  />
+  <span class="afi-radio__ring" aria-hidden="true"></span>
+  @if (label()) {
+    <span class="afi-radio__text">
+      <span class="afi-radio__label">{{ label() }}</span>
+      @if (hint()) {
+        <span [id]="hintId" class="afi-radio__hint">{{ hint() }}</span>
+      }
+    </span>
+  }
+</label>

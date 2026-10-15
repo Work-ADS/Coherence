@@ -1,0 +1,20 @@
+<!-- The wrapper keeps pointer and key activation from reaching the field or its label. -->
+<span
+  class="afi-field-help"
+  (click)="stop($event)"
+  (mousedown)="$event.stopPropagation()"
+  (keydown.enter)="$event.stopPropagation()"
+  (keydown.space)="$event.stopPropagation()"
+>
+  <afi-tooltip [text]="help()" position="top" [openOnClick]="true" [multiline]="true" [delayMs]="0">
+    <afi-icon-button
+      variant="quiet"
+      size="sm"
+      [ariaLabel]="name()"
+      [ariaDescribedBy]="descriptionId"
+    >
+      <afi-icon name="info" />
+    </afi-icon-button>
+  </afi-tooltip>
+  <span [id]="descriptionId" hidden>{{ help() }}</span>
+</span>

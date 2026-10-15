@@ -51,6 +51,15 @@
         />
       }
     </afi-radio-group>
+    <afi-radio-group
+      legend="Frecuencia"
+      help="Con qué frecuencia recibirá el informe."
+      hint="Puede cambiarla más tarde."
+      orientation="vertical"
+      [options]="frecuencias"
+      [value]="frecuencia()"
+      (valueChange)="frecuencia.set($event)"
+    />
   </div>
 
   <site-doc-tokens slot="tokens" [categories]="tokenCategories" />

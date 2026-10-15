@@ -12,7 +12,7 @@
   @if (!loading()) {
     <ng-content />
   } @else {
-    <span class="btn__spinner" aria-hidden="true">⟳</span>
+    <afi-icon class="btn__spinner" name="loader" />
     <span class="btn__sr-only">Cargando…</span>
   }
   @if (iconEnd()) {

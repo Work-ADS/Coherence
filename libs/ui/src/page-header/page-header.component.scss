@@ -62,7 +62,7 @@
 :host(.page-header--subsection) {
   background: transparent;
   border: var(--border-width-hairline) solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-section);
   padding: var(--space-lg);
   --afi-table-first-cell-pad: 0;
 }
@@ -212,6 +212,56 @@
   flex-wrap: wrap;
 }
 
+.page-header__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--dimension-8);
+  block-size: var(--dimension-8);
+  border-radius: var(--radius-full);
+  background: var(--brand-secondary-neutral-background-default);
+  color: var(--brand-secondary-neutral-foreground-default);
+
+  afi-icon {
+    --afi-icon-size: var(--icon-sm);
+  }
+}
+
+// The heading column holds the title and, when projected, the meta line. A
+// header with no meta is just the title in a column: same geometry as before.
+.page-header__heading {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+// Meta: a compact status or metadata line directly under the title. It never
+// goes in the subtitle and is not a live region.
+.page-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+  min-width: 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+// With meta the title block top-aligns, so an icon or accessory keeps the
+// title line's position instead of centring on the whole block.
+.page-header__title-leading:has(.page-header__meta:not(:empty)) {
+  align-items: flex-start;
+}
+
+.page-header__title-leading:has(.page-header__meta:not(:empty)) > [slot='extraInfo'],
+.page-header__title-leading:has(.page-header__meta:not(:empty)) > [slot='titleAccessory'] {
+  align-self: flex-start;
+}
+
 .page-header__title {
   margin: 0;
   color: var(--foreground-primary-default);
@@ -225,7 +275,7 @@
 //   section    h2 → 500 20/24 (--type-section)
 //   subsection h3 → 500 16/24 (--type-body-lg-500)
 :host(.page-header--page) .page-header__title {
-  font: var(--type-subtitle);
+  font: var(--type-title);
   letter-spacing: var(--tracking-snug);
 }
 
@@ -234,12 +284,14 @@
 }
 
 :host(.page-header--subsection) .page-header__title {
-  font: var(--type-body-lg-500);
+  font: var(--type-section-title);
 }
 
 .page-header__subtitle {
   margin: 0;
   color: var(--foreground-secondary-default);
+  max-inline-size: 84ch;
+  text-wrap: pretty;
 }
 
 :host(.page-header--page) .page-header__subtitle {
@@ -276,10 +328,10 @@
   min-width: var(--dimension-5);
   padding-inline: var(--space-sm);
   padding-block: var(--space-2xs);
-  background: var(--color-afi-azul-25);
-  color: var(--color-afi-azul-900);
+  background: var(--brand-secondary-neutral-background-default);
+  color: var(--brand-secondary-neutral-foreground-default);
   border-radius: var(--radius-pill);
-  font: var(--type-body-xs-500, var(--type-body-sm-500));
+  font: var(--type-body-sm-500);
   white-space: nowrap;
   flex-shrink: 0;
   align-self: center;
@@ -364,5 +416,59 @@
   &:empty {
     display: none;
     margin: 0;
+  }
+}
+
+// compactActionPlacement="after-description": at the compact width the title row
+// dissolves into the main column and CSS order places title, description, then
+// the actions. The same actions node moves; nothing is duplicated.
+@mixin actions-last {
+  .page-header__main {
+    flex-direction: column;
+  }
+
+  .page-header__title-row {
+    display: contents;
+  }
+
+  .page-header__title-leading {
+    order: 0;
+  }
+
+  .page-header__subtitle {
+    order: 1;
+  }
+
+  .page-header__actions {
+    order: 2;
+    margin-top: var(--space-md);
+  }
+}
+
+@media (max-width: 640px) {
+  :host(.page-header--actions-last) {
+    @include actions-last;
+  }
+}
+
+@container viewport (max-width: 40rem) {
+  :host(.page-header--actions-last) {
+    @include actions-last;
+  }
+}
+
+// actionsPlacement="end": title and actions stay on one row at every width; the
+// title ellipsizes instead of the actions wrapping below it.
+@media (max-width: 640px) {
+  :host(.page-header--actions-end) .page-header__title-row {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+}
+
+@container viewport (max-width: 40rem) {
+  :host(.page-header--actions-end) .page-header__title-row {
+    flex-wrap: nowrap;
+    align-items: center;
   }
 }

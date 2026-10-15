@@ -8,7 +8,7 @@ import { IconButtonVariant, IconButtonVariantLegacy, IconButtonSize } from './ic
  *
  * `wide` opts out of the fixed-square footprint when the projected content
  * needs more room (e.g. a dual-icon trigger). Width becomes auto with
- * horizontal padding. Orthogonal to `size` — works with sm/md/lg.
+ * horizontal padding. Orthogonal to `size` — works at every size.
  */
 @Component({
   selector: 'afi-icon-button',
@@ -23,8 +23,11 @@ export class IconButtonComponent {
   readonly size = input<IconButtonSize>('md');
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input.required<string>();
+  /** Id of the element that describes this button (e.g. the field-help text). */
+  readonly ariaDescribedBy = input<string | null>(null);
   readonly pressed = input<boolean | null>(null);
   readonly expanded = input<boolean | null>(null);
+  /** Declared for `feedback-overlay`, which binds it; not rendered yet. */
   readonly badge = input<number | null>(null);
   readonly wide = input<boolean>(false);
 

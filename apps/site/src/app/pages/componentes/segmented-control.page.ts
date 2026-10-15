@@ -161,6 +161,28 @@ export class SegmentedControlPage {
   readonly selected = signal('daily');
   readonly count = signal<string>('2');
   readonly state = signal<'default' | 'disabled'>('default');
+  readonly view = signal('list');
+  readonly tab = signal('todos');
+  readonly tipo = signal('ahorro');
+
+  /** Icon-only segments: the option's ariaLabel is the accessible name. */
+  readonly iconOptions: SegmentedOption[] = [
+    { value: 'list', label: '', icon: 'file-text', ariaLabel: 'Lista' },
+    { value: 'chart', label: '', icon: 'pie-chart', ariaLabel: 'Gráfico' },
+  ];
+
+  /** Count, dot and meta slots after the label. */
+  readonly slotOptions: SegmentedOption[] = [
+    { value: 'todos', label: 'Todos', count: 12 },
+    { value: 'nuevos', label: 'Nuevos', dot: true },
+    { value: 'mes', label: 'Octubre', meta: '2026' },
+  ];
+
+  readonly tipoOptions: SegmentedOption[] = [
+    { value: 'ahorro', label: 'Ahorro' },
+    { value: 'inversion', label: 'Inversión' },
+    { value: 'jubilacion', label: 'Jubilación', disabled: true },
+  ];
 
   /**
    * Disables the LAST option rather than a fixed one, so the state stays

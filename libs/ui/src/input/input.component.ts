@@ -8,7 +8,11 @@ import {
   output,
 } from '@angular/core';
 
-import type { InputSize, InputType } from './input.variants';
+import { FieldLabelComponent } from '../field-label';
+import { IconComponent } from '../icon';
+import type { IconName } from '../icon';
+
+import type { InputShape, InputSize, InputType } from './input.variants';
 
 let nextId = 0;
 
@@ -17,11 +21,16 @@ let nextId = 0;
  *
  * Covers text / textarea / number / email / password via the `type` input.
  * Label, hint, and error are bundled in — the Input owns its a11y wiring.
+ * `help` adds the ⓘ after the label; `shape="pill"` is the filter-row form;
+ * `iconStart`/`iconEnd` are `afi-icon` names drawn inside the field; `numeric`
+ * right-aligns the value with tabular figures (a `type="number"` still does so
+ * on its own for now: migrate consumers to `numeric`, then drop the implicit rule).
  * BEM + DS tokens via CSS custom properties; no Tailwind for visual styling.
  */
 @Component({
   selector: 'afi-input',
   standalone: true,
+  imports: [FieldLabelComponent, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
@@ -38,7 +47,12 @@ export class InputComponent implements OnInit {
   readonly readonly = input<boolean>(false);
   readonly required = input<boolean>(false);
   readonly autocomplete = input<string | null>(null);
-  readonly iconStart = input<string | null>(null);
+  readonly shape = input<InputShape>('rect');
+  readonly numeric = input<boolean>(false);
+  readonly help = input<string | null>(null);
+  readonly helpLabel = input<string | null>(null);
+  readonly iconStart = input<IconName | null>(null);
+  readonly iconEnd = input<IconName | null>(null);
   readonly prefix = input<string | null>(null);
   readonly suffix = input<string | null>(null);
   readonly ariaLabel = input<string | null>(null);
@@ -51,11 +65,17 @@ export class InputComponent implements OnInit {
   readonly blurred = output<FocusEvent>();
 
   readonly inputId = `afi-input-${nextId++}`;
+  readonly labelId = `${this.inputId}-label`;
   readonly hintId = `${this.inputId}-hint`;
   readonly errorId = `${this.inputId}-error`;
 
   readonly hasAdornment = computed(
-    () => (this.prefix() !== null || this.suffix() !== null) && this.type() !== 'textarea',
+    () =>
+      (this.prefix() !== null ||
+        this.suffix() !== null ||
+        this.iconStart() !== null ||
+        this.iconEnd() !== null) &&
+      this.type() !== 'textarea',
   );
 
   readonly fieldClasses = computed(() => {
@@ -64,6 +84,8 @@ export class InputComponent implements OnInit {
       `afi-input__field--${this.size()}`,
     ];
     if (this.type() === 'textarea') parts.push('afi-input__field--textarea');
+    if (this.numeric()) parts.push('afi-input__field--numeric');
+    if (this.shape() === 'pill') parts.push('afi-input__field--pill');
     if (this.error()) parts.push('afi-input__field--error');
     if (this.hasAdornment()) parts.push('afi-input__field--bare');
     return parts.join(' ');
@@ -72,6 +94,7 @@ export class InputComponent implements OnInit {
   readonly shellClasses = computed(() => {
     const parts = ['afi-input__shell', `afi-input__shell--${this.size()}`];
     if (this.error()) parts.push('afi-input__shell--error');
+    if (this.shape() === 'pill') parts.push('afi-input__shell--pill');
     if (this.disabled()) parts.push('afi-input__shell--disabled');
     if (this.readonly()) parts.push('afi-input__shell--readonly');
     return parts.join(' ');

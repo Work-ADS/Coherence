@@ -31,6 +31,8 @@ export const componentes_routes: Routes = [
   { path: 'tabs', loadComponent: () => import('./tabs.page').then(m => m.TabsPage) },
   { path: 'modal', loadComponent: () => import('./modal.page').then(m => m.ModalPage) },
   { path: 'drawer', loadComponent: () => import('./drawer.page').then(m => m.DrawerPage) },
+  { path: 'search', loadComponent: () => import('./search.page').then(m => m.SearchPage) },
+  { path: 'multi-select', loadComponent: () => import('./multi-select.page').then(m => m.MultiSelectPage) },
   { path: 'select', loadComponent: () => import('./select.page').then(m => m.SelectPage) },
   // Sidebar is a pattern (composes Logo + NavSection + NavItem + IconButton +
   // Select). Lives at /patrones/sidebar-ia-comparison — this route is
@@ -42,6 +44,7 @@ export const componentes_routes: Routes = [
   { path: 'page-header', loadComponent: () => import('./page-header.page').then(m => m.PageHeaderPage) },
   { path: 'status-chip', loadComponent: () => import('./status-chip.page').then(m => m.StatusChipPage) },
   { path: 'filter-chip', loadComponent: () => import('./filter-chip.page').then(m => m.FilterChipPage) },
+  { path: 'field-help', loadComponent: () => import('./field-help.page').then(m => m.FieldHelpPage) },
   { path: 'icon', loadComponent: () => import('./icon.page').then(m => m.IconPage) },
   { path: 'kbd', loadComponent: () => import('./kbd.page').then(m => m.KbdPage) },
   { path: 'shell', loadComponent: () => import('./shell.page').then(m => m.ShellPage) },

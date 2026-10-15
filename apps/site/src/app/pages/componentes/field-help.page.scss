@@ -1,0 +1,19 @@
+// =============================================================================
+// field-help.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+  width: 100%;
+  padding: var(--space-xl);
+
+  &__field {
+    flex: 1 1 var(--dimension-60);
+    min-inline-size: 0;
+    max-inline-size: var(--dimension-72);
+  }
+}

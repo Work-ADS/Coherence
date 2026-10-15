@@ -1,0 +1,163 @@
+@if (label(); as labelText) {
+  @if (shape() !== 'pill') {
+    <afi-field-label
+      [text]="labelText"
+      [forId]="msId"
+      [labelId]="labelId"
+      [required]="required()"
+      [help]="help()"
+      [helpLabel]="helpLabel()"
+    />
+  }
+}
+
+<div class="afi-ms__wrapper">
+  @if (triggerTpl(); as tpl) {
+    <!-- A custom closed control (typically a filter chip). It owns its look and
+         aria-expanded; keys from inside it drive the same panel. -->
+    <span #anchorEl class="afi-ms__anchor" (keydown)="onTriggerKeydown($event)">
+      <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="triggerContext()" />
+    </span>
+  } @else {
+    <button
+      #triggerEl
+      type="button"
+      [id]="msId"
+      [class]="triggerClasses()"
+      [disabled]="disabled()"
+      role="combobox"
+      aria-haspopup="listbox"
+      [attr.aria-expanded]="open()"
+      [attr.aria-controls]="open() ? listboxId : null"
+      [attr.aria-activedescendant]="open() && activeIndex() >= 0 ? rowId(activeIndex()) : null"
+      [attr.aria-labelledby]="label() && shape() !== 'pill' ? labelId : null"
+      [attr.aria-label]="!label() || shape() === 'pill' ? (ariaLabel() ?? label()) : null"
+      [attr.aria-required]="required() ? 'true' : null"
+      [attr.aria-invalid]="error() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
+      (click)="toggle()"
+      (keydown)="onTriggerKeydown($event)"
+    >
+      <span
+        class="afi-ms__summary"
+        [class.afi-ms__summary--placeholder]="count() === 0"
+      >{{ summaryText() }}</span>
+      @if (badge(); as n) {
+        <span class="afi-ms__badge" aria-hidden="true">{{ n }}</span>
+      }
+      <afi-icon class="afi-ms__chevron" [class.afi-ms__chevron--open]="open()" name="chevron-down" />
+    </button>
+  }
+
+  @if (open()) {
+    <div class="afi-ms__backdrop" [attr.data-ms]="msId" (click)="close()" aria-hidden="true"></div>
+    <div class="afi-ms__panel" [attr.data-ms]="msId" [style]="panelStyle()">
+      <div
+        role="listbox"
+        [id]="listboxId"
+        aria-multiselectable="true"
+        class="afi-ms__listbox"
+        [attr.aria-label]="ariaLabel() ?? label()"
+      >
+        @for (row of rows(); track row.id; let i = $index) {
+          @switch (row.kind) {
+            @case ('option') {
+              <div
+                role="option"
+                [id]="row.id"
+                [attr.aria-selected]="isPicked(row.option.value)"
+                [attr.aria-disabled]="row.disabled || null"
+                class="afi-ms__row"
+                [class.afi-ms__row--grouped]="row.grouped"
+                [class.afi-ms__row--active]="i === activeIndex()"
+                [class.afi-ms__row--disabled]="row.disabled"
+                (mouseenter)="!row.disabled && activeIndex.set(i)"
+                (click)="activate(row)"
+              >
+                <span class="afi-ms__check" [class.afi-ms__check--on]="isPicked(row.option.value)">
+                  @if (isPicked(row.option.value)) {
+                    <afi-icon name="check" />
+                  }
+                </span>
+                <span class="afi-ms__row-label">{{ row.option.label }}</span>
+                @if (row.option.hint) {
+                  <span class="afi-ms__row-hint">{{ row.option.hint }}</span>
+                }
+              </div>
+            }
+            @case ('all') {
+              <div
+                role="option"
+                [id]="row.id"
+                [attr.aria-selected]="row.check === 'on'"
+                [attr.aria-checked]="row.check === 'mixed' ? 'mixed' : row.check === 'on'"
+                class="afi-ms__row afi-ms__row--all"
+                [class.afi-ms__row--active]="i === activeIndex()"
+                (mouseenter)="activeIndex.set(i)"
+                (click)="activate(row)"
+              >
+                <span class="afi-ms__check" [class.afi-ms__check--on]="row.check !== 'off'">
+                  @if (row.check === 'on') {
+                    <afi-icon name="check" />
+                  } @else if (row.check === 'mixed') {
+                    <span class="afi-ms__dash"></span>
+                  }
+                </span>
+                <span class="afi-ms__row-label">{{ row.label }}</span>
+              </div>
+            }
+            @case ('group') {
+              <div
+                role="option"
+                [id]="row.id"
+                [attr.aria-selected]="row.check === 'on'"
+                [attr.aria-checked]="row.check === 'mixed' ? 'mixed' : row.check === 'on'"
+                [attr.aria-disabled]="row.disabled || null"
+                class="afi-ms__row afi-ms__row--group"
+                [class.afi-ms__row--active]="i === activeIndex()"
+                [class.afi-ms__row--disabled]="row.disabled"
+                (mouseenter)="!row.disabled && activeIndex.set(i)"
+                (click)="activate(row)"
+              >
+                <span class="afi-ms__check" [class.afi-ms__check--on]="row.check !== 'off'">
+                  @if (row.check === 'on') {
+                    <afi-icon name="check" />
+                  } @else if (row.check === 'mixed') {
+                    <span class="afi-ms__dash"></span>
+                  }
+                </span>
+                <span class="afi-ms__row-label">{{ row.label }}</span>
+                @if (row.hint) {
+                  <span class="afi-ms__row-hint">{{ row.hint }}</span>
+                }
+              </div>
+            }
+            @default {
+              <div
+                role="option"
+                [id]="row.id"
+                [attr.aria-selected]="false"
+                class="afi-ms__row afi-ms__row--tool"
+                [class.afi-ms__row--active]="i === activeIndex()"
+                (mouseenter)="activeIndex.set(i)"
+                (click)="activate(row)"
+              >
+                <span class="afi-ms__row-label">{{ row.label }}</span>
+              </div>
+            }
+          }
+        }
+        @if (options().length === 0) {
+          <div class="afi-ms__empty" aria-live="polite">{{ emptyLabel() }}</div>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+@if (hint() && !error()) {
+  <p [id]="hintId" class="afi-ms__hint">{{ hint() }}</p>
+}
+@if (error()) {
+  <p [id]="errorId" class="afi-ms__error">{{ error() }}</p>
+}

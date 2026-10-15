@@ -12,7 +12,12 @@ import {
   viewChild,
 } from '@angular/core';
 
-import type { SearchSize, SearchSuggestion } from './search.variants';
+import { FieldLabelComponent } from '../field-label';
+import { IconComponent } from '../icon';
+
+import type { SearchShape, SearchSize, SearchSuggestion } from './search.variants';
+
+const MAX_SUGGESTIONS = 10;
 
 let nextId = 0;
 
@@ -41,12 +46,19 @@ let nextId = 0;
 @Component({
   selector: 'afi-search',
   standalone: true,
+  imports: [FieldLabelComponent, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent implements OnInit {
   readonly size = input<SearchSize>('sm');
+  /** `pill` is the filter-row shape: fully rounded. */
+  readonly shape = input<SearchShape>('rect');
+  readonly required = input<boolean>(false);
+  /** ⓘ after the label: help text in a tooltip (see `afi-field-help`). */
+  readonly help = input<string | null>(null);
+  readonly helpLabel = input<string | null>(null);
   readonly value = input<string>('');
   readonly placeholder = input<string>('Buscar');
   readonly label = input<string | null>(null);
@@ -81,7 +93,8 @@ export class SearchComponent implements OnInit {
   private readonly host = inject(ElementRef);
 
   readonly rootClasses = computed(
-    () => `afi-search afi-search--${this.size()}`,
+    () =>
+      `afi-search afi-search--${this.size()}${this.shape() === 'pill' ? ' afi-search--pill' : ''}`,
   );
 
   readonly hasValue = computed(() => (this.value() ?? '').length > 0);
@@ -94,6 +107,10 @@ export class SearchComponent implements OnInit {
   /** Keyboard-driven highlight inside the suggestions list. -1 = no
    *  active row; cleared whenever the input value changes. */
   readonly activeIndex = signal<number>(-1);
+
+  /** At most ten rows are rendered, so `aria-activedescendant` never names a
+   *  row that is not in the DOM. Consumers narrow the list; this is the cap. */
+  readonly visibleSuggestions = computed(() => this.suggestions().slice(0, MAX_SUGGESTIONS));
 
   readonly hasSuggestions = computed(() => this.suggestions().length > 0);
 
@@ -141,19 +158,22 @@ export class SearchComponent implements OnInit {
     this.focused.set(true);
   }
 
-  onBlur(): void {
-    // queueMicrotask defers the dropdown teardown so a suggestion click
-    // (whose handler fires after blur) still resolves. The per-row
-    // mousedown-preventDefault is the primary mechanism — this is the
-    // keyboard/tab-away fallback.
-    queueMicrotask(() => this.focused.set(false));
+  onBlur(event: FocusEvent): void {
+    // Rows and the clear button cancel mousedown, so a click on them never moves
+    // focus. Closing on a real blur is then immediate and race-free; focus moving
+    // to something inside the component keeps the list open.
+    const next = event.relatedTarget as Node | null;
+    if (next && this.host.nativeElement.contains(next)) return;
+    this.focused.set(false);
   }
 
   onKeydown(event: KeyboardEvent): void {
+    // Mid-composition (IME) keys belong to the composition, not to the list.
+    if (event.isComposing) return;
     if (event.key === 'Enter') {
       event.preventDefault();
       const active = this.activeIndex();
-      const list = this.suggestions();
+      const list = this.visibleSuggestions();
       if (this.showSuggestions() && active >= 0 && active < list.length) {
         const picked = list[active];
         if (picked) {
@@ -168,11 +188,15 @@ export class SearchComponent implements OnInit {
     if (!this.hasSuggestions()) return;
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      this.activeIndex.update((i) => (i + 1) % this.suggestions().length);
+      this.activeIndex.update((i) => (i + 1) % this.visibleSuggestions().length);
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      const len = this.suggestions().length;
+      const len = this.visibleSuggestions().length;
       this.activeIndex.update((i) => (i <= 0 ? len - 1 : i - 1));
+    } else if ((event.key === 'Home' || event.key === 'End') && this.showSuggestions() && this.activeIndex() >= 0) {
+      // With a row highlighted, Home and End move the highlight; otherwise they move the caret.
+      event.preventDefault();
+      this.activeIndex.set(event.key === 'Home' ? 0 : this.visibleSuggestions().length - 1);
     } else if (event.key === 'Escape') {
       event.preventDefault();
       this.focused.set(false);

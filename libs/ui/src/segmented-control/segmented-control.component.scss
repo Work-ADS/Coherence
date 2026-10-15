@@ -8,27 +8,44 @@
 }
 
 .seg-control {
+  // The track is as tall as an input at the same size; the thumb and the
+  // options take the control radius, the track wraps them concentrically.
+  --seg-pad: var(--space-3xs);
+  --seg-h: var(--control-h-md);
+  --seg-r: calc(var(--radius-control) + var(--seg-pad));
+
   position: relative;
+  box-sizing: border-box;
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2xs);
+  gap: var(--seg-pad);
   max-width: 100%;
-  padding: var(--space-2xs);
-  border-radius: var(--radius-lg);
+  padding: var(--seg-pad);
+  border-radius: var(--seg-r);
   background: var(--control-background-default);
+
+  &--sm {
+    --seg-h: var(--control-h-sm);
+  }
+
+  &--lg {
+    --seg-h: var(--control-h-lg);
+  }
 
   // ─── Sliding indicator ───
   &__indicator {
     position: absolute;
     top: 0;
     left: 0;
-    border-radius: var(--radius-md);
-    background: var(--control-background-active);
-    box-shadow: var(--elevation-sm);
+    border-radius: var(--radius-control);
+    background: var(--seg-thumb-background);
+    box-shadow:
+      var(--elevation-sm),
+      inset 0 0 0 var(--border-width-hairline) var(--border-subtle);
     transition:
-      transform var(--duration-base) var(--easing-standard),
-      width var(--duration-fast) var(--easing-standard),
+      transform var(--duration-base) var(--easing-enter),
+      width var(--duration-base) var(--easing-enter),
       height var(--duration-fast) var(--easing-standard);
     will-change: transform, width, height;
 
@@ -38,73 +55,230 @@
   }
 
   // ─── Option button ───
+  // One weight in every state: only the ink changes, so a label never changes
+  // width when it is selected.
   &__option {
     position: relative;
     z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-control);
     background: transparent;
-    color: var(--foreground-tertiary-default);
+    color: var(--foreground-secondary-default);
     cursor: pointer;
     user-select: none;
     min-width: 0;
     max-width: 100%;
     white-space: normal;
-    font: var(--type-body-md-400);
-    transition: color var(--duration-fast) ease-out;
+    font: var(--type-body-md-500);
+    transition: color var(--duration-base) var(--easing-enter);
 
     &:hover:not(.seg-control__option--active):not(.seg-control__option--disabled) {
-      color: var(--foreground-secondary-default);
+      color: var(--foreground-primary-default);
     }
 
     &--active {
       color: var(--foreground-primary-default);
-      font: var(--type-body-md-500);
     }
 
     &--disabled {
-      opacity: 0.5;
+      color: var(--disabled-foreground);
       cursor: not-allowed;
     }
 
+    // Inset ring: drawn inside the track so a parent's overflow never clips it.
     &:focus-visible {
       outline: none;
-      box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+      box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
     }
   }
 
-  // ─── Size variants ───
+  // ─── Size variants: option height = track height minus the track padding ───
   &--sm .seg-control__option {
-    height: var(--dimension-7);
+    height: calc(var(--seg-h) - 2 * var(--seg-pad));
     padding: 0 var(--space-sm);
-    font: var(--type-body-sm-400);
-
-    &.seg-control__option--active {
-      font: var(--type-body-sm-500);
-    }
+    font: var(--type-body-sm-500);
   }
 
   &--md .seg-control__option {
-    height: var(--dimension-9);
+    height: calc(var(--seg-h) - 2 * var(--seg-pad));
     padding: 0 var(--space-md);
-    font: var(--type-body-md-400);
-
-    &.seg-control__option--active {
-      font: var(--type-body-md-500);
-    }
   }
 
   &--lg .seg-control__option {
-    height: var(--dimension-10);
+    height: calc(var(--seg-h) - 2 * var(--seg-pad));
     padding: 0 var(--space-md);
-    font: var(--type-body-md-400);
+  }
+}
 
-    &.seg-control__option--active {
-      font: var(--type-body-md-500);
+// ─── Appearance, layout and state modifiers ──────────────────────────────
+
+.seg-control {
+  // No measurable thumb yet: the active option carries the surface itself, so
+  // first paint never shows an empty track.
+  &--nothumb &__indicator {
+    display: none;
+  }
+
+  &--nothumb &__option--active {
+    background: var(--seg-thumb-background);
+    box-shadow:
+      var(--elevation-sm),
+      inset 0 0 0 var(--border-width-hairline) var(--border-subtle);
+  }
+
+  // First paint: no sliding.
+  &--idle &__indicator {
+    transition: none;
+  }
+
+  // Solid: the thumb is the action colour, the active ink inverts.
+  &--solid &__indicator,
+  &--solid.seg-control--nothumb &__option--active {
+    background: var(--button-primary-background-default);
+    box-shadow: var(--elevation-sm);
+  }
+
+  &--solid &__option--active {
+    color: var(--foreground-inverse-default);
+  }
+
+  // Full width: segments share the track equally; a label that cannot fit ends in an ellipsis.
+  &--full {
+    display: flex;
+    inline-size: 100%;
+
+    .seg-control__option:not(.seg-control__option--icon) {
+      flex: 1 1 0;
+      min-inline-size: 0;
     }
+  }
+
+  // Whole control disabled: the selection stays legible.
+  &--disabled {
+    background: var(--seg-track-disabled);
+    cursor: not-allowed;
+  }
+
+  &--disabled &__option--active {
+    color: var(--foreground-secondary-default);
+  }
+
+  // Invalid: a hairline error ring on the track, drawn as a shadow so nothing moves.
+  &--error {
+    box-shadow: inset 0 0 0 var(--border-width-hairline) var(--feedback-error-foreground);
+  }
+
+  &__label {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__option {
+    gap: var(--space-2xs);
+  }
+
+  &__icon {
+    --afi-icon-size: var(--icon-sm);
+  }
+
+  &__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    box-sizing: border-box;
+    block-size: var(--dimension-4-5);
+    min-inline-size: var(--dimension-4-5);
+    padding-inline: var(--space-2xs);
+    border: var(--border-width-hairline) solid color-mix(in srgb, currentColor 32%, transparent);
+    border-radius: var(--radius-full);
+    font: var(--type-body-sm-500);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // Visually hidden: the dot's meaning for screen readers.
+  &__sr {
+    position: absolute;
+    inline-size: var(--border-width-hairline);
+    block-size: var(--border-width-hairline);
+    margin: calc(-1 * var(--border-width-hairline));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  &__dot {
+    flex: none;
+    inline-size: var(--dimension-1-5);
+    block-size: var(--dimension-1-5);
+    border-radius: var(--radius-full);
+    background: var(--foreground-brand-default);
+  }
+
+  &--solid &__option--active &__dot {
+    background: currentColor;
+  }
+
+  &__meta {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    padding-inline: var(--dimension-1-5);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, currentColor 10%, transparent);
+    font: var(--type-body-sm-400);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// Icon-only: a square segment as wide as the track is tall. Three classes, so it
+// outranks the per-size padding rules.
+.seg-control .seg-control__option.seg-control__option--icon {
+  flex: none;
+  padding: 0;
+  inline-size: calc(var(--seg-h) - 2 * var(--seg-pad));
+}
+
+// ─── Field anatomy: only when `label` is set ─────────────────────────────
+
+.seg-field {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  &__legend {
+    padding: 0;
+    margin-block-end: var(--space-2xs);
+    font: var(--type-body-md-400);
+    color: var(--foreground-secondary-default);
+  }
+
+  &__required {
+    color: var(--feedback-error-foreground);
+    margin-inline-start: var(--space-3xs);
+  }
+
+  &__hint,
+  &__error {
+    margin: var(--space-2xs) 0 0;
+    font: var(--type-body-sm-400);
+  }
+
+  &__hint {
+    color: var(--foreground-tertiary-default);
+  }
+
+  &__error {
+    color: var(--feedback-error-foreground);
   }
 }
 

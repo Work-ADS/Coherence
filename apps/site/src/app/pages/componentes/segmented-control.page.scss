@@ -6,11 +6,25 @@
 
 .preview {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--space-lg);
   min-height: var(--dimension-24);
   width: 100%;
   background: var(--surface-primary);
   transition: background-color var(--duration-base) var(--easing-enter);
 
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+  }
+
+  &__field {
+    inline-size: min(100%, var(--dimension-80));
+  }
 }

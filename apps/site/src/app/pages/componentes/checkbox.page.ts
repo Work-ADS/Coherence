@@ -34,6 +34,7 @@ const SIZING_CATEGORY: DocTokenCategory = {
 };
 
 const SIZE_OPTIONS = [
+  { value: 'xs', label: 'xs' },
   { value: 'sm', label: 'sm' },
   { value: 'md', label: 'md' },
 ];

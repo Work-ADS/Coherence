@@ -5,26 +5,22 @@
     [class]="sizeClass()"
     [style]="chipStyle()"
     [attr.data-estado]="estado()"
-    [attr.aria-label]="computedAriaLabel()"
-    aria-haspopup="menu"
+    [attr.aria-label]="ariaLabel()"
     (click)="triggered.emit()"
   >
     @if (showDot()) {
       <span class="status-chip__dot" [style.background-color]="dotColor()" aria-hidden="true"></span>
     }
     <span>{{ label() }}</span>
-    <svg class="status-chip__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/>
-    </svg>
+    <afi-icon class="status-chip__chevron" name="chevron-down" />
   </button>
 } @else {
+  <!-- Static text, not a live region: a table of chips must not announce itself. -->
   <span
     class="status-chip"
     [class]="sizeClass()"
     [style]="chipStyle()"
     [attr.data-estado]="estado()"
-    [attr.aria-label]="computedAriaLabel()"
-    role="status"
   >
     @if (showDot()) {
       <span class="status-chip__dot" [style.background-color]="dotColor()" aria-hidden="true"></span>

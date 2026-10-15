@@ -8,6 +8,8 @@ import {
   output,
 } from '@angular/core';
 
+import { FieldHelpComponent } from '../field-help';
+
 import type { SwitchSize } from './switch.variants';
 
 let nextId = 0;
@@ -21,6 +23,7 @@ let nextId = 0;
 @Component({
   selector: 'afi-switch',
   standalone: true,
+  imports: [FieldHelpComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './switch.component.html',
   styleUrls: ['./switch.component.scss'],
@@ -30,6 +33,9 @@ export class SwitchComponent implements OnInit {
   readonly size = input<SwitchSize>('md');
   readonly label = input<string | null>(null);
   readonly hint = input<string | null>(null);
+  /** ⓘ after the label: help text in a tooltip (see `afi-field-help`). Pressing it never toggles the switch. */
+  readonly help = input<string | null>(null);
+  readonly helpLabel = input<string | null>(null);
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
 
@@ -37,6 +43,7 @@ export class SwitchComponent implements OnInit {
 
   readonly switchId = `afi-switch-${nextId++}`;
   readonly hintId = `${this.switchId}-hint`;
+  readonly labelTextId = `${this.switchId}-label`;
 
   readonly describedBy = computed(() => (this.hint() ? this.hintId : null));
 

@@ -27,6 +27,24 @@
     opacity: 1;
   }
 
+  // Pinned open by a click (openOnClick), and closed again by Escape.
+  .tooltip--open & {
+    opacity: 1;
+  }
+
+  .tooltip.tooltip--dismissed & {
+    opacity: 0;
+  }
+
+  // Help text: wraps instead of running on one line. The bubble sizes to its
+  // content up to a cap, so a narrow trigger does not squeeze it.
+  &--multiline {
+    inline-size: max-content;
+    max-inline-size: var(--dimension-60);
+    white-space: normal;
+    text-wrap: pretty;
+  }
+
   // Positions
   &--bottom {
     top: 100%;

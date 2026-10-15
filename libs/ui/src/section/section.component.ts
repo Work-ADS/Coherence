@@ -12,6 +12,12 @@ export type SectionVariant = 'default' | 'collapsible';
 let nextId = 0;
 
 /**
+ * @deprecated Use `afi-page-header` with `level="section"` (page-structure-skill.md).
+ * Chunk 5c deprecates this primitive: the zip has no equivalent (its framed
+ * PageSection differs on five values) and the six consumers are versioned blog
+ * snapshots, so it is left untouched until they go. `--section-radius` stays
+ * defined for the same reason.
+ *
  * Boxed section container — eyebrow + title + subtitle + body, optionally
  * collapsible. Header text stack and action slot live side-by-side in the
  * header row; the body is gated below by `--section-gap`.

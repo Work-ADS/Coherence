@@ -14,21 +14,29 @@ import {
   isDevMode,
   viewChild,
 } from '@angular/core';
+import { IconComponent } from '../icon';
+import type { IconName } from '../icon';
 import { StatusChipComponent } from '../status-chip';
 import type { Estado } from '../status-chip/status-chip.labels';
-import type { PageHeaderLevel, PageHeaderDensity } from './page-header.variants';
+import type {
+  PageHeaderActionsPlacement,
+  PageHeaderAppearance,
+  PageHeaderCompactPlacement,
+  PageHeaderDensity,
+  PageHeaderLevel,
+} from './page-header.variants';
 
 let nextId = 0;
 
 @Component({
   selector: 'afi-page-header',
   standalone: true,
-  imports: [StatusChipComponent],
+  imports: [IconComponent, StatusChipComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
   host: {
-    'role': 'banner',
+    '[attr.role]': "level() === 'page' ? 'banner' : null",
     '[id]': 'computedId()',
     '[class]': 'hostClasses()',
     '[attr.aria-label]': 'computedAriaLabel()',
@@ -39,6 +47,15 @@ let nextId = 0;
 export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnDestroy {
   readonly title = input.required<string>();
   readonly subtitle = input<string | null>(null);
+  /** The zip's name for `subtitle`; either works. */
+  readonly description = input<string | null>(null);
+  /** Glyph from the `afi-icon` set, in a 32 px medallion before the title. */
+  readonly icon = input<IconName | null>(null);
+  /**
+   * Compact width only: `after-title` (default) wraps the actions below the title;
+   * `after-description` moves them under the description instead.
+   */
+  readonly compactActionPlacement = input<PageHeaderCompactPlacement>('after-title');
   readonly level = input<PageHeaderLevel>('page');
   readonly estado = input<Estado | null>(null);
   readonly sticky = input(true);
@@ -62,11 +79,16 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
   readonly complete = input<boolean>(false);
 
   /**
+   * @deprecated Use `appearance="plain"`.
    * When true, removes the border outline for section / subsection levels.
    * Useful inside dialogs where the surrounding modal panel already defines
    * the visual boundary — the extra box border feels heavy.
    */
   readonly borderless = input<boolean>(false);
+  /** Section and subsection: `framed` (default) is the outline box, `plain` removes it. */
+  readonly appearance = input<PageHeaderAppearance>('framed');
+  /** Section and subsection: `end` keeps title and actions on one row at every width. */
+  readonly actionsPlacement = input<PageHeaderActionsPlacement>('inline');
 
   /**
    * Body bleeds to the box's inline + bottom edges instead of being inset
@@ -88,19 +110,18 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
   #scrollHandler: (() => void) | null = null;
   #warnedActions = false;
 
+  protected readonly descriptionText = computed(() => this.description() ?? this.subtitle());
+
   protected readonly computedId = computed(() =>
     this.level() === 'page' ? 'page-header' : null,
   );
 
-  protected readonly computedAriaLabel = computed(() => {
-    const custom = this.ariaLabel();
-    if (custom) return custom;
-    switch (this.level()) {
-      case 'section': return 'Encabezado de sección';
-      case 'subsection': return 'Encabezado de subsección';
-      default: return 'Encabezado de página';
-    }
-  });
+  // Only the page header is a landmark. A section or subsection header is not a
+  // banner, and an aria-label on a role-less element is ignored, so those carry none
+  // (a collapsible one is named through its button, see `ariaLabel` in the template).
+  protected readonly computedAriaLabel = computed(() =>
+    this.level() === 'page' ? (this.ariaLabel() ?? 'Encabezado de página') : null,
+  );
 
   protected readonly hostClasses = computed(() => {
     const parts = [
@@ -121,8 +142,15 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
     if (this.bodyFlush() && this.level() !== 'page') {
       parts.push('page-header--body-flush');
     }
-    if (this.borderless() && this.level() !== 'page') {
+    // Not for a collapsible header: its chevron, count and check mark would each drop onto their own row.
+    if (this.compactActionPlacement() === 'after-description' && !this.collapsible()) {
+      parts.push('page-header--actions-last');
+    }
+    if ((this.appearance() === 'plain' || this.borderless()) && this.level() !== 'page') {
       parts.push('page-header--borderless');
+    }
+    if (this.actionsPlacement() === 'end' && this.level() !== 'page') {
+      parts.push('page-header--actions-end');
     }
     return parts.join(' ');
   });

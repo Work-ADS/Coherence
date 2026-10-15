@@ -1,11 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  AfterViewInit,
   computed,
+  ElementRef,
+  inject,
   input,
   isDevMode,
   output,
 } from '@angular/core';
+
+import { IconComponent } from '../icon';
 
 import type { ButtonSize, ButtonVariant } from './button.variants';
 
@@ -16,17 +21,23 @@ import type { ButtonSize, ButtonVariant } from './button.variants';
  * in `button.component.scss` using BEM classes + DS tokens. The template
  * binds a single BEM class string computed from the inputs.
  *
- * `size="sm"` (32 px) is a desktop-dense opt-out — see `docs/accessibility.md`
- * for touch-target guidance.
+ * Sizes sit on the chrome scale (24 to 40 px); the `touch-area` mixin keeps
+ * the hit area at 44 px, see `docs/rules/accessibility.md` rule 7. `iconStart` and
+ * `iconEnd` are flags: set one and project the glyph into `slot="iconStart"` or
+ * `slot="iconEnd"` (an `afi-icon` or an svg). Consumers bind them today, so the
+ * gate stays until they move to icon names.
  */
 @Component({
   selector: 'afi-button',
   standalone: true,
+  imports: [IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
 })
-export class ButtonComponent {
+export class ButtonComponent implements AfterViewInit {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
   readonly variant = input<ButtonVariant>('primary');
   readonly size = input<ButtonSize>('md');
   readonly type = input<'button' | 'submit' | 'reset'>('button');
@@ -55,15 +66,15 @@ export class ButtonComponent {
       return;
     }
 
-    if (isDevMode()) {
-      this.warnMissingLabel();
-    }
-
     this.clicked.emit({ event });
   }
 
-  private warnMissingLabel(): void {
-    if ((this.iconStart() || this.iconEnd()) && !this.ariaLabel()) {
+  /** Dev-only: an icon-only button needs an accessible name. Reads the rendered
+   *  text once, which is the only way to see projected content. */
+  ngAfterViewInit(): void {
+    if (!isDevMode() || this.ariaLabel()) return;
+    const text = this.host.nativeElement.textContent?.replace('Cargando…', '').trim();
+    if (!text) {
       console.warn(
         '[afi-button] Icon-only button detected without ariaLabel. ' +
           'Provide an ariaLabel input for accessibility.',

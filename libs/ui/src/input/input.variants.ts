@@ -6,6 +6,9 @@
  */
 
 export type InputSize = 'sm' | 'md' | 'lg';
+
+/** `pill` is the filter-row shape: fully rounded, for search and filter fields on open canvas, never inside a form. */
+export type InputShape = 'rect' | 'pill';
 export type InputType =
   | 'text'
   | 'textarea'

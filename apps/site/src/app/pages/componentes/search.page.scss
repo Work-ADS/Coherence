@@ -1,0 +1,20 @@
+// =============================================================================
+// search.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+  max-inline-size: var(--dimension-72);
+  padding: var(--space-xl);
+
+  &__picked {
+    margin: 0;
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+  }
+}

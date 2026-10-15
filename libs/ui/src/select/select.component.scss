@@ -3,23 +3,22 @@
 // BEM classes, DS tokens via CSS custom properties only.
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+
 :host {
   display: block;
 }
 
-.afi-select__label {
-  display: block;
-  margin-block-end: var(--space-2xs);
-  font: var(--type-body-sm-500);
-  color: var(--foreground-primary-default);
-}
-
-.afi-select__required {
-  color: var(--feedback-error-foreground);
+:host(.afi-select--pill) {
+  display: inline-block;
 }
 
 .afi-select__wrapper {
   position: relative;
+}
+
+.afi-select__anchor {
+  display: inline-flex;
 }
 
 // ─── Trigger button ────────────────────────────────────────────────────────
@@ -29,30 +28,42 @@
   gap: var(--space-xs);
   width: 100%;
   appearance: none;
-  border-radius: var(--radius-md);
-  // Control surface — matches input/checkbox/etc.
-  background: var(--control-background-default);
-  color: var(--foreground-primary-default);
-  border: var(--border-width-hairline) solid var(--border-hairline);
+  box-sizing: border-box;
+  border-radius: var(--radius-control);
+  // The input surface is shared with input and search (--input-*).
+  background: var(--input-background-default);
+  color: var(--input-foreground-default);
+  border: var(--border-width-hairline) solid var(--input-border-default);
   font: var(--type-body-md-400);
   cursor: pointer;
   transition:
     border-color var(--duration-fast) var(--easing-enter),
+    box-shadow var(--duration-fast) var(--easing-enter),
     background-color var(--duration-fast) var(--easing-enter);
 
   &:hover:not(:disabled) {
-    border-color: var(--border-default);
+    border-color: var(--input-border-hover);
   }
 
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
-    outline-offset: var(--border-width-thick);
+  // The ring stays while the list is open (aria-expanded), not only on focus.
+  &:focus-visible,
+  &[aria-expanded="true"] {
+    @include focus-ring;
+    border-color: var(--input-border-focus);
   }
 
   &:disabled {
-    opacity: 0.5;
+    background: var(--input-background-disabled);
+    border-color: var(--input-border-disabled);
+    color: var(--input-foreground-disabled);
+    -webkit-text-fill-color: var(--input-foreground-disabled);
     cursor: not-allowed;
+  }
+
+  // Filter-row shape: fully rounded, sized to its label.
+  &--pill {
+    width: auto;
+    border-radius: var(--radius-full);
   }
 
   &--error {
@@ -61,23 +72,28 @@
     &:hover {
       border-color: var(--feedback-error-foreground);
     }
+
+    &:focus-visible,
+    &[aria-expanded="true"] {
+      box-shadow: 0 0 0 var(--border-width-thick) var(--feedback-error-border);
+    }
   }
 
   // ─── Sizes ────────────────────────────────────────────────────────────
   &--sm {
     height: var(--control-h-sm, var(--dimension-8));
     padding-inline: var(--space-sm);
-    font: var(--type-body-sm-400);
   }
 
+  // sm, md and lg differ in height only: one type size and one inset.
   &--md {
     height: var(--control-h-md, var(--dimension-10));
-    padding-inline: var(--space-md);
+    padding-inline: var(--space-sm);
   }
 
   &--lg {
     height: var(--control-h-lg, var(--dimension-12));
-    padding-inline: var(--space-lg);
+    padding-inline: var(--space-sm);
   }
 }
 
@@ -89,14 +105,13 @@
   white-space: nowrap;
 
   &--placeholder {
-    color: var(--foreground-tertiary-default);
+    color: var(--input-foreground-placeholder);
   }
 }
 
 .afi-select__chevron {
-  width: var(--dimension-4);
-  height: var(--dimension-4);
-  color: var(--foreground-tertiary-default);
+  --afi-icon-size: var(--icon-sm);
+  color: var(--input-icon-default);
   flex-shrink: 0;
   transition: transform var(--duration-fast) var(--easing-enter);
 
@@ -109,7 +124,7 @@
 .afi-select__backdrop {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: calc(var(--z-floating) - 1);
 }
 
 .afi-select__panel {
@@ -118,11 +133,15 @@
   // The component computes top / left / width from the trigger's
   // bounding rect on every open + scroll/resize.
   position: fixed;
-  z-index: 50;
-  min-width: var(--dimension-48);
-  background: var(--surface-elevated);
-  border: var(--border-width-hairline) solid var(--border-hairline);
-  border-radius: var(--radius-lg);
+  z-index: var(--z-floating);
+  // Never narrower than the trigger (inline min-width) and grows to the longest
+  // option up to the cap; --select-panel-max overrides the cap.
+  inline-size: max-content;
+  max-inline-size: min(var(--select-panel-max, var(--dimension-80)), calc(100vw - var(--space-xl)));
+  background: var(--overlay-dropdown);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  // Concentric with the rows: row radius plus the panel's inner gap.
+  border-radius: var(--radius-panel);
   box-shadow: var(--elevation-lg);
   animation: afi-select-enter var(--duration-base) var(--easing-enter);
   overflow: hidden;
@@ -139,7 +158,7 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding-block: var(--space-2xs);
+  padding: var(--space-2xs);
   margin: 0;
   list-style: none;
 
@@ -160,8 +179,7 @@
 }
 
 .afi-select__search-icon {
-  width: var(--dimension-4);
-  height: var(--dimension-4);
+  --afi-icon-size: var(--icon-sm);
   color: var(--foreground-tertiary-default);
   flex-shrink: 0;
 }
@@ -200,10 +218,6 @@
   }
 }
 
-:host-context([data-brand="unicaja"]) .afi-select__label {
-  font: var(--unicaja-field-label-font, var(--type-body-md-500));
-}
-
 :host-context([data-brand="unicaja"]) .afi-select__trigger {
   border-color: var(--color-unicaja-primary-500);
   border-radius: var(--dimension-1);
@@ -240,28 +254,26 @@
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  margin-inline: var(--space-2xs);
-  // Match the trigger's md size — same min-height, same horizontal padding,
-  // same body font — so an open menu reads as a vertical continuation of
-  // the trigger (Granola / macOS pattern) instead of a denser list.
-  min-height: var(--control-h-md, var(--dimension-10));
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-sm);
-  font: var(--type-body-md-400);
+  // Rows share the menu item scale (--menu-item-*) with menu and search.
+  min-height: var(--menu-item-min-height);
+  padding: var(--menu-item-padding-block) var(--menu-item-padding-inline);
+  gap: var(--menu-item-gap);
+  border-radius: var(--radius-control);
+  font: var(--menu-item-font);
   color: var(--foreground-primary-default);
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--easing-enter);
 
   &--focused:not(.afi-select__option--disabled) {
-    background: var(--surface-muted);
+    background: var(--nav-item-background-hover);
   }
 
   &--selected {
-    font: var(--type-body-md-500);
+    font: var(--menu-item-font-current);
   }
 
   &--disabled {
-    color: var(--foreground-tertiary-default);
+    color: var(--nav-item-foreground-disabled);
     cursor: not-allowed;
     pointer-events: none;
   }
@@ -275,9 +287,8 @@
 }
 
 .afi-select__check {
-  width: var(--dimension-4);
-  height: var(--dimension-4);
-  color: var(--brand-primary-background-default);
+  --afi-icon-size: var(--icon-sm);
+  color: var(--nav-item-icon-hover);
   flex-shrink: 0;
 }
 

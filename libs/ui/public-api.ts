@@ -6,7 +6,7 @@ export type { ButtonVariant, ButtonSize } from './src/button';
 export { ButtonV2Component } from './src/button-v2';
 export type { ButtonV2Variant, ButtonV2Size } from './src/button-v2';
 export { InputComponent } from './src/input';
-export type { InputSize, InputType } from './src/input';
+export type { InputShape, InputSize, InputType } from './src/input';
 export { InputV2Component } from './src/input-v2';
 export type { InputV2Size, InputV2Type } from './src/input-v2';
 export { MenuItemV2Component, MenuV2Component, MenuDividerV2Component } from './src/menu-v2';
@@ -54,25 +54,43 @@ export type {
   TableApronTokenIcon,
 } from './src/table-apron';
 export { SearchComponent } from './src/search';
-export type { SearchSize, SearchSuggestion } from './src/search';
+export type { SearchShape, SearchSize, SearchSuggestion } from './src/search';
 export { SearchV2Component } from './src/search-v2';
 export type { SearchV2Size, SearchV2Suggestion } from './src/search-v2';
 export { FilterChipComponent } from './src/filter-chip';
 export type {
+  FilterChipAppearance,
   FilterChipMode,
   FilterChipOption,
   FilterChipSize,
 } from './src/filter-chip';
+export { MultiSelectComponent } from './src/multi-select';
+export type {
+  MultiSelectOption,
+  MultiSelectShape,
+  MultiSelectSize,
+  MultiSelectSummary,
+  MultiSelectTriggerContext,
+  MultiSelectTriggerState,
+} from './src/multi-select';
 export { SelectComponent } from './src/select';
-export type { SelectOption, SelectMode, SelectSize } from './src/select';
+export type {
+  SelectAlign,
+  SelectOption,
+  SelectMode,
+  SelectShape,
+  SelectSize,
+  SelectTriggerContext,
+  SelectTriggerState,
+} from './src/select';
 export { CheckboxComponent } from './src/checkbox';
 export type { CheckboxSize } from './src/checkbox';
 export { RadioGroupComponent, RadioGroupItemComponent } from './src/radio-group';
-export type { RadioSize } from './src/radio-group';
+export type { RadioOption, RadioSize } from './src/radio-group';
 export { SwitchComponent } from './src/switch';
 export type { SwitchSize } from './src/switch';
 export { CardComponent } from './src/card';
-export type { CardVariant, CardPadding } from './src/card';
+export type { CardVariant, CardPadding, CardElevation } from './src/card';
 export { SectionComponent } from './src/section';
 export type { SectionVariant } from './src/section';
 export { ModalComponent } from './src/modal';
@@ -109,13 +127,15 @@ export { MenuComponent, MenuItemComponent, MenuDividerComponent } from './src/me
 export type { MenuPlacement, MenuItemVariant } from './src/menu';
 export { IconComponent, ICON_GLYPHS, ICON_MILESTONES } from './src/icon';
 export type { IconName, IconShape } from './src/icon';
+export { FieldHelpComponent } from './src/field-help';
+export { FieldLabelComponent } from './src/field-label';
 export { KbdComponent } from './src/kbd';
 export type { KbdSize, KbdSeparator } from './src/kbd';
 export { StatusChipComponent } from './src/status-chip';
 export type { Estado, StatusChipSize, StatusChipVariant } from './src/status-chip';
 export { estadoLabels } from './src/status-chip';
 export { BadgeComponent } from './src/badge';
-export type { BadgeIntent, BadgeSize } from './src/badge';
+export type { BadgeIntent, BadgeSize, BadgeTone, BadgeVariant } from './src/badge';
 export { LoadingOverlayComponent } from './src/loading-overlay';
 export type { LoadingOverlayVariant } from './src/loading-overlay';
 export { ToastV2Component } from './src/toast-v2';
@@ -123,7 +143,13 @@ export { TOAST_V2_TOKEN_USAGE } from './src/toast-v2';
 export type { ToastV2Placement } from './src/toast-v2';
 
 export { PageHeaderComponent } from './src/page-header';
-export type { PageHeaderDensity, PageHeaderLevel } from './src/page-header';
+export type {
+  PageHeaderActionsPlacement,
+  PageHeaderAppearance,
+  PageHeaderCompactPlacement,
+  PageHeaderDensity,
+  PageHeaderLevel,
+} from './src/page-header';
 export { ShellComponent, ShellWorkspaceComponent, ShellAuthComponent, ShellDocsComponent, ShellFocusComponent, ShellCanvasComponent, shellTypeFromRoute, coerceShellType } from './src/shell';
 export type { ShellType } from './src/shell';
 export { ChartBarComponent, ChartCompositionComponent, ChartLineComponent, ChartHeatmapComponent, ChartDumbbellComponent, ChartAxisComponent, ChartLegendComponent, ChartTooltipComponent, ChartInstructionsComponent, ChartDataTableComponent } from './src/chart';
@@ -133,8 +159,10 @@ export { IconButtonComponent } from './src/icon-button';
 export type { IconButtonVariant, IconButtonSize } from './src/icon-button';
 export { AvatarComponent } from './src/avatar';
 export type { AvatarSize } from './src/avatar';
+export { AvatarGroupComponent } from './src/avatar-group';
 export { SegmentedControlComponent } from './src/segmented-control';
 export type {
+  SegmentedControlAppearance,
   SegmentedControlSize,
   SegmentedOption,
 } from './src/segmented-control';

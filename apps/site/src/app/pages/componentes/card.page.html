@@ -45,6 +45,21 @@
       <p style="margin: 0; font: var(--type-title); color: var(--foreground-primary-default);">€ 245.300</p>
       <p style="margin: var(--space-xs) 0 0; font: var(--type-body-sm-400); color: var(--foreground-tertiary-default);">+2,4% vs mes anterior</p>
     </afi-card>
+    <afi-card
+      variant="quiet"
+      [bordered]="true"
+      [interactive]="true"
+      eyebrow="Objetivo"
+      title="Jubilación"
+      padding="lg"
+      ariaLabel="Abrir el objetivo Jubilación"
+      (clicked)="clicks.set(clicks() + 1)"
+    >
+      <p class="preview__text">Clic o Intro para abrir ({{ clicks() }}).</p>
+    </afi-card>
+    <afi-card variant="raised" elevation="on-brand" padding="lg">
+      <p class="preview__text">Sombra tintada para una tarjeta sobre un fondo de color.</p>
+    </afi-card>
   </div>
 
   <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
@@ -53,7 +68,9 @@
     <h2 class="prose-section__title">Accessibility</h2>
     <ul class="prose-section__list">
       <li>Card es un contenedor decorativo — sin role implícito.</li>
-      <li>Si la card es clickable como un todo, envuelve el contenido en un <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code> nativo.</li>
+      <li>Un heading dentro de una card interactiva se pierde para los lectores (los hijos de un botón son presentacionales): pase siempre <code>ariaLabel</code>. En oscuro la elevación al pasar el ratón es sutil.</li>
+      <li>Con <code>interactive</code> la card es <code>role="button"</code> con <code>tabindex="0"</code>; Intro y Espacio la activan, el foco dibuja un anillo y <code>ariaLabel</code> le da nombre. Elevación y desplazamiento de 2 px solo al pasar el ratón.</li>
+      <li>Nombres de variante: <code>subtle</code> es el <code>default</code> de Coherence y <code>raised</code> es <code>elevated</code>; el <code>default</code> plano del zip es <code>quiet</code>. El padding por defecto del zip (24) es <code>padding="lg"</code> y su <code>tight</code> (16) es <code>padding="md"</code>.</li>
       <li>El título dentro de card debe ser un heading apropiado para la jerarquía de la página.</li>
     </ul>
   </section>

@@ -5,6 +5,8 @@
 // BEM classes, DS tokens via CSS custom properties only.
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+
 :host {
   display: inline-block;
   position: relative;
@@ -17,12 +19,10 @@
   // Patrimonio convention; --space-2xs felt cramped once the chip
   // carries a textual selectionLabel rather than a bare number.
   gap: var(--space-xs);
-  border: var(--border-width-hairline) solid var(--border-hairline);
-  border-radius: var(--filter-chip-radius, var(--radius-pill));
-  // Resting surface = `bg-surface` Tailwind on the Patrimonio bespoke
-  // chip. --surface-default sits a step lower on AFI and looks muddy
-  // next to a real card.
-  background: var(--surface-base);
+  box-sizing: border-box;
+  border: var(--border-width-hairline) solid var(--control-border-default);
+  border-radius: var(--radius-full);
+  background: var(--control-background-default);
   color: var(--foreground-secondary-default);
   cursor: pointer;
   transition:
@@ -31,26 +31,33 @@
     color var(--duration-fast) var(--easing-enter);
 
   &:hover:not(.afi-chip--disabled) {
-    background: var(--surface-subtle);
-    border-color: var(--border-default);
+    background: var(--control-background-hover);
+    border-color: var(--control-border-hover);
     color: var(--foreground-primary-default);
   }
 
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
-    outline-offset: var(--border-width-thick);
+  &:active:not(.afi-chip--disabled) {
+    background: var(--control-background-active);
   }
 
+  // The ring is drawn on the pill when the BODY has keyboard focus: instant, never transitioned.
+  &:has(.afi-chip__body:focus-visible) {
+    @include focus-ring;
+  }
+
+  max-inline-size: 100%;
+
+  // Selected is a quiet tint with the action border, never a solid pill. The
+  // border holds through hover and press: only the fill responds.
   &--selected {
-    background: var(--brand-primary-background-default);
-    border-color: var(--brand-primary-background-default);
-    color: var(--brand-primary-foreground-default);
+    background: var(--control-background-selected);
+    border-color: var(--control-border-selected);
+    color: var(--foreground-primary-default);
 
     &:hover:not(.afi-chip--disabled) {
-      background: var(--brand-primary-background-hover);
-      border-color: var(--brand-primary-background-hover);
-      color: var(--brand-primary-foreground-hover);
+      background: var(--control-background-hover);
+      border-color: var(--control-border-selected);
+      color: var(--foreground-primary-default);
     }
   }
 
@@ -59,22 +66,23 @@
     cursor: not-allowed;
   }
 
+  // Sizes sit on the chrome scale (24 / 32), the same as Button and IconButton.
   &--sm {
-    height: var(--dimension-6);
+    height: var(--control-size-sm);
     padding-inline: var(--space-xs);
     font: var(--type-body-sm-400);
   }
 
   &--md {
-    height: var(--dimension-8);
+    height: var(--control-size-lg);
     // Asymmetric padding so the caret on the right sits tucked
     // (--space-xs) while the label keeps --space-sm breathing room on
     // the left — matches the Patrimonio bespoke trigger button.
     padding-inline-start: var(--space-sm);
     padding-inline-end: var(--space-xs);
-    // Stay on body-sm — body-md reads as a button, not a filter chip,
-    // once the chip sits at chip-height.
-    font: var(--type-body-sm-400);
+    // The filter name reads like ordinary control text, as in the field
+    // beside it; only the applied value carries weight.
+    font: var(--type-body-md-400);
   }
 
   // Dropdown mode keeps the same chrome but uses an action-tinted active
@@ -100,6 +108,10 @@
   display: inline-block;
   white-space: nowrap;
   font-weight: 500;
+
+  .afi-chip--md & {
+    font-weight: 400;
+  }
 }
 
 .afi-chip__count {
@@ -115,61 +127,97 @@
   font: var(--type-body-sm-500);
 
   .afi-chip--selected & {
-    background: var(--brand-primary-foreground-default);
-    color: var(--brand-primary-background-default);
+    background: var(--surface-default);
   }
 }
 
-.afi-chip__dismiss {
+// The body and the × buttons are siblings inside the pill (a button cannot
+// contain a button). Hover and press fill is driven from the pill, so hovering
+// the × lights the whole shape.
+.afi-chip__body,
+.afi-chip__x {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: var(--dimension-4);
-  height: var(--dimension-4);
-  margin-inline-start: var(--space-2xs);
-  border-radius: var(--radius-pill);
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
   cursor: pointer;
-  opacity: 0.7;
-  transition: opacity var(--duration-fast) var(--easing-enter);
 
-  &:hover { opacity: 1; }
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.afi-chip__body {
+  min-inline-size: 0;
+  overflow: hidden;
 
   &:focus-visible {
     outline: none;
-    opacity: 1;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
-  }
-
-  svg {
-    width: var(--dimension-3);
-    height: var(--dimension-3);
   }
 }
 
-// ─── Dropdown-mode trigger affordances ─────────────────────────────────────
-.afi-chip__clear {
-  display: inline-flex;
-  align-items: center;
+.afi-chip__x {
+  flex: none;
   justify-content: center;
-  width: var(--dimension-4);
-  height: var(--dimension-4);
-  border-radius: var(--radius-pill);
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  border-radius: var(--radius-full);
   color: var(--foreground-secondary-default);
-  cursor: pointer;
-  opacity: 0.75;
-  transition: opacity var(--duration-fast) var(--easing-enter);
+  transition: color var(--duration-fast) var(--easing-enter);
 
-  &:hover { opacity: 1; }
-
-  &:focus-visible {
-    outline: none;
-    opacity: 1;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  afi-icon {
+    --afi-icon-size: var(--icon-sm);
   }
 
-  svg {
-    width: var(--dimension-3);
-    height: var(--dimension-3);
+  &:hover {
+    color: var(--foreground-primary-default);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &--lead {
+    margin-inline-end: calc(-1 * var(--space-2xs));
+  }
+}
+
+.afi-chip__value {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// The caret turns over while the panel is open.
+.afi-chip--open .afi-chip__caret {
+  transform: rotate(180deg);
+}
+
+// Outline: the compact filter-trigger look. Transparent surface at rest, a
+// dashed border until a value is applied and a solid one after; md uses the
+// 28 px chrome step.
+.afi-chip--outline {
+  background: transparent;
+  border-style: dashed;
+
+  &.afi-chip--selected {
+    border-style: solid;
+  }
+
+  &.afi-chip--md {
+    height: var(--control-size-md);
+    padding-inline: var(--space-xs);
+  }
+
+  &.afi-chip--open {
+    border-style: solid;
+    border-color: var(--input-border-focus);
   }
 }
 
@@ -181,7 +229,7 @@
 }
 
 .afi-chip__selection {
-  font-weight: 600;
+  font-weight: 500;
   // Pick up the action color (brand-secondary on AFI) so the count/label
   // pops against the subtle tinted background — matches Patrimonio.
   color: var(--control-foreground-active);
@@ -189,8 +237,8 @@
 }
 
 .afi-chip__caret {
-  width: var(--dimension-3);
-  height: var(--dimension-3);
+  --afi-icon-size: var(--icon-xs);
+  transition: transform var(--duration-fast) var(--easing-standard);
   color: var(--foreground-secondary-default);
   flex-shrink: 0;
 }
@@ -205,12 +253,12 @@
   position: absolute;
   inset-block-start: calc(100% + var(--space-2xs));
   inset-inline-start: 0;
-  z-index: 50;
+  z-index: var(--z-floating);
   min-inline-size: 17.5rem;
   padding: var(--space-xs);
-  background: var(--surface-elevated);
-  border: var(--border-width-hairline) solid var(--border-hairline);
-  border-radius: var(--radius-md);
+  background: var(--overlay-dropdown);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-panel);
   box-shadow: var(--elevation-lg);
 }
 
@@ -223,18 +271,18 @@
   padding-inline: var(--space-xs);
   border: 0;
   background: transparent;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-control);
   text-align: start;
   color: var(--foreground-primary-default);
   font: var(--type-body-sm-400);
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--easing-enter);
 
-  &:hover { background: var(--surface-muted); }
+  &:hover { background: var(--nav-item-background-hover); }
 
   &:focus-visible {
     outline: none;
-    background: var(--surface-muted);
+    background: var(--nav-item-background-hover);
     box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
   }
 
@@ -273,9 +321,8 @@
     color: var(--brand-secondary-foreground-default);
   }
 
-  svg {
-    width: var(--dimension-3);
-    height: var(--dimension-3);
+  afi-icon {
+    --afi-icon-size: var(--icon-xs);
   }
 }
 
@@ -305,8 +352,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .afi-chip,
-  .afi-chip__dismiss,
-  .afi-chip__clear,
+  .afi-chip__x,
+  .afi-chip__caret,
   .afi-chip__menu-row,
   .afi-chip__menu-check {
     transition-duration: 0ms !important;

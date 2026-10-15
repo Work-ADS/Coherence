@@ -1,0 +1,36 @@
+<label [class]="rootClasses()">
+  <!-- Hidden native input carries the semantics; the box below is its picture. -->
+  <input
+    #inputEl
+    type="checkbox"
+    class="afi-check__native"
+    [id]="checkboxId"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    [attr.aria-required]="required() ? 'true' : null"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-label]="!label() ? ariaLabel() : null"
+    (change)="onToggle($event)"
+  />
+  <span class="afi-check__box" aria-hidden="true">
+    <svg class="afi-check__tick" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+    <svg class="afi-check__dash" viewBox="0 0 24 24"><path d="M5 12h14" /></svg>
+  </span>
+  @if (label()) {
+    <span class="afi-check__text">
+      <span class="afi-check__label">
+        {{ label() }}
+        @if (required()) {
+          <span class="afi-check__required" aria-hidden="true">*</span>
+        }
+      </span>
+      @if (hint() && !error()) {
+        <span [id]="hintId" class="afi-check__hint">{{ hint() }}</span>
+      }
+      @if (error()) {
+        <span [id]="errorId" class="afi-check__error" role="alert">{{ error() }}</span>
+      }
+    </span>
+  }
+</label>

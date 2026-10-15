@@ -1,27 +1,27 @@
 /**
- * Checkbox variant class maps.
- * All colors reference Tailwind tokens (no hex/rgba).
+ * afi-checkbox — type exports only.
+ *
+ * Per `docs/rules/component-skill.md §6`, size logic lives in
+ * `checkbox.component.scss` via BEM modifiers.
  */
 
-export const boxSizeClasses = {
-  sm: 'h-4 w-4',
-  md: 'h-5 w-5',
-} as const;
-
-export type CheckboxSize = keyof typeof boxSizeClasses;
+/** `xs` (14 px) is for dense data: 12 px table type, 32 px rows. */
+export type CheckboxSize = 'xs' | 'sm' | 'md';
 
 /** Token usage map for the Checkbox primitive (consumed by site Design tab). */
 export const tokenUsage = [
-  { property: 'Fondo (unchecked)', token: 'var(--surface-base)' },
-  { property: 'Fondo (checked)', token: 'var(--action-500)' },
-  { property: 'Borde (idle)', token: 'var(--border-hairline)' },
-  { property: 'Borde (checked)', token: 'var(--action-500)' },
-  { property: 'Borde (error)', token: 'var(--system-error-base)' },
-  { property: 'Foco', token: 'var(--border-focus)', note: '2px offset' },
-  { property: 'Texto label', token: 'var(--canvas-fg)' },
-  { property: 'Hint', token: 'var(--neutral-500)' },
-  { property: 'Error', token: 'var(--system-error-base)' },
-  { property: 'Tamaño (sm/md)', token: '16px / 20px' },
-  { property: 'Radio', token: 'rounded-sm (2px)' },
-  { property: 'Transición', token: 'var(--duration-fast) ease-out' },
+  { property: 'Fondo (sin marcar)', token: 'var(--input-background-default)' },
+  { property: 'Fondo (marcado)', token: 'var(--brand-secondary-background-default)' },
+  { property: 'Borde (reposo)', token: 'var(--input-border-default)' },
+  { property: 'Borde (hover)', token: 'var(--input-border-hover)' },
+  { property: 'Borde (marcado)', token: 'var(--brand-secondary-background-default)' },
+  { property: 'Borde (error)', token: 'var(--feedback-error-foreground)' },
+  { property: 'Foco', token: 'var(--border-focus)', note: '2px' },
+  { property: 'Texto label', token: 'var(--foreground-primary-default)' },
+  { property: 'Hint', token: 'var(--foreground-tertiary-default)' },
+  { property: 'Error', token: 'var(--feedback-error-foreground)' },
+  { property: 'Tamaño (md/sm/xs)', token: 'var(--checkbox-size-md) / var(--checkbox-size-sm) / var(--checkbox-size-xs)' },
+  { property: 'Trazo (md/sm/xs)', token: 'var(--checkbox-glyph-md) / var(--checkbox-glyph-sm) / var(--checkbox-glyph-xs)' },
+  { property: 'Radio', token: 'var(--radius-sm)' },
+  { property: 'Transición', token: 'var(--duration-fast) var(--easing-enter)' },
 ] as const;

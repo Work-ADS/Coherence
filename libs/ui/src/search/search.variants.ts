@@ -7,6 +7,9 @@
 
 export type SearchSize = 'sm' | 'md' | 'lg';
 
+/** `pill` is the filter-row shape: fully rounded. */
+export type SearchShape = 'rect' | 'pill';
+
 /**
  * Item shape for the optional `[suggestions]` autocomplete dropdown.
  *

@@ -150,6 +150,16 @@ export const ICON_GLYPHS = {
     { tag: 'path', d: 'M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3' },
     { tag: 'path', d: 'M12 17h.01' },
   ],
+  check: [
+    { tag: 'path', d: 'M20 6 9 17l-5-5' },
+  ],
+  search: [
+    { tag: 'circle', cx: '11', cy: '11', r: '8' },
+    { tag: 'path', d: 'm21 21-4.3-4.3' },
+  ],
+  loader: [
+    { tag: 'path', d: 'M21 12a9 9 0 1 1-6.219-8.56' },
+  ],
   info: [
     { tag: 'circle', cx: '12', cy: '12', r: '10' },
     { tag: 'path', d: 'M12 16v-4' },

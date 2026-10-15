@@ -1,10 +1,12 @@
-@if (label()) {
-  <label [for]="inputId" class="afi-input__label">
-    {{ label() }}
-    @if (required()) {
-      <span class="afi-input__required" aria-hidden="true"> *</span>
-    }
-  </label>
+@if (label(); as labelText) {
+  <afi-field-label
+    [text]="labelText"
+    [forId]="inputId"
+    [labelId]="labelId"
+    [required]="required()"
+    [help]="help()"
+    [helpLabel]="helpLabel()"
+  />
 }
 
 @if (type() === 'textarea') {
@@ -26,6 +28,9 @@
   ></textarea>
 } @else if (hasAdornment()) {
   <div [class]="shellClasses()">
+    @if (iconStart(); as name) {
+      <afi-icon class="afi-input__icon afi-input__icon--start" [name]="name" />
+    }
     @if (prefix()) {
       <span class="afi-input__prefix" aria-hidden="true">{{ prefix() }}</span>
     }
@@ -53,6 +58,9 @@
     />
     @if (suffix()) {
       <span class="afi-input__suffix" aria-hidden="true">{{ suffix() }}</span>
+    }
+    @if (iconEnd(); as name) {
+      <afi-icon class="afi-input__icon afi-input__icon--end" [name]="name" />
     }
   </div>
 } @else {
@@ -85,5 +93,5 @@
 }
 
 @if (error()) {
-  <p [id]="errorId" class="afi-input__error" role="alert">{{ error() }}</p>
+  <p [id]="errorId" class="afi-input__error">{{ error() }}</p>
 }

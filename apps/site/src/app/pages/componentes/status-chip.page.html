@@ -77,9 +77,9 @@
   <section slot="accessibility" class="prose-section">
     <h2 class="prose-section__title">Accessibility</h2>
     <ul class="prose-section__list">
-      <li>Interactive mode renders <code>aria-haspopup="menu"</code> on the button.</li>
-      <li>Static mode uses <code>role="status"</code> for live announcements.</li>
-      <li><code>aria-label</code> defaults to the estado label text; override with custom label for more context.</li>
+      <li>Interactive mode renders a real button named by its text; the parent that opens the menu owns <code>aria-haspopup</code>/<code>aria-expanded</code>. Keyboard focus draws the 2 px focus ring.</li>
+      <li>Static mode is plain text, not a live region: a table of chips must not announce itself.</li>
+      <li>The chip never shrinks or clips (<code>flex: none</code>). Use <code>label</code> to override the text and <code>ariaLabel</code> to override the interactive button's name.</li>
       <li>Color alone does not convey state — the dot + text label ensure accessibility.</li>
       <li>Focus ring follows <code>var(--border-focus)</code> standard.</li>
     </ul>

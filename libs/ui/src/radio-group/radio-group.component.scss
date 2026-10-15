@@ -1,0 +1,57 @@
+// =============================================================================
+// afi-radio-group — fieldset container for radio items. BEM, DS tokens only.
+// =============================================================================
+
+:host {
+  display: block;
+}
+
+// Undo the browser's fieldset chrome; the group draws none of its own.
+.afi-radio-group {
+  display: flex;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  &--horizontal {
+    flex-flow: row wrap;
+    column-gap: var(--space-lg);
+    row-gap: var(--space-sm);
+  }
+
+  &--vertical {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+}
+
+// Same label anatomy as Input and Select: body-md-400 in secondary ink, then
+// the 4 px field gap to the controls.
+.afi-radio-group__legend {
+  inline-size: 100%;
+  padding: 0;
+  margin-block-end: var(--space-2xs);
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+.afi-radio-group__hint,
+.afi-radio-group__error {
+  inline-size: 100%;
+  margin: var(--space-2xs) 0 0;
+  font: var(--type-body-sm-400);
+}
+
+.afi-radio-group__hint {
+  color: var(--foreground-tertiary-default);
+}
+
+.afi-radio-group__error {
+  color: var(--feedback-error-foreground);
+}
+
+.afi-radio-group__required {
+  color: var(--feedback-error-foreground);
+  margin-inline-start: var(--border-width-thick);
+}

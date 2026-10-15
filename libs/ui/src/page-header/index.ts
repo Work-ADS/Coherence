@@ -1,2 +1,6 @@
 export { PageHeaderComponent } from './page-header.component';
-export type { PageHeaderLevel, PageHeaderDensity } from './page-header.variants';
+export type { PageHeaderActionsPlacement,
+  PageHeaderAppearance,
+  PageHeaderCompactPlacement,
+  PageHeaderDensity,
+  PageHeaderLevel } from './page-header.variants';

@@ -1,2 +1,2 @@
 export { InputComponent } from './input.component';
-export type { InputSize, InputType } from './input.variants';
+export type { InputShape, InputSize, InputType } from './input.variants';

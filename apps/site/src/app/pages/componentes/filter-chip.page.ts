@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { SegmentedControlComponent } from '@coherence/ui';
+import { FilterChipComponent, SegmentedControlComponent } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell/doc-page-shell.component';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
@@ -11,6 +11,7 @@ import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-
   standalone: true,
   imports: [
     RouterLink,
+    FilterChipComponent,
     SegmentedControlComponent,
     DocPageShellComponent,
     DocTokensComponent,
@@ -22,11 +23,16 @@ import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-
 export class FilterChipPage {
   /* ── Preview state ── */
   protected readonly filters = signal([
-    { label: 'Tipo', active: false },
-    { label: 'Estado', active: true },
-    { label: 'Fecha', active: false },
-    { label: 'Importe', active: false },
+    { label: 'Tipo', active: false, value: 'Inmuebles' },
+    { label: 'Estado', active: true, value: 'Activo' },
+    { label: 'Fecha', active: false, value: 'Este año' },
+    { label: 'Importe', active: false, value: '> 10.000 €' },
   ]);
+
+  /** A trigger chip: the consumer owns the panel and the applied value. */
+  protected readonly panelOpen = signal(false);
+  protected readonly tipo = signal<string | null>('Fondos');
+  protected readonly removed = signal(false);
 
   protected toggleFilter(index: number): void {
     this.filters.update((arr) =>

@@ -29,21 +29,34 @@
   <div slot="preview" class="preview">
     <div class="preview__chip-row">
       @for (filter of filters(); track filter.label; let i = $index) {
-        <button
-          class="preview__chip"
-          [class.preview__chip--active]="filter.active"
-          (click)="toggleFilter(i)"
-          [attr.aria-pressed]="filter.active"
-        >
-          {{ filter.label }}
-          @if (filter.active) {
-            <svg class="preview__chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
-            </svg>
-          }
-        </button>
+        <afi-filter-chip
+          [label]="filter.label"
+          [selected]="filter.active"
+          [value]="filter.active ? filter.value : null"
+          [removable]="false"
+          (selectedChange)="toggleFilter(i)"
+          (cleared)="toggleFilter(i)"
+        />
       }
     </div>
+    <div class="preview__chip-row">
+      <afi-filter-chip
+        label="Tipo"
+        size="md"
+        appearance="outline"
+        [asTrigger]="true"
+        [expanded]="panelOpen()"
+        [selected]="tipo() !== null"
+        [value]="tipo()"
+        (toggled)="panelOpen.set(!panelOpen())"
+        (reset)="tipo.set(null); panelOpen.set(false)"
+      />
+      <afi-filter-chip label="Cuenta corriente" [removable]="true" (removed)="removed.set(true)" />
+      <afi-filter-chip label="Desactivado" [disabled]="true" [selected]="true" value="Activo" />
+    </div>
+    @if (removed()) {
+      <p class="preview__note">Se quitó el filtro «Cuenta corriente».</p>
+    }
   </div>
 
   <!-- Tokens -->
@@ -53,7 +66,8 @@
   <section slot="accessibility" class="prose-section">
     <h2 class="prose-section__title">Accessibility</h2>
     <ul class="prose-section__list">
-      <li><code>aria-pressed</code> reflects active/inactive state on each chip.</li>
+      <li>The pill holds two sibling buttons (the body and the ×): a button never contains a button. The × is named «Quitar filtro de …» or «Borrar …».</li>
+      <li><code>aria-pressed</code> reflects active/inactive state on each toggle chip; a trigger chip (<code>asTrigger</code>) reports <code>aria-haspopup</code> and <code>aria-expanded</code> instead, and its leading reset never opens the panel.</li>
       <li>Chips are focusable buttons — Enter/Space toggles the filter.</li>
       <li>Active state is communicated via both visual change (background + text weight) and ARIA.</li>
       <li>When a chip opens a dropdown, add <code>aria-haspopup="listbox"</code> and <code>aria-expanded</code>.</li>

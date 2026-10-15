@@ -1,10 +1,12 @@
-@if (label()) {
-  <label [id]="labelId" class="afi-select__label">
-    {{ label() }}
-    @if (required()) {
-      <span class="afi-select__required" aria-hidden="true"> *</span>
-    }
-  </label>
+@if (label(); as labelText) {
+  <afi-field-label
+    [text]="labelText"
+    [forId]="selectId"
+    [labelId]="labelId"
+    [required]="required()"
+    [help]="help()"
+    [helpLabel]="helpLabel()"
+  />
 }
 
 <div class="afi-select__wrapper">
@@ -14,8 +16,10 @@
     [id]="selectId"
     [class]="triggerClasses()"
     [disabled]="disabled()"
+    role="combobox"
     [attr.aria-expanded]="open()"
     [attr.aria-haspopup]="'listbox'"
+    [attr.aria-controls]="open() ? listboxId : null"
     [attr.aria-labelledby]="label() ? labelId : null"
     [attr.aria-label]="!label() ? ariaLabel() : null"
     [attr.aria-required]="required() ? 'true' : null"
@@ -31,19 +35,11 @@
     >
       {{ selectedOption()?.label ?? placeholder() ?? '' }}
     </span>
-    <svg
+    <afi-icon
       class="afi-select__chevron"
       [class.afi-select__chevron--open]="open()"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path
-        fill-rule="evenodd"
-        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-        clip-rule="evenodd"
-      />
-    </svg>
+      name="chevron-down"
+    />
   </button>
 
   @if (open()) {
@@ -52,19 +48,7 @@
     <div class="afi-select__panel" [style]="panelStyle()">
       @if (searchable()) {
         <div class="afi-select__search">
-          <svg
-            class="afi-select__search-icon"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <circle cx="7" cy="7" r="4.5" />
-            <path d="m13 13-2.5-2.5" />
-          </svg>
+          <afi-icon class="afi-select__search-icon" name="search" />
           <input
             #searchInputEl
             type="text"
@@ -111,15 +95,7 @@
           >
             <span class="afi-select__option-label">{{ opt.label }}</span>
             @if (opt.value === value()) {
-              <svg class="afi-select__check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path
-                  d="M3.5 8.5L6.5 11.5L12.5 4.5"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              <afi-icon class="afi-select__check" name="check" />
             }
           </li>
         }
@@ -136,5 +112,5 @@
 }
 
 @if (error()) {
-  <p [id]="errorId" class="afi-select__error" role="alert">{{ error() }}</p>
+  <p [id]="errorId" class="afi-select__error">{{ error() }}</p>
 }

@@ -9,16 +9,8 @@
   display: block;
 }
 
-.afi-select__label {
-  display: block;
-  margin-block-end: var(--space-2xs);
-  font: var(--type-body-md-400);
-  color: var(--foreground-secondary-default);
-}
-
-.afi-select__required {
-  color: var(--feedback-error-foreground);
-  margin-inline-start: var(--border-width-thick);
+:host(.afi-select--pill) {
+  display: inline-block;
 }
 
 .afi-select__wrapper {
@@ -62,6 +54,12 @@
     color: var(--input-foreground-disabled);
     -webkit-text-fill-color: var(--input-foreground-disabled);
     cursor: not-allowed;
+  }
+
+  // Filter-row shape: fully rounded, sized to its label.
+  &--pill {
+    width: auto;
+    border-radius: var(--radius-full);
   }
 
   &--error {
@@ -108,8 +106,7 @@
 }
 
 .afi-select__chevron {
-  width: var(--dimension-4);
-  height: var(--dimension-4);
+  --afi-icon-size: var(--icon-sm);
   color: var(--input-icon-default);
   flex-shrink: 0;
   transition: transform var(--duration-fast) var(--easing-enter);
@@ -133,7 +130,10 @@
   // bounding rect on every open + scroll/resize.
   position: fixed;
   z-index: var(--z-floating);
-  min-width: var(--dimension-48);
+  // Never narrower than the trigger (inline min-width) and grows to the longest
+  // option up to the cap; --select-panel-max overrides the cap.
+  inline-size: max-content;
+  max-inline-size: min(var(--select-panel-max, var(--dimension-80)), calc(100vw - var(--space-xl)));
   background: var(--overlay-dropdown);
   border: var(--border-width-hairline) solid var(--border-subtle);
   // Concentric with the rows: row radius plus the panel's inner gap.
@@ -175,8 +175,7 @@
 }
 
 .afi-select__search-icon {
-  width: var(--dimension-4);
-  height: var(--dimension-4);
+  --afi-icon-size: var(--icon-sm);
   color: var(--foreground-tertiary-default);
   flex-shrink: 0;
 }
@@ -213,10 +212,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-:host-context([data-brand="unicaja"]) .afi-select__label {
-  font: var(--unicaja-field-label-font, var(--type-body-md-500));
 }
 
 :host-context([data-brand="unicaja"]) .afi-select__trigger {
@@ -288,8 +283,7 @@
 }
 
 .afi-select__check {
-  width: var(--dimension-4);
-  height: var(--dimension-4);
+  --afi-icon-size: var(--icon-sm);
   color: var(--nav-item-icon-hover);
   flex-shrink: 0;
 }

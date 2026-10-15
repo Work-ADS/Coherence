@@ -64,7 +64,7 @@ export type {
   FilterChipSize,
 } from './src/filter-chip';
 export { SelectComponent } from './src/select';
-export type { SelectOption, SelectMode, SelectSize } from './src/select';
+export type { SelectAlign, SelectOption, SelectMode, SelectShape, SelectSize } from './src/select';
 export { CheckboxComponent } from './src/checkbox';
 export type { CheckboxSize } from './src/checkbox';
 export { RadioGroupComponent, RadioGroupItemComponent } from './src/radio-group';

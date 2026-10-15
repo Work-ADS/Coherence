@@ -39,7 +39,7 @@
     box-shadow: none;
   }
 
-  // Icon sizing — the glyph holds --icon-button-icon-size (16) at every size so far
+  // Icon sizing — the glyph holds 16 up to lg, then steps to 18 and 20
   svg {
     display: block;
     height: var(--icon-button-icon-size);
@@ -48,7 +48,7 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Sizes — container changes, icon stays at --icon-button-icon-size
+  // Sizes — container changes, glyph size is --icon-button-icon-size (16 to lg, 18 at xl, 20 at 2xl)
   // ---------------------------------------------------------------------------
   &--sm {
     height: var(--icon-button-size-sm);
@@ -63,6 +63,18 @@
   &--lg {
     height: var(--icon-button-size-lg);
     width: var(--icon-button-size-lg);
+  }
+
+  &--xl {
+    height: var(--icon-button-size-xl);
+    width: var(--icon-button-size-xl);
+    --icon-button-icon-size: var(--dimension-4-5);
+  }
+
+  &--2xl {
+    height: var(--icon-button-size-2xl);
+    width: var(--icon-button-size-2xl);
+    --icon-button-icon-size: var(--icon-md);
   }
 
   // ---------------------------------------------------------------------------
@@ -90,6 +102,38 @@
     &:active:not(:disabled),
     &[aria-expanded="true"]:not(:disabled) {
       background: var(--button-neutral-background-active);
+    }
+  }
+
+  // Quiet: icon-only with no surface at rest. Colour is the first feedback;
+  // row actions in tables and the field-help ⓘ.
+  &--quiet {
+    background: transparent;
+    color: var(--foreground-tertiary-default);
+
+    &:hover:not(:disabled) {
+      background: var(--button-neutral-background-active);
+      color: var(--foreground-secondary-default);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--button-neutral-background-active);
+      color: var(--foreground-primary-default);
+    }
+  }
+
+  &--quiet-destruction {
+    background: transparent;
+    color: var(--feedback-error-foreground);
+
+    &:hover:not(:disabled) {
+      background: var(--button-neutral-background-active);
+      color: var(--button-danger-background-active);
+    }
+
+    &:active:not(:disabled) {
+      background: var(--button-neutral-background-active);
+      color: var(--button-danger-background-active);
     }
   }
 

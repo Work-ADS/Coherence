@@ -89,6 +89,7 @@
               <div
                 role="option"
                 [id]="row.id"
+                [attr.aria-selected]="row.check === 'on'"
                 [attr.aria-checked]="row.check === 'mixed' ? 'mixed' : row.check === 'on'"
                 class="afi-ms__row afi-ms__row--all"
                 [class.afi-ms__row--active]="i === activeIndex()"
@@ -109,6 +110,7 @@
               <div
                 role="option"
                 [id]="row.id"
+                [attr.aria-selected]="row.check === 'on'"
                 [attr.aria-checked]="row.check === 'mixed' ? 'mixed' : row.check === 'on'"
                 [attr.aria-disabled]="row.disabled || null"
                 class="afi-ms__row afi-ms__row--group"
@@ -134,6 +136,7 @@
               <div
                 role="option"
                 [id]="row.id"
+                [attr.aria-selected]="false"
                 class="afi-ms__row afi-ms__row--tool"
                 [class.afi-ms__row--active]="i === activeIndex()"
                 (mouseenter)="activeIndex.set(i)"

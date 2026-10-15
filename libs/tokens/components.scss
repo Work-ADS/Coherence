@@ -200,6 +200,7 @@
   --switch-track-off:       var(--control-background-active);
   --switch-thumb:           var(--color-base-white);
   --seg-thumb-background:   var(--surface-raised);
+  --seg-track-disabled:     var(--control-background-disabled);
 
   --menu-item-min-height:     var(--dimension-10);   // 40px
   --menu-item-padding-block:  var(--space-xs);
@@ -214,6 +215,8 @@
   --switch-track-off:       var(--color-afi-control-600);
   --input-icon-default:     var(--color-afi-control-400);
   --seg-thumb-background:   var(--color-afi-control-700);
+  // The generic disabled fill equals the enabled track in dark; one step deeper tells them apart.
+  --seg-track-disabled:     var(--color-afi-control-900);
   --button-neutral-background-hover:  var(--color-afi-control-800);
   --button-neutral-background-active: var(--color-afi-control-700);
   --button-primary-background-default: var(--color-afi-azul-profundo-300);

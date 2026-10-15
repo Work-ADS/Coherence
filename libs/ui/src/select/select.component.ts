@@ -110,6 +110,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
       option: this.selectedOption(),
       clear: () => this.valueChange.emit(null),
       listboxId: this.listboxId,
+      activeId: this.open() && this.focusedIndex() >= 0 ? this.optionId(this.focusedIndex()) : null,
     },
   }));
   readonly searchInputEl = viewChild<ElementRef<HTMLInputElement>>('searchInputEl');

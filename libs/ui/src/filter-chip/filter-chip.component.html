@@ -17,6 +17,8 @@
     [attr.aria-pressed]="isTrigger() ? null : selected()"
     [attr.aria-haspopup]="isTrigger() ? (isDropdown() ? 'menu' : 'listbox') : null"
     [attr.aria-expanded]="isTrigger() ? isOpen() : null"
+    [attr.aria-controls]="isTrigger() && isOpen() ? controls() : null"
+    [attr.aria-activedescendant]="isTrigger() && isOpen() ? activeId() : null"
     [attr.aria-label]="ariaLabel()"
     [attr.title]="appliedText() !== null ? label() + ': ' + appliedText() : null"
     (click)="onToggle()"

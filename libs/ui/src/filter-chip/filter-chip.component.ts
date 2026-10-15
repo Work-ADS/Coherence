@@ -66,6 +66,10 @@ export class FilterChipComponent {
   readonly asTrigger = input<boolean>(false);
   /** Panel open state, for `asTrigger`. */
   readonly expanded = input<boolean>(false);
+  /** Trigger mode: id of the panel's listbox (`aria-controls`). */
+  readonly controls = input<string | null>(null);
+  /** Trigger mode: id of the highlighted row while the panel is open (`aria-activedescendant`). */
+  readonly activeId = input<string | null>(null);
   readonly count = input<number | null>(null);
   readonly dismissable = input<boolean>(false);
   readonly selectedChange = output<boolean>();

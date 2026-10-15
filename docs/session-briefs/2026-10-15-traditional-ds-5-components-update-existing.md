@@ -58,4 +58,5 @@ Bring the 41 v1 primitives in `libs/ui/src/` to the zip's look and API, in six s
 
 ## Findings from the session
 
-_(filled per sub-chunk)_
+- **5a:** see the 5a brief.
+- **5b (Controls) done 2026-10-15** on `traditional-ds-5b-controls` (five commits groups: restyle, buttons and field anatomy, Select/Search/Switch/Checkbox/Radio, Segmented/Filter Chip/MultiSelect). Full findings, deviations from the zip and open items are in the [5b brief](2026-10-15-traditional-ds-5b-controls.md). Headlines: `tsc` does not check templates, so every API commit needs `npm run build`; plans that count consumers need a correct grep (two consumers were missed); the segmented-control Unicaja cards survived every step; the no-CDK panel duplication is the main debt going into 5d.

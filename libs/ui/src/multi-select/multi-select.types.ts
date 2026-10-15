@@ -45,4 +45,6 @@ export interface MultiSelectTriggerState {
   clear: () => void;
   /** Id of the listbox, for `aria-controls` on the custom trigger. */
   listboxId: string;
+  /** Id of the highlighted row while open, for `aria-activedescendant` on the custom trigger (else null). */
+  activeId: string | null;
 }

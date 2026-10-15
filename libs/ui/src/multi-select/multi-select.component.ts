@@ -227,6 +227,7 @@ export class MultiSelectComponent implements OnInit, AfterViewChecked, OnDestroy
       labels: this.labels(),
       clear: () => this.clear(),
       listboxId: this.listboxId,
+      activeId: this.open() && this.activeIndex() >= 0 ? this.rowId(this.activeIndex()) : null,
     };
     return { $implicit: state };
   });
@@ -421,7 +422,9 @@ export class MultiSelectComponent implements OnInit, AfterViewChecked, OnDestroy
     if (!anchor) return;
     const rect = anchor.getBoundingClientRect();
     const viewportH = window.innerHeight;
-    const panelMaxH = 288; // mirrors --dimension-72 (max-height of .afi-ms__panel)
+    // 288 and 256 below mirror --dimension-72 (panel max height) and --dimension-64 (panel minimum
+    // width) in multi-select.component.scss; keep them in step.
+    const panelMaxH = 288;
     const gap = 4;
     const openUp = viewportH - rect.bottom < Math.min(panelMaxH, 160) && rect.top > viewportH - rect.bottom;
     const rightEdge = rect.right + 256 > document.documentElement.clientWidth; // mirrors --dimension-64 (the panel's minimum width)

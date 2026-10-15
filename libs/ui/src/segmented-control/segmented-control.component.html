@@ -51,10 +51,11 @@
           <span class="seg-control__label">{{ option.label }}</span>
         }
         @if (option.count !== undefined) {
-          <span class="seg-control__count" aria-hidden="true">{{ option.count }}</span>
+          <span class="seg-control__count">{{ option.count }}</span>
         }
         @if (option.dot) {
           <span class="seg-control__dot" aria-hidden="true"></span>
+          <span class="seg-control__sr">(con novedades)</span>
         }
         @if (option.meta) {
           <span class="seg-control__meta">{{ option.meta }}</span>

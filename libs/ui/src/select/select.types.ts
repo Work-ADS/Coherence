@@ -28,6 +28,8 @@ export interface SelectTriggerState {
   clear: () => void;
   /** Id of the listbox, for `aria-controls` on the custom trigger. */
   listboxId: string;
+  /** Id of the highlighted option while open, for `aria-activedescendant` on the custom trigger (else null). */
+  activeId: string | null;
 }
 
 /** `pill` is the filter-row shape: fully rounded and sized to its content. */

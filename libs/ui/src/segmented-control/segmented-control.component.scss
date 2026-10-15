@@ -159,7 +159,7 @@
 
   // Whole control disabled: the selection stays legible.
   &--disabled {
-    background: var(--control-background-disabled);
+    background: var(--seg-track-disabled);
     cursor: not-allowed;
   }
 
@@ -201,6 +201,18 @@
     font: var(--type-body-sm-500);
     line-height: 1;
     font-variant-numeric: tabular-nums;
+  }
+
+  // Visually hidden: the dot's meaning for screen readers.
+  &__sr {
+    position: absolute;
+    inline-size: var(--border-width-hairline);
+    block-size: var(--border-width-hairline);
+    margin: calc(-1 * var(--border-width-hairline));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   &__dot {
@@ -252,7 +264,7 @@
 
   &__required {
     color: var(--feedback-error-foreground);
-    margin-inline-start: var(--border-width-thick);
+    margin-inline-start: var(--space-3xs);
   }
 
   &__hint,

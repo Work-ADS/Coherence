@@ -117,7 +117,9 @@ export class SegmentedControlComponent implements AfterViewInit, OnInit {
   readonly hintId = `${this.segId}-hint`;
   readonly errorId = `${this.segId}-error`;
 
+  /** Hint and error render only with field anatomy (`label`), so only then are they referenced. */
   readonly describedBy = computed(() => {
+    if (!this.label()) return null;
     if (this.error()) return this.errorId;
     return this.hint() ? this.hintId : null;
   });

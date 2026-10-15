@@ -39,6 +39,21 @@ Bring badge, status-chip, avatar, card and page-header to the zip's look and API
 - **Card:** interactive hover lifts and focus draws a ring; Enter and Space activate.
 - `clean-code-check.sh` and `npm run build` green after every commit; modern `-v2` untouched; guardian clean.
 
+## 5c-2 plan (approved 2026-10-15)
+
+Scope: `afi-page-header` only (54 consumer files; `level="section"` in 5 of them). Every API step ends with `npm run build` (templates), and the page-header is grepped again per step for multi-line attributes.
+
+1. **Restyle, behaviour-neutral:** `--radius-lg` to `--radius-section` (both 12 px, so pixel-identical; `page-structure-skill.md` §3 wrongly says `--section-radius`, which is 16), count chip on `--brand-secondary-neutral-*` instead of azul primitives, `role="banner"` and the generic aria-label only at level page, subsection h3 on `--type-section-title`.
+2. **Level=page API:** `icon` (`afi-icon` name, 32 px medallion), `[slot=meta]` (compact line under the h1 in a heading column, never between title and actions, never in the subtitle), `titleAccessory` as an alias of the `extraInfo` slot, ranked `[slot=backAction]` / `[slot=secondaryActions]` / `[slot=actions]` / `[slot=primaryAction]` (layout only: Angular cannot recolour projected buttons, so consumers keep choosing variants), `compactActionPlacement="after-title|after-description"`, `description` as an alias of `subtitle` (max width, `text-wrap: pretty`).
+3. **Section levels:** `appearance="framed|plain"` (framed is today's outline box; plain is today's `borderless`, which stays as a deprecated alias), `actionsPlacement="inline|end"`.
+4. **Docs:** `page-structure-skill.md` §3 and §5, and the `/componentes/page-header` page with the real component.
+5. **Close:** guardian, dark and 375 px sweeps, findings, push.
+6. **Title look, held until Richard has seen the screenshots:** h1 from `--type-subtitle` (500, 20/28 growing to 24/32) to `--type-title` (400, 24/32) as the zip has it. Committed last and not pushed until the before/after pairs for three pages (Sociedades, Patrimonio, a wealth-planner page) are approved.
+
+Decisions: `role="banner"` stays at level page only. Not adopted: the zip's space-after tokens (page rhythm is locked at 12 px by §6 and §12) and "the rail owns the side inset" (§4b parity rule keeps header and body on the same padding). `PageActions`, a standalone PageSection and the collapsible header's real-button rewrite are out of scope.
+
+Done when: `framed` is visually identical to today's section, `plain` to `borderless`, no-meta headers keep their geometry, build and clean-code check green after each commit, guardian review clean, dark and 375 px swept.
+
 ## Findings from the session
 
 **5c-1 (badge, status-chip, avatar, card, afi-section note) done 2026-10-15** on `traditional-ds-5c-display`. `clean-code-check.sh` and `npm run build` green after each commit; browser-verified on each doc page; 375 px: no horizontal scroll on badge, status-chip, avatar and card.

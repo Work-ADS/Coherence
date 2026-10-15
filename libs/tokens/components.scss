@@ -212,6 +212,7 @@
 // sits after it; semantic.scss's dark block would lose the cascade here.
 [data-theme="dark"] {
   --switch-track-off:       var(--color-afi-control-600);
+  --input-icon-default:     var(--color-afi-control-400);
   --seg-thumb-background:   var(--color-afi-control-700);
   --button-neutral-background-hover:  var(--color-afi-control-800);
   --button-neutral-background-active: var(--color-afi-control-700);

@@ -39,7 +39,6 @@
     box-shadow: none;
   }
 
-  // Icon sizing — the glyph holds 16 up to lg, then steps to 18 and 20
   svg {
     display: block;
     height: var(--icon-button-icon-size);
@@ -128,12 +127,12 @@
 
     &:hover:not(:disabled) {
       background: var(--button-neutral-background-active);
-      color: var(--button-danger-background-active);
+      color: var(--feedback-error-foreground);
     }
 
     &:active:not(:disabled) {
       background: var(--button-neutral-background-active);
-      color: var(--button-danger-background-active);
+      color: var(--feedback-error-foreground);
     }
   }
 

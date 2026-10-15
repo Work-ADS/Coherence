@@ -17,6 +17,10 @@
   position: relative;
 }
 
+.afi-select__anchor {
+  display: inline-flex;
+}
+
 // ─── Trigger button ────────────────────────────────────────────────────────
 .afi-select__trigger {
   display: flex;

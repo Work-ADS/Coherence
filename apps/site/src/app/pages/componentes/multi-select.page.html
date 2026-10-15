@@ -1,0 +1,107 @@
+<site-doc-page-shell
+  title="Multi Select"
+  overline="COMPONENTS"
+  description="Campo de filtro con casillas: acumula, se queda abierto mientras se marca y dice cuántas hay activas. Select sustituye y se cierra; este suma."
+  componentName="multi-select"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Multi Select</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Filtros de un conjunto de datos</span> — tipo de activo, titular, producto: cualquiera de varios.</li>
+    <li><span class="use-cases__label">Fila de filtros</span> — <code>shape="pill"</code>, o un chip como cierre con <code>#trigger</code>.</li>
+    <li><span class="use-cases__label">Select o Multi Select</span> — si los consumidores piden siempre «Todos» como opción, es un Multi Select.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Summary</span>
+      <afi-segmented-control [options]="summaryOptions" [(value)]="summary" size="sm" ariaLabel="Summary" />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="preview__field">
+      <afi-multi-select
+        label="Tipo de activo"
+        help="Elija uno o varios tipos para filtrar la tabla."
+        placeholder="Todos"
+        allLabel="Todos"
+        [options]="tipos"
+        [value]="value()"
+        [summary]="summary()"
+        [selectAll]="true"
+        (valueChange)="value.set($event)"
+      />
+    </div>
+    <div class="preview__row">
+      <afi-multi-select
+        label="Tipo"
+        shape="pill"
+        size="sm"
+        [options]="tipos"
+        [value]="value()"
+        (valueChange)="value.set($event)"
+      />
+      <!-- The closed control is a filter chip; the panel, rows and keyboard are the same. -->
+      <afi-multi-select
+        label="Tipo"
+        ariaLabel="Filtrar por tipo"
+        [options]="tipos"
+        [value]="chipValue()"
+        [selectAll]="true"
+        (valueChange)="chipValue.set($event)"
+      >
+        <ng-template #trigger let-s>
+          <afi-filter-chip
+            label="Tipo"
+            size="md"
+            appearance="outline"
+            [asTrigger]="true"
+            [expanded]="s.open"
+            [selected]="s.count > 0"
+            [value]="chipText(s.labels, s.count)"
+            (toggled)="s.toggle()"
+            (reset)="s.clear()"
+          />
+        </ng-template>
+      </afi-multi-select>
+      <afi-select
+        ariaLabel="Escenario"
+        [options]="escenarios"
+        [value]="escenario()"
+        (valueChange)="escenario.set($event)"
+      >
+        <ng-template #trigger let-s>
+          <afi-filter-chip
+            label="Escenario"
+            size="md"
+            appearance="outline"
+            [asTrigger]="true"
+            [expanded]="s.open"
+            [selected]="s.option !== null"
+            [value]="s.option?.label ?? null"
+            (toggled)="s.toggle()"
+            (reset)="s.clear()"
+          />
+        </ng-template>
+      </afi-select>
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>El botón es un <code>combobox</code> con <code>aria-controls</code> y <code>aria-activedescendant</code>; la lista es un <code>listbox</code> multiselección.</li>
+      <li>Flechas, Inicio y Fin recorren filas (también la fila «Todos», las cabeceras de grupo y los enlaces «Seleccionar todo» y «Limpiar»); Intro y Espacio marcan sin cerrar; Escape cierra y devuelve el foco; Tab cierra.</li>
+      <li>La fila «Todos» y las cabeceras de grupo tienen estado marcado, mixto o sin marcar; solo actúan sobre las opciones habilitadas.</li>
+      <li>La marca se dibuja en la fila, no con un checkbox anidado: la fila entera es el control y no añade una segunda parada de Tab.</li>
+      <li>Con un chip como cierre (<code>#trigger</code>) el chip ofrece <code>aria-expanded</code>; su ⊗ inicial limpia el filtro sin abrir el panel.</li>
+    </ul>
+  </section>
+</site-doc-page-shell>

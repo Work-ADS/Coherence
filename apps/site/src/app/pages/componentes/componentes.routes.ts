@@ -32,6 +32,7 @@ export const componentes_routes: Routes = [
   { path: 'modal', loadComponent: () => import('./modal.page').then(m => m.ModalPage) },
   { path: 'drawer', loadComponent: () => import('./drawer.page').then(m => m.DrawerPage) },
   { path: 'search', loadComponent: () => import('./search.page').then(m => m.SearchPage) },
+  { path: 'multi-select', loadComponent: () => import('./multi-select.page').then(m => m.MultiSelectPage) },
   { path: 'select', loadComponent: () => import('./select.page').then(m => m.SelectPage) },
   // Sidebar is a pattern (composes Logo + NavSection + NavItem + IconButton +
   // Select). Lives at /patrones/sidebar-ia-comparison — this route is

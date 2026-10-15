@@ -64,8 +64,25 @@ export type {
   FilterChipOption,
   FilterChipSize,
 } from './src/filter-chip';
+export { MultiSelectComponent } from './src/multi-select';
+export type {
+  MultiSelectOption,
+  MultiSelectShape,
+  MultiSelectSize,
+  MultiSelectSummary,
+  MultiSelectTriggerContext,
+  MultiSelectTriggerState,
+} from './src/multi-select';
 export { SelectComponent } from './src/select';
-export type { SelectAlign, SelectOption, SelectMode, SelectShape, SelectSize } from './src/select';
+export type {
+  SelectAlign,
+  SelectOption,
+  SelectMode,
+  SelectShape,
+  SelectSize,
+  SelectTriggerContext,
+  SelectTriggerState,
+} from './src/select';
 export { CheckboxComponent } from './src/checkbox';
 export type { CheckboxSize } from './src/checkbox';
 export { RadioGroupComponent, RadioGroupItemComponent } from './src/radio-group';

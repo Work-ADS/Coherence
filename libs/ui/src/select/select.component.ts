@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
   ElementRef,
   HostListener,
   inject,
@@ -12,13 +13,21 @@ import {
   OnInit,
   output,
   signal,
+  TemplateRef,
   viewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 
 import { FieldLabelComponent } from '../field-label';
 import { IconComponent } from '../icon';
 
-import type { SelectAlign, SelectOption, SelectShape, SelectSize } from './select.types';
+import type {
+  SelectAlign,
+  SelectOption,
+  SelectShape,
+  SelectSize,
+  SelectTriggerContext,
+} from './select.types';
 
 let nextId = 0;
 
@@ -36,7 +45,7 @@ let nextId = 0;
 @Component({
   selector: 'afi-select',
   standalone: true,
-  imports: [FieldLabelComponent, IconComponent],
+  imports: [FieldLabelComponent, IconComponent, NgTemplateOutlet],
   host: { '[class.afi-select--pill]': "shape() === 'pill'" },
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './select.component.html',
@@ -87,6 +96,22 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   private readonly el = inject(ElementRef);
   readonly triggerEl = viewChild<ElementRef<HTMLButtonElement>>('triggerEl');
+
+  /** Replaces the closed control (typically an `afi-filter-chip` with `asTrigger`); the panel is unchanged. */
+  readonly triggerTpl = contentChild<TemplateRef<SelectTriggerContext>>('trigger');
+  readonly anchorEl = viewChild<ElementRef<HTMLElement>>('anchorEl');
+
+  /** State for a custom trigger template. */
+  readonly triggerContext = computed<SelectTriggerContext>(() => ({
+    $implicit: {
+      open: this.open(),
+      toggle: () => this.toggle(),
+      value: this.value(),
+      option: this.selectedOption(),
+      clear: () => this.valueChange.emit(null),
+      listboxId: this.listboxId,
+    },
+  }));
   readonly searchInputEl = viewChild<ElementRef<HTMLInputElement>>('searchInputEl');
 
   private typeAheadBuffer = '';
@@ -250,7 +275,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
    * more room above than below the viewport edge.
    */
   private recomputePanelPosition(): void {
-    const trigger = this.triggerEl()?.nativeElement;
+    const trigger = (this.anchorEl() ?? this.triggerEl())?.nativeElement;
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
     const viewportH = window.innerHeight;
@@ -286,7 +311,8 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     document.removeEventListener('scroll', this.onAncestorScroll, true);
     this.closed.emit();
-    this.triggerEl()?.nativeElement?.focus();
+    const trigger = this.triggerEl()?.nativeElement ?? this.anchorEl()?.nativeElement.querySelector<HTMLElement>('button, [tabindex]');
+    trigger?.focus();
   }
 
   onSearchInput(event: Event): void {

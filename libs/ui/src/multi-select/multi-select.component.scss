@@ -1,0 +1,270 @@
+// =============================================================================
+// afi-multi-select — accumulating filter field. BEM, DS tokens only.
+// Trigger and panel share the Select look (--input-*, --menu-item-*).
+// =============================================================================
+
+@use '../styles/focus-ring-v1' as *;
+
+:host {
+  display: block;
+}
+
+:host(.afi-ms--pill) {
+  display: inline-block;
+}
+
+.afi-ms__wrapper {
+  position: relative;
+}
+
+.afi-ms__anchor {
+  display: inline-flex;
+}
+
+// ─── Trigger ──────────────────────────────────────────────────────────────
+.afi-ms__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  inline-size: 100%;
+  appearance: none;
+  box-sizing: border-box;
+  padding-inline: var(--space-sm);
+  border: var(--border-width-hairline) solid var(--input-border-default);
+  border-radius: var(--radius-control);
+  background: var(--input-background-default);
+  color: var(--input-foreground-default);
+  font: var(--type-body-md-400);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--easing-enter),
+    box-shadow var(--duration-fast) var(--easing-enter);
+
+  &:hover:not(:disabled) {
+    border-color: var(--input-border-hover);
+  }
+
+  &:focus-visible,
+  &[aria-expanded="true"] {
+    @include focus-ring;
+    border-color: var(--input-border-focus);
+  }
+
+  &:disabled {
+    background: var(--input-background-disabled);
+    border-color: var(--input-border-disabled);
+    color: var(--input-foreground-disabled);
+    cursor: not-allowed;
+  }
+
+  &--sm {
+    block-size: var(--control-h-sm);
+  }
+
+  &--md {
+    block-size: var(--control-h-md);
+  }
+
+  // Filter-row shape: sized to its label, fully rounded.
+  &--pill {
+    inline-size: auto;
+    border-radius: var(--radius-full);
+  }
+
+  &--error {
+    border-color: var(--feedback-error-foreground);
+
+    &:focus-visible,
+    &[aria-expanded="true"] {
+      box-shadow: 0 0 0 var(--border-width-thick) var(--feedback-error-border);
+    }
+  }
+}
+
+.afi-ms__summary {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &--placeholder {
+    color: var(--input-foreground-placeholder);
+  }
+}
+
+.afi-ms__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-inline-size: var(--dimension-5);
+  block-size: var(--dimension-5);
+  padding-inline: var(--space-2xs);
+  border-radius: var(--radius-full);
+  background: var(--control-background-selected);
+  color: var(--foreground-primary-default);
+  font: var(--type-body-sm-500);
+  font-variant-numeric: tabular-nums;
+}
+
+.afi-ms__chevron {
+  --afi-icon-size: var(--icon-sm);
+  flex: none;
+  color: var(--input-icon-default);
+  transition: transform var(--duration-fast) var(--easing-enter);
+
+  &--open {
+    transform: rotate(180deg);
+  }
+}
+
+// ─── Panel ────────────────────────────────────────────────────────────────
+.afi-ms__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-floating) - 1);
+}
+
+.afi-ms__panel {
+  position: fixed;
+  z-index: var(--z-floating);
+  // Never narrower than the trigger or the minimum: an option you cannot read is not a filter.
+  min-inline-size: max(var(--ms-anchor-width, 0), var(--dimension-64));
+  max-inline-size: calc(100vw - var(--space-xl));
+  max-block-size: var(--dimension-72);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--overlay-dropdown);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--elevation-lg);
+  animation: afi-ms-enter var(--duration-base) var(--easing-enter);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.afi-ms__listbox {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  padding: var(--space-2xs);
+}
+
+.afi-ms__row {
+  display: flex;
+  align-items: center;
+  gap: var(--menu-item-gap);
+  min-block-size: var(--menu-item-min-height);
+  padding: var(--menu-item-padding-block) var(--menu-item-padding-inline);
+  border-radius: var(--radius-control);
+  font: var(--menu-item-font);
+  color: var(--foreground-primary-default);
+  cursor: pointer;
+
+  &--active {
+    background: var(--nav-item-background-hover);
+  }
+
+  &--grouped {
+    padding-inline-start: calc(var(--menu-item-padding-inline) + var(--space-md));
+  }
+
+  &--group,
+  &--all {
+    font: var(--menu-item-font-current);
+  }
+
+  &--tool {
+    color: var(--foreground-brand-default);
+  }
+
+  &--disabled {
+    color: var(--nav-item-foreground-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.afi-ms__row-label {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.afi-ms__row-hint {
+  flex: none;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  font-variant-numeric: tabular-nums;
+}
+
+// The tick is drawn in the row, not a nested checkbox: the whole row is the
+// control, and a second tab stop per option would be wrong.
+.afi-ms__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  box-sizing: border-box;
+  inline-size: var(--checkbox-size-sm);
+  block-size: var(--checkbox-size-sm);
+  border: var(--border-width-thick) solid var(--input-border-default);
+  border-radius: var(--radius-sm);
+  background: var(--input-background-default);
+  color: var(--brand-secondary-foreground-default);
+
+  &--on {
+    border-color: var(--brand-secondary-background-default);
+    background: var(--brand-secondary-background-default);
+  }
+
+  afi-icon {
+    --afi-icon-size: var(--checkbox-glyph-sm);
+  }
+}
+
+.afi-ms__dash {
+  inline-size: var(--checkbox-glyph-sm);
+  block-size: var(--border-width-thick);
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+.afi-ms__empty {
+  padding: var(--space-md) var(--space-sm);
+  text-align: center;
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+}
+
+@keyframes afi-ms-enter {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-2xs) * -1));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.afi-ms__hint,
+.afi-ms__error {
+  margin: var(--space-2xs) 0 0;
+  font: var(--type-body-sm-400);
+}
+
+.afi-ms__hint {
+  color: var(--foreground-tertiary-default);
+}
+
+.afi-ms__error {
+  color: var(--feedback-error-foreground);
+}

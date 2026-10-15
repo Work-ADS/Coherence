@@ -10,37 +10,44 @@
 }
 
 <div class="afi-select__wrapper">
-  <button
-    #triggerEl
-    type="button"
-    [id]="selectId"
-    [class]="triggerClasses()"
-    [disabled]="disabled()"
-    role="combobox"
-    [attr.aria-expanded]="open()"
-    [attr.aria-haspopup]="'listbox'"
-    [attr.aria-controls]="open() ? listboxId : null"
-    [attr.aria-labelledby]="label() ? labelId : null"
-    [attr.aria-label]="!label() ? ariaLabel() : null"
-    [attr.aria-required]="required() ? 'true' : null"
-    [attr.aria-invalid]="error() ? 'true' : null"
-    [attr.aria-describedby]="describedBy()"
-    [attr.aria-activedescendant]="open() && focusedIndex() >= 0 ? optionId(focusedIndex()) : null"
-    (click)="toggle()"
-    (keydown)="onTriggerKeydown($event)"
-  >
-    <span
-      class="afi-select__value"
-      [class.afi-select__value--placeholder]="!selectedOption()"
-    >
-      {{ selectedOption()?.label ?? placeholder() ?? '' }}
+  @if (triggerTpl(); as tpl) {
+    <!-- A custom closed control. It owns its look and aria-expanded. -->
+    <span #anchorEl class="afi-select__anchor" (keydown)="onTriggerKeydown($event)">
+      <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="triggerContext()" />
     </span>
-    <afi-icon
-      class="afi-select__chevron"
-      [class.afi-select__chevron--open]="open()"
-      name="chevron-down"
-    />
-  </button>
+  } @else {
+    <button
+      #triggerEl
+      type="button"
+      [id]="selectId"
+      [class]="triggerClasses()"
+      [disabled]="disabled()"
+      role="combobox"
+      [attr.aria-expanded]="open()"
+      [attr.aria-haspopup]="'listbox'"
+      [attr.aria-controls]="open() ? listboxId : null"
+      [attr.aria-labelledby]="label() ? labelId : null"
+      [attr.aria-label]="!label() ? ariaLabel() : null"
+      [attr.aria-required]="required() ? 'true' : null"
+      [attr.aria-invalid]="error() ? 'true' : null"
+      [attr.aria-describedby]="describedBy()"
+      [attr.aria-activedescendant]="open() && focusedIndex() >= 0 ? optionId(focusedIndex()) : null"
+      (click)="toggle()"
+      (keydown)="onTriggerKeydown($event)"
+    >
+      <span
+        class="afi-select__value"
+        [class.afi-select__value--placeholder]="!selectedOption()"
+      >
+        {{ selectedOption()?.label ?? placeholder() ?? '' }}
+      </span>
+      <afi-icon
+        class="afi-select__chevron"
+        [class.afi-select__chevron--open]="open()"
+        name="chevron-down"
+      />
+    </button>
+  }
 
   @if (open()) {
     <div class="afi-select__backdrop" (click)="close()" aria-hidden="true"></div>

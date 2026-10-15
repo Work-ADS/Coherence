@@ -1,4 +1,13 @@
-<span class="tooltip" [attr.aria-describedby]="disabled() ? null : tooltipId">
+<span
+  [class]="hostClasses()"
+  [attr.aria-describedby]="disabled() ? null : tooltipId"
+  (mouseenter)="onEnter()"
+  (mouseleave)="onLeave()"
+  (focusin)="onEnter()"
+  (focusout)="onLeave()"
+  (click)="onClick()"
+  (keydown.escape)="onEscape($event)"
+>
   <ng-content />
   @if (!disabled()) {
     <span

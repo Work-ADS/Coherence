@@ -3,66 +3,66 @@
 // BEM classes, DS tokens via CSS custom properties only.
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+@use '../styles/touch-area' as *;
+
 :host {
   display: inline-block;
 }
 
 .btn {
+  @include touch-area;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
   border: 0;
-  border-radius: var(--radius-md);
-  font-family: var(--font-brand-display, serif);
-  font-weight: 500;
+  border-radius: var(--radius-control);
   cursor: pointer;
+  white-space: nowrap;
   transition:
     background-color var(--duration-fast) var(--easing-enter),
     color var(--duration-fast) var(--easing-enter),
-    opacity var(--duration-fast) var(--easing-enter);
+    opacity var(--duration-fast) var(--easing-enter),
+    box-shadow var(--duration-fast) var(--easing-enter);
 
   &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    @include focus-ring;
     outline-offset: var(--border-width-thick);
   }
 
+  // Disabled is opacity only: no fill swap, no ring.
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    box-shadow: none;
   }
 
   // ─── Variants ────────────────────────────────────────────────────────────
   &--primary {
-    background: var(--brand-secondary-background-default);
+    background: var(--button-primary-background-default);
     color: var(--brand-secondary-foreground-default);
 
     &:hover:not(:disabled) {
-      background: var(--brand-secondary-background-hover);
-      color: var(--brand-secondary-foreground-hover);
+      background: var(--button-primary-background-hover);
     }
     &:active:not(:disabled) {
-      background: var(--brand-secondary-background-active);
-      color: var(--brand-secondary-foreground-active);
-    }
-    &:disabled {
-      background: var(--brand-secondary-background-disabled);
-      color: var(--brand-secondary-foreground-disabled);
-      opacity: 1; // colors already encode disabled
+      background: var(--button-primary-background-active);
     }
   }
 
   &--secondary {
     background: var(--surface-default);
     color: var(--foreground-primary-default);
-    border: var(--border-width-hairline) solid var(--border-hairline);
+    border: var(--border-width-hairline) solid var(--border-default);
 
     &:hover:not(:disabled) {
-      background: var(--surface-subtle);
+      background: var(--button-neutral-background-hover);
+      border-color: var(--border-strong);
     }
     &:active:not(:disabled) {
-      background: var(--surface-muted);
+      background: var(--button-neutral-background-active);
+      border-color: var(--border-strong);
     }
   }
 
@@ -71,59 +71,66 @@
     color: var(--foreground-secondary-default);
 
     &:hover:not(:disabled) {
-      background: var(--surface-subtle);
+      background: var(--button-neutral-background-hover);
     }
     &:active:not(:disabled) {
-      background: var(--surface-muted);
+      background: var(--button-neutral-background-active);
     }
   }
 
   &--danger {
-    background: var(--feedback-error-foreground);
-    color: var(--feedback-error-background);
+    background: var(--button-danger-background-default);
+    color: var(--button-danger-foreground);
 
     &:hover:not(:disabled) {
-      opacity: 0.9;
+      background: var(--button-danger-background-hover);
     }
     &:active:not(:disabled) {
-      opacity: 0.8;
+      background: var(--button-danger-background-active);
     }
   }
 
-  // Ghost destructive — transparent body, red outline + label. Hover tints
-  // the surface so the action reads as deliberate; matches the destructive
-  // intent of `danger` without the heavyweight filled look.
+  // Ghost destructive: transparent body, red hairline and label.
   &--danger-ghost {
     background: transparent;
     color: var(--feedback-error-foreground);
     border: var(--border-width-hairline) solid var(--feedback-error-foreground);
 
     &:hover:not(:disabled) {
-      background: var(--feedback-error-background);
+      background: var(--button-danger-ghost-background-hover);
     }
     &:active:not(:disabled) {
-      background: var(--feedback-error-background);
-      opacity: 0.85;
+      background: var(--button-danger-ghost-background-active);
     }
   }
 
-  // ─── Sizes ───────────────────────────────────────────────────────────────
+  // ─── Sizes: chrome scale 24/28/32 (touch-area gives the 44 px hit area) ──
   &--sm {
-    height: var(--control-h-sm, var(--dimension-8));
-    padding-inline: var(--space-sm);
-    font: var(--type-body-sm-500);
+    height: var(--control-size-sm);
+    padding-inline: var(--space-xs);
+    font: var(--control-label-font-sm);
   }
 
   &--md {
-    height: var(--control-h-md, var(--dimension-10));
-    padding-inline: var(--space-md);
-    font: var(--type-button, var(--type-body-md-500));
+    height: var(--control-size-md);
+    padding-inline: var(--space-sm);
+    font: var(--control-label-font-sm);
   }
 
   &--lg {
-    height: var(--control-h-lg, var(--dimension-12));
-    padding-inline: var(--space-lg);
-    font: var(--type-button, var(--type-body-md-500));
+    height: var(--control-size-lg);
+    padding-inline: var(--space-sm);
+    font: var(--control-label-font-lg);
+  }
+
+  // The font shorthands above reset letter-spacing, so it is pinned after them
+  // on every state: control labels hold the same tracking at every size.
+  &,
+  &:hover:not(:disabled),
+  &:active:not(:disabled),
+  &:focus-visible,
+  &:disabled {
+    letter-spacing: var(--control-label-tracking);
   }
 
   // ─── Modifiers ───────────────────────────────────────────────────────────

@@ -158,6 +158,8 @@
   --button-danger-background-default: var(--color-error-700);
   --button-danger-background-hover:   var(--color-error-500);
   --button-danger-background-active:  var(--color-error-900);
+  // Label on the danger fill: --feedback-error-background flips dark in dark mode (1.85:1 on the fill), so the label has its own token.
+  --button-danger-foreground:         var(--feedback-error-background);
   --button-danger-ghost-background-hover:  var(--color-error-50);
   --button-danger-ghost-background-active: var(--color-error-200);
 
@@ -208,6 +210,7 @@
   --button-primary-background-default: var(--color-afi-azul-profundo-300);
   --button-primary-background-hover:   var(--color-afi-azul-profundo-200);
   --button-primary-background-active:  var(--color-afi-azul-profundo-100);
+  --button-danger-foreground:         var(--color-base-white);
   --button-danger-ghost-background-hover:  var(--color-error-900);
   --button-danger-ghost-background-active: var(--color-error-700);
   --button-warning-ghost-foreground:        var(--color-warning-200);

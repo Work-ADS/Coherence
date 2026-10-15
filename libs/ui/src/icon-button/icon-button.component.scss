@@ -13,6 +13,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0; // square by size, not by padding; --wide sets its own
   border: none;
   border-color: transparent; // explicit baseline so UA computed border-color doesn't leak
   outline: none;
@@ -20,7 +21,9 @@
   border-radius: var(--radius-control);
   cursor: pointer;
   position: relative;
+  color: var(--foreground-secondary-default);
   transition: background-color var(--duration-fast) var(--easing-enter),
+              border-color var(--duration-fast) var(--easing-enter),
               color var(--duration-fast) var(--easing-enter);
 
   // Focus ring
@@ -29,15 +32,19 @@
   }
 
   // Disabled — per-variant blocks below override UA defaults with disabled tokens.
+  // Disabled is opacity only, as on Button.
   &:disabled {
+    opacity: 0.5;
     cursor: not-allowed;
+    box-shadow: none;
   }
 
-  // Icon sizing — always consistent regardless of container size
+  // Icon sizing — the glyph holds --icon-button-icon-size (16) at every size so far
   svg {
     display: block;
     height: var(--icon-button-icon-size);
     width: var(--icon-button-icon-size);
+    flex: none; // a padded flex box must not squeeze the glyph into an ellipse
   }
 
   // ---------------------------------------------------------------------------
@@ -65,7 +72,9 @@
   // ---------------------------------------------------------------------------
   &--wide {
     width: auto;
-    padding-inline: var(--space-xs);
+    padding-inline: var(--space-sm);
+    font: var(--control-label-font-sm);
+    letter-spacing: var(--control-label-tracking);
   }
 
   // ---------------------------------------------------------------------------
@@ -73,20 +82,14 @@
   // ---------------------------------------------------------------------------
   &--ghost {
     background: transparent;
-    color: var(--foreground-tertiary-default);
 
     &:hover:not(:disabled) {
-      background: var(--control-background-hover);
-      color: var(--foreground-primary-default);
+      background: var(--button-neutral-background-hover);
     }
 
-    &:active:not(:disabled) {
-      background: var(--control-background-active);
-    }
-
-    &:disabled {
-      background: transparent;
-      color: var(--foreground-tertiary-disabled);
+    &:active:not(:disabled),
+    &[aria-expanded="true"]:not(:disabled) {
+      background: var(--button-neutral-background-active);
     }
   }
 
@@ -104,73 +107,50 @@
       background: var(--brand-secondary-neutral-background-active);
       color: var(--brand-secondary-neutral-foreground-active);
     }
-
-    &:disabled {
-      background: var(--brand-secondary-neutral-background-disabled);
-      color: var(--brand-secondary-neutral-foreground-disabled);
-    }
   }
 
   &--outline {
     background: transparent;
-    color: var(--foreground-tertiary-default);
     border: var(--border-width-hairline) solid var(--border-default);
 
     &:hover:not(:disabled) {
-      background: var(--control-background-default);
-      color: var(--foreground-primary-default);
+      background: var(--button-neutral-background-hover);
+      border-color: var(--border-strong);
     }
 
     &:active:not(:disabled) {
-      background: var(--control-background-hover);
-    }
-
-    &:disabled {
-      background: transparent;
-      color: var(--foreground-tertiary-disabled);
-      border-color: var(--border-disabled);
+      background: var(--button-neutral-background-active);
+      border-color: var(--border-strong);
     }
   }
 
+  // Primary is the action colour (brand-secondary on AFI), as on Button.
   &--primary {
-    background: var(--brand-primary-background-default);
-    color: var(--brand-primary-foreground-default);
+    background: var(--button-primary-background-default);
+    color: var(--brand-secondary-foreground-default);
 
     &:hover:not(:disabled) {
-      background: var(--brand-primary-background-hover);
-      color: var(--brand-primary-foreground-hover);
+      background: var(--button-primary-background-hover);
     }
 
     &:active:not(:disabled) {
-      background: var(--brand-primary-background-active);
-      color: var(--brand-primary-foreground-active);
-    }
-
-    &:disabled {
-      background: var(--brand-primary-background-disabled);
-      color: var(--brand-primary-foreground-disabled);
-      border-color: var(--brand-primary-border-disabled);
+      background: var(--button-primary-background-active);
     }
   }
 
   &--secondary {
-    background: var(--brand-secondary-neutral-background-default);
-    color: var(--brand-secondary-neutral-foreground-default);
+    background: var(--surface-default);
+    color: var(--foreground-primary-default);
+    border: var(--border-width-hairline) solid var(--border-default);
 
     &:hover:not(:disabled) {
-      background: var(--brand-secondary-neutral-background-hover);
-      color: var(--brand-secondary-neutral-foreground-hover);
+      background: var(--button-neutral-background-hover);
+      border-color: var(--border-strong);
     }
 
     &:active:not(:disabled) {
-      background: var(--brand-secondary-neutral-background-active);
-      color: var(--brand-secondary-neutral-foreground-active);
-    }
-
-    &:disabled {
-      background: var(--brand-secondary-neutral-background-disabled);
-      color: var(--brand-secondary-neutral-foreground-disabled);
-      border-color: var(--brand-secondary-neutral-border-disabled);
+      background: var(--button-neutral-background-active);
+      border-color: var(--border-strong);
     }
   }
 
@@ -179,35 +159,26 @@
     color: var(--feedback-error-foreground);
 
     &:hover:not(:disabled) {
-      background: var(--feedback-error-background);
-      color: var(--feedback-error-foreground);
+      background: var(--button-danger-ghost-background-hover);
     }
 
     &:active:not(:disabled) {
-      background: var(--feedback-error-border);
-      color: var(--feedback-error-foreground);
-    }
-
-    &:disabled {
-      background: transparent;
-      color: var(--foreground-tertiary-disabled);
+      background: var(--button-danger-ghost-background-active);
     }
   }
 
   // Toggled / pressed state — overrides per-variant defaults so it's
   // visually obvious that a toggle button is currently active.
   &[aria-pressed="true"]:not(:disabled) {
-    background: var(--brand-primary-background-default);
-    color: var(--brand-primary-foreground-default);
+    background: var(--button-primary-background-default);
+    color: var(--brand-secondary-foreground-default);
 
     &:hover {
-      background: var(--brand-primary-background-hover);
-      color: var(--brand-primary-foreground-hover);
+      background: var(--button-primary-background-hover);
     }
 
     &:active {
-      background: var(--brand-primary-background-active);
-      color: var(--brand-primary-foreground-active);
+      background: var(--button-primary-background-active);
     }
   }
 }

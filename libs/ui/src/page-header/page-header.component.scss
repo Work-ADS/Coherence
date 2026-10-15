@@ -275,7 +275,7 @@
 //   section    h2 → 500 20/24 (--type-section)
 //   subsection h3 → 500 16/24 (--type-body-lg-500)
 :host(.page-header--page) .page-header__title {
-  font: var(--type-subtitle);
+  font: var(--type-title);
   letter-spacing: var(--tracking-snug);
 }
 

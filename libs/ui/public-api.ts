@@ -107,6 +107,8 @@ export { NavbarItemV2Component } from './src/navbar-item-v2';
 export { LogoV2Component } from './src/logo-v2';
 export { MenuComponent, MenuItemComponent, MenuDividerComponent } from './src/menu';
 export type { MenuPlacement, MenuItemVariant } from './src/menu';
+export { IconComponent, ICON_GLYPHS, ICON_MILESTONES } from './src/icon';
+export type { IconName, IconShape } from './src/icon';
 export { KbdComponent } from './src/kbd';
 export type { KbdSize, KbdSeparator } from './src/kbd';
 export { StatusChipComponent } from './src/status-chip';

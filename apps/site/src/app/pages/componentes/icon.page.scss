@@ -1,0 +1,40 @@
+// =============================================================================
+// icon.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-xl);
+  color: var(--foreground-primary-default);
+
+  &__title {
+    margin: 0;
+    font: var(--type-body-md-500);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--dimension-30), 1fr));
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  &__name {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+  }
+}

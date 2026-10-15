@@ -1,0 +1,44 @@
+@if (entry(); as icon) {
+  <svg
+    class="icon"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    focusable="false"
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <g [attr.transform]="groupTransform()" [attr.stroke-width]="strokeWidth()">
+      @for (shape of icon.shapes; track $index) {
+        @switch (shape.tag) {
+          @case ('path') {
+            <path [attr.d]="shape.d" />
+          }
+          @case ('circle') {
+            <circle
+              [attr.cx]="shape.cx"
+              [attr.cy]="shape.cy"
+              [attr.r]="shape.r"
+              [attr.fill]="shape.solid ? 'currentColor' : null"
+              [attr.stroke]="shape.solid ? 'none' : null"
+            />
+          }
+          @case ('rect') {
+            <rect
+              [attr.x]="shape.x"
+              [attr.y]="shape.y"
+              [attr.width]="shape.width"
+              [attr.height]="shape.height"
+              [attr.rx]="shape.rx"
+              [attr.ry]="shape.ry"
+            />
+          }
+          @case ('line') {
+            <line [attr.x1]="shape.x1" [attr.x2]="shape.x2" [attr.y1]="shape.y1" [attr.y2]="shape.y2" />
+          }
+        }
+      }
+    </g>
+  </svg>
+}

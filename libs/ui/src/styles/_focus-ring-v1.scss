@@ -1,0 +1,10 @@
+// Focus ring for the traditional (v1) primitives. Include INSIDE a component's
+// own :focus-visible selector; the mixin holds only the declarations. The ring
+// is instant: no transition, and nothing shows on mouse focus because the
+// caller scopes it to :focus-visible. (The v2 family uses focus-ring-v2.)
+@mixin focus-ring {
+  outline: none;
+  // Built from --border-focus here, not from --focus-ring: a var() in a custom
+  // property resolves at :root, so a scoped brand or dark wrapper would be missed.
+  box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+}

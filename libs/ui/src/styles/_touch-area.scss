@@ -1,0 +1,17 @@
+// Invisible touch area for controls whose visible size is under the 44 px floor
+// (docs/rules/accessibility.md rule 7). The visible box stays at its token size;
+// an ::after grows the hit area to --touch-target-min, centred on the control.
+// Include in the control's base selector. It sets position: relative on the host.
+@mixin touch-area {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    inline-size: max(100%, var(--touch-target-min));
+    block-size: max(100%, var(--touch-target-min));
+    transform: translate(-50%, -50%);
+  }
+}

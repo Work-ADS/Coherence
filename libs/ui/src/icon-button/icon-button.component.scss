@@ -5,7 +5,11 @@
 // No raw hex, rgba, or px values. See docs/rules/component-skill.md §7.
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+@use '../styles/touch-area' as *;
+
 .icon-button {
+  @include touch-area;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -21,8 +25,7 @@
 
   // Focus ring
   &:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    @include focus-ring;
   }
 
   // Disabled — per-variant blocks below override UA defaults with disabled tokens.

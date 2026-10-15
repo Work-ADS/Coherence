@@ -1,5 +1,5 @@
 @if (visible()) {
-  <div class="toast__anchor">
+  <div #anchorEl class="toast__anchor" popover="manual">
     <div
       class="toast__pill"
       [attr.role]="tone() === 'error' ? 'alert' : 'status'"

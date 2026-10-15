@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { afterRenderEffect, ChangeDetectionStrategy, Component, ElementRef, input, output, viewChild } from '@angular/core';
 
 import { IconComponent } from '../icon';
 import { KbdComponent } from '../kbd';
@@ -37,4 +37,19 @@ export class ToastComponent {
   readonly dismissed = output<void>();
   /** True while the pointer or focus is on the toast, so an owner of the timer can hold it. */
   readonly paused = output<boolean>();
+
+  private readonly anchorEl = viewChild<ElementRef<HTMLElement>>('anchorEl');
+
+  constructor() {
+    // A toast fired from inside an open modal must show above it. A modal
+    // <dialog> sits in the browser's top layer, which no z-index beats; a manual
+    // popover joins the top layer too, and later entries stack above earlier ones.
+    afterRenderEffect(() => {
+      this.message(); // a replacement toast is shown again, so it goes back on top
+      const el = this.anchorEl()?.nativeElement;
+      if (!el) return;
+      if (el.matches(':popover-open')) el.hidePopover();
+      el.showPopover?.();
+    });
+  }
 }

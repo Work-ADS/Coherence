@@ -139,7 +139,7 @@
   z-index: var(--z-floating);
   // The margin is the gap to the field; FloatingPanel reads it.
   margin-block: var(--space-2xs);
-  inline-size: var(--floating-anchor-width);
+  inline-size: var(--floating-anchor-width, 100%);
   max-block-size: 20rem;
   overflow-y: auto;
   padding: var(--space-2xs);

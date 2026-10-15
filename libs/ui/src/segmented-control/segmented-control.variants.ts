@@ -4,6 +4,9 @@
 
 export type SegmentedControlSize = 'sm' | 'md' | 'lg';
 
+/** `raised` is a lifted white thumb; `solid` is an action-coloured thumb. */
+export type SegmentedControlAppearance = 'raised' | 'solid';
+
 export const tokenUsage = [
   { property: 'Track background', token: 'var(--surface-subtle)' },
   { property: 'Indicator background', token: 'var(--surface-default)' },

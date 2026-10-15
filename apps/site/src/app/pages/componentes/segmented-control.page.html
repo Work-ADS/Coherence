@@ -52,6 +52,21 @@
       [(value)]="selected"
       ariaLabel="Demo segmented control"
     />
+    <div class="preview__row">
+      <afi-segmented-control [options]="iconOptions" [(value)]="view" appearance="solid" ariaLabel="Vista" />
+      <afi-segmented-control [options]="slotOptions" [(value)]="tab" ariaLabel="Filtro" />
+    </div>
+    <div class="preview__field">
+      <afi-segmented-control
+        [options]="tipoOptions"
+        [(value)]="tipo"
+        label="Tipo de objetivo"
+        help="Elija el tipo de objetivo que va a planificar."
+        hint="Jubilación estará disponible próximamente."
+        [required]="true"
+        [fullWidth]="true"
+      />
+    </div>
   </div>
 
   <!-- Tokens -->
@@ -64,6 +79,8 @@
       <li>Container uses <code>role="radiogroup"</code> with <code>aria-label</code>.</li>
       <li>Each option uses <code>role="radio"</code> with <code>aria-checked</code>.</li>
       <li>Focus ring uses <code>var(--border-focus)</code> meeting WCAG 2.2.</li>
+      <li>Roving tabindex: la opción marcada es la única parada de Tab; las flechas mueven y seleccionan (con vuelta al inicio), Inicio y Fin saltan y las opciones deshabilitadas se omiten.</li>
+      <li>Con <code>label</code> el control es un <code>fieldset</code> con <code>legend</code>, <code>help</code>, <code>hint</code>, <code>error</code> y <code>required</code>; las opciones solo con icono necesitan <code>ariaLabel</code>.</li>
       <li>Disabled options have <code>opacity: 0.5</code> and <code>cursor: not-allowed</code>.</li>
       <li>Respects <code>prefers-reduced-motion</code> — pill transition disabled.</li>
     </ul>

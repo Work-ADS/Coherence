@@ -137,6 +137,7 @@ export { AvatarComponent } from './src/avatar';
 export type { AvatarSize } from './src/avatar';
 export { SegmentedControlComponent } from './src/segmented-control';
 export type {
+  SegmentedControlAppearance,
   SegmentedControlSize,
   SegmentedOption,
 } from './src/segmented-control';

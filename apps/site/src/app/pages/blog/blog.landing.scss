@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
-  max-width: var(--content-prose-wide);
+  max-width: var(--content-home-max);
   margin-inline: auto;
   padding-block: var(--space-2xl);
   padding-inline: var(--space-md);
@@ -34,9 +34,24 @@
   // too airy here — bind the primitive the Figma value points at.
   gap: var(--dimension-3);
   text-align: center;
+  // Headline and description share one measure so they read as a single block.
+  --hero-measure: 48rem;
+}
+
+.blog-landing__hero-eyebrow {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: var(--type-label-line-height);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--content-tertiary);
 }
 
 .blog-landing__hero-title {
+  max-width: var(--hero-measure);
+  text-wrap: balance;
   margin: 0;
   font-family: var(--font-family-primary);
   font-size: var(--type-display-size);
@@ -47,11 +62,76 @@
 
 .blog-landing__hero-intro {
   margin: 0;
-  max-width: 60ch;
+  max-width: var(--hero-measure);
   font-family: var(--font-family-primary);
   font-size: var(--type-body-large-size);
   font-weight: var(--type-body-large-weight);
   line-height: var(--type-body-large-line-height);
+  color: var(--content-secondary);
+}
+
+// Supporting sections under the hero — left-aligned prose, hairline-topped so
+// each reads as its own point without becoming a card.
+.blog-landing__foundation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  font-family: var(--font-family-primary);
+}
+
+.blog-landing__foundation-item {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--dimension-3);
+  padding-block-start: var(--space-md);
+  border-block-start: var(--border-width-hairline) solid var(--border-hairline);
+
+  // Wide: heading on the left, prose on the right — stacked rows, not columns.
+  @media (min-width: 768px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--space-xl);
+  }
+}
+
+.blog-landing__cycle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dimension-3);
+  font-family: var(--font-family-primary);
+
+  .blog-landing__foundation-body {
+    max-width: 72ch;
+  }
+}
+
+.blog-landing__work {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.blog-landing__work-title {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--type-body-large-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--type-body-large-line-height);
+  color: var(--content-primary);
+}
+
+.blog-landing__foundation-heading {
+  margin: 0;
+  font-size: var(--type-body-large-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--type-body-large-line-height);
+  color: var(--content-primary);
+}
+
+.blog-landing__foundation-body {
+  margin: 0;
+  font-size: var(--type-body-default-size);
+  font-weight: var(--type-body-default-weight);
+  line-height: var(--type-body-default-line-height);
   color: var(--content-secondary);
 }
 
@@ -87,13 +167,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  // Sit the band the same distance from the grid that the cards sit from each
-  // other, so it reads as another row of the same rhythm rather than a floating
-  // slab. The margin has to CANCEL the parent's flex gap first (.blog-landing
-  // is a column with --space-xl between children) — otherwise the two stack and
-  // the band sits five times further from the grid than the grid's own rows sit
-  // from each other.
-  margin-block-end: calc(var(--space-xs) - var(--space-xl));
   padding: var(--space-sm) var(--space-md);
   // Surface, border and radius are the CARD's tokens, not the modern ones: the
   // band has to sit level with the grid it introduces, and sharing the tokens

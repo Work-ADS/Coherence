@@ -7,6 +7,7 @@
            that mount is what fires the HyperText decode (motion-skill §4.10,
            headings only). The header carries data-foundation="modern" so the
            --motion-decode-* tokens the directive reads resolve. -->
+      <p class="blog-landing__hero-eyebrow">{{ headerCopy().eyebrow }}</p>
       @if (lang() === 'en') {
         <h1 siteHyperText class="blog-landing__hero-title">{{ headerCopy().title }}</h1>
       } @else {
@@ -14,6 +15,24 @@
       }
       <p class="blog-landing__hero-intro">{{ headerCopy().intro }}</p>
     </header>
+
+    <!-- Supporting sections: the coordination problem, then why components alone
+         are not enough. Two columns on desktop, stacked on mobile. -->
+    <div class="blog-landing__foundation" data-foundation="modern">
+      @for (item of foundationCopy(); track item.heading) {
+        <section class="blog-landing__foundation-item">
+          <h2 class="blog-landing__foundation-heading">{{ item.heading }}</h2>
+          <p class="blog-landing__foundation-body">{{ item.body }}</p>
+        </section>
+      }
+    </div>
+
+    <!-- Worked example of the cycle the sections above describe. -->
+    <section class="blog-landing__cycle" data-foundation="modern">
+      <h2 class="blog-landing__foundation-heading">{{ cycleCopy().heading }}</h2>
+      <p class="blog-landing__foundation-body">{{ cycleCopy().body }}</p>
+      <site-reactive-cycle-flow />
+    </section>
 
     <!-- Workbench band — a peer surface, not a post. Deliberately NOT a card in
          the list below: every card there is something you read, with a date, and
@@ -53,6 +72,10 @@
     </header>
   }
 
+  <section class="blog-landing__work">
+  @if (isMethodology()) {
+    <h2 class="blog-landing__work-title" data-foundation="modern">{{ workTitle() }}</h2>
+  }
   <ul class="blog-landing__list">
     @for (post of posts(); track post.slug) {
       <li class="blog-landing__item">
@@ -146,4 +169,5 @@
       </li>
     }
   </ul>
+  </section>
 </section>

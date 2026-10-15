@@ -6,6 +6,8 @@ import { map } from 'rxjs/operators';
 import { HyperTextDirective } from '../../directives/hyper-text.directive';
 import { BadgeV2Component } from '@coherence/ui';
 
+import { ReactiveCycleFlowComponent } from '../../components/reactive-cycle-flow/reactive-cycle-flow.component';
+
 import { LanguageService } from '../../services/language.service';
 
 type Thumb = 'proceso' | 'video';
@@ -178,7 +180,7 @@ interface ViewPost {
 @Component({
   selector: 'site-blog-landing',
   standalone: true,
-  imports: [RouterLink, HyperTextDirective, BadgeV2Component],
+  imports: [RouterLink, HyperTextDirective, BadgeV2Component, ReactiveCycleFlowComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './blog.landing.html',
   styleUrl: './blog.landing.scss',
@@ -229,13 +231,16 @@ export class BlogLandingPage {
   readonly headerCopy = computed(() => {
     const isEn = this.lang() === 'en';
     if (this.collection() === 'methodology') {
-      // Design at Afi hero — Figma AFI-FOUNDATIONS-MODERN 2975:9948.
+      // Design at Afi hero — Figma AFI-FOUNDATIONS-MODERN 2975:9948. States
+      // the organisational problem the system exists to address.
       return {
-        eyebrow: '',
-        title: isEn ? 'Documenting our new era' : 'Documentamos nuestra nueva etapa',
+        eyebrow: isEn ? 'Why this design system exists' : 'Por qué existe este sistema de diseño',
+        title: isEn
+          ? 'Less rework. Clearer decisions. More consistent products.'
+          : 'Menos retrabajo. Decisiones más claras. Productos más coherentes.',
         intro: isEn
-          ? 'We\'re entering a new chapter of technology, where design is what sets you apart. This is how the Afi design team works now, documented as it happens.'
-          : 'Entramos en un nuevo capítulo de la tecnología, en el que el diseño es lo que marca la diferencia. Así trabaja ahora el equipo de diseño de Afi, documentado en tiempo real.',
+          ? 'When work begins under tight deadlines, requirements are still evolving and development overlaps with unresolved design decisions, teams spend valuable time revising what is already being built. This design system establishes a shared foundation so delivery can build on agreed patterns and give new product questions the attention they need.'
+          : 'Cuando el trabajo arranca con plazos ajustados, los requisitos siguen evolucionando y el desarrollo se solapa con decisiones de diseño sin resolver, los equipos dedican mucho tiempo a revisar lo que ya se está construyendo. Este sistema de diseño establece una base compartida para que la entrega se apoye en patrones acordados y las preguntas nuevas de producto reciban la atención que necesitan.',
       };
     }
     return {
@@ -245,6 +250,40 @@ export class BlogLandingPage {
         ? 'Design and architecture decisions, written when the work ships. Per-demo case studies live inside their corresponding /demos/… page.'
         : 'Decisiones de diseño y arquitectura, escritas al cerrar la entrega. Los casos de estudio por demo viven dentro de su /demos/… correspondiente.',
     };
+  });
+
+  readonly workTitle = computed(() => (this.lang() === 'en' ? 'Work' : 'Trabajo'));
+
+  /** Intro to the worked-example flowchart. */
+  readonly cycleCopy = computed(() => {
+    const isEn = this.lang() === 'en';
+    return {
+      heading: isEn ? 'How the cycle repeats' : 'Cómo se repite el ciclo',
+      body: isEn
+        ? 'Each step is a reasonable response to the conditions before it. Together they form a loop that no single role can break: design involvement, agreed priorities and clear requirements have to be in place before the work starts.'
+        : 'Cada paso es una respuesta razonable a las condiciones anteriores. Juntos forman un bucle que ningún rol puede romper por sí solo: la participación de diseño, las prioridades acordadas y unos requisitos claros tienen que estar antes de empezar.',
+    };
+  });
+
+  /** Supporting sections under the hero: the coordination problem, then its limits. */
+  readonly foundationCopy = computed(() => {
+    const isEn = this.lang() === 'en';
+    return [
+      {
+        heading: isEn ? 'A shared foundation for five teams' : 'Una base compartida para cinco equipos',
+        body: isEn
+          ? 'With five teams supported by one designer, usability decisions cannot depend on individual conversations. Components, interaction patterns and the reasoning behind them need to be accessible across teams. Centralising this knowledge helps teams work independently, apply decisions consistently and evaluate proposed changes against a common reference.'
+          : 'Con cinco equipos atendidos por una sola persona de diseño, las decisiones de usabilidad no pueden depender de conversaciones individuales. Los componentes, los patrones de interacción y el razonamiento que los respalda tienen que estar al alcance de todos los equipos. Centralizar este conocimiento ayuda a trabajar con autonomía, aplicar las decisiones de forma coherente y evaluar los cambios propuestos con una referencia común.',
+      },
+      {
+        heading: isEn
+          ? 'Better delivery requires more than reusable components'
+          : 'Entregar mejor requiere algo más que componentes reutilizables',
+        body: isEn
+          ? 'The system reduces repeated interface decisions. Clear priorities, agreed requirements and early alignment reduce avoidable changes during implementation. Together, they create space for deliberate design, more focused feedback and a clearer handoff to development.'
+          : 'El sistema reduce las decisiones de interfaz que se repiten. Unas prioridades claras, unos requisitos acordados y una alineación temprana reducen los cambios evitables durante la implementación. Juntos, abren espacio para un diseño deliberado, un feedback más centrado y un traspaso más claro a desarrollo.',
+      },
+    ];
   });
 
   /**

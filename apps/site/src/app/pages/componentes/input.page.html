@@ -38,6 +38,24 @@
       />
     </div>
     <div class="control-group">
+      <span class="control-group__label">Shape</span>
+      <afi-segmented-control
+        [options]="shapeOptions"
+        [(value)]="shape"
+        size="sm"
+        ariaLabel="Input shape"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Extras</span>
+      <afi-segmented-control
+        [options]="extraOptions"
+        [(value)]="extra"
+        size="sm"
+        ariaLabel="Input extras"
+      />
+    </div>
+    <div class="control-group">
       <span class="control-group__label">State</span>
       <afi-segmented-control
         [options]="stateOptions"
@@ -52,6 +70,11 @@
     <afi-input
       [type]="type()"
       [size]="size()"
+      [shape]="shape()"
+      [numeric]="extra() === 'numeric'"
+      [help]="extra() === 'help' ? 'Es el correo con el que recibirá los avisos de su cuenta.' : null"
+      [iconStart]="extra() === 'icons' ? 'banknote' : null"
+      [iconEnd]="extra() === 'icons' ? 'info' : null"
       label="Correo electrónico"
       placeholder="usuario@ejemplo.com"
       hint="Usaremos este correo para la verificación."
@@ -69,6 +92,8 @@
       <li>Todo input requiere <code>label</code> visible o <code>ariaLabel</code> cuando el label vive fuera del componente.</li>
       <li><code>required</code> añade un asterisco visible y emite <code>aria-required="true"</code>.</li>
       <li><code>error</code> aplica borde rojo, mensaje y <code>aria-invalid="true"</code> — el lector lo anuncia al recibir foco.</li>
+      <li><code>help</code> añade un ⓘ tras la etiqueta: botón con nombre «Más información sobre…», descrito por el texto de ayuda; abre al enfocar, al pasar el ratón y al pulsar, y Escape lo cierra.</li>
+      <li><code>error</code> se asocia al campo con <code>aria-describedby</code>; no se anuncia dos veces.</li>
       <li><code>hint</code> se asocia vía <code>aria-describedby</code> automáticamente.</li>
       <li>Foco visible con anillo de 2px (<code>--border-focus</code>).</li>
       <li><code>disabled</code> bloquea interacción y emite <code>aria-disabled="true"</code>; <code>readonly</code> permite foco y copia.</li>

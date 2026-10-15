@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 
 import { IconComponent } from '../icon';
-import type { IconName } from '../icon';
 
 import type { ButtonSize, ButtonVariant } from './button.variants';
 
@@ -23,8 +22,10 @@ import type { ButtonSize, ButtonVariant } from './button.variants';
  * binds a single BEM class string computed from the inputs.
  *
  * Sizes sit on the chrome scale (24 to 40 px); the `touch-area` mixin keeps
- * the hit area at 44 px, see `docs/rules/accessibility.md` rule 7. Icons are
- * names from the `afi-icon` set, drawn at the label's size.
+ * the hit area at 44 px, see `docs/rules/accessibility.md` rule 7. `iconStart` and
+ * `iconEnd` are flags: set one and project the glyph into `slot="iconStart"` or
+ * `slot="iconEnd"` (an `afi-icon` or an svg). Consumers bind them today, so the
+ * gate stays until they move to icon names.
  */
 @Component({
   selector: 'afi-button',
@@ -42,8 +43,8 @@ export class ButtonComponent implements AfterViewInit {
   readonly type = input<'button' | 'submit' | 'reset'>('button');
   readonly disabled = input<boolean>(false);
   readonly loading = input<boolean>(false);
-  readonly iconStart = input<IconName | null>(null);
-  readonly iconEnd = input<IconName | null>(null);
+  readonly iconStart = input<string | null>(null);
+  readonly iconEnd = input<string | null>(null);
   readonly fullWidth = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
 

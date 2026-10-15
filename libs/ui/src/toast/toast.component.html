@@ -1,29 +1,38 @@
 @if (visible()) {
   <div class="toast__anchor">
-    <div class="toast__pill" role="status" aria-live="polite">
-      <!-- Undo button -->
+    <div
+      class="toast__pill"
+      [attr.role]="tone() === 'error' ? 'alert' : 'status'"
+      [attr.aria-live]="tone() === 'error' ? 'assertive' : 'polite'"
+      (mouseenter)="paused.emit(true)"
+      (mouseleave)="paused.emit(false)"
+      (focusin)="paused.emit(true)"
+      (focusout)="paused.emit(false)"
+      (keydown.escape)="dismissed.emit()"
+    >
+      <!-- Message (tone is a leading glyph only) -->
+      <span class="toast__message">
+        @if (tone() === 'success') {
+          <afi-icon class="toast__glyph" name="check" />
+        } @else if (tone() === 'error') {
+          <afi-icon class="toast__glyph" name="alert" />
+        }
+        {{ message() }}
+      </span>
+
+      <!-- Action (one verb) -->
       @if (showUndo()) {
-        <button type="button" class="toast__action" (click)="undo.emit()" aria-label="Deshacer">
-          <svg class="toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/>
-          </svg>
+        <button type="button" class="toast__action" (click)="undo.emit()">
           <span class="toast__action-label">{{ undoLabel() }}</span>
           @if (shortcut().length > 0) {
             <afi-kbd class="toast__shortcut" [keys]="shortcut()" size="sm" />
           }
         </button>
-        <span class="toast__divider" aria-hidden="true"></span>
       }
 
-      <!-- Message -->
-      <span class="toast__message">{{ message() }}</span>
-
       <!-- Dismiss -->
-      <span class="toast__divider" aria-hidden="true"></span>
       <button type="button" class="toast__dismiss" (click)="dismissed.emit()" aria-label="Cerrar aviso">
-        <svg class="toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-        </svg>
+        <afi-icon class="toast__icon" name="x" />
       </button>
     </div>
   </div>

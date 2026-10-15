@@ -15,7 +15,7 @@ import { LanguageToggleComponent } from './components/language-toggle/language-t
 import { FeedbackOverlayComponent } from './components/feedback-overlay/feedback-overlay.component';
 import { EmbedService } from './services/embed.service';
 import { LanguageService } from './services/language.service';
-import { LogoComponent, TopBarComponent, NavbarItemV2Component } from '@coherence/ui';
+import { LogoComponent, TopBarComponent, NavbarItemV2Component, ToastHostComponent } from '@coherence/ui';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +29,7 @@ import { LogoComponent, TopBarComponent, NavbarItemV2Component } from '@coherenc
     // ThemeToggleComponent, // hidden 2026-07-21 — see app.component.html
     // BrandPickerComponent, // hidden 2026-05-26 — see app.component.html
     FeedbackOverlayComponent,
+    ToastHostComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.component.html',

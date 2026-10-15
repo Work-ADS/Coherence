@@ -7,23 +7,25 @@
   bottom: var(--space-lg);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 70;
+  z-index: var(--z-toast);
   pointer-events: none;
 }
 
+// One dark pill: tone is a leading glyph, never the surface.
 .toast__pill {
   pointer-events: auto;
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
-  height: var(--dim-40);
-  padding-left: var(--space-xs);
-  padding-right: var(--space-2xs);
-  border-radius: var(--radius-full);
-  background: var(--color-neutral-900);
-  color: var(--color-base-white);
-  box-shadow: var(--elevation-md);
-  animation: toast-enter var(--duration-base) var(--easing-enter);
+  gap: var(--space-md);
+  block-size: var(--toast-height);
+  padding-inline: var(--space-md);
+  border-radius: var(--radius-pill);
+  background: var(--toast-background);
+  color: var(--toast-foreground);
+  box-shadow: var(--elevation-lg);
+  font: var(--type-body-sm-400);
+  white-space: nowrap;
+  animation: toast-enter var(--duration-fast) var(--easing-enter) both;
 }
 
 @keyframes toast-enter {
@@ -43,54 +45,43 @@
   }
 }
 
+.toast__message {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.toast__glyph {
+  --afi-icon-size: var(--icon-sm);
+  flex: none;
+}
+
 // ─── Action (undo) ───────────────────────────────────────────────────────────
+// One verb, underlined: the toast offers at most one thing to do.
 .toast__action {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2xs);
-  height: var(--dimension-7);
-  padding: 0 var(--space-xs);
-  border: none;
-  border-radius: var(--radius-full);
+  padding: 0;
+  border: 0;
   background: transparent;
-  color: var(--toast-action-color, var(--color-base-white));
-  opacity: 0.9;
+  color: inherit;
   cursor: pointer;
-  font: var(--type-body-sm-500);
-  transition: background var(--duration-fast) var(--easing-enter);
+  font: var(--type-body-sm-600);
+  text-decoration: underline;
 
-  &:hover {
-    background: var(--toast-hover-bg, var(--color-neutral-800));
-    opacity: 1;
+  &:focus-visible {
+    outline: var(--border-width-thick) solid currentColor;
+    outline-offset: var(--space-3xs);
+    border-radius: var(--radius-sm);
   }
 }
 
-.toast__action-label {
-  font: var(--type-body-sm-500);
-}
-
-// Tunnel the dark-pill palette into the embedded `<afi-kbd>` so the keycaps
-// read light-on-dark instead of inheriting the page's light styling. Uses
-// the same neutral-700/800 + base-white that the toast pill itself draws
-// from, so the chip stays in palette under brand mode swaps.
+// The keycaps read light-on-dark inside the dark pill.
 .toast__shortcut {
-  --kbd-fg: var(--color-base-white);
-  --kbd-bg: var(--color-neutral-800);
-  --kbd-border: var(--color-neutral-700);
-}
-
-// ─── Message ─────────────────────────────────────────────────────────────────
-.toast__message {
-  font: var(--type-body-sm-400);
-  padding: 0 var(--space-2xs);
-}
-
-// ─── Divider ─────────────────────────────────────────────────────────────────
-.toast__divider {
-  width: var(--separator-thickness);
-  height: var(--dim-20);
-  background: var(--color-base-white);
-  opacity: 0.2;
+  --kbd-fg: var(--toast-foreground);
+  --kbd-bg: transparent;
+  --kbd-border: var(--toast-foreground);
 }
 
 // ─── Dismiss ─────────────────────────────────────────────────────────────────
@@ -98,25 +89,28 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--dimension-7);
-  height: var(--dimension-7);
-  border: none;
+  inline-size: var(--control-size-md);
+  block-size: var(--control-size-md);
+  margin-inline-end: calc(-1 * var(--space-xs));
+  padding: 0;
+  border: 0;
   border-radius: var(--radius-full);
   background: transparent;
-  color: var(--color-base-white);
-  opacity: 0.7;
+  color: inherit;
   cursor: pointer;
-  transition: background var(--duration-fast) var(--easing-enter),
-              opacity var(--duration-fast) var(--easing-enter);
+  opacity: 0.7;
+  transition: opacity var(--duration-fast) var(--easing-enter);
 
   &:hover {
-    background: var(--toast-hover-bg, var(--color-neutral-800));
     opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-thick) solid currentColor;
+    outline-offset: calc(-1 * var(--border-width-thick));
   }
 }
 
-// ─── Icon ────────────────────────────────────────────────────────────────────
 .toast__icon {
-  width: var(--dim-16);
-  height: var(--dim-16);
+  --afi-icon-size: var(--icon-sm);
 }

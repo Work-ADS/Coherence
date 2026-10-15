@@ -175,7 +175,8 @@ export { FloatingPanel, escapeConsumed, onOverlayEscape } from './src/floating-p
 export type { FloatingAlign, FloatingPanelOptions, FloatingSide } from './src/floating-panel';
 export { TooltipComponent } from './src/tooltip';
 export type { TooltipPosition } from './src/tooltip';
-export { ToastComponent } from './src/toast';
+export { ToastComponent, ToastHostComponent, ToastService, TOAST_DEFAULT_DURATION } from './src/toast';
+export type { ToastTone, ToastOptions, ActiveToast } from './src/toast';
 export { AnimatedChartComponent } from './src/animated-chart';
 export type { AnimatedChartSize, AnimatedChartSeries, ChartColumn } from './src/animated-chart';
 export { StepperComponent } from './src/stepper';

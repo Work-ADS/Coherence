@@ -112,6 +112,16 @@
 
 
   // ===========================================================================
+  // TOAST
+  // ===========================================================================
+
+  // Fixed polarity, like the tooltip: a dark pill with light ink in both themes.
+  --toast-background: var(--surface-inverse-default);
+  --toast-foreground: var(--color-afi-control-0);
+  --toast-height: var(--dimension-10);                 // 40px
+
+
+  // ===========================================================================
   // TOOLTIP
   // ===========================================================================
 

@@ -24,6 +24,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "color"
   },
   {
+    "name": "--canvas-brand",
+    "kind": "color"
+  },
+  {
     "name": "--surface-default",
     "kind": "color"
   },
@@ -41,6 +45,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--surface-selected",
+    "kind": "color"
+  },
+  {
+    "name": "--surface-context",
     "kind": "color"
   },
   {
@@ -384,6 +392,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "color"
   },
   {
+    "name": "--border-focus-inverse",
+    "kind": "color"
+  },
+  {
     "name": "--border-disabled",
     "kind": "color"
   },
@@ -405,6 +417,18 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--control-background-active",
+    "kind": "color"
+  },
+  {
+    "name": "--control-background-hover-inverse",
+    "kind": "color"
+  },
+  {
+    "name": "--control-background-active-inverse",
+    "kind": "color"
+  },
+  {
+    "name": "--control-track-background",
     "kind": "color"
   },
   {
@@ -600,6 +624,26 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "color"
   },
   {
+    "name": "--overlay-blanket-drawer",
+    "kind": "color"
+  },
+  {
+    "name": "--overlay-blur",
+    "kind": "other"
+  },
+  {
+    "name": "--overlay-menu",
+    "kind": "color"
+  },
+  {
+    "name": "--z-dropdown",
+    "kind": "other"
+  },
+  {
+    "name": "--z-floating",
+    "kind": "other"
+  },
+  {
     "name": "--feedback-success-background",
     "kind": "color"
   },
@@ -633,6 +677,10 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--feedback-warning-text",
+    "kind": "color"
+  },
+  {
+    "name": "--feedback-warning-indicator",
     "kind": "color"
   },
   {
@@ -752,6 +800,198 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "color"
   },
   {
+    "name": "--chart-category-1",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-category-2",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-category-3",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-category-4",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-category-5",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-category-6",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-category-7",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-range-outer",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-range-inner",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-data-comparison",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-data-muted",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-data-comparison-1",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-data-comparison-2",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-data-comparison-3",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-data-muted-gradient",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-gradient-start-opacity",
+    "kind": "other"
+  },
+  {
+    "name": "--chart-soft-fill-mix",
+    "kind": "length"
+  },
+  {
+    "name": "--chart-data-primary-subtle",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-negative-strong",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-caution-subtle",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-caution-default",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-caution-strong",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-positive",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-positive-fill",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-positive-ink",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-negative",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-negative-fill",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-negative-ink",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-caution",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-caution-fill",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-caution-ink",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-positive-mark",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-caution-mark",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-negative-mark",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-value-negative-label",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-scale-1",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-scale-2",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-scale-3",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-scale-4",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-scale-1-ink",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-scale-2-ink",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-scale-3-ink",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-scale-4-ink",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-annotation-ink",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-annotation-ink-subtle",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-annotation-ink-inverse",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-annotation-ink-inverse-subtle",
+    "kind": "color"
+  },
+  {
+    "name": "--chart-reference-neutral",
+    "kind": "color"
+  },
+  {
     "name": "--control-h-lg",
     "kind": "length"
   },
@@ -808,6 +1048,18 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "length"
   },
   {
+    "name": "--section-space-after",
+    "kind": "length"
+  },
+  {
+    "name": "--subsection-space-after",
+    "kind": "length"
+  },
+  {
+    "name": "--section-content-gap",
+    "kind": "length"
+  },
+  {
     "name": "--gap-card-to-card",
     "kind": "length"
   },
@@ -821,6 +1073,58 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--gap-content-to-footer",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-page-header-gap",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-rail-max",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-rail-inset",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-rail-inset-sm",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-rail-block",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-rail-converge",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-bp-grid",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-bp-handoff",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-bp-compact",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-drawer-width",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-shell-header",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-shell-brand-gap",
+    "kind": "length"
+  },
+  {
+    "name": "--layout-shell-inset",
     "kind": "length"
   },
   {
@@ -913,6 +1217,30 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
   },
   {
     "name": "--radius-pill",
+    "kind": "length"
+  },
+  {
+    "name": "--radius-section",
+    "kind": "length"
+  },
+  {
+    "name": "--radius-chart-bar",
+    "kind": "length"
+  },
+  {
+    "name": "--panel-padding",
+    "kind": "length"
+  },
+  {
+    "name": "--radius-panel",
+    "kind": "length"
+  },
+  {
+    "name": "--radius-table",
+    "kind": "length"
+  },
+  {
+    "name": "--radius-shell",
     "kind": "length"
   },
   {

@@ -83,3 +83,14 @@ Method: root vs root, dark vs dark, our files cut at the first line-start `[data
 - Dark-twin primitives keep the zip names; five unused caution primitives stay.
 - `--control-h-*`, `--control-size-*`, `--icon-button-size-*` wait for chunk 5.
 - `--radius-section` (12px) next to `--section-radius` (16px) as in the zip.
+
+## Findings from the session (2026-10-14)
+
+- **2b landed first** as its own commit (`436cf1f`): canvas padding, section gap, two dark values. Guardian approved. It flagged that tablet widths (576 to 991px) now pad 16px where they were 20 or 24px, and that `--canvas-padding-block` drops 20 to 16px from sm. Intended, matches the zip.
+- **82 names added** to `semantic.scss`, generated from the zip text so values and comments cannot drift. A mixin-aware compile and re-diff shows zero root and zero dark differences, except the keeps: `--border-width-hairline/thick` (kept as dimension tokens) and `--control-h-*` (chunk 5). `--meter-fill-muted` was left out on purpose (Meter, chunk 6a); `--border-hairline` lives in `aliases.scss`.
+- **Dark:** every new name with a zip dark value has one, plus `--chart-data-primary` (azul-profundo-400, series 1 was 1.23:1 on the dark surface) and `--feedback-warning-indicator`. Computed values checked in light and dark; modern's own values are untouched.
+- **Guardian (ds-token-guardian): approve, no blockers.** Taken: reworded the dark CHART comment. Left as the zip has them: `--surface-context` has no dark re-alias (same element, so it resolves; only a nested dark scope would inherit light), and three layout lengths could alias existing primitives (`--layout-drawer-width` to `--dimension-72`, `--layout-bp-handoff` to `--bp-md`, `--layout-rail-converge` to `--layout-rail-max`). Revisit when chunk 5 consumes them.
+- **Naming:** `--radius-table`, `--radius-shell` and `--panel-padding` are tied to a component even though they sit in the cross-cutting list. Don't treat them as general tokens.
+- **Manifest:** `--chart-soft-fill-mix` (45%) is classified as `length`. Harmless today.
+- **Open for Richard:** `--radius-section` is 12px next to `--section-radius` at 16px, as in the zip. Pick one in chunk 5.
+- **Build:** green. One transient failure inlining Google Fonts (network), fixed by retry. The Sarevi stylesheet budget warning predates this chunk.

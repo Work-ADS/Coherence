@@ -43,6 +43,16 @@
   --canvas-secondary: var(--color-afi-white-25);
   // Role: softly recessed page band — sub-sections, filter rails, secondary content blocks.
 
+  // The product SHELL ground: a tinted brand surface that reaches every edge
+  // and carries the top bar's own content, because a bar drawn on this ground
+  // has no surface of its own. It is the SAME blue as the app sidebar
+  // (afi-azul-profundo-500, #062D3F) — chrome is one colour, whether it is
+  // vertical or horizontal. That also satisfies the constraint the bar puts on
+  // it: white bar content must reach 4.5:1, and this measures ~14:1. The bright
+  // brand blue (--color-afi-azul-500) measures 3.5:1 and is never the ground.
+  // Any re-point has to be measured against white before it ships.
+  --canvas-brand:     var(--color-afi-azul-profundo-500);
+
 
   // ===========================================================================
   // SURFACE (7) — mid-level surfaces (cards, panels, modals)
@@ -58,6 +68,16 @@
   // Role: hovered surface
   --surface-selected: var(--color-afi-azul-profundo-25);
   // Role: currently-selected surface — selected row in a table, active nav item bg.
+
+  // The paint of the nearest container, declared by that container (Card,
+  // Modal, Drawer; page canvas at :root). A custom property inherits through
+  // unpainted wrappers — which `background: inherit` does not, since it copies
+  // only the direct parent's computed background — so this is what a sticky
+  // element inside a transparent scroll container can paint to stay opaque
+  // without naming a colour. The default is the PRIMARY page canvas — the
+  // surface a normal product page is painted — so a page-level table needs no
+  // override; painted containers (Card, Modal, Drawer) redeclare it below.
+  --surface-context:  var(--canvas-primary);
 
   // Inverse pair — a deliberately dark field inside an otherwise light UI:
   // dark chrome bands, hero/thumbnail illustration backgrounds, dark demo
@@ -275,6 +295,9 @@
   // Role: emphatic border — selected states, strong divisions.
   --border-focus:    var(--color-afi-control-500);
   // Role: generic focus ring on neutral controls. Brand-specific focus uses brand-*-border-* tokens.
+  // Focus ring for content on a brand/dark ground — the neutral ring
+  // disappears against --canvas-brand.
+  --border-focus-inverse: var(--color-afi-azul-200);
   --border-disabled: var(--color-afi-control-300);
   // Role: border on any disabled element.
 
@@ -291,6 +314,16 @@
   // Role: default control bg — secondary buttons, neutral toggles at rest.
   --control-background-hover:    var(--color-afi-control-100);
   --control-background-active:   var(--color-afi-control-200);
+  // Interactive feedback for controls sitting DIRECTLY on a brand/dark ground
+  // (--canvas-brand): a low-opacity white wash instead of a neutral tint, so
+  // the ground's own hue shows through and a ghost control still reads as a
+  // control. A neutral tint on a coloured ground reads as dirt.
+  --control-background-hover-inverse:  color-mix(in srgb, var(--color-base-white) 14%, transparent);
+  --control-background-active-inverse: color-mix(in srgb, var(--color-base-white) 22%, transparent);
+  // Track behind a group of controls (ControlBar, segmented, range pickers).
+  // A step darker than the control FILL, so a white selected pill reads as
+  // lifted off it.
+  --control-track-background:    var(--color-afi-control-200);
   --control-background-selected: var(--color-afi-control-200);
   --control-background-focus:    var(--brand-secondary-background-active);
   --control-background-disabled: var(--disabled-background);
@@ -383,6 +416,29 @@
   --overlay-dropdown: var(--color-afi-white-0);
   // Role: dropdown menu / select-option-list body bg.
 
+  // Drawer scrim: the brand navy at 25%, lighter than the Modal blanket on
+  // purpose. A drawer annotates the page, so the page stays legible behind it;
+  // a modal interrupts it.
+  --overlay-blanket-drawer: color-mix(in srgb, var(--color-afi-azul-profundo-500) 25%, transparent);
+  // Backdrop blur for FULL-SCREEN scrims only (Drawer, Modal, ProgressOverlay):
+  // the page behind recedes a step. Never on dropdown panels, tooltips or the
+  // TourSpotlight cut-out, whose target must stay sharp. Theme-independent.
+  --overlay-blur:     var(--blur-sm);
+  // @deprecated use --overlay-dropdown
+  --overlay-menu:     var(--overlay-dropdown);
+
+  // Stacking layers. A panel's z-index is a property of the LAYER it lives on,
+  // never of the component that happens to draw it: Menu at 30 and MultiSelect
+  // at 40 meant two panels of the same kind stacked by whichever component the
+  // page reached for. Anything anchored to a trigger and positioned in flow
+  // sits on --z-dropdown. The portalled layers above it are ordered by what
+  // has to survive what.
+  --z-dropdown: 40;
+  // Lists portalled to <body> from a trigger (Select, MultiSelect, DatePicker,
+  // Search): above Drawer (901), its scrim (900) and Modal (1000), so a field
+  // inside a drawer or modal opens its list on top; below Tooltip (1100).
+  --z-floating: 1050;
+
 
   // ===========================================================================
   // FEEDBACK (15) — system feedback states (success / error / warning / info)
@@ -402,6 +458,12 @@
   // Role: warning notification bg, warning status chip bg.
   --feedback-warning-foreground: var(--color-warning-700);
   --feedback-warning-text:       var(--color-warning-900);
+  // Warning STATE DOT (semaphore): StatusPill default + soft, Badge dot,
+  // ValuePill, VerdictBlock, Drawer tab dots, TopBar overflow dot. The 500
+  // step, so warning reads orange next to the error dot; the 700 read as red.
+  // 2.45:1 on the pill tint, accepted because the dot always sits next to a
+  // text label. Warning TEXT keeps --feedback-warning-text / -foreground.
+  --feedback-warning-indicator:  var(--color-warning-500);
   --feedback-warning-border:     var(--color-warning-300);
 
   --feedback-info-background:    var(--color-info-50);
@@ -454,6 +516,120 @@
   --chart-neutral-label: var(--color-data-viz-neutral-label);
   // Role: chart label text (axis ticks, data labels).
 
+  // ---- Wealth Planner chart roles (traditional update, chunk 3) ----
+  // Stacked-bar categories (4+ positive series, up to 7): blues dark (bottom)
+  // to light, then blue-greys. Never plain grey, which means normal or
+  // compared data. Segments are split by a 1.5px surface seam; legend and
+  // readout name each one.
+  --chart-category-1: var(--color-data-viz-category-1);
+  --chart-category-2: var(--color-data-viz-category-2);
+  --chart-category-3: var(--color-data-viz-category-3);
+  --chart-category-4: var(--color-data-viz-category-4);
+  --chart-category-5: var(--color-data-viz-category-5);
+  --chart-category-6: var(--color-data-viz-category-6);
+  --chart-category-7: var(--color-data-viz-category-7);
+  // Scenario range (band): soft blue from the Afi azul scale, opaque, so the drawn
+  // band is exactly the token (outer azul-50 #e6f4fb, inner azul-100 #cde9f6 on
+  // any ground). A navy mix read as grey on white. Primary line on top: 12.85 /
+  // 11.40:1.
+  --chart-range-outer: var(--color-afi-azul-50);
+  --chart-range-inner: var(--color-afi-azul-100);
+  // Chart-internal roles that used to be primitives named inside Chart.jsx:
+  // the ink of comparison series 1+ and the fill of de-emphasised bars. Light
+  // values are the primitives Chart used before, so light charts are unchanged;
+  // the dark theme overrides them below.
+  --chart-data-comparison: var(--color-afi-control-700);
+  --chart-data-muted:      var(--color-afi-control-200);
+  // Meter tone muted: the normal grey of a comparison row. Darker than
+  // --chart-data-muted, which is the track colour itself (3.9:1 on the track).
+  // Opt-in comparison trio for three-series comparisons (scenarios and the
+  // like). Chart never applies it on its own: consumers pass it as
+  // series[].color, so existing charts and --chart-data-comparison are
+  // unchanged. One blue family, separated by lightness (the stroke pattern is
+  // the second cue); no sign or feedback role. Light, on white (surface and
+  // canvas): 14.43 / 6.53 / 4.03:1; pairs 1-2 2.21, 1-3 3.58, 2-3 1.62:1.
+  --chart-data-comparison-1: var(--color-data-viz-series-1);
+  --chart-data-comparison-2: var(--color-afi-azul-700);
+  --chart-data-comparison-3: var(--color-afi-azul-500);
+  // style="gradient": the muted-bar colour and the opacity at the light end of
+  // every bar, segment and arc ramp (the full end is always 1).
+  --chart-data-muted-gradient:     var(--color-afi-control-400);
+  --chart-gradient-start-opacity:  0.38;
+  // treatment="soft-hatch": how much of the tone's -fill role the pale
+  // fill keeps (the rest is transparent). Light 45%: fill 1.49:1, overall
+  // weight about 1.8:1 against white, far under the covered series.
+  --chart-soft-fill-mix: 45%;
+  // A de-emphasised step of the LEAD series, for the preceding values in a
+  // series whose last point carries the emphasis. Deliberately a step of
+  // primary and not --chart-data-secondary: secondary means the second
+  // series, not a dimmer first one, and using it makes one quantity read as
+  // two. Mixed with transparent so it composites correctly on any ground.
+  --chart-data-primary-subtle: color-mix(in oklab, var(--chart-data-primary) 32%, transparent);
+  --chart-negative-strong:  var(--color-data-viz-negative-strong);
+  // Caution fill is the warning 50 tint: warning-700 text on it 4.88:1.
+  --chart-caution-subtle:   var(--color-warning-50);
+  --chart-caution-default:  var(--color-data-viz-caution-default);
+  // Strong caution IS the warning feedback colour (the StatusPill "En riesgo"
+  // ink/border), so caution reads as one colour across chips, Meter fills and
+  // chart marks. 4.18:1 on --control-track-background, 5.18:1 on white.
+  --chart-caution-strong:   var(--color-warning-700);
+
+  // Sign-keyed value roles. A bar, delta or figure below zero takes the
+  // negative role; at or above zero it takes the positive role. Green and
+  // red carry the sign — never blue, and never sign by arrow alone.
+  --chart-value-positive:      var(--chart-positive-default);
+  --chart-value-positive-fill: var(--chart-positive-subtle);
+  --chart-value-positive-ink:  var(--chart-positive-strong);
+  --chart-value-negative:      var(--chart-negative-default);
+  --chart-value-negative-fill: var(--chart-negative-subtle);
+  --chart-value-negative-ink:  var(--color-data-viz-negative-ink);
+  // The middle state — "medio", "Media", a verdict that is neither met nor
+  // missed. Same shape as the other two so a scenario switch is one token
+  // swap, never a literal.
+  --chart-value-caution:       var(--chart-caution-default);
+  --chart-value-caution-fill:  var(--chart-caution-subtle);
+  --chart-value-caution-ink:   var(--chart-caution-strong);
+  // Mark step: the sign colour for a thin line or outline that must reach
+  // 3:1 on the chart ground by itself (soft-hatch outline and hatch). The
+  // default step does not in light for positive (2.04:1) and caution
+  // (2.27:1), so light uses the strong step for those two (5.20 / 5.18:1);
+  // negative's default already reaches 3.50:1 and stays lighter than its
+  // strong step. Dark uses the default step for all three.
+  --chart-value-positive-mark: var(--chart-positive-strong);
+  --chart-value-caution-mark:  var(--chart-caution-strong);
+  --chart-value-negative-mark: var(--chart-negative-default);
+  // Label step: negative TEXT written on the chart ground (Chart end labels,
+  // zero-marker labels). Light = the negative ink (#701818, 11.46:1 on white).
+  // Dark overrides it: the ink measures under 2:1 on control-900.
+  --chart-value-negative-label: var(--chart-value-negative-ink);
+
+  // Ordered scale — ranked steps of ONE quantity. Not the same thing as
+  // --chart-data-*: those are series identity, eight interchangeable hues whose
+  // order carries no meaning (swapping series 2 and 5 changes nothing). These
+  // four are a sequence, and swapping two of them states something false. Use
+  // them for bands, quartiles and likelihood steps; use --chart-data-* for
+  // "which line is which". The -ink roles are the label drawn INSIDE a band.
+  --chart-scale-1:     var(--color-data-viz-scale-1);
+  --chart-scale-2:     var(--color-data-viz-scale-2);
+  --chart-scale-3:     var(--color-data-viz-scale-3);
+  --chart-scale-4:     var(--color-data-viz-scale-4);
+  --chart-scale-1-ink: var(--color-data-viz-scale-ink-on-light);
+  --chart-scale-2-ink: var(--color-data-viz-scale-ink-on-light);
+  --chart-scale-3-ink: var(--color-data-viz-scale-ink-on-dark);
+  --chart-scale-4-ink: var(--color-data-viz-scale-ink-on-dark);
+
+  // Annotation — a reference line, an objective, a marker and its label, drawn
+  // ON the plot. --chart-neutral-axis is furniture at the edge of the plot and
+  // disappears used this way. -inverse is for an annotation crossing a dark
+  // filled series.
+  --chart-annotation-ink:                var(--color-data-viz-neutral-annotation);
+  --chart-annotation-ink-subtle:         var(--color-data-viz-neutral-annotation-subtle);
+  --chart-annotation-ink-inverse:        var(--color-data-viz-neutral-annotation-inverse);
+  --chart-annotation-ink-inverse-subtle: var(--color-data-viz-neutral-annotation-inverse-subtle);
+
+  // Neutral reference rule (referenceTone="neutral") and its legend swatch: annotation ink, about 7.6:1 on white.
+  --chart-reference-neutral: var(--chart-annotation-ink-subtle);
+
 
   // ===========================================================================
   // SIZING / DIMENSION SEMANTIC TOKENS — orthogonal to color taxonomy
@@ -505,6 +681,9 @@
   --section-padding-block:  var(--dimension-4);  // 16 px
   --section-gap:            var(--dimension-6);  // 24 px header → body
   --section-radius:         var(--radius-xl);    // 16 px
+  --section-space-after:    var(--space-2xl);   // 48 — below an H2 PageSection
+  --subsection-space-after: var(--space-xl);    // 32 — below an H3 PageSection
+  --section-content-gap:    var(--space-md);    // 16 — head/description to content, both levels
 
   // -----------------------------------------------------------------------
   // GAP — semantic spacing-between roles.
@@ -513,6 +692,49 @@
   --gap-content-to-content: var(--dimension-4);
   --gap-section-to-section: var(--dimension-8);  // 32 px
   --gap-content-to-footer:  var(--dimension-6);
+
+  // -----------------------------------------------------------------------
+  // LAYOUT — page rhythm, the three rails, the shell header band.
+  // -----------------------------------------------------------------------
+  // PAGE layout rhythm — the vertical gaps a page-level component owns so a
+  // consuming screen never repeats them by hand.
+  --layout-page-header-gap: var(--dimension-5); // 20 — PageHeader to first section
+
+  // RESPONSIVE CANVAS — the three rails of a planner screen. See the
+  // "Lienzo responsive" pattern. Breakpoints read the DRAWN AREA (container
+  // queries), never the browser window.
+  // The content rail is the ONLY thing with a maximum; the top bar spans the
+  // whole main column and takes the same inset, so the two converge into one
+  // rail at and below --layout-rail-converge.
+  --layout-rail-max:      var(--content-xl);   // 1140 — never 1180
+  --layout-rail-inset:    var(--dimension-6);  // 24 — bar and rail, both sides
+  --layout-rail-inset-sm: var(--dimension-4);  // 16 — at ≤640
+  --layout-rail-block:    var(--dimension-8);  // 32 — above and below the rail
+  --layout-rail-converge: 1140px;              // main column width where rail goes flush
+  --layout-bp-grid:        1024px; // three-up → two-up
+  --layout-bp-handoff:     768px;  // sidebar → drawer, bar re-forms
+  --layout-bp-compact:     640px;  // 16px inset, wrapped title row, 44px touch
+  --layout-drawer-width:   288px;  // or 80% of the content area, whichever is smaller
+
+  // SHELL HEADER BAND — the one horizontal band at the top of a planner screen.
+  // The TopBar fills it and the Sidebar brand lockup centres in it, so the Afi
+  // lockup and the bar's first crumb share ONE centre line. Neither component
+  // declares a height of its own: both read this token. Change it here and the
+  // two move together.
+  // The band works because PlannerShell starts the sidebar and the main column
+  // at the same block edge (--layout-shell-inset on every side); no component
+  // may compensate for the frame with an offset of its own.
+  --layout-shell-header:    var(--dimension-12); // 48 — bar height = brand band
+  // Distance from the bottom of the brand band to the first nav row. Keeps the
+  // sidebar's original 88px of brand-to-nav air without tying it to the band.
+  --layout-shell-brand-gap: var(--dimension-4);  // 16 — was 40: the band already
+  // carries the lockup's own air, so 40 more read as a hole between brand and
+  // nav. Changing it moves the NAV, never the lockup: the lockup is centred in
+  // --layout-shell-header and stays on the TopBar's centre line.
+  // The planner frame: ground showing around the sidebar and the content card,
+  // and the gap between them. Equal on all sides — that equality IS the
+  // alignment rule.
+  --layout-shell-inset:     var(--dimension-2);  // 8
 
   // -----------------------------------------------------------------------
   // ICONS — sizes + adjacent gap. NOT responsive.
@@ -552,6 +774,21 @@
   --radius-card:    var(--radius-md);   // cards, panels
   --radius-modal:   var(--radius-lg);   // modals, drawers
   --radius-pill:    var(--radius-full); // status chips, pills
+  // Section frame: DataSection, bordered Card, framed PageSection. One step
+  // rounder than a card (was 8). Anything nested flush inside a section takes
+  // calc(var(--radius-section) - <padding between them>), never a fixed value.
+  --radius-section: var(--radius-lg);   // 12px
+  // Chart bars (Chart, every register, and Sparkline): the two corners away from
+  // the axis only, capped at a third of the bar width. Stacked: outermost segment only.
+  --radius-chart-bar: 2px;
+  // Floating panels (menus, dropdowns, popovers): concentric with their rows.
+  // Panel radius = row radius (--radius-control) + the panel's padding, so a
+  // 10px row sits evenly inside. A panel with other padding uses
+  // calc(var(--radius-control) + <its padding>).
+  --panel-padding:  var(--space-2xs);   // 4px
+  --radius-panel:   calc(var(--radius-control) + var(--panel-padding)); // 14px
+  --radius-table:   var(--radius-sm);   // data-table frame — 4px, tighter than controls
+  --radius-shell:   var(--radius-lg);   // the shell's content card — larger than a control, no larger than a modal
 
   // -----------------------------------------------------------------------
   // SEPARATORS.
@@ -958,16 +1195,118 @@ body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__bac
   --feedback-warning-background: var(--color-warning-900);
   --feedback-warning-foreground: var(--color-warning-200);
   --feedback-warning-text:       var(--color-warning-200);
+  --feedback-warning-indicator:  var(--color-warning-500);
   --feedback-warning-border:     var(--color-warning-700);
   --feedback-info-background:    var(--color-info-900);
   --feedback-info-foreground:    var(--color-info-200);
   --feedback-info-border:        var(--color-info-700);
 
-  // ===== CHART — only adjust chart chrome; series/positive/negative palettes
-  // keep their hues (they need to read against both light + dark backgrounds).
+  // ===== CHART — chrome adjusts here; the positive/negative palettes keep their
+  // hues. Series 1 and the Wealth Planner roles get dark values below: contrast
+  // fixes (series 1, categories, comparison, muted) and theme reversals (scale, annotation).
   --chart-neutral-axis:  var(--color-afi-control-400);
   --chart-neutral-grid:  var(--color-afi-control-700);
   --chart-neutral-label: var(--color-afi-control-200);
+
+  // ===== CANVAS BRAND + INVERSE CONTROLS — Wealth Planner roles =====
+  --canvas-brand:                       var(--color-afi-azul-profundo-800);
+  --border-focus-inverse:               var(--color-afi-azul-300);
+  --control-background-hover-inverse:   color-mix(in srgb, var(--color-base-white) 10%, transparent);
+  --control-background-active-inverse:  color-mix(in srgb, var(--color-base-white) 16%, transparent);
+  --control-track-background:           var(--color-afi-control-800);
+  --overlay-blanket-drawer:             hsla(0, 0%, 0%, 0.45);
+  // Re-aliased for the same reason as --overlay-popover above.
+  --overlay-menu:                       var(--overlay-dropdown);
+
+  // ===== CHART — Wealth Planner roles, dark values =====
+  --chart-reference-neutral: var(--color-data-viz-neutral-annotation-inverse-subtle);
+  // Series identity on the dark chart grounds (--surface-default control-900,
+  // --canvas-primary control-950). Every mark must reach 3:1. Only series-1
+  // failed: #062d3f measured 1.23:1 on surface / 1.31:1 on canvas, so a bar in
+  // --chart-data-primary all but disappeared. azul-profundo-400 keeps the
+  // same hue family at 4.31:1 / 4.58:1, and stays apart from series-2 (azure,
+  // 1.88:1 luminance plus saturation) and series-3 (2.86:1). Series 2-8 pass
+  // as they are (3.42-15.99:1) and keep their light values.
+  // --chart-data-primary-subtle is redeclared because a custom property that
+  // reads another resolves where it is declared; the :root copy would keep
+  // the light primary.
+  --chart-data-primary:        var(--color-afi-azul-profundo-400);
+  --chart-data-primary-subtle: color-mix(in oklab, var(--chart-data-primary) 32%, transparent);
+  // Dark ranges: azul-900 / azul-800 at 55 % on the surface, opaque. Calm on the
+  // control-900 ground (1.22 / 1.37:1), the inner a step stronger, and the dark
+  // primary line on top stays at 3:1 or more (3.53 / 3.14:1; full azul-800
+  // dropped it to 2.28:1). Secondary 6.6 / 5.9:1, annotation ink 9:1+.
+  --chart-range-outer: color-mix(in srgb, var(--color-afi-azul-900) 55%, var(--surface-default));
+  --chart-range-inner: color-mix(in srgb, var(--color-afi-azul-800) 55%, var(--surface-default));
+  // Dark: step 1 is azul-600 (3.59:1 on surface-default); azul-700 was 2.72:1.
+  --chart-category-1: var(--color-afi-azul-600);
+  --chart-category-2: var(--color-afi-azul-500);
+  --chart-category-3: var(--color-afi-azul-400);
+  --chart-category-4: var(--color-afi-azul-200);
+  --chart-category-5: var(--color-afi-azul-100);
+  --chart-category-6: var(--color-afi-azul-profundo-300);
+  --chart-category-7: var(--color-afi-azul-profundo-100);
+  // control-700 comparison lines measured 1.70:1 on the dark surface;
+  // control-300 is 12.04:1 and still reads as the neutral counterpart to the
+  // azure series 0. Muted bars: control-200 (14.32:1) out-shone the
+  // highlighted bar (8.09:1) and inverted emphasis; control-500 is 3.57:1,
+  // visible, and quieter than the highlight.
+  --chart-data-comparison: var(--color-afi-control-300);
+  --chart-data-muted:      var(--color-afi-control-500);
+  // Gradient bars: at 0.38 the light end of a bar fell to 1.50-2.84:1 on the
+  // dark surface (muted control-400: 2.07:1), so the top of the bar, where its
+  // value is read, vanished. 0.9 is the lowest start that keeps every dark
+  // series, the muted bar and the sign roles at 3:1 or more at the top
+  // (weakest: series-6 3.03:1). The ramp stays, shallower.
+  --chart-data-muted-gradient:     var(--color-afi-control-400);
+  --chart-gradient-start-opacity:  0.9;
+  // Dark 25%: the negative-fill primitive (#eb8787) is bright on the dark
+  // ground; at 25% the remainder weighs about 1.9:1 against the surface,
+  // under the covered series (primary 4.31:1). The outline carries the
+  // boundary at 5.07:1 (3.50:1 light).
+  --chart-soft-fill-mix: 25%;
+  // Mark step in dark: default for all three (positive 8.71, caution 13.11,
+  // negative 5.07:1 on surface-default). The strong steps fail here
+  // (negative-strong 2.90:1).
+  --chart-value-positive-mark: var(--chart-positive-default);
+  --chart-value-caution-mark:  var(--chart-caution-default);
+  --chart-value-negative-mark: var(--chart-negative-default);
+  // Negative text in dark: the default step (5.07:1 on surface-default).
+  --chart-value-negative-label: var(--chart-negative-default);
+  // Comparison trio, dark (surface / canvas): 14.01/14.89, 8.09/8.60,
+  // 4.40/4.68:1; pairs 1-2 1.73, 1-3 3.18, 2-3 1.84:1. Light-to-dark the
+  // lightness order flips so role 1 stays the most prominent in both.
+  --chart-data-comparison-1: var(--color-afi-azul-100);
+  --chart-data-comparison-2: var(--color-data-viz-series-2);
+  --chart-data-comparison-3: var(--color-afi-azul-500);
+  // Dark caution = the dark warning chip: 900 fill, 200 ink. warning-700 (the
+  // chip border) is not used for marks: 2.84:1 on the dark track fails 3:1.
+  // warning-200: 10.86:1 on --control-track-background, 13.11:1 on
+  // surface-default, 6.92:1 as text on the warning-900 fill.
+  --chart-caution-subtle:  var(--color-warning-900);
+  --chart-caution-default: var(--color-warning-200);
+  --chart-caution-strong:  var(--color-warning-200);
+  // Re-alias here: :root resolves these against the light steps and nested
+  // dark scopes would inherit that computed light value.
+  --chart-value-caution:       var(--chart-caution-default);
+  --chart-value-caution-fill:  var(--chart-caution-subtle);
+  --chart-value-caution-ink:   var(--chart-caution-strong);
+
+  // The scale reverses on a dark ground: low is dark, high is light, so the
+  // direction of travel still reads as "more". The ink pairs flip with it.
+  --chart-scale-1:     var(--color-data-viz-scale-1-dark);
+  --chart-scale-2:     var(--color-data-viz-scale-2-dark);
+  --chart-scale-3:     var(--color-data-viz-scale-3-dark);
+  --chart-scale-4:     var(--color-data-viz-scale-4-dark);
+  --chart-scale-1-ink: var(--color-data-viz-scale-ink-on-dark-dark);
+  --chart-scale-2-ink: var(--color-data-viz-scale-ink-on-dark-dark);
+  --chart-scale-3-ink: var(--color-data-viz-scale-ink-on-light-dark);
+  --chart-scale-4-ink: var(--color-data-viz-scale-ink-on-light-dark);
+
+  --chart-annotation-ink:                var(--color-data-viz-neutral-annotation-inverse);
+  --chart-annotation-ink-subtle:         var(--color-data-viz-neutral-annotation-inverse-subtle);
+  --chart-annotation-ink-inverse:        var(--color-data-viz-neutral-annotation);
+  --chart-annotation-ink-inverse-subtle: var(--color-data-viz-neutral-annotation-subtle);
 }
 
 // Optional: auto-dark when the OS / browser prefers dark mode AND no

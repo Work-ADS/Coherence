@@ -1,0 +1,25 @@
+// afi-field-label — canonical field label: body-md-400 in secondary ink, 4 px
+// to the control. Shared by every field so a labelled Input, Select and radio
+// group line up in one form row without anyone tuning a margin.
+
+:host {
+  display: block;
+  min-inline-size: 0;
+  margin-block-end: var(--space-2xs);
+}
+
+.afi-field-label__text {
+  display: inline;
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+.afi-field-label__required {
+  color: var(--feedback-error-foreground);
+  margin-inline-start: var(--border-width-thick);
+}
+
+// White-label (frozen): Unicaja sets its own label font.
+:host-context([data-brand="unicaja"]) .afi-field-label__text {
+  font: var(--unicaja-field-label-font, var(--type-body-md-500));
+}

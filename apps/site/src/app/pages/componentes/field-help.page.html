@@ -1,0 +1,84 @@
+<site-doc-page-shell
+  title="Field Help"
+  overline="COMPONENTS"
+  description="El ⓘ que sigue a la etiqueta de un campo: texto de ayuda que se abre al enfocar, al pasar el ratón y al pulsar. Se usa a través de la propiedad help de cada campo."
+  componentName="field-help"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Field Help</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Ayuda contextual</span> — una aclaración de dos o tres líneas que no merece una línea fija bajo el campo.</li>
+    <li><span class="use-cases__label">Campos con etiqueta larga</span> — el ⓘ sigue a la última palabra de la etiqueta, no se va al borde del campo.</li>
+    <li><span class="use-cases__label">Siempre visible</span> — para texto que el usuario debe leer, use <code>hint</code>, no <code>help</code>.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Etiqueta</span>
+      <afi-segmented-control
+        [options]="labelOptions"
+        [(value)]="labelLength"
+        size="sm"
+        ariaLabel="Longitud de la etiqueta"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="preview__field">
+      <afi-input
+        [label]="labelLength() === 'short' ? shortLabel : longLabel"
+        [help]="helpText"
+        [required]="true"
+        placeholder="0,00"
+        suffix="€"
+        [numeric]="true"
+      />
+    </div>
+    <div class="preview__field">
+      <afi-input
+        [label]="shortLabel"
+        [help]="helpText"
+        [disabled]="true"
+        placeholder="0,00"
+      />
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>El ⓘ es un botón alcanzable con Tab, con nombre «Más información sobre &lt;etiqueta&gt;» (o <code>helpLabel</code>).</li>
+      <li>El texto de ayuda es la descripción del botón (<code>aria-describedby</code> a un nodo oculto): se lee sin abrir la burbuja.</li>
+      <li>La burbuja se abre al enfocar, al pasar el ratón y al pulsar o tocar. Escape la cierra primero y deja abierto el diálogo o el panel que haya detrás.</li>
+      <li>Pulsar el ⓘ nunca enfoca ni activa el campo, y sigue activo aunque el campo esté deshabilitado.</li>
+      <li>El ⓘ queda fuera del elemento <code>&lt;label&gt;</code>: no forma parte del nombre del campo.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Texto corto y concreto: qué es el dato y de dónde sale.</li>
+          <li>Use <code>hint</code> para lo que debe leerse siempre.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No esconda aquí un requisito obligatorio del formato.</li>
+          <li>No dependa solo del ratón: el texto debe llegar también con teclado y con toque.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

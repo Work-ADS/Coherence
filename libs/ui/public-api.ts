@@ -6,7 +6,7 @@ export type { ButtonVariant, ButtonSize } from './src/button';
 export { ButtonV2Component } from './src/button-v2';
 export type { ButtonV2Variant, ButtonV2Size } from './src/button-v2';
 export { InputComponent } from './src/input';
-export type { InputSize, InputType } from './src/input';
+export type { InputShape, InputSize, InputType } from './src/input';
 export { InputV2Component } from './src/input-v2';
 export type { InputV2Size, InputV2Type } from './src/input-v2';
 export { MenuItemV2Component, MenuV2Component, MenuDividerV2Component } from './src/menu-v2';
@@ -109,6 +109,8 @@ export { MenuComponent, MenuItemComponent, MenuDividerComponent } from './src/me
 export type { MenuPlacement, MenuItemVariant } from './src/menu';
 export { IconComponent, ICON_GLYPHS, ICON_MILESTONES } from './src/icon';
 export type { IconName, IconShape } from './src/icon';
+export { FieldHelpComponent } from './src/field-help';
+export { FieldLabelComponent } from './src/field-label';
 export { KbdComponent } from './src/kbd';
 export type { KbdSize, KbdSeparator } from './src/kbd';
 export { StatusChipComponent } from './src/status-chip';

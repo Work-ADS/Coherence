@@ -1,0 +1,9 @@
+<label class="afi-field-label__text" [attr.for]="forId()" [attr.id]="labelId()">
+  {{ text() }}
+  @if (required()) {
+    <span class="afi-field-label__required" aria-hidden="true">*</span>
+  }
+</label>
+@if (help(); as helpText) {
+  <afi-field-help [help]="helpText" [helpLabel]="helpLabel()" [label]="text()" />
+}

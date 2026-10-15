@@ -1,0 +1,15 @@
+// afi-field-help — the ⓘ box. One label line tall and top-aligned in the line,
+// so the 24 px button centres on the label without changing the line's height.
+
+:host {
+  display: inline-flex;
+  block-size: 1lh;
+  vertical-align: top;
+  margin-inline-start: var(--space-2xs);
+  font: var(--type-body-md-400);
+}
+
+.afi-field-help {
+  display: inline-flex;
+  align-items: center;
+}

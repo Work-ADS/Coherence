@@ -23,8 +23,12 @@ export class IconButtonComponent {
   readonly size = input<IconButtonSize>('md');
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input.required<string>();
+  /** Id of the element that describes this button (e.g. the field-help text). */
+  readonly ariaDescribedBy = input<string | null>(null);
   readonly pressed = input<boolean | null>(null);
   readonly expanded = input<boolean | null>(null);
+  /** Declared for `feedback-overlay`, which binds it; not rendered yet. */
+  readonly badge = input<number | null>(null);
   readonly wide = input<boolean>(false);
 
   readonly clicked = output<{ event: MouseEvent }>();

@@ -116,6 +116,9 @@ Order matters; each sub-chunk is one session with a plan gate. Run the Unicaja s
 
 - **Decided 1:** button, checkbox, menu, sidebar and table component-scoped tokens move from chunk 6 into chunk 5, created alongside their primitive (5a to 5f). Insight, tour, statuspill and meter tokens stay with chunk 6.
 - **Decided 3:** keep `--radius-section` (12px) and retire `--section-radius` (16px). The retire step lands with the `afi-section` deprecation in 5c; page-header switches from `--radius-lg` to `--radius-section`.
+- **Decided 2 (2026-10-15):** chart strategy follows the zip's `Chart` (multi-mode, ~45 props, plus ChartPanel, DataSection, Sparkline etc.), built as a new `afi-chart` in its own brief. The existing per-shape charts stay until it ships.
+- **Decided 4 (2026-10-15):** sidebar hover-expand and pin are not touched now. The primitive has `mode: static | collapsible | hover-expand`, but the Wealth Planner sidebar (`planner-sidebar.component.html`) uses `mode="static"`, so the planner never exercises them. Decision waits until the sidebar is built in 5e, using the sidebar flows in the second zip Richard is attaching.
+- **Decided 10 (2026-10-15):** the 44px floor is a touch *area*, not the visible size. Buttons keep the zip's 24 to 40px range on desktop; chunk 5a adds an invisible hit area to 44px (padding or pseudo-element) on the small sizes. A general responsive rule steps controls up on mobile (the zip's `--control-h-*` already goes 40/44/48 there). The product is desktop-first, so this is a safety rule, not a design driver. The rule gets written into `accessibility.md` and `component-skill.md` in 5a.
 
 ## Open decisions (Richard)
 

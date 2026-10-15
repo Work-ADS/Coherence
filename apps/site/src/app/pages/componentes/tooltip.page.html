@@ -58,6 +58,15 @@
     >
       <button class="preview__trigger">Hover me</button>
     </afi-tooltip>
+    <afi-tooltip
+      text="Determina el orden en que se venden los activos cuando falta liquidez."
+      [multiline]="true"
+      [openOnClick]="true"
+      [maxWidth]="280"
+      [position]="position()"
+    >
+      <button class="preview__trigger">Click for help text</button>
+    </afi-tooltip>
   </div>
 
   <!-- Tokens -->
@@ -69,8 +78,9 @@
     <ul class="prose-section__list">
       <li>The tooltip popup has <code>role="tooltip"</code> and a unique <code>id</code>.</li>
       <li>The trigger element receives <code>aria-describedby</code> pointing to the tooltip id — screen readers announce the tooltip content when the trigger is focused.</li>
-      <li>Tooltip dismisses on <code>Escape</code> key and on blur (via CSS <code>:focus-within</code>).</li>
-      <li>Respects <code>prefers-reduced-motion</code> — fade transition is disabled.</li>
+      <li>Tooltip dismisses on <code>Escape</code> and on blur or mouse leave. Escape is consumed once: it closes the tooltip and a dialog or drawer behind it stays open.</li>
+      <li>The bubble is portalled to <code>&lt;body&gt;</code> (or the open dialog) and positioned fixed, so a scroll container never clips it or grows a scrollbar. It follows the trigger on scroll and flips at the viewport edge.</li>
+      <li>Respects <code>prefers-reduced-motion</code> — the fade is disabled.</li>
       <li>When <code>disabled</code> is true, the tooltip DOM is not rendered and <code>aria-describedby</code> is removed.</li>
     </ul>
   </section>

@@ -648,6 +648,26 @@ export const SEMANTIC_TOKEN_MANIFEST: readonly SemanticTokenManifestEntry[] = [
     "kind": "other"
   },
   {
+    "name": "--z-drawer",
+    "kind": "other"
+  },
+  {
+    "name": "--z-modal",
+    "kind": "other"
+  },
+  {
+    "name": "--z-tooltip",
+    "kind": "other"
+  },
+  {
+    "name": "--z-toast",
+    "kind": "other"
+  },
+  {
+    "name": "--z-overlay",
+    "kind": "other"
+  },
+  {
     "name": "--feedback-success-background",
     "kind": "color"
   },

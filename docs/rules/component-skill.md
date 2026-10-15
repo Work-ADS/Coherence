@@ -307,8 +307,9 @@ Apply on top of the universal rules.
 - Control height tokens are responsive: `--control-h-sm/md/lg` are 40/44/48 below `lg` and 28/32/40 from `lg` (desktop density). Buttons, icon buttons and chips read the fixed chrome scale `--control-size-sm..2xl` (24/28/32/36/40) instead and rely on the `touch-area` mixin for the 44 px hit area.
 
 ### Overlays (Modal, Drawer, Popover, Tooltip)
-- CDK Overlay for positioning. FocusTrap on open; restore focus on close.
-- `Escape` dismisses. Click-outside dismisses (unless modal is explicitly "blocking").
+- No CDK in this repo. A layer anchored to a trigger (Select, MultiSelect, Tooltip; Menu in 5d-2) uses `FloatingPanel` from `libs/ui/src/floating-panel/`: it portals the panel to the open `<dialog>` (top layer) else `<body>`, positions it fixed, flips and clamps to the viewport, follows scroll and resize. The panel's CSS supplies `position: fixed`, a `--z-*` layer token and a vertical `margin-block` (the gap). Never hand-roll `appendChild` or a backdrop.
+- Stacking is a ladder of tokens, not numbers: `--z-dropdown` 40 < `--z-drawer` 900 < `--z-modal` 1000 < `--z-floating` 1050 < `--z-tooltip` 1100 < `--z-toast` < `--z-overlay`.
+- Restore focus on close. `Escape` dismisses once: register the open layer with `onOverlayEscape` (capture phase, marks the event `defaultPrevented`), so Tooltip over Select over Modal closes one layer per press. Modal and Drawer close only if `escapeConsumed(event)` is false. Click-outside dismisses by `mousedown` outside panel and trigger, not a backdrop element (unless modal is explicitly "blocking").
 - Scrim = `surface-overlay`.
 - `role="dialog"` + `aria-modal="true"` + `aria-labelledby` pointing at the title.
 - Reduced motion → enter/exit collapse to fade.

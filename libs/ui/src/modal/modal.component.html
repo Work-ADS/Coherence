@@ -5,6 +5,7 @@
   [attr.aria-describedby]="description() ? descriptionId : null"
   [attr.aria-label]="!title() ? ariaLabel() : null"
   (close)="onNativeClose()"
+  (cancel)="onCancel($event)"
   (click)="onBackdropClick($event)"
 >
   <div
@@ -13,33 +14,28 @@
     [class.afi-modal__panel--form]="type() === 'form'"
     (click)="$event.stopPropagation()"
   >
-    <!-- Close button -->
-    <button
-      type="button"
-      class="afi-modal__close"
-      aria-label="Cerrar"
-      (click)="close('button')"
-    >
-      <svg
-        class="afi-modal__close-icon"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
-        />
-      </svg>
-    </button>
-
-    <!-- Header -->
-    @if (title()) {
+    <!-- Header: titles and the close button share one row -->
+    @if (title() || showClose()) {
       <div class="afi-modal__header">
-        <h2 [id]="titleId" class="afi-modal__title">{{ title() }}</h2>
-        @if (description()) {
-          <p [id]="descriptionId" class="afi-modal__description">
-            {{ description() }}
-          </p>
+        <div class="afi-modal__titles">
+          @if (title()) {
+            <h2 [id]="titleId" class="afi-modal__title">{{ title() }}</h2>
+            @if (description()) {
+              <p [id]="descriptionId" class="afi-modal__description">
+                {{ description() }}
+              </p>
+            }
+          }
+        </div>
+        @if (showClose()) {
+          <button
+            type="button"
+            class="afi-modal__close"
+            aria-label="Cerrar"
+            (click)="close('button')"
+          >
+            <afi-icon class="afi-modal__close-icon" name="x" />
+          </button>
         }
       </div>
     }

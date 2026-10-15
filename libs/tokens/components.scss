@@ -98,6 +98,20 @@
 
 
   // ===========================================================================
+  // MODAL
+  // ===========================================================================
+
+  // sm / md / lg follow the Wealth Planner zip (400 / 540 / 760). xl and xxl are
+  // ours: multi-section forms and the two-pane add-asset layout.
+  --dimension-modal-sm:  var(--dimension-100);   // 400px
+  --dimension-modal-md:  var(--dimension-135);   // 540px
+  --dimension-modal-lg:  var(--dimension-190);   // 760px
+  --dimension-modal-xl:  56rem;
+  --dimension-modal-xxl: 65rem;
+  --modal-close-size: var(--control-size-lg);    // 32px
+
+
+  // ===========================================================================
   // TOOLTIP
   // ===========================================================================
 

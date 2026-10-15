@@ -28,41 +28,47 @@
   max-height: calc(100vh - var(--space-2xl));
   overflow: hidden;
 
+  // The page behind recedes a step: scrim colour plus blur (full-screen scrims only).
   &::backdrop {
-    background: var(--surface-overlay);
+    background: var(--overlay-blanket);
+    -webkit-backdrop-filter: blur(var(--overlay-blur));
+    backdrop-filter: blur(var(--overlay-blur));
   }
 
   // ─── Size variants ──────────────────────────────────────────────────────
   &--sm {
-    max-width: var(--dimension-modal-sm, 28rem);
+    max-width: var(--dimension-modal-sm);
   }
 
   &--md {
-    max-width: var(--dimension-modal-md, 32rem);
+    max-width: var(--dimension-modal-md);
   }
 
   &--lg {
-    max-width: var(--dimension-modal-lg, 42rem);
+    max-width: var(--dimension-modal-lg);
   }
 
   &--xl {
-    max-width: var(--dimension-modal-xl, 56rem);
+    max-width: var(--dimension-modal-xl);
   }
 
   // 2-pane layouts (form + preview / form + live result). Larger than xl
   // by design — reach for this only when a single pane genuinely doesn't
   // fit. Added 2026-05-28 for patrimonial's add-asset dialog.
   &--xxl {
-    max-width: var(--dimension-modal-xxl, 65rem);
+    max-width: var(--dimension-modal-xxl);
   }
 }
 
 .afi-modal__panel {
   position: relative;
   width: 100%;
-  background: var(--surface-raised);
-  border-radius: var(--radius-md);
-  box-shadow: var(--elevation-lg);
+  background: var(--overlay-modal);
+  // Flush Table headers paint the container's surface, not the page's.
+  --surface-context: var(--overlay-modal);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--elevation-xl);
+  animation: afi-modal-rise var(--duration-base) var(--easing-enter);
 
   // Flex column so the body can scroll when the modal hits its
   // `max-height` cap. Header / footer stay pinned; only the body scrolls.
@@ -92,7 +98,6 @@
 
   .afi-modal__footer {
     justify-content: flex-end;
-    border-block-start: var(--border-width-hairline) solid var(--border-subtle);
   }
 }
 
@@ -108,19 +113,25 @@
 }
 
 // ─── Close button ─────────────────────────────────────────────────────────
+// In the header row's flow, not floating over the title.
 .afi-modal__close {
-  position: absolute;
-  inset-block-start: var(--space-sm);
-  inset-inline-end: var(--space-sm);
-  padding: var(--space-2xs);
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--modal-close-size);
+  block-size: var(--modal-close-size);
+  padding: 0;
   border: 0;
   background: transparent;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-control);
   color: var(--foreground-tertiary-default);
   cursor: pointer;
-  transition: color var(--duration-fast) var(--easing-enter);
+  transition: background-color var(--duration-fast) var(--easing-enter),
+              color var(--duration-fast) var(--easing-enter);
 
   &:hover {
+    background: var(--surface-subtle);
     color: var(--foreground-primary-default);
   }
 
@@ -131,47 +142,65 @@
 }
 
 .afi-modal__close-icon {
-  display: block;
-  width: var(--dimension-5);
-  height: var(--dimension-5);
+  --afi-icon-size: var(--icon-md);
 }
 
 // ─── Header ───────────────────────────────────────────────────────────────
 .afi-modal__header {
-  padding-block-start: var(--space-lg);
-  padding-block-end: var(--space-md);
-  padding-inline: var(--space-lg);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-lg) var(--space-sm);
+}
+
+.afi-modal__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  min-inline-size: 0;
 }
 
 .afi-modal__title {
   margin: 0;
-  padding-inline-end: var(--space-2xl);
-  font: var(--type-section);
+  font: var(--type-subtitle);
   color: var(--foreground-primary-default);
 }
 
 .afi-modal__description {
-  margin: var(--space-2xs) 0 0;
+  margin: 0;
   font: var(--type-body-md-400);
-  color: var(--foreground-secondary-default);
+  color: var(--foreground-tertiary-default);
 }
 
 // ─── Body ─────────────────────────────────────────────────────────────────
 .afi-modal__body {
-  padding-block: var(--space-md);
+  padding-block: 0;
   padding-inline: var(--space-lg);
 }
 
 // ─── Footer ───────────────────────────────────────────────────────────────
 .afi-modal__footer {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: var(--space-sm);
-  padding-block: var(--space-md);
-  padding-inline: var(--space-lg);
-  border-block-start: var(--border-width-hairline) solid var(--border-subtle);
+  padding: var(--space-lg);
 
   &:empty {
     display: none;
+  }
+}
+
+@keyframes afi-modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-xs)) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afi-modal__panel {
+    animation: none;
   }
 }

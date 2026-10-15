@@ -1,13 +1,12 @@
 @if (dot()) {
-  <span
-    [class]="dotClasses()"
-    role="status"
-    [attr.aria-label]="ariaLabel()"
-  ></span>
+  <span [class]="dotClasses()" role="img" [attr.aria-label]="ariaLabel()"></span>
 } @else {
-  <span [class]="classes()" role="status">
-    @if (icon()) {
-      <span class="inline-flex shrink-0" aria-hidden="true">{{ icon() }}</span>
+  <span [class]="classes()">
+    @if (indicator()) {
+      <span class="afi-badge__indicator" aria-hidden="true"></span>
+    }
+    @if (icon(); as iconName) {
+      <afi-icon class="afi-badge__icon" [name]="iconName" />
     }
     <ng-content />
   </span>

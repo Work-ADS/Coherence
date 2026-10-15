@@ -1,0 +1,123 @@
+// =============================================================================
+// afi-badge — small label for counts, categories and metadata.
+// BEM classes, DS tokens via CSS custom properties only.
+// =============================================================================
+
+:host {
+  display: inline-flex;
+}
+
+.afi-badge {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  gap: var(--space-2xs);
+  block-size: var(--dimension-5);
+  padding-inline: var(--space-xs);
+  border-radius: var(--radius-pill);
+  font: var(--type-body-sm-600);
+  white-space: nowrap;
+
+  &--sm {
+    block-size: var(--dimension-4);
+    padding-inline: var(--dimension-1-5);
+    font: var(--type-body-sm-500);
+  }
+
+  // ─── Tones (soft) ────────────────────────────────────────────────────────
+  &--neutral {
+    background: var(--surface-subtle);
+    color: var(--foreground-secondary-default);
+  }
+
+  &--brand {
+    background: var(--brand-secondary-neutral-background-default);
+    color: var(--brand-secondary-neutral-foreground-default);
+  }
+
+  &--success {
+    background: var(--feedback-success-background);
+    color: var(--feedback-success-foreground);
+  }
+
+  // Warning text uses the text-strength step (900): the 700 foreground is over
+  // the contrast floor for small text, but without margin.
+  &--warning {
+    background: var(--feedback-warning-background);
+    color: var(--feedback-warning-text);
+  }
+
+  &--error {
+    background: var(--feedback-error-background);
+    color: var(--feedback-error-foreground);
+  }
+
+  &--info {
+    background: var(--feedback-info-background);
+    color: var(--feedback-info-foreground);
+  }
+
+  // ─── Variants ────────────────────────────────────────────────────────────
+  &--solid#{&}--brand {
+    background: var(--brand-secondary-background-default);
+    color: var(--brand-secondary-foreground-default);
+  }
+
+  &--solid#{&}--error {
+    background: var(--button-danger-background-default);
+    color: var(--button-danger-foreground);
+  }
+
+  &--outline {
+    background: transparent;
+    box-shadow: inset 0 0 0 var(--border-width-hairline) currentColor;
+  }
+}
+
+// ─── Bare status dot: no text, no pill ─────────────────────────────────────
+.afi-badge--dot {
+  inline-size: var(--dimension-2);
+  block-size: var(--dimension-2);
+  padding: 0;
+  border-radius: var(--radius-full);
+  background: var(--foreground-tertiary-default);
+
+  &.afi-badge--brand {
+    background: var(--brand-secondary-background-default);
+  }
+
+  &.afi-badge--success {
+    background: var(--feedback-success-foreground);
+  }
+
+  &.afi-badge--warning {
+    background: var(--feedback-warning-indicator);
+  }
+
+  &.afi-badge--error {
+    background: var(--feedback-error-foreground);
+  }
+
+  &.afi-badge--info {
+    background: var(--feedback-info-foreground);
+  }
+}
+
+// A leading dot inside the pill, in the badge's own ink so it adds no colour.
+.afi-badge__indicator {
+  flex: none;
+  inline-size: var(--dimension-1-5);
+  block-size: var(--dimension-1-5);
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+// The warning dot is the indicator step (500), not the 900 text ink.
+.afi-badge--warning .afi-badge__indicator {
+  background: var(--feedback-warning-indicator);
+}
+
+.afi-badge__icon {
+  --afi-icon-size: var(--icon-xs);
+  flex: none;
+}

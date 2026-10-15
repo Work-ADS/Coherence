@@ -135,7 +135,7 @@ export { StatusChipComponent } from './src/status-chip';
 export type { Estado, StatusChipSize, StatusChipVariant } from './src/status-chip';
 export { estadoLabels } from './src/status-chip';
 export { BadgeComponent } from './src/badge';
-export type { BadgeIntent, BadgeSize } from './src/badge';
+export type { BadgeIntent, BadgeSize, BadgeTone, BadgeVariant } from './src/badge';
 export { LoadingOverlayComponent } from './src/loading-overlay';
 export type { LoadingOverlayVariant } from './src/loading-overlay';
 export { ToastV2Component } from './src/toast-v2';

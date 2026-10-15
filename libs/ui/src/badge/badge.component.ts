@@ -1,39 +1,53 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  computed,
-  input,
-} from '@angular/core';
-import {
-  baseClasses,
-  sizeClasses,
-  intentClasses,
-  dotIntentClasses,
-} from './badge.variants';
-import type { BadgeIntent, BadgeSize } from './badge.variants';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
+import { IconComponent } from '../icon';
+import type { IconName } from '../icon';
+
+import type { BadgeIntent, BadgeSize, BadgeTone, BadgeVariant } from './badge.variants';
+
+/**
+ * Badge: a small label for counts, categories and metadata. For workflow
+ * states use `afi-status-chip`.
+ *
+ * A badge is static text: it is not a live region (a table of badges must not
+ * announce itself). Only the bare `dot` form carries a role, `img`, because it
+ * has no text of its own and so needs `ariaLabel`.
+ *
+ * - `tone` sets the colour meaning; `intent` is the old name for it.
+ * - `indicator` draws a leading dot inside the pill, in the badge's ink.
+ * - `dot` renders a bare status dot instead of the pill.
+ */
 @Component({
   selector: 'afi-badge',
   standalone: true,
+  imports: [IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './badge.component.html',
+  styleUrls: ['./badge.component.scss'],
 })
 export class BadgeComponent {
+  readonly tone = input<BadgeTone | null>(null);
+  /** @deprecated Use `tone`. */
   readonly intent = input<BadgeIntent>('neutral');
+  readonly variant = input<BadgeVariant>('soft');
   readonly size = input<BadgeSize>('md');
+  /** A bare status dot instead of the pill. Needs `ariaLabel`. */
   readonly dot = input(false);
-  readonly icon = input<string | null>(null);
+  /** A leading dot inside the pill. */
+  readonly indicator = input(false);
+  /** Glyph from the `afi-icon` set, before the label. */
+  readonly icon = input<IconName | null>(null);
   readonly ariaLabel = input<string | null>(null);
 
-  protected readonly classes = computed(() =>
-    [
-      baseClasses,
-      sizeClasses[this.size()],
-      intentClasses[this.intent()],
-    ].join(' '),
-  );
+  protected readonly resolvedTone = computed<BadgeTone>(() => this.tone() ?? this.intent());
 
-  protected readonly dotClasses = computed(() =>
-    ['inline-block w-2 h-2 rounded-full', dotIntentClasses[this.intent()]].join(' '),
+  protected readonly classes = computed(() => {
+    const parts = ['afi-badge', `afi-badge--${this.resolvedTone()}`, `afi-badge--${this.size()}`];
+    if (this.variant() !== 'soft') parts.push(`afi-badge--${this.variant()}`);
+    return parts.join(' ');
+  });
+
+  protected readonly dotClasses = computed(
+    () => `afi-badge afi-badge--dot afi-badge--${this.resolvedTone()}`,
   );
 }

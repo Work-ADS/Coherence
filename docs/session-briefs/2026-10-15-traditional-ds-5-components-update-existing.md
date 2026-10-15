@@ -63,3 +63,4 @@ Bring the 41 v1 primitives in `libs/ui/src/` to the zip's look and API, in six s
 - **5c-1 (display, small primitives) done 2026-10-15** on `traditional-ds-5c-display`: badge, status-chip, avatar (+ group), card, `afi-section` deprecation. Page-header (5c-2) is next. See the [5c brief](2026-10-15-traditional-ds-5c-display.md).
 - **5c-2 (page header) done 2026-10-15** on `traditional-ds-5c-display`, except the h1 title look, which waits for review as its own unpushed commit. See the [5c brief](2026-10-15-traditional-ds-5c-display.md).
 
+- **5d (overlays) planned 2026-10-15** on `traditional-ds-5d-overlays`: split into 5d-1 (protocol, floating panel, Tooltip), 5d-2 (Menu and panels), 5d-3 (Modal, Toast, Loading overlay), 5d-4 (Drawer rewrite). See the [5d brief](2026-10-15-traditional-ds-5d-overlays.md).

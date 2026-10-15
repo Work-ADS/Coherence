@@ -6,19 +6,21 @@
 .menu__backdrop {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: var(--z-dropdown);
 }
 
 .menu__panel {
   position: absolute;
-  z-index: 50;
-  min-width: 12rem;
-  padding: var(--space-2xs) 0;
-  background: var(--surface-raised);
+  z-index: var(--z-floating);
+  min-inline-size: var(--dimension-31);
+  max-inline-size: var(--dimension-80);
+  padding: var(--space-2xs);
+  background: var(--overlay-dropdown);
   border: var(--border-width-hairline) solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  box-shadow: var(--elevation-md);
-  animation: menu-enter var(--duration-fast) var(--easing-enter);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--elevation-lg);
+  transform-origin: top center;
+  animation: menu-extrude var(--duration-fast) var(--easing-enter) both;
 
   /* Placement modifiers — apply only when NOT anchored (i.e. when the
      panel positions absolutely relative to the menu host). Anchored mode
@@ -35,23 +37,43 @@
      component) so it escapes ancestor overflow clipping. Raise z-index
      above app chrome (sidebars, top bars) so it lays over everything. */
   &--anchored {
-    z-index: 1000;
+    z-index: var(--z-floating);
   }
 }
 
-@keyframes menu-enter {
+// The panel unrolls from its trigger edge: from the top for a panel below,
+// from the bottom for one above.
+@keyframes menu-extrude {
   from {
-    opacity: 0;
-    transform: translateY(calc(-1 * var(--space-2xs)));
+    clip-path: inset(0 calc(-1 * var(--space-lg)) 100% calc(-1 * var(--space-lg)));
+    transform: translateY(calc(-1 * var(--space-3xs)));
   }
   to {
-    opacity: 1;
+    clip-path: inset(calc(-1 * var(--space-lg)));
     transform: translateY(0);
   }
+}
+
+@keyframes menu-extrude-up {
+  from {
+    clip-path: inset(100% calc(-1 * var(--space-lg)) 0 calc(-1 * var(--space-lg)));
+    transform: translateY(var(--space-3xs));
+  }
+  to {
+    clip-path: inset(calc(-1 * var(--space-lg)));
+    transform: translateY(0);
+  }
+}
+
+.menu__panel.placement-top-start,
+.menu__panel.placement-top-end {
+  transform-origin: bottom center;
+  animation-name: menu-extrude-up;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .menu__panel {
     animation: none;
+    clip-path: none;
   }
 }

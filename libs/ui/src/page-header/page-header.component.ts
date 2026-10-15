@@ -28,7 +28,7 @@ let nextId = 0;
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
   host: {
-    'role': 'banner',
+    '[attr.role]': "level() === 'page' ? 'banner' : null",
     '[id]': 'computedId()',
     '[class]': 'hostClasses()',
     '[attr.aria-label]': 'computedAriaLabel()',
@@ -92,15 +92,12 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
     this.level() === 'page' ? 'page-header' : null,
   );
 
-  protected readonly computedAriaLabel = computed(() => {
-    const custom = this.ariaLabel();
-    if (custom) return custom;
-    switch (this.level()) {
-      case 'section': return 'Encabezado de sección';
-      case 'subsection': return 'Encabezado de subsección';
-      default: return 'Encabezado de página';
-    }
-  });
+  // Only the page header is a landmark. A section or subsection header is not a
+  // banner, and an aria-label on a role-less element is ignored, so those carry none
+  // (a collapsible one is named through its button, see `ariaLabel` in the template).
+  protected readonly computedAriaLabel = computed(() =>
+    this.level() === 'page' ? (this.ariaLabel() ?? 'Encabezado de página') : null,
+  );
 
   protected readonly hostClasses = computed(() => {
     const parts = [

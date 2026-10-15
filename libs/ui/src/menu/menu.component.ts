@@ -1,197 +1,101 @@
 import {
-  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
-  contentChildren,
   effect,
   ElementRef,
-  HostListener,
   inject,
   input,
+  OnDestroy,
   output,
-  signal,
+  viewChild,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 
+import { FloatingPanel, onOverlayEscape } from '../floating-panel';
+import type { FloatingAlign, FloatingSide } from '../floating-panel';
 import type { MenuPlacement } from './menu.variants';
-import { MenuItemComponent } from './menu-item.component';
 
-interface AnchoredCoords {
-  top?: number;
-  left?: number;
-  right?: number;
-  bottom?: number;
-  minWidth?: number;
-}
+const PLACEMENT: Record<MenuPlacement, { side: FloatingSide; align: FloatingAlign }> = {
+  'bottom-start': { side: 'bottom', align: 'start' },
+  'bottom-end': { side: 'bottom', align: 'end' },
+  'top-start': { side: 'top', align: 'start' },
+  'top-end': { side: 'top', align: 'end' },
+  'right-start': { side: 'right', align: 'start' },
+  'left-start': { side: 'left', align: 'start' },
+};
 
 /**
  * Contextual action menu overlay.
  *
- * Positions itself relative to a trigger element. Manages open state,
- * focus, keyboard navigation, and dismiss behavior.
+ * The panel is portalled and positioned by `FloatingPanel` (to the open dialog
+ * or `<body>`, fixed, flipped and clamped to the viewport, following scroll),
+ * so no scroll container or transformed ancestor can clip or move it.
  *
- * **Anchor mode** (added 2026-05-28): pass `[anchor]="triggerElement"`
- * and the panel switches to `position: fixed` with coordinates computed
- * from the anchor's `getBoundingClientRect()`. This escapes ancestor
- * `overflow: hidden / auto` clipping — required when the menu is rendered
- * inside a scrolling table (`<afi-table>`) or any container that would
- * otherwise crop the panel. On scroll/resize the menu auto-dismisses
- * (cheaper than re-anchoring; matches the Notion / Linear UX where a
- * menu disappears the moment the page moves).
+ * **Anchor.** Pass `[anchor]="triggerElement"` (the element that opened it) so
+ * the panel lines up with it and a click on the trigger toggles instead of
+ * dismissing and reopening. Without `anchor` the panel sits against the menu
+ * host, and the host's parent counts as the trigger area.
  *
- * Without `anchor` set, the panel keeps the original `position: absolute`
- * behavior relative to the menu host — preserves every existing consumer.
+ * Keyboard: opens with focus on the first enabled row; arrows wrap, Home/End,
+ * Enter/Space activate the row, Tab dismisses. Escape closes only this menu
+ * (a dialog or drawer behind it stays open) and focus returns to the opener.
  */
 @Component({
   selector: 'afi-menu',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss',
-  template: `
-    @if (open()) {
-      <!-- Backdrop for click-outside dismiss -->
-      <div
-        class="menu__backdrop"
-        (click)="dismiss('click-outside')"
-        aria-hidden="true">
-      </div>
-
-      <!-- Menu panel -->
-      <div
-        role="menu"
-        [attr.aria-label]="ariaLabel()"
-        aria-orientation="vertical"
-        [class]="panelClasses()"
-        [style.position]="anchor() ? 'fixed' : null"
-        [style.top.px]="anchoredCoords()?.top ?? null"
-        [style.left.px]="anchoredCoords()?.left ?? null"
-        [style.right.px]="anchoredCoords()?.right ?? null"
-        [style.bottom.px]="anchoredCoords()?.bottom ?? null"
-        [style.min-width.px]="anchoredCoords()?.minWidth ?? null"
-        (keydown)="onKeydown($event)">
-        <ng-content />
-      </div>
-    }
-  `,
 })
-export class MenuComponent {
+export class MenuComponent implements OnDestroy {
   readonly open = input<boolean>(false);
   readonly placement = input<MenuPlacement>('bottom-start');
   readonly ariaLabel = input<string>('Context menu');
-  /**
-   * Optional trigger element. When set, the menu switches to
-   * `position: fixed` + JS-computed coordinates so it escapes any
-   * ancestor overflow clipping. Pass the trigger button via a template
-   * reference variable (`#triggerRef`) → `[anchor]="triggerRef"`.
-   */
+  /** The element that opened the menu (pass the trigger button). */
   readonly anchor = input<HTMLElement | null>(null);
   /**
-   * When true (and `anchor` is set), the panel's `min-width` is set to the
-   * anchor's measured width at open time. The menu can still grow wider for
-   * long item labels but never collapses narrower than the trigger.
+   * When true the panel is never narrower than the anchor. It can still grow
+   * wider for long item labels.
    */
   readonly matchAnchorWidth = input<boolean>(false);
 
   readonly openChange = output<boolean>();
   readonly dismissed = output<'escape' | 'click-outside' | 'item-select'>();
 
-  private readonly items = contentChildren(MenuItemComponent, { descendants: true });
-  private readonly focusedIndex = signal(-1);
-  private readonly el = inject(ElementRef);
-  private readonly doc = inject(DOCUMENT);
-
-  /**
-   * Coordinates for the panel when in anchor (fixed-position) mode.
-   * Recomputed on every open() flip. Only the relevant pair of edges is
-   * set per placement so the panel can size naturally.
-   */
-  private readonly anchorRect = signal<DOMRect | null>(null);
-
-  readonly anchoredCoords = computed<AnchoredCoords | null>(() => {
-    const a = this.anchor();
-    if (!a) return null;
-    const rect = this.anchorRect();
-    if (!rect) return null;
-    const gap = 4; // matches the original `margin-top: --space-2xs`
-    const minWidth = this.matchAnchorWidth() ? rect.width : undefined;
-    switch (this.placement()) {
-      case 'bottom-end':
-        return {
-          top: rect.bottom + gap,
-          right: window.innerWidth - rect.right,
-          minWidth,
-        };
-      case 'bottom-start':
-        return { top: rect.bottom + gap, left: rect.left, minWidth };
-      case 'top-end':
-        return {
-          bottom: window.innerHeight - rect.top + gap,
-          right: window.innerWidth - rect.right,
-          minWidth,
-        };
-      case 'top-start':
-        return { bottom: window.innerHeight - rect.top + gap, left: rect.left, minWidth };
-      case 'right-start':
-        return { top: rect.top, left: rect.right + gap, minWidth };
-      case 'left-start':
-        return { top: rect.top, right: window.innerWidth - rect.left + gap, minWidth };
-    }
-  });
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly panelRoot = viewChild<ElementRef<HTMLElement>>('panelRoot');
+  private readonly floating = new FloatingPanel();
+  private disposeEscape: (() => void) | null = null;
+  private opener: HTMLElement | null = null;
+  private shown = false;
 
   readonly panelClasses = computed(() => {
-    const base = `menu__panel placement-${this.placement()}`;
-    return this.anchor() ? `${base} menu__panel--anchored` : base;
+    const parts = ['menu__panel', `placement-${this.placement()}`];
+    if (this.matchAnchorWidth()) parts.push('menu__panel--match');
+    return parts.join(' ');
   });
 
   constructor() {
-    // Whenever the menu opens with an anchor, sample the anchor's rect.
-    // Closing clears the rect so the next open re-measures fresh.
     effect(() => {
-      const isOpen = this.open();
-      const a = this.anchor();
-      if (isOpen && a) {
-        this.anchorRect.set(a.getBoundingClientRect());
-      } else {
-        this.anchorRect.set(null);
+      const panel = this.panelRoot()?.nativeElement;
+      if (!panel) {
+        this.release();
+        return;
       }
-    });
-
-    // Portal the panel + backdrop to `document.body` when anchored. Without
-    // this, `position: fixed` is trapped by any transformed ancestor (e.g.
-    // patrimonial's `.tab-panel { transform: translateX(...) }` animation
-    // turns `.tab-panel` into the containing block for `fixed`). Yanking the
-    // elements to `body` escapes the whole subtree.
-    //
-    // Runs as an afterRenderEffect so the @if-rendered panel exists in the
-    // DOM before we move it. `@if` removes the element when open flips
-    // false — Angular still owns the lifecycle, the body parent is just an
-    // intermediate location.
-    afterRenderEffect(() => {
-      if (!this.open() || !this.anchor()) return;
-      const host = this.el.nativeElement as HTMLElement;
-      const panel = host.querySelector('.menu__panel') as HTMLElement | null;
-      const backdrop = host.querySelector('.menu__backdrop') as HTMLElement | null;
-      const body = this.doc.body;
-      if (panel && panel.parentElement !== body) body.appendChild(panel);
-      if (backdrop && backdrop.parentElement !== body) body.appendChild(backdrop);
+      const { side, align } = PLACEMENT[this.placement()];
+      const anchor = this.anchor() ?? this.host;
+      this.floating.attach(panel, anchor, { side, align, onOutside: (event) => this.onOutside(event) });
+      this.disposeEscape ??= onOverlayEscape(() => this.dismiss('escape'));
+      if (!this.shown) {
+        this.shown = true;
+        this.opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        this.enabledRows(panel)[0]?.focus();
+      }
     });
   }
 
-  /**
-   * Auto-dismiss on window scroll / resize when anchored — cheaper than
-   * re-anchoring continuously, and matches the Notion / Linear UX.
-   */
-  @HostListener('window:scroll', ['$event'])
-  @HostListener('window:resize')
-  onWindowMove(event?: Event): void {
-    if (!this.open() || !this.anchor()) return;
-    // Ignore scroll events from inside the menu itself.
-    const target = event?.target as HTMLElement | Document | null;
-    if (target && 'closest' in target && target instanceof HTMLElement) {
-      if (target.closest('.menu__panel')) return;
-    }
-    this.dismiss('click-outside');
+  ngOnDestroy(): void {
+    this.release();
   }
 
   dismiss(reason: 'escape' | 'click-outside' | 'item-select'): void {
@@ -199,35 +103,23 @@ export class MenuComponent {
     this.dismissed.emit(reason);
   }
 
-  @HostListener('document:keydown.escape')
-  onEscape(): void {
-    if (this.open()) {
-      this.dismiss('escape');
-    }
-  }
-
   onKeydown(event: KeyboardEvent): void {
-    const itemList = this.items().filter(i => !i.disabled());
-    if (!itemList.length) return;
-
-    let idx = this.focusedIndex();
-
+    const rows = this.enabledRows(event.currentTarget as HTMLElement);
+    if (!rows.length) return;
+    const current = rows.indexOf(document.activeElement as HTMLElement);
+    let next: number;
     switch (event.key) {
       case 'ArrowDown':
-        event.preventDefault();
-        idx = idx < itemList.length - 1 ? idx + 1 : 0;
+        next = current < rows.length - 1 ? current + 1 : 0;
         break;
       case 'ArrowUp':
-        event.preventDefault();
-        idx = idx > 0 ? idx - 1 : itemList.length - 1;
+        next = current > 0 ? current - 1 : rows.length - 1;
         break;
       case 'Home':
-        event.preventDefault();
-        idx = 0;
+        next = 0;
         break;
       case 'End':
-        event.preventDefault();
-        idx = itemList.length - 1;
+        next = rows.length - 1;
         break;
       case 'Tab':
         this.dismiss('escape');
@@ -235,10 +127,35 @@ export class MenuComponent {
       default:
         return;
     }
+    event.preventDefault();
+    rows[next]?.focus();
+  }
 
-    this.focusedIndex.set(idx);
-    const el = this.el.nativeElement as HTMLElement;
-    const buttons = el.querySelectorAll<HTMLElement>('afi-menu-item button:not([disabled])');
-    buttons[idx]?.focus();
+  // The trigger (or, without an anchor, the host's parent) is not "outside": its
+  // own click toggles the menu, and dismissing on mousedown would reopen it.
+  private onOutside(event: MouseEvent): void {
+    const target = event.target as Node | null;
+    if (!this.anchor() && target && this.host.parentElement?.contains(target)) return;
+    this.dismiss('click-outside');
+  }
+
+  private enabledRows(panel: HTMLElement): HTMLElement[] {
+    return Array.from(panel.querySelectorAll<HTMLElement>('[role="menuitem"]:not([disabled])'));
+  }
+
+  private release(): void {
+    const panel = this.panelRoot()?.nativeElement;
+    // Focus that was inside the panel is lost when it goes; hand it back.
+    const hadFocus = !!panel && panel.contains(document.activeElement);
+    this.floating.detach();
+    this.disposeEscape?.();
+    this.disposeEscape = null;
+    if (this.shown) {
+      this.shown = false;
+      if ((hadFocus || document.activeElement === document.body) && this.opener?.isConnected) {
+        this.opener.focus();
+      }
+      this.opener = null;
+    }
   }
 }

@@ -3,13 +3,16 @@ import {
   Component,
   input,
   output,
-  HostListener,
 } from '@angular/core';
 
 import type { MenuItemVariant } from './menu.variants';
 
 /**
  * Single action row inside `<afi-menu>`.
+ *
+ * The host is a plain wrapper (`role="none"`); the one interactive element is
+ * the inner `<button role="menuitem">`, so Enter and Space activate it once
+ * through the native click.
  *
  * Slots:
  * - `[slot=icon]` — leading icon (shown only when `iconStart` is truthy)
@@ -29,54 +32,9 @@ import type { MenuItemVariant } from './menu.variants';
   selector: 'afi-menu-item',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './menu-item.component.html',
   styleUrl: './menu-item.component.scss',
-  host: {
-    role: 'menuitem',
-    tabindex: '-1',
-    '[attr.aria-disabled]': 'disabled() || null',
-    '[attr.aria-label]': 'ariaLabel()',
-  },
-  template: `
-    <button
-      type="button"
-      class="menu-item"
-      [class.is-danger]="variant() === 'danger'"
-      [class.is-disabled]="disabled()"
-      [class.has-secondary]="!!secondaryLabel()"
-      [disabled]="disabled()"
-      (click)="onClick($event)">
-      <!-- Leading icon -->
-      @if (iconStart()) {
-        <span class="menu-item__icon">
-          <ng-content select="[slot=icon]" />
-        </span>
-      }
-
-      <!-- Label group (primary + optional secondary line) -->
-      <span class="menu-item__label-group">
-        @if (label()) {
-          <span class="menu-item__label">{{ label() }}</span>
-        } @else {
-          <span class="menu-item__label menu-item__label--slot">
-            <ng-content select="[slot=label]" />
-          </span>
-        }
-        @if (secondaryLabel()) {
-          <span class="menu-item__secondary-label">{{ secondaryLabel() }}</span>
-        }
-      </span>
-
-      <!-- Shortcut hint -->
-      @if (shortcut()) {
-        <span class="menu-item__shortcut">{{ shortcut() }}</span>
-      }
-
-      <!-- Trailing slot (e.g. check icon for selected, badge) -->
-      <span class="menu-item__trailing">
-        <ng-content select="[slot=trailing]" />
-      </span>
-    </button>
-  `,
+  host: { role: 'none' },
 })
 export class MenuItemComponent {
   readonly iconStart = input<string | null>(null);
@@ -91,15 +49,6 @@ export class MenuItemComponent {
 
   onClick(event: MouseEvent): void {
     if (!this.disabled()) {
-      this.clicked.emit({ event });
-    }
-  }
-
-  @HostListener('keydown.enter', ['$event'])
-  @HostListener('keydown.space', ['$event'])
-  onKeyActivate(event: Event): void {
-    if (!this.disabled()) {
-      event.preventDefault();
       this.clicked.emit({ event });
     }
   }

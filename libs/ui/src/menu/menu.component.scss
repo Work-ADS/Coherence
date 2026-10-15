@@ -3,15 +3,12 @@
   display: inline-block;
 }
 
-.menu__backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-dropdown);
-}
-
 .menu__panel {
-  position: absolute;
+  // Fixed, portalled and placed by FloatingPanel. The margin is the gap to the
+  // trigger; FloatingPanel reads it. Placement classes only pick the unroll direction.
+  position: fixed;
   z-index: var(--z-floating);
+  margin: var(--space-2xs);
   min-inline-size: var(--dimension-31);
   max-inline-size: var(--dimension-80);
   padding: var(--space-2xs);
@@ -22,22 +19,8 @@
   transform-origin: top center;
   animation: menu-extrude var(--duration-fast) var(--easing-enter) both;
 
-  /* Placement modifiers — apply only when NOT anchored (i.e. when the
-     panel positions absolutely relative to the menu host). Anchored mode
-     uses inline `top/left/right/bottom` styles set from JS, so we skip
-     these. */
-  &:not(.menu__panel--anchored) {
-    &.placement-bottom-start { left: 0; top: 100%; margin-top: var(--space-2xs); }
-    &.placement-bottom-end   { right: 0; top: 100%; margin-top: var(--space-2xs); }
-    &.placement-top-start    { left: 0; bottom: 100%; margin-bottom: var(--space-2xs); }
-    &.placement-top-end      { right: 0; bottom: 100%; margin-bottom: var(--space-2xs); }
-  }
-
-  /* Anchored mode: panel is `position: fixed` (set inline from the
-     component) so it escapes ancestor overflow clipping. Raise z-index
-     above app chrome (sidebars, top bars) so it lays over everything. */
-  &--anchored {
-    z-index: var(--z-floating);
+  &--match {
+    min-inline-size: max(var(--dimension-31), var(--floating-anchor-width, 0));
   }
 }
 

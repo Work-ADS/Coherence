@@ -1,2 +1,2 @@
 export { CardComponent } from './card.component';
-export type { CardVariant, CardPadding } from './card.variants';
+export type { CardVariant, CardPadding, CardElevation } from './card.variants';

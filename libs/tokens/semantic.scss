@@ -704,6 +704,7 @@
   --section-padding-inline: var(--dimension-4);  // 16 px (static, per Figma 466:28470)
   --section-padding-block:  var(--dimension-4);  // 16 px
   --section-gap:            var(--dimension-6);  // 24 px header → body
+  // @deprecated: only afi-section reads it (deprecated, versioned blog snapshots). Use --radius-section.
   --section-radius:         var(--radius-xl);    // 16 px
   --section-space-after:    var(--space-2xl);   // 48 — below an H2 PageSection
   --subsection-space-after: var(--space-xl);    // 32 — below an H3 PageSection

@@ -7,8 +7,15 @@
 .preview {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
   justify-content: center;
-  min-width: var(--dimension-80);
   width: 100%;
   padding: var(--space-2xl);
+
+  &__text {
+    margin: 0;
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+  }
 }

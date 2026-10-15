@@ -17,10 +17,13 @@ const VISUAL_CATEGORY: DocTokenCategory = {
     { property: 'Fondo (elevated)', token: '--surface-raised', semantic: '--surface-raised', primitive: 'AFI Gris 0' },
     { property: 'Fondo (quiet)', token: '--surface-default', semantic: '--surface-default', primitive: 'AFI White 25' },
     { property: 'Sombra (elevated)', token: '--elevation-sm', semantic: '--elevation-sm' },
-    { property: 'Sombra hover (interactive)', token: '--elevation-md', semantic: '--elevation-md' },
-    { property: 'Foco (interactive)', token: '--border-focus', semantic: '--border-focus', note: '--space-2xs offset' },
-    { property: 'Radio', token: '--radius-md', semantic: '--radius-md' },
-    { property: 'Transición', token: '--duration-fast / --easing-enter' },
+    { property: 'Sombra hover (interactive)', token: '--elevation-card-hover', semantic: '--elevation-card-hover', note: 'sube 2 px' },
+    { property: 'Sombra (on-brand)', token: '--elevation-card-on-brand', semantic: '--elevation-card-on-brand' },
+    { property: 'Borde (bordered)', token: '--border-subtle', semantic: '--border-subtle' },
+    { property: 'Foco (interactive)', token: '--border-focus', semantic: '--border-focus', note: 'anillo de 2 px' },
+    { property: 'Radio', token: '--radius-card', semantic: '--radius-card' },
+    { property: 'Radio (bordered)', token: '--radius-section', semantic: '--radius-section' },
+    { property: 'Transición', token: '--duration-base / --easing-standard' },
   ],
 };
 
@@ -40,6 +43,8 @@ const VARIANT_OPTIONS = [
   { value: 'default', label: 'Default' },
   { value: 'elevated', label: 'Elevated' },
   { value: 'quiet', label: 'Quiet' },
+  { value: 'subtle', label: 'Subtle (= default)' },
+  { value: 'raised', label: 'Raised (= elevated)' },
 ];
 
 const PADDING_OPTIONS = [
@@ -65,6 +70,7 @@ const PADDING_OPTIONS = [
 export class CardPage {
   readonly variant = signal<CardVariant>('default');
   readonly padding = signal<CardPadding>('md');
+  readonly clicks = signal(0);
 
   readonly variantOptions = VARIANT_OPTIONS;
   readonly paddingOptions = PADDING_OPTIONS;

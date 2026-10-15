@@ -7,7 +7,7 @@ import {
   output,
 } from '@angular/core';
 
-import type { CardVariant, CardPadding } from './card.variants';
+import type { CardElevation, CardPadding, CardVariant } from './card.variants';
 
 /**
  * Card primitive.
@@ -16,6 +16,10 @@ import type { CardVariant, CardPadding } from './card.variants';
  *   • [slot=header]  — top region (auto-collapsed when empty)
  *   • default        — body
  *   • [slot=footer]  — bottom region (auto-collapsed when empty)
+ *
+ * `eyebrow` and `title` draw a standard header; `[slot=actions]` sits at its
+ * right edge. Body padding: the zip's default (24) is `padding="lg"`, its
+ * `tight` (16) is `padding="md"`.
  *
  * The host element IS the visual card surface. Surface tint (no border)
  * per Richard 2026-06-10. See card.component.scss for variant + padding
@@ -37,10 +41,17 @@ import type { CardVariant, CardPadding } from './card.variants';
 export class CardComponent {
   readonly variant = input<CardVariant>('default');
   readonly padding = input<CardPadding>('md');
+  /** A hairline border and the section radius (a card standing on its own). */
+  readonly bordered = input<boolean>(false);
+  readonly elevation = input<CardElevation>('default');
+  readonly eyebrow = input<string | null>(null);
+  readonly title = input<string | null>(null);
   readonly interactive = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
 
   readonly clicked = output<{ event: MouseEvent | KeyboardEvent }>();
+
+  protected readonly titled = computed(() => !!this.eyebrow() || !!this.title());
 
   protected readonly hostClasses = computed(() => {
     const parts = [
@@ -48,6 +59,8 @@ export class CardComponent {
       `afi-card--${this.variant()}`,
       `afi-card--padding-${this.padding()}`,
     ];
+    if (this.bordered()) parts.push('afi-card--bordered');
+    if (this.elevation() === 'on-brand') parts.push('afi-card--on-brand');
     if (this.interactive()) parts.push('afi-card--interactive');
     return parts.join(' ');
   });

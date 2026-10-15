@@ -8,7 +8,16 @@
  * default variant now uses `--surface-subtle` (AFI Gris 25), no border.
  */
 
-export type CardVariant = 'default' | 'elevated' | 'quiet';
+/**
+ * `default`, `elevated` and `quiet` are ours. The zip names are accepted as
+ * aliases: `subtle` is our `default` (surface-subtle) and `raised` is our
+ * `elevated`. The zip's own `default` (a flat surface-default card) is our
+ * `quiet`; the names swap in a later pass, once the last consumer moves.
+ */
+export type CardVariant = 'default' | 'elevated' | 'quiet' | 'subtle' | 'raised';
+
+/** `on-brand`: a shadow tinted toward the brand hue, for a card on a coloured ground. */
+export type CardElevation = 'default' | 'on-brand';
 export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
 
 export const tokenUsage = [
@@ -16,15 +25,18 @@ export const tokenUsage = [
   { property: 'Fondo (elevated)', token: 'var(--surface-raised)' },
   { property: 'Fondo (quiet)', token: 'var(--surface-default)' },
   { property: 'Sombra (elevated)', token: 'var(--elevation-sm)' },
-  { property: 'Sombra hover (interactive)', token: 'var(--elevation-md)' },
-  { property: 'Foco', token: 'var(--border-focus)', note: '--space-2xs offset' },
-  { property: 'Radio', token: 'var(--radius-md)' },
+  { property: 'Sombra hover (interactive)', token: 'var(--elevation-card-hover)', note: 'sube 2 px' },
+  { property: 'Sombra (on-brand)', token: 'var(--elevation-card-on-brand)' },
+  { property: 'Borde (bordered)', token: 'var(--border-subtle)' },
+  { property: 'Foco', token: 'var(--border-focus)', note: 'anillo de 2 px' },
+  { property: 'Radio', token: 'var(--radius-card)' },
+  { property: 'Radio (bordered)', token: 'var(--radius-section)' },
   {
     property: 'Padding (sm/md/lg)',
     token: 'var(--space-sm) / var(--space-md) / var(--space-lg)',
   },
   {
     property: 'Transición',
-    token: 'var(--duration-fast) var(--easing-enter)',
+    token: 'var(--duration-base) var(--easing-standard)',
   },
 ];

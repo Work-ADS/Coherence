@@ -1,3 +1,5 @@
+@use '../styles/focus-ring-v1' as *;
+
 // =============================================================================
 // card.component.scss — Card primitive · BEM + token-only
 // =============================================================================
@@ -21,26 +23,45 @@
 
 :host {
   display: block;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   overflow: hidden;
   background: var(--surface-subtle);
+  // Flush table headers and the like paint the container's surface.
+  --surface-context: var(--surface-subtle);
   transition:
-    background-color var(--duration-fast) var(--easing-enter),
-    box-shadow var(--duration-fast) var(--easing-enter);
+    background-color var(--duration-base) var(--easing-standard),
+    box-shadow var(--duration-base) var(--easing-standard),
+    transform var(--duration-base) var(--easing-standard);
 }
 
 // ─── Variants ────────────────────────────────────────────────────────────────
-:host(.afi-card--default) {
+:host(.afi-card--default),
+:host(.afi-card--subtle) {
   background: var(--surface-subtle);
+  --surface-context: var(--surface-subtle);
 }
 
-:host(.afi-card--elevated) {
+:host(.afi-card--elevated),
+:host(.afi-card--raised) {
   background: var(--surface-raised);
+  --surface-context: var(--surface-raised);
   box-shadow: var(--elevation-sm);
 }
 
 :host(.afi-card--quiet) {
   background: var(--surface-default);
+  --surface-context: var(--surface-default);
+}
+
+// A shadow tinted toward the brand hue: the neutral one reads as dirt on a coloured ground.
+:host(.afi-card--on-brand) {
+  box-shadow: var(--elevation-card-on-brand);
+}
+
+// Stands on its own: hairline and the larger section radius.
+:host(.afi-card--bordered) {
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-section);
 }
 
 // ─── Interactive ─────────────────────────────────────────────────────────────
@@ -51,18 +72,61 @@
 }
 
 :host(.afi-card--interactive):hover {
-  box-shadow: var(--elevation-md);
+  box-shadow: var(--elevation-card-hover);
+  transform: translateY(calc(-1 * var(--border-width-thick)));
 }
 
 :host(.afi-card--interactive):focus-visible {
-  outline: var(--border-width-thick) solid var(--border-focus);
-  outline-offset: var(--space-2xs);
+  @include focus-ring;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :host {
     transition: none;
   }
+
+  :host(.afi-card--interactive):hover {
+    transform: none;
+  }
+}
+
+.afi-card__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-md) 0;
+}
+
+.afi-card__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  min-inline-size: 0;
+}
+
+.afi-card__eyebrow {
+  font: var(--type-section-eyebrow);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--foreground-tertiary-default);
+}
+
+.afi-card__title {
+  margin: 0;
+  font: var(--type-body-md-500);
+  color: var(--foreground-primary-default);
+}
+
+.afi-card__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex: none;
+}
+
+.afi-card__actions:not(:has(*)) {
+  display: none;
 }
 
 // ─── Regions ────────────────────────────────────────────────────────────────

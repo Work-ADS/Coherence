@@ -90,7 +90,7 @@ export type { RadioOption, RadioSize } from './src/radio-group';
 export { SwitchComponent } from './src/switch';
 export type { SwitchSize } from './src/switch';
 export { CardComponent } from './src/card';
-export type { CardVariant, CardPadding } from './src/card';
+export type { CardVariant, CardPadding, CardElevation } from './src/card';
 export { SectionComponent } from './src/section';
 export type { SectionVariant } from './src/section';
 export { ModalComponent } from './src/modal';

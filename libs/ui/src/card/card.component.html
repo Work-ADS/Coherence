@@ -7,6 +7,22 @@
   (no extra wrapper div) — variant + padding classes live on the host so
   consumers can compose `class="…"` from outside without nesting selectors.
 -->
+@if (titled()) {
+  <div class="afi-card__heading">
+    <div class="afi-card__titles">
+      @if (eyebrow(); as eyebrowText) {
+        <span class="afi-card__eyebrow">{{ eyebrowText }}</span>
+      }
+      @if (title(); as titleText) {
+        <h3 class="afi-card__title">{{ titleText }}</h3>
+      }
+    </div>
+    <div class="afi-card__actions">
+      <ng-content select="[slot=actions]" />
+    </div>
+  </div>
+}
+
 <div class="afi-card__header">
   <ng-content select="[slot=header]" />
 </div>

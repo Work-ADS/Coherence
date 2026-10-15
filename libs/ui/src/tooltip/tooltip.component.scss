@@ -3,72 +3,38 @@
   display: inline-flex;
 }
 
+// Hidden until shown. While hidden it is display:none, so it never adds to a
+// scroll container's width; while shown FloatingPanel has moved it to <body>.
 .tooltip__pop {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
+  display: none;
+  // Placed by FloatingPanel; the margin is its gap to the trigger.
+  position: fixed;
+  z-index: var(--z-tooltip);
+  margin: var(--tooltip-gap);
   align-items: center;
   gap: var(--space-2xs);
   padding: var(--space-2xs) var(--space-xs);
-  font: var(--type-body-sm-400);
-  color: var(--color-base-white);
-  background: var(--color-neutral-900);
-  border-radius: var(--radius-sm);
+  font: var(--type-body-sm-500);
+  color: var(--tooltip-foreground);
+  background: var(--tooltip-background);
+  border-radius: var(--radius-control);
+  box-shadow: var(--elevation-lg);
+  max-inline-size: var(--tooltip-max-width);
   white-space: nowrap;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--duration-fast) var(--easing-enter);
-  z-index: 60;
 
-  // Show on parent hover/focus
-  .tooltip:hover &,
-  .tooltip:focus-within & {
-    opacity: 1;
+  &--in {
+    display: inline-flex;
+    animation: afi-tooltip-in var(--duration-fast) var(--easing-enter);
   }
 
-  // Pinned open by a click (openOnClick), and closed again by Escape.
-  .tooltip--open & {
-    opacity: 1;
-  }
-
-  .tooltip.tooltip--dismissed & {
-    opacity: 0;
-  }
-
-  // Help text: wraps instead of running on one line. The bubble sizes to its
-  // content up to a cap, so a narrow trigger does not squeeze it.
+  // Help text: wraps instead of running on one line, with leading set for two
+  // or three lines. The bubble sizes to its content up to the cap.
   &--multiline {
     inline-size: max-content;
-    max-inline-size: var(--dimension-60);
     white-space: normal;
+    line-height: 1.45;
     text-wrap: pretty;
-  }
-
-  // Positions
-  &--bottom {
-    top: 100%;
-    margin-top: var(--space-2xs);
-  }
-
-  &--top {
-    bottom: 100%;
-    margin-bottom: var(--space-2xs);
-  }
-
-  &--left {
-    top: 50%;
-    left: auto;
-    right: 100%;
-    transform: translateY(-50%);
-    margin-right: var(--space-2xs);
-  }
-
-  &--right {
-    top: 50%;
-    left: 100%;
-    transform: translateY(-50%);
-    margin-left: var(--space-2xs);
   }
 }
 
@@ -76,9 +42,13 @@
   opacity: 0.8;
 }
 
-// Reduced motion
+@keyframes afi-tooltip-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .tooltip__pop {
-    transition: none;
+  .tooltip__pop--in {
+    animation: none;
   }
 }

@@ -143,7 +143,7 @@
 // ── Preview panel — the afi-menu-v2 listbox, anchored to the field ────────────
 .afi-search-v2__panel {
   position: fixed;
-  z-index: var(--z-overlay);
+  z-index: var(--z-floating);
   overflow-y: auto;
 }
 

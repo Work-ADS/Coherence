@@ -1,12 +1,10 @@
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   computed,
   contentChild,
+  effect,
   ElementRef,
-  HostListener,
-  inject,
   input,
   isDevMode,
   OnDestroy,
@@ -19,6 +17,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 
 import { FieldLabelComponent } from '../field-label';
+import { FloatingPanel, onOverlayEscape } from '../floating-panel';
 import { IconComponent } from '../icon';
 
 import type {
@@ -51,7 +50,7 @@ let nextId = 0;
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
 })
-export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class SelectComponent implements OnInit, OnDestroy {
   readonly size = input<SelectSize>('md');
   /** `pill` is the filter-row shape: rounded and sized to its content. */
   readonly shape = input<SelectShape>('rect');
@@ -87,14 +86,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
   readonly focusedIndex = signal(-1);
   readonly searchQuery = signal('');
 
-  /**
-   * Inline style for the floating panel — recomputed from the trigger's
-   * bounding rect every time the panel opens (and on scroll/resize while
-   * open). Lets the panel sit outside any clipping ancestor.
-   */
-  readonly panelStyle = signal<Record<string, string>>({});
-
-  private readonly el = inject(ElementRef);
   readonly triggerEl = viewChild<ElementRef<HTMLButtonElement>>('triggerEl');
 
   /** Replaces the closed control (typically an `afi-filter-chip` with `asTrigger`); the panel is unchanged. */
@@ -114,6 +105,10 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     },
   }));
   readonly searchInputEl = viewChild<ElementRef<HTMLInputElement>>('searchInputEl');
+  private readonly panelRoot = viewChild<ElementRef<HTMLElement>>('panelRoot');
+
+  private readonly floating = new FloatingPanel();
+  private disposeEscape: (() => void) | null = null;
 
   private typeAheadBuffer = '';
   private typeAheadTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -169,6 +164,21 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     return `${this.selectId}-opt-${index}`;
   }
 
+  constructor() {
+    // The panel is rendered by the template; the floating panel portals it,
+    // positions it against the trigger and drops it when the list closes.
+    effect(() => {
+      const panel = this.panelRoot()?.nativeElement;
+      const anchor = (this.anchorEl() ?? this.triggerEl())?.nativeElement;
+      if (panel && anchor) {
+        this.floating.attach(panel, anchor, { side: 'bottom', align: this.align() === 'end' ? 'end' : 'start', onOutside: () => this.close() });
+        this.disposeEscape ??= onOverlayEscape(() => this.close());
+      } else {
+        this.release();
+      }
+    });
+  }
+
   ngOnInit(): void {
     if (isDevMode() && !this.label() && !this.ariaLabel()) {
       console.warn(
@@ -178,56 +188,14 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
   }
 
-  /**
-   * Portal the panel + backdrop out of the component's local DOM after each
-   * render where they exist. Two destinations:
-   *
-   *   1. When the trigger sits inside an open native `<dialog>` (i.e. an
-   *      `afi-modal` opened via `showModal()`), portal to **that dialog**.
-   *      The dialog renders in the browser's top-layer, which sits above
-   *      every z-indexed element — a panel portaled to `document.body`
-   *      would be painted *behind* the dialog backdrop regardless of its
-   *      `z-index`. Putting the panel inside the dialog lets it inherit
-   *      the same top-layer.
-   *
-   *   2. Otherwise, portal to `document.body`. Needed because the
-   *      demo-shell viewport sizer (and other ancestors) apply CSS
-   *      `transform`, which makes `position: fixed` anchor to *that*
-   *      element rather than the viewport. Reparenting to body escapes
-   *      every such containing block.
-   */
-  ngAfterViewChecked(): void {
-    if (!this.open()) return;
-    const host = this.el.nativeElement as HTMLElement;
-    const panelEl = host.querySelector('.afi-select__panel') as HTMLElement | null;
-    const backdropEl = host.querySelector('.afi-select__backdrop') as HTMLElement | null;
-    const dialogAncestor = host.closest('dialog') as HTMLDialogElement | null;
-    const target: HTMLElement =
-      dialogAncestor && dialogAncestor.open ? dialogAncestor : document.body;
-    if (panelEl && panelEl.parentElement !== target) {
-      target.appendChild(panelEl);
-    }
-    if (backdropEl && backdropEl.parentElement !== target) {
-      target.appendChild(backdropEl);
-    }
+  ngOnDestroy(): void {
+    this.release();
   }
 
-  ngOnDestroy(): void {
-    // Failsafe: if the component is destroyed while the panel is open,
-    // the portaled nodes won't be cleaned up by Angular (they're outside
-    // the component's view). Yank them manually whether the portal target
-    // is `document.body` or a `<dialog>` ancestor (modal flavor).
-    if (this.open()) {
-      document
-        .querySelectorAll('.afi-select__panel, .afi-select__backdrop')
-        .forEach((el) => {
-          const parent = el.parentElement;
-          if (parent === document.body || parent instanceof HTMLDialogElement) {
-            el.remove();
-          }
-        });
-    }
-    document.removeEventListener('scroll', this.onAncestorScroll, true);
+  private release(): void {
+    this.floating.detach();
+    this.disposeEscape?.();
+    this.disposeEscape = null;
   }
 
   toggle(): void {
@@ -241,13 +209,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
   openPanel(): void {
     if (this.disabled()) return;
     this.open.set(true);
-    this.recomputePanelPosition();
-    // Capture-phase scroll listener: `@HostListener('window:scroll')` only
-    // fires for the document — nested scroll containers (e.g. <main> in the
-    // demos page) need this to keep the panel anchored when the trigger
-    // moves. The capture flag is required because scroll events don't
-    // bubble.
-    document.addEventListener('scroll', this.onAncestorScroll, true);
     const opts = this.displayOptions();
     const selectedIdx = opts.findIndex((o) => o.value === this.value());
     this.focusedIndex.set(selectedIdx >= 0 ? selectedIdx : 0);
@@ -257,60 +218,12 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
   }
 
-  /**
-   * Re-anchor the panel when any ancestor scrolls. If the scroll happened
-   * inside the panel's own listbox (user scrolling through 200 cities),
-   * ignore it — only outer-page scrolls move the trigger.
-   */
-  private readonly onAncestorScroll = (event: Event): void => {
-    if (!this.open()) return;
-    const target = event.target as Element | null;
-    if (target && 'closest' in target && target.closest('.afi-select__panel')) {
-      return;
-    }
-    this.recomputePanelPosition();
-  };
-
-  /**
-   * Anchor the floating panel to the trigger. Flips upward when there's
-   * more room above than below the viewport edge.
-   */
-  private recomputePanelPosition(): void {
-    const trigger = (this.anchorEl() ?? this.triggerEl())?.nativeElement;
-    if (!trigger) return;
-    const rect = trigger.getBoundingClientRect();
-    const viewportH = window.innerHeight;
-    const panelMaxH = 288; // mirrors --dimension-72 (max-height of .afi-select__panel)
-    const gap = 4; // small visual gap so the panel doesn't kiss the trigger
-    const spaceBelow = viewportH - rect.bottom;
-    const spaceAbove = rect.top;
-    const openUp = spaceBelow < Math.min(panelMaxH, 160) && spaceAbove > spaceBelow;
-
-    // The panel is never narrower than the trigger and grows to its longest
-    // option up to the cap in the stylesheet; `align="end"` pins its right edge.
-    const edge =
-      this.align() === 'end'
-        ? { right: `${document.documentElement.clientWidth - rect.right}px`, left: 'auto' }
-        : { left: `${rect.left}px`, right: 'auto' };
-    const vertical = openUp
-      ? { bottom: `${viewportH - rect.top + gap}px`, top: 'auto' }
-      : { top: `${rect.bottom + gap}px`, bottom: 'auto' };
-    this.panelStyle.set({ ...edge, ...vertical, 'min-width': `${rect.width}px` });
-  }
-
-  @HostListener('window:resize')
-  @HostListener('window:scroll')
-  onViewportChange(): void {
-    if (this.open()) this.recomputePanelPosition();
-  }
-
   close(): void {
     this.open.set(false);
     this.focusedIndex.set(-1);
     if (this.searchable()) {
       this.searchQuery.set('');
     }
-    document.removeEventListener('scroll', this.onAncestorScroll, true);
     this.closed.emit();
     const trigger = this.triggerEl()?.nativeElement ?? this.anchorEl()?.nativeElement.querySelector<HTMLElement>('button, [tabindex]');
     trigger?.focus();
@@ -378,10 +291,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
           this.selectOption(opts[enabledIndices[0]!]!);
         }
         break;
-      case 'Escape':
-        event.preventDefault();
-        this.close();
-        break;
       case 'Tab':
         this.close();
         break;
@@ -404,12 +313,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
         event.preventDefault();
         if (!this.open()) {
           this.openPanel();
-        }
-        break;
-      case 'Escape':
-        if (this.open()) {
-          event.preventDefault();
-          this.close();
         }
         break;
     }
@@ -462,10 +365,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
           this.selectOption(opts[idx]!);
         }
         break;
-      case 'Escape':
-        event.preventDefault();
-        this.close();
-        break;
       case 'Tab':
         this.close();
         break;
@@ -477,13 +376,6 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     this.scrollFocusedIntoView();
-  }
-
-  @HostListener('document:keydown.escape')
-  onDocEscape(): void {
-    if (this.open()) {
-      this.close();
-    }
   }
 
   private handleTypeAhead(
@@ -511,9 +403,8 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     const idx = this.focusedIndex();
     if (idx < 0) return;
     setTimeout(() => {
-      const listbox = this.el.nativeElement.querySelector('[role="listbox"]');
-      const item = listbox?.querySelector(`#${this.optionId(idx)}`);
-      item?.scrollIntoView({ block: 'nearest' });
+      // The panel is portalled out of the host, so look the row up by id.
+      document.getElementById(this.optionId(idx))?.scrollIntoView({ block: 'nearest' });
     });
   }
 }

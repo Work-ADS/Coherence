@@ -42,11 +42,21 @@ export class TooltipPage {
       value: 'visual',
       label: 'Visual',
       rows: [
-        { property: 'Background', token: '--color-neutral-900' },
-        { property: 'Text color', token: '--color-base-white' },
-        { property: 'Border radius', token: '--dim-4' },
+        { property: 'Background', token: '--tooltip-background' },
+        { property: 'Text color', token: '--tooltip-foreground' },
+        { property: 'Border radius', token: '--radius-control' },
+        { property: 'Shadow', token: '--elevation-lg' },
         { property: 'Padding block', token: '--space-2xs' },
         { property: 'Padding inline', token: '--space-xs' },
+        { property: 'Gap to trigger', token: '--tooltip-gap' },
+        { property: 'Max width', token: '--tooltip-max-width' },
+      ],
+    },
+    {
+      value: 'layer',
+      label: 'Layer',
+      rows: [
+        { property: 'Stacking layer', token: '--z-tooltip' },
       ],
     },
     {

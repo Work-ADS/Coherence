@@ -98,6 +98,18 @@
 
 
   // ===========================================================================
+  // TOOLTIP
+  // ===========================================================================
+
+  // Fixed polarity: the bubble stays a dark field with light ink in both
+  // themes (the page-relative --foreground-inverse-* flips in dark mode).
+  --tooltip-background: var(--surface-inverse-default);
+  --tooltip-foreground: var(--color-afi-control-0);
+  --tooltip-gap: var(--dimension-1-5);                 // 6px between bubble and trigger
+  --tooltip-max-width: var(--dimension-60);            // 240px; a multiline bubble wraps at this
+
+
+  // ===========================================================================
   // FILTER CHIP
   // ===========================================================================
 

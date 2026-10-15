@@ -10,9 +10,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 export class TipografiaPage {
   readonly headingScale = [
     { name: 'Display', token: '--type-display', sample: 'Wealth Planner', note: 'Hero headlines only. Scales 48→96px at lg breakpoint.' },
-    { name: 'Title', token: '--type-title', sample: 'Fundamentos del sistema', note: 'Page titles. 24→32px responsive.' },
+    { name: 'Title', token: '--type-title', sample: 'Fundamentos del sistema', note: 'Page titles. 400 24/32, fixed.' },
     { name: 'Subtitle', token: '--type-subtitle', sample: 'Escala de acción', note: 'Section headers. 20→24px responsive.' },
-    { name: 'Section', token: '--type-section', sample: 'Colores de sistema', note: 'Sub-sections within a page. 18→20px responsive.' },
+    { name: 'Section', token: '--type-section', sample: 'Colores de sistema', note: 'Section headings. 500 18/28, fixed at every width.' },
   ];
 
   readonly bodyScale = [

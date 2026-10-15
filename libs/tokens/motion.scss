@@ -56,4 +56,27 @@
   --reveal-blur-light:   4px;
   --reveal-blur-normal:  8px;
   --reveal-blur-heavy:  14px;
+
+  // ── Result cascade (Search results, tab panels) ───────────────────────────
+  // Each block fades in, rises and un-blurs, staggered by --reveal-stagger-light.
+  // Same numbers as the normal tier's duration and rise with the heavy tier's
+  // blur, so they point at those instead of repeating them. Reduced motion: a
+  // short opacity fade only.
+  --reveal-cascade-duration: var(--duration-reveal-normal);
+  --reveal-cascade-rise: var(--reveal-rise-normal);
+  --reveal-cascade-blur: var(--reveal-blur-heavy);
+  --reveal-cascade-reduced-duration: 80ms;
+}
+
+// The cascade's keyframes, global so every surface that reveals with it uses the
+// same curve. The blur lands at exactly 0 and the animation fill is backwards,
+// so no filter lingers once it ends.
+@keyframes afi-reveal-cascade {
+  from { opacity: 0; transform: translateY(var(--reveal-cascade-rise)); filter: blur(var(--reveal-cascade-blur)); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes afi-reveal-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }

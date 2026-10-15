@@ -26,6 +26,16 @@
   --elevation-lg:   0 10px 15px -3px hsla(200, 5%, 9%, 0.08), 0 4px 6px -4px hsla(200, 5%, 9%, 0.04);
   --elevation-xl:   0 20px 25px -5px hsla(200, 5%, 9%, 0.10), 0 8px 10px -6px hsla(200, 5%, 9%, 0.04);
 
+  // Button depth — resting, hover lift, pressed. Tinted with azul-profundo.
+  --elevation-button: 0 1px 2px 0 hsla(200, 83%, 14%, 0.16);
+  --elevation-button-hover: 0 4px 10px -2px hsla(200, 83%, 14%, 0.28), 0 2px 4px -1px hsla(200, 83%, 14%, 0.12);
+  --elevation-button-pressed: inset 0 1px 2px 0 hsla(200, 83%, 14%, 0.24);
+
+  // The shell card — one raised surface on a tinted brand ground. A tight shadow
+  // for the edge and a wide far-offset one for the lift, both tinted toward the
+  // brand hue: a grey shadow on a coloured ground reads as dirt.
+  --elevation-card-on-brand: 0 1px 2px 0 hsla(200, 83%, 10%, 0.30), 0 24px 48px -16px hsla(200, 83%, 10%, 0.45);
+
   // Card hover lift — used by interactive cards on home/blog/demos pages.
   --elevation-card-hover: 0 16px 32px -20px hsla(0, 0%, 0%, 0.18);
 

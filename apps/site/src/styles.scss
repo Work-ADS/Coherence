@@ -20,7 +20,6 @@
 // --plan-state-* tokens can reference DS --feedback-* values.
 // See docs/rules/dimension-tokens.md → "Product-level tokens".
 @import './styles/wealth-planner';
-@import './styles/laboral-kutxa-sarevi';
 
 // Inline Versión 1/2/3 pill is replaced by the floating design-review widget
 // embedded from index.html. Hide rather than delete so seniors can compare
@@ -53,7 +52,7 @@ site-version-toggle {
   outline-offset: var(--border-width-hairline) !important;
 }
 
-// Roboto Serif is loaded via <link rel="stylesheet"> in index.html so it's
+// Roboto (and Roboto Serif, kept for frozen brands) is loaded via <link rel="stylesheet"> in index.html so it's
 // available on first paint. Previously `@import url(...)` here was placed
 // after a rule block, which the CSS spec says browsers must ignore.
 

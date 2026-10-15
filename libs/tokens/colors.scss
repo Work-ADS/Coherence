@@ -62,6 +62,9 @@
   --color-afi-azul-profundo-200: #AFC4CF;
   --color-afi-azul-profundo-300: #8AA8B6;
   --color-afi-azul-profundo-400: #5E8294;
+  // 450 is the lifted shade of the 500 action colour: primary button hover and
+  // the sidebar's hover, selected and divider states sit one step up from it.
+  --color-afi-azul-profundo-450: #174557;
   --color-afi-azul-profundo-500: #062D3F;
   --color-afi-azul-profundo-600: #052636;
   --color-afi-azul-profundo-700: #041F2C;
@@ -134,7 +137,7 @@
   --color-info-200: #C7DBFF;
   --color-info-300: #9EC5FE;
   --color-info-500: #4C8DFF;
-  --color-info-700: #2F5FCC;
+  --color-info-700: #2E5ECC;
   --color-info-900: #1C3A80;
 
   --color-success-25:  #F8FDF9;
@@ -146,14 +149,15 @@
   --color-success-700: #2C7A4A;
   --color-success-900: #1A4A2D;
 
-  --color-warning-25:  #FFFEF5;
-  --color-warning-50:  #FFFBEA;
-  --color-warning-100: #FFF5CC;
-  --color-warning-200: #FFE9A3;
-  --color-warning-300: #FFD666;
-  --color-warning-500: #FFC107;
-  --color-warning-700: #B28704;
-  --color-warning-900: #6D5300;
+  // Warning is orange (Wealth Planner DS, 2026-10-14). It was amber-yellow.
+  --color-warning-25:  #FFFCF5;
+  --color-warning-50:  #FFF7ED;
+  --color-warning-100: #FFEDD5;
+  --color-warning-200: #FED7AA;
+  --color-warning-300: #FDBA74;
+  --color-warning-500: #F97316;
+  --color-warning-700: #C2410C;
+  --color-warning-900: #7C2D12;
 
   --color-error-25:  #FFF8F8;
   --color-error-50:  #FEF3F2;
@@ -181,6 +185,37 @@
   --color-data-viz-series-7: #EB5656;
   --color-data-viz-series-8: #EB8787;
 
+  // data-viz/category — stacked-bar categories on a light ground. Every step is
+  // at least 3:1 on white except step 7 (14.43 / 9.41 / 4.94 / 2.95 / 6.03 /
+  // 4.12 / 2.51). Four blues dark to light, then three blue-greys ending light.
+  // Step 4 is lightened to sit 1.67:1 from step 3; step 7 is azul-profundo-300,
+  // 1.64:1 from step 6. Step 7 needs no 3:1 on white: legend, series-list
+  // tooltip and the table view carry the values.
+  --color-data-viz-category-1: #062D3F;
+  --color-data-viz-category-2: #004A74;
+  --color-data-viz-category-3: #0076B4;
+  --color-data-viz-category-4: #2E9FDC;
+  --color-data-viz-category-5: #51666F;
+  --color-data-viz-category-6: #5E8294;
+  --color-data-viz-category-7: #8AA8B6;
+
+  // data-viz/scale — four ranked steps for one quantity measured in bands
+  // (Baja / Media / Alta / Muy alta). One hue, four clearly separated
+  // lightnesses, so the order survives greyscale and colour-vision deficiency:
+  // adjacent steps differ by 1.68:1, 2.51:1 and 2.47:1 in luminance.
+  // Step 3 is #0079B8, not monochrome-4 (#0085CA): the band chart prints an
+  // 11px label inside the band, and white on #0085CA measures 4.03:1, under the
+  // 4.5:1 text threshold. #0079B8 takes it to 4.74:1.
+  // In the zip this REPLACES data-viz-monochrome-1…6. Here monochrome stays:
+  // semantic.scss and the modern foundation still read it. Removal is a later
+  // decision, not part of the primitive pass.
+  --color-data-viz-scale-1: #E6F4FB;
+  --color-data-viz-scale-2: #80C6E5;
+  --color-data-viz-scale-3: #0079B8;
+  --color-data-viz-scale-4: #003B5F;
+  --color-data-viz-scale-ink-on-light: #0C111D;
+  --color-data-viz-scale-ink-on-dark:  #FFFFFF;
+
   // data-viz/monochrome — 6 shades (afi-azul tinted)
   --color-data-viz-monochrome-1: #F2FAFE;
   --color-data-viz-monochrome-2: #E6F4FB;
@@ -194,9 +229,43 @@
   --color-data-viz-positive-default: #72C971;
   --color-data-viz-positive-strong:  #367B35;
 
-  // data-viz/negative — named tiers (2 shades)
+  // data-viz/negative — named tiers (3 shades + ink)
   --color-data-viz-negative-subtle:  #EB8787;
   --color-data-viz-negative-default: #EB5656;
+  --color-data-viz-negative-strong:  #B53030;
+  // The negative INK is darker than the strong step, which the other two signs
+  // do not need. #B53030 on the negative fill #EB8787 measures 2.43:1: fine as
+  // a mark, failing as text. This value clears 4.5:1 on that fill.
+  --color-data-viz-negative-ink:     #701818;
+
+  // data-viz/caution — the middle of the sign-keyed set. Same three steps and
+  // the same tonal shape as positive and negative, in a data-viz amber family.
+  // NOT the --color-warning-* feedback ramp: chart roles never point at
+  // feedback tokens, and the feedback ramp is tuned for a tinted chip behind
+  // 14px text, not for a filled area next to a green and a red one.
+  --color-data-viz-caution-subtle:  #F7E0A3;
+  --color-data-viz-caution-default: #E0A02E;
+  --color-data-viz-caution-strong:  #8A5A10;
+
+  // data-viz/annotation — ink for reference lines, objective lines, markers and
+  // their labels. neutral-axis (#D0D5DD) is chart furniture and is invisible as
+  // an annotation; this is drawn ON the plot, so it is near-black. The inverse
+  // pair is for an annotation crossing a dark filled series.
+  --color-data-viz-neutral-annotation:                #182230;
+  --color-data-viz-neutral-annotation-subtle:         #475467;
+  --color-data-viz-neutral-annotation-inverse:        #F5F7FA;
+  --color-data-viz-neutral-annotation-inverse-subtle: #CBD5E1;
+
+  // data-viz dark-theme values. The ground flips, so the subtle fills darken.
+  --color-data-viz-caution-subtle-dark:  #4D3A12;
+  --color-data-viz-caution-default-dark: #E0A02E;
+  --color-data-viz-caution-strong-dark:  #F2C67A;
+  --color-data-viz-scale-1-dark: #0A3446;
+  --color-data-viz-scale-2-dark: #0D5C86;
+  --color-data-viz-scale-3-dark: #2F9FD4;
+  --color-data-viz-scale-4-dark: #A8DCF5;
+  --color-data-viz-scale-ink-on-light-dark: #04212E;
+  --color-data-viz-scale-ink-on-dark-dark:  #EAF6FD;
 
   // data-viz/neutral — purpose-named chart chrome
   --color-data-viz-neutral-axis:               #D0D5DD;

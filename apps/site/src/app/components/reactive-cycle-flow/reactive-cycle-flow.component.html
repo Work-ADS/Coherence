@@ -1,0 +1,50 @@
+<div class="flow">
+  <div class="flow__scroll">
+    <svg
+      class="flow__svg"
+      [attr.viewBox]="'0 0 ' + width + ' ' + height"
+      role="img"
+      aria-labelledby="flow-title"
+    >
+      <title id="flow-title">{{ title() }}</title>
+      <defs>
+        <marker
+          id="flow-arrow"
+          viewBox="0 0 10 10"
+          refX="9"
+          refY="5"
+          markerWidth="7"
+          markerHeight="7"
+          orient="auto-start-reverse"
+        >
+          <path d="M1 1 L9 5 L1 9" class="flow__arrowhead" />
+        </marker>
+      </defs>
+
+      @for (edge of view().edges; track $index) {
+        <path class="flow__edge" [attr.d]="edge.d" marker-end="url(#flow-arrow)" />
+        @if (edge.label) {
+          <text class="flow__edge-label" [attr.x]="edge.lx" [attr.y]="edge.ly" [attr.text-anchor]="edge.anchor">
+            {{ edge.label }}
+          </text>
+        }
+      }
+
+      @for (node of view().nodes; track node.id) {
+        <g class="flow__node flow__node--{{ node.kind }}">
+          <rect [attr.x]="node.x" [attr.y]="node.y" [attr.width]="nodeW" [attr.height]="nodeH" rx="8" />
+          @for (line of node.lines; track $index) {
+            <text [attr.x]="node.x + nodeW / 2" [attr.y]="line.y" text-anchor="middle">{{ line.text }}</text>
+          }
+        </g>
+      }
+    </svg>
+  </div>
+
+  <!-- The diagram is one image to assistive tech; the steps read as a list. -->
+  <ol class="flow__sr">
+    @for (node of view().nodes; track node.id) {
+      <li>{{ node.lines.map(l => l.text).join(' ') }}</li>
+    }
+  </ol>
+</div>

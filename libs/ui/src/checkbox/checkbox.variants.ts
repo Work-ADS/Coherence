@@ -5,7 +5,8 @@
  * `checkbox.component.scss` via BEM modifiers.
  */
 
-export type CheckboxSize = 'sm' | 'md';
+/** `xs` (14 px) is for dense data: 12 px table type, 32 px rows. */
+export type CheckboxSize = 'xs' | 'sm' | 'md';
 
 /** Token usage map for the Checkbox primitive (consumed by site Design tab). */
 export const tokenUsage = [
@@ -19,8 +20,8 @@ export const tokenUsage = [
   { property: 'Texto label', token: 'var(--foreground-primary-default)' },
   { property: 'Hint', token: 'var(--foreground-tertiary-default)' },
   { property: 'Error', token: 'var(--feedback-error-foreground)' },
-  { property: 'Tamaño (md/sm)', token: 'var(--checkbox-size-md) / var(--checkbox-size-sm)' },
-  { property: 'Trazo (md/sm)', token: 'var(--checkbox-glyph-md) / var(--checkbox-glyph-sm)' },
+  { property: 'Tamaño (md/sm/xs)', token: 'var(--checkbox-size-md) / var(--checkbox-size-sm) / var(--checkbox-size-xs)' },
+  { property: 'Trazo (md/sm/xs)', token: 'var(--checkbox-glyph-md) / var(--checkbox-glyph-sm) / var(--checkbox-glyph-xs)' },
   { property: 'Radio', token: 'var(--radius-sm)' },
   { property: 'Transición', token: 'var(--duration-fast) var(--easing-enter)' },
 ] as const;

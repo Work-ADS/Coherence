@@ -91,6 +91,32 @@
   }
 }
 
+.afi-check--xs .afi-check__box {
+  inline-size: var(--checkbox-size-xs);
+  block-size: var(--checkbox-size-xs);
+  margin-block-start: var(--dimension-0-5);
+
+  svg {
+    inline-size: var(--checkbox-glyph-xs);
+    block-size: var(--checkbox-glyph-xs);
+    stroke-width: 3.5;
+  }
+}
+
+.afi-check--xs .afi-check__label {
+  font: var(--type-body-sm-400);
+}
+
+// A 14 px box beside a label keeps a 24 px row and centres in it.
+.afi-check--xs:has(.afi-check__label) {
+  align-items: center;
+  min-block-size: var(--control-size-sm);
+
+  .afi-check__box {
+    margin-block-start: 0;
+  }
+}
+
 .afi-check--compact .afi-check__box {
   margin-block-start: 0;
 }

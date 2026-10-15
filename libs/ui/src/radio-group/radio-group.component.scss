@@ -4,6 +4,8 @@
 
 :host {
   display: block;
+  // The group's own width decides when a row of options stacks, not the window.
+  container-type: inline-size;
 }
 
 // Undo the browser's fieldset chrome; the group draws none of its own.
@@ -34,6 +36,29 @@
   margin-block-end: var(--space-2xs);
   font: var(--type-body-md-400);
   color: var(--foreground-secondary-default);
+}
+
+.afi-radio-group__hint,
+.afi-radio-group__error {
+  inline-size: 100%;
+  margin: var(--space-2xs) 0 0;
+  font: var(--type-body-sm-400);
+}
+
+.afi-radio-group__hint {
+  color: var(--foreground-tertiary-default);
+}
+
+.afi-radio-group__error {
+  color: var(--feedback-error-foreground);
+}
+
+// A row of options stacks into a column once the group is narrower than 40rem.
+@container (max-width: 40rem) {
+  .afi-radio-group--horizontal {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
 }
 
 .afi-radio-group__required {

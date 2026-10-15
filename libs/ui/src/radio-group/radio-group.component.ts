@@ -2,14 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  contentChildren,
+  forwardRef,
   input,
   output,
   isDevMode,
   OnInit,
 } from '@angular/core';
 
+import { FieldHelpComponent } from '../field-help';
+
 import { RadioGroupItemComponent } from './radio-group-item.component';
+import { RADIO_GROUP } from './radio-group.token';
+import type { RadioGroupHost } from './radio-group.token';
+import type { RadioOption } from './radio-group.variants';
 
 let nextGroupId = 0;
 
@@ -28,13 +33,23 @@ let nextGroupId = 0;
 @Component({
   selector: 'afi-radio-group',
   standalone: true,
+  imports: [FieldHelpComponent, RadioGroupItemComponent],
+  providers: [{ provide: RADIO_GROUP, useExisting: forwardRef(() => RadioGroupComponent) }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './radio-group.component.html',
   styleUrls: ['./radio-group.component.scss'],
 })
-export class RadioGroupComponent implements OnInit {
+export class RadioGroupComponent implements OnInit, RadioGroupHost {
   readonly value = input<string | null>(null);
+  /** Options the group renders as items itself; items projected in the template still work. */
+  readonly options = input<readonly RadioOption[]>([]);
   readonly legend = input<string | null>(null);
+  readonly hint = input<string | null>(null);
+  /** Error text under the group; sets `aria-invalid` and replaces `hint`. */
+  readonly error = input<string | null>(null);
+  /** ⓘ after the legend: help text in a tooltip (see `afi-field-help`). */
+  readonly help = input<string | null>(null);
+  readonly helpLabel = input<string | null>(null);
   readonly required = input<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
@@ -53,14 +68,17 @@ export class RadioGroupComponent implements OnInit {
   readonly valueChange = output<string>();
 
   readonly groupName = `afi-radio-group-${nextGroupId++}`;
+  readonly hintId = `${this.groupName}-hint`;
+  readonly errorId = `${this.groupName}-error`;
 
-  readonly items = contentChildren(RadioGroupItemComponent);
+  readonly describedBy = computed(() => {
+    if (this.error()) return this.errorId;
+    return this.hint() ? this.hintId : null;
+  });
 
-  constructor() {
-    // Note: contentChildren + effect can sync name/selected to items,
-    // but since items use input() signals, the parent needs to
-    // pass values via template bindings. This component serves as the
-    // semantic container (fieldset + radiogroup role).
+    /** Called by an item inside the group when the user picks it. */
+  select(value: string): void {
+    this.valueChange.emit(value);
   }
 
   ngOnInit(): void {

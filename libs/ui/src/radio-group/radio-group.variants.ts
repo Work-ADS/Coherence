@@ -7,6 +7,15 @@
 
 export type RadioSize = 'sm' | 'md';
 
+/** One option of a group that renders its own items through `options`. */
+export interface RadioOption {
+  value: string;
+  label: string;
+  /** Second line under the label. */
+  description?: string;
+  disabled?: boolean;
+}
+
 /** Token usage map for the RadioGroup primitive (consumed by site Design tab). */
 export const tokenUsage = [
   { property: 'Fondo (anillo)', token: 'var(--input-background-default)' },

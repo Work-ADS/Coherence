@@ -68,7 +68,7 @@ export type { SelectAlign, SelectOption, SelectMode, SelectShape, SelectSize } f
 export { CheckboxComponent } from './src/checkbox';
 export type { CheckboxSize } from './src/checkbox';
 export { RadioGroupComponent, RadioGroupItemComponent } from './src/radio-group';
-export type { RadioSize } from './src/radio-group';
+export type { RadioOption, RadioSize } from './src/radio-group';
 export { SwitchComponent } from './src/switch';
 export type { SwitchSize } from './src/switch';
 export { CardComponent } from './src/card';

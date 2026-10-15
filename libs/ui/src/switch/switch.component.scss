@@ -140,6 +140,18 @@
   gap: var(--space-2xs);
 }
 
+.afi-switch__label-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+// The ⓘ sits on the label line without making it taller.
+.afi-switch__label-row afi-field-help {
+  margin-inline-start: 0;
+  block-size: auto;
+}
+
 .afi-switch__label {
   font: var(--type-body-md-400);
   color: var(--foreground-primary-default);

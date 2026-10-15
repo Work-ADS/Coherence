@@ -264,7 +264,7 @@ export class SelectComponent implements OnInit, AfterViewChecked, OnDestroy {
     // option up to the cap in the stylesheet; `align="end"` pins its right edge.
     const edge =
       this.align() === 'end'
-        ? { right: `${window.innerWidth - rect.right}px`, left: 'auto' }
+        ? { right: `${document.documentElement.clientWidth - rect.right}px`, left: 'auto' }
         : { left: `${rect.left}px`, right: 'auto' };
     const vertical = openUp
       ? { bottom: `${viewportH - rect.top + gap}px`, top: 'auto' }

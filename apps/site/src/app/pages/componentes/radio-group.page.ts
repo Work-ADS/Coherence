@@ -75,6 +75,12 @@ export class RadioGroupPage {
   readonly sizeOptions = SIZE_OPTIONS;
   readonly stateOptions = STATE_OPTIONS;
   readonly items = ITEMS;
+  readonly frecuencia = signal<string>('mensual');
+  readonly frecuencias = [
+    { value: 'mensual', label: 'Mensual', description: 'Un informe el primer día de cada mes.' },
+    { value: 'trimestral', label: 'Trimestral' },
+    { value: 'anual', label: 'Anual', disabled: true },
+  ];
 
   readonly disabled = computed(() => this.state() === 'disabled');
 

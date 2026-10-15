@@ -47,6 +47,17 @@
       (valueChange)="selectedValue.set($event)"
       [disabled]="disabled()"
       [error]="errorText()"
+      help="Es el país de residencia fiscal."
+    />
+    <afi-select
+      [size]="size()"
+      shape="pill"
+      align="end"
+      [options]="demoOptions"
+      placeholder="País"
+      ariaLabel="País (filtro)"
+      [value]="selectedValue()"
+      (valueChange)="selectedValue.set($event)"
     />
   </div>
 
@@ -55,7 +66,7 @@
   <section slot="accessibility" class="prose-section">
     <h2 class="prose-section__title">Accessibility</h2>
     <ul class="prose-section__list">
-      <li>Native <code>&lt;select&gt;</code> bajo el estilizado — teclado y screen reader son nativos.</li>
+      <li>El botón es un <code>combobox</code> con <code>aria-controls</code> a la lista y <code>aria-activedescendant</code> a la opción resaltada.</li>
       <li><code>Space</code> abre el desplegable; flechas navegan; <code>Enter</code> confirma.</li>
       <li>Label requerido (visible o <code>ariaLabel</code>).</li>
       <li>Estado <code>error</code> añade <code>aria-invalid="true"</code> y mensaje asociado vía <code>aria-describedby</code>.</li>

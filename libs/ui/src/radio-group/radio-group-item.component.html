@@ -4,10 +4,10 @@
     type="radio"
     class="afi-radio__native"
     [id]="radioId"
-    [name]="name()"
+    [name]="groupedName()"
     [value]="value()"
-    [checked]="selected()"
-    [disabled]="disabled()"
+    [checked]="isSelected()"
+    [disabled]="isDisabled()"
     [attr.aria-describedby]="hint() ? hintId : null"
     (change)="onSelect()"
   />

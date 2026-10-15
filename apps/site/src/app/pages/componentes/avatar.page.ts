@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { AvatarComponent, SegmentedControlComponent } from '@coherence/ui';
+import { AvatarComponent, AvatarGroupComponent, SegmentedControlComponent } from '@coherence/ui';
 import type { AvatarSize } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
@@ -11,9 +11,14 @@ const VISUAL_CATEGORY: DocTokenCategory = {
   value: 'visual',
   label: 'Visual',
   rows: [
-    { property: 'Background (fallback)', token: '--surface-quiet', semantic: '--surface-quiet', primitive: '--color-afi-control-100' },
-    { property: 'Foreground (initials)', token: '--foreground-secondary-default', semantic: '--foreground-secondary-default', primitive: '--color-afi-control-700' },
-    { property: 'Border radius', token: '--radius-full', semantic: '--radius-full', primitive: '999px' },
+    { property: 'Background (default)', token: '--brand-secondary-neutral-background-default', semantic: '--brand-secondary-neutral-background-default', primitive: '--color-afi-azul-profundo-50' },
+    { property: 'Foreground (default)', token: '--brand-secondary-neutral-foreground-default', semantic: '--brand-secondary-neutral-foreground-default', primitive: '--color-afi-azul-profundo-800' },
+    { property: 'Background (neutral)', token: '--surface-subtle', semantic: '--surface-subtle', primitive: '--color-afi-control-50' },
+    { property: 'Foreground (neutral)', token: '--foreground-secondary-default', semantic: '--foreground-secondary-default', primitive: '--color-afi-control-700' },
+    { property: 'Border radius', token: '--radius-full', semantic: '--radius-full', primitive: '9999px' },
+    { property: 'Border radius (square)', token: '--radius-card', semantic: '--radius-card', primitive: '8px' },
+    { property: 'Group ring', token: '--canvas-primary', semantic: '--canvas-primary', primitive: '--color-base-white' },
+    { property: 'Overflow chip', token: '--surface-subtle', semantic: '--surface-subtle', primitive: '--color-afi-control-50' },
   ],
 };
 
@@ -21,17 +26,24 @@ const SIZING_CATEGORY: DocTokenCategory = {
   value: 'sizing',
   label: 'Sizing',
   rows: [
-    { property: 'sm', token: '--dimension-6', semantic: '--dimension-6', primitive: '24px' },
-    { property: 'md', token: '--dimension-8', semantic: '--dimension-8', primitive: '32px' },
-    { property: 'lg', token: '--dimension-10', semantic: '--dimension-10', primitive: '40px' },
-    { property: 'Typography', token: '--type-body-sm-500', semantic: '--type-body-sm-500', primitive: '14px / 20px / 500' },
+    { property: 'xs', token: '--avatar-xs', semantic: '--avatar-xs', primitive: '24px' },
+    { property: 'sm', token: '--avatar-sm', semantic: '--avatar-sm', primitive: '32px' },
+    { property: 'md', token: '--avatar-md', semantic: '--avatar-md', primitive: '40px' },
+    { property: 'lg', token: '--avatar-lg', semantic: '--avatar-lg', primitive: '48px' },
+    { property: 'xl', token: '--avatar-xl', semantic: '--avatar-xl', primitive: '64px' },
+    { property: 'Initials (xs, sm)', token: '--type-body-sm-600', semantic: '--type-body-sm-600', primitive: '12px / 16px / 600' },
+    { property: 'Initials (md)', token: '--type-body-md-600', semantic: '--type-body-md-600', primitive: '14px / 20px / 600' },
+    { property: 'Initials (lg, xl)', token: '--type-body-lg-600', semantic: '--type-body-lg-600', primitive: '16px / 24px / 600' },
+    { property: 'Group overlap', token: '--space-xs', semantic: '--space-xs', primitive: '8px' },
   ],
 };
 
 const SIZE_OPTIONS = [
+  { value: 'xs', label: 'xs' },
   { value: 'sm', label: 'sm' },
   { value: 'md', label: 'md' },
   { value: 'lg', label: 'lg' },
+  { value: 'xl', label: 'xl' },
 ];
 
 @Component({
@@ -40,6 +52,7 @@ const SIZE_OPTIONS = [
   imports: [
     RouterLink,
     AvatarComponent,
+    AvatarGroupComponent,
     SegmentedControlComponent,
     DocPageShellComponent,
     DocTokensComponent,

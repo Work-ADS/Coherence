@@ -1,48 +1,79 @@
+// =============================================================================
+// afi-avatar — photo or initials. BEM classes, DS tokens only.
+// =============================================================================
+
+:host {
+  display: inline-flex;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
 .avatar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  flex: none;
   overflow: hidden;
-  background: var(--control-background-default);
-  color: var(--foreground-tertiary-default);
-  font-weight: 500;
-  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: var(--brand-secondary-neutral-background-default);
+  color: var(--brand-secondary-neutral-foreground-default);
+  user-select: none;
+
+  &--square {
+    border-radius: var(--radius-card);
+  }
+
+  &--neutral {
+    background: var(--surface-subtle);
+    color: var(--foreground-secondary-default);
+  }
 
   &__img {
-    height: 100%;
-    width: 100%;
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
     object-fit: cover;
   }
 
-  // Sizes — map to --avatar-* semantic tokens
+  // ─── Sizes: --avatar-* box; initials at weight 600 on the nearest type step ─
   &--xs {
-    height: var(--avatar-xs);
-    width: var(--avatar-xs);
-    font-size: 10px;
+    inline-size: var(--avatar-xs);
+    block-size: var(--avatar-xs);
+    font: var(--type-body-sm-600);
   }
 
   &--sm {
-    height: var(--avatar-sm);
-    width: var(--avatar-sm);
-    font: var(--type-body-sm-500);
+    inline-size: var(--avatar-sm);
+    block-size: var(--avatar-sm);
+    font: var(--type-body-sm-600);
   }
 
   &--md {
-    height: var(--avatar-md);
-    width: var(--avatar-md);
-    font: var(--type-body-md-500);
+    inline-size: var(--avatar-md);
+    block-size: var(--avatar-md);
+    font: var(--type-body-md-600);
   }
 
   &--lg {
-    height: var(--avatar-lg);
-    width: var(--avatar-lg);
-    font: var(--type-body);
+    inline-size: var(--avatar-lg);
+    block-size: var(--avatar-lg);
+    font: var(--type-body-lg-600);
   }
 
   &--xl {
-    height: var(--avatar-xl);
-    width: var(--avatar-xl);
-    font: var(--type-body-lg-500);
+    inline-size: var(--avatar-xl);
+    block-size: var(--avatar-xl);
+    font: var(--type-body-lg-600);
+  }
+
+  // ─── In a group: a canvas ring and an overlap ────────────────────────────
+  &--grouped {
+    box-shadow: 0 0 0 var(--border-width-thick) var(--canvas-primary);
+  }
+
+  &--stacked {
+    margin-inline-start: calc(-1 * var(--space-xs));
   }
 }

@@ -33,6 +33,15 @@
     <afi-avatar [size]="size()" name="Ana López" />
     <afi-avatar [size]="size()" name="Carlos Ruiz" />
     <afi-avatar [size]="size()" name="María García" />
+    <afi-avatar [size]="size()" name="Gestoras Norte" [square]="true" />
+    <afi-avatar [size]="size()" name="Sin foto" [neutral]="true" />
+    <afi-avatar-group [size]="size()" [max]="3" ariaLabel="Participantes">
+      <afi-avatar name="Ana López" />
+      <afi-avatar name="Carlos Ruiz" />
+      <afi-avatar name="María García" />
+      <afi-avatar name="Luis Pérez" />
+      <afi-avatar name="Eva Torres" />
+    </afi-avatar-group>
   </div>
 
   <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
@@ -42,6 +51,7 @@
     <ul class="prose-section__list">
       <li>Imagen incluye <code>alt</code> con el nombre cuando hay <code>src</code>.</li>
       <li>Fallback de iniciales se marca como <code>aria-hidden="true"</code> — el nombre acompaña vía label adyacente.</li>
+      <li>El grupo es un <code>role="group"</code> con nombre; el chip «+N» se lee «y N más».</li>
       <li>Avatares decorativos sin valor semántico deben envolverse en un contenedor con <code>aria-hidden="true"</code>.</li>
     </ul>
   </section>

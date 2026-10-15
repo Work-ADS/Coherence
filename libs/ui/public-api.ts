@@ -153,6 +153,7 @@ export { IconButtonComponent } from './src/icon-button';
 export type { IconButtonVariant, IconButtonSize } from './src/icon-button';
 export { AvatarComponent } from './src/avatar';
 export type { AvatarSize } from './src/avatar';
+export { AvatarGroupComponent } from './src/avatar-group';
 export { SegmentedControlComponent } from './src/segmented-control';
 export type {
   SegmentedControlAppearance,

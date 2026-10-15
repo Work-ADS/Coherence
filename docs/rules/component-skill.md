@@ -242,7 +242,7 @@ Consult `docs/rules/accessibility.md` for the per-primitive checklist. These app
 
 - **Focus-visible ring** — 2px `action-500`, 2px offset. Every focusable element. No exceptions.
 - **Keyboard operable** — Tab / Shift-Tab, Arrow keys for composite widgets, Enter / Space where native, Escape to dismiss overlays. Tested in the spec.
-- **Touch target ≥ 44×44pt** on interactive elements. The `sm` size opt-outs require a product-level `aria-label` and a documented dense-context reason.
+- **Touch area ≥ 44×44pt** on interactive elements. The visible size can be smaller (buttons run 24 to 40 px): include the `touch-area` mixin so an invisible hit area reaches `--touch-target-min`. Opt-outs need a product-level `aria-label` and a documented dense-context reason. See `accessibility.md` rule 7.
 - **Reduced motion** — `prefers-reduced-motion: reduce` collapses movement transitions to 0–80ms fades. State communication stays; motion is cut.
 - **Screen reader** — role, name, state announced. Test with VoiceOver on macOS before PR.
 - **Contrast** — WCAG 2.2 AA minimum. AAA for text where the spec calls for it.
@@ -304,7 +304,7 @@ Apply on top of the universal rules.
 - Wrap in a `<label>` — implicit wrapping preferred over `for=` / `id=` when the structure allows.
 - Error state via `aria-invalid="true"` + visible error message region with `aria-describedby`.
 - Disabled uses the native `disabled` attribute, not `aria-disabled` alone (unless staying focusable is required).
-- Control height tokens: `control-h-sm: 32` (dense desktop), `control-h-md: 40`, `control-h-lg: 48` (mobile + default forms, WCAG AAA).
+- Control height tokens are responsive: `--control-h-sm/md/lg` are 40/44/48 below `lg` and 28/32/40 from `lg` (desktop density). Buttons, icon buttons and chips read the fixed chrome scale `--control-size-sm..2xl` (24/28/32/36/40) instead and rely on the `touch-area` mixin for the 44 px hit area.
 
 ### Overlays (Modal, Drawer, Popover, Tooltip)
 - CDK Overlay for positioning. FocusTrap on open; restore focus on close.

@@ -53,4 +53,23 @@ Settle the scale and the dead tokens every later sub-chunk reads. Token, mixin, 
 
 ## Findings from the session
 
-_(filled as work lands)_
+- **Numeric spacing names.** The brief counted `--space-3` only. `--space-1` to `--space-4` are all undefined: 19 uses in `page-header` and demo-shared components. All four remapped to `--space-2xs/xs/sm/md`.
+- **`--radius-xs` is 4px, not 2px.** The kbd doc page already documents it as 4px, so it points at `--radius-sm`.
+- **Icon set is 33 glyphs plus 9 milestone glyphs** (the plan said 11). Shapes live as data and render through the template, so no `innerHTML`/sanitizer. The primitive is `afi-icon`; doc page `/componentes/icon`. Specs: the repo has no test runner (see memory `ds has no unit tests`), so no spec was added; registry coverage was checked in the browser (42 of 42 icons draw).
+- **`--data-*` repoint was already done.** `aliases.scss` already maps the neutral and highlight names to `--chart-*`. What was missing, and is now fixed: `--data-diverge-*` (divergent heatmap now paints green and red steps) and the legend pattern defs (each swatch carries its own `<pattern>`; verified on `/patrones/graficos/line`).
+- **Open: `--chart-negative` is the hex `#C81E1E` in `charts.scss`**, which does not flip in dark, while `--chart-negative-default` is `#EB5656`. Repointing changes the red in light mode, so it is left for Richard's call (contrast against the chart ink).
+- **`editable-text.component.scss` had 14 raw px** that the commit hook would have blocked on any edit. Tokenised (small shifts: 6px gap is now `--space-xs`).
+- **Dark values for the new component tokens live in `components.scss`**, not in the `semantic.scss` dark block: same specificity as `:root`, and `components.scss` loads later, so a `semantic.scss` dark block would lose the cascade.
+- **Primary button hover** now resolves to azul-profundo-450 (`--button-primary-background-hover`); no primitive reads it until 5b.
+- Verified in the browser: control heights 28/32/40 at 1024px and 40/44/48 at 375px; dark values for `--button-*` resolve; Unicaja still renders radio cards (bordered 72px, 8px radius); no console errors.
+- The site prestart regenerates `semantic-token-manifest.generated.ts`; it is committed with the token change.
+
+### Guardian review (ds-token-guardian, 2026-10-15)
+
+Fixed: focus-ring mixin now builds the shadow from `--border-focus` on the element (the `--focus-ring` custom property resolves at `:root` and misses scoped brand or dark wrappers); dark warning-ghost active has its own step; tabs and segmented-control doc strings use `--easing-standard`; AFI-only note on `--button-*`.
+Recorded, not changed:
+- `--button-primary/danger-*` bind AFI ramps directly (zip does the same); white-label must override if unfrozen. Dark `--button-warning-ghost-border` and `--button-danger-background-default` have no dark override: check contrast in 5b when Button consumes them.
+- Two parallel scales: `--control-size-*` (24 to 40 chrome) and `--control-h-*` (fields). `--control-h-xl` (56, aliases.scss) is off-scale. `--button-height`, `--chip-height`, `--icon-button-size-*` shrink: intended.
+- `--radius-xs` is 2px under `[data-foundation="modern"]` and 4px in traditional; modern is untouched.
+- Legend pattern geometry (`width="6"`, `r="1.2"`) is raw SVG attributes copied from `buildPatternDefs`; no token exists for pattern geometry.
+- Still-undefined names outside the locked list (sweep not finished, verify each, later chunk): `--elevation-1`/`-2` in v1 `table-apron` and the segmented-control variants doc; `--foreground-primary/secondary`, `--surface-primary(-default)`, `--surface-secondary-default`, `--type-caption-400`, `--type-body-xs-500`, `--overlay-darken-20`, `--elevation-overlay`, `--feedback-error-*-default`, `--toast-action-color`, `--toast-hover-bg`, `--shadow-*`, `--radius-control-sm/md`.

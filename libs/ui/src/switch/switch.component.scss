@@ -2,53 +2,48 @@
 // afi-switch — toggle switch primitive.
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+@use '../styles/touch-area' as *;
+
 :host {
   display: inline-block;
 }
 
 .afi-switch {
+  @include touch-area;
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
-  min-height: var(--dimension-11); // 44 px touch target
+  gap: var(--space-sm);
   cursor: pointer;
 
+  // The target is the label row; touch-area grows it to the 44 px floor.
   &--disabled {
-    opacity: 0.5;
+    opacity: 0.55;
     cursor: not-allowed;
   }
 }
 
 // ─── Track ────────────────────────────────────────────────────────────────
-// Off state uses a stronger control gray (control-300) so the track is
-// actually visible at rest — the previous control-50 was so close to the
-// page background it disappeared. On state uses azul-profundo-700 for a
-// clear, deep blue.
+// Off = control-background-active (visible against the page); on = the action
+// colour. Sizes are the zip's: 40 x 24 and 32 x 18.
 .afi-switch__track {
   position: relative;
   display: inline-flex;
   align-items: center;
+  flex: none;
   border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-afi-control-300);
+  border-radius: var(--radius-full);
+  background: var(--control-background-active);
   cursor: inherit;
-  // 2 px inset all around so the thumb breathes inside the track instead of
-  // touching the rounded edge (shadcn switch convention).
-  padding-inline: var(--space-3xs);
-  transition: background-color var(--duration-fast) var(--easing-enter);
+  padding-inline: var(--dimension-0-75);
+  transition: background-color var(--duration-base) var(--easing-standard);
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
 
-  &:hover:not(:disabled) {
-    background: var(--color-afi-control-400, var(--color-afi-control-300));
-  }
-
   &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
-    outline-offset: var(--border-width-thick);
+    @include focus-ring;
   }
 
   &:disabled {
@@ -56,16 +51,13 @@
   }
 
   &--on {
-    background: var(--color-afi-azul-profundo-700);
-
-    &:hover:not(:disabled) {
-      background: var(--color-afi-azul-profundo-800);
-    }
+    background: var(--brand-secondary-background-default);
   }
 
   &--sm {
     width: var(--dimension-8);
-    height: var(--dimension-5);
+    height: var(--dimension-4-5);
+    padding-inline: var(--space-3xs);
   }
 
   &--md {
@@ -75,38 +67,68 @@
 }
 
 // ─── Thumb ────────────────────────────────────────────────────────────────
-// Sits inside the track's 2 px padding on every side. Off state = at left
-// padding (translateX(0)); on state = shifted by (track_w − thumb_w − padding*2)
-// so it lands at the right padding.
+// Off = at the left inset; on = shifted by track − thumb − 2 × inset. The
+// travel carries an overshoot settle; the colour crossfade stays linear. While
+// pressed the thumb stretches toward where it is going, then snaps back.
 .afi-switch__thumb {
   display: inline-block;
-  border-radius: var(--radius-pill);
-  background: var(--surface-default);
+  border-radius: var(--radius-full);
+  background: var(--color-base-white);
   box-shadow: var(--elevation-sm);
   transform: translateX(0);
-  transition: transform var(--duration-fast) var(--easing-enter);
+  transition:
+    transform var(--duration-base) var(--easing-overshoot),
+    width var(--duration-fast) var(--easing-standard);
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
 
-  // sm: track 32 × 20, thumb 16 × 16, on-translate = 32 − 16 − 4 = 12 px.
-  &--sm {
-    width: var(--dimension-4);
-    height: var(--dimension-4);
-
-    &.afi-switch__thumb--on {
-      transform: translateX(var(--dimension-3));
-    }
-  }
-
-  // md: track 40 × 24, thumb 20 × 20, on-translate = 40 − 20 − 4 = 16 px.
+  // md: track 40, thumb 18, inset 3 -> travel 16.
   &--md {
-    width: var(--dimension-5);
-    height: var(--dimension-5);
+    width: var(--dimension-4-5);
+    height: var(--dimension-4-5);
 
     &.afi-switch__thumb--on {
       transform: translateX(var(--dimension-4));
+    }
+  }
+
+  // sm: track 32, thumb 14, inset 2 -> travel 14.
+  &--sm {
+    width: var(--dimension-3-5);
+    height: var(--dimension-3-5);
+
+    &.afi-switch__thumb--on {
+      transform: translateX(var(--dimension-3-5));
+    }
+  }
+}
+
+.afi-switch__track:active:not(:disabled) {
+  .afi-switch__thumb--md {
+    width: calc(var(--dimension-4-5) + var(--dimension-0-75));
+
+    &.afi-switch__thumb--on {
+      transform: translateX(calc(var(--dimension-4) - var(--dimension-0-75)));
+    }
+  }
+
+  .afi-switch__thumb--sm {
+    width: calc(var(--dimension-3-5) + var(--dimension-0-75));
+
+    &.afi-switch__thumb--on {
+      transform: translateX(calc(var(--dimension-3-5) - var(--dimension-0-75)));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .afi-switch__thumb--md {
+      width: var(--dimension-4-5);
+    }
+
+    .afi-switch__thumb--sm {
+      width: var(--dimension-3-5);
     }
   }
 }

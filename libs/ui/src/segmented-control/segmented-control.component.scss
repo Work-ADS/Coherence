@@ -8,27 +8,44 @@
 }
 
 .seg-control {
+  // The track is as tall as an input at the same size; the thumb and the
+  // options take the control radius, the track wraps them concentrically.
+  --seg-pad: var(--space-3xs);
+  --seg-h: var(--control-h-md);
+  --seg-r: calc(var(--radius-control) + var(--seg-pad));
+
   position: relative;
+  box-sizing: border-box;
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2xs);
+  gap: var(--seg-pad);
   max-width: 100%;
-  padding: var(--space-2xs);
-  border-radius: var(--radius-lg);
+  padding: var(--seg-pad);
+  border-radius: var(--seg-r);
   background: var(--control-background-default);
+
+  &--sm {
+    --seg-h: var(--control-h-sm);
+  }
+
+  &--lg {
+    --seg-h: var(--control-h-lg);
+  }
 
   // ─── Sliding indicator ───
   &__indicator {
     position: absolute;
     top: 0;
     left: 0;
-    border-radius: var(--radius-md);
-    background: var(--control-background-active);
-    box-shadow: var(--elevation-sm);
+    border-radius: var(--radius-control);
+    background: var(--surface-raised);
+    box-shadow:
+      var(--elevation-sm),
+      inset 0 0 0 var(--border-width-hairline) var(--border-subtle);
     transition:
-      transform var(--duration-base) var(--easing-standard),
-      width var(--duration-fast) var(--easing-standard),
+      transform var(--duration-base) var(--easing-enter),
+      width var(--duration-base) var(--easing-enter),
       height var(--duration-fast) var(--easing-standard);
     will-change: transform, width, height;
 
@@ -38,73 +55,62 @@
   }
 
   // ─── Option button ───
+  // One weight in every state: only the ink changes, so a label never changes
+  // width when it is selected.
   &__option {
     position: relative;
     z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-control);
     background: transparent;
-    color: var(--foreground-tertiary-default);
+    color: var(--foreground-secondary-default);
     cursor: pointer;
     user-select: none;
     min-width: 0;
     max-width: 100%;
     white-space: normal;
-    font: var(--type-body-md-400);
-    transition: color var(--duration-fast) ease-out;
+    font: var(--type-body-md-500);
+    transition: color var(--duration-base) var(--easing-enter);
 
     &:hover:not(.seg-control__option--active):not(.seg-control__option--disabled) {
-      color: var(--foreground-secondary-default);
+      color: var(--foreground-primary-default);
     }
 
     &--active {
       color: var(--foreground-primary-default);
-      font: var(--type-body-md-500);
     }
 
     &--disabled {
-      opacity: 0.5;
+      color: var(--disabled-foreground);
       cursor: not-allowed;
     }
 
+    // Inset ring: drawn inside the track so a parent's overflow never clips it.
     &:focus-visible {
       outline: none;
-      box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+      box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
     }
   }
 
-  // ─── Size variants ───
+  // ─── Size variants: option height = track height minus the track padding ───
   &--sm .seg-control__option {
-    height: var(--dimension-7);
+    height: calc(var(--seg-h) - 2 * var(--seg-pad));
     padding: 0 var(--space-sm);
-    font: var(--type-body-sm-400);
-
-    &.seg-control__option--active {
-      font: var(--type-body-sm-500);
-    }
+    font: var(--type-body-sm-500);
   }
 
   &--md .seg-control__option {
-    height: var(--dimension-9);
+    height: calc(var(--seg-h) - 2 * var(--seg-pad));
     padding: 0 var(--space-md);
-    font: var(--type-body-md-400);
-
-    &.seg-control__option--active {
-      font: var(--type-body-md-500);
-    }
   }
 
   &--lg .seg-control__option {
-    height: var(--dimension-10);
+    height: calc(var(--seg-h) - 2 * var(--seg-pad));
     padding: 0 var(--space-md);
-    font: var(--type-body-md-400);
-
-    &.seg-control__option--active {
-      font: var(--type-body-md-500);
-    }
   }
 }
 

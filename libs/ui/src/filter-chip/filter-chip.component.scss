@@ -5,6 +5,8 @@
 // BEM classes, DS tokens via CSS custom properties only.
 // =============================================================================
 
+@use '../styles/focus-ring-v1' as *;
+
 :host {
   display: inline-block;
   position: relative;
@@ -17,12 +19,10 @@
   // Patrimonio convention; --space-2xs felt cramped once the chip
   // carries a textual selectionLabel rather than a bare number.
   gap: var(--space-xs);
-  border: var(--border-width-hairline) solid var(--border-hairline);
-  border-radius: var(--filter-chip-radius, var(--radius-pill));
-  // Resting surface = `bg-surface` Tailwind on the Patrimonio bespoke
-  // chip. --surface-default sits a step lower on AFI and looks muddy
-  // next to a real card.
-  background: var(--surface-base);
+  box-sizing: border-box;
+  border: var(--border-width-hairline) solid var(--control-border-default);
+  border-radius: var(--radius-full);
+  background: var(--control-background-default);
   color: var(--foreground-secondary-default);
   cursor: pointer;
   transition:
@@ -31,26 +31,31 @@
     color var(--duration-fast) var(--easing-enter);
 
   &:hover:not(.afi-chip--disabled) {
-    background: var(--surface-subtle);
-    border-color: var(--border-default);
+    background: var(--control-background-hover);
+    border-color: var(--control-border-hover);
     color: var(--foreground-primary-default);
   }
 
+  &:active:not(.afi-chip--disabled) {
+    background: var(--control-background-active);
+  }
+
   &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    @include focus-ring;
     outline-offset: var(--border-width-thick);
   }
 
+  // Selected is a quiet tint with the action border, never a solid pill. The
+  // border holds through hover and press: only the fill responds.
   &--selected {
-    background: var(--brand-primary-background-default);
-    border-color: var(--brand-primary-background-default);
-    color: var(--brand-primary-foreground-default);
+    background: var(--control-background-selected);
+    border-color: var(--control-border-selected);
+    color: var(--foreground-primary-default);
 
     &:hover:not(.afi-chip--disabled) {
-      background: var(--brand-primary-background-hover);
-      border-color: var(--brand-primary-background-hover);
-      color: var(--brand-primary-foreground-hover);
+      background: var(--control-background-hover);
+      border-color: var(--control-border-selected);
+      color: var(--foreground-primary-default);
     }
   }
 
@@ -59,22 +64,23 @@
     cursor: not-allowed;
   }
 
+  // Sizes sit on the chrome scale (24 / 32), the same as Button and IconButton.
   &--sm {
-    height: var(--dimension-6);
+    height: var(--control-size-sm);
     padding-inline: var(--space-xs);
     font: var(--type-body-sm-400);
   }
 
   &--md {
-    height: var(--dimension-8);
+    height: var(--control-size-lg);
     // Asymmetric padding so the caret on the right sits tucked
     // (--space-xs) while the label keeps --space-sm breathing room on
     // the left — matches the Patrimonio bespoke trigger button.
     padding-inline-start: var(--space-sm);
     padding-inline-end: var(--space-xs);
-    // Stay on body-sm — body-md reads as a button, not a filter chip,
-    // once the chip sits at chip-height.
-    font: var(--type-body-sm-400);
+    // The filter name reads like ordinary control text, as in the field
+    // beside it; only the applied value carries weight.
+    font: var(--type-body-md-400);
   }
 
   // Dropdown mode keeps the same chrome but uses an action-tinted active
@@ -100,6 +106,10 @@
   display: inline-block;
   white-space: nowrap;
   font-weight: 500;
+
+  .afi-chip--md & {
+    font-weight: 400;
+  }
 }
 
 .afi-chip__count {
@@ -115,8 +125,7 @@
   font: var(--type-body-sm-500);
 
   .afi-chip--selected & {
-    background: var(--brand-primary-foreground-default);
-    color: var(--brand-primary-background-default);
+    background: var(--surface-default);
   }
 }
 
@@ -181,7 +190,7 @@
 }
 
 .afi-chip__selection {
-  font-weight: 600;
+  font-weight: 500;
   // Pick up the action color (brand-secondary on AFI) so the count/label
   // pops against the subtle tinted background — matches Patrimonio.
   color: var(--control-foreground-active);
@@ -205,12 +214,12 @@
   position: absolute;
   inset-block-start: calc(100% + var(--space-2xs));
   inset-inline-start: 0;
-  z-index: 50;
+  z-index: var(--z-floating);
   min-inline-size: 17.5rem;
   padding: var(--space-xs);
-  background: var(--surface-elevated);
-  border: var(--border-width-hairline) solid var(--border-hairline);
-  border-radius: var(--radius-md);
+  background: var(--overlay-dropdown);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-panel);
   box-shadow: var(--elevation-lg);
 }
 
@@ -223,18 +232,18 @@
   padding-inline: var(--space-xs);
   border: 0;
   background: transparent;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-control);
   text-align: start;
   color: var(--foreground-primary-default);
   font: var(--type-body-sm-400);
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--easing-enter);
 
-  &:hover { background: var(--surface-muted); }
+  &:hover { background: var(--nav-item-background-hover); }
 
   &:focus-visible {
     outline: none;
-    background: var(--surface-muted);
+    background: var(--nav-item-background-hover);
     box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focus);
   }
 

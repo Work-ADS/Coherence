@@ -11,134 +11,22 @@ import {
   ElementRef,
 } from '@angular/core';
 
-import { boxSizeClasses, CheckboxSize } from './checkbox.variants';
+import type { CheckboxSize } from './checkbox.variants';
 
 let nextId = 0;
 
 /**
- * Checkbox primitive with Animate UI–style micro-animations.
- *
- * Uses a native `<input type="checkbox">` for maximum a11y.
- * Overlays an SVG checkmark with stroke-dashoffset draw animation
- * and a spring-like scale bounce on state change.
- * Supports `indeterminate` state (horizontal dash).
- * All motion respects `prefers-reduced-motion`.
+ * Checkbox primitive: a native `<input type="checkbox">` for the semantics and
+ * a drawn box for the look. The tick draws itself and the box settles once on
+ * commit; `indeterminate` shows a dash. All motion respects
+ * `prefers-reduced-motion`. Styling lives in `checkbox.component.scss`.
  */
 @Component({
   selector: 'afi-checkbox',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    /* Checkmark path draw animation */
-    .afi-check-path {
-      stroke-dasharray: 22;
-      stroke-dashoffset: 22;
-      transition: stroke-dashoffset 200ms cubic-bezier(0.65, 0, 0.35, 1) 80ms;
-    }
-    .afi-check-path--visible {
-      stroke-dashoffset: 0;
-    }
-
-    /* Indeterminate dash draw */
-    .afi-dash-path {
-      stroke-dasharray: 10;
-      stroke-dashoffset: 10;
-      transition: stroke-dashoffset 150ms cubic-bezier(0.65, 0, 0.35, 1) 80ms;
-    }
-    .afi-dash-path--visible {
-      stroke-dashoffset: 0;
-    }
-
-    /* Spring-like scale bounce on the box */
-    .afi-checkbox-box {
-      transition:
-        background-color 150ms ease-out,
-        border-color 150ms ease-out,
-        transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .afi-checkbox-box--pressed {
-      transform: scale(0.9);
-    }
-
-    /* Reduced motion: collapse all transitions */
-    @media (prefers-reduced-motion: reduce) {
-      .afi-check-path,
-      .afi-dash-path,
-      .afi-checkbox-box {
-        transition-duration: 0ms !important;
-        transition-delay: 0ms !important;
-      }
-    }
-  `,
-  template: `
-    <label [for]="checkboxId"
-           [class]="compact() ? 'inline-flex items-center gap-1.5 cursor-pointer' : 'inline-flex items-start gap-space-2 min-h-[var(--dimension-11)] min-w-[var(--dimension-11)] cursor-pointer'"
-           [class.opacity-50]="disabled()" [class.cursor-not-allowed]="disabled()">
-      <span [class]="wrapperClasses()">
-        <!-- Hidden native input for a11y -->
-        <input
-          #inputEl
-          type="checkbox"
-          [id]="checkboxId"
-          [checked]="checked()"
-          [disabled]="disabled()"
-          [attr.aria-required]="required() ? 'true' : null"
-          [attr.aria-invalid]="error() ? 'true' : null"
-          [attr.aria-describedby]="describedBy()"
-          [attr.aria-label]="!label() ? ariaLabel() : null"
-          class="peer absolute w-0 h-0 opacity-0 pointer-events-none"
-          (change)="onToggle($event)"
-        />
-        <!-- Custom visual box with animation -->
-        <span [class]="boxClasses()">
-          <!-- Checkmark SVG (visible when checked, not indeterminate) -->
-          <svg
-            [class]="svgSizeClass()"
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden="true"
-          >
-            @if (!indeterminate()) {
-              <path
-                d="M3.5 8.5L6.5 11.5L12.5 4.5"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="afi-check-path"
-                [class.afi-check-path--visible]="checked()"
-              />
-            } @else {
-              <line
-                x1="4" y1="8" x2="12" y2="8"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                class="afi-dash-path"
-                [class.afi-dash-path--visible]="indeterminate()"
-              />
-            }
-          </svg>
-        </span>
-      </span>
-      @if (label()) {
-        <span [class]="compact() ? 'flex flex-col' : 'flex flex-col pt-[var(--dimension-2-5)]'">
-          <span [class]="compact() ? 'text-body-sm text-canvas-fg' : 'text-body-md text-canvas-fg'">
-            {{ label() }}
-            @if (required()) {
-              <span class="text-system-error" aria-hidden="true"> *</span>
-            }
-          </span>
-          @if (hint() && !error()) {
-            <span [id]="hintId" class="text-body-sm text-neutral-500">{{ hint() }}</span>
-          }
-          @if (error()) {
-            <span [id]="errorId" class="text-body-sm text-system-error" role="alert">{{ error() }}</span>
-          }
-        </span>
-      }
-    </label>
-  `,
+  templateUrl: './checkbox.component.html',
+  styleUrls: ['./checkbox.component.scss'],
 })
 export class CheckboxComponent implements OnInit {
   readonly checked = input<boolean>(false);
@@ -160,39 +48,12 @@ export class CheckboxComponent implements OnInit {
   readonly hintId = `${this.checkboxId}-hint`;
   readonly errorId = `${this.checkboxId}-error`;
 
-  /** SVG icon size matches box size */
-  readonly svgSizeClass = computed(() => {
-    return this.size() === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5';
-  });
-
-  /** Outer span around the absolute-positioned box. Compact mode collapses
-   *  the 44×44 touch-target wrapper down to the box's own size so the
-   *  absolute box has a positioning anchor and the label sits flush. */
-  readonly wrapperClasses = computed(() => {
-    if (this.compact()) {
-      return `relative flex ${boxSizeClasses[this.size()]} shrink-0`;
-    }
-    return 'relative flex items-center justify-center min-h-[var(--dimension-11)] min-w-[var(--dimension-11)]';
-  });
-
-  readonly boxClasses = computed(() => {
-    const isChecked = this.checked();
-    const isIndeterminate = this.indeterminate();
-    const active = isChecked || isIndeterminate;
-    const errorBorder = this.error() && !active;
-
-    return [
-      // Base layout
-      'afi-checkbox-box',
-      'absolute flex items-center justify-center rounded-sm border-2 cursor-pointer',
-      // Focus ring on sibling input focus-visible
-      'peer-focus-visible:ring-2 peer-focus-visible:ring-border-focus peer-focus-visible:ring-offset-2',
-      // Size
-      boxSizeClasses[this.size()],
-      // Color states
-      active ? 'bg-action border-action' : 'bg-control border-border-hairline',
-      errorBorder ? 'border-system-error' : '',
-    ].filter(Boolean).join(' ');
+  readonly rootClasses = computed(() => {
+    const parts = ['afi-check', `afi-check--${this.size()}`];
+    if (this.compact()) parts.push('afi-check--compact');
+    if (this.error()) parts.push('afi-check--error');
+    if (this.disabled()) parts.push('afi-check--disabled');
+    return parts.join(' ');
   });
 
   readonly describedBy = computed(() => {

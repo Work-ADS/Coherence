@@ -1,0 +1,16 @@
+<fieldset
+  [class]="fieldsetClasses()"
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-labelledby]="ariaLabelledBy()"
+  role="radiogroup"
+>
+  @if (legend()) {
+    <legend class="afi-radio-group__legend">
+      {{ legend() }}
+      @if (required()) {
+        <span class="afi-radio-group__required" aria-hidden="true">*</span>
+      }
+    </legend>
+  }
+  <ng-content />
+</fieldset>

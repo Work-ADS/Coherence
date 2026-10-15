@@ -8,6 +8,12 @@
 export type FilterChipSize = 'sm' | 'md';
 
 /**
+ * `default` is the tinted chip; `outline` is the compact filter-trigger look for
+ * filter rows: transparent, dashed until a value is applied, solid once it is.
+ */
+export type FilterChipAppearance = 'default' | 'outline';
+
+/**
  * Behavior mode for the filter chip.
  *
  * - `toggle`   — single pill that toggles on/off (legacy default). Use a

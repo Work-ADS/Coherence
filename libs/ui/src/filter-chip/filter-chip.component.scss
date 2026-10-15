@@ -40,10 +40,12 @@
     background: var(--control-background-active);
   }
 
-  &:focus-visible {
+  // The ring is drawn on the pill when the BODY has keyboard focus: instant, never transitioned.
+  &:has(.afi-chip__body:focus-visible) {
     @include focus-ring;
-    outline-offset: var(--border-width-thick);
   }
+
+  max-inline-size: 100%;
 
   // Selected is a quiet tint with the action border, never a solid pill. The
   // border holds through hover and press: only the fill responds.
@@ -129,56 +131,93 @@
   }
 }
 
-.afi-chip__dismiss {
+// The body and the × buttons are siblings inside the pill (a button cannot
+// contain a button). Hover and press fill is driven from the pill, so hovering
+// the × lights the whole shape.
+.afi-chip__body,
+.afi-chip__x {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: var(--dimension-4);
-  height: var(--dimension-4);
-  margin-inline-start: var(--space-2xs);
-  border-radius: var(--radius-pill);
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
   cursor: pointer;
-  opacity: 0.7;
-  transition: opacity var(--duration-fast) var(--easing-enter);
 
-  &:hover { opacity: 1; }
-
-  &:focus-visible {
-    outline: none;
-    opacity: 1;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
-  }
-
-  svg {
-    width: var(--dimension-3);
-    height: var(--dimension-3);
+  &:disabled {
+    cursor: not-allowed;
   }
 }
 
-// ─── Dropdown-mode trigger affordances ─────────────────────────────────────
-.afi-chip__clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--dimension-4);
-  height: var(--dimension-4);
-  border-radius: var(--radius-pill);
-  color: var(--foreground-secondary-default);
-  cursor: pointer;
-  opacity: 0.75;
-  transition: opacity var(--duration-fast) var(--easing-enter);
-
-  &:hover { opacity: 1; }
+.afi-chip__body {
+  min-inline-size: 0;
+  overflow: hidden;
 
   &:focus-visible {
     outline: none;
-    opacity: 1;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+}
+
+.afi-chip__x {
+  flex: none;
+  justify-content: center;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  border-radius: var(--radius-full);
+  color: var(--foreground-secondary-default);
+  transition: color var(--duration-fast) var(--easing-enter);
+
+  afi-icon {
+    --afi-icon-size: var(--icon-sm);
   }
 
-  svg {
-    width: var(--dimension-3);
-    height: var(--dimension-3);
+  &:hover {
+    color: var(--foreground-primary-default);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &--lead {
+    margin-inline-end: calc(-1 * var(--space-2xs));
+  }
+}
+
+.afi-chip__value {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// The caret turns over while the panel is open.
+.afi-chip--open .afi-chip__caret {
+  transform: rotate(180deg);
+}
+
+// Outline: the compact filter-trigger look. Transparent surface at rest, a
+// dashed border until a value is applied and a solid one after; md uses the
+// 28 px chrome step.
+.afi-chip--outline {
+  background: transparent;
+  border-style: dashed;
+
+  &.afi-chip--selected {
+    border-style: solid;
+  }
+
+  &.afi-chip--md {
+    height: var(--control-size-md);
+    padding-inline: var(--space-xs);
+  }
+
+  &.afi-chip--open {
+    border-style: solid;
+    border-color: var(--input-border-focus);
   }
 }
 
@@ -198,8 +237,8 @@
 }
 
 .afi-chip__caret {
-  width: var(--dimension-3);
-  height: var(--dimension-3);
+  --afi-icon-size: var(--icon-xs);
+  transition: transform var(--duration-fast) var(--easing-standard);
   color: var(--foreground-secondary-default);
   flex-shrink: 0;
 }
@@ -282,9 +321,8 @@
     color: var(--brand-secondary-foreground-default);
   }
 
-  svg {
-    width: var(--dimension-3);
-    height: var(--dimension-3);
+  afi-icon {
+    --afi-icon-size: var(--icon-xs);
   }
 }
 
@@ -314,8 +352,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .afi-chip,
-  .afi-chip__dismiss,
-  .afi-chip__clear,
+  .afi-chip__x,
+  .afi-chip__caret,
   .afi-chip__menu-row,
   .afi-chip__menu-check {
     transition-duration: 0ms !important;

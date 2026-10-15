@@ -59,6 +59,7 @@ export { SearchV2Component } from './src/search-v2';
 export type { SearchV2Size, SearchV2Suggestion } from './src/search-v2';
 export { FilterChipComponent } from './src/filter-chip';
 export type {
+  FilterChipAppearance,
   FilterChipMode,
   FilterChipOption,
   FilterChipSize,

@@ -6,5 +6,5 @@
  * This file exports the union types consumed by the component's signal inputs.
  */
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'danger-ghost';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'danger-ghost' | 'warning-ghost';
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl';

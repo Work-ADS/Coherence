@@ -104,7 +104,22 @@
     }
   }
 
-  // ─── Sizes: chrome scale 24/28/32 (touch-area gives the 44 px hit area) ──
+  // Warning-toned action for a value still to complete: transparent with a
+  // warning hairline and warning ink.
+  &--warning-ghost {
+    background: transparent;
+    color: var(--button-warning-ghost-foreground);
+    border: var(--border-width-hairline) solid var(--button-warning-ghost-border);
+
+    &:hover:not(:disabled) {
+      background: var(--button-warning-ghost-background-hover);
+    }
+    &:active:not(:disabled) {
+      background: var(--button-warning-ghost-background-active);
+    }
+  }
+
+  // ─── Sizes: chrome scale 24/28/32/36/40 (touch-area gives the 44 px hit area) ──
   &--sm {
     height: var(--control-size-sm);
     padding-inline: var(--space-xs);
@@ -120,6 +135,18 @@
   &--lg {
     height: var(--control-size-lg);
     padding-inline: var(--space-sm);
+    font: var(--control-label-font-lg);
+  }
+
+  &--xl {
+    height: var(--control-size-xl);
+    padding-inline: var(--space-md);
+    font: var(--control-label-font-lg);
+  }
+
+  &--2xl {
+    height: var(--control-size-2xl);
+    padding-inline: var(--space-md);
     font: var(--control-label-font-lg);
   }
 
@@ -143,9 +170,13 @@
   }
 }
 
+.btn__icon {
+  flex: none;
+}
+
 .btn__spinner {
-  display: inline-block;
-  animation: btn-spin 1s linear infinite;
+  display: inline-flex;
+  animation: btn-spin 0.7s linear infinite;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;

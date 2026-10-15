@@ -6,16 +6,16 @@
   [attr.aria-label]="ariaLabel()"
   (click)="onClick($event)"
 >
-  @if (iconStart()) {
-    <ng-content select="[slot=iconStart]" />
-  }
   @if (!loading()) {
+    @if (iconStart(); as name) {
+      <afi-icon class="btn__icon" [name]="name" />
+    }
     <ng-content />
+    @if (iconEnd(); as name) {
+      <afi-icon class="btn__icon" [name]="name" />
+    }
   } @else {
-    <span class="btn__spinner" aria-hidden="true">⟳</span>
+    <afi-icon class="btn__spinner" name="loader" />
     <span class="btn__sr-only">Cargando…</span>
-  }
-  @if (iconEnd()) {
-    <ng-content select="[slot=iconEnd]" />
   }
 </button>

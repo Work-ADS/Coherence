@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, isDevMode, OnInit } from '@angular/core';
 
 import { IconComponent } from '../icon';
 import type { IconName } from '../icon';
@@ -25,7 +25,7 @@ import type { BadgeIntent, BadgeSize, BadgeTone, BadgeVariant } from './badge.va
   templateUrl: './badge.component.html',
   styleUrls: ['./badge.component.scss'],
 })
-export class BadgeComponent {
+export class BadgeComponent implements OnInit {
   readonly tone = input<BadgeTone | null>(null);
   /** @deprecated Use `tone`. */
   readonly intent = input<BadgeIntent>('neutral');
@@ -38,6 +38,14 @@ export class BadgeComponent {
   /** Glyph from the `afi-icon` set, before the label. */
   readonly icon = input<IconName | null>(null);
   readonly ariaLabel = input<string | null>(null);
+
+  ngOnInit(): void {
+    if (isDevMode() && this.dot() && !this.ariaLabel()) {
+      console.warn(
+        '[afi-badge] A bare dot has no text, so it needs an ariaLabel. Provide one for accessibility.',
+      );
+    }
+  }
 
   protected readonly resolvedTone = computed<BadgeTone>(() => this.tone() ?? this.intent());
 

@@ -213,3 +213,9 @@
   --status-archived-fg:   var(--feedback-disabled-foreground);
   --status-archived-dot:  var(--color-afi-control-400);
 }
+
+// Solid draft chip in dark: the dark ink on the light dot (control-500) is 3.8:1; one step lighter passes.
+// Here, not in components.scss, because this file loads after it and wins the cascade.
+[data-theme="dark"] {
+  --status-draft-dot: var(--color-afi-control-400);
+}

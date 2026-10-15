@@ -142,7 +142,8 @@ export class PageHeaderComponent implements AfterViewInit, AfterContentInit, OnD
     if (this.bodyFlush() && this.level() !== 'page') {
       parts.push('page-header--body-flush');
     }
-    if (this.compactActionPlacement() === 'after-description') {
+    // Not for a collapsible header: its chevron, count and check mark would each drop onto their own row.
+    if (this.compactActionPlacement() === 'after-description' && !this.collapsible()) {
       parts.push('page-header--actions-last');
     }
     if ((this.appearance() === 'plain' || this.borderless()) && this.level() !== 'page') {

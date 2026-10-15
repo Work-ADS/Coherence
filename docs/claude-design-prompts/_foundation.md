@@ -3,6 +3,25 @@
 You are building motion for a design system. The individual pattern brief that
 follows assumes everything below.
 
+## Working rules — no retry loops
+
+**Two tries, then stop.** If something hangs, fails or looks wrong, try at most
+two fixes. If the second doesn't work, stop and report instead of trying again.
+No test pages built only to debug, and no rounds of screenshot, wait, retry.
+
+**A report says four things:**
+
+1. What's failing: which screen, which component, which data or options.
+2. What you've changed so far, and whether each change works.
+3. Where the cause lives: the design system or the product file.
+4. Your best guess at the cause, and the one fix you'd try next.
+
+Then wait for a reply. A clear report after two tries beats an hour of silent
+retries.
+
+**Ship the part that works.** When one piece is blocked, finish and show the
+pieces that aren't, then report the blocked one.
+
 ## Principles these patterns share
 
 **Order communicates.** When two things move, the order is the message. A

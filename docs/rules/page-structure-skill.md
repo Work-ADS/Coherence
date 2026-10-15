@@ -148,7 +148,7 @@ Shape A is the default. Shape B only when sticky behaviour requires it — and t
 </afi-page-header>
 ```
 
-Multiple action elements all go in `slot="actions"`. The primitive warns in dev mode when more than `maxInlineActions` (default 3) are projected — wrap overflow into an `afi-menu` instead of stacking. See [page-header.component.ts:149](../../libs/ui/src/page-header/page-header.component.ts:149).
+Multiple action elements all go in `slot="actions"`. The primitive warns in dev mode when more than `maxInlineActions` (default 3) are projected — wrap overflow into an `afi-menu` instead of stacking. See `page-header.component.ts` (`ngAfterContentInit`).
 
 A `slot="primaryAction"` exists for the rare case where one CTA must visually outrank the rest; it renders after `slot="actions"` and counts toward the same overflow rule.
 
@@ -160,7 +160,7 @@ The page header ranks its actions weakest to strongest, left to right: `slot="ba
 - **`slot="titleAccessory"`** (alias of `extraInfo`) is for small inline controls tied to the title, right after the h1.
 - **`description`** is an alias of `subtitle` (max 84 characters wide).
 - **`compactActionPlacement="after-description"`** moves the actions below the description at the compact width; the default wraps them below the title.
-- Sections and subsections are not `banner` landmarks and carry no `aria-label`.
+- Sections and subsections are not `banner` landmarks and the host carries no `aria-label`. A collapsible one names its toggle button from `ariaLabel`, defaulting to the title.
 
 **What this rule catches:**
 
@@ -196,7 +196,7 @@ A single-section page with no body actions and no body cards never needs a secti
 
 If none of those hold, the content stays inline in the parent section's body. Don't reach for a subsection container just to introduce a heading — use the body's own typography.
 
-Inside dialogs, `level="subsection" borderless` removes the outline since the surrounding modal panel already defines the visual boundary. Patrimonial's add-modal is the canonical example.
+Inside dialogs, `level="subsection" appearance="plain"` (formerly `borderless`) removes the outline since the surrounding modal panel already defines the visual boundary. Patrimonial's add-modal is the canonical example.
 
 **Banned: bespoke section divs.** `<section class="pf-section">`, `<section class="pf-gate">` and other hand-rolled divs styled to mimic a section — all banned. If you reach for one, the primitive you're avoiding is `<afi-page-header level="section">` or `<afi-section>`. Use it, or document the gap in a session brief before rolling your own. (Note: `.{prefix}-empty` divs are not section masquerades — they are the placeholder for the missing `<afi-empty-state>` primitive. See §10.)
 

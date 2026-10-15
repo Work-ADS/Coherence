@@ -19,7 +19,7 @@
   [attr.tabindex]="collapsible() ? 0 : null"
   [attr.aria-expanded]="collapsible() ? expanded() : null"
   [attr.aria-controls]="collapsible() ? bodyId : null"
-  [attr.aria-label]="collapsible() ? ariaLabel() : null"
+  [attr.aria-label]="collapsible() ? (ariaLabel() ?? title()) : null"
   (click)="onToggle()"
   (keydown.enter)="onToggle(); $event.preventDefault()"
   (keydown.space)="onToggle(); $event.preventDefault()"

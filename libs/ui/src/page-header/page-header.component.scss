@@ -221,7 +221,7 @@
   block-size: var(--dimension-8);
   border-radius: var(--radius-full);
   background: var(--brand-secondary-neutral-background-default);
-  color: var(--foreground-primary-default);
+  color: var(--brand-secondary-neutral-foreground-default);
 
   afi-icon {
     --afi-icon-size: var(--icon-sm);
@@ -331,7 +331,7 @@
   background: var(--brand-secondary-neutral-background-default);
   color: var(--brand-secondary-neutral-foreground-default);
   border-radius: var(--radius-pill);
-  font: var(--type-body-xs-500, var(--type-body-sm-500));
+  font: var(--type-body-sm-500);
   white-space: nowrap;
   flex-shrink: 0;
   align-self: center;

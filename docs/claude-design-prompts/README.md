@@ -71,11 +71,16 @@ the rows to appear before the panel does not want this system.
 | [`selection-slide.md`](./selection-slide.md) | Tabs + segmented control indicator | §4.12, §4.13 |
 | [`selection-controls.md`](./selection-controls.md) | Checkbox, radio, switch feedback | §4.8, §4.9 |
 | [`page-section-layout.md`](./page-section-layout.md) | Shell, page header, section box, and their interaction | page-structure-skill §3–§17 |
+| [`responsive-canvas.md`](./responsive-canvas.md) | Shell widths, where the content rail meets the top bar, and the collapse order | page-structure-skill §4, §11 |
 | [`search-typeahead-reveal.md`](./search-typeahead-reveal.md) | Search field + typeahead panel + result cascade | §4.7, **exception uncataloged** |
 | [`filter-chip.md`](./filter-chip.md) | Filter pill — toggle, removable, applied value, exit | §4.1, §4.3, §4.6, §4.14 |
 | [`multi-select-menu.md`](./multi-select-menu.md) | Pill trigger + checkbox menu | **composed, not yet a v2 primitive** |
+| [`planner-top-bar-v1.md`](./planner-top-bar-v1.md) | V1 planner top bar: identity, rename in place, state badge and menu | §4.1, §4.3; page-structure §3 |
 | [`notes-dropdown-v1.md`](./notes-dropdown-v1.md) | V1 notes dropdown in the planner top bar, with what not to copy | §4.1, §4.2, §4.3, §4.14 |
+| [`listado-product-shell.md`](./listado-product-shell.md) | Listado in a tinted shell: the planner bar with no plan open, over a full-bleed ground, holding one raised card | **proposed, uncataloged** — page-structure §3, §4, §11 |
+| [`listado-table-tools.md`](./listado-table-tools.md) | Listado as a working table: sort, two densities, column chooser, flush on the page surface | **proposed, uncataloged** — page-structure §3, §4, §11 |
 | [`glass-nav-bar.md`](./glass-nav-bar.md) | Frosted top bar that content scrolls under, with the dark-content switch | **uncataloged**, see note |
+| [`windowed-bar-and-docked-readout.md`](./windowed-bar-and-docked-readout.md) | Dense stacked bar with a window + overview, and the docked readout under it | **proposed, uncataloged** — data-viz-skill §chart anatomy |
 | [`tooltip-shared-morph.md`](./tooltip-shared-morph.md) | Tooltip reveal + shared morph | **proposed, uncataloged** |
 | [`cross-reference-and-cleanup.md`](./cross-reference-and-cleanup.md) | *Job, not a pattern:* audit and reorganise the design-system project | — |
 
@@ -84,9 +89,11 @@ references kept in the house format, and they do not describe Coherence until
 they ship and get a catalog entry.
 
 Sections marked **decided, not built** sit inside otherwise-shipped briefs.
-They record a rule that is in the standard but not yet in code — today, the
-`list-exit` pattern (§4.14) in `filter-chip.md` and `page-section-layout.md`.
-Everything they describe still happens instantly in the product.
+They record a rule we've agreed but haven't put in code yet. Today that means
+the `list-exit` pattern (§4.14) in `filter-chip.md` and
+`page-section-layout.md`, and the rename changes in `planner-top-bar-v1.md` (no
+pencil, and a 12px gap to the state badge). The product still behaves the old
+way until they're built.
 
 Files marked **composed** describe an assembly of shipped v2 parts that no single
 primitive owns yet. Every motion in them exists in code; the combination does not.

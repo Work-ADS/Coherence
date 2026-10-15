@@ -46,7 +46,23 @@ Every chart is assembled from the same parts. Required means the primitive rende
 
 ## Chart selection
 
-Three-step refinement (Visa PDS):
+Start with a written brief, then the three-step refinement (Visa PDS). The brief comes first because every later step, and every review, is judged against it: without it you can say a chart is tidy, never that it's right.
+
+### Step 0 — Brief (required before any chart is chosen or built)
+
+Answer these in writing before choosing a shape. If the key question or the decision is blank, stop and ask; don't guess from the data that happens to be available. One brief per audience: if two audiences need the same data, they get two briefs.
+
+| Field | Answer |
+| --- | --- |
+| **Audience** | Who reads this chart? How well do they know the topic and how comfortable are they with numbers? How long will they look at it: a glance, or a sit-down analysis? |
+| **Key question** | The one question the chart answers, written as a question. Plus the follow-up questions the reader is likely to ask next. |
+| **Decision** | What will the reader do with the answer? Is there a threshold that triggers action (a budget, a target, a risk level)? If nothing changes after reading it, the chart shouldn't exist. |
+| **Medium** | Where it's read: dashboard, PDF report, slide, mobile. Static or interactive? At what size? |
+| **Data** | What's measured and in what unit (e.g. € invested). Per what (per client, per fund). Grouped by what (region, month). Any extra breakdowns. Source, date, and how complete and fresh the data is. |
+
+The brief feeds the steps below: the key question picks the insight (Step 1), the decision and its threshold pick the focus (Step 2), the audience and medium set how much to reduce and label (Step 3).
+
+Adapted from the Viz Canvas in Visa's *Data Experience Critique Framework* (Visa Data Experience Team, 2022): reworded for AFI, not reproduced.
 
 ### Step 1 — Insight
 
@@ -65,7 +81,26 @@ Pick the business question the chart has to answer.
 | Ranking | Which items have the highest and lowest values? |
 | Spatial | How does location impact a pattern? |
 
-Visa's table stops at the question — it deliberately does not map insight → chart type, because the mapping runs through their examples index. Our v1 covers Trend + Ranking (bar, line), Deviation (dumbbell) and Correlation (heatmap). Anything landing on Composition, Distribution, Flow or Spatial has no v1 primitive — route to Planner rather than forcing an existing shape.
+Visa's table stops at the question; its insight → chart mapping lives in its examples index and covers only four chart types. The table below closes that gap for all ten insights, using the FT Visual Vocabulary, the Urban Institute style guide and GitLab Pajamas (see **Sources for chart choice**).
+
+- **Built**: a Coherence primitive exists. Use it.
+- **Allowed, not built**: a sound choice. Draw it in the mock-up following its rules under **Charts without a primitive yet**, and add a visible note: "Este gráfico aún no es un componente del DS". The component gets built when a real screen needs it, at design review, not in advance. Don't force a built shape onto the wrong insight.
+- **Avoid**: misleading or hard to read for this insight, even when it looks familiar.
+
+| Insight | Built | Allowed, not built | Avoid |
+| --- | --- | --- | --- |
+| Association | Heatmap (matrix of two categories) | Network diagram, only when the connections themselves are the story | Venn diagrams carrying data |
+| Current status | — | KPI tile; bullet chart (value against a target or range) | Gauges and speedometers; a one-value donut |
+| Composition | Bar (when only the size of each part matters, sorted) | Stacked bar; 100 % stacked bar; donut or pie; treemap (parts within parts); waterfall (parts that add or subtract to a total) | Several pies side by side to compare; 3D or exploded pies |
+| Correlation | Heatmap (two categories) | Scatterplot (two numbers); bubble chart (a third number, sparingly) | Two lines on dual y-axes to imply a relationship |
+| Deviation | Dumbbell; bar running either side of zero or a target | Diverging bar; surplus/deficit filled line | Red vs green as the only cue |
+| Distribution | Bar (binned, Visa's "distribution summary") | Histogram; dot strip; box plot (expert audiences only) | Violin and beeswarm plots in client-facing material |
+| Flow | — | Waterfall (a sequence of gains and losses to an end total); Sankey (movement between states) | Chord diagrams |
+| Trend | Line; bar (few, discrete periods) | Area (one series, or a stacked total); slope (two points in time); small multiples (many series); fan chart (projections with uncertainty) | Dual y-axes; curve smoothing; stacked area with more than 4 series |
+| Ranking | Bar (sorted by value) | Lollipop; slope or bump chart (how a rank changed) | Unsorted bars; pie |
+| Spatial | — | Choropleth map (rates and ratios); proportional symbol map (totals) | Choropleth coloured by totals: big regions look important just for being big |
+
+Read the table from the left: the insight comes from the brief's key question, not from what the data looks like.
 
 ### Step 2 — Focus element
 
@@ -101,7 +136,7 @@ Shape selection follows insight + focus + task — not designer preference.
 
 ## v1 chart taxonomy
 
-Four primitives in v1, matching Visa's publicly-documented set. Others (area, scatter, stacked bar, treemap) are v1.1+.
+Four primitives in v1, matching Visa's publicly-documented set. Charts without a primitive yet have their rules under **Charts without a primitive yet**.
 
 ### Bar
 - **Use for:** trends over weeks/months/quarters, rankings, precise values.
@@ -147,6 +182,79 @@ Four primitives in v1, matching Visa's publicly-documented set. Others (area, sc
 - **Don't use when the gaps are too small to be meaningful** — the whole encoding is the line length. If it's short everywhere, the chart says nothing.
 - If precise per-category trend matters more than the gap, use Line instead.
 
+## Charts without a primitive yet
+
+Rules for the "allowed, not built" charts in the chart-selection table. Everything else in this file (non-negotiables, colour, labelling, number format, accessibility) still applies. Rules are reworded from the sources listed at the end of this section.
+
+### KPI tile
+- **Use for:** the current value of one metric, alone or as a row of related metrics.
+- **Don't use for:** the same metric over time (that's a line or bar chart); text that isn't a number.
+- Always pair the number with something to judge it by: a target, the previous period, or a range. A number on its own doesn't tell anyone if it's good or bad.
+- Change indicators (arrow, badge) need text too ("+3,2 % vs. trimestre anterior"), not colour alone.
+
+### Bullet chart
+- **Use for:** one value against a target and qualitative bands (below / on / above plan). The compact replacement for a gauge.
+- Bands in neutral tints; only the value bar carries the highlight colour.
+
+### Stacked bar
+- **Use for:** totals that matter **and** a rough sense of what makes them up.
+- **Max 5 segments.** More than that: group the small ones into "Otros".
+- Only the segment sitting on the baseline can be compared accurately across bars, so put the most important (or largest) segment there.
+- Same segment order in every bar and in the legend.
+- Must start at zero.
+- If comparing each segment across bars is the point, use grouped bars or small multiples instead.
+
+### 100 % stacked bar
+- **Use for:** comparing composition (shares) across groups when the totals don't matter.
+- Say in the subtitle that each bar adds up to 100 %. Same segment rules as stacked bar.
+
+### Donut / pie
+- **Use for:** parts of **one** whole, when there are few parts and one of them is the story.
+- **Max 5 slices**, and they must add up to 100 %. Group the rest into "Otros".
+- Label slices directly; no legend lookup.
+- Never compare two or more pies; use a 100 % stacked bar.
+- Donut over pie when the centre holds the total.
+
+### Waterfall
+- **Use for:** how a starting value becomes an end value through gains and losses (a portfolio's return broken down by asset class, a budget bridge).
+- First and last bars are totals and look different from the steps. Gains and losses differ by colour **and** direction/label.
+- Must start at zero. Order steps logically (chronological or by process), not by size.
+
+### Area
+- **Use for:** one series where the volume under the line matters, or a stacked total over time.
+- **Max 4 series** when stacked; only the bottom series is easy to read, so it should be the most important.
+- Must start at zero. If individual series trends matter more than the total, use lines.
+
+### Histogram
+- **Use for:** how values are spread (how many clients fall into each wealth band).
+- Bins of equal width, with small gaps between bars. Say what a bin is in the axis title.
+- Too few bins hide the shape; too many make it noisy. Try a few widths and keep the one that shows the shape honestly.
+
+### Scatterplot
+- **Use for:** whether two numbers move together (risk vs return).
+- Both axes labelled with units. Highlight the points the brief cares about; the rest in neutral.
+- Readers assume correlation means causation: if it doesn't, say so in a note.
+- Too many overlapping points: add transparency or use a heatmap.
+
+### Slope chart
+- **Use for:** change between exactly two points in time or two conditions, across several categories.
+- Label both ends directly. Grey for most lines, colour for the ones the story is about.
+
+### Small multiples
+- **Use for:** many series that would tangle on one chart (more than 5 lines).
+- Every panel the same chart type, size and scale, starting and ending at the same values. Different scales make panels look comparable when they aren't.
+
+### Fan chart
+- **Use for:** a projection whose uncertainty grows with time (a wealth projection, a pension forecast).
+- Central estimate as a solid line; ranges as progressively lighter bands. Name what each band means ("80 % de los escenarios") in a label, not just a legend.
+- Make the split between actual data and projection visible (a vertical rule or a change in line style).
+
+### Sources for chart choice
+Reworded, not reproduced:
+- Financial Times, *Visual Vocabulary* (2016–2019), CC BY-SA 4.0: https://github.com/Financial-Times/chart-doctor/tree/main/visual-vocabulary
+- Urban Institute, *Data Visualization Style Guide*: https://urbaninstitute.github.io/graphics-styleguide/
+- GitLab, *Pajamas: single stat*: https://design.gitlab.com/data-visualization/single-stat
+
 ## Color
 
 - **Neutral palette (default):** one color per chart unless encoding additional data adds significant value. Maps to Coherence `data-neutral-{strong|medium|muted}` tokens.
@@ -160,6 +268,7 @@ Four primitives in v1, matching Visa's publicly-documented set. Others (area, sc
 - **Sentence case everywhere.** No Title Case, no SCREAMING CAPS.
 - **Plain language.** `num_tx` → `Número de transacciones`. No jargon or abbreviations in labels.
 - **Titles** frame the insight. For exploratory dashboards, phrase as a question.
+- **Strongly advised:** when the brief has a clear takeaway, the title states it ("Las ventas caen un 12 % en el tercer trimestre"), not just the metric ("Ventas por trimestre"). If the team prefers a neutral title, put the takeaway in the subtitle instead.
 - **Subtitles** carry interpretive context (date range, filter, unit).
 - **Direct labeling** preferred over a separate legend when shape allows.
 
@@ -269,11 +378,15 @@ Visa is silent here. Coherence rules:
 - Title Case or SCREAMING CAPS in labels.
 - Tooltip-only critical data. If a number matters, label it on-chart or in the data-table fallback.
 - Chart as decoration. If it doesn't answer a question, remove it.
+- Seven or more colours or series in one chart. Group, filter, or split into small multiples. **Exception:** a fixed taxonomy used the same way across the product (e.g. tipo de activo), where every category always has the same colour, so readers learn it once. Still label directly where possible, and keep the order fixed.
+- Legend order that doesn't match the order in the chart.
+- The same unit repeated on every label. State it once, in the subtitle or axis title.
 
 ## Pre-flight
 
 Before shipping a chart primitive:
 
+- [ ] Brief written (Step 0): audience, key question, decision, medium, data. The chart answers the key question and shows the decision threshold, if there is one.
 - [ ] Color never alone — every encoding paired with texture, position, or direct label.
 - [ ] Bar starts at zero. Non-zero line baseline is documented on the chart.
 - [ ] Sentence case in all labels.

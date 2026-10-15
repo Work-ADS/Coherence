@@ -1,0 +1,146 @@
+<!-- @dsCard group="Data" viewport="1180x4200" name="Data-viz — elegir y revisar un gráfico" subtitle="Brief obligatorio · pregunta → gráfico · revisión antes de entregar" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Elegir un gráfico</title>
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  html body { margin: 0; background: var(--canvas-primary); padding: 24px 32px 40px; font-family: var(--font-family-sans); color: var(--foreground-primary-default); }
+  .stack { display: flex; flex-direction: column; gap: 32px; max-width: 1100px; }
+  .case { display: flex; flex-direction: column; gap: 10px; }
+  .case h2 { font: var(--type-body-lg-600, var(--type-body-md-600)); margin: 0; }
+  .case h3 { font: var(--type-body-md-600); margin: 8px 0 0; }
+  .eyebrow { font: var(--type-body-sm-600); letter-spacing: var(--tracking-wider); text-transform: uppercase; color: var(--foreground-tertiary-default); margin: 0; }
+  p, li { font: var(--type-body-md-400); margin: 0; max-width: 94ch; text-wrap: pretty; }
+  ul, ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .note { font: var(--type-body-sm-400); color: var(--foreground-tertiary-default); }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: var(--control-track-background); padding: 1px 5px; border-radius: var(--radius-sm); }
+  table { border-collapse: collapse; width: 100%; }
+  th { font: var(--type-body-sm-600); color: var(--foreground-tertiary-default); text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--border-subtle); vertical-align: bottom; }
+  td { font: var(--type-body-sm-400); padding: 10px 12px 10px 0; border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+  td:first-child { font: var(--type-body-sm-600); white-space: nowrap; }
+  .rule { padding: 12px 16px; border-radius: var(--radius-md); background: var(--surface-subtle); }
+</style>
+</head>
+<body>
+<div class="stack">
+
+  <section class="case">
+    <p class="eyebrow">Data-viz · elegir y revisar</p>
+    <p>Esta tarjeta decide <strong>qué</strong> gráfico usar. <strong>Cómo</strong> dibujarlo lo deciden las tarjetas de <code>Chart</code>, <code>chart-colour-rule</code>, <code>colors-dataviz</code> y <code>pattern-section-chart</code>. Se aplica a todo gráfico, KPI o visualización de datos que se diseñe con este sistema.</p>
+  </section>
+
+  <!-- 1. BRIEF -->
+  <section class="case">
+    <h2>1 · Brief: antes de dibujar</h2>
+    <div class="rule">
+      <p><strong>Regla para el agente.</strong> Antes de proponer o dibujar un gráfico, haga estas cinco preguntas al usuario en un solo mensaje. Si la pregunta clave o la decisión quedan sin respuesta, no elija el gráfico por los datos disponibles: pregunte. Si el usuario pide seguir sin responder, siga, pero escriba junto al gráfico, de forma visible, una nota <em>«Supuestos»</em> con lo que ha supuesto en cada campo.</p>
+    </div>
+    <table>
+      <thead><tr><th>Campo</th><th>Pregunta</th></tr></thead>
+      <tbody>
+        <tr><td>Audiencia</td><td>¿Quién lo lee: cliente, asesor, comité? ¿Cuánto sabe del tema y de números? ¿Le dedicará un vistazo o un análisis?</td></tr>
+        <tr><td>Pregunta clave</td><td>¿Qué única pregunta responde el gráfico, escrita como pregunta? ¿Qué preguntará el lector después?</td></tr>
+        <tr><td>Decisión</td><td>¿Qué hará el lector con la respuesta? ¿Hay un umbral que obliga a actuar (objetivo, presupuesto, nivel de riesgo)? Si nada cambia tras leerlo, el gráfico sobra.</td></tr>
+        <tr><td>Medio</td><td>¿Dónde se lee: pantalla del Planner, informe PDF, presentación, móvil? ¿Estático o interactivo? ¿A qué tamaño?</td></tr>
+        <tr><td>Datos</td><td>¿Qué se mide y en qué unidad (€, %)? ¿Por qué unidad (cliente, cartera, activo)? ¿Agrupado por qué (tipo de activo, año)? ¿Fuente, fecha, y está completo y actualizado?</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Un brief por audiencia: si cliente y asesor necesitan los mismos datos, son dos briefs. La pregunta clave elige el tipo de pregunta (tabla 2); la decisión elige qué se destaca; la audiencia y el medio, cuánto se etiqueta.</p>
+  </section>
+
+  <!-- 2. TABLE -->
+  <section class="case">
+    <h2>2 · Pregunta → gráfico</h2>
+    <p>Lea la tabla desde la izquierda: el tipo de pregunta sale de la pregunta clave del brief, no de la forma de los datos. Use primero la columna <strong>En el DS</strong>.</p>
+    <table>
+      <thead><tr><th>Tipo de pregunta</th><th>Ejemplo</th><th>En el DS</th><th>Permitido, aún no en el DS</th><th>Evitar</th></tr></thead>
+      <tbody>
+        <tr><td>Estado actual</td><td>¿Cuánto vale ahora y está bien o mal?</td><td><code>MetricCard</code>, <code>FigureStrip</code>, <code>Meter</code> (cobertura), <code>ReturnRuler</code> (rentabilidad actual vs. necesaria)</td><td>Bullet (valor frente a objetivo y bandas)</td><td>Velocímetros; donut de un solo valor</td></tr>
+        <tr><td>Evolución</td><td>¿Cómo ha cambiado o cambiará con el tiempo?</td><td><code>Chart</code> line, line-comparison, bar (pocos periodos); banda de escenarios para proyecciones; <code>ChartPanel</code>; <code>Sparkline</code> en celdas</td><td>Área (una serie o total apilado); slope (dos momentos); pequeños múltiplos (muchas series)</td><td>Doble eje Y; líneas suavizadas; área apilada con más de 4 series</td></tr>
+        <tr><td>Composición</td><td>¿De qué se compone el total?</td><td><code>Chart</code> donut (máx. 5 porciones), stacked-bar; <code>RankedBars</code> (desglose ordenado)</td><td>Barra apilada al 100 %; treemap (partes dentro de partes); cascada (partes que suman o restan hasta un total)</td><td>Varios donuts para comparar; 3D</td></tr>
+        <tr><td>Ranking</td><td>¿Qué elementos son mayores y menores?</td><td><code>RankedBars</code>; <code>Chart</code> bar ordenado por valor</td><td>Lollipop; slope o bump (cambio de posición)</td><td>Barras sin ordenar; donut</td></tr>
+        <tr><td>Desviación</td><td>¿Cuánta diferencia hay frente a una referencia?</td><td><code>Chart</code> bar con color por signo; <code>ReturnRuler</code> (brecha en pp); línea de objetivo</td><td>Dumbbell (dos valores por categoría); barra divergente</td><td>Verde y rojo como única señal</td></tr>
+        <tr><td>Distribución</td><td>¿Cómo se reparten los valores?</td><td>—</td><td>Histograma; dot strip; box plot (solo audiencia experta)</td><td>Violin y beeswarm en material para cliente</td></tr>
+        <tr><td>Correlación</td><td>¿Se mueven juntos dos números?</td><td>—</td><td>Dispersión (scatter); heatmap (dos categorías)</td><td>Dos líneas con doble eje para insinuar relación</td></tr>
+        <tr><td>Flujo</td><td>¿Cómo pasa algo de un estado a otro?</td><td>—</td><td>Cascada (de un valor inicial a uno final); Sankey</td><td>Diagramas de cuerdas</td></tr>
+        <tr><td>Asociación</td><td>¿Cómo se relacionan los elementos?</td><td>—</td><td>Heatmap (matriz); red, solo si las conexiones son la historia</td><td>Diagramas de Venn con datos</td></tr>
+        <tr><td>Ubicación</td><td>¿Cómo influye el lugar?</td><td>—</td><td>Mapa coroplético (tasas); mapa de símbolos proporcionales (totales)</td><td>Coroplético con totales</td></tr>
+      </tbody>
+    </table>
+    <div class="rule">
+      <p><strong>Si el gráfico no está en el DS.</strong> Dibújelo siguiendo sus reglas (abajo) y con los tokens <code>--chart-*</code>, y añada junto a él una nota visible: <em>«Este gráfico aún no es un componente del DS»</em>. No fuerce un gráfico del DS sobre un tipo de pregunta que no le corresponde. El componente se construye cuando una pantalla real lo necesita, tras la revisión de diseño.</p>
+    </div>
+  </section>
+
+  <!-- 3. RULES FOR CHARTS NOT IN DS -->
+  <section class="case">
+    <h2>3 · Reglas de los gráficos que aún no están en el DS</h2>
+    <ul>
+      <li><strong>Bullet:</strong> bandas en grises; solo la barra del valor lleva color. Sustituye al velocímetro.</li>
+      <li><strong>Área:</strong> empieza en cero; máx. 4 series apiladas; la serie más importante, abajo (es la única que se compara bien).</li>
+      <li><strong>Slope:</strong> exactamente dos momentos; etiqueta directa en ambos extremos; gris para casi todas las líneas, color para las de la historia.</li>
+      <li><strong>Pequeños múltiplos:</strong> mismo tipo, tamaño y escala en todos los paneles. Escalas distintas parecen comparables y no lo son.</li>
+      <li><strong>Barra apilada al 100 %:</strong> dígalo en el subtítulo («cada barra suma 100 %»); máx. 5 segmentos; mismo orden en todas las barras y en la leyenda.</li>
+      <li><strong>Treemap:</strong> para jerarquías; abreviaturas lógicas y su explicación en una nota.</li>
+      <li><strong>Cascada:</strong> primera y última barra son totales y se distinguen de los pasos; ganancias y pérdidas se distinguen por color <em>y</em> por dirección o etiqueta; empieza en cero; orden lógico, no por tamaño.</li>
+      <li><strong>Dumbbell:</strong> dos valores por categoría; si las brechas son mínimas en todas, no dice nada: use barras.</li>
+      <li><strong>Histograma:</strong> intervalos del mismo ancho; diga qué es un intervalo en el título del eje.</li>
+      <li><strong>Dispersión:</strong> ambos ejes con unidad; destaque solo los puntos del brief; si la relación no es causal, dígalo en una nota.</li>
+      <li><strong>Heatmap:</strong> no sirve si los valores apenas varían ni para comparar celdas con precisión; leyenda salvo que todas las celdas lleven etiqueta.</li>
+      <li><strong>Mapas:</strong> coroplético solo con tasas o proporciones; para totales, símbolos proporcionales.</li>
+    </ul>
+  </section>
+
+  <!-- 4. REVIEW -->
+  <section class="case">
+    <h2>4 · Revisión antes de entregar</h2>
+    <div class="rule">
+      <p><strong>Regla para el agente.</strong> Al terminar un gráfico, o cuando se le pida revisarlo, recorra esta lista y responda cada punto con <strong>Cumple</strong> o <strong>Corregir</strong> y la corrección concreta. Nada de «podría mejorarse»: un veredicto por punto.</p>
+    </div>
+    <h3>Propósito</h3>
+    <ol>
+      <li>El brief está completo, o los supuestos están visibles junto al gráfico.</li>
+      <li>El gráfico responde la pregunta clave y su tipo coincide con la tabla 2.</li>
+      <li>Si la decisión tiene un umbral, se ve en el gráfico (línea de objetivo o banda).</li>
+    </ol>
+    <h3>Foco</h3>
+    <ol start="4">
+      <li>Un solo elemento destacado; el resto en gris, según <code>chart-colour-rule</code>.</li>
+      <li>Nada repetido: si cada barra lleva etiqueta, sobran el eje Y y la cuadrícula; si las líneas llevan etiqueta directa, sobra la leyenda.</li>
+      <li>Máx. 6 series o colores. Excepción: tipo de activo, con <code>--chart-category-1…7</code> siempre en el mismo orden y color.</li>
+      <li>Orden deliberado: cronológico o por valor, nunca el orden en que llegaron los datos.</li>
+    </ol>
+    <h3>Fiabilidad</h3>
+    <ol start="8">
+      <li>Las barras empiezan en cero. Sin doble eje Y, sin 3D, sin líneas suavizadas.</li>
+      <li>Donut con máx. 5 porciones, que suman 100 %; el resto en «Otros».</li>
+      <li>Fuente y fecha de los datos visibles.</li>
+      <li>Huecos en los datos se muestran como huecos, no se unen.</li>
+    </ol>
+    <h3>Lectura</h3>
+    <ol start="12">
+      <li><strong>Muy recomendado:</strong> el título dice la conclusión («El patrimonio cubre el objetivo hasta 2041»), no solo la métrica («Evolución del patrimonio»). Si se prefiere un título neutro, la conclusión va en el subtítulo.</li>
+      <li>La unidad aparece una vez (subtítulo o título del eje). Números en formato español: <code>1.250,50 €</code>, <code>3,2 %</code>.</li>
+      <li>Mayúscula solo inicial en títulos, ejes, leyendas y etiquetas.</li>
+    </ol>
+    <h3>Accesibilidad</h3>
+    <ol start="15">
+      <li>El color nunca es la única señal: va con etiqueta, posición, dirección o trama.</li>
+      <li>Hay una alternativa en tabla (conmutador Gráfico/Tabla de <code>DataSection</code> o la descarga de <code>ChartPanel</code>).</li>
+      <li>Los datos importantes no viven solo en el tooltip.</li>
+    </ol>
+    <h3>Sistema</h3>
+    <ol start="18">
+      <li>Usa un componente del DS si existe para ese tipo de pregunta; si no, lleva la nota «Este gráfico aún no es un componente del DS».</li>
+    </ol>
+  </section>
+
+  <section class="case">
+    <p class="note">Fuentes, reescritas y no reproducidas: Visa, <em>Data Experience Critique Framework</em> (2022) y guías de data-viz de design.visa.com; Financial Times, <em>Visual Vocabulary</em> (CC BY-SA 4.0); Urban Institute, <em>Data Visualization Style Guide</em>; GitLab Pajamas. Versión completa con todas las reglas: <code>Coherence/docs/rules/data-viz-skill.md</code>.</p>
+  </section>
+
+</div>
+</body>
+</html>

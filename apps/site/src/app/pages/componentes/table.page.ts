@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { TableComponent, SegmentedControlComponent } from '@coherence/ui';
+import { ButtonComponent, TableComponent, SegmentedControlComponent } from '@coherence/ui';
 import type {
   TableActionsReveal,
+  TableAppearance,
   TableColumn,
   TableDensity,
   TableHover,
@@ -51,6 +52,30 @@ const SAMPLE_ROW_ACTIONS: TableRowAction[] = [
 const ACTION_REVEAL_OPTIONS = [
   { value: 'hover', label: 'Opción 1' },
   { value: 'soft', label: 'Opción 2' },
+];
+
+// Icons from the icon set (`download`, `copy`) beside the built-in ones; one action is disabled.
+const RICH_ROW_ACTIONS: TableRowAction[] = [
+  { key: 'edit', label: 'Editar', icon: 'edit', ariaLabel: 'Editar operación' },
+  { key: 'copy', label: 'Duplicar', icon: 'copy', ariaLabel: 'Duplicar operación' },
+  { key: 'download', label: 'Descargar', icon: 'download', ariaLabel: 'Descargar operación', disabled: true },
+  { key: 'delete', label: 'Borrar', icon: 'delete', ariaLabel: 'Borrar operación', variant: 'danger' },
+];
+
+const APPEARANCE_OPTIONS = [
+  { value: 'default', label: 'Default' },
+  { value: 'planning', label: 'Planning' },
+];
+
+const ACTIONS_OPTIONS = [
+  { value: 'standard', label: 'Standard' },
+  { value: 'rich', label: 'Icons + disabled' },
+];
+
+const INLINE_OPTIONS = [
+  { value: 'auto', label: 'Auto' },
+  { value: '1', label: '1' },
+  { value: '0', label: '0' },
 ];
 
 const TOKEN_CATEGORIES: DocTokenCategory[] = [
@@ -174,6 +199,7 @@ const FOOTER_ROW: Record<string, unknown> = { id: '', nombre: 'Total', estado: '
   standalone: true,
   imports: [
     RouterLink,
+    ButtonComponent,
     TableComponent,
     SegmentedControlComponent,
     DocPageShellComponent,
@@ -186,6 +212,16 @@ const FOOTER_ROW: Record<string, unknown> = { id: '', nombre: 'Total', estado: '
 export class TablePage {
   readonly density = signal<TableDensity>('compact');
   readonly hover = signal<TableHover>('on');
+  readonly appearance = signal<TableAppearance>('default');
+  readonly actionsSet = signal<'standard' | 'rich'>('standard');
+  readonly inlineCount = signal<'auto' | '1' | '0'>('auto');
+  readonly appearanceOptions = APPEARANCE_OPTIONS;
+  readonly actionsOptions = ACTIONS_OPTIONS;
+  readonly inlineOptions = INLINE_OPTIONS;
+  readonly activeActions = computed(() => (this.actionsSet() === 'rich' ? RICH_ROW_ACTIONS : SAMPLE_ROW_ACTIONS));
+  readonly inlineActions = computed<'auto' | number>(() => (this.inlineCount() === 'auto' ? 'auto' : Number(this.inlineCount())));
+  readonly highlightKey = signal<unknown>(null);
+  readonly highlightEnded = signal<string>('—');
   readonly extras = signal<'on' | 'off'>('off');
   // Docs-page default mirrors the primitive default (`'hover'`, locked
   // 2026-05-28). The Opción 1 / 2 toggle stays as an educational affordance
@@ -217,4 +253,16 @@ export class TablePage {
   readonly rows = SAMPLE_ROWS;
   readonly rowActions = SAMPLE_ROW_ACTIONS;
   readonly tokenCategories = TOKEN_CATEGORIES;
+
+  highlightRow(): void {
+    this.highlightEnded.set('—');
+    this.highlightKey.set(null);
+    // A tick later, so the same key can be highlighted twice in a row.
+    queueMicrotask(() => this.highlightKey.set(3));
+  }
+
+  onHighlightEnd(key: unknown): void {
+    this.highlightEnded.set(String(key));
+    this.highlightKey.set(null);
+  }
 }

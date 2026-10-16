@@ -35,6 +35,25 @@
       </span>
     </div>
     <div class="control-group">
+      <span class="control-group__label">Appearance</span>
+      <afi-segmented-control [options]="appearanceOptions" [(value)]="appearance" size="sm" ariaLabel="Table appearance" />
+      <span class="control-group__hint"><strong>Planning</strong> — Roboto 15/20, filas de 48px, cabeceras que envuelven.</span>
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Acciones</span>
+      <afi-segmented-control [options]="actionsOptions" [(value)]="actionsSet" size="sm" ariaLabel="Row actions set" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Inline actions</span>
+      <afi-segmented-control [options]="inlineOptions" [(value)]="inlineCount" size="sm" ariaLabel="Inline actions" />
+      <span class="control-group__hint">Auto = 1-2 siempre visibles; un número muestra esas y pliega el resto en el menú.</span>
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Resaltar fila</span>
+      <afi-button size="sm" variant="secondary" (clicked)="highlightRow()">Resaltar «Operación Gamma»</afi-button>
+      <span class="control-group__hint">Fin del resaltado: {{ highlightEnded() }}</span>
+    </div>
+    <div class="control-group">
       <span class="control-group__label">Fila de referencia y totales</span>
       <afi-segmented-control [options]="extrasOptions" [(value)]="extras" size="sm" ariaLabel="Reference row and totals" />
     </div>
@@ -109,7 +128,11 @@
       [footer]="footerRow()"
       [hover]="hover()"
       [density]="density()"
-      [rowActions]="rowActions"
+      [rowActions]="activeActions()"
+      [inlineActions]="inlineActions()"
+      [appearance]="appearance()"
+      [highlightedRowKey]="highlightKey()"
+      (highlightEnd)="onHighlightEnd($event)"
       [actionsReveal]="actionReveal()"
       trackByKey="id"
     />

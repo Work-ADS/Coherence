@@ -11,6 +11,7 @@ export type {
 } from './table.types';
 export type {
   TableActionsReveal,
+  TableAppearance,
   TableDensity,
   TableHover,
   TableSelectionMode,

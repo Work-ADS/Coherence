@@ -1,8 +1,11 @@
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
+  ElementRef,
+  inject,
   input,
   isDevMode,
   untracked,
@@ -13,6 +16,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 
 import { BadgeComponent } from '../badge';
+import { IconComponent } from '../icon';
 import { CheckboxComponent } from '../checkbox';
 import { MenuComponent } from '../menu/menu.component';
 import { MenuDividerComponent } from '../menu/menu-divider.component';
@@ -27,6 +31,7 @@ import type {
 } from './table.types';
 import type {
   TableActionsReveal,
+  TableAppearance,
   TableDensity,
   TableHover,
   TableSelectionMode,
@@ -50,6 +55,7 @@ const ROW_SELECT_SKIP =
   imports: [
     BadgeComponent,
     CheckboxComponent,
+    IconComponent,
     MenuComponent,
     MenuDividerComponent,
     MenuItemComponent,
@@ -86,6 +92,13 @@ export class TableComponent {
   readonly emptyText = input<string>('Sin datos');
   readonly rowHoverable = input<boolean>(true);
   readonly density = input<TableDensity>('compact');
+  /** `planning` is the planning-table register (see `TableAppearance`). Default is unchanged. */
+  readonly appearance = input<TableAppearance>('default');
+  /**
+   * How many row actions show as buttons. `'auto'` (default): one or two always inline, from three the
+   * `overflow` flags decide. A number shows that many first and folds the rest into the `⋯` menu; 0 folds all.
+   */
+  readonly inlineActions = input<'auto' | number>('auto');
   /** When rows show the hover fill. See `TableHover`. `rowHoverable=false` still turns it off. */
   readonly hover = input<TableHover>('on');
   /** A totals row under the body, keyed by column key (`{ nombre: 'Total', valor: '1.200 €' }`). */
@@ -171,8 +184,12 @@ export class TableComponent {
     event: MouseEvent;
   }>();
   readonly expandedKeysChange = output<unknown[]>();
+  /** The highlighted row's fade finished: the key it was highlighted by. */
+  readonly highlightEnd = output<unknown>();
 
   readonly skeletonRows = [0, 1, 2, 3, 4];
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   /** Open rows once the table owns the state (`defaultExpandedKeys`). */
   private readonly innerExpanded = signal<unknown[] | null>(null);
@@ -198,6 +215,25 @@ export class TableComponent {
     effect(() => {
       const initial = this.defaultExpandedKeys();
       untracked(() => this.innerExpanded.set(initial));
+    });
+
+    // A newly highlighted row scrolls into view, so a row added off screen is not missed.
+    // Only when the key changes: sorting or editing while the key is still held must not pull the page back.
+    let lastScrolledKey: unknown = null;
+    afterRenderEffect(() => {
+      const key = this.highlightedRowKey();
+      this.rows();
+      if (key === null || key === undefined) {
+        lastScrolledKey = null;
+        return;
+      }
+      if (key === lastScrolledKey) return;
+      const row = Array.from(this.host.querySelectorAll<HTMLElement>('tr[data-row-key]')).find(
+        (r) => r.getAttribute('data-row-key') === String(key) && r.classList.contains('afi-table__row--highlighted'),
+      );
+      if (!row) return;
+      lastScrolledKey = key;
+      row.scrollIntoView({ block: 'nearest' });
     });
 
     effect(() => {
@@ -268,13 +304,17 @@ export class TableComponent {
    * inline/overflow split.
    */
   private resolveActions(actions: TableRowAction[]): TableRowAction[] {
+    const raw = this.inlineActions();
+    // A number outside 0..n (NaN, negative, fractional) is read as the nearest whole count; NaN means auto.
+    const n = raw === 'auto' || Number.isNaN(raw) ? 'auto' : Math.max(0, Math.floor(raw));
+    if (n !== 'auto') return actions.map((a, i) => ({ ...a, overflow: i >= n }));
     if (actions.length <= 2) {
       return actions.map((a) => (a.overflow ? { ...a, overflow: false } : a));
     }
     return actions;
   }
 
-  readonly inlineActions = computed(() =>
+  readonly inlineActionList = computed(() =>
     this.resolveActions(this.rowActions()).filter((a) => !a.overflow),
   );
   readonly overflowActions = computed(() =>
@@ -330,6 +370,7 @@ export class TableComponent {
     if (this.hasHeaderGroups()) parts.push('afi-table--with-groups');
     if (this.selectionVisible()) parts.push('afi-table--select-visible');
     if (this.treeAnatomy()) parts.push('afi-table--tree');
+    if (this.appearance() === 'planning') parts.push('afi-table--planning');
     return parts.join(' ');
   });
 
@@ -799,8 +840,20 @@ export class TableComponent {
     this.rowClicked.emit({ row, event });
   }
 
+  isBuiltinIcon(icon: string): boolean {
+    return icon === 'edit' || icon === 'delete' || icon === 'more' || icon === 'duplicate' || icon === 'archive';
+  }
+
+  /** A highlighted row's fade ends: tell the page, so it can clear the key. */
+  onRowAnimationEnd(row: Record<string, unknown>, event: AnimationEvent): void {
+    // Angular scopes keyframe names, so match the end of the name; child animations bubble up to the row.
+    if (!event.animationName.endsWith('afi-table-row-highlight') || !this.isHighlighted(row)) return;
+    this.highlightEnd.emit(this.highlightedRowKey());
+  }
+
   onRowAction(action: TableRowAction, row: Record<string, unknown>, event: MouseEvent): void {
     event.stopPropagation();
+    if (action.disabled) return;
     this.rowActionClicked.emit({ action, row, event });
   }
 
@@ -834,6 +887,7 @@ export class TableComponent {
     row: Record<string, unknown>,
     event: Event,
   ): void {
+    if (action.disabled) return;
     this.rowActionClicked.emit({
       action,
       row,

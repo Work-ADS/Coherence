@@ -43,3 +43,83 @@
   gap: var(--space-2xs);
   margin-left: auto;
 }
+
+// ─── on-brand: drawn on the brand canvas ───
+// No surface, no hairline, light ink. Slotted controls read --border-focus and the hover wash
+// from here, so rebinding them is enough to keep them visible on the dark ground.
+.top-bar--on-brand {
+  background: transparent;
+  border-bottom: none;
+  color: var(--top-bar-on-brand-foreground);
+  --border-focus: var(--border-focus-inverse);
+  --control-background-hover: var(--control-background-hover-inverse);
+  --control-background-active: var(--control-background-active-inverse);
+  --foreground-primary-default: var(--top-bar-on-brand-foreground);
+  --foreground-secondary-default: var(--top-bar-on-brand-foreground-secondary);
+  --foreground-tertiary-default: var(--top-bar-on-brand-foreground-secondary);
+}
+
+// ─── Exit zone ───
+.top-bar__exit {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex: none;
+  margin-inline-start: var(--space-md);
+
+  // Nothing projected: no rule either.
+  &:has(.top-bar__exit-slot:empty) {
+    display: none;
+  }
+}
+
+.top-bar__exit-rule {
+  width: var(--border-width-hairline);
+  height: var(--top-bar-exit-rule-height);
+  background: var(--border-subtle);
+  flex: none;
+
+  .top-bar--on-brand & {
+    background: var(--control-background-active-inverse);
+  }
+}
+
+.top-bar__exit-slot {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+// ─── Planner shell geometry (opt-in) ───
+// It fills the shell header band and insets by the content rail. The narrow gutter reads the bar's
+// own width through a container on the HOST, declared only for this mode: a size container is a
+// containing block for fixed descendants, which the default bar must not become.
+:host(.top-bar-host--shell) {
+  container-type: inline-size;
+  container-name: top-bar;
+}
+
+.top-bar--shell {
+  height: var(--layout-shell-header);
+  padding-inline: var(--layout-rail-inset);
+
+  &.top-bar--glass {
+    position: sticky;
+    top: 0;
+    border-bottom: var(--border-width-hairline) solid var(--border-subtle);
+
+    &.top-bar--borderless {
+      border-bottom: none;
+    }
+  }
+
+  &.top-bar--on-brand {
+    border-bottom: none;
+  }
+}
+
+@container top-bar (max-width: 40rem) {
+  .top-bar--shell {
+    padding-inline: var(--layout-rail-inset-sm);
+  }
+}

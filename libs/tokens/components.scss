@@ -39,9 +39,27 @@
   // Sizing
   --nav-item-height: var(--control-h-sm);
   --nav-item-padding-x: var(--space-sm);
-  --nav-item-gap: var(--space-xs);
+  --nav-item-gap: var(--space-sm);
   --nav-item-icon-size: var(--icon-sm);      // 16px
   --nav-item-radius: var(--radius-control);
+  --nav-item-font: var(--type-body-md-500);
+  --nav-item-font-selected: var(--type-body-md-600);
+  // Selected row: a short rule on the leading edge (zip NavItem).
+  --nav-item-rule-width: var(--dimension-0-75);   // 3px
+  --nav-item-rule-background: var(--brand-secondary-background-default);
+  --nav-item-step-size: var(--dimension-5);       // 20px numbered chip
+
+
+  // ===========================================================================
+  // SIDEBAR — section titles and group chrome (nav-section today, sidebar next)
+  // ===========================================================================
+
+  // The sidebar sits on the canvas: titles read one step quieter than the page text.
+  --sidebar-foreground:       var(--color-afi-control-700);
+  --sidebar-foreground-hover: var(--color-afi-control-900);
+  --sidebar-icon:             var(--color-afi-control-700);
+  --sidebar-background-hover: var(--color-afi-control-100);
+  --sidebar-item-height:      var(--dimension-9);   // 36px
 
 
   // ===========================================================================
@@ -312,6 +330,10 @@
 // sits after it; semantic.scss's dark block would lose the cascade here.
 [data-theme="dark"] {
   --table-row-background-hover: var(--color-afi-control-800);
+  --sidebar-foreground:       var(--color-afi-control-300);
+  --sidebar-foreground-hover: var(--color-afi-control-100);
+  --sidebar-icon:             var(--color-afi-control-300);
+  --sidebar-background-hover: var(--color-afi-control-800);
   --switch-track-off:       var(--color-afi-control-600);
   --input-icon-default:     var(--color-afi-control-400);
   --seg-thumb-background:   var(--color-afi-control-700);

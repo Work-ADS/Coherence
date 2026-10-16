@@ -1,77 +1,49 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   input,
   output,
   HostListener,
 } from '@angular/core';
 
+let nextId = 0;
+
 /**
  * Navigation item for use inside `<afi-sidebar>`.
  *
- * Renders as a button. Icon always visible; label visible when sidebar expanded.
- * Tooltip shown when sidebar collapsed, on hover/focus.
+ * Renders as a button, or as a link when `as="a"`, so route and wizard
+ * navigation can be real links. Icon always visible; label visible when sidebar
+ * expanded. Tooltip shown when sidebar collapsed, on hover/focus.
  */
 @Component({
   selector: 'afi-nav-item',
   standalone: true,
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './nav-item.component.scss',
-  template: `
-    <button
-      type="button"
-      class="nav-item"
-      [class.is-active]="active()"
-      [class.is-disabled]="disabled()"
-      [attr.aria-current]="active() ? 'page' : null"
-      [attr.aria-label]="label()"
-      [attr.title]="label()"
-      [disabled]="disabled()">
-      <!-- Icon slot -->
-      @if (showIcon()) {
-        <span class="nav-item__icon">
-          <ng-content select="[slot=icon]" />
-        </span>
-      }
-
-      <!-- Label (hidden when collapsed via parent CSS) -->
-      <span
-        class="nav-item__label"
-        [class.is-collapsed]="!sidebarExpanded()">
-        {{ label() }}
-      </span>
-
-      <!-- Badge -->
-      @if (badge() !== null) {
-        <span class="nav-item__badge">
-          {{ badge() }}
-        </span>
-      }
-
-      <!-- Chevron (right) -->
-      @if (chevron() === 'right') {
-        <svg
-          class="nav-item__chevron"
-          [class.is-expanded]="expanded()"
-          viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-          <path d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" />
-        </svg>
-      }
-    </button>
-
-    <!-- Custom DS tooltip — always rendered, revealed on hover via CSS. The
-         button also carries a native title attribute as a fallback for
-         truncated labels in expanded sidebar widths. -->
-    <span role="tooltip" class="nav-item__tooltip">
-      {{ label() }}
-    </span>
-  `,
+  templateUrl: './nav-item.component.html',
 })
 export class NavItemComponent {
   readonly label = input.required<string>();
   readonly active = input<boolean>(false);
+  /** The zip's name for `active`; either one marks the current page. */
+  readonly selected = input<boolean>(false);
+  /** Numbered chip shown instead of the icon (wizard step nav). */
+  readonly step = input<number | string | null>(null);
+  /** Render as a link (`a`, with `href`) or a button (default). */
+  readonly tag = input<'button' | 'a'>('button', { alias: 'as' });
+  readonly href = input<string | null>(null);
   readonly badge = input<number | string | null>(null);
   readonly disabled = input<boolean>(false);
+  /**
+   * Why the row is disabled, written as the action that unlocks it. When set,
+   * a disabled row stays focusable (`aria-disabled`) and is described by the
+   * reason, so keyboard and screen-reader users learn what to do. Unset: the
+   * row is disabled as before (native `disabled`, not focusable).
+   */
+  readonly disabledReason = input<string | null>(null);
   /** Show a chevron indicator (right side). Use for expandable section parents. */
   readonly chevron = input<'right' | 'none'>('none');
   /** Whether the section this item controls is expanded (rotates chevron) */
@@ -81,6 +53,10 @@ export class NavItemComponent {
 
   /** Set by parent Sidebar — controls label visibility and tooltip */
   readonly sidebarExpanded = input<boolean>(true);
+
+  readonly isSelected = computed(() => this.active() || this.selected());
+  readonly reasonShown = computed(() => this.disabled() && !!this.disabledReason());
+  readonly reasonId = `nav-item-reason-${nextId++}`;
 
   readonly clicked = output<{ event: MouseEvent }>();
 

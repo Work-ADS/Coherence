@@ -1,49 +1,66 @@
+@use '../styles/focus-ring-v1' as *;
+
 :host {
   display: block;
   position: relative;
 }
 
 .nav-item {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--nav-item-gap);
   width: 100%;
-  padding: var(--space-xs);
-  padding-inline-start: var(--nav-item-leading-pad, var(--space-xs));
-  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--nav-item-padding-x);
+  padding-inline-start: var(--nav-item-leading-pad, var(--nav-item-padding-x));
+  border-radius: var(--nav-item-radius);
   border: none;
   background: var(--nav-item-background-default);
   color: var(--nav-item-foreground-default);
-  font: var(--type-body-sm-400);
+  font: var(--nav-item-font);
   cursor: pointer;
-  transition: background var(--duration-fast) var(--easing-standard),
-              color var(--duration-fast) var(--easing-standard);
-  text-align: left;
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--easing-enter),
+              color var(--duration-fast) var(--easing-enter);
+  text-align: start;
 
-  &:hover {
+  &:hover:not(:disabled):not(.is-disabled) {
     background: var(--nav-item-background-hover);
     color: var(--nav-item-foreground-hover);
   }
 
-  &:active {
+  &:active:not(:disabled):not(.is-disabled) {
     background: var(--nav-item-background-active);
-    color: var(--nav-item-foreground-active);
   }
 
   &:focus-visible {
-    outline: var(--border-width-thick) solid var(--border-focus);
-    outline-offset: var(--border-width-thick);
+    @include focus-ring;
   }
 
   &.is-active {
     background: var(--nav-item-background-selected);
     color: var(--nav-item-foreground-selected);
-    font-weight: 500;
+    font: var(--nav-item-font-selected);
+
+    // The leading rule marks the selected row; a parent can drop it by setting its width to 0.
+    &::before {
+      content: '';
+      position: absolute;
+      inset-inline-start: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: var(--nav-item-rule-width);
+      height: 60%;
+      border-radius: var(--radius-pill);
+      background: var(--nav-item-rule-background);
+    }
   }
 
+  &:disabled,
   &.is-disabled {
-    opacity: 0.4;
-    pointer-events: none;
+    background: var(--nav-item-background-disabled);
+    color: var(--nav-item-foreground-disabled);
+    cursor: not-allowed;
   }
 }
 
@@ -51,19 +68,64 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--dimension-5);
-  height: var(--dimension-5);
+  width: var(--nav-item-icon-size);
+  height: var(--nav-item-icon-size);
   flex-shrink: 0;
   color: var(--nav-item-icon-default);
-  transition: color var(--duration-fast) var(--easing-standard);
+  transition: color var(--duration-fast) var(--easing-enter);
 
-  .nav-item:hover & {
+  .nav-item:hover:not(:disabled):not(.is-disabled) & {
     color: var(--nav-item-icon-hover);
   }
 
   .nav-item.is-active & {
-    color: var(--nav-item-icon-active);
+    color: var(--nav-item-icon-selected);
   }
+
+  .nav-item:disabled &,
+  .nav-item.is-disabled & {
+    color: var(--nav-item-icon-disabled);
+  }
+}
+
+.nav-item__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--nav-item-step-size);
+  height: var(--nav-item-step-size);
+  border-radius: var(--radius-full);
+  font: var(--type-body-sm-600);
+  font-variant-numeric: tabular-nums;
+  background: var(--nav-item-background-selected);
+  color: var(--nav-item-icon-default);
+
+  .nav-item.is-active & {
+    background: var(--brand-secondary-background-default);
+    color: var(--brand-secondary-foreground-default);
+  }
+}
+
+.nav-item__trail {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  color: var(--foreground-tertiary-default);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.nav-item__reason {
+  position: absolute;
+  inline-size: var(--border-width-hairline);
+  block-size: var(--border-width-hairline);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .nav-item__label {
@@ -88,9 +150,8 @@
   border-radius: var(--radius-full);
   padding: var(--border-width-hairline) var(--space-2xs);
   line-height: 1;
-  min-width: 1.125rem;
+  min-width: var(--dimension-5);
   text-align: center;
-  font-size: 0.6875rem;
 }
 
 .nav-item__chevron {

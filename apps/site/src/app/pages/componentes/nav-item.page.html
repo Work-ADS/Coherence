@@ -40,6 +40,26 @@
       />
     </div>
     <div class="control-group">
+      <span class="control-group__label">Leading</span>
+      <afi-select
+        [options]="leadingOptions"
+        [value]="leading()"
+        (valueChange)="leading.set($event + '')"
+        size="sm"
+        ariaLabel="Leading"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Render as</span>
+      <afi-select
+        [options]="renderOptions"
+        [value]="render()"
+        (valueChange)="render.set($event + '')"
+        size="sm"
+        ariaLabel="Render as"
+      />
+    </div>
+    <div class="control-group">
       <span class="control-group__label">Badge</span>
       <afi-select
         [options]="badgeOptions"
@@ -60,7 +80,11 @@
       <afi-nav-item
         label="Dashboard"
         [active]="state() === 'active'"
-        [disabled]="state() === 'disabled'"
+        [disabled]="state() === 'disabled' || state() === 'disabled-reason'"
+        [disabledReason]="state() === 'disabled-reason' ? 'Se abre al añadir un activo en Patrimonio' : null"
+        [step]="leading() === 'step' ? 2 : null"
+        [as]="render() === 'a' ? 'a' : 'button'"
+        [href]="render() === 'a' ? '#' : null"
         [badge]="computedBadge()"
         [sidebarExpanded]="true"
       >
@@ -78,11 +102,12 @@
   <section slot="accessibility" class="prose-section">
     <h2 class="prose-section__title">Accessibility</h2>
     <ul class="prose-section__list">
-      <li>Renders as native <code>&lt;button&gt;</code> — fully keyboard accessible.</li>
+      <li>Renders as native <code>&lt;button&gt;</code>, or as a real <code>&lt;a&gt;</code> with <code>as="a"</code> and <code>href</code> for route and wizard navigation.</li>
       <li>Active item marked with <code>aria-current="page"</code>.</li>
       <li>Collapsed state shows tooltip with label on hover/focus for screen readers.</li>
-      <li>Focus ring uses <code>var(--border-focus)</code> at 2px offset.</li>
-      <li>Disabled items have <code>opacity: 0.4</code> and <code>pointer-events: none</code>.</li>
+      <li>Focus ring is the outward <code>var(--border-focus)</code> ring shared by the v1 primitives.</li>
+      <li>Disabled rows read from the <code>--nav-item-*-disabled</code> roles, not from opacity.</li>
+      <li>With <code>disabledReason</code> a disabled row stays focusable (<code>aria-disabled</code>) and is described by the reason, so the reader learns what unlocks it.</li>
       <li>Supports <code>prefers-reduced-motion</code> — transitions disabled.</li>
     </ul>
   </section>

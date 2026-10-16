@@ -102,23 +102,34 @@ function sharedCategories(): DocTokenCategory[] {
       value: 'type',
       label: 'Type',
       rows: [
-        { property: 'Font (default)', token: '--type-body-sm-400', semantic: '--type-body-sm-400', primitive: '14px/1.4 400' },
-        { property: 'Font (active)', token: 'font-weight: 500', semantic: '—', primitive: '500' },
+        { property: 'Font (default)', token: '--nav-item-font', semantic: '--type-body-md-500', primitive: '14px / 20px 500' },
+        { property: 'Font (selected)', token: '--nav-item-font-selected', semantic: '--type-body-md-600', primitive: '14px / 20px 600' },
       ],
     },
     {
       value: 'spacing',
       label: 'Spacing',
       rows: [
-        { property: 'Padding', token: '--space-xs', semantic: '--space-xs', primitive: '--dimension-2 (8px)' },
+        { property: 'Padding (block)', token: '--space-xs', semantic: '--space-xs', primitive: '--dimension-2 (8px)' },
+        { property: 'Padding (inline)', token: '--space-sm', semantic: '--space-sm', primitive: '--dimension-3 (12px)' },
         { property: 'Gap', token: '--space-sm', semantic: '--space-sm', primitive: '--dimension-3 (12px)' },
+        { property: 'Icon size', token: '--nav-item-icon-size', semantic: '--icon-sm', primitive: '--dimension-4 (16px)' },
+        { property: 'Step chip', token: '--nav-item-step-size', semantic: '--dimension-5', primitive: '20px' },
       ],
     },
     {
       value: 'radius',
       label: 'Radius',
       rows: [
-        { property: 'Item radius', token: '--radius-sm', semantic: '--radius-sm', primitive: '6px' },
+        { property: 'Item radius', token: '--nav-item-radius', semantic: '--radius-control', primitive: '10px' },
+      ],
+    },
+    {
+      value: 'selected',
+      label: 'Selected rule',
+      rows: [
+        { property: 'Rule width', token: '--nav-item-rule-width', semantic: '--dimension-0-75', primitive: '3px' },
+        { property: 'Rule colour', token: '--nav-item-rule-background', semantic: '--brand-secondary-background-default', primitive: '--color-afi-azul-profundo-500' },
       ],
     },
     {
@@ -126,7 +137,7 @@ function sharedCategories(): DocTokenCategory[] {
       label: 'Motion',
       rows: [
         { property: 'Duration', token: '--duration-fast', semantic: '--duration-fast', primitive: '150ms' },
-        { property: 'Easing', token: '--easing-standard', semantic: '--easing-standard', primitive: 'cubic-bezier(0.2, 0, 0, 1)' },
+        { property: 'Easing', token: '--easing-enter', semantic: '--easing-enter', primitive: 'cubic-bezier(0.16, 1, 0.3, 1)' },
       ],
     },
   ];
@@ -149,6 +160,8 @@ function sharedCategories(): DocTokenCategory[] {
 export class NavItemPage {
   readonly state = signal('default');
   readonly badgeChoice = signal('none');
+  readonly leading = signal<string>('icon');
+  readonly render = signal<string>('button');
   readonly variant = signal<string>('neutral');
 
   readonly variantOptions: SelectOption[] = [
@@ -161,6 +174,17 @@ export class NavItemPage {
     { label: 'Default', value: 'default' },
     { label: 'Active', value: 'active' },
     { label: 'Disabled', value: 'disabled' },
+    { label: 'Disabled with reason', value: 'disabled-reason' },
+  ];
+
+  readonly leadingOptions: SelectOption[] = [
+    { label: 'Icon', value: 'icon' },
+    { label: 'Step number', value: 'step' },
+  ];
+
+  readonly renderOptions: SelectOption[] = [
+    { label: 'Button', value: 'button' },
+    { label: 'Link', value: 'a' },
   ];
 
   readonly badgeOptions: SelectOption[] = [
@@ -202,6 +226,9 @@ export class NavItemPage {
         --nav-item-icon-hover: var(--brand-secondary-foreground-hover);
         --nav-item-icon-active: var(--brand-secondary-foreground-active);
         --nav-item-icon-selected: var(--brand-secondary-foreground-default);
+        --nav-item-background-disabled: transparent;
+        --nav-item-foreground-disabled: var(--foreground-inverse-tertiary);
+        --nav-item-icon-disabled: var(--foreground-inverse-tertiary);
       `;
     }
     if (v === 'brand-neutral') {

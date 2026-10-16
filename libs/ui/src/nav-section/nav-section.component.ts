@@ -28,77 +28,7 @@ let nextId = 0;
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './nav-section.component.scss',
-  template: `
-    <!-- Parent row -->
-    @if (!hideHeader()) {
-    <button
-      type="button"
-      class="nav-section__trigger"
-      [class.has-active-child]="hasActiveChild()"
-      [attr.aria-expanded]="isExpanded()"
-      [attr.aria-controls]="childrenId"
-      [attr.aria-label]="ariaLabel() ?? 'Section: ' + label()"
-      [disabled]="disabled()"
-      (click)="toggle()">
-      <!-- Chevron left -->
-      @if (chevronPosition() === 'left') {
-        <svg
-          class="nav-section__chevron"
-          [class.is-expanded]="isExpanded()"
-          viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-          <path d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" />
-        </svg>
-      }
-
-      <!-- Icon slot -->
-      <ng-content select="[slot=icon]" />
-
-      <!-- Label -->
-      <span class="nav-section__label">{{ label() }}</span>
-
-      <!-- Trailing action slot -->
-      <span class="nav-section__trailing" (click)="$event.stopPropagation()">
-        <ng-content select="[slot=trailingAction]" />
-      </span>
-
-      <!-- Chevron right -->
-      @if (chevronPosition() === 'right') {
-        <svg
-          class="nav-section__chevron nav-section__chevron--right"
-          [class.is-expanded]="isExpanded()"
-          viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-          <path d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" />
-        </svg>
-      }
-    </button>
-    }
-
-    <!-- Children region with grid expand/collapse -->
-    <div
-      [id]="childrenId"
-      role="group"
-      [attr.aria-label]="label()"
-      class="nav-section__children-wrapper"
-      [class.is-expanded]="isExpanded()">
-      <div class="nav-section__children-inner">
-        <div
-          [class.nav-section__children]="showTreeLines()"
-          [class.nav-section__children--flat]="!showTreeLines()"
-          [attr.data-trail]="showTreeLines() && trailTargetIndex() !== null"
-          [style.--trail-end-y.px]="markerY()">
-          @if (showTreeLines()) {
-            <span
-              class="nav-section__marker"
-              aria-hidden="true"
-              [class.is-visible]="trailTargetIndex() !== null"
-              [style.--marker-y.px]="markerY()">
-            </span>
-          }
-          <ng-content />
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './nav-section.component.html',
 })
 export class NavSectionComponent implements AfterViewInit, OnDestroy {
   readonly label = input.required<string>();
@@ -106,11 +36,16 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
   readonly defaultExpanded = input<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
-  readonly showTreeLines = input<boolean>(true);
+  /** Vertical guide line and active-trail marker beside the children. Off by default (the zip has none). */
+  readonly showTreeLines = input<boolean>(false);
   /** Hide the section's own trigger row (use when an external nav-item acts as the parent) */
   readonly hideHeader = input<boolean>(false);
-  /** Position of the expand/collapse chevron */
-  readonly chevronPosition = input<'left' | 'right'>('right');
+  /**
+   * Where the expand/collapse chevron sits. `after-label` (default): in a
+   * fixed box one `--space-2xs` after the label, so the row keeps its full-width hit target
+   * and nothing shifts between open and closed. `left` and `right` as before.
+   */
+  readonly chevronPosition = input<'left' | 'right' | 'after-label'>('after-label');
 
   readonly expandedChange = output<boolean>();
   readonly parentClicked = output<{ event: MouseEvent }>();
@@ -122,7 +57,7 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
   readonly childrenId = `nav-section-${nextId++}`;
 
   readonly hasActiveChild = computed(() =>
-    this.childItems().some(item => item.active())
+    this.childItems().some(item => item.isSelected())
   );
 
   readonly isExpanded = computed(() => {
@@ -141,7 +76,7 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
   /** Index of the active child (persistent trail target) */
   readonly activeChildIndex = computed(() => {
     const items = this.childItems();
-    const idx = items.findIndex(item => item.active());
+    const idx = items.findIndex(item => item.isSelected());
     return idx >= 0 ? idx : null;
   });
 

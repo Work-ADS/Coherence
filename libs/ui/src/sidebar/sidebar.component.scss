@@ -131,5 +131,15 @@
   --nav-item-icon-hover: var(--brand-secondary-foreground-default);
   --nav-item-icon-active: var(--brand-secondary-foreground-default);
   --nav-item-icon-selected: var(--brand-secondary-foreground-default);
+  // The selected rule defaults to the panel's own colour, so it flips to the ink here.
+  --nav-item-rule-background: var(--brand-secondary-foreground-default);
+  // The generic disabled roles are light fills; on the azul panel a disabled row dims its ink instead.
+  --nav-item-background-disabled: transparent;
+  --nav-item-foreground-disabled: var(--foreground-inverse-tertiary);
+  --nav-item-icon-disabled: var(--foreground-inverse-tertiary);
   --foreground-tertiary-default: var(--brand-secondary-foreground-hover);
+  --sidebar-foreground: var(--brand-secondary-foreground-hover);
+  --sidebar-foreground-hover: var(--brand-secondary-foreground-default);
+  --sidebar-icon: var(--brand-secondary-foreground-hover);
+  --sidebar-background-hover: var(--brand-secondary-background-hover);
 }

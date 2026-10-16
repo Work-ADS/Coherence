@@ -77,6 +77,7 @@
   background: var(--border-subtle);
   flex: none;
 
+  // No border role exists for the brand ground, so the active wash stands in for it.
   .top-bar--on-brand & {
     background: var(--control-background-active-inverse);
   }
@@ -93,8 +94,18 @@
 // own width through a container on the HOST, declared only for this mode: a size container is a
 // containing block for fixed descendants, which the default bar must not become.
 :host(.top-bar-host--shell) {
+  // A size container needs a box that is not inline.
+  display: block;
   container-type: inline-size;
   container-name: top-bar;
+}
+
+// Glass under the shell geometry sticks to the top of its scroll area. The HOST is the sticky
+// element: the inner bar fills it, and the host (unlike the bar) is a child of the scroller.
+:host(.top-bar-host--sticky) {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .top-bar--shell {
@@ -102,8 +113,6 @@
   padding-inline: var(--layout-rail-inset);
 
   &.top-bar--glass {
-    position: sticky;
-    top: 0;
     border-bottom: var(--border-width-hairline) solid var(--border-subtle);
 
     &.top-bar--borderless {

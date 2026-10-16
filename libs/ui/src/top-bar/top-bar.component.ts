@@ -31,7 +31,10 @@ export type TopBarVariant = 'solid' | 'glass' | 'on-brand';
   selector: 'afi-top-bar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.top-bar-host--shell]': 'shellBand()' },
+  host: {
+    '[class.top-bar-host--shell]': 'shellBand()',
+    '[class.top-bar-host--sticky]': "shellBand() && variant() === 'glass'",
+  },
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.scss'],
 })

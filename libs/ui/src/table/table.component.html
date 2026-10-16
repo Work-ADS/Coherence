@@ -27,6 +27,7 @@
           <th scope="col" class="afi-table__th-select">
             <afi-checkbox
               [size]="checkboxSize()"
+              [disabled]="noneSelectable()"
               ariaLabel="Seleccionar todas las filas"
               [checked]="allSelected()"
               [indeterminate]="someSelected()"
@@ -102,7 +103,7 @@
              and the first cell gets indented via CSS. -->
         <ng-template #rowTpl let-row let-isChild="isChild">
           <tr
-            [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild, isMuted(row), isReference(row))"
+            [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild, isMuted(row), isReference(row), isMixed(row))"
             [attr.data-row-key]="row[trackByKey()]"
             [attr.tabindex]="!isChild && hasExpansion(row) && !isReference(row) ? 0 : null"
             (click)="onRowClick(row, $event)"
@@ -115,6 +116,8 @@
                     [size]="checkboxSize()"
                     [ariaLabel]="'Seleccionar ' + labelOf(row)"
                     [checked]="isSelected(row)"
+                    [indeterminate]="isMixed(row)"
+                    [disabled]="isBoxDisabled(row)"
                     (checkedChange)="toggleRow(row, $event)"
                   />
                 }

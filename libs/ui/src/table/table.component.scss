@@ -170,8 +170,16 @@
 
 .afi-table__row--hoverable:hover .afi-table__td-select > afi-checkbox,
 .afi-table__row--selected .afi-table__td-select > afi-checkbox,
-.afi-table__head-row:hover .afi-table__th-select > afi-checkbox {
+.afi-table__row--partial .afi-table__td-select > afi-checkbox,
+.afi-table__row:focus-within .afi-table__td-select > afi-checkbox,
+.afi-table__head-row:hover .afi-table__th-select > afi-checkbox,
+.afi-table__head-row:focus-within .afi-table__th-select > afi-checkbox {
   opacity: 1;
+}
+
+// selectionVisible: boxes rest visible even where a host (a page-header section) hides them.
+.afi-table--select-visible {
+  --afi-table-select-checkbox-rest-opacity: 1;
 }
 
 .afi-table__th-actions {

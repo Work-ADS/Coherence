@@ -24,3 +24,23 @@
     font-weight: 500;
   }
 }
+
+.selection-demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+  margin-block-end: var(--space-xl);
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  &__readout {
+    margin: 0;
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+  }
+}

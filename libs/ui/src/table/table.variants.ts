@@ -16,6 +16,16 @@ export type TableDensity = 'compact' | 'default' | 'comfortable';
  *            an output has a listener.
  * - `off` — never. `[rowHoverable]="false"` keeps working and means the same.
  */
+/**
+ * Which rows carry the selection boxes.
+ *
+ * - `rows` — the default: every row has its own box and the selection holds whichever rows were ticked.
+ * - `leaves` — for grouped tables: child rows carry the boxes; a group row shows a tri-state box
+ *              (all, some, none of its selectable leaves) that selects or clears its leaves; the
+ *              selection holds leaf rows or keys only, never a group.
+ */
+export type TableSelectionMode = 'rows' | 'leaves';
+
 export type TableHover = 'auto' | 'on' | 'off';
 
 /**

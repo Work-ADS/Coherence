@@ -2,7 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   input,
+  isDevMode,
+  untracked,
   output,
   signal,
   TemplateRef,
@@ -116,6 +119,20 @@ export class TableComponent {
   readonly expandedKeys = input<unknown[]>([]);
 
   /**
+   * Uncontrolled expansion: when set, the table keeps its own open rows, starting from these
+   * keys, and ignores `expandedKeys`. `expandedKeysChange` still emits. Use one or the other.
+   * Binding a different array later re-seeds the open rows from it.
+   */
+  readonly defaultExpandedKeys = input<unknown[] | null>(null);
+
+  /**
+   * The column that hosts the hierarchy. Unset: today's anatomy (first column, chevron before the
+   * label). Set: the zip's anatomy in that column: the chevron follows the label and a child's label
+   * indents one step. An unknown key warns in dev and falls back to the first column.
+   */
+  readonly treeColumn = input<string | null>(null);
+
+  /**
    * Free-form detail template for the `expand` variant — rendered below
    * the row when no `children` are present. Context: `$implicit` is the
    * row data, so the template can read row fields via `let-row`.
@@ -156,6 +173,44 @@ export class TableComponent {
   readonly expandedKeysChange = output<unknown[]>();
 
   readonly skeletonRows = [0, 1, 2, 3, 4];
+
+  /** Open rows once the table owns the state (`defaultExpandedKeys`). */
+  private readonly innerExpanded = signal<unknown[] | null>(null);
+
+  private readonly openKeys = computed<unknown[]>(() => {
+    const initial = this.defaultExpandedKeys();
+    return initial !== null ? (this.innerExpanded() ?? initial) : this.expandedKeys();
+  });
+
+  /** Position of the column that hosts the hierarchy (the first unless `treeColumn` names another). */
+  readonly treeIndex = computed(() => {
+    const key = this.treeColumn();
+    if (key == null) return 0;
+    const i = this.visibleColumns().findIndex((c) => c.key === key);
+    return i < 0 ? 0 : i;
+  });
+
+  /** The zip anatomy is on whenever `treeColumn` is set. */
+  readonly treeAnatomy = computed(() => this.treeColumn() != null);
+
+  constructor() {
+    // `defaultExpandedKeys` seeds the table's own state whenever it changes; toggles then carry on from there.
+    effect(() => {
+      const initial = this.defaultExpandedKeys();
+      untracked(() => this.innerExpanded.set(initial));
+    });
+
+    effect(() => {
+      const key = this.treeColumn();
+      const cols = this.visibleColumns();
+      if (isDevMode() && key != null && cols.length > 0 && !cols.some((c) => c.key === key)) {
+        const hidden = this.columns().some((c) => c.key === key);
+        console.warn(
+          `[afi-table] treeColumn "${key}" ${hidden ? 'is a hidden column' : 'matches no column key'}; the hierarchy falls back to the first visible column.`,
+        );
+      }
+    });
+  }
 
   readonly visibleColumns = computed(() => this.columns().filter((c) => !c.hidden));
 
@@ -274,6 +329,7 @@ export class TableComponent {
     if (reveal !== 'always') parts.push(`afi-table--actions-${reveal}`);
     if (this.hasHeaderGroups()) parts.push('afi-table--with-groups');
     if (this.selectionVisible()) parts.push('afi-table--select-visible');
+    if (this.treeAnatomy()) parts.push('afi-table--tree');
     return parts.join(' ');
   });
 
@@ -415,14 +471,15 @@ export class TableComponent {
 
   isExpanded(row: Record<string, unknown>): boolean {
     const key = row[this.trackByKey()];
-    return this.expandedKeys().includes(key);
+    return this.openKeys().includes(key);
   }
 
   toggleExpand(row: Record<string, unknown>, event?: Event): void {
     event?.stopPropagation();
     const key = row[this.trackByKey()];
-    const current = this.expandedKeys();
+    const current = this.openKeys();
     const next = current.includes(key) ? current.filter((k) => k !== key) : [...current, key];
+    if (this.defaultExpandedKeys() !== null) this.innerExpanded.set(next);
     this.expandedKeysChange.emit(next);
   }
 
@@ -533,9 +590,12 @@ export class TableComponent {
           ? 'afi-table__td--center'
           : 'afi-table__td--start';
     const tone = this.toneFor(col, row);
+    const tree = this.treeAnatomy() && this.visibleColumns()[this.treeIndex()]?.key === col.key;
     return [
       'afi-table__td',
       align,
+      tree ? 'afi-table__td--tree' : '',
+      tree && this.treeIndex() === 0 ? 'afi-table__td--tree-first' : '',
       col.emphasis ? 'afi-table__td--emphasis' : '',
       tone ? `afi-table__td--tone-${tone}` : '',
     ]
@@ -585,6 +645,7 @@ export class TableComponent {
     muted = false,
     reference = false,
     partial = false,
+    group = false,
   ): string {
     return [
       'afi-table__row',
@@ -593,6 +654,7 @@ export class TableComponent {
       reference ? 'afi-table__row--reference' : '',
       selected ? 'afi-table__row--selected' : '',
       partial ? 'afi-table__row--partial' : '',
+      group ? 'afi-table__row--group' : '',
       highlighted ? 'afi-table__row--highlighted' : '',
       isChild ? 'afi-table__row--child' : '',
       muted ? 'afi-table__row--muted' : '',
@@ -609,12 +671,13 @@ export class TableComponent {
     return row['variant'] === 'reference';
   }
 
-  /** What assistive technology calls this row: `rowLabel`, else the first column's text. */
+  /** What assistive technology calls this row: `rowLabel`, else the tree column's text (the first column unless `treeColumn` names another). */
   labelOf(row: Record<string, unknown>): string {
     const custom = this.rowLabel();
     if (custom) return custom(row);
-    const first = this.visibleColumns()[0];
-    return first ? this.cellText(row, first) || 'fila' : 'fila';
+    // The hierarchy column names the row when there is one, else the first column.
+    const col = this.visibleColumns()[this.treeIndex()];
+    return col ? this.cellText(row, col) || 'fila' : 'fila';
   }
 
   /** Enter or Space on a focused group row opens or closes it (not when the key came from a control inside). */

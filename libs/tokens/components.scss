@@ -104,12 +104,15 @@
   // No header fill: a column header inherits whatever the container is painted,
   // so the same table reads on the canvas, in a card and in a modal. Header and
   // cells share one size; separation is weight and ink, plus the hairline.
-  // Group, action and planning roles join with their slices (5f-4, 5f-5).
+  // Action and planning roles join with their slice (5f-5).
   --table-header-font:       var(--type-body-sm-600);
   --table-header-foreground: var(--foreground-tertiary-default);
   --table-header-divider:    var(--border-subtle);
   --table-cell-font:         var(--type-body-sm-400);
   --table-cell-foreground:   var(--foreground-secondary-default);
+  // Level 1 of a hierarchy: a roll-up of the rows beneath it, so label and figures carry medium weight and primary ink.
+  --table-group-font:        var(--type-body-sm-500);
+  --table-group-foreground:  var(--foreground-primary-default);
   // Child rows share the cell ink and are subordinate by indent, never by fill.
   --table-child-foreground:  var(--foreground-secondary-default);
   // Totals row: same size as every other cell; emphasis is weight, primary ink and the thick rule above.

@@ -1,0 +1,98 @@
+<site-doc-page-shell
+  title="Stepper"
+  overline="COMPONENTS"
+  description="Cabecera numerada de un asistente: indica en qué paso está el usuario. El paso actual es un anillo, los completados van rellenos y el tramo recorrido del conector se tiñe. Es una cabecera, no navegación: una lista con nombre, sin landmark."
+  componentName="stepper"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Stepper</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Asistentes de varios pasos</span> — Objetivos, Desinversión futura, Optimización del asset allocation.</li>
+    <li><span class="use-cases__label">Flujos cortos dentro de una página</span> — <code>layout="plain"</code> con <code>size="compact"</code>: sin conector, a la izquierda, con salto de línea.</li>
+    <li><span class="use-cases__label">Volver atrás solo donde se puede</span> — con <code>interactive</code> los pasos completados son botones; apagado, es solo una cabecera.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Layout</span>
+      <afi-segmented-control [options]="layoutOptions" [(value)]="layout" size="sm" ariaLabel="Layout" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Size</span>
+      <afi-segmented-control [options]="sizeOptions" [(value)]="size" size="sm" ariaLabel="Size" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Orientation</span>
+      <afi-segmented-control [options]="orientationOptions" [(value)]="orientation" size="sm" ariaLabel="Orientation" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Current</span>
+      <afi-segmented-control [options]="currentOptions" [(value)]="current" size="sm" ariaLabel="Current step" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Interactive</span>
+      <afi-segmented-control [options]="offOnOptions" [(value)]="interactive" size="sm" ariaLabel="Interactive" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Second line</span>
+      <afi-segmented-control [options]="offOnOptions" [(value)]="sub" size="sm" ariaLabel="Second line" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Step 2 marked done</span>
+      <afi-segmented-control [options]="offOnOptions" [(value)]="skipped" size="sm" ariaLabel="Step 2 state override" />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <afi-stepper
+      [steps]="steps()"
+      [currentIndex]="currentIndex()"
+      [layout]="layout()"
+      [size]="size()"
+      [orientation]="orientation()"
+      [interactive]="interactive() === 'on'"
+      ariaLabel="Pasos del asistente de ejemplo"
+      (stepClicked)="onStepClicked($event)"
+    />
+    <p class="preview__readout">Último paso pulsado: {{ lastClicked() }}</p>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>La raíz es una lista con nombre (<code>role="list"</code> y <code>aria-label</code>) y cada paso un <code>listitem</code>: el lector anuncia el total y la posición.</li>
+      <li>El paso actual lleva <code>aria-current="step"</code> en su elemento de lista.</li>
+      <li>El número del marcador queda oculto; el estado se dice con un sufijo visualmente oculto («, completado» o «, pendiente»). El paso actual no lo lleva para no anunciarlo dos veces.</li>
+      <li>El sufijo está fuera de flujo y recortado: la geometría es idéntica con y sin él.</li>
+      <li>Solo los pasos completados son botones (Enter y Espacio); los pendientes y el actual son texto y no entran en el orden de tabulación.</li>
+      <li>Con <code>prefers-reduced-motion</code> las transiciones se anulan.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Usa el stepper como cabecera de un asistente de 2 a 6 pasos.</li>
+          <li>Pasa <code>interactive</code> solo donde volver atrás es válido.</li>
+          <li>Da siempre un <code>ariaLabel</code> que nombre el flujo.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No lo uses como navegación principal: para eso están el sidebar y las tabs.</li>
+          <li>No hagas pulsable un paso que el usuario aún no ha alcanzado.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

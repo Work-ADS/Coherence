@@ -1,24 +1,25 @@
 @use '../styles/focus-ring-v1' as *;
 
 // =============================================================================
-// afi-stepper — horizontal (default) / vertical step indicator
+// afi-stepper — step indicator (horizontal, vertical; inline, stacked or plain)
 // =============================================================================
 //
-// Visual contract LOCKED 2026-06-03. Three per-item states (done / current /
-// todo). Items size to content; connectors flex-grow between them so the
-// indicator always spans the available width.
+// A header that says where you are, not navigation. Three per-item states
+// (done / current / todo); `state` on an item can override. Items size to
+// content; connectors flex-grow between them so the indicator spans the
+// available width (`plain` has none and wraps).
 //
 // Token usage:
-// - Active badge + filled connector → `--brand-secondary-background-default`
-//   (matches `<afi-button variant="primary">` so the stepper reads as part
-//   of the same action family on AFI; brand-secondary maps to each brand's
-//   action ramp via `libs/tokens/_mixins.scss`).
-// - Muted connector → `--border-subtle`
-// - Todo badge → `--surface-subtle` + hairline `--border-subtle`; current = ring
+// - Done marker + filled connector → `--brand-secondary-background-default`
+//   (the AFI action colour, same family as `<afi-button variant="primary">`).
+// - Current marker is a RING: `--surface-default` fill, thick
+//   `--brand-secondary-background-default` border, `--foreground-brand-default` number.
+// - Todo marker → `--surface-subtle` + hairline `--border-subtle`; muted connector → `--border-subtle`.
+// - Sizes → `--stepper-marker-size` / `--stepper-marker-size-compact`.
 // - Optional current-step accent stripe under the label →
 //   `--stepper-current-accent-thickness` + `--stepper-current-accent-color`,
-//   both transparent by default. Brand themes opt in (e.g. BC sets these
-//   to render an amarillo-suave brushstroke under the active label).
+//   transparent by default. Brand themes opt in (BC sets them to render an
+//   amarillo-suave brushstroke under the active label).
 // =============================================================================
 
 :host {
@@ -254,7 +255,8 @@
       // `align-self: flex-start` + a top margin gets us there without
       // knowing the consumer's label height.
       align-self: flex-start;
-      margin-block-start: calc((var(--stepper-marker-size) - var(--stepper-connector-width)) / 2);
+      // The step's own block padding sits above the marker, so the rule starts below it too.
+      margin-block-start: calc(var(--space-xs) + (var(--stepper-marker-size) - var(--stepper-connector-width)) / 2);
     }
   }
 }
@@ -293,7 +295,7 @@
 
 // Wrap at narrow widths — the steps stack instead of overflowing.
 @media (max-width: 640px) {
-  .afi-stepper:not(.afi-stepper--vertical) {
+  .afi-stepper:not(.afi-stepper--vertical):not(.afi-stepper--plain) {
     .afi-stepper__list {
       flex-wrap: wrap;
       gap: var(--space-xs);

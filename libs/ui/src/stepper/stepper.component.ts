@@ -16,30 +16,33 @@ import type {
 } from './stepper.variants';
 
 /**
- * Horizontal (or vertical) step indicator. Per-item state derives from
- * `current` (1-based) so consumers only have to push one signal.
+ * Step indicator: numbered markers, optionally joined by connectors. Per-item
+ * state derives from `current` (1-based) or `currentIndex` (0-based) so
+ * consumers push one signal; an item's own `state` overrides it.
  *
- * Visual states (LOCKED 2026-06-03):
- * - `done`     — filled action-coloured circle with check glyph; label
- *                muted; the connector entering this step renders in
- *                action-500 so completed segments read as a single trail.
- * - `current`  — filled action-coloured circle with the step number;
- *                label gains the body-md-500 weight; focus ring visible.
- * - `todo`     — outlined hairline circle with the step number in
- *                tertiary; label muted; button is `disabled` so the
- *                gestor can't jump ahead.
+ * Visual states:
+ * - `done`    — filled action-coloured marker with a check; label secondary;
+ *               the connector after it is inked so completed segments read as
+ *               one trail.
+ * - `current` — a ring (surface fill, thick action-coloured border, brand
+ *               number); label 600 in primary ink.
+ * - `todo`    — subtle fill with a hairline and the number in tertiary.
  *
- * Clicking a `done` step (or pressing Enter / Space when focused) emits
- * `stepClicked` with both the key and the 1-based index. Consumers decide
- * whether to navigate. `current` and `todo` are not interactive.
+ * Layouts: `inline` (marker beside label, with connectors), `stacked` (marker
+ * above label, used by the BC datos page), `plain` (beside label, no
+ * connectors, left-aligned, wraps). `size="compact"` shrinks the markers.
+ *
+ * Clicking a `done` step emits `stepClicked` with its key and 1-based index
+ * unless `interactive` is false. `current` and `todo` are never interactive.
  *
  * A11y: a stepper is a header that says where you are, not navigation, so
  * the root is a labelled list (no landmark) and each step a list item; the
  * current item carries `aria-current="step"`. The marker is hidden from
  * assistive tech and the state is spoken by a visually hidden suffix
  * («, completado» / «, pendiente»; none on the current step). Only `done`
- * steps are buttons; `current` and `todo` are plain text. Reduced motion
- * collapses transitions per `docs/rules/component-skill.md` §11.
+ * steps are buttons (when interactive); `current` and `todo` are plain text.
+ * Keys must be unique within `steps`. Reduced motion collapses transitions per
+ * `docs/rules/component-skill.md` §11.
  */
 @Component({
   selector: 'afi-stepper',

@@ -39,6 +39,7 @@ export const componentes_routes: Routes = [
   // Select). Lives at /patrones/sidebar-ia-comparison — this route is
   // preserved as a redirect for old bookmarks and stale cross-references.
   { path: 'sidebar', redirectTo: '/patrones/sidebar-ia-comparison', pathMatch: 'full' },
+  { path: 'stepper', loadComponent: () => import('./stepper.page').then(m => m.StepperPage) },
   { path: 'nav-section', loadComponent: () => import('./nav-section.page').then(m => m.NavSectionPage) },
   { path: 'menu', loadComponent: () => import('./menu.page').then(m => m.MenuPage) },
   { path: 'table', loadComponent: () => import('./table.page').then(m => m.TablePage) },

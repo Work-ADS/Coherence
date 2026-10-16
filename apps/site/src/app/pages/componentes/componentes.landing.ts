@@ -43,6 +43,7 @@ export class ComponentesLandingPage {
     { slug: 'table', name: 'Table', description: 'Sort, selección, estados vacío/carga' },
     { slug: 'drawer', name: 'Drawer', description: 'Panel lateral no bloqueante' },
     { slug: 'sidebar', name: 'Sidebar', description: '3 modos: static, collapsible, hover' },
+    { slug: 'stepper', name: 'Stepper', description: 'Cabecera de asistente, lista con nombre' },
     { slug: 'nav-item', name: 'NavItem', description: 'Icono + label + badge + tooltip' },
     { slug: 'status-chip', name: 'StatusChip', description: '8 estados, subtle/solid' },
     { slug: 'badge', name: 'Badge', description: '5 intents, modo dot, sm/md' },

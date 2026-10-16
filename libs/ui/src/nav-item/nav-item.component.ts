@@ -17,55 +17,7 @@ import {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './nav-item.component.scss',
-  template: `
-    <button
-      type="button"
-      class="nav-item"
-      [class.is-active]="active()"
-      [class.is-disabled]="disabled()"
-      [attr.aria-current]="active() ? 'page' : null"
-      [attr.aria-label]="label()"
-      [attr.title]="label()"
-      [disabled]="disabled()">
-      <!-- Icon slot -->
-      @if (showIcon()) {
-        <span class="nav-item__icon">
-          <ng-content select="[slot=icon]" />
-        </span>
-      }
-
-      <!-- Label (hidden when collapsed via parent CSS) -->
-      <span
-        class="nav-item__label"
-        [class.is-collapsed]="!sidebarExpanded()">
-        {{ label() }}
-      </span>
-
-      <!-- Badge -->
-      @if (badge() !== null) {
-        <span class="nav-item__badge">
-          {{ badge() }}
-        </span>
-      }
-
-      <!-- Chevron (right) -->
-      @if (chevron() === 'right') {
-        <svg
-          class="nav-item__chevron"
-          [class.is-expanded]="expanded()"
-          viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-          <path d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" />
-        </svg>
-      }
-    </button>
-
-    <!-- Custom DS tooltip — always rendered, revealed on hover via CSS. The
-         button also carries a native title attribute as a fallback for
-         truncated labels in expanded sidebar widths. -->
-    <span role="tooltip" class="nav-item__tooltip">
-      {{ label() }}
-    </span>
-  `,
+  templateUrl: './nav-item.component.html',
 })
 export class NavItemComponent {
   readonly label = input.required<string>();

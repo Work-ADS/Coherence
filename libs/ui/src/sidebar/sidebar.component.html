@@ -1,14 +1,38 @@
-<nav
-  [attr.aria-label]="ariaLabel()"
-  [attr.aria-expanded]="isExpanded() ? 'true' : 'false'"
-  [style.width]="currentWidth()"
+<aside
+  #panel
   class="sidebar"
-  [class.sidebar--secondary-azul]="variant() === 'secondary-azul'">
+  [style.width]="currentWidth()"
+  [class.sidebar--secondary-azul]="variant() === 'secondary-azul'"
+  [class.sidebar--planning]="isPlanning()"
+  [class.sidebar--flush-light]="variant() === 'flush-light'"
+  [class.sidebar--inset-dark]="variant() === 'inset-dark'"
+  [class.sidebar--rail]="isRail()"
+  [class.sidebar--static]="mode() === 'static'"
+  [class.sidebar--reveal]="revealing()">
 
   <!-- Top slot (logo) -->
   <div class="sidebar__logo-row">
+    @if (isRail()) {
+      @if (logoMarkSrc(); as mark) {
+        <img class="sidebar__mark" [src]="mark" [alt]="logoMarkAlt()" />
+      }
+    } @else if (logoSrc(); as logo) {
+      <span class="sidebar__lockup" [class.sidebar__lockup--named]="!!product()">
+        <img class="sidebar__logo" [src]="logo" [alt]="logoAlt()" />
+        @if (product(); as name) {
+          <span class="sidebar__product">{{ name }}</span>
+        }
+      </span>
+    }
     <ng-content select="[slot=top]" />
   </div>
+
+  <!-- Optional block between the brand and the nav: expanded only -->
+  @if (isExpanded()) {
+    <div class="sidebar__header">
+      <ng-content select="[slot=header]" />
+    </div>
+  }
 
   <!-- Pin button (hover-expand mode) -->
   @if (mode() === 'hover-expand' && isExpanded()) {
@@ -16,7 +40,8 @@
       type="button"
       class="sidebar__pin"
       [class.is-pinned]="pinned()"
-      [attr.aria-label]="pinned() ? 'Unpin sidebar' : 'Pin sidebar'"
+      [attr.aria-pressed]="pinned()"
+      aria-label="Fijar navegación"
       (click)="togglePin()">
       <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path d="M10 2a.75.75 0 01.75.75v5.59l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 011.06-1.06l3.22 3.22V2.75A.75.75 0 0110 2z" />
@@ -30,21 +55,42 @@
       type="button"
       class="sidebar__toggle"
       [class.is-collapsed]="!isExpanded()"
-      [attr.aria-label]="isExpanded() ? 'Collapse navigation' : 'Expand navigation'"
+      [attr.aria-expanded]="isExpanded()"
+      [attr.aria-label]="isExpanded() ? 'Contraer navegación' : 'Expandir navegación'"
       (click)="toggleCollapse()">
-      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-      </svg>
+      @if (isPlanning()) {
+        <afi-icon name="panel-left" />
+      } @else {
+        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+        </svg>
+      }
     </button>
   }
 
   <!-- Nav items -->
-  <div class="sidebar__content" role="list">
+  <nav class="sidebar__content" [attr.aria-label]="ariaLabel()">
     <ng-content />
-  </div>
+  </nav>
+
+  @if (user(); as signedIn) {
+    <afi-tooltip [text]="signedIn.name" position="right" [disabled]="!isRail()" class="sidebar__user-tip">
+      <div class="sidebar__user">
+        <afi-avatar [name]="signedIn.name" [src]="signedIn.src ?? null" size="sm" />
+        @if (!isRail()) {
+          <span class="sidebar__user-text">
+            <span class="sidebar__user-name">{{ signedIn.name }}</span>
+            @if (signedIn.role) {
+              <span class="sidebar__user-role">{{ signedIn.role }}</span>
+            }
+          </span>
+        }
+      </div>
+    </afi-tooltip>
+  }
 
   <!-- Bottom slot (user/settings) -->
   <div class="sidebar__footer">
     <ng-content select="[slot=bottom]" />
   </div>
-</nav>
+</aside>

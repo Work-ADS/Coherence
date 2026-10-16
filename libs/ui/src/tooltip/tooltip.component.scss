@@ -1,6 +1,8 @@
 .tooltip {
   position: relative;
   display: inline-flex;
+  // A wrapper that must fill its row (a nav item) sets this; unset, the trigger sizes to its content.
+  inline-size: var(--tooltip-trigger-inline-size, auto);
 }
 
 // Hidden until shown. While hidden it is display:none, so it never adds to a

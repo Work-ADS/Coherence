@@ -1,3 +1,5 @@
+@use '../styles/focus-ring-v1' as *;
+
 :host {
   display: block;
   position: relative;
@@ -12,6 +14,7 @@
   transition: width var(--duration-base) var(--easing-standard);
   overflow: hidden;
   flex-shrink: 0;
+  border-radius: var(--sidebar-radius);
 }
 
 .sidebar__logo-row {
@@ -99,7 +102,28 @@
   }
 }
 
+// expandMotion="reveal": the nav arrives a beat after the width starts to move.
+.sidebar--reveal .sidebar__content {
+  animation: sidebar-reveal var(--duration-base) var(--easing-enter) both;
+  animation-delay: var(--duration-fast);
+}
+
+@keyframes sidebar-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--dimension-1));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .sidebar--reveal .sidebar__content {
+    animation: none;
+  }
+
   .sidebar,
   .sidebar__pin,
   .sidebar__toggle,
@@ -142,4 +166,271 @@
   --sidebar-foreground-hover: var(--brand-secondary-foreground-default);
   --sidebar-icon: var(--brand-secondary-foreground-hover);
   --sidebar-background-hover: var(--brand-secondary-background-hover);
+}
+
+/* ─── Wealth Planner chrome: flush-light and inset-dark ───
+   Geometry is shared; the variants only rebind the sidebar roles. */
+.sidebar--planning {
+  background: var(--sidebar-background);
+  border-inline-end: var(--border-width-hairline) solid var(--sidebar-border);
+  color: var(--sidebar-foreground);
+  font-family: var(--font-family-sans);
+  min-width: var(--sidebar-nav-width);
+
+  &.sidebar--static {
+    width: max-content;
+  }
+
+  &.sidebar--rail {
+    min-width: 0;
+  }
+
+  // Selected rows keep the sidebar roles' selected ink on a top-level page.
+  --nav-item-rule-background: var(--sidebar-foreground-selected);
+
+  .sidebar__logo-row {
+    height: var(--sidebar-brand-height);
+    padding-inline: var(--sidebar-padding-x) var(--sidebar-brand-padding-end);
+    color: var(--sidebar-brand-foreground);
+  }
+
+  &.sidebar--rail .sidebar__logo-row {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .sidebar__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sidebar-group-gap);
+    min-height: 0;
+    overflow-x: hidden;
+    padding: calc(var(--sidebar-brand-gap) + var(--space-2xs)) 0 var(--space-2xs);
+    scrollbar-width: thin;
+    scrollbar-color: var(--sidebar-scrollbar-thumb) transparent;
+
+    &::-webkit-scrollbar {
+      width: var(--dimension-2);
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--sidebar-scrollbar-thumb);
+      border-radius: var(--radius-pill);
+      border: var(--border-width-thick) solid transparent;
+      background-clip: padding-box;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--sidebar-scrollbar-thumb-hover);
+      background-clip: padding-box;
+    }
+  }
+
+  // The rail has no room for a scrollbar: it would push every icon off the centre line.
+  &.sidebar--rail .sidebar__content {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  // A top-level page row sits inset from the panel edge, like a child row inside a section.
+  // NavItem reads the custom property; a section's own children and the rail reset it.
+  .sidebar__content {
+    --nav-item-margin-inline: var(--space-2xs);
+  }
+
+  &.sidebar--rail .sidebar__content {
+    --nav-item-margin-inline: 0;
+  }
+
+  // Logotype and product name read as one lockup; the name is one step quieter than the nav labels.
+  .sidebar__lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-width: 0;
+  }
+
+  .sidebar__logo {
+    display: block;
+    height: var(--sidebar-logo-height);
+    width: auto;
+    flex: none;
+  }
+
+  // Beside a product name the logotype steps down so the pair still fits the panel.
+  .sidebar__lockup--named .sidebar__logo {
+    height: var(--sidebar-wordmark-height);
+  }
+
+  .sidebar__product {
+    font: var(--type-body-md-400);
+    color: var(--sidebar-brand-foreground);
+    white-space: nowrap;
+    flex: none;
+  }
+
+  .sidebar__mark {
+    display: block;
+    height: var(--sidebar-mark-height);
+    width: auto;
+    transition: opacity var(--duration-fast) var(--easing-enter);
+  }
+
+  // The mark gives way to the toggle on hover, and when the TOGGLE has keyboard focus: after a
+  // mouse click on it the mark returns as soon as the pointer leaves, and arrowing through the
+  // rows leaves the mark alone. Two rules, so a browser without :has
+  // still gets the hover one.
+  &.sidebar--rail:hover .sidebar__mark {
+    opacity: 0;
+  }
+
+  &.sidebar--rail:has(.sidebar__toggle:focus-visible) .sidebar__mark {
+    opacity: 0;
+  }
+
+  // Optional block under the brand. Inline-size containment keeps a long client name from
+  // widening a fit-to-label panel: the text wraps to the panel instead.
+  .sidebar__header {
+    flex: none;
+    min-width: 0;
+    contain: inline-size;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .sidebar__user-tip {
+    display: block;
+    flex: none;
+    --tooltip-trigger-inline-size: 100%;
+  }
+
+  .sidebar__user {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-width: 0;
+    padding: var(--space-sm) var(--sidebar-padding-x);
+    border-top: var(--border-width-hairline) solid var(--sidebar-divider);
+  }
+
+  &.sidebar--rail .sidebar__user {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .sidebar__user-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .sidebar__user-name {
+    font: var(--type-body-md-500);
+    color: var(--sidebar-foreground-selected);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sidebar__user-role {
+    font: var(--type-body-sm-400);
+    color: var(--sidebar-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sidebar__footer {
+    border-top: none;
+    padding: var(--space-md) var(--sidebar-padding-x);
+  }
+
+  // The toggle sits in the brand band and shows on hover or keyboard focus only.
+  .sidebar__toggle {
+    position: absolute;
+    top: calc((var(--sidebar-brand-height) - var(--icon-lg)) / 2);
+    inset-inline-end: var(--sidebar-brand-padding-end);
+    align-self: auto;
+    margin: 0;
+    width: var(--icon-lg);
+    height: var(--icon-lg);
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sidebar-icon);
+    opacity: 0;
+    z-index: 10;
+    transition: opacity var(--duration-fast) var(--easing-enter),
+                color var(--duration-fast) var(--easing-enter),
+                background-color var(--duration-fast) var(--easing-enter);
+    --afi-icon-size: var(--sidebar-toggle-icon-size);
+
+    &:hover {
+      color: var(--sidebar-icon-hover);
+      background: var(--sidebar-background-hover);
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+      opacity: 1;
+    }
+
+    &.is-collapsed {
+      inset-inline-end: auto;
+      inset-inline-start: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  &:hover .sidebar__toggle {
+    opacity: 1;
+  }
+}
+
+.sidebar--flush-light {
+  --nav-item-foreground-disabled: var(--sidebar-foreground-disabled);
+}
+
+.sidebar--inset-dark {
+  --sidebar-background: var(--sidebar-inset-background);
+  --sidebar-border: transparent;
+  --sidebar-foreground: var(--sidebar-inset-foreground);
+  --sidebar-foreground-hover: var(--sidebar-inset-foreground-hover);
+  --sidebar-foreground-selected: var(--sidebar-inset-foreground-selected);
+  --sidebar-background-hover: var(--sidebar-inset-background-hover);
+  --sidebar-background-selected: var(--sidebar-inset-background-selected);
+  --sidebar-icon: var(--sidebar-inset-icon);
+  --sidebar-icon-hover: var(--sidebar-inset-icon-hover);
+  --sidebar-icon-selected: var(--sidebar-inset-icon-selected);
+  --sidebar-dot: var(--sidebar-inset-dot);
+  --sidebar-dot-halo: var(--sidebar-inset-dot-halo);
+  --sidebar-brand-foreground: var(--sidebar-inset-brand-foreground);
+  --sidebar-radius: var(--radius-lg);
+  --sidebar-divider: var(--sidebar-inset-divider);
+  --sidebar-foreground-disabled: var(--sidebar-inset-foreground-disabled);
+  --sidebar-scrollbar-thumb: var(--sidebar-inset-scrollbar-thumb);
+  --sidebar-scrollbar-thumb-hover: var(--sidebar-inset-scrollbar-thumb-hover);
+
+  // The light NavItem roles re-bound to the panel's own: rows and sections read one palette.
+  --nav-item-background-default: transparent;
+  --nav-item-background-hover: var(--sidebar-background-hover);
+  --nav-item-background-active: var(--sidebar-background-hover);
+  --nav-item-background-selected: var(--sidebar-background-selected);
+  --nav-item-foreground-default: var(--sidebar-foreground);
+  --nav-item-foreground-hover: var(--sidebar-foreground-hover);
+  --nav-item-foreground-active: var(--sidebar-foreground-hover);
+  --nav-item-foreground-selected: var(--sidebar-foreground-selected);
+  --nav-item-icon-default: var(--sidebar-icon);
+  --nav-item-icon-hover: var(--sidebar-icon-hover);
+  --nav-item-icon-selected: var(--sidebar-icon-selected);
+  --nav-item-background-disabled: transparent;
+  --nav-item-foreground-disabled: var(--sidebar-foreground-disabled);
+  --nav-item-icon-disabled: var(--sidebar-foreground-disabled);
 }

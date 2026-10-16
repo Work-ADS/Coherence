@@ -123,6 +123,16 @@ export class TableComponent {
   readonly highlightedRowKey = input<unknown>(null);
 
   /**
+   * Keys (`trackByKey` values) of rows on their way out, in a delete. The row
+   * fades over `--duration-fast` on `--easing-exit`, takes no pointer events and
+   * is hidden from assistive tech (beat one of the leaving choreography, for
+   * rows: a `<tr>` cannot be wrapped). Remove the row from `rows` 150ms later;
+   * the rows below then close the gap (no slide: table rows cannot be FLIPped).
+   * No fade under `prefers-reduced-motion`.
+   */
+  readonly leavingKeys = input<readonly unknown[] | ReadonlySet<unknown> | null>(null);
+
+  /**
    * Currently-expanded row keys (consumer-managed, mirrors `selected`).
    * A row is expandable when it carries `children: [...]` OR when
    * `expandDetailTpl` is set on the table. Click on the chevron toggles
@@ -741,6 +751,13 @@ export class TableComponent {
     const f = this.footer();
     const v = f ? f[col.key] : null;
     return v === null || v === undefined ? '' : String(v);
+  }
+
+  isLeaving(row: Record<string, unknown>): boolean {
+    const keys = this.leavingKeys();
+    if (!keys) return false;
+    const key = row[this.trackByKey()];
+    return Array.isArray(keys) ? keys.includes(key) : (keys as ReadonlySet<unknown>).has(key);
   }
 
   isHighlighted(row: Record<string, unknown>): boolean {

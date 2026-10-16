@@ -263,6 +263,21 @@
   }
 }
 
+// Leaving rows — driven by [leavingKeys]. Beat one of the delete choreography:
+// the cells fade on the exit curve and take no pointer events; the consumer
+// drops the row from `rows` once --duration-fast has passed.
+.afi-table tbody tr[data-leaving] > td {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--easing-exit);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afi-table tbody tr[data-leaving] > td {
+    transition: none;
+  }
+}
+
 @keyframes afi-table-row-highlight {
   0%   { background: var(--feedback-info-background); }
   20%  { background: var(--feedback-info-background); }

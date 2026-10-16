@@ -46,7 +46,8 @@
 
 // ─── on-brand: drawn on the brand canvas ───
 // No surface, no hairline, light ink. Slotted controls read --border-focus and the hover wash
-// from here, so rebinding them is enough to keep them visible on the dark ground.
+// from here, so rebinding those is enough to keep them visible on the dark ground. The text roles
+// are NOT rebound: a control with its own surface (a secondary button for the exit) keeps its ink.
 .top-bar--on-brand {
   background: transparent;
   border-bottom: none;
@@ -54,9 +55,6 @@
   --border-focus: var(--border-focus-inverse);
   --control-background-hover: var(--control-background-hover-inverse);
   --control-background-active: var(--control-background-active-inverse);
-  --foreground-primary-default: var(--top-bar-on-brand-foreground);
-  --foreground-secondary-default: var(--top-bar-on-brand-foreground-secondary);
-  --foreground-tertiary-default: var(--top-bar-on-brand-foreground-secondary);
 }
 
 // ─── Exit zone ───

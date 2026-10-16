@@ -174,6 +174,7 @@ export { InlineEditComponent } from './src/inline-edit';
 /** @deprecated Use InlineEditComponent instead */
 export { InlineEditComponent as EditableTextComponent } from './src/inline-edit';
 export { TopBarComponent } from './src/top-bar';
+export type { TopBarVariant } from './src/top-bar';
 export { FloatingPanel, escapeConsumed, onOverlayEscape } from './src/floating-panel';
 export type { FloatingAlign, FloatingPanelOptions, FloatingSide } from './src/floating-panel';
 export { FocusField, focusField, focusFirstInvalid } from './src/focus-field';

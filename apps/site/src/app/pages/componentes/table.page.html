@@ -28,6 +28,17 @@
       />
     </div>
     <div class="control-group">
+      <span class="control-group__label">Hover</span>
+      <afi-segmented-control [options]="hoverOptions" [(value)]="hover" size="sm" ariaLabel="Row hover" />
+      <span class="control-group__hint">
+        <strong>Auto</strong> — solo se rellena si las filas son interactivas (selección, acciones, expansión).
+      </span>
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Fila de referencia y totales</span>
+      <afi-segmented-control [options]="extrasOptions" [(value)]="extras" size="sm" ariaLabel="Reference row and totals" />
+    </div>
+    <div class="control-group">
       <span class="control-group__label">Acciones en fila</span>
       <afi-segmented-control
         [options]="actionRevealOptions"
@@ -45,7 +56,9 @@
   <div slot="preview" class="preview">
     <afi-table
       [columns]="columns"
-      [rows]="rows"
+      [rows]="displayRows()"
+      [footer]="footerRow()"
+      [hover]="hover()"
       [density]="density()"
       [rowActions]="rowActions"
       [actionsReveal]="actionReveal()"
@@ -60,7 +73,8 @@
     <ul class="prose-section__list">
       <li>Render HTML semántico (<code>&lt;table&gt;</code>, <code>&lt;th&gt;</code>, <code>&lt;td&gt;</code>) con <code>scope="col"</code>.</li>
       <li>Columnas ordenables emiten <code>aria-sort</code> + son enfocables con teclado.</li>
-      <li>Checkbox por fila tiene <code>ariaLabel="Seleccionar fila"</code> contextual.</li>
+      <li>El checkbox de cada fila se nombra con la fila («Seleccionar Operación Alpha»); el botón de expandir, «Expandir …» / «Contraer …» con <code>aria-expanded</code>; una fila con hijos es enfocable y se abre con Enter o Espacio.</li>
+      <li>La fila de referencia (<code>variant: 'reference'</code>) es inerte: sin hover, clic, acciones ni selección.</li>
       <li>Estado vacío anuncia el texto con <code>aria-live="polite"</code>.</li>
     </ul>
   </section>

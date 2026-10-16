@@ -26,7 +26,7 @@
         @if (selectable()) {
           <th scope="col" class="afi-table__th-select">
             <afi-checkbox
-              size="sm"
+              [size]="checkboxSize()"
               ariaLabel="Seleccionar todas las filas"
               [checked]="allSelected()"
               [indeterminate]="someSelected()"
@@ -102,28 +102,32 @@
              and the first cell gets indented via CSS. -->
         <ng-template #rowTpl let-row let-isChild="isChild">
           <tr
-            [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild, isMuted(row))"
+            [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild, isMuted(row), isReference(row))"
             [attr.data-row-key]="row[trackByKey()]"
+            [attr.tabindex]="!isChild && hasExpansion(row) && !isReference(row) ? 0 : null"
             (click)="onRowClick(row, $event)"
+            (keydown)="onRowKeydown(row, $event)"
           >
             @if (selectable()) {
               <td class="afi-table__td-select" (click)="$event.stopPropagation()">
-                <afi-checkbox
-                  size="sm"
-                  ariaLabel="Seleccionar fila"
-                  [checked]="isSelected(row)"
-                  (checkedChange)="toggleRow(row, $event)"
-                />
+                @if (!isReference(row)) {
+                  <afi-checkbox
+                    [size]="checkboxSize()"
+                    [ariaLabel]="'Seleccionar ' + labelOf(row)"
+                    [checked]="isSelected(row)"
+                    (checkedChange)="toggleRow(row, $event)"
+                  />
+                }
               </td>
             }
             @for (col of visibleColumns(); track col.key; let isFirstCol = $first) {
               <td [class]="cellClasses(col, row)">
-                @if (isFirstCol && !isChild && hasExpansion(row)) {
+                @if (isFirstCol && !isChild && hasExpansion(row) && !isReference(row)) {
                   <button
                     type="button"
                     class="afi-table__expand-toggle"
                     [class.afi-table__expand-toggle--open]="isExpanded(row)"
-                    [attr.aria-label]="isExpanded(row) ? 'Colapsar fila' : 'Expandir fila'"
+                    [attr.aria-label]="(isExpanded(row) ? 'Contraer ' : 'Expandir ') + labelOf(row)"
                     [attr.aria-expanded]="isExpanded(row)"
                     (click)="toggleExpand(row, $event)"
                   >
@@ -158,7 +162,9 @@
                 }
               </td>
             }
-            @if (hasRowActions()) {
+            @if (hasRowActions() && isReference(row)) {
+              <td class="afi-table__td-actions"></td>
+            } @else if (hasRowActions()) {
               <!-- Stop propagation on the actions cell so a click on empty
                    gutter space (not directly on a button) doesn't bubble to
                    the row's click handler and trigger `rowClicked`. -->
@@ -281,7 +287,7 @@
           </tr>
         </ng-template>
 
-        @for (row of rows(); track trackKey(row)) {
+        @for (row of orderedRows(); track trackKey(row)) {
           <!-- Parent row -->
           <ng-container
             *ngTemplateOutlet="rowTpl; context: { $implicit: row, isChild: false }"
@@ -309,5 +315,20 @@
         }
       }
     </tbody>
+    @if (footer(); as f) {
+      <tfoot>
+        <tr class="afi-table__foot-row">
+          @if (selectable()) {
+            <td class="afi-table__td-select afi-table__foot-cell"></td>
+          }
+          @for (col of visibleColumns(); track col.key) {
+            <td [class]="footCellClasses(col)">{{ footerText(col) }}</td>
+          }
+          @if (hasRowActions()) {
+            <td class="afi-table__td-actions afi-table__foot-cell"></td>
+          }
+        </tr>
+      </tfoot>
+    }
   </table>
 </div>

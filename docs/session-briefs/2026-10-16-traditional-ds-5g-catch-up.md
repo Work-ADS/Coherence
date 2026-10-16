@@ -36,7 +36,7 @@ Sidebar, TopBar, PlannerShell, NotesPopover (5e session). `*-v2`, `foundations-m
 | Slice | Branch | Scope | Status |
 |---|---|---|---|
 | **5g-1** | `traditional-ds-5g-1-focus-field` | FocusField module and global ring styles, Modal and Drawer `initialFocusRef` through it, doc page. | done 2026-10-16 |
-| 5g-2 | `traditional-ds-5g-2-table-leaving` | Table `leavingKeys`, «Eliminar filas» demo with undo toast, brief closeout. | planned |
+| 5g-2 | `traditional-ds-5g-2-table-leaving` | Table `leavingKeys`, «Eliminar filas» demo with undo toast, brief closeout. | done 2026-10-16 |
 
 ## Method
 
@@ -55,3 +55,11 @@ Plan gate before each slice. Full AGENTS.md read order, reuse before building, `
   - **Verified in the browser:** jump to the last field scrolls the form container (page scroll 0) and rings the field; «Guardar con errores» focuses the first invalid field with the error ring, light and dark; the drawer opens on its last field with the ring visible; no console errors; `tsc`, `npm run build` green (the one budget warning is the frozen Sarevi page).
   - **Not verified:** the Modal path in the browser (same code shape as the drawer), blur clearing the ring in a focused window (the Browser pane has no document focus), the halo animation (the pane freezes animations), reduced motion, checkbox and radio ring boxes.
   - **Guardian:** all tokens exist and resolve in dark. Fixed: a "24px" in a comment, and the two timing constants now say which token they mirror. Accepted: the error ring uses `--feedback-error-border`, the same pairing the input's own error focus ring uses.
+- **5g-2 done 2026-10-16** on `traditional-ds-5g-2-table-leaving` (cut from the 5g-1 branch because 5g-1 was not merged yet; merge 5g-1 first).
+  - **API (additive):** `leavingKeys` (array or `Set` of `trackByKey` values, default empty). A matching row gets `data-leaving` and `aria-hidden="true"`; its cells fade over `--duration-fast` on `--easing-exit`, take no pointer events, and have no transition under reduced motion. The consumer owns the 150ms timer and drops the row from `rows` itself; the rows below close the gap with no slide (a `<tr>` cannot be FLIPped). No new token. Consumers: 23 files render `afi-table`, none sets `leavingKeys`.
+  - **Doc page:** an «Eliminar filas» demo on the table page with the real component, the built-in delete row action, and `ToastService` («Fila eliminada», «Deshacer», 5s); undo puts the row back at its old position.
+  - **Verified in the browser:** delete marks the row `data-leaving` with `aria-hidden="true"`, pointer events none, `opacity 0.15s` transition; after the fade the row count goes 4 to 3, the toast reads «Fila eliminada Deshacer», undo restores 4 rows with the row back in second place; no console errors; `tsc` and `npm run build` green.
+  - **Not verified:** the fade itself on screen (the Browser pane freezes animations), reduced motion, dark mode of the fade, a keyboard walk of the delete action.
+  - **Not done on purpose:** the «Eliminar registros» pattern page (needs a Modal that names dependent records; its own piece of work if Richard wants it).
+  - **Carry-forward for chunk 6** is the list at the top of this brief (SummaryPanel `meta/tone/status/visual`, EmptyState `choices`, InlineNotice `targets` with FocusField). 5g is complete once both PRs are merged.
+  - **Guardian (approve):** tokens exist, specificity beats every cell rule with no conflict, reduced motion correct. Accepted: the demo's `DELETE_FADE_MS = 150` is tied to `--duration-fast` by a comment only (fine for a doc page); a highlighted row that is deleted keeps its tint for the 150ms.

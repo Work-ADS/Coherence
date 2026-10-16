@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ButtonComponent, TableComponent, SegmentedControlComponent } from '@coherence/ui';
+import { ButtonComponent, TableComponent, SegmentedControlComponent, ToastService } from '@coherence/ui';
 import type {
   TableActionsReveal,
   TableAppearance,
@@ -21,6 +21,9 @@ const SAMPLE_COLUMNS: TableColumn[] = [
   { key: 'estado', label: 'Estado' },
   { key: 'monto', label: 'Monto', align: 'end', sortable: true },
 ];
+
+// Matches --duration-fast: the consumer drops a leaving row once the fade is done.
+const DELETE_FADE_MS = 150;
 
 const SAMPLE_ROWS: Record<string, unknown>[] = [
   { id: 1, nombre: 'Operación Alpha', estado: 'Activo', monto: '$12,500' },
@@ -210,6 +213,16 @@ const FOOTER_ROW: Record<string, unknown> = { id: '', nombre: 'Total', estado: '
   styleUrl: './table.page.scss',
 })
 export class TablePage {
+  private readonly toast = inject(ToastService);
+
+  // Delete demo: the row fades (leavingKeys), is dropped after the fade, and an
+  // undo toast puts it back where it was.
+  readonly deleteRows = signal<Record<string, unknown>[]>(SAMPLE_ROWS.map((row) => ({ ...row })));
+  readonly leavingKeys = signal<unknown[]>([]);
+  readonly deleteActions: TableRowAction[] = [
+    { key: 'delete', label: 'Borrar', icon: 'delete', ariaLabel: 'Borrar operación', variant: 'danger' },
+  ];
+
   readonly density = signal<TableDensity>('compact');
   readonly hover = signal<TableHover>('on');
   readonly appearance = signal<TableAppearance>('default');
@@ -253,6 +266,32 @@ export class TablePage {
   readonly rows = SAMPLE_ROWS;
   readonly rowActions = SAMPLE_ROW_ACTIONS;
   readonly tokenCategories = TOKEN_CATEGORIES;
+
+  onDeleteAction(event: { action: TableRowAction; row: Record<string, unknown> }): void {
+    if (event.action.key !== 'delete') return;
+    const row = event.row;
+    const index = this.deleteRows().findIndex((r) => r['id'] === row['id']);
+    this.leavingKeys.update((keys) => [...keys, row['id']]);
+    setTimeout(() => {
+      this.deleteRows.update((rows) => rows.filter((r) => r['id'] !== row['id']));
+      this.leavingKeys.update((keys) => keys.filter((k) => k !== row['id']));
+      this.toast.show('Fila eliminada', {
+        actionLabel: 'Deshacer',
+        duration: 5000,
+        onAction: () =>
+          this.deleteRows.update((rows) => {
+            const next = [...rows];
+            next.splice(Math.min(index, next.length), 0, row);
+            return next;
+          }),
+      });
+    }, DELETE_FADE_MS);
+  }
+
+  resetDelete(): void {
+    this.deleteRows.set(SAMPLE_ROWS.map((row) => ({ ...row })));
+    this.leavingKeys.set([]);
+  }
 
   highlightRow(): void {
     this.highlightEnded.set('—');

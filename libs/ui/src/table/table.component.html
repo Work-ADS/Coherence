@@ -105,7 +105,7 @@
           <tr
             [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild, isMuted(row), isReference(row), isMixed(row))"
             [attr.data-row-key]="row[trackByKey()]"
-            [attr.tabindex]="!isChild && hasExpansion(row) && !isReference(row) ? 0 : null"
+            [attr.tabindex]="!isReference(row) && ((!isChild && hasExpansion(row)) || (selectOnRowClick() && selectable() && !isChild)) ? 0 : null"
             (click)="onRowClick(row, $event)"
             (keydown)="onRowKeydown(row, $event)"
           >

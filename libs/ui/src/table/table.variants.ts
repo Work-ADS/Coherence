@@ -16,6 +16,8 @@ export type TableDensity = 'compact' | 'default' | 'comfortable';
  *            an output has a listener.
  * - `off` — never. `[rowHoverable]="false"` keeps working and means the same.
  */
+export type TableHover = 'auto' | 'on' | 'off';
+
 /**
  * Which rows carry the selection boxes.
  *
@@ -25,8 +27,6 @@ export type TableDensity = 'compact' | 'default' | 'comfortable';
  *              selection holds leaf rows or keys only, never a group.
  */
 export type TableSelectionMode = 'rows' | 'leaves';
-
-export type TableHover = 'auto' | 'on' | 'off';
 
 /**
  * Reveal mode for trailing row actions.
@@ -46,3 +46,4 @@ export type TableHover = 'auto' | 'on' | 'off';
  *              acceptable (touch, kiosk, training mode).
  */
 export type TableActionsReveal = 'always' | 'hover' | 'soft';
+

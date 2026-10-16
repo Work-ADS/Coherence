@@ -65,6 +65,10 @@ export class TableComponent {
    * Selection by key (`trackByKey` values) instead of by row object. When set (even to `[]`) the
    * table runs on keys and emits `selectedKeysChange`; the `selected` / `selectedChange` pair is
    * then ignored. Left unset, nothing about the object API changes.
+   *
+   * Prefer keys with `selectionMode="leaves"` or a paginated list: leaves mode on the object API
+   * rebuilds `selectedChange` from the rows currently in `rows`, so objects for rows no longer
+   * shown are dropped.
    */
   readonly selectedKeys = input<readonly unknown[] | ReadonlySet<unknown> | null>(null);
   /** `rows` (default) or `leaves` for grouped tables. See `TableSelectionMode`. */
@@ -318,7 +322,7 @@ export class TableComponent {
   );
 
   /** Keys or objects? Keys when `selectedKeys` is set at all. */
-  private readonly keyed = computed(() => this.selectedKeys() !== null);
+  private readonly keyed = computed(() => this.selectedKeys() != null);
 
   /** The new paths (leaves, keys) run on a key set; the plain object API keeps its original code. */
   private readonly unified = computed(() => this.keyed() || this.selectionMode() === 'leaves');
@@ -336,7 +340,7 @@ export class TableComponent {
 
   private readonly selectedKeySet = computed<Set<unknown>>(() => {
     const keys = this.selectedKeys();
-    if (keys !== null) return new Set(keys);
+    if (keys != null) return new Set(keys);
     const key = this.trackByKey();
     return new Set(this.selected().map((r) => r[key]));
   });
@@ -373,9 +377,11 @@ export class TableComponent {
   });
 
   /** Nothing to select: the header box is disabled. */
-  readonly noneSelectable = computed(() =>
-    this.unified() ? this.unifiedTargets().length === 0 : this.selectableRows().length === 0,
-  );
+  readonly noneSelectable = computed(() => {
+    // An empty or loading table keeps an enabled box, as it always did.
+    if (this.dataRows().length === 0) return false;
+    return this.unified() ? this.unifiedTargets().length === 0 : this.selectableRows().length === 0;
+  });
 
   /** What select-all covers on the key set: leaves in leaves mode, selectable rows otherwise. */
   private unifiedTargets(): Record<string, unknown>[] {
@@ -476,11 +482,12 @@ export class TableComponent {
 
   /** The leaves a row stands for in leaves mode: a group's children, or the row itself. */
   private leavesOf(row: Record<string, unknown>): Record<string, unknown>[] {
-    if (this.isDisabled(row) && !this.hasChildren(row)) return [];
+    // A disabled row, group included, offers nothing to select.
+    if (this.isDisabled(row)) return [];
     if (this.selectionMode() === 'leaves' && this.hasChildren(row)) {
-      return this.childrenOf(row).filter((c) => !this.isDisabled(c));
+      return this.childrenOf(row).filter((c) => !this.isDisabled(c) && !this.isReference(c));
     }
-    return this.isDisabled(row) ? [] : [row];
+    return [row];
   }
 
   /** Box state for a row: leaves mode gives a group a tri-state over its selectable leaves. */

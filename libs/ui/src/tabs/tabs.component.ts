@@ -1,4 +1,5 @@
 import {
+  afterRenderEffect,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -16,18 +17,34 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
+import { IconComponent } from '../icon';
+import type { IconName } from '../icon';
 import { TabItemComponent } from './tab-item.component';
-import { TabsSize } from './tabs.variants';
+import type { TabsItem, TabsSize } from './tabs.variants';
 
 let nextId = 0;
+
+/** One tab as the bar draws it, whether it came from `<afi-tab-item>` or from `items`. */
+interface TabEntry {
+  value: string;
+  label: string;
+  icon: IconName | null;
+  count: number | string | null;
+  disabled: boolean;
+}
 
 /**
  * Tabs — underline-style tab bar with animated sliding underline indicator.
  *
  * Content lives inside `<afi-tab-item>` children and is conditionally
  * rendered into tab panels. Supports lazy rendering via the `lazy` input.
+ * Selection is by position (`activeIndex`) or by key (`value`); with `items`
+ * the component draws the bar only and the consumer owns the panels
+ * (see `afi-tab-panel`).
  *
- * Implements WAI-ARIA tablist/tab/tabpanel with full keyboard navigation.
+ * Implements WAI-ARIA tablist/tab/tabpanel with roving tabindex and automatic
+ * activation: one tab stop, arrows move and select (wrapping), Home and End
+ * jump, disabled tabs are skipped.
  *
  * @example
  * ```html
@@ -44,14 +61,30 @@ let nextId = 0;
 @Component({
   selector: 'afi-tabs',
   standalone: true,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tabs.component.html',
   styleUrl: './tabs.component.scss',
 })
 export class TabsComponent implements AfterViewInit {
-  /** Controlled active tab index. */
+  /** Controlled active tab index. Ignored while `value` is bound. */
   readonly activeIndex = input<number>(0);
+
+  /**
+   * Controlled active tab by key. A tab-item without its own `value` is keyed by
+   * its position as a string. `null` means nothing is selected (keyboard entry is
+   * then the first enabled tab). Unset: `activeIndex` decides.
+   */
+  readonly value = input<string | null | undefined>(undefined);
+
+  /** Initial tab by key when `value` is not bound. Used only if it names an enabled tab. */
+  readonly defaultValue = input<string | undefined>(undefined);
+
+  /** Tabs as data: the bar only, no projected panels. Strings or `{ value, label, icon, count, disabled }`. */
+  readonly items = input<ReadonlyArray<string | TabsItem> | null>(null);
+
+  /** Stretch the tabs to fill the width. */
+  readonly fullWidth = input<boolean>(false);
 
   /** Size variant — affects trigger height and font size. */
   readonly size = input<TabsSize>('md');
@@ -64,6 +97,9 @@ export class TabsComponent implements AfterViewInit {
 
   /** Emits the new index when the user activates a tab. */
   readonly activeChange = output<number>();
+
+  /** Emits the new key when the user activates a tab. */
+  readonly valueChange = output<string>();
 
   /** Projected `<afi-tab-item>` children. */
   readonly tabs = contentChildren(TabItemComponent);
@@ -79,15 +115,62 @@ export class TabsComponent implements AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
   private resizeObserver: ResizeObserver | null = null;
   private seeded = false;
+  private keySeen = false;
+  private lastKey: string | null = null;
+  private defaultApplied = false;
 
-  /** Counts the user's tab changes: the panel animates only after the first one. */
+  /** Counts tab changes after the first value: the panel animates only after one. */
   readonly animationKey = signal(0);
 
   /** False until the first measurement settles, so the indicator does not fly in. */
   readonly indicatorSettled = signal(false);
 
-  /** Current active tab index. */
-  readonly currentIndex = computed(() => this.internalIndex());
+  /** True when the consumer owns the panels (`items`). */
+  readonly barOnly = computed(() => this.items() !== null);
+
+  /** The tabs as the bar draws them. */
+  readonly entries = computed<TabEntry[]>(() => {
+    const given = this.items();
+    if (given) {
+      return given.map((t) =>
+        typeof t === 'string'
+          ? { value: t, label: t, icon: null, count: null, disabled: false }
+          : {
+              value: t.value,
+              label: t.label,
+              icon: t.icon ?? null,
+              count: t.count ?? null,
+              disabled: t.disabled ?? false,
+            },
+      );
+    }
+    return this.tabs().map((t, i) => ({
+      value: t.value() ?? String(i),
+      label: t.label(),
+      icon: t.icon(),
+      count: t.count() ?? t.badge(),
+      disabled: t.disabled(),
+    }));
+  });
+
+  /**
+   * Current active tab index; -1 when nothing is selected. A bound `value`
+   * decides on its own (the consumer owns the selection); otherwise the index
+   * the user or `activeIndex` last set.
+   */
+  readonly currentIndex = computed(() => {
+    const key = this.value();
+    if (key === undefined) return this.internalIndex();
+    return key === null ? -1 : this.entries().findIndex((t) => t.value === key);
+  });
+
+  /** The one tab that takes keyboard focus: the selected tab, else the first enabled one. */
+  readonly entryIndex = computed(() => {
+    const list = this.entries();
+    const cur = this.currentIndex();
+    if (cur >= 0 && list[cur] && !list[cur].disabled) return cur;
+    return list.findIndex((t) => !t.disabled);
+  });
 
   // ─── Indicator positioning ───
   readonly indicatorWidth = signal(0);
@@ -97,23 +180,39 @@ export class TabsComponent implements AfterViewInit {
   );
 
   constructor() {
-    // Sync controlled input → internal state
+    // Sync the controlled inputs. This reads inputs only (never the projected tab items, whose
+    // inputs are not set yet when an effect first runs).
     effect(() => {
-      const next = this.activeIndex();
-      if (this.internalIndex() === next) {
-        this.seeded = true;
+      const key = this.value();
+      const index = this.activeIndex();
+      if (key !== undefined) {
+        // A change from outside animates like a click; the very first value does not.
+        if (this.keySeen && key !== this.lastKey) this.animationKey.update((k) => k + 1);
+        this.keySeen = true;
+        this.lastKey = key;
         return;
       }
-      this.internalIndex.set(next);
-      // A change from outside animates like a click; the very first value does not.
-      if (this.seeded) this.animationKey.update((k) => k + 1);
+      if (this.internalIndex() !== index) {
+        this.internalIndex.set(index);
+        if (this.seeded) this.animationKey.update((k) => k + 1);
+      }
       this.seeded = true;
     });
 
+    // `defaultValue` picks the first selection once the tab list exists.
+    afterRenderEffect(() => {
+      const wanted = this.defaultValue();
+      const list = this.entries();
+      if (this.defaultApplied || this.value() !== undefined || wanted === undefined || !list.length) return;
+      this.defaultApplied = true;
+      const at = list.findIndex((t) => t.value === wanted && !t.disabled);
+      if (at >= 0) this.internalIndex.set(at);
+    });
+
     // Recalculate indicator when index or tabs change
-    effect(() => {
+    afterRenderEffect(() => {
       const _ = this.currentIndex();
-      const __ = this.tabs();
+      const __ = this.entries();
       requestAnimationFrame(() => this.updateIndicator());
     });
 
@@ -149,58 +248,37 @@ export class TabsComponent implements AfterViewInit {
   }
 
   activate(index: number): void {
-    const tab = this.tabs()[index];
-    if (tab?.disabled()) return;
+    const entry = this.entries()[index];
+    if (!entry || entry.disabled || index === this.currentIndex()) return;
     this.internalIndex.set(index);
     this.animationKey.update((k) => k + 1);
     this.activeChange.emit(index);
+    this.valueChange.emit(entry.value);
   }
 
   onKeydown(event: KeyboardEvent): void {
-    const allTabs = this.tabs();
-    const len = allTabs.length;
-    const current = this.currentIndex();
+    const list = this.entries();
+    const enabled = list.map((t, i) => (t.disabled ? -1 : i)).filter((i) => i >= 0);
+    if (!enabled.length) return;
+    const key = event.key;
+    if (key !== 'ArrowRight' && key !== 'ArrowLeft' && key !== 'Home' && key !== 'End') return;
 
-    const findNext = (dir: 1 | -1): number => {
-      let next = current;
-      for (let i = 0; i < len; i++) {
-        next = (next + dir + len) % len;
-        const tab = allTabs[next];
-        if (tab && !tab.disabled()) return next;
-      }
-      return current;
-    };
-
-    switch (event.key) {
-      case 'ArrowRight':
-        event.preventDefault();
-        this.focusTab(findNext(1));
-        break;
-      case 'ArrowLeft':
-        event.preventDefault();
-        this.focusTab(findNext(-1));
-        break;
-      case 'Home':
-        event.preventDefault();
-        this.focusTab(findNext(1 - len as 1));
-        break;
-      case 'End':
-        event.preventDefault();
-        for (let i = len - 1; i >= 0; i--) {
-          const t = allTabs[i];
-          if (t && !t.disabled()) {
-            this.focusTab(i);
-            break;
-          }
-        }
-        break;
-    }
+    const at = Math.max(0, enabled.indexOf(this.entryIndex()));
+    const n = enabled.length;
+    const to =
+      key === 'Home' ? 0 : key === 'End' ? n - 1 : key === 'ArrowRight' ? (at + 1) % n : (at - 1 + n) % n;
+    event.preventDefault();
+    const target = enabled[to];
+    if (target !== undefined) this.focusTab(target);
   }
 
   private updateIndicator(): void {
     const triggers = this.triggerEls();
     const idx = this.currentIndex();
-    if (!triggers || idx < 0 || idx >= triggers.length) return;
+    if (!triggers || idx < 0 || idx >= triggers.length) {
+      this.indicatorWidth.set(0);
+      return;
+    }
     const el = triggers[idx]?.nativeElement as HTMLElement | undefined;
     if (!el) return;
     this.indicatorOffset.set(el.offsetLeft);
@@ -208,7 +286,7 @@ export class TabsComponent implements AfterViewInit {
   }
 
   private focusTab(index: number): void {
-    const el = document.getElementById(this.tabId(index));
+    const el = this.triggerEls()[index]?.nativeElement as HTMLElement | undefined;
     if (el) {
       el.focus();
       this.activate(index);

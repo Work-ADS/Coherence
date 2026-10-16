@@ -3,7 +3,9 @@
   class="tabs"
   [class.tabs--sm]="size() === 'sm'"
   [class.tabs--md]="size() === 'md'"
+  [class.tabs--fill]="fullWidth()"
   role="tablist"
+  aria-orientation="horizontal"
   [attr.aria-label]="ariaLabel()"
   (keydown)="onKeydown($event)"
 >
@@ -17,42 +19,47 @@
   ></div>
 
   <!-- Tab triggers -->
-  @for (tab of tabs(); track $index) {
+  @for (tab of entries(); track $index) {
     <button
       #tabTrigger
       type="button"
       role="tab"
       [id]="tabId($index)"
       [attr.aria-selected]="$index === currentIndex()"
-      [attr.aria-controls]="panelId($index)"
-      [tabindex]="$index === currentIndex() ? 0 : -1"
-      [disabled]="tab.disabled()"
+      [attr.aria-controls]="barOnly() ? null : panelId($index)"
+      [tabindex]="$index === entryIndex() ? 0 : -1"
+      [disabled]="tab.disabled"
       class="tabs__trigger"
       [class.tabs__trigger--active]="$index === currentIndex()"
       (click)="activate($index)"
     >
-      {{ tab.label() }}
-      @if (tab.badge() !== null) {
-        <span class="tabs__badge">{{ tab.badge() }}</span>
+      @if (tab.icon; as icon) {
+        <afi-icon class="tabs__icon" [name]="icon" />
+      }
+      {{ tab.label }}
+      @if (tab.count !== null) {
+        <span class="tabs__badge">{{ tab.count }}</span>
       }
     </button>
   }
 </div>
 
-<!-- Tab panels -->
-<div class="tabs__panels">
-  @for (tab of tabs(); track $index) {
-    <div
-      role="tabpanel"
-      [id]="panelId($index)"
-      [attr.aria-labelledby]="tabId($index)"
-      [hidden]="$index !== currentIndex()"
-      class="tabs__panel"
-      [class.tabs__panel--enter]="$index === currentIndex() && animationKey() > 0"
-    >
-      @if (!lazy() || $index === currentIndex()) {
-        <ng-container [ngTemplateOutlet]="tab.contentTpl()!" />
-      }
-    </div>
-  }
-</div>
+<!-- Tab panels: projected tab-items only; with `items` the consumer owns them -->
+@if (!barOnly()) {
+  <div class="tabs__panels">
+    @for (tab of tabs(); track $index) {
+      <div
+        role="tabpanel"
+        [id]="panelId($index)"
+        [attr.aria-labelledby]="tabId($index)"
+        [hidden]="$index !== currentIndex()"
+        class="tabs__panel"
+        [class.tabs__panel--enter]="$index === currentIndex() && animationKey() > 0"
+      >
+        @if (!lazy() || $index === currentIndex()) {
+          <ng-container [ngTemplateOutlet]="tab.contentTpl()!" />
+        }
+      </div>
+    }
+  </div>
+}

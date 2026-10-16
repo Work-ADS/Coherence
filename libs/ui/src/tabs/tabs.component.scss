@@ -131,12 +131,27 @@
     }
   }
 
+  // ─── Full width ───
+  &--fill {
+    gap: 0;
+
+    .tabs__trigger {
+      flex: 1;
+      padding-inline: var(--space-md);
+    }
+  }
+
+  &__icon {
+    --afi-icon-size: var(--icon-sm);
+    flex-shrink: 0;
+  }
+
   // ─── Leading-tab alignment (LOCKED — applies to every afi-tabs instance) ───
   // The first trigger's inline-start padding is removed so its text aligns
   // with the page-header title above (and any persistent content below).
   // The underline indicator follows automatically — it measures the
   // trigger's box.
-  .tabs__trigger:first-of-type {
+  &:not(.tabs--fill) .tabs__trigger:first-of-type {
     padding-inline-start: 0;
   }
 }

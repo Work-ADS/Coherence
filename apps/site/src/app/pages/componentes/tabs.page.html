@@ -1,7 +1,7 @@
 <site-doc-page-shell
   title="Tabs"
   overline="COMPONENTS"
-  description="Underline-style horizontal tabs with a sliding indicator and animated slide+blur panel transitions. Implements the WAI-ARIA tablist/tab/tabpanel pattern with full keyboard navigation. Content lives inside each tab item and is conditionally rendered into panels."
+  description="Underline-style horizontal tabs with a sliding indicator and a result-cascade panel change. Selection by position or by key; the bar can also be drawn from data with the panel owned by the page. Implements the WAI-ARIA tablist/tab/tabpanel pattern with roving tabindex and automatic activation."
   componentName="tabs"
 >
   <span slot="breadcrumb">
@@ -39,21 +39,55 @@
         ariaLabel="Number of tabs"
       />
     </div>
+    <div class="control-group">
+      <span class="control-group__label">Selection</span>
+      <afi-select
+        [options]="selectionOptions"
+        [value]="selection()"
+        (valueChange)="selection.set($event + '')"
+        size="sm"
+        ariaLabel="Selection"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Width</span>
+      <afi-select
+        [options]="fillOptions"
+        [value]="fill()"
+        (valueChange)="fill.set($event + '')"
+        size="sm"
+        ariaLabel="Width"
+      />
+    </div>
   </div>
 
   <div slot="preview" class="preview">
     <afi-tabs
       [activeIndex]="activeTab()"
+      [value]="demoValue()"
+      [fullWidth]="fill() === 'on'"
       [size]="$any(size())"
       ariaLabel="Demo tabs"
       (activeChange)="activeTab.set($event)"
+      (valueChange)="onValueChange($event)"
     >
       @for (tab of demoTabs(); track $index) {
-        <afi-tab-item [label]="tab.label" [badge]="tab.badge" [disabled]="tab.disabled">
+        <afi-tab-item [label]="tab.label" [value]="tab.value" [count]="tab.badge" [disabled]="tab.disabled">
           <div class="preview__panel">{{ tab.content }}</div>
         </afi-tab-item>
       }
     </afi-tabs>
+
+    <p class="preview__caption">Bar only: tabs as data, with <code>afi-tab-panel</code> owning the content.</p>
+    <afi-tabs
+      [items]="barItems"
+      [value]="barTab()"
+      (valueChange)="barTab.set($event)"
+      ariaLabel="Demo bar only"
+    />
+    <afi-tab-panel [value]="barTab()">
+      <div class="preview__panel">Contenido de {{ barTab() }}.</div>
+    </afi-tab-panel>
   </div>
 
   <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
@@ -67,8 +101,10 @@
       <li>Roving tabindex — only the active tab has <code>tabindex="0"</code>.</li>
       <li>Arrow keys navigate between tabs, Home/End jump to first/last.</li>
       <li>Disabled tabs are skipped during keyboard navigation.</li>
-      <li>Focus ring uses <code>var(--border-focus)</code> with inset box-shadow.</li>
-      <li>Respects <code>prefers-reduced-motion</code> — all transitions and animations disabled.</li>
+      <li>Automatic activation: arrows select as they move, and both ends wrap. With <code>value</code> set to <code>null</code> nothing is selected and the Tab key enters at the first enabled tab.</li>
+      <li>Focus ring is the outward <code>var(--border-focus)</code> ring shared by the v1 primitives.</li>
+      <li>The panel change leaves no transform or filter behind, so popovers inside a panel still position against the page.</li>
+      <li>Respects <code>prefers-reduced-motion</code> — the indicator stays put and the panel only fades for a moment.</li>
     </ul>
   </section>
 
@@ -82,7 +118,7 @@
           <li>Put content inside <code>afi-tab-item</code> for proper panel semantics.</li>
           <li>Provide an <code>ariaLabel</code> on the tabs container.</li>
           <li>Use <code>lazy</code> for tabs with heavy content.</li>
-          <li>Use badges sparingly to indicate counts or status.</li>
+          <li>Use the count chip sparingly (<code>count</code>, or <code>badge</code> as before) to show how many items a tab holds.</li>
         </ul>
       </div>
       <div class="dos-donts__card dos-donts__card--dont">

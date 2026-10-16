@@ -132,4 +132,8 @@
   --nav-item-icon-active: var(--brand-secondary-foreground-default);
   --nav-item-icon-selected: var(--brand-secondary-foreground-default);
   --foreground-tertiary-default: var(--brand-secondary-foreground-hover);
+  --sidebar-foreground: var(--brand-secondary-foreground-hover);
+  --sidebar-foreground-hover: var(--brand-secondary-foreground-default);
+  --sidebar-icon: var(--brand-secondary-foreground-hover);
+  --sidebar-background-hover: var(--brand-secondary-background-hover);
 }

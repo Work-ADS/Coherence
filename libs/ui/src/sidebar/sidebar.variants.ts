@@ -7,6 +7,13 @@ export type SidebarMode = 'static' | 'collapsible' | 'hover-expand';
  */
 export type SidebarVariant = 'neutral' | 'secondary-azul' | 'flush-light' | 'inset-dark';
 
+/** Who is signed in, shown above the footer. */
+export interface SidebarUser {
+  name: string;
+  role?: string;
+  src?: string | null;
+}
+
 /** Variants that carry the Wealth Planner geometry. */
 export const planningVariants: readonly SidebarVariant[] = ['flush-light', 'inset-dark'] as const;
 

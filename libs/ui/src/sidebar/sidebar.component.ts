@@ -8,9 +8,11 @@ import {
   signal,
 } from '@angular/core';
 
+import { AvatarComponent } from '../avatar';
 import { IconComponent } from '../icon';
+import { TooltipComponent } from '../tooltip';
 import { SIDEBAR_CONTEXT } from './sidebar.token';
-import type { SidebarMode, SidebarVariant } from './sidebar.variants';
+import type { SidebarMode, SidebarUser, SidebarVariant } from './sidebar.variants';
 import { planningVariants, sidebarWidths } from './sidebar.variants';
 
 /**
@@ -28,7 +30,7 @@ import { planningVariants, sidebarWidths } from './sidebar.variants';
 @Component({
   selector: 'afi-sidebar',
   standalone: true,
-  imports: [IconComponent],
+  imports: [AvatarComponent, IconComponent, TooltipComponent],
   providers: [{ provide: SIDEBAR_CONTEXT, useExisting: forwardRef(() => SidebarComponent) }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './sidebar.component.html',
@@ -53,6 +55,16 @@ export class SidebarComponent {
    * `dotLabel` wins.
    */
   readonly dotLabel = input<string>('pendiente de revisión');
+  /** Brand logotype, shown expanded. `[slot=top]` still works for a custom brand. */
+  readonly logoSrc = input<string | null>(null);
+  readonly logoAlt = input<string>('Afi');
+  /** Brand mark shown in the rail; it gives way to the toggle on hover and keyboard focus. */
+  readonly logoMarkSrc = input<string | null>(null);
+  readonly logoMarkAlt = input<string>('Afi');
+  /** Product name beside the logotype, as one lockup. Dropped in the rail. */
+  readonly product = input<string | null>(null);
+  /** Who is signed in: avatar, name and role above the footer; only the avatar in the rail. */
+  readonly user = input<SidebarUser | null>(null);
   /** Overrides the panel widths. Unset: the new variants read the sidebar tokens, the original chrome keeps 64 and 240. */
   readonly width = input<{ collapsed: string; expanded: string } | null>(null);
 

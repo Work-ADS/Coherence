@@ -10,8 +10,27 @@
 
   <!-- Top slot (logo) -->
   <div class="sidebar__logo-row">
+    @if (isRail()) {
+      @if (logoMarkSrc(); as mark) {
+        <img class="sidebar__mark" [src]="mark" [alt]="logoMarkAlt()" />
+      }
+    } @else if (logoSrc(); as logo) {
+      <span class="sidebar__lockup">
+        <img class="sidebar__logo" [src]="logo" [alt]="logoAlt()" />
+        @if (product(); as name) {
+          <span class="sidebar__product">{{ name }}</span>
+        }
+      </span>
+    }
     <ng-content select="[slot=top]" />
   </div>
+
+  <!-- Optional block between the brand and the nav: expanded only -->
+  @if (isExpanded()) {
+    <div class="sidebar__header">
+      <ng-content select="[slot=header]" />
+    </div>
+  }
 
   <!-- Pin button (hover-expand mode) -->
   @if (mode() === 'hover-expand' && isExpanded()) {
@@ -51,6 +70,22 @@
   <nav class="sidebar__content" [attr.aria-label]="ariaLabel()">
     <ng-content />
   </nav>
+
+  @if (user(); as signedIn) {
+    <afi-tooltip [text]="signedIn.name" position="right" [disabled]="!isRail()" class="sidebar__user-tip">
+      <div class="sidebar__user">
+        <afi-avatar [name]="signedIn.name" [src]="signedIn.src ?? null" size="sm" />
+        @if (!isRail()) {
+          <span class="sidebar__user-text">
+            <span class="sidebar__user-name">{{ signedIn.name }}</span>
+            @if (signedIn.role) {
+              <span class="sidebar__user-role">{{ signedIn.role }}</span>
+            }
+          </span>
+        }
+      </div>
+    </afi-tooltip>
+  }
 
   <!-- Bottom slot (user/settings) -->
   <div class="sidebar__footer">

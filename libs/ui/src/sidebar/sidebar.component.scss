@@ -225,6 +225,100 @@
     --nav-item-margin-inline: 0;
   }
 
+  // Logotype and product name read as one lockup; the name is one step quieter than the nav labels.
+  .sidebar__lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-width: 0;
+  }
+
+  .sidebar__logo {
+    display: block;
+    height: var(--dimension-5-5);
+    width: auto;
+    flex: none;
+  }
+
+  .sidebar__product {
+    font: var(--type-body-md-400);
+    color: var(--sidebar-brand-foreground);
+    white-space: nowrap;
+    flex: none;
+  }
+
+  .sidebar__mark {
+    display: block;
+    height: calc(var(--sidebar-logo-height) * 0.62);
+    width: auto;
+    transition: opacity var(--duration-fast) var(--easing-enter);
+  }
+
+  // The mark gives way to the toggle on hover, and for KEYBOARD focus only: after a mouse click
+  // on the toggle it returns as soon as the pointer leaves. Two rules, so a browser without :has
+  // still gets the hover one.
+  &.sidebar--rail:hover .sidebar__mark {
+    opacity: 0;
+  }
+
+  &.sidebar--rail:has(:focus-visible) .sidebar__mark {
+    opacity: 0;
+  }
+
+  // Optional block under the brand. Inline-size containment keeps a long client name from
+  // widening a fit-to-label panel: the text wraps to the panel instead.
+  .sidebar__header {
+    flex: none;
+    min-width: 0;
+    contain: inline-size;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .sidebar__user-tip {
+    display: block;
+    flex: none;
+    --tooltip-trigger-inline-size: 100%;
+  }
+
+  .sidebar__user {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-width: 0;
+    padding: var(--space-sm) var(--sidebar-padding-x);
+    border-top: var(--border-width-hairline) solid var(--sidebar-divider);
+  }
+
+  &.sidebar--rail .sidebar__user {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .sidebar__user-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .sidebar__user-name {
+    font: var(--type-body-md-500);
+    color: var(--sidebar-foreground-selected);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sidebar__user-role {
+    font: var(--type-body-sm-400);
+    color: var(--sidebar-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .sidebar__footer {
     border-top: none;
     padding: var(--space-md) var(--sidebar-padding-x);

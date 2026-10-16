@@ -1167,6 +1167,7 @@ body:has(.lk-sarevi--banco-cooperativo) :is(.afi-select__panel, .afi-select__bac
   --foreground-primary-hover:     var(--color-afi-control-200);
   --foreground-secondary-default: var(--color-afi-control-50);
   --foreground-tertiary-default:  var(--color-afi-control-400);
+  --foreground-tertiary-disabled: var(--color-afi-control-600);   // one step under the rest ink, so a disabled label still reads as dimmer
   --foreground-brand-default:     var(--color-afi-azul-300);   // brighter for dark bg
   --foreground-inverse-default:   var(--color-afi-control-950);
 

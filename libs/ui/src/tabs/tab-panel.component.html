@@ -1,0 +1,10 @@
+<div
+  role="tabpanel"
+  [attr.aria-labelledby]="labelledBy()"
+  [attr.aria-label]="labelledBy() ? null : ariaLabel()"
+  class="tab-panel"
+  [class.tab-panel--enter-a]="enterA()"
+  [class.tab-panel--enter-b]="enterB()"
+>
+  <ng-content />
+</div>

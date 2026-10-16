@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+// Same motion as the panels inside afi-tabs: the result cascade, with `backwards` fill so no
+// filter or transform stays behind once it ends (either would trap fixed-position popovers).
+.tab-panel {
+  &--enter-a {
+    animation: tab-panel-enter-a var(--reveal-cascade-duration) var(--easing-enter) backwards;
+  }
+
+  &--enter-b {
+    animation: tab-panel-enter-b var(--reveal-cascade-duration) var(--easing-enter) backwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &--enter-a,
+    &--enter-b {
+      animation: afi-reveal-fade var(--reveal-cascade-reduced-duration) linear backwards;
+    }
+  }
+}
+
+@keyframes tab-panel-enter-a {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-cascade-rise));
+    filter: blur(var(--reveal-cascade-blur));
+  }
+}
+
+@keyframes tab-panel-enter-b {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-cascade-rise));
+    filter: blur(var(--reveal-cascade-blur));
+  }
+}

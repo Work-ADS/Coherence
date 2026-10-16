@@ -96,8 +96,18 @@
   // ===========================================================================
 
   --tab-item-height: var(--tab-height);
-  --tab-item-padding-x: var(--space-md);
-  --tab-item-gap: var(--space-xs);
+  --tab-item-height-sm: var(--dimension-9);       // 36px, the compact size
+  --tab-item-padding-x: var(--dimension-0-5);     // 2px: the label is the tab; the strip's gap does the spacing
+  --tab-item-gap: var(--space-xs);                // between label, icon and count
+  --tab-gap: var(--space-lg);                     // between tabs
+  --tab-item-font: var(--type-body-md-500);
+  --tab-item-font-active: var(--type-body-md-600);
+  --tab-item-font-sm: var(--type-body-sm-500);
+  --tab-item-font-sm-active: var(--type-body-sm-600);
+  // Count chip: neutral at rest, brand-neutral on the active tab.
+  --tab-count-size: var(--dimension-4-5);         // 18px
+  --tab-count-padding-x: var(--space-2xs);
+  --tab-count-font: var(--type-body-sm-600);
 
 
   // ===========================================================================

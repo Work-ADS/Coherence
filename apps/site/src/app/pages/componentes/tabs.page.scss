@@ -14,6 +14,12 @@
               color var(--duration-base) var(--easing-enter);
 
 
+  &__caption {
+    margin: var(--space-xl) 0 var(--space-xs);
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default);
+  }
+
   &__panel {
     padding: var(--space-lg);
     font: var(--type-body-md-400);

@@ -1,3 +1,5 @@
+import type { IconName } from '../icon';
+
 /**
  * Tabs size variants.
  * Sizing is handled in SCSS via `.tabs__list--sm` / `.tabs__list--md` modifiers.
@@ -6,18 +8,24 @@
 
 export type TabsSize = 'sm' | 'md';
 
+/** A tab given as data (`items` on `afi-tabs`): the bar only, with the panels owned by the consumer. */
+export interface TabsItem {
+  value: string;
+  label: string;
+  icon?: IconName;
+  /** Trailing count chip. */
+  count?: number | string;
+  disabled?: boolean;
+}
+
 export const tokenUsage = [
-  { property: 'List background', token: 'var(--surface-subtle)' },
-  { property: 'Indicator background', token: 'var(--surface-default)' },
-  { property: 'Indicator shadow', token: 'var(--shadow-sm)' },
-  { property: 'Trigger text (inactive)', token: 'var(--foreground-tertiary-default)' },
-  { property: 'Trigger text (active)', token: 'var(--foreground-primary-default)' },
-  { property: 'Trigger text (hover)', token: 'var(--foreground-primary-default)' },
-  { property: 'Border radius (list)', token: 'var(--radius-lg)' },
-  { property: 'Border radius (indicator)', token: 'var(--radius-md)' },
-  { property: 'Focus ring', token: 'var(--border-focus)' },
-  { property: 'Transition (indicator)', token: 'var(--duration-base) var(--easing-standard)' },
-  { property: 'Transition (color)', token: 'var(--duration-fast) ease-out' },
-  { property: 'Badge background', token: 'var(--brand-primary-background-default)' },
-  { property: 'Badge text', token: 'var(--brand-primary-foreground-default)' },
-];
+  { property: 'Gap between tabs', token: '--tab-gap' },
+  { property: 'Tab height', token: '--tab-item-height (sm: --tab-item-height-sm)' },
+  { property: 'Tab font (rest / active)', token: '--tab-item-font / --tab-item-font-active' },
+  { property: 'Trigger text (inactive / hover)', token: '--foreground-tertiary-default / --foreground-secondary-default' },
+  { property: 'Trigger text (active)', token: '--foreground-brand-default' },
+  { property: 'Trigger text (disabled)', token: '--foreground-tertiary-disabled' },
+  { property: 'Indicator', token: '--brand-secondary-background-default' },
+  { property: 'Count chip', token: '--tab-count-size, --surface-subtle (active: --brand-secondary-neutral-background-default)' },
+  { property: 'Panel enter', token: '--reveal-cascade-duration + --easing-enter' },
+] as const;

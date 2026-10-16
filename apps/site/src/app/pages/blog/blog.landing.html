@@ -16,23 +16,25 @@
       <p class="blog-landing__hero-intro">{{ headerCopy().intro }}</p>
     </header>
 
-    <!-- Supporting sections: the coordination problem, then why components alone
-         are not enough. Two columns on desktop, stacked on mobile. -->
-    <div class="blog-landing__foundation" data-foundation="modern">
-      @for (item of foundationCopy(); track item.heading) {
-        <section class="blog-landing__foundation-item">
-          <h2 class="blog-landing__foundation-heading">{{ item.heading }}</h2>
-          <p class="blog-landing__foundation-body">{{ item.body }}</p>
-        </section>
-      }
-    </div>
+    @if (showSupporting) {
+      <!-- Supporting sections: the coordination problem, then why components alone
+           are not enough. Two columns on desktop, stacked on mobile. -->
+      <div class="blog-landing__foundation" data-foundation="modern">
+        @for (item of foundationCopy(); track item.heading) {
+          <section class="blog-landing__foundation-item">
+            <h2 class="blog-landing__foundation-heading">{{ item.heading }}</h2>
+            <p class="blog-landing__foundation-body">{{ item.body }}</p>
+          </section>
+        }
+      </div>
 
-    <!-- Worked example of the cycle the sections above describe. -->
-    <section class="blog-landing__cycle" data-foundation="modern">
-      <h2 class="blog-landing__foundation-heading">{{ cycleCopy().heading }}</h2>
-      <p class="blog-landing__foundation-body">{{ cycleCopy().body }}</p>
-      <site-reactive-cycle-flow />
-    </section>
+      <!-- Worked example of the cycle the sections above describe. -->
+      <section class="blog-landing__cycle" data-foundation="modern">
+        <h2 class="blog-landing__foundation-heading">{{ cycleCopy().heading }}</h2>
+        <p class="blog-landing__foundation-body">{{ cycleCopy().body }}</p>
+        <site-reactive-cycle-flow />
+      </section>
+    }
 
     <!-- Workbench band — a peer surface, not a post. Deliberately NOT a card in
          the list below: every card there is something you read, with a date, and

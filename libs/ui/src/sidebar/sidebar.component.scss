@@ -102,7 +102,28 @@
   }
 }
 
+// expandMotion="reveal": the nav arrives a beat after the width starts to move.
+.sidebar--reveal .sidebar__content {
+  animation: sidebar-reveal var(--duration-base) var(--easing-enter) both;
+  animation-delay: var(--duration-fast);
+}
+
+@keyframes sidebar-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--dimension-1));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .sidebar--reveal .sidebar__content {
+    animation: none;
+  }
+
   .sidebar,
   .sidebar__pin,
   .sidebar__toggle,

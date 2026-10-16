@@ -1,4 +1,5 @@
 <aside
+  #panel
   class="sidebar"
   [style.width]="currentWidth()"
   [class.sidebar--secondary-azul]="variant() === 'secondary-azul'"
@@ -6,7 +7,8 @@
   [class.sidebar--flush-light]="variant() === 'flush-light'"
   [class.sidebar--inset-dark]="variant() === 'inset-dark'"
   [class.sidebar--rail]="isRail()"
-  [class.sidebar--static]="mode() === 'static'">
+  [class.sidebar--static]="mode() === 'static'"
+  [class.sidebar--reveal]="revealing()">
 
   <!-- Top slot (logo) -->
   <div class="sidebar__logo-row">

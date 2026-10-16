@@ -1,18 +1,28 @@
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
+  ElementRef,
   forwardRef,
+  inject,
   input,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 
 import { AvatarComponent } from '../avatar';
 import { IconComponent } from '../icon';
 import { TooltipComponent } from '../tooltip';
 import { SIDEBAR_CONTEXT } from './sidebar.token';
-import type { SidebarMode, SidebarUser, SidebarVariant } from './sidebar.variants';
+import type {
+  SidebarExpandMotion,
+  SidebarMode,
+  SidebarUser,
+  SidebarVariant,
+} from './sidebar.variants';
 import { planningVariants, sidebarWidths } from './sidebar.variants';
 
 /**
@@ -65,11 +75,63 @@ export class SidebarComponent {
   readonly product = input<string | null>(null);
   /** Who is signed in: avatar, name and role above the footer; only the avatar in the rail. */
   readonly user = input<SidebarUser | null>(null);
+  /**
+   * How the Wealth Planner panel opens from the rail. `instant` (default): a
+   * cut. `reveal`: the width runs from the rail to the panel in
+   * `--duration-slow` on `--easing-enter` and the nav fades in after it starts.
+   * Nothing moves under `prefers-reduced-motion`.
+   */
+  readonly expandMotion = input<SidebarExpandMotion>('instant');
   /** Overrides the panel widths. Unset: the new variants read the sidebar tokens, the original chrome keeps 64 and 240. */
   readonly width = input<{ collapsed: string; expanded: string } | null>(null);
 
   readonly expandedChange = output<boolean>();
+
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  private readonly destroyRef = inject(DestroyRef);
+  private wasExpanded = true;
+  private railWidth = 0;
+  private revealTimer: ReturnType<typeof setTimeout> | null = null;
+
+  /** True while the reveal runs; fades the nav in. */
+  readonly revealing = signal(false);
   readonly pinnedChange = output<boolean>();
+
+  constructor() {
+    // The reveal animates a width that `max-content` cannot interpolate, so the panel is measured
+    // once after render (the only DOM read here) and animated between the two measurements.
+    afterRenderEffect(() => {
+      const el = this.panel()?.nativeElement;
+      const open = this.isExpanded();
+      if (!el) return;
+      const was = this.wasExpanded;
+      this.wasExpanded = open;
+      if (!open) {
+        this.railWidth = el.offsetWidth;
+        return;
+      }
+      if (was || this.expandMotion() !== 'reveal' || !this.isPlanning()) return;
+      if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const target = el.offsetWidth;
+      const style = getComputedStyle(el);
+      const duration = parseFloat(style.getPropertyValue('--duration-slow')) || 0;
+      const easing = style.getPropertyValue('--easing-enter').trim() || 'ease-out';
+      if (!this.railWidth || !duration) return;
+      el.animate(
+        [
+          { width: `${this.railWidth}px`, minWidth: 0 },
+          { width: `${target}px`, minWidth: `${target}px` },
+        ],
+        { duration, easing },
+      );
+      this.revealing.set(true);
+      if (this.revealTimer) clearTimeout(this.revealTimer);
+      this.revealTimer = setTimeout(() => this.revealing.set(false), duration + 150);
+    });
+    this.destroyRef.onDestroy(() => {
+      if (this.revealTimer) clearTimeout(this.revealTimer);
+    });
+  }
 
   /** Internal hover/focus state for hover-expand mode */
   private readonly hovered = signal(false);

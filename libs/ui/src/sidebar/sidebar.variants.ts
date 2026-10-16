@@ -7,6 +7,9 @@ export type SidebarMode = 'static' | 'collapsible' | 'hover-expand';
  */
 export type SidebarVariant = 'neutral' | 'secondary-azul' | 'flush-light' | 'inset-dark';
 
+/** How the panel opens from the rail: a cut, or the canonical expand. */
+export type SidebarExpandMotion = 'instant' | 'reveal';
+
 /** Who is signed in, shown above the footer. */
 export interface SidebarUser {
   name: string;

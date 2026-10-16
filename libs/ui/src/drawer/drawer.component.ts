@@ -5,187 +5,132 @@ import {
   effect,
   ElementRef,
   input,
+  OnDestroy,
   output,
   signal,
   viewChild,
 } from '@angular/core';
 
+import { onOverlayEscape } from '../floating-panel';
+import { IconComponent } from '../icon';
 import type { DrawerSize } from './drawer.variants';
-import { sizeClasses } from './drawer.variants';
+
+let nextId = 0;
 
 /**
- * Non-blocking right-edge panel.
+ * Right-side panel over the content: the shell for a side task (a record's
+ * detail, a settings panel, a short form). Not a Modal: it does not demand a
+ * decision, it sits beside the work it annotates.
  *
- * NOT a modal — no overlay, no focus trap, page stays interactive.
- * Click-outside closes by default. Arrow nav for row-detail pattern.
+ * Floating frame (`--layout-shell-inset` on top, right and bottom, every corner
+ * rounded) over a scrim that tints and blurs the page. `scrim` off leaves the
+ * page unobscured (a tool drawer such as the feedback overlay) but a press on
+ * the page still closes it.
+ *
+ * `role="dialog"` with `aria-modal="false"`. Focus lands on the panel itself
+ * (a landing spot, no ring) unless `initialFocusRef` names a control inside, and
+ * returns to `returnFocusRef`, else the opener. Escape closes only the topmost
+ * layer: a Select or Tooltip open inside the drawer takes it first.
+ *
+ * Ours, not the zip's: row navigation (`position`, `navigated`) for the
+ * row-detail pattern, and the `scrim` input.
  */
 @Component({
   selector: 'afi-drawer',
   standalone: true,
-  imports: [],
+  imports: [IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[class]': '"contents"',
-  },
-  template: `
-    @if (open()) {
-      <!-- Click-outside listener -->
-      @if (closeOnOutsideClick()) {
-        <div
-          class="fixed inset-0 z-40"
-          (click)="onOutsideClick()"
-          aria-hidden="true"></div>
-      }
-
-      <aside
-        #panel
-        [class]="panelClasses()"
-        role="region"
-        [attr.aria-label]="!title() ? ariaLabel() : null"
-        [attr.aria-labelledby]="title() ? titleId : null"
-        (keydown)="onKeydown($event)"
-      >
-        <!-- Header -->
-        <header class="flex items-center justify-between gap-space-2 px-space-4 py-space-3 border-b border-border-hairline shrink-0">
-          <div class="flex items-center gap-space-2 min-w-0">
-            <ng-content select="[slot=header]">
-              @if (title()) {
-                <h2 [id]="titleId" class="text-body-md-600 truncate">{{ title() }}</h2>
-              }
-            </ng-content>
-          </div>
-
-          <div class="flex items-center gap-space-1 shrink-0">
-            @if (position()) {
-              <div class="flex items-center gap-space-1">
-                <button
-                  type="button"
-                  class="p-1 rounded hover:bg-surface-100 transition-colors duration-fast disabled:opacity-40"
-                  aria-label="Fila anterior"
-                  [disabled]="position()!.current <= 1"
-                  (click)="onNavigate('prev')">
-                  <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-                  </svg>
-                </button>
-                <span class="text-body-sm text-neutral-500 tabular-nums" aria-live="polite">
-                  {{ position()!.current }} de {{ position()!.total }}
-                </span>
-                <button
-                  type="button"
-                  class="p-1 rounded hover:bg-surface-100 transition-colors duration-fast disabled:opacity-40"
-                  aria-label="Fila siguiente"
-                  [disabled]="position()!.current >= position()!.total"
-                  (click)="onNavigate('next')">
-                  <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            }
-
-            <button
-              type="button"
-              class="p-1 rounded hover:bg-surface-100 transition-colors duration-fast"
-              aria-label="Cerrar"
-              (click)="onClose('button')">
-              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-              </svg>
-            </button>
-          </div>
-        </header>
-
-        <!-- Body -->
-        <div class="flex-1 overflow-y-auto px-space-4 py-space-4">
-          <ng-content />
-        </div>
-
-        <!-- Footer -->
-        <ng-content select="[slot=footer]" />
-      </aside>
-    }
-  `,
-  styles: [`
-    :host { display: contents; }
-
-    @keyframes drawer-slide-in {
-      from { transform: translateX(100%); }
-      to { transform: translateX(0); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .animate-drawer {
-        animation: none !important;
-        opacity: 1;
-      }
-    }
-  `],
+  templateUrl: './drawer.component.html',
+  styleUrl: './drawer.component.scss',
 })
-export class DrawerComponent {
+export class DrawerComponent implements OnDestroy {
   readonly open = input<boolean>(false);
-  readonly size = input<DrawerSize>('md');
+  /** `sm` (default), `md`, or `wide` (right of the sidebar column). `lg` is a deprecated alias of `md`. */
+  readonly size = input<DrawerSize>('sm');
   readonly title = input<string | null>(null);
   readonly position = input<{ current: number; total: number } | null>(null);
   readonly closeOnEsc = input<boolean>(true);
   readonly closeOnOutsideClick = input<boolean>(true);
+  /** Tints and blurs the page behind, and locks its scroll. Off for a tool drawer that sits beside live content. */
+  readonly scrim = input<boolean>(true);
   readonly ariaLabel = input<string | null>(null);
+  /** Where focus lands on open. Defaults to the panel. Must be inside the drawer. */
+  readonly initialFocusRef = input<HTMLElement | ElementRef<HTMLElement> | null>(null);
+  /** Where focus goes on close. Defaults to the element that had it when the drawer opened. */
+  readonly returnFocusRef = input<HTMLElement | ElementRef<HTMLElement> | null>(null);
 
   readonly openChange = output<boolean>();
   readonly closed = output<'esc' | 'outside' | 'button'>();
   readonly navigated = output<'prev' | 'next'>();
 
-  readonly titleId = 'afi-drawer-title-' + Math.random().toString(36).slice(2, 9);
+  readonly titleId = `afi-drawer-title-${nextId++}`;
 
-  readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
 
-  private readonly isVisible = signal(false);
+  /** In the DOM: while open and for the length of the exit animation. */
+  protected readonly rendered = signal(false);
+  protected readonly leaving = signal(false);
 
-  readonly panelClasses = computed(() => {
-    const sz = sizeClasses[this.size()];
-    return [
-      'fixed top-0 right-0 h-full z-50',
-      sz,
-      'max-w-[calc(100vw-48px)]',
-      'bg-surface border-l border-border-hairline shadow-elevation-high',
-      'flex flex-col',
-      'animate-drawer',
-    ].join(' ');
+  private leaveTimer: ReturnType<typeof setTimeout> | null = null;
+  private opener: HTMLElement | null = null;
+  private shown = false;
+  private lockedScroll: string | null = null;
+  private disposeEscape: (() => void) | null = null;
+
+  protected readonly panelClasses = computed(() => {
+    const size = this.size() === 'lg' ? 'md' : this.size();
+    return `afi-drawer afi-drawer--${size}${this.leaving() ? ' afi-drawer--leaving' : ''}`;
   });
 
   constructor() {
-    // Focus first interactive element on open
+    // Open: render. Close: play the exit, then drop the DOM.
     effect(() => {
       if (this.open()) {
-        this.isVisible.set(true);
-        // Wait for render
-        queueMicrotask(() => {
-          const el = this.panel()?.nativeElement;
-          if (!el) return;
-          const focusable = el.querySelector<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          );
-          focusable?.focus();
-        });
-      } else {
-        this.isVisible.set(false);
+        this.clearLeaveTimer();
+        this.leaving.set(false);
+        this.rendered.set(true);
+      } else if (this.rendered() && !this.leaving()) {
+        this.leaving.set(true);
+        this.scheduleRemoval();
+      }
+    });
+
+    // Focus in, lock scroll and listen for Escape while the panel is up; undo on the way out.
+    effect(() => {
+      const panel = this.panel()?.nativeElement;
+      const active = !!panel && this.open();
+      if (active && !this.shown) {
+        this.shown = true;
+        this.opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        if (this.scrim()) {
+          this.lockedScroll = document.body.style.overflow;
+          document.body.style.overflow = 'hidden';
+        }
+        const target = this.resolve(this.initialFocusRef());
+        (target && panel.contains(target) ? target : panel).focus({ preventScroll: true });
+        if (this.closeOnEsc()) this.disposeEscape = onOverlayEscape(() => this.onClose('esc'));
+      } else if (!active && this.shown) {
+        this.release();
       }
     });
   }
 
+  ngOnDestroy(): void {
+    this.clearLeaveTimer();
+    this.release();
+  }
+
   onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape' && this.closeOnEsc()) {
-      this.onClose('esc');
-      return;
-    }
-    if (this.position()) {
-      if (event.key === 'ArrowLeft') {
-        event.preventDefault();
-        this.onNavigate('prev');
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault();
-        this.onNavigate('next');
-      }
+    if (!this.position()) return;
+    // Row navigation by arrow, unless a field inside the drawer wants the key.
+    const target = event.target as HTMLElement;
+    if (target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.onNavigate('prev');
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.onNavigate('next');
     }
   }
 
@@ -195,7 +140,7 @@ export class DrawerComponent {
   }
 
   onOutsideClick(): void {
-    this.onClose('outside');
+    if (this.closeOnOutsideClick()) this.onClose('outside');
   }
 
   onNavigate(direction: 'prev' | 'next'): void {
@@ -204,5 +149,49 @@ export class DrawerComponent {
     if (direction === 'prev' && pos.current <= 1) return;
     if (direction === 'next' && pos.current >= pos.total) return;
     this.navigated.emit(direction);
+  }
+
+  /** Waits out the exit animation (none under reduced motion), then removes the panel. */
+  private scheduleRemoval(): void {
+    queueMicrotask(() => {
+      const el = this.panel()?.nativeElement;
+      const seconds = el ? parseFloat(getComputedStyle(el).animationDuration) || 0 : 0;
+      this.clearLeaveTimer();
+      this.leaveTimer = setTimeout(() => {
+        this.leaveTimer = null;
+        this.rendered.set(false);
+        this.leaving.set(false);
+      }, seconds * 1000);
+    });
+  }
+
+  private clearLeaveTimer(): void {
+    if (this.leaveTimer !== null) clearTimeout(this.leaveTimer);
+    this.leaveTimer = null;
+  }
+
+  private release(): void {
+    this.disposeEscape?.();
+    this.disposeEscape = null;
+    if (this.lockedScroll !== null) {
+      document.body.style.overflow = this.lockedScroll;
+      this.lockedScroll = null;
+    }
+    if (this.shown) {
+      this.shown = false;
+      const preferred = this.resolve(this.returnFocusRef());
+      const back = this.usable(preferred) ? preferred : this.usable(this.opener) ? this.opener : null;
+      back?.focus({ preventScroll: true });
+      this.opener = null;
+    }
+  }
+
+  private resolve(ref: HTMLElement | ElementRef<HTMLElement> | null): HTMLElement | null {
+    if (!ref) return null;
+    return ref instanceof ElementRef ? ref.nativeElement : ref;
+  }
+
+  private usable(el: HTMLElement | null): el is HTMLElement {
+    return !!el && el.isConnected && !(el as HTMLButtonElement).disabled && el !== document.body;
   }
 }

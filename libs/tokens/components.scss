@@ -112,6 +112,20 @@
 
 
   // ===========================================================================
+  // DRAWER
+  // ===========================================================================
+
+  // Widths follow the Wealth Planner zip. `wide` is the viewport minus the
+  // sidebar column, so it is a left offset, not a width.
+  --drawer-width-sm: 450px;
+  --drawer-width-md: var(--dimension-190);             // 760px
+  --drawer-wide-offset: var(--dimension-70);           // 280px: the sidebar column
+  --drawer-button-size: var(--control-size-lg);        // 32px
+  // The panel sits one step above its scrim.
+  --drawer-panel-z: calc(var(--z-drawer) + 1);
+
+
+  // ===========================================================================
   // TOAST
   // ===========================================================================
 

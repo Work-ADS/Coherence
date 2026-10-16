@@ -1,7 +1,7 @@
 <site-doc-page-shell
   title="Drawer"
   overline="COMPONENTS"
-  description="Panel deslizante desde el borde de la pantalla para tareas largas o contenido extenso que no entra en un Modal. Bloquea el resto de la UI con backdrop."
+  description="Panel deslizante desde el borde de la pantalla para tareas largas o contenido extenso que no entra en un Modal. Marco flotante sobre un telón que oscurece y desenfoca la página."
   componentName="drawer"
 >
   <span slot="breadcrumb">
@@ -27,6 +27,14 @@
         ariaLabel="Drawer size"
       />
     </div>
+    <div class="control-group">
+      <span class="control-group__label">Scrim</span>
+      <afi-segmented-control [options]="scrimOptions" [(value)]="scrim" size="sm" ariaLabel="Scrim" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Row navigation</span>
+      <afi-segmented-control [options]="navOptions" [(value)]="nav" size="sm" ariaLabel="Row navigation" />
+    </div>
   </div>
 
   <div slot="preview" class="preview">
@@ -34,8 +42,11 @@
     <afi-drawer
       [open]="open()"
       [size]="size()"
+      [scrim]="scrim() === 'on'"
+      [position]="nav() === 'on' ? { current: row(), total: 5 } : null"
       title="Editar planificación"
       (closed)="closeDrawer()"
+      (navigated)="row.set($event === 'next' ? row() + 1 : row() - 1)"
     >
       <p>Aquí va el formulario o el contenido extenso del drawer.</p>
     </afi-drawer>
@@ -46,10 +57,11 @@
   <section slot="accessibility" class="prose-section">
     <h2 class="prose-section__title">Accessibility</h2>
     <ul class="prose-section__list">
-      <li>Renderiza con <code>role="dialog"</code> + <code>aria-modal="true"</code>.</li>
+      <li>Renderiza con <code>role="dialog"</code> + <code>aria-modal="false"</code>: la página de detrás sigue siendo legible.</li>
       <li>Title se asocia vía <code>aria-labelledby</code>.</li>
-      <li>Focus trap mientras está abierto, foco vuelve al trigger al cerrar.</li>
-      <li><code>Escape</code> cierra el drawer por defecto.</li>
+      <li>El foco aterriza en el propio panel (sin anillo) o en <code>initialFocusRef</code>, y vuelve a <code>returnFocusRef</code> o al elemento que abrió el drawer.</li>
+      <li><code>Escape</code> cierra solo la capa de más arriba: un Select o un Tooltip abiertos dentro lo reciben antes; un segundo Escape cierra el drawer.</li>
+      <li>El scroll de la página se bloquea mientras el telón está visible.</li>
     </ul>
   </section>
 

@@ -319,13 +319,13 @@
       <tfoot>
         <tr class="afi-table__foot-row">
           @if (selectable()) {
-            <td class="afi-table__td-select"></td>
+            <td class="afi-table__td-select afi-table__foot-cell"></td>
           }
           @for (col of visibleColumns(); track col.key) {
             <td [class]="footCellClasses(col)">{{ footerText(col) }}</td>
           }
           @if (hasRowActions()) {
-            <td class="afi-table__td-actions"></td>
+            <td class="afi-table__td-actions afi-table__foot-cell"></td>
           }
         </tr>
       </tfoot>

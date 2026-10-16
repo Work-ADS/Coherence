@@ -1,37 +1,59 @@
-<nav [class]="rootClasses()" [attr.aria-label]="ariaLabel()">
-  <div class="afi-stepper__list" role="list">
-    @for (step of steps(); let i = $index; track step.key) {
+<ng-template #body let-step let-index="index" let-state="state">
+  <span class="afi-stepper__badge" aria-hidden="true">
+    @if (state === 'done') {
+      <svg viewBox="0 0 16 16" class="afi-stepper__check">
+        <path
+          d="M3.5 8.5L6.5 11.5L12.5 4.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    } @else {
+      <span class="afi-stepper__number">{{ index }}</span>
+    }
+  </span>
+  <span class="afi-stepper__text">
+    <span class="afi-stepper__label">{{ step.label }}</span>
+    @if (step.sub) {
+      <span class="afi-stepper__sub">{{ step.sub }}</span>
+    }
+  </span>
+  <!-- Spoken state. The current step needs none: aria-current="step" carries it. Out of flow and
+       clipped, so the layout is identical with and without it. -->
+  @if (spokenState(state); as spoken) {
+    <span class="afi-stepper__state">{{ spoken }}</span>
+  }
+</ng-template>
+
+<!-- A stepper is a header that says where you are, not navigation: a labelled list, no landmark. -->
+<div [class]="rootClasses()">
+  <div class="afi-stepper__list" role="list" [attr.aria-label]="ariaLabel()">
+    @for (step of steps(); let i = $index; track keyOf(step, i + 1)) {
       @let index = i + 1;
-      @let state = stateFor(index);
-      <div [class]="itemClasses(state)" role="listitem">
-        <button
-          type="button"
-          class="afi-stepper__button"
-          [attr.aria-current]="state === 'current' ? 'step' : null"
-          [attr.aria-label]="step.label + (state === 'done' ? ', paso completado' : state === 'current' ? ', paso actual' : ', paso pendiente')"
-          [disabled]="!isInteractive(state)"
-          (click)="onClick(step, index, state)"
-        >
-          <span class="afi-stepper__badge" aria-hidden="true">
-            @if (state === 'done') {
-              <svg viewBox="0 0 16 16" class="afi-stepper__check">
-                <path
-                  d="M3.5 8.5L6.5 11.5L12.5 4.5"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            } @else {
-              <span class="afi-stepper__number">{{ index }}</span>
-            }
+      @let state = stateFor(index, step);
+      <div
+        [class]="itemClasses(state)"
+        role="listitem"
+        [attr.aria-current]="state === 'current' ? 'step' : null"
+      >
+        @if (isInteractive(state)) {
+          <button type="button" class="afi-stepper__button" (click)="onClick(step, index, state)">
+            <ng-container
+              *ngTemplateOutlet="body; context: { $implicit: step, index: index, state: state }"
+            />
+          </button>
+        } @else {
+          <span class="afi-stepper__button afi-stepper__button--static">
+            <ng-container
+              *ngTemplateOutlet="body; context: { $implicit: step, index: index, state: state }"
+            />
           </span>
-          <span class="afi-stepper__label">{{ step.label }}</span>
-        </button>
+        }
       </div>
-      @if (index < steps().length) {
+      @if (index < steps().length && layout() !== 'plain') {
         <span
           [class]="connectorClasses(state)"
           aria-hidden="true"
@@ -39,4 +61,4 @@
       }
     }
   </div>
-</nav>
+</div>

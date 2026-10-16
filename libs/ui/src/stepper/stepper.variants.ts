@@ -10,13 +10,24 @@ export type StepperOrientation = 'horizontal' | 'vertical';
  * - `stacked` — badge sits above the label, label centered below. Used
  *   when the designer wants a stronger marker per step (e.g. the BC
  *   datos page, where each step circle has its label centered beneath it).
+ * - `plain` — badge beside the label, steps left-aligned with no connector
+ *   rule between them, wrapping onto a new row when narrow (the zip's
+ *   `inline`). Pair with `size="compact"` for short embedded flows.
  */
-export type StepperLayout = 'inline' | 'stacked';
+export type StepperLayout = 'inline' | 'stacked' | 'plain';
+
+/** `md` markers; `compact`, the smaller ones for short flows embedded in a page. */
+export type StepperSize = 'md' | 'compact';
 
 /** One step in the indicator. Add fields cautiously — every consumer reads them. */
 export interface StepperItem {
-  key: string;
+  /** Stable key. Unset: the step's position. */
+  key?: string;
   label: string;
+  /** Second line under the label: a hint or a value already entered. */
+  sub?: string;
+  /** Overrides the state derived from `current` (a skipped step, say). */
+  state?: StepperState;
 }
 
 /** Per-item state computed from `current` vs the item's index (1-based). */

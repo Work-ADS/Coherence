@@ -186,4 +186,4 @@ export type { ToastTone, ToastOptions, ActiveToast } from './src/toast';
 export { AnimatedChartComponent } from './src/animated-chart';
 export type { AnimatedChartSize, AnimatedChartSeries, ChartColumn } from './src/animated-chart';
 export { StepperComponent } from './src/stepper';
-export type { StepperItem, StepperLayout, StepperOrientation, StepperState } from './src/stepper';
+export type { StepperItem, StepperLayout, StepperOrientation, StepperSize, StepperState } from './src/stepper';

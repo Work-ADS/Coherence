@@ -140,6 +140,19 @@
 
 
   // ===========================================================================
+  // STEPPER
+  // ===========================================================================
+
+  --stepper-marker-size: var(--dimension-8);          // 32px
+  --stepper-marker-size-compact: var(--dimension-6);  // 24px
+  --stepper-connector-width: var(--border-width-thick);
+  --stepper-gap-plain: var(--space-xl);               // between steps when there are no connectors
+  // Optional accent stripe under the current label; a brand theme sets these (BC does). Off by default.
+  --stepper-current-accent-thickness: var(--dimension-0);
+  --stepper-current-accent-color: transparent;
+
+
+  // ===========================================================================
   // TOP BAR
   // ===========================================================================
 

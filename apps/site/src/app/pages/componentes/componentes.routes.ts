@@ -36,6 +36,7 @@ export const componentes_routes: Routes = [
   // The IA exploration still lives at /patrones/sidebar-ia-comparison; the
   // primitive itself (variants, rail, tokens) is documented here.
   { path: 'sidebar', loadComponent: () => import('./sidebar.page').then(m => m.SidebarPage) },
+  { path: 'stepper', loadComponent: () => import('./stepper.page').then(m => m.StepperPage) },
   { path: 'top-bar', loadComponent: () => import('./top-bar.page').then(m => m.TopBarPage) },
   { path: 'nav-section', loadComponent: () => import('./nav-section.page').then(m => m.NavSectionPage) },
   { path: 'menu', loadComponent: () => import('./menu.page').then(m => m.MenuPage) },

@@ -1,0 +1,17 @@
+// =============================================================================
+// stepper.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: block;
+  width: 100%;
+  padding: var(--space-xl);
+
+  &__readout {
+    margin: var(--space-lg) 0 0;
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default);
+  }
+}

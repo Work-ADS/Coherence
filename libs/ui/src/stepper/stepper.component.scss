@@ -1,22 +1,25 @@
+@use '../styles/focus-ring-v1' as *;
+
 // =============================================================================
-// afi-stepper — horizontal (default) / vertical step indicator
+// afi-stepper — step indicator (horizontal, vertical; inline, stacked or plain)
 // =============================================================================
 //
-// Visual contract LOCKED 2026-06-03. Three per-item states (done / current /
-// todo). Items size to content; connectors flex-grow between them so the
-// indicator always spans the available width.
+// A header that says where you are, not navigation. Three per-item states
+// (done / current / todo); `state` on an item can override. Items size to
+// content; connectors flex-grow between them so the indicator spans the
+// available width (`plain` has none and wraps).
 //
 // Token usage:
-// - Active badge + filled connector → `--brand-secondary-background-default`
-//   (matches `<afi-button variant="primary">` so the stepper reads as part
-//   of the same action family on AFI; brand-secondary maps to each brand's
-//   action ramp via `libs/tokens/_mixins.scss`).
-// - Muted connector → `--border-subtle`
-// - Todo badge → `--surface-default` + inset `--border-subtle`
+// - Done marker + filled connector → `--brand-secondary-background-default`
+//   (the AFI action colour, same family as `<afi-button variant="primary">`).
+// - Current marker is a RING: `--surface-default` fill, thick
+//   `--brand-secondary-background-default` border, `--foreground-brand-default` number.
+// - Todo marker → `--surface-subtle` + hairline `--border-subtle`; muted connector → `--border-subtle`.
+// - Sizes → `--stepper-marker-size` / `--stepper-marker-size-compact`.
 // - Optional current-step accent stripe under the label →
 //   `--stepper-current-accent-thickness` + `--stepper-current-accent-color`,
-//   both transparent by default. Brand themes opt in (e.g. BC sets these
-//   to render an amarillo-suave brushstroke under the active label).
+//   transparent by default. Brand themes opt in (BC sets them to render an
+//   amarillo-suave brushstroke under the active label).
 // =============================================================================
 
 :host {
@@ -32,6 +35,7 @@
   }
 
   &__item {
+    position: relative;
     display: inline-flex;
     align-items: center;
     flex: 0 0 auto;
@@ -53,29 +57,31 @@
     text-align: start;
     min-width: 0;
 
-    &:disabled {
+    // Pending and current steps are plain text: no hand cursor, no hover.
+    &--static {
       cursor: default;
     }
 
     &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+      @include focus-ring;
     }
   }
 
   &__badge {
     flex: 0 0 auto;
-    width: var(--dimension-7);
-    height: var(--dimension-7);
+    box-sizing: border-box;
+    width: var(--stepper-marker-size);
+    height: var(--stepper-marker-size);
     border-radius: var(--radius-full);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font: var(--type-body-sm-500);
+    font: var(--type-body-md-600);
+    font-variant-numeric: tabular-nums;
     transition:
-      background-color var(--duration-fast) var(--easing-standard),
-      color var(--duration-fast) var(--easing-standard),
-      box-shadow var(--duration-fast) var(--easing-standard);
+      background-color var(--duration-base) var(--easing-standard),
+      color var(--duration-base) var(--easing-standard),
+      border-color var(--duration-base) var(--easing-standard);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -89,6 +95,17 @@
   &__check {
     width: var(--dimension-4);
     height: var(--dimension-4);
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__sub {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default);
   }
 
   &__label {
@@ -105,10 +122,20 @@
     }
   }
 
+  // Visually hidden state suffix: out of flow and clipped, so it adds no box, gap or line.
+  &__state {
+    position: absolute;
+    inline-size: var(--border-width-hairline);
+    block-size: var(--border-width-hairline);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   &__connector {
     flex: 1 1 auto;
     align-self: center;
-    height: var(--border-width-hairline);
+    height: var(--stepper-connector-width);
     min-width: var(--space-md);
     background: var(--border-subtle);
     transition: background-color var(--duration-fast) var(--easing-standard);
@@ -127,25 +154,28 @@
   &__item--done {
     .afi-stepper__badge {
       background: var(--brand-secondary-background-default);
+      border: var(--border-width-hairline) solid var(--brand-secondary-background-default);
       color: var(--brand-secondary-foreground-default);
     }
     .afi-stepper__label {
       color: var(--foreground-secondary-default);
     }
-    .afi-stepper__button:hover:not(:disabled) .afi-stepper__label {
+    .afi-stepper__button:hover:not(.afi-stepper__button--static) .afi-stepper__label {
       color: var(--foreground-primary-default);
     }
   }
 
   &__item--current {
+    // "You are here" is a ring, not a heavier fill, so it does not compete with the done run.
+    // The ring is a border (shadow is for floating chrome); box-sizing keeps the marker its size.
     .afi-stepper__badge {
-      background: var(--brand-secondary-background-default);
-      color: var(--brand-secondary-foreground-default);
-      box-shadow: 0 0 0 var(--border-width-thick) var(--surface-subtle);
+      background: var(--surface-default);
+      border: var(--border-width-thick) solid var(--brand-secondary-background-default);
+      color: var(--foreground-brand-default);
     }
     .afi-stepper__label {
       color: var(--foreground-primary-default);
-      font: var(--type-body-md-500);
+      font: var(--type-body-md-600);
       position: relative;
       padding-block-end: var(--stepper-current-accent-thickness, 0);
 
@@ -165,9 +195,9 @@
 
   &__item--todo {
     .afi-stepper__badge {
-      background: var(--surface-default);
+      background: var(--surface-subtle);
+      border: var(--border-width-hairline) solid var(--border-subtle);
       color: var(--foreground-tertiary-default);
-      box-shadow: inset 0 0 0 var(--border-width-hairline) var(--border-subtle);
     }
     .afi-stepper__label {
       color: var(--foreground-tertiary-default);
@@ -188,8 +218,8 @@
     }
 
     .afi-stepper__connector {
-      width: var(--border-width-hairline);
-      height: var(--dimension-6);
+      width: var(--stepper-connector-width);
+      height: var(--space-lg);
       min-width: 0;
       align-self: center;
     }
@@ -225,14 +255,47 @@
       // `align-self: flex-start` + a top margin gets us there without
       // knowing the consumer's label height.
       align-self: flex-start;
-      margin-block-start: calc(var(--dimension-7) / 2);
+      // The step's own block padding sits above the marker, so the rule starts below it too.
+      margin-block-start: calc(var(--space-xs) + (var(--stepper-marker-size) - var(--stepper-connector-width)) / 2);
     }
+  }
+}
+
+// ─── Compact: smaller markers ──────────────────────────────────────────────
+.afi-stepper--compact {
+  --stepper-marker-size: var(--stepper-marker-size-compact);
+
+  .afi-stepper__badge {
+    font: var(--type-body-sm-600);
+  }
+
+  .afi-stepper__label {
+    font: var(--type-body-sm-400);
+  }
+
+  .afi-stepper__item--current .afi-stepper__label {
+    font: var(--type-body-sm-600);
+  }
+}
+
+// ─── Plain: no connectors, left-aligned, wraps ────────────────────────────
+.afi-stepper--plain {
+  .afi-stepper__list {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    column-gap: var(--stepper-gap-plain);
+    row-gap: var(--space-xs);
+  }
+
+  .afi-stepper__button {
+    gap: var(--space-xs);
+    padding: 0;
   }
 }
 
 // Wrap at narrow widths — the steps stack instead of overflowing.
 @media (max-width: 640px) {
-  .afi-stepper:not(.afi-stepper--vertical) {
+  .afi-stepper:not(.afi-stepper--vertical):not(.afi-stepper--plain) {
     .afi-stepper__list {
       flex-wrap: wrap;
       gap: var(--space-xs);

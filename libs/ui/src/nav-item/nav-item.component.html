@@ -15,6 +15,10 @@
     {{ label() }}
   </span>
 
+  @if (dot()) {
+    <span class="nav-item__dot" aria-hidden="true"></span>
+  }
+
   <!-- Trailing slot: neutral count, chevron, anything small -->
   <span class="nav-item__trail">
     <ng-content select="[slot=trailing]" />
@@ -42,6 +46,12 @@
   }
 </ng-template>
 
+<afi-tooltip
+  [text]="tipText() ?? ''"
+  position="right"
+  [disabled]="tipText() === null"
+  [multiline]="reasonShown()"
+  [maxWidth]="reasonShown() ? 280 : null">
 @if (tag() === 'a') {
   <a
     class="nav-item"
@@ -54,8 +64,8 @@
     [attr.aria-describedby]="reasonShown() ? reasonId : null"
     [attr.role]="disabled() ? 'link' : null"
     [attr.tabindex]="disabled() ? (reasonShown() ? 0 : -1) : null"
-    [attr.aria-label]="label()"
-    [attr.title]="label()">
+    [attr.aria-label]="accessibleName()"
+    [attr.title]="tipText() === null ? label() : null">
     <ng-container *ngTemplateOutlet="body" />
   </a>
 } @else {
@@ -68,16 +78,10 @@
     [attr.aria-current]="isSelected() ? 'page' : null"
     [attr.aria-disabled]="disabled() && reasonShown() ? 'true' : null"
     [attr.aria-describedby]="reasonShown() ? reasonId : null"
-    [attr.aria-label]="label()"
-    [attr.title]="label()"
+    [attr.aria-label]="accessibleName()"
+    [attr.title]="tipText() === null ? label() : null"
     [disabled]="disabled() && !reasonShown()">
     <ng-container *ngTemplateOutlet="body" />
   </button>
 }
-
-<!-- Custom DS tooltip — always rendered, revealed on hover via CSS. The
-     button also carries a native title attribute as a fallback for
-     truncated labels in expanded sidebar widths. -->
-<span role="tooltip" class="nav-item__tooltip">
-  {{ label() }}
-</span>
+</afi-tooltip>

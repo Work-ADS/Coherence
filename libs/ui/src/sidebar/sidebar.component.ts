@@ -47,6 +47,12 @@ export class SidebarComponent {
   readonly expanded = input<boolean | null>(null);
   readonly pinned = input<boolean>(false);
   readonly ariaLabel = input<string>('Navegación principal');
+  /**
+   * Wording of the status dot (`dot` on a nav item): appended to the row's
+   * accessible name and shown, capitalised, in its tooltip. A nav item's own
+   * `dotLabel` wins.
+   */
+  readonly dotLabel = input<string>('pendiente de revisión');
   /** Overrides the panel widths. Unset: the new variants read the sidebar tokens, the original chrome keeps 64 and 240. */
   readonly width = input<{ collapsed: string; expanded: string } | null>(null);
 

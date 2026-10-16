@@ -10,6 +10,8 @@ export interface SidebarContext {
   readonly isExpanded: Signal<boolean>;
   /** True while the zip-style rail is showing: a new variant, collapsed. */
   readonly isRail: Signal<boolean>;
+  /** Default wording of a row's status dot. */
+  readonly dotLabel: Signal<string>;
 }
 
 export const SIDEBAR_CONTEXT = new InjectionToken<SidebarContext>('SIDEBAR_CONTEXT');

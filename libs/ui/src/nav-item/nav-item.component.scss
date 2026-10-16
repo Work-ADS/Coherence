@@ -181,34 +181,35 @@
   }
 }
 
-.nav-item__tooltip {
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: var(--space-xs);
-  padding: var(--space-2xs) var(--space-xs);
-  font: var(--type-body-sm-400);
-  background: var(--foreground-primary-default);
-  color: var(--nav-sidebar);
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
-  opacity: 0;
+.nav-item__dot {
+  flex-shrink: 0;
+  width: var(--sidebar-dot-size);
+  height: var(--sidebar-dot-size);
+  margin-inline-start: auto;
+  border-radius: var(--radius-full);
+  background: var(--sidebar-dot);
+  box-shadow: 0 0 0 var(--dimension-0-75) var(--sidebar-dot-halo);
   pointer-events: none;
-  transition: opacity var(--duration-fast) var(--easing-standard);
-  z-index: 50;
 
-  :host:hover &,
-  :host:focus-within & {
-    opacity: 1;
+  // In the rail the dot rides the icon's top-right corner and takes no room.
+  .nav-item.is-rail & {
+    position: absolute;
+    top: calc(50% - var(--nav-item-icon-size));
+    left: 50%;
+    margin-inline-start: calc(var(--nav-item-icon-size) / 2);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .nav-item,
   .nav-item__icon,
-  .nav-item__label,
-  .nav-item__tooltip {
+  .nav-item__label {
     transition-duration: 0ms !important;
   }
+}
+
+// The tooltip wrapper must not shrink the row.
+afi-tooltip {
+  display: block;
+  --tooltip-trigger-inline-size: 100%;
 }

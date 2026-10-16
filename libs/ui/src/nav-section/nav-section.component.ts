@@ -5,6 +5,7 @@ import {
   contentChildren,
   effect,
   ElementRef,
+  forwardRef,
   inject,
   input,
   output,
@@ -15,6 +16,7 @@ import {
 
 import { NavItemComponent } from '../nav-item/nav-item.component';
 import { SIDEBAR_CONTEXT } from '../sidebar/sidebar.token';
+import { NAV_SECTION_CONTEXT } from './nav-section.token';
 
 let nextId = 0;
 
@@ -27,6 +29,7 @@ let nextId = 0;
 @Component({
   selector: 'afi-nav-section',
   standalone: true,
+  providers: [{ provide: NAV_SECTION_CONTEXT, useExisting: forwardRef(() => NavSectionComponent) }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './nav-section.component.scss',
   templateUrl: './nav-section.component.html',

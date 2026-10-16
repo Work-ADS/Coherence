@@ -122,6 +122,26 @@
       <p class="selection-demo__readout">Selected keys: {{ selectedKeys().length ? selectedKeys().join(', ') : '—' }}</p>
     </div>
 
+    <div class="selection-demo">
+      <div class="selection-demo__controls">
+        <div class="control-group">
+          <span class="control-group__label">Eliminar filas</span>
+          <afi-button size="sm" variant="secondary" (clicked)="resetDelete()">Restablecer filas</afi-button>
+          <span class="control-group__hint">
+            <strong>leavingKeys</strong> — la fila se desvanece y, pasados 150 ms, la página la quita de <code>rows</code> y muestra «Deshacer» (5 s).
+          </span>
+        </div>
+      </div>
+      <afi-table
+        [columns]="columns"
+        [rows]="deleteRows()"
+        [rowActions]="deleteActions"
+        [leavingKeys]="leavingKeys()"
+        (rowActionClicked)="onDeleteAction($event)"
+        trackByKey="id"
+      />
+    </div>
+
     <afi-table
       [columns]="columns"
       [rows]="displayRows()"
@@ -148,6 +168,7 @@
       <li>El checkbox de cada fila se nombra con la fila («Seleccionar Operación Alpha»); el botón de expandir, «Expandir …» / «Contraer …» con <code>aria-expanded</code>; una fila con hijos es enfocable y se abre con Enter o Espacio.</li>
       <li>Con <code>selectionMode="leaves"</code> la caja de un grupo es de tres estados (todas, algunas o ninguna de sus hojas) y la selección emitida contiene solo hojas, nunca el grupo.</li>
       <li>Con <code>selectOnRowClick</code> la caja sigue siendo la única parada de tabulador; Espacio en una fila de grupo enfocada la selecciona y Enter la expande.</li>
+      <li>Con <code>leavingKeys</code> la fila que sale queda oculta a la tecnología de asistencia (<code>aria-hidden</code>) y sin eventos de puntero; con <code>prefers-reduced-motion</code> no hay fundido. Las filas de debajo cierran el hueco sin deslizarse: una fila de tabla no admite FLIP.</li>
       <li>La fila de referencia (<code>variant: 'reference'</code>) es inerte: sin hover, clic, acciones ni selección.</li>
       <li>Estado vacío anuncia el texto con <code>aria-live="polite"</code>.</li>
     </ul>

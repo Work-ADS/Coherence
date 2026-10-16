@@ -31,7 +31,7 @@ The traditional AFI brand (the default `:root` layer) brought in line with the W
 | 2 | [Semantic: update existing](2026-10-14-traditional-ds-2-semantic-update-existing.md) (Roboto lands, warning orange, nav/sidebar, shape, overlay) | `libs/tokens/semantic.scss` | 1 |
 | 3 | [Semantic: create new, cross-cutting only](2026-10-14-traditional-ds-3-semantic-create-cross-cutting.md) (chart, canvas, layout, color) | `libs/tokens/semantic.scss` | 2 |
 | 4 | [Components: audit every existing primitive against the zip](2026-10-15-traditional-ds-4-components-audit.md) (read-only; [report](2026-10-15-traditional-ds-4-components-audit-report.md)) | none | 2 |
-| 5 | [Components: update existing to the zip's look](2026-10-15-traditional-ds-5-components-update-existing.md) (5a to 5f) | `libs/ui/src/*` | 2, 4 |
+| 5 | [Components: update existing to the zip's look](2026-10-15-traditional-ds-5-components-update-existing.md) (5a to 5f, plus [5g catch-up](2026-10-16-traditional-ds-5g-catch-up.md) for the newer zip) | `libs/ui/src/*` | 2, 4 |
 | 6a | New components: data and charts (DataSection, FigureStrip, RankedBars, ReturnRuler, Sparkline, SummaryPanel, Meter) | `libs/ui/src/` | 3, 5 |
 | 6b | New components: forms (ControlBar, FormGrid, ValueField, PercentageSplit, MultiSelect, DatePicker, FieldReveal, ExpandableCheckRow, FieldHelp) | `libs/ui/src/` | 5 |
 | 6c | New components: display and navigation (MetricCard, InsightCard, VerdictBlock, ValuePill, StatusPill, Pagination, NotesPopover, PageSection, PageActions) | `libs/ui/src/` | 5 |

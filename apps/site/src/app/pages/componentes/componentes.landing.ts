@@ -44,6 +44,7 @@ export class ComponentesLandingPage {
     { slug: 'drawer', name: 'Drawer', description: 'Panel lateral no bloqueante' },
     { slug: 'sidebar', name: 'Sidebar', description: '4 acabados, 3 modos, raíl de 72 px' },
     { slug: 'stepper', name: 'Stepper', description: 'Cabecera de asistente, lista con nombre' },
+    { slug: 'top-bar', name: 'TopBar', description: 'Tres zonas, cristal, on-brand y salida' },
     { slug: 'nav-item', name: 'NavItem', description: 'Icono + label + badge + tooltip' },
     { slug: 'status-chip', name: 'StatusChip', description: '8 estados, subtle/solid' },
     { slug: 'badge', name: 'Badge', description: '5 intents, modo dot, sm/md' },

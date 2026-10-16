@@ -14,10 +14,8 @@ export const componentes_routes: Routes = [
   { path: 'dropdown-panel', loadComponent: () => import('./dropdown-panel.page').then(m => m.DropdownPanelPage) },
   { path: 'inline-edit', loadComponent: () => import('./inline-edit.page').then(m => m.InlineEditPage) },
   { path: 'editable-text', redirectTo: 'inline-edit', pathMatch: 'full' },
-  // Top Bar is a pattern (composes logo + nav + theme/lang toggles). Lives at
-  // /patrones/cabeceras/top-bar — this route is preserved as a redirect for
-  // old bookmarks and stale cross-references.
-  { path: 'top-bar', redirectTo: '/patrones/cabeceras/top-bar', pathMatch: 'full' },
+  // The bar primitive (variants, shell band, exit) is documented at /componentes/top-bar below;
+  // the composed site nav bar stays a pattern at /patrones/cabeceras/top-bar.
   { path: 'tooltip', loadComponent: () => import('./tooltip.page').then(m => m.TooltipPage) },
   { path: 'focus-field', loadComponent: () => import('./focus-field.page').then(m => m.FocusFieldPage) },
   { path: 'toast', loadComponent: () => import('./toast.page').then(m => m.ToastPage) },
@@ -39,6 +37,7 @@ export const componentes_routes: Routes = [
   // primitive itself (variants, rail, tokens) is documented here.
   { path: 'sidebar', loadComponent: () => import('./sidebar.page').then(m => m.SidebarPage) },
   { path: 'stepper', loadComponent: () => import('./stepper.page').then(m => m.StepperPage) },
+  { path: 'top-bar', loadComponent: () => import('./top-bar.page').then(m => m.TopBarPage) },
   { path: 'nav-section', loadComponent: () => import('./nav-section.page').then(m => m.NavSectionPage) },
   { path: 'menu', loadComponent: () => import('./menu.page').then(m => m.MenuPage) },
   { path: 'table', loadComponent: () => import('./table.page').then(m => m.TablePage) },

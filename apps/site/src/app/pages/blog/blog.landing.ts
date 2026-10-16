@@ -239,8 +239,8 @@ export class BlogLandingPage {
           ? 'Less rework. Clearer decisions. More consistent products.'
           : 'Menos retrabajo. Decisiones más claras. Productos más coherentes.',
         intro: isEn
-          ? 'When work begins under tight deadlines, requirements are still evolving and development overlaps with unresolved design decisions, teams spend valuable time revising what is already being built. This design system establishes a shared foundation so delivery can build on agreed patterns and give new product questions the attention they need.'
-          : 'Cuando el trabajo arranca con plazos ajustados, los requisitos siguen evolucionando y el desarrollo se solapa con decisiones de diseño sin resolver, los equipos dedican mucho tiempo a revisar lo que ya se está construyendo. Este sistema de diseño establece una base compartida para que la entrega se apoye en patrones acordados y las preguntas nuevas de producto reciban la atención que necesitan.',
+          ? 'Work starts under tight deadlines, before requirements and design decisions are settled, so teams spend much of their time revising what they have already built. Five teams share one designer; this system gives them a common foundation to build on instead.'
+          : 'El trabajo arranca con plazos ajustados, antes de cerrar requisitos y decisiones de diseño, y los equipos acaban dedicando buena parte de su tiempo a rehacer lo ya construido. Cinco equipos comparten una sola persona de diseño: este sistema les da una base común sobre la que construir.',
       };
     }
     return {
@@ -253,6 +253,12 @@ export class BlogLandingPage {
   });
 
   readonly workTitle = computed(() => (this.lang() === 'en' ? 'Work' : 'Trabajo'));
+
+  /**
+   * The two supporting sections and the worked-example flowchart under the hero
+   * are parked, not deleted: flip this on to bring them back.
+   */
+  readonly showSupporting = false;
 
   /** Intro to the worked-example flowchart. */
   readonly cycleCopy = computed(() => {

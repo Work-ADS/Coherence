@@ -98,6 +98,25 @@
 
 
   // ===========================================================================
+  // TABLE
+  // ===========================================================================
+
+  // No header fill: a column header inherits whatever the container is painted,
+  // so the same table reads on the canvas, in a card and in a modal. Header and
+  // cells share one size; separation is weight and ink, plus the hairline.
+  // Group, footer, action and planning roles join with their slices (5f-2 to 5f-5).
+  --table-header-font:       var(--type-body-sm-600);
+  --table-header-foreground: var(--foreground-tertiary-default);
+  --table-header-divider:    var(--border-subtle);
+  --table-cell-font:         var(--type-body-sm-400);
+  --table-cell-foreground:   var(--foreground-secondary-default);
+  // Child rows share the cell ink and are subordinate by indent, never by fill.
+  --table-child-foreground:  var(--foreground-secondary-default);
+  // Neutral (untinted) row hover.
+  --table-row-background-hover: var(--color-afi-control-100);
+
+
+  // ===========================================================================
   // MODAL
   // ===========================================================================
 
@@ -265,6 +284,7 @@
 // Dark values for the tokens above. Same specificity as :root, so this block
 // sits after it; semantic.scss's dark block would lose the cascade here.
 [data-theme="dark"] {
+  --table-row-background-hover: var(--color-afi-control-800);
   --switch-track-off:       var(--color-afi-control-600);
   --input-icon-default:     var(--color-afi-control-400);
   --seg-thumb-background:   var(--color-afi-control-700);

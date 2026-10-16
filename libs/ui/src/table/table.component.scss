@@ -621,6 +621,35 @@
   display: block;
 }
 
+// Tree anatomy (`treeColumn`): the chevron follows the label, one --space-2xs gap after it.
+.afi-table__expand-toggle--after {
+  margin-inline-start: var(--space-2xs);
+  margin-inline-end: 0;
+}
+
+// The tree column's child label keeps exactly one indent step more than its parent's label. In the
+// default anatomy this indent lives on the first cell (and on the checkbox cell when selectable).
+.afi-table--tree .afi-table__row--child > .afi-table__td-select:first-child {
+  padding-inline-start: var(--afi-table-select-cell-padding, var(--space-xs));
+}
+
+.afi-table--tree .afi-table__row--child > .afi-table__td:first-child:not(.afi-table__td--tree),
+.afi-table--tree .afi-table__row--child > .afi-table__td-select + .afi-table__td:not(.afi-table__td--tree) {
+  padding-inline-start: var(--space-md);
+}
+
+.afi-table--tree .afi-table__row--child > .afi-table__td.afi-table__td--tree {
+  padding-inline-start: calc(var(--afi-table-first-cell-pad, var(--space-md)) + var(--dimension-6));
+}
+
+// Group row (a row with children): the level-1 roll-up of the rows beneath it, so label and
+// figures read at medium weight in primary ink. Cells that carry their own tone or emphasis keep it.
+.afi-table__row--group > .afi-table__td:not([class*='--tone-']):not(.afi-table__td--emphasis) {
+  font: var(--table-group-font);
+  font-variant-numeric: tabular-nums;
+  color: var(--table-group-foreground);
+}
+
 // Child rows: indent the first cell so the hierarchy reads visually.
 // `--dimension-6` on top of the existing cell padding-inline. With
 // `selectable`, the SELECT cell is first — we still indent it; the

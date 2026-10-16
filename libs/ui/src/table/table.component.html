@@ -97,13 +97,42 @@
           </td>
         </tr>
       } @else {
+        <!-- The expand chevron, shared by both anatomies: before the label (today's
+             default) or after it (`treeColumn` set, the zip's anatomy). -->
+        <ng-template #toggleTpl let-row let-after="after">
+          <button
+            type="button"
+            class="afi-table__expand-toggle"
+            [class.afi-table__expand-toggle--after]="after"
+            [class.afi-table__expand-toggle--open]="isExpanded(row)"
+            [attr.aria-label]="(isExpanded(row) ? 'Contraer ' : 'Expandir ') + labelOf(row)"
+            [attr.aria-expanded]="isExpanded(row)"
+            (click)="toggleExpand(row, $event)"
+          >
+            <svg
+              class="afi-table__expand-icon"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="9 6 15 12 9 18" />
+            </svg>
+          </button>
+        </ng-template>
+
         <!-- Row template reused for parents AND children (single source of
              truth for cell rendering). `isChild` defaults to false; child
              invocation passes `true` so the row picks up `--child` class
              and the first cell gets indented via CSS. -->
         <ng-template #rowTpl let-row let-isChild="isChild">
           <tr
-            [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild, isMuted(row), isReference(row), isMixed(row))"
+            [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild, isMuted(row), isReference(row), isMixed(row), hasChildren(row) && !isChild)"
             [attr.data-row-key]="row[trackByKey()]"
             [attr.tabindex]="!isReference(row) && ((!isChild && hasExpansion(row)) || (selectOnRowClick() && selectable() && !isChild)) ? 0 : null"
             (click)="onRowClick(row, $event)"
@@ -123,32 +152,10 @@
                 }
               </td>
             }
-            @for (col of visibleColumns(); track col.key; let isFirstCol = $first) {
+            @for (col of visibleColumns(); track col.key; let idx = $index) {
               <td [class]="cellClasses(col, row)">
-                @if (isFirstCol && !isChild && hasExpansion(row) && !isReference(row)) {
-                  <button
-                    type="button"
-                    class="afi-table__expand-toggle"
-                    [class.afi-table__expand-toggle--open]="isExpanded(row)"
-                    [attr.aria-label]="(isExpanded(row) ? 'Contraer ' : 'Expandir ') + labelOf(row)"
-                    [attr.aria-expanded]="isExpanded(row)"
-                    (click)="toggleExpand(row, $event)"
-                  >
-                    <svg
-                      class="afi-table__expand-icon"
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <polyline points="9 6 15 12 9 18" />
-                    </svg>
-                  </button>
+                @if (idx === treeIndex() && !treeAnatomy() && !isChild && hasExpansion(row) && !isReference(row)) {
+                  <ng-container *ngTemplateOutlet="toggleTpl; context: { $implicit: row }" />
                 }
                 @if (cellTemplateFor(col); as tpl) {
                   <ng-container
@@ -162,6 +169,10 @@
                   }
                 } @else {
                   {{ cellText(row, col) }}
+                }
+                @if (idx === treeIndex() && treeAnatomy() && !isChild && hasExpansion(row) && !isReference(row)) {
+                  <!-- Word joiner: the chevron never wraps away from the last word of the label. -->
+                  ⁠<ng-container *ngTemplateOutlet="toggleTpl; context: { $implicit: row, after: true }" />
                 }
               </td>
             }

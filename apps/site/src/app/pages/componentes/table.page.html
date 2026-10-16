@@ -57,6 +57,24 @@
     <div class="selection-demo">
       <div class="selection-demo__controls">
         <div class="control-group">
+          <span class="control-group__label">Hierarchy anatomy</span>
+          <afi-segmented-control [options]="treeOptions" [(value)]="treeColumn" size="sm" ariaLabel="Hierarchy anatomy" />
+          <span class="control-group__hint">
+            <strong>treeColumn</strong> — el chevron sigue a la etiqueta y la jerarquía vive en la columna «Activo». Expansión sin estado en la página (<code>defaultExpandedKeys</code>).
+          </span>
+        </div>
+      </div>
+      <afi-table
+        [columns]="treeColumns"
+        [rows]="treeRows"
+        [treeColumn]="treeColumn() === 'none' ? null : treeColumn()"
+        [defaultExpandedKeys]="treeExpanded"
+        trackByKey="id"
+      />
+    </div>
+    <div class="selection-demo">
+      <div class="selection-demo__controls">
+        <div class="control-group">
           <span class="control-group__label">Selection mode</span>
           <afi-segmented-control [options]="modeOptions" [(value)]="selectionMode" size="sm" ariaLabel="Selection mode" />
         </div>

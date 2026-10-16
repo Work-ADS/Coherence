@@ -63,6 +63,8 @@ const TOKEN_CATEGORIES: DocTokenCategory[] = [
       { property: 'Header divider', token: '--table-header-divider' },
       { property: 'Cell font', token: '--table-cell-font' },
       { property: 'Cell text', token: '--table-cell-foreground' },
+      { property: 'Group row font', token: '--table-group-font' },
+      { property: 'Group row text', token: '--table-group-foreground' },
       { property: 'Child row text', token: '--table-child-foreground' },
       { property: 'Row background (hover)', token: '--table-row-background-hover' },
       { property: 'Row background (selected)', token: '--surface-selected' },
@@ -129,6 +131,24 @@ const GROUP_ROWS: Record<string, unknown>[] = [
   { id: 'otros', nombre: 'Colección de arte', valor: '$25,000' },
 ];
 
+// Hierarchy in the SECOND column: a type column leads, the name column hosts the tree.
+const TREE_COLUMNS: TableColumn[] = [
+  { key: 'tipo', label: 'Tipo' },
+  { key: 'nombre', label: 'Activo' },
+  { key: 'valor', label: 'Valor', align: 'end' },
+];
+
+const TREE_ROWS: Record<string, unknown>[] = GROUP_ROWS.map((g) => ({
+  ...g,
+  tipo: g['children'] ? 'Grupo' : 'Activo',
+  children: ((g['children'] as Record<string, unknown>[] | undefined) ?? []).map((c) => ({ ...c, tipo: 'Activo' })),
+}));
+
+const TREE_OPTIONS = [
+  { value: 'none', label: 'Default' },
+  { value: 'nombre', label: 'treeColumn' },
+];
+
 const MODE_OPTIONS = [
   { value: 'rows', label: 'Rows' },
   { value: 'leaves', label: 'Leaves' },
@@ -174,6 +194,11 @@ export class TablePage {
 
   readonly groupColumns = GROUP_COLUMNS;
   readonly groupRows = GROUP_ROWS;
+  readonly treeColumns = TREE_COLUMNS;
+  readonly treeRows = TREE_ROWS;
+  readonly treeOptions = TREE_OPTIONS;
+  readonly treeColumn = signal<'none' | 'nombre'>('nombre');
+  readonly treeExpanded = ['inm'];
   readonly modeOptions = MODE_OPTIONS;
   readonly onOffOptions = ON_OFF_OPTIONS;
   readonly selectionMode = signal<TableSelectionMode>('leaves');

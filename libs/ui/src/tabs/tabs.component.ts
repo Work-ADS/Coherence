@@ -3,12 +3,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   contentChildren,
+  DestroyRef,
   effect,
   ElementRef,
+  inject,
   input,
   output,
   signal,
   computed,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -68,17 +71,20 @@ export class TabsComponent implements AfterViewInit {
   /** References to trigger button elements for indicator measurement. */
   readonly triggerEls = viewChildren<ElementRef>('tabTrigger');
 
+  /** The tablist element, observed so the indicator follows its size. */
+  private readonly listEl = viewChild<ElementRef<HTMLElement>>('tablist');
+
   private readonly baseId = `afi-tabs-${nextId++}`;
   private readonly internalIndex = signal(0);
-  private readonly previousIndex = signal(0);
+  private readonly destroyRef = inject(DestroyRef);
+  private resizeObserver: ResizeObserver | null = null;
+  private seeded = false;
 
-  /** Direction of the panel transition: 'left' or 'right'. */
-  readonly slideDirection = computed(() =>
-    this.currentIndex() >= this.previousIndex() ? 'left' : 'right',
-  );
-
-  /** Increments on every tab change to trigger CSS animation restart. */
+  /** Counts the user's tab changes: the panel animates only after the first one. */
   readonly animationKey = signal(0);
+
+  /** False until the first measurement settles, so the indicator does not fly in. */
+  readonly indicatorSettled = signal(false);
 
   /** Current active tab index. */
   readonly currentIndex = computed(() => this.internalIndex());
@@ -94,7 +100,14 @@ export class TabsComponent implements AfterViewInit {
     // Sync controlled input → internal state
     effect(() => {
       const next = this.activeIndex();
-      if (this.internalIndex() !== next) this.internalIndex.set(next);
+      if (this.internalIndex() === next) {
+        this.seeded = true;
+        return;
+      }
+      this.internalIndex.set(next);
+      // A change from outside animates like a click; the very first value does not.
+      if (this.seeded) this.animationKey.update((k) => k + 1);
+      this.seeded = true;
     });
 
     // Recalculate indicator when index or tabs change
@@ -103,10 +116,28 @@ export class TabsComponent implements AfterViewInit {
       const __ = this.tabs();
       requestAnimationFrame(() => this.updateIndicator());
     });
+
+    // The bar is measured from the trigger boxes, so it must follow whatever resizes them: the
+    // window, a webfont arriving, a label or count changing.
+    effect(() => {
+      const list = this.listEl()?.nativeElement;
+      const triggers = this.triggerEls();
+      if (typeof ResizeObserver === 'undefined' || !list) return;
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = new ResizeObserver(() => this.updateIndicator());
+      this.resizeObserver.observe(list);
+      triggers.forEach((t) => this.resizeObserver?.observe(t.nativeElement as HTMLElement));
+    });
+    this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
   }
 
   ngAfterViewInit(): void {
     this.updateIndicator();
+    requestAnimationFrame(() => {
+      this.updateIndicator();
+      this.indicatorSettled.set(true);
+    });
+    document.fonts?.ready.then(() => this.updateIndicator());
   }
 
   tabId(index: number): string {
@@ -120,7 +151,6 @@ export class TabsComponent implements AfterViewInit {
   activate(index: number): void {
     const tab = this.tabs()[index];
     if (tab?.disabled()) return;
-    this.previousIndex.set(this.internalIndex());
     this.internalIndex.set(index);
     this.animationKey.update((k) => k + 1);
     this.activeChange.emit(index);
@@ -164,11 +194,6 @@ export class TabsComponent implements AfterViewInit {
           }
         }
         break;
-      case 'Enter':
-      case ' ':
-        event.preventDefault();
-        this.activate(current);
-        break;
     }
   }
 
@@ -178,13 +203,8 @@ export class TabsComponent implements AfterViewInit {
     if (!triggers || idx < 0 || idx >= triggers.length) return;
     const el = triggers[idx]?.nativeElement as HTMLElement | undefined;
     if (!el) return;
-    const parent = el.parentElement;
-    if (!parent) return;
-
-    const parentRect = parent.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-    this.indicatorOffset.set(elRect.left - parentRect.left);
-    this.indicatorWidth.set(elRect.width);
+    this.indicatorOffset.set(el.offsetLeft);
+    this.indicatorWidth.set(el.offsetWidth);
   }
 
   private focusTab(index: number): void {

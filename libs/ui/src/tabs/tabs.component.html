@@ -1,4 +1,5 @@
 <div
+  #tablist
   class="tabs"
   [class.tabs--sm]="size() === 'sm'"
   [class.tabs--md]="size() === 'md'"
@@ -9,6 +10,7 @@
   <!-- Sliding underline indicator -->
   <div
     class="tabs__underline"
+    [class.tabs__underline--idle]="!indicatorSettled()"
     [style.transform]="indicatorTransform()"
     [style.width.px]="indicatorWidth()"
     aria-hidden="true"
@@ -46,10 +48,7 @@
       [attr.aria-labelledby]="tabId($index)"
       [hidden]="$index !== currentIndex()"
       class="tabs__panel"
-      [class.tabs__panel--enter-left]="$index === currentIndex() && slideDirection() === 'left' && animationKey() % 2 === 0"
-      [class.tabs__panel--enter-left-alt]="$index === currentIndex() && slideDirection() === 'left' && animationKey() % 2 === 1"
-      [class.tabs__panel--enter-right]="$index === currentIndex() && slideDirection() === 'right' && animationKey() % 2 === 0"
-      [class.tabs__panel--enter-right-alt]="$index === currentIndex() && slideDirection() === 'right' && animationKey() % 2 === 1"
+      [class.tabs__panel--enter]="$index === currentIndex() && animationKey() > 0"
     >
       @if (!lazy() || $index === currentIndex()) {
         <ng-container [ngTemplateOutlet]="tab.contentTpl()!" />

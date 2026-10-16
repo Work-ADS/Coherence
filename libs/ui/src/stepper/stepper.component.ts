@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -31,14 +32,18 @@ import type {
  * `stepClicked` with both the key and the 1-based index. Consumers decide
  * whether to navigate. `current` and `todo` are not interactive.
  *
- * A11y: `<nav>` landmark with consumer-provided `ariaLabel`; each step is
- * a `<button>` with `aria-current="step"` on the current item and
- * `disabled` on todo items. Reduced-motion collapses transitions per
- * `docs/rules/component-skill.md` §11.
+ * A11y: a stepper is a header that says where you are, not navigation, so
+ * the root is a labelled list (no landmark) and each step a list item; the
+ * current item carries `aria-current="step"`. The marker is hidden from
+ * assistive tech and the state is spoken by a visually hidden suffix
+ * («, completado» / «, pendiente»; none on the current step). Only `done`
+ * steps are buttons; `current` and `todo` are plain text. Reduced motion
+ * collapses transitions per `docs/rules/component-skill.md` §11.
  */
 @Component({
   selector: 'afi-stepper',
   standalone: true,
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.scss'],
@@ -84,9 +89,16 @@ export class StepperComponent {
     return `afi-stepper__connector afi-stepper__connector--${filled ? 'filled' : 'muted'}`;
   }
 
-  /** A "done" step is the only interactive one. Todo items are disabled outright. */
+  /** A "done" step is the only interactive one; the others are plain text, not buttons. */
   isInteractive(state: StepperState): boolean {
     return state === 'done';
+  }
+
+  /** Hidden text that speaks the state after the label. The current step has none. */
+  spokenState(state: StepperState): string | null {
+    if (state === 'done') return ', completado';
+    if (state === 'todo') return ', pendiente';
+    return null;
   }
 
   onClick(step: StepperItem, index: number, state: StepperState): void {

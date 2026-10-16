@@ -15,7 +15,12 @@
       <span class="afi-stepper__number">{{ index }}</span>
     }
   </span>
-  <span class="afi-stepper__label">{{ step.label }}</span>
+  <span class="afi-stepper__text">
+    <span class="afi-stepper__label">{{ step.label }}</span>
+    @if (step.sub) {
+      <span class="afi-stepper__sub">{{ step.sub }}</span>
+    }
+  </span>
   <!-- Spoken state. The current step needs none: aria-current="step" carries it. Out of flow and
        clipped, so the layout is identical with and without it. -->
   @if (spokenState(state); as spoken) {
@@ -26,9 +31,9 @@
 <!-- A stepper is a header that says where you are, not navigation: a labelled list, no landmark. -->
 <div [class]="rootClasses()">
   <div class="afi-stepper__list" role="list" [attr.aria-label]="ariaLabel()">
-    @for (step of steps(); let i = $index; track step.key) {
+    @for (step of steps(); let i = $index; track keyOf(step, i + 1)) {
       @let index = i + 1;
-      @let state = stateFor(index);
+      @let state = stateFor(index, step);
       <div
         [class]="itemClasses(state)"
         role="listitem"
@@ -48,7 +53,7 @@
           </span>
         }
       </div>
-      @if (index < steps().length) {
+      @if (index < steps().length && layout() !== 'plain') {
         <span
           [class]="connectorClasses(state)"
           aria-hidden="true"

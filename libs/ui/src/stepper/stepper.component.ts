@@ -11,6 +11,7 @@ import type {
   StepperItem,
   StepperLayout,
   StepperOrientation,
+  StepperSize,
   StepperState,
 } from './stepper.variants';
 
@@ -50,8 +51,17 @@ import type {
 })
 export class StepperComponent {
   readonly steps = input.required<StepperItem[]>();
-  /** 1-based index of the current step. Out-of-range values clamp at render time. */
-  readonly current = input.required<number>();
+  /** 1-based index of the current step. Give this or `currentIndex`. */
+  readonly current = input<number | null>(null);
+  /** 0-based index of the current step (the zip's convention). Wins over `current`. */
+  readonly currentIndex = input<number | null>(null);
+  /** `md` markers or `compact`, the smaller ones for flows embedded in a page. */
+  readonly size = input<StepperSize>('md');
+  /**
+   * Whether done steps are buttons. Unset (true) they are, and `stepClicked`
+   * fires. Turn it off for a header that only states where you are.
+   */
+  readonly interactive = input<boolean>(true);
   readonly orientation = input<StepperOrientation>('horizontal');
   /**
    * Per-item layout. `inline` (default) keeps badge + label on one line;
@@ -63,16 +73,31 @@ export class StepperComponent {
 
   readonly stepClicked = output<{ key: string; index: number }>();
 
-  readonly rootClasses = computed(() =>
-    `afi-stepper afi-stepper--${this.orientation()} afi-stepper--${this.layout()}`,
+  readonly rootClasses = computed(
+    () =>
+      `afi-stepper afi-stepper--${this.orientation()} afi-stepper--${this.layout()}` +
+      (this.size() === 'compact' ? ' afi-stepper--compact' : ''),
   );
 
+  /** The current step, 1-based, whichever input the consumer used. */
+  private readonly currentOneBased = computed(() => {
+    const zero = this.currentIndex();
+    if (zero !== null) return zero + 1;
+    return this.current() ?? 0;
+  });
+
   /** Per-item state. `index` is 1-based to match the user-facing labels. */
-  stateFor(index: number): StepperState {
-    const cur = this.current();
+  stateFor(index: number, step?: StepperItem): StepperState {
+    if (step?.state) return step.state;
+    const cur = this.currentOneBased();
     if (index < cur) return 'done';
     if (index === cur) return 'current';
     return 'todo';
+  }
+
+  /** Stable key of a step: its own, else its position. */
+  keyOf(step: StepperItem, index: number): string {
+    return step.key ?? String(index);
   }
 
   itemClasses(state: StepperState): string {
@@ -91,7 +116,7 @@ export class StepperComponent {
 
   /** A "done" step is the only interactive one; the others are plain text, not buttons. */
   isInteractive(state: StepperState): boolean {
-    return state === 'done';
+    return this.interactive() && state === 'done';
   }
 
   /** Hidden text that speaks the state after the label. The current step has none. */
@@ -102,7 +127,7 @@ export class StepperComponent {
   }
 
   onClick(step: StepperItem, index: number, state: StepperState): void {
-    if (state !== 'done') return;
-    this.stepClicked.emit({ key: step.key, index });
+    if (!this.isInteractive(state)) return;
+    this.stepClicked.emit({ key: this.keyOf(step, index), index });
   }
 }

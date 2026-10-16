@@ -96,6 +96,17 @@
     height: var(--dimension-4);
   }
 
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__sub {
+    font: var(--type-body-sm-400);
+    color: var(--foreground-tertiary-default);
+  }
+
   &__label {
     font: var(--type-body-md-400);
     color: var(--foreground-tertiary-default);
@@ -245,6 +256,38 @@
       align-self: flex-start;
       margin-block-start: calc((var(--stepper-marker-size) - var(--stepper-connector-width)) / 2);
     }
+  }
+}
+
+// ─── Compact: smaller markers ──────────────────────────────────────────────
+.afi-stepper--compact {
+  --stepper-marker-size: var(--stepper-marker-size-compact);
+
+  .afi-stepper__badge {
+    font: var(--type-body-sm-600);
+  }
+
+  .afi-stepper__label {
+    font: var(--type-body-sm-400);
+  }
+
+  .afi-stepper__item--current .afi-stepper__label {
+    font: var(--type-body-sm-600);
+  }
+}
+
+// ─── Plain: no connectors, left-aligned, wraps ────────────────────────────
+.afi-stepper--plain {
+  .afi-stepper__list {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    column-gap: var(--stepper-gap-plain);
+    row-gap: var(--space-xs);
+  }
+
+  .afi-stepper__button {
+    gap: var(--space-xs);
+    padding: 0;
   }
 }
 

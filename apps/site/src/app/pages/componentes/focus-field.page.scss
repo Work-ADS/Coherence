@@ -1,0 +1,39 @@
+// =============================================================================
+// focus-field.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: var(--dimension-120);
+  padding: var(--space-lg);
+
+  // A scrolling container shorter than its content, so the jump has to scroll.
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    max-height: var(--dimension-64);
+    padding: var(--space-md);
+    overflow-y: auto;
+    border: var(--separator-thickness) solid var(--border-default);
+    border-radius: var(--radius-control);
+  }
+
+  &__result {
+    min-height: var(--space-lg);
+    margin: 0;
+    font: var(--type-body-sm-400);
+    color: var(--foreground-secondary-default);
+  }
+}
+
+.preview__drawer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}

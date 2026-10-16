@@ -35,7 +35,7 @@ Sidebar, TopBar, PlannerShell, NotesPopover (5e session). `*-v2`, `foundations-m
 
 | Slice | Branch | Scope | Status |
 |---|---|---|---|
-| **5g-1** | `traditional-ds-5g-1-focus-field` | FocusField module and global ring styles, Modal and Drawer `initialFocusRef` through it, doc page. | in progress |
+| **5g-1** | `traditional-ds-5g-1-focus-field` | FocusField module and global ring styles, Modal and Drawer `initialFocusRef` through it, doc page. | done 2026-10-16 |
 | 5g-2 | `traditional-ds-5g-2-table-leaving` | Table `leavingKeys`, «Eliminar filas» demo with undo toast, brief closeout. | planned |
 
 ## Method
@@ -45,3 +45,13 @@ Plan gate before each slice. Full AGENTS.md read order, reuse before building, `
 ## Findings from the session
 
 - **2026-10-16, planning.** Plan approved by Richard at the gate.
+- **5g-1 done 2026-10-16** on `traditional-ds-5g-1-focus-field`.
+  - **FocusField** is a plain module in `libs/ui/src/focus-field/` (`focusField`, `focusFirstInvalid`, `FocusField.focus/firstInvalid`), exported from the public API. Targets: element, `ElementRef` or selector; a wrapper resolves to its first control.
+  - **Ring styles** are a global partial (`_focus-field.scss`) imported from `apps/site/src/styles.scss`, because the helper marks controls owned by other components. Two `!important` declarations (the ring) because encapsulated component rules outrank a global attribute selector. **Deviation from the zip:** the 300ms settle animates `outline` (a halo that fades), not `box-shadow`, because an `!important` declaration beats a running animation, so the zip's version could never play.
+  - **Painted boxes:** only the controls whose ring is not on the focused element are listed (`.afi-input__shell`, `.afi-search`, `.afi-check__box`, `.afi-radio__ring`); a plain input, select and multi-select triggers, switch track and segmented buttons draw the ring on themselves.
+  - **One ring at a time:** a new jump clears any ring left behind, because a document without focus never fires blur.
+  - **Modal and Drawer** `initialFocusRef` go through `focusField` (scroll `nearest`, inside the body), falling back to plain focus. Consumers: zero templates set `initialFocusRef`, so nothing changes for existing pages.
+  - **Doc page** `/componentes/focus-field` with a scrolling form (jump, first invalid) and a Drawer that opens on a field below the fold; Modal and Drawer pages link to it.
+  - **Verified in the browser:** jump to the last field scrolls the form container (page scroll 0) and rings the field; «Guardar con errores» focuses the first invalid field with the error ring, light and dark; the drawer opens on its last field with the ring visible; no console errors; `tsc`, `npm run build` green (the one budget warning is the frozen Sarevi page).
+  - **Not verified:** the Modal path in the browser (same code shape as the drawer), blur clearing the ring in a focused window (the Browser pane has no document focus), the halo animation (the pane freezes animations), reduced motion, checkbox and radio ring boxes.
+  - **Guardian:** all tokens exist and resolve in dark. Fixed: a "24px" in a comment, and the two timing constants now say which token they mirror. Accepted: the error ring uses `--feedback-error-border`, the same pairing the input's own error focus ring uses.

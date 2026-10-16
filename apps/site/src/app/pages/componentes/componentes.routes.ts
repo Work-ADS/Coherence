@@ -19,6 +19,7 @@ export const componentes_routes: Routes = [
   // old bookmarks and stale cross-references.
   { path: 'top-bar', redirectTo: '/patrones/cabeceras/top-bar', pathMatch: 'full' },
   { path: 'tooltip', loadComponent: () => import('./tooltip.page').then(m => m.TooltipPage) },
+  { path: 'focus-field', loadComponent: () => import('./focus-field.page').then(m => m.FocusFieldPage) },
   { path: 'toast', loadComponent: () => import('./toast.page').then(m => m.ToastPage) },
   // ─── Legacy ───────────────────────────────────────────────────────────────
   // Explicit primitive detail pages

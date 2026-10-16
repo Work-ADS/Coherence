@@ -59,7 +59,7 @@
     <ul class="prose-section__list">
       <li>Renderiza con <code>role="dialog"</code> + <code>aria-modal="false"</code>: la página de detrás sigue siendo legible.</li>
       <li>Title se asocia vía <code>aria-labelledby</code>.</li>
-      <li>El foco aterriza en el propio panel (sin anillo) o en <code>initialFocusRef</code>, y vuelve a <code>returnFocusRef</code> o al elemento que abrió el drawer.</li>
+      <li>El foco aterriza en el propio panel (sin anillo) o en <code>initialFocusRef</code> (el cuerpo se desplaza hasta él y el anillo se ve aunque se abriera con el ratón: <a routerLink="/componentes/focus-field">FocusField</a>), y vuelve a <code>returnFocusRef</code> o al elemento que abrió el drawer.</li>
       <li><code>Escape</code> cierra solo la capa de más arriba: un Select o un Tooltip abiertos dentro lo reciben antes; un segundo Escape cierra el drawer.</li>
       <li>El scroll de la página se bloquea mientras el telón está visible.</li>
     </ul>

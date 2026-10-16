@@ -124,6 +124,8 @@ export interface TableSortState {
  * - `actions` — per-row override of the table-level `[rowActions]` input.
  *   Pass `actions: []` to hide all actions on that row; pass a custom
  *   array to swap the action set entirely.
+ * - `disabled` — selection skips the row: its box is disabled and row clicks, group toggles and
+ *   select-all leave it alone.
  * - `variant: 'reference'` — a comparison baseline, not data (an "Objetivo" row): pinned above
  *   the data whatever the sort, inert (no hover, click, actions or selection), hairline above,
  *   italic secondary label, left out of selection. Distinct from `muted`, which only restyles.
@@ -132,4 +134,4 @@ export interface TableSortState {
  *   rows that should not draw the eye (e.g. the "Objetivo" target row
  *   in Consecución de objetivos).
  */
-export type TableReservedKey = 'children' | 'actions' | 'muted' | 'variant';
+export type TableReservedKey = 'children' | 'actions' | 'muted' | 'variant' | 'disabled';

@@ -22,7 +22,16 @@ import type {
   TableRowAction,
   TableSortState,
 } from './table.types';
-import type { TableActionsReveal, TableDensity, TableHover } from './table.variants';
+import type {
+  TableActionsReveal,
+  TableDensity,
+  TableHover,
+  TableSelectionMode,
+} from './table.variants';
+
+/** Elements inside a row that keep their own click: a press on one never selects the row. */
+const ROW_SELECT_SKIP =
+  'a, button, input, select, textarea, label, [role="switch"], [role="button"], [role="checkbox"], [role="radio"], [role="link"], [role="menuitem"], [role="tab"], [role="option"], [role="combobox"], [contenteditable="true"], [data-no-row-select]';
 
 /**
  * Data table primitive.
@@ -52,6 +61,22 @@ export class TableComponent {
   readonly rows = input<Record<string, unknown>[]>([]);
   readonly trackByKey = input<string>('id');
   readonly selected = input<Record<string, unknown>[]>([]);
+  /**
+   * Selection by key (`trackByKey` values) instead of by row object. When set (even to `[]`) the
+   * table runs on keys and emits `selectedKeysChange`; the `selected` / `selectedChange` pair is
+   * then ignored. Left unset, nothing about the object API changes.
+   *
+   * Prefer keys with `selectionMode="leaves"` or a paginated list: leaves mode on the object API
+   * rebuilds `selectedChange` from the rows currently in `rows`, so objects for rows no longer
+   * shown are dropped.
+   */
+  readonly selectedKeys = input<readonly unknown[] | ReadonlySet<unknown> | null>(null);
+  /** `rows` (default) or `leaves` for grouped tables. See `TableSelectionMode`. */
+  readonly selectionMode = input<TableSelectionMode>('rows');
+  /** A click anywhere on a row (outside its own controls) toggles the row. Replaces `rowClicked` on selectable rows. */
+  readonly selectOnRowClick = input<boolean>(false);
+  /** Boxes always visible instead of only on hover, focus or once ticked. */
+  readonly selectionVisible = input<boolean>(false);
   readonly selectable = input<boolean>(false);
   readonly sortBy = input<TableSortState | null>(null);
   readonly loading = input<boolean>(false);
@@ -117,6 +142,7 @@ export class TableComponent {
   readonly cellTemplates = input<TableCellTemplateMap | null>(null);
 
   readonly selectedChange = output<Record<string, unknown>[]>();
+  readonly selectedKeysChange = output<unknown[]>();
   readonly sortChange = output<TableSortState | null>();
   readonly rowClicked = output<{
     row: Record<string, unknown>;
@@ -140,7 +166,7 @@ export class TableComponent {
     return [...all.filter((r) => this.isReference(r)), ...all.filter((r) => !this.isReference(r))];
   });
 
-  /** The selectable rows: reference rows are baselines, never part of a selection. */
+  /** Reference rows are baselines, never part of a selection. */
   private readonly dataRows = computed(() => this.rows().filter((r) => !this.isReference(r)));
 
   /** Fill rows on hover? `auto` follows interactivity. */
@@ -247,6 +273,7 @@ export class TableComponent {
     const parts = ['afi-table'];
     if (reveal !== 'always') parts.push(`afi-table--actions-${reveal}`);
     if (this.hasHeaderGroups()) parts.push('afi-table--with-groups');
+    if (this.selectionVisible()) parts.push('afi-table--select-visible');
     return parts.join(' ');
   });
 
@@ -294,16 +321,72 @@ export class TableComponent {
       this.visibleColumns().length + (this.selectable() ? 1 : 0) + (this.hasRowActions() ? 1 : 0),
   );
 
+  /** Keys or objects? Keys when `selectedKeys` is set at all. */
+  private readonly keyed = computed(() => this.selectedKeys() != null);
+
+  /** The new paths (leaves, keys) run on a key set; the plain object API keeps its original code. */
+  private readonly unified = computed(() => this.keyed() || this.selectionMode() === 'leaves');
+
+  /** Every row and child by key, to turn a key set back into row objects. */
+  private readonly rowsByKey = computed(() => {
+    const map = new Map<unknown, Record<string, unknown>>();
+    const key = this.trackByKey();
+    for (const r of this.rows()) {
+      map.set(r[key], r);
+      for (const c of this.childrenOf(r)) map.set(c[key], c);
+    }
+    return map;
+  });
+
+  private readonly selectedKeySet = computed<Set<unknown>>(() => {
+    const keys = this.selectedKeys();
+    if (keys != null) return new Set(keys);
+    const key = this.trackByKey();
+    return new Set(this.selected().map((r) => r[key]));
+  });
+
+  /** The rows a select-all may touch: not reference rows, not disabled ones. */
+  private readonly selectableRows = computed(() => this.dataRows().filter((r) => !this.isDisabled(r)));
+
+  /** In leaves mode, the rows that carry a real selection: a group's children, or a childless row itself. */
+  private readonly selectableLeaves = computed(() =>
+    this.dataRows().flatMap((r) => this.leavesOf(r)),
+  );
+
   readonly allSelected = computed(() => {
-    const r = this.dataRows();
+    if (this.unified()) {
+      const leaves = this.unifiedTargets();
+      const set = this.selectedKeySet();
+      const key = this.trackByKey();
+      return leaves.length > 0 && leaves.every((r) => set.has(r[key]));
+    }
+    const r = this.selectableRows();
     const s = this.selected();
     return r.length > 0 && s.length === r.length;
   });
 
   readonly someSelected = computed(() => {
+    if (this.unified()) {
+      const set = this.selectedKeySet();
+      const key = this.trackByKey();
+      const some = this.unifiedTargets().some((r) => set.has(r[key]));
+      return some && !this.allSelected();
+    }
     const s = this.selected();
     return s.length > 0 && !this.allSelected();
   });
+
+  /** Nothing to select: the header box is disabled. */
+  readonly noneSelectable = computed(() => {
+    // An empty or loading table keeps an enabled box, as it always did.
+    if (this.dataRows().length === 0) return false;
+    return this.unified() ? this.unifiedTargets().length === 0 : this.selectableRows().length === 0;
+  });
+
+  /** What select-all covers on the key set: leaves in leaves mode, selectable rows otherwise. */
+  private unifiedTargets(): Record<string, unknown>[] {
+    return this.selectionMode() === 'leaves' ? this.selectableLeaves() : this.selectableRows();
+  }
 
   trackKey(row: Record<string, unknown>): unknown {
     return row[this.trackByKey()];
@@ -388,8 +471,46 @@ export class TableComponent {
   }
 
   isSelected(row: Record<string, unknown>): boolean {
+    if (this.unified()) return this.boxState(row) === 'on';
     const key = this.trackByKey();
     return this.selected().some((s) => s[key] === row[key]);
+  }
+
+  isDisabled(row: Record<string, unknown>): boolean {
+    return row['disabled'] === true;
+  }
+
+  /** The leaves a row stands for in leaves mode: a group's children, or the row itself. */
+  private leavesOf(row: Record<string, unknown>): Record<string, unknown>[] {
+    // A disabled row, group included, offers nothing to select.
+    if (this.isDisabled(row)) return [];
+    if (this.selectionMode() === 'leaves' && this.hasChildren(row)) {
+      return this.childrenOf(row).filter((c) => !this.isDisabled(c) && !this.isReference(c));
+    }
+    return [row];
+  }
+
+  /** Box state for a row: leaves mode gives a group a tri-state over its selectable leaves. */
+  boxState(row: Record<string, unknown>): 'on' | 'mixed' | 'off' {
+    const set = this.selectedKeySet();
+    const key = this.trackByKey();
+    if (this.selectionMode() === 'leaves' && this.hasChildren(row)) {
+      const leaves = this.leavesOf(row);
+      if (leaves.length === 0) return 'off';
+      const on = leaves.filter((l) => set.has(l[key])).length;
+      return on === 0 ? 'off' : on === leaves.length ? 'on' : 'mixed';
+    }
+    return set.has(row[key]) ? 'on' : 'off';
+  }
+
+  isMixed(row: Record<string, unknown>): boolean {
+    return this.unified() && this.boxState(row) === 'mixed';
+  }
+
+  /** Disabled box: a disabled row, or a group with no selectable leaf. */
+  isBoxDisabled(row: Record<string, unknown>): boolean {
+    if (this.selectionMode() === 'leaves' && this.hasChildren(row)) return this.leavesOf(row).length === 0;
+    return this.isDisabled(row);
   }
 
   headerCellClasses(col: TableColumn): string {
@@ -463,6 +584,7 @@ export class TableComponent {
     isChild = false,
     muted = false,
     reference = false,
+    partial = false,
   ): string {
     return [
       'afi-table__row',
@@ -470,6 +592,7 @@ export class TableComponent {
       this.hoverEnabled() && !reference ? 'afi-table__row--hoverable' : '',
       reference ? 'afi-table__row--reference' : '',
       selected ? 'afi-table__row--selected' : '',
+      partial ? 'afi-table__row--partial' : '',
       highlighted ? 'afi-table__row--highlighted' : '',
       isChild ? 'afi-table__row--child' : '',
       muted ? 'afi-table__row--muted' : '',
@@ -498,7 +621,14 @@ export class TableComponent {
   onRowKeydown(row: Record<string, unknown>, event: KeyboardEvent): void {
     if (event.target !== event.currentTarget) return;
     if (event.key !== 'Enter' && event.key !== ' ') return;
+    // With row-click selection, Space selects a focused row and Enter expands it.
+    if (event.key === ' ' && this.selectOnRowClick() && this.selectable() && !this.isReference(row)) {
+      event.preventDefault();
+      this.toggleRowSelection(row);
+      return;
+    }
     if (!this.hasExpansion(row)) return;
+    if (event.key === ' ' && this.selectOnRowClick() && this.selectable()) return;
     event.preventDefault();
     this.toggleExpand(row);
   }
@@ -543,10 +673,32 @@ export class TableComponent {
   }
 
   toggleAll(checked: boolean): void {
-    this.selectedChange.emit(checked ? [...this.dataRows()] : []);
+    if (this.unified()) {
+      const next = new Set(this.selectedKeySet());
+      const key = this.trackByKey();
+      for (const r of this.unifiedTargets()) {
+        if (checked) next.add(r[key]);
+        else next.delete(r[key]);
+      }
+      this.emitKeys(next);
+      return;
+    }
+    this.selectedChange.emit(checked ? [...this.selectableRows()] : []);
   }
 
   toggleRow(row: Record<string, unknown>, checked: boolean): void {
+    if (this.isBoxDisabled(row)) return;
+    if (this.unified()) {
+      const next = new Set(this.selectedKeySet());
+      const key = this.trackByKey();
+      const targets = this.selectionMode() === 'leaves' ? this.leavesOf(row) : [row];
+      for (const r of targets) {
+        if (checked) next.add(r[key]);
+        else next.delete(r[key]);
+      }
+      this.emitKeys(next);
+      return;
+    }
     const key = this.trackByKey();
     if (checked) {
       this.selectedChange.emit([...this.selected(), row]);
@@ -555,9 +707,31 @@ export class TableComponent {
     }
   }
 
+  /** Flip a row's selection the way its box would (a group's click acts on its leaves). */
+  private toggleRowSelection(row: Record<string, unknown>): void {
+    if (this.isBoxDisabled(row)) return;
+    this.toggleRow(row, !this.isSelected(row));
+  }
+
+  private emitKeys(keys: Set<unknown>): void {
+    if (this.keyed()) {
+      this.selectedKeysChange.emit([...keys]);
+      return;
+    }
+    const map = this.rowsByKey();
+    this.selectedChange.emit([...keys].map((k) => map.get(k)).filter((r): r is Record<string, unknown> => !!r));
+  }
+
   onRowClick(row: Record<string, unknown>, event: MouseEvent): void {
     if (this.isReference(row)) return;
     const target = event.target as HTMLElement;
+    if (this.selectOnRowClick() && this.selectable()) {
+      // A press on a control inside the row keeps its own behaviour.
+      const hit = target.closest(ROW_SELECT_SKIP);
+      if (hit && (event.currentTarget as HTMLElement).contains(hit)) return;
+      this.toggleRowSelection(row);
+      return;
+    }
     if (target.closest('afi-checkbox') || target.closest('button') || target.closest('a')) return;
     this.rowClicked.emit({ row, event });
   }

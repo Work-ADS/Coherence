@@ -19,6 +19,16 @@ export type TableDensity = 'compact' | 'default' | 'comfortable';
 export type TableHover = 'auto' | 'on' | 'off';
 
 /**
+ * Which rows carry the selection boxes.
+ *
+ * - `rows` — the default: every row has its own box and the selection holds whichever rows were ticked.
+ * - `leaves` — for grouped tables: child rows carry the boxes; a group row shows a tri-state box
+ *              (all, some, none of its selectable leaves) that selects or clears its leaves; the
+ *              selection holds leaf rows or keys only, never a group.
+ */
+export type TableSelectionMode = 'rows' | 'leaves';
+
+/**
  * Reveal mode for trailing row actions.
  *
  * - `always` — actions are fully visible at rest. Retained as an opt-in
@@ -36,3 +46,4 @@ export type TableHover = 'auto' | 'on' | 'off';
  *              acceptable (touch, kiosk, training mode).
  */
 export type TableActionsReveal = 'always' | 'hover' | 'soft';
+

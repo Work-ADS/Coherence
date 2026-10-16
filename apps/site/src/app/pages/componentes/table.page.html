@@ -54,6 +54,37 @@
   </div>
 
   <div slot="preview" class="preview">
+    <div class="selection-demo">
+      <div class="selection-demo__controls">
+        <div class="control-group">
+          <span class="control-group__label">Selection mode</span>
+          <afi-segmented-control [options]="modeOptions" [(value)]="selectionMode" size="sm" ariaLabel="Selection mode" />
+        </div>
+        <div class="control-group">
+          <span class="control-group__label">Select on row click</span>
+          <afi-segmented-control [options]="onOffOptions" [(value)]="rowClickSelect" size="sm" ariaLabel="Select on row click" />
+        </div>
+        <div class="control-group">
+          <span class="control-group__label">Boxes always visible</span>
+          <afi-segmented-control [options]="onOffOptions" [(value)]="boxesVisible" size="sm" ariaLabel="Boxes always visible" />
+        </div>
+      </div>
+      <afi-table
+        [columns]="groupColumns"
+        [rows]="groupRows"
+        [selectable]="true"
+        [selectedKeys]="selectedKeys()"
+        (selectedKeysChange)="selectedKeys.set($event)"
+        [selectionMode]="selectionMode()"
+        [selectOnRowClick]="rowClickSelect() === 'on'"
+        [selectionVisible]="boxesVisible() === 'on'"
+        [expandedKeys]="expandedKeys()"
+        (expandedKeysChange)="expandedKeys.set($event)"
+        trackByKey="id"
+      />
+      <p class="selection-demo__readout">Selected keys: {{ selectedKeys().length ? selectedKeys().join(', ') : '—' }}</p>
+    </div>
+
     <afi-table
       [columns]="columns"
       [rows]="displayRows()"
@@ -74,6 +105,8 @@
       <li>Render HTML semántico (<code>&lt;table&gt;</code>, <code>&lt;th&gt;</code>, <code>&lt;td&gt;</code>) con <code>scope="col"</code>.</li>
       <li>Columnas ordenables emiten <code>aria-sort</code> + son enfocables con teclado.</li>
       <li>El checkbox de cada fila se nombra con la fila («Seleccionar Operación Alpha»); el botón de expandir, «Expandir …» / «Contraer …» con <code>aria-expanded</code>; una fila con hijos es enfocable y se abre con Enter o Espacio.</li>
+      <li>Con <code>selectionMode="leaves"</code> la caja de un grupo es de tres estados (todas, algunas o ninguna de sus hojas) y la selección emitida contiene solo hojas, nunca el grupo.</li>
+      <li>Con <code>selectOnRowClick</code> la caja sigue siendo la única parada de tabulador; Espacio en una fila de grupo enfocada la selecciona y Enter la expande.</li>
       <li>La fila de referencia (<code>variant: 'reference'</code>) es inerte: sin hover, clic, acciones ni selección.</li>
       <li>Estado vacío anuncia el texto con <code>aria-live="polite"</code>.</li>
     </ul>

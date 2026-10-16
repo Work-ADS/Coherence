@@ -8,6 +8,7 @@ import type {
   TableDensity,
   TableHover,
   TableRowAction,
+  TableSelectionMode,
 } from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
@@ -100,6 +101,44 @@ const EXTRAS_OPTIONS = [
   { value: 'on', label: 'Reference + totals' },
 ];
 
+const GROUP_COLUMNS: TableColumn[] = [
+  { key: 'nombre', label: 'Activo', sortable: false },
+  { key: 'valor', label: 'Valor', align: 'end' },
+];
+
+// Two levels: a group (children) and leaves. `disabled` shows a leaf selection skips.
+const GROUP_ROWS: Record<string, unknown>[] = [
+  {
+    id: 'inm',
+    nombre: 'Inmobiliario',
+    valor: '$320,000',
+    children: [
+      { id: 'inm-1', nombre: 'Vivienda habitual', valor: '$210,000' },
+      { id: 'inm-2', nombre: 'Local alquilado', valor: '$110,000' },
+    ],
+  },
+  {
+    id: 'fin',
+    nombre: 'Financiero',
+    valor: '$140,000',
+    children: [
+      { id: 'fin-1', nombre: 'Fondo indexado', valor: '$90,000' },
+      { id: 'fin-2', nombre: 'Depósito (bloqueado)', valor: '$50,000', disabled: true },
+    ],
+  },
+  { id: 'otros', nombre: 'Colección de arte', valor: '$25,000' },
+];
+
+const MODE_OPTIONS = [
+  { value: 'rows', label: 'Rows' },
+  { value: 'leaves', label: 'Leaves' },
+];
+
+const ON_OFF_OPTIONS = [
+  { value: 'off', label: 'Off' },
+  { value: 'on', label: 'On' },
+];
+
 const REFERENCE_ROW: Record<string, unknown> = {
   id: '—',
   nombre: 'Objetivo',
@@ -133,6 +172,15 @@ export class TablePage {
   // so the team can demonstrate the contrast with `'soft'` from the docs.
   readonly actionReveal = signal<TableActionsReveal>('hover');
 
+  readonly groupColumns = GROUP_COLUMNS;
+  readonly groupRows = GROUP_ROWS;
+  readonly modeOptions = MODE_OPTIONS;
+  readonly onOffOptions = ON_OFF_OPTIONS;
+  readonly selectionMode = signal<TableSelectionMode>('leaves');
+  readonly rowClickSelect = signal<'on' | 'off'>('on');
+  readonly boxesVisible = signal<'on' | 'off'>('off');
+  readonly selectedKeys = signal<unknown[]>([]);
+  readonly expandedKeys = signal<unknown[]>(['inm']);
   readonly densityOptions = DENSITY_OPTIONS;
   readonly hoverOptions = HOVER_OPTIONS;
   readonly extrasOptions = EXTRAS_OPTIONS;

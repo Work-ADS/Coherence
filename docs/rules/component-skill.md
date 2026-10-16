@@ -308,7 +308,7 @@ Apply on top of the universal rules.
 
 ### Overlays (Modal, Drawer, Popover, Tooltip)
 - No CDK in this repo. A layer anchored to a trigger (Select, MultiSelect, Tooltip; Menu in 5d-2) uses `FloatingPanel` from `libs/ui/src/floating-panel/`: it portals the panel to the open `<dialog>` (top layer) else `<body>`, positions it fixed, flips and clamps to the viewport, follows scroll and resize. The panel's CSS supplies `position: fixed`, a `--z-*` layer token and a vertical `margin-block` (the gap). Never hand-roll `appendChild` or a backdrop.
-- Stacking is a ladder of tokens, not numbers: `--z-dropdown` 40 < `--z-drawer` 900 < `--z-modal` 1000 < `--z-floating` 1050 < `--z-tooltip` 1100 < `--z-toast` < `--z-overlay`.
+- Stacking is a ladder of tokens, not numbers: `--z-dropdown` 40 < `--z-drawer` 900 (panel `--drawer-panel-z`, one step above) < `--z-modal` 1000 < `--z-floating` 1050 < `--z-tooltip` 1100 < `--z-toast` < `--z-overlay`.
 - Restore focus on close. `Escape` dismisses once: register the open layer with `onOverlayEscape` (capture phase, marks the event `defaultPrevented`), so Tooltip over Select over Modal closes one layer per press. Modal and Drawer close only if `escapeConsumed(event)` is false. Click-outside dismisses by `mousedown` outside panel and trigger, not a backdrop element (unless modal is explicitly "blocking").
 - Scrim = `surface-overlay`.
 - `role="dialog"` + `aria-modal="true"` + `aria-labelledby` pointing at the title.

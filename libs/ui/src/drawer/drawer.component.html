@@ -1,0 +1,65 @@
+@if (rendered()) {
+  <!-- The page behind: tinted and blurred (scrim), or left clear (scrim off). Either way
+       a press on it closes the drawer. Floating lists open above it (--z-floating). -->
+  <div
+    class="afi-drawer__scrim"
+    [class.afi-drawer__scrim--clear]="!scrim()"
+    [class.afi-drawer__scrim--leaving]="leaving()"
+    (click)="onOutsideClick()"
+    aria-hidden="true"
+  ></div>
+
+  <aside
+    #panel
+    [class]="panelClasses()"
+    role="dialog"
+    aria-modal="false"
+    tabindex="-1"
+    [attr.aria-label]="!title() ? ariaLabel() : null"
+    [attr.aria-labelledby]="title() ? titleId : null"
+    (keydown)="onKeydown($event)"
+  >
+    <header class="afi-drawer__head">
+      <div class="afi-drawer__heading">
+        <ng-content select="[slot=header]">
+          @if (title()) {
+            <h2 [id]="titleId" class="afi-drawer__title">{{ title() }}</h2>
+          }
+        </ng-content>
+      </div>
+
+      <div class="afi-drawer__acts">
+        @if (position(); as pos) {
+          <button
+            type="button"
+            class="afi-drawer__btn"
+            aria-label="Fila anterior"
+            [disabled]="pos.current <= 1"
+            (click)="onNavigate('prev')"
+          >
+            <afi-icon name="chevron-left" />
+          </button>
+          <span class="afi-drawer__position" aria-live="polite">{{ pos.current }} de {{ pos.total }}</span>
+          <button
+            type="button"
+            class="afi-drawer__btn"
+            aria-label="Fila siguiente"
+            [disabled]="pos.current >= pos.total"
+            (click)="onNavigate('next')"
+          >
+            <afi-icon name="chevron-right" />
+          </button>
+        }
+        <button type="button" class="afi-drawer__btn" aria-label="Cerrar" (click)="onClose('button')">
+          <afi-icon name="x" />
+        </button>
+      </div>
+    </header>
+
+    <div class="afi-drawer__body">
+      <ng-content />
+    </div>
+
+    <ng-content select="[slot=footer]" />
+  </aside>
+}

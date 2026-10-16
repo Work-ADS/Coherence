@@ -112,6 +112,22 @@
 
 
   // ===========================================================================
+  // DRAWER
+  // ===========================================================================
+
+  // Widths follow the Wealth Planner zip. `wide` is the viewport minus the
+  // sidebar column, so it is a left offset, not a width.
+  // 450 comes from the zip and is off the 4px grid on purpose: do not round it to 448.
+  --drawer-width-sm: 450px;
+  --drawer-width-md: var(--dimension-190);             // 760px
+  --drawer-wide-offset: var(--dimension-70);           // 280px: the sidebar column
+  --drawer-button-size: var(--control-size-lg);        // 32px
+  // The panel sits one step above its scrim. The one z token kept at component
+  // level: the ladder itself lives in semantic.scss, so do not add more here ad hoc.
+  --drawer-panel-z: calc(var(--z-drawer) + 1);
+
+
+  // ===========================================================================
   // TOAST
   // ===========================================================================
 

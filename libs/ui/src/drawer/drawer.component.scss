@@ -1,0 +1,186 @@
+:host {
+  display: contents;
+}
+
+// ─── Scrim ────────────────────────────────────────────────────────────────
+// 25%: a drawer annotates the page, so the page stays legible behind it.
+.afi-drawer__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-drawer);
+  background: var(--overlay-blanket-drawer);
+  -webkit-backdrop-filter: blur(var(--overlay-blur));
+  backdrop-filter: blur(var(--overlay-blur));
+  animation: afi-drawer-fade var(--duration-slow) var(--easing-enter);
+
+  // No tint and no blur, but still the surface that catches an outside press.
+  &--clear {
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    animation: none;
+  }
+
+  &--leaving {
+    animation: afi-drawer-fade-out var(--duration-slow) var(--easing-exit) both;
+  }
+}
+
+// ─── Panel ────────────────────────────────────────────────────────────────
+// Floating on every side: --layout-shell-inset from the top, right and bottom,
+// and every corner rounded, so the page stays visible around it.
+.afi-drawer {
+  position: fixed;
+  z-index: var(--drawer-panel-z);
+  inset-block: var(--layout-shell-inset);
+  inset-inline-end: var(--layout-shell-inset);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--overlay-modal);
+  --surface-context: var(--overlay-modal);
+  border: var(--border-width-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--elevation-xl);
+  animation: afi-drawer-in var(--duration-slow) var(--easing-enter);
+
+  // A landing spot for screen readers and the Tab sequence, not a control: it
+  // never draws a ring. Controls inside keep their own focus-visible rings.
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+
+  &--leaving {
+    animation: afi-drawer-out var(--duration-slow) var(--easing-exit) both;
+  }
+
+  // The left edge keeps the inset on narrow screens rather than touching the
+  // edge, so a panel never grows wider than the viewport.
+  &--sm {
+    inset-inline-start: max(var(--layout-shell-inset), calc(100% - var(--drawer-width-sm) - var(--layout-shell-inset)));
+  }
+
+  &--md {
+    inset-inline-start: max(var(--layout-shell-inset), calc(100% - var(--drawer-width-md) - var(--layout-shell-inset)));
+  }
+
+  // Everything right of the sidebar column; its right edge is on the inset, so
+  // its left edge moves in by the same inset.
+  &--wide {
+    inset-inline-start: calc(var(--drawer-wide-offset) - var(--layout-shell-inset));
+  }
+}
+
+// At the hand-off width and below, wide takes the whole viewport inside the
+// frame. A media query cannot read --layout-bp-handoff, so the width is repeated.
+@media (max-width: 768px) {
+  .afi-drawer--wide {
+    inset-inline-start: var(--layout-shell-inset);
+  }
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────
+.afi-drawer__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.afi-drawer__heading {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.afi-drawer__title {
+  margin: 0;
+  font: var(--type-body-lg-600);
+  color: var(--foreground-primary-default);
+}
+
+.afi-drawer__acts {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.afi-drawer__position {
+  font: var(--type-body-sm-400);
+  color: var(--foreground-tertiary-default);
+  font-variant-numeric: tabular-nums;
+}
+
+.afi-drawer__btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--drawer-button-size);
+  block-size: var(--drawer-button-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--foreground-tertiary-default);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-enter),
+              color var(--duration-fast) var(--easing-enter);
+
+  &:hover:not(:disabled) {
+    background: var(--surface-subtle);
+    color: var(--foreground-primary-default);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+  }
+
+  &:disabled {
+    color: var(--disabled-foreground);
+    cursor: not-allowed;
+  }
+
+  afi-icon {
+    --afi-icon-size: var(--icon-md);
+  }
+}
+
+// ─── Body ─────────────────────────────────────────────────────────────────
+// Starts --space-xs below the header text (header bottom --space-md plus this).
+.afi-drawer__body {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+  padding: var(--space-xs) var(--space-lg) var(--space-lg);
+  font: var(--type-body-md-400);
+  color: var(--foreground-secondary-default);
+}
+
+// ─── Footer (projected) ───────────────────────────────────────────────────
+:host ::slotted([slot='footer']) {
+  flex: none;
+}
+
+@keyframes afi-drawer-fade { from { opacity: 0; } }
+@keyframes afi-drawer-fade-out { to { opacity: 0; } }
+@keyframes afi-drawer-in { from { transform: translateX(var(--space-md)); opacity: 0; } }
+@keyframes afi-drawer-out { to { transform: translateX(var(--space-md)); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .afi-drawer,
+  .afi-drawer--leaving,
+  .afi-drawer__scrim,
+  .afi-drawer__scrim--leaving {
+    animation: none;
+  }
+
+  .afi-drawer__btn {
+    transition: none;
+  }
+}

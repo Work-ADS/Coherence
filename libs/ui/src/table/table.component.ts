@@ -189,9 +189,9 @@ export class TableComponent {
 
   readonly skeletonRows = [0, 1, 2, 3, 4];
 
-  /** Open rows once the table owns the state (`defaultExpandedKeys`). */
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
+  /** Open rows once the table owns the state (`defaultExpandedKeys`). */
   private readonly innerExpanded = signal<unknown[] | null>(null);
 
   private readonly openKeys = computed<unknown[]>(() => {
@@ -218,14 +218,22 @@ export class TableComponent {
     });
 
     // A newly highlighted row scrolls into view, so a row added off screen is not missed.
+    // Only when the key changes: sorting or editing while the key is still held must not pull the page back.
+    let lastScrolledKey: unknown = null;
     afterRenderEffect(() => {
       const key = this.highlightedRowKey();
       this.rows();
-      if (key === null || key === undefined) return;
+      if (key === null || key === undefined) {
+        lastScrolledKey = null;
+        return;
+      }
+      if (key === lastScrolledKey) return;
       const row = Array.from(this.host.querySelectorAll<HTMLElement>('tr[data-row-key]')).find(
-        (r) => r.getAttribute('data-row-key') === String(key),
+        (r) => r.getAttribute('data-row-key') === String(key) && r.classList.contains('afi-table__row--highlighted'),
       );
-      row?.scrollIntoView({ block: 'nearest' });
+      if (!row) return;
+      lastScrolledKey = key;
+      row.scrollIntoView({ block: 'nearest' });
     });
 
     effect(() => {
@@ -296,7 +304,9 @@ export class TableComponent {
    * inline/overflow split.
    */
   private resolveActions(actions: TableRowAction[]): TableRowAction[] {
-    const n = this.inlineActions();
+    const raw = this.inlineActions();
+    // A number outside 0..n (NaN, negative, fractional) is read as the nearest whole count; NaN means auto.
+    const n = raw === 'auto' || Number.isNaN(raw) ? 'auto' : Math.max(0, Math.floor(raw));
     if (n !== 'auto') return actions.map((a, i) => ({ ...a, overflow: i >= n }));
     if (actions.length <= 2) {
       return actions.map((a) => (a.overflow ? { ...a, overflow: false } : a));
@@ -836,7 +846,8 @@ export class TableComponent {
 
   /** A highlighted row's fade ends: tell the page, so it can clear the key. */
   onRowAnimationEnd(row: Record<string, unknown>, event: AnimationEvent): void {
-    if (!event.animationName.includes('afi-table-row-highlight') || !this.isHighlighted(row)) return;
+    // Angular scopes keyframe names, so match the end of the name; child animations bubble up to the row.
+    if (!event.animationName.endsWith('afi-table-row-highlight') || !this.isHighlighted(row)) return;
     this.highlightEnd.emit(this.highlightedRowKey());
   }
 

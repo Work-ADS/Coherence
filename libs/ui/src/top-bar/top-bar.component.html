@@ -2,7 +2,9 @@
   class="top-bar"
   [class.top-bar--borderless]="borderless()"
   [class.top-bar--glass]="variant() === 'glass'"
-  role="banner"
+  [class.top-bar--on-brand]="variant() === 'on-brand'"
+  [class.top-bar--shell]="shellBand()"
+  [attr.aria-label]="ariaLabel()"
 >
   <!-- Start zone -->
   <div class="top-bar__start">
@@ -17,5 +19,13 @@
   <!-- End zone -->
   <div class="top-bar__end">
     <ng-content select="[slot=end]" />
+  </div>
+
+  <!-- Exit zone: the one way out of a guided flow. Behind its own rule; hidden while empty. -->
+  <div class="top-bar__exit">
+    <span class="top-bar__exit-rule" aria-hidden="true"></span>
+    <div class="top-bar__exit-slot">
+      <ng-content select="[slot=exit]" />
+    </div>
   </div>
 </header>

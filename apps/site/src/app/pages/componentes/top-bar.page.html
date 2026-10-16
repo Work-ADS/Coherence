@@ -1,0 +1,94 @@
+<site-doc-page-shell
+  title="Top Bar"
+  overline="COMPONENTS"
+  description="Barra superior de tres zonas (inicio, centro, final) más una salida opcional. La geometría del planificador (banda de 48 px, gutter del raíl) es opt-in con shellBand; on-brand dibuja la barra directamente sobre el lienzo de marca."
+  componentName="top-bar"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Top Bar</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Barra de la web</span> — sólida o de cristal, con su altura de siempre.</li>
+    <li><span class="use-cases__label">Barra del planificador</span> — <code>shellBand</code>: llena la banda de cabecera de 48 px que comparte con la barra lateral.</li>
+    <li><span class="use-cases__label">Asistentes guiados</span> — <code>slot="exit"</code>: una única salida, siempre visible.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Variant</span>
+      <afi-segmented-control [options]="variantOptions" [(value)]="variant" size="sm" ariaLabel="Variant" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Shell band</span>
+      <afi-segmented-control [options]="offOnOptions" [(value)]="shellBand" size="sm" ariaLabel="Shell band" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Borderless</span>
+      <afi-segmented-control [options]="offOnOptions" [(value)]="borderless" size="sm" ariaLabel="Borderless" />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Exit</span>
+      <afi-segmented-control [options]="offOnOptions" [(value)]="exit" size="sm" ariaLabel="Exit" />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="frame" [class.frame--brand]="onBrand()">
+      <afi-top-bar
+        [variant]="variant()"
+        [shellBand]="shellBand() === 'on'"
+        [borderless]="borderless() === 'on'"
+        ariaLabel="Barra de ejemplo"
+      >
+        <span slot="start" class="bar-title">Familia García · Plan 2026</span>
+        <div slot="end" class="bar-actions">
+          <afi-button variant="ghost" size="sm">Notas</afi-button>
+          <afi-button variant="ghost" size="sm">Ajustes</afi-button>
+        </div>
+        @if (exit() === 'on') {
+          <afi-button slot="exit" variant="secondary" size="sm">Salir del asistente</afi-button>
+        }
+      </afi-top-bar>
+      <div class="frame__content">
+        @for (row of rows; track row) {
+          <p class="frame__row">Fila {{ row }}: el contenido pasa por debajo de la barra al desplazarse.</p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>Es un <code>&lt;header&gt;</code>: ya es el landmark de banner, así que no lleva <code>role="banner"</code>. Con más de una barra en la página, dale un nombre con <code>ariaLabel</code>.</li>
+      <li>La salida es un único control del consumidor, siempre enfocable, y nunca se oculta en anchos estrechos.</li>
+      <li>En <code>on-brand</code> el anillo de foco y el fondo al pasar el puntero cambian a sus tokens inversos para seguir siendo visibles sobre el lienzo de marca.</li>
+      <li>La barra con <code>shellBand</code> mide su propio ancho (consulta de contenedor), no la ventana.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Pon la barra de cristal sticky dentro del área que se desplaza: sin nada detrás, el cristal es solo gris.</li>
+          <li>Usa <code>on-brand</code> solo dentro de un contenedor pintado con el lienzo de marca.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No pongas dos controles en la salida: en un flujo guiado hay una sola forma de salir.</li>
+          <li>No metas migas, estados ni indicadores del plan en esta barra: eso es el compuesto de la barra del planificador.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

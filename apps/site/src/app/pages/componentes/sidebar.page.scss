@@ -1,0 +1,38 @@
+// =============================================================================
+// sidebar.page.scss
+// =============================================================================
+
+@use './_doc-page-shared' as *;
+
+.preview {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-xl);
+}
+
+// The planner frame: the canvas shows around an inset panel.
+.frame {
+  display: flex;
+  width: 100%;
+  height: var(--dimension-120);
+  padding: var(--layout-shell-inset);
+  background: var(--canvas-primary);
+  border: var(--border-width-hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.brand {
+  font: var(--type-body-md-500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-demo {
+  margin: 0;
+  padding-inline: var(--space-sm);
+  font: var(--type-body-sm-400);
+  color: var(--sidebar-foreground);
+}

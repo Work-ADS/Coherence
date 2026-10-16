@@ -3,10 +3,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
   HostListener,
 } from '@angular/core';
+
+import { NAV_SECTION_CONTEXT } from '../nav-section/nav-section.token';
+import { DEFAULT_DOT_LABEL, SIDEBAR_CONTEXT } from '../sidebar/sidebar.token';
+import { TooltipComponent } from '../tooltip';
 
 let nextId = 0;
 
@@ -20,7 +25,7 @@ let nextId = 0;
 @Component({
   selector: 'afi-nav-item',
   standalone: true,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, TooltipComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './nav-item.component.scss',
   templateUrl: './nav-item.component.html',
@@ -44,6 +49,10 @@ export class NavItemComponent {
    * row is disabled as before (native `disabled`, not focusable).
    */
   readonly disabledReason = input<string | null>(null);
+  /** Status marker (pending review and the like). Its meaning is in the accessible name and the tooltip. */
+  readonly dot = input<boolean>(false);
+  /** Wording of this row's dot. Unset: the sidebar's `dotLabel`. */
+  readonly dotLabel = input<string | null>(null);
   /** Show a chevron indicator (right side). Use for expandable section parents. */
   readonly chevron = input<'right' | 'none'>('none');
   /** Whether the section this item controls is expanded (rotates chevron) */
@@ -54,9 +63,47 @@ export class NavItemComponent {
   /** Set by parent Sidebar — controls label visibility and tooltip */
   readonly sidebarExpanded = input<boolean>(true);
 
+  private readonly sidebar = inject(SIDEBAR_CONTEXT, { optional: true });
+  private readonly section = inject(NAV_SECTION_CONTEXT, { optional: true });
+
+  /** Labels hide when the consumer says the panel is narrow, or in the Wealth Planner rail. */
+  readonly labelHidden = computed(() => !this.sidebarExpanded() || (this.sidebar?.isRail() ?? false));
+  /** The Wealth Planner rail: rows centre on the icon. */
+  readonly rail = computed(() => this.sidebar?.isRail() ?? false);
+
   readonly isSelected = computed(() => this.active() || this.selected());
   readonly reasonShown = computed(() => this.disabled() && !!this.disabledReason());
   readonly reasonId = `nav-item-reason-${nextId++}`;
+
+  private readonly dotText = computed(
+    () => this.dotLabel()?.trim() || this.sidebar?.dotLabel() || DEFAULT_DOT_LABEL,
+  );
+
+  /** In the rail the section name comes along: the icon is all the label there is. */
+  private readonly baseName = computed(() =>
+    this.rail() && this.section ? `${this.section.label()} · ${this.label()}` : this.label(),
+  );
+
+  /** Accessible name: the page, and the dot's meaning when it has one. */
+  readonly accessibleName = computed(() =>
+    this.dot() ? `${this.baseName()} — ${this.dotText()}` : this.baseName(),
+  );
+
+  /**
+   * What the tooltip says, or null when there is nothing to add. A collapsed row
+   * names itself («Section · Page — reason · dot»); an expanded one only speaks
+   * for a disabled reason or a dot.
+   */
+  readonly tipText = computed<string | null>(() => {
+    const reason = this.reasonShown() ? this.disabledReason() : null;
+    const dot = this.dot() ? this.dotText() : null;
+    if (this.labelHidden()) {
+      const extra = [reason, dot].filter(Boolean).join(' · ');
+      return extra ? `${this.baseName()} — ${extra}` : this.baseName();
+    }
+    if (reason) return reason;
+    return dot ? dot.charAt(0).toUpperCase() + dot.slice(1) : null;
+  });
 
   readonly clicked = output<{ event: MouseEvent }>();
 

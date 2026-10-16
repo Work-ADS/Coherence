@@ -55,11 +55,59 @@
   // ===========================================================================
 
   // The sidebar sits on the canvas: titles read one step quieter than the page text.
-  --sidebar-foreground:       var(--color-afi-control-700);
-  --sidebar-foreground-hover: var(--color-afi-control-900);
-  --sidebar-icon:             var(--color-afi-control-700);
-  --sidebar-background-hover: var(--color-afi-control-100);
-  --sidebar-item-height:      var(--dimension-9);   // 36px
+  --sidebar-background:          transparent;
+  --sidebar-border:              transparent;
+  --sidebar-foreground:          var(--color-afi-control-700);
+  // Hover and selected follow the nav-item roles, so a section title, a page row and a child row share one fill in both themes.
+  --sidebar-foreground-hover:    var(--nav-item-foreground-hover);
+  --sidebar-foreground-selected: var(--nav-item-foreground-selected);
+  --sidebar-background-hover:    var(--nav-item-background-hover);
+  --sidebar-background-selected: var(--nav-item-background-selected);
+  --sidebar-icon:                var(--color-afi-control-700);
+  --sidebar-icon-hover:          var(--nav-item-icon-hover);
+  --sidebar-icon-selected:       var(--nav-item-icon-selected);
+  --sidebar-brand-foreground:    var(--color-afi-control-900);
+  // Status dot on a page row: azul reads as "needs attention" without claiming a feedback colour.
+  --sidebar-dot:                 var(--color-afi-azul-500);
+  --sidebar-dot-halo:            var(--color-afi-azul-100);
+  --sidebar-dot-size:            var(--space-xs);        // 8px
+  --sidebar-radius:              var(--radius-none);
+  // Geometry, measured off the planner shell.
+  --sidebar-nav-width:           var(--dimension-60);    // 240px floor
+  --sidebar-rail-width:          var(--dimension-18);    // 72px collapsed
+  --sidebar-padding-x:           var(--space-sm);        // 12px
+  --sidebar-brand-padding-end:   var(--space-sm);
+  --sidebar-logo-height:         var(--dimension-8);     // 32px, logotype alone
+  --sidebar-wordmark-height:     var(--dimension-5-5);   // 22px, logotype beside a product name
+  --sidebar-mark-height:         var(--dimension-5);     // 20px, rail mark
+  --sidebar-icon-size:           var(--icon-xs);         // 12px
+  --sidebar-toggle-icon-size:    var(--dimension-3-5);   // 14px
+  --sidebar-brand-height:        var(--layout-shell-header);
+  --sidebar-brand-gap:           var(--layout-shell-brand-gap);
+  --sidebar-item-height:         var(--dimension-9);     // 36px
+  --sidebar-group-gap:           var(--space-md);        // 16px, so 52px between pages
+  --sidebar-divider:             var(--border-subtle);
+  --sidebar-foreground-disabled: var(--disabled-foreground);
+  --sidebar-scrollbar-thumb:       var(--color-afi-control-300);
+  --sidebar-scrollbar-thumb-hover: var(--color-afi-control-400);
+
+  // inset-dark: an azul panel on the canvas with light ink. The variant aliases these onto the roles above.
+  --sidebar-inset-background:          var(--color-afi-azul-profundo-500);
+  --sidebar-inset-foreground:          var(--color-afi-control-100);
+  --sidebar-inset-foreground-hover:    var(--color-afi-white-0);
+  --sidebar-inset-foreground-selected: var(--color-afi-white-0);
+  --sidebar-inset-background-hover:    var(--color-afi-azul-profundo-450);
+  --sidebar-inset-background-selected: var(--color-afi-azul-profundo-450);
+  --sidebar-inset-icon:                var(--color-afi-control-100);
+  --sidebar-inset-icon-hover:          var(--color-afi-white-0);
+  --sidebar-inset-icon-selected:       var(--color-afi-white-0);
+  --sidebar-inset-dot:                 var(--color-afi-azul-400);
+  --sidebar-inset-dot-halo:            var(--color-afi-azul-profundo-450);
+  --sidebar-inset-brand-foreground:    var(--color-afi-white-0);
+  --sidebar-inset-divider:             var(--color-afi-azul-profundo-450);
+  --sidebar-inset-foreground-disabled: var(--color-afi-azul-profundo-300);
+  --sidebar-inset-scrollbar-thumb:       var(--color-afi-control-400);
+  --sidebar-inset-scrollbar-thumb-hover: var(--color-afi-control-300);
 
 
   // ===========================================================================
@@ -340,10 +388,13 @@
 // sits after it; semantic.scss's dark block would lose the cascade here.
 [data-theme="dark"] {
   --table-row-background-hover: var(--color-afi-control-800);
-  --sidebar-foreground:       var(--color-afi-control-300);
-  --sidebar-foreground-hover: var(--color-afi-control-100);
-  --sidebar-icon:             var(--color-afi-control-300);
-  --sidebar-background-hover: var(--color-afi-control-800);
+  --sidebar-foreground:          var(--color-afi-control-300);
+  --sidebar-icon:                var(--color-afi-control-300);
+  --sidebar-scrollbar-thumb:       var(--color-afi-control-600);
+  --sidebar-scrollbar-thumb-hover: var(--color-afi-control-500);
+  --sidebar-brand-foreground:    var(--color-afi-control-100);
+  --sidebar-dot:                 var(--color-afi-azul-300);
+  --sidebar-dot-halo:            var(--color-afi-control-900);
   --switch-track-off:       var(--color-afi-control-600);
   --input-icon-default:     var(--color-afi-control-400);
   --seg-thumb-background:   var(--color-afi-control-700);

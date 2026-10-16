@@ -116,7 +116,7 @@ export type {
 export { DrawerComponent } from './src/drawer';
 export type { DrawerSize } from './src/drawer';
 export { SidebarComponent } from './src/sidebar';
-export type { SidebarMode } from './src/sidebar';
+export type { SidebarExpandMotion, SidebarMode, SidebarUser, SidebarVariant } from './src/sidebar';
 export { NavItemComponent } from './src/nav-item';
 export { NavSectionComponent } from './src/nav-section';
 export { NavbarV2Component } from './src/navbar-v2';

@@ -92,6 +92,16 @@
 
 
   // ===========================================================================
+  // STEPPER
+  // ===========================================================================
+
+  --stepper-marker-size: var(--dimension-8);          // 32px
+  --stepper-marker-size-compact: var(--dimension-6);  // 24px
+  --stepper-connector-width: var(--border-width-thick);
+  --stepper-gap-plain: var(--space-xl);               // between steps when there are no connectors
+
+
+  // ===========================================================================
   // TABS
   // ===========================================================================
 

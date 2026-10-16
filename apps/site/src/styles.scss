@@ -16,6 +16,10 @@
 @import '../../../libs/tokens/foundations-modern/component-button';
 @import '../../../libs/tokens/foundations-modern/component-reader';
 
+// FocusField ring: global because focusField() marks controls owned by other
+// components. See libs/ui/src/focus-field/_focus-field.scss.
+@import '../../../libs/ui/src/focus-field/focus-field';
+
 // Product-level tokens — Wealth Planner. Imported AFTER the DS so its
 // --plan-state-* tokens can reference DS --feedback-* values.
 // See docs/rules/dimension-tokens.md → "Product-level tokens".

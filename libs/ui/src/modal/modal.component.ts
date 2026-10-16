@@ -10,6 +10,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 
+import { focusField } from '../focus-field';
 import { IconComponent } from '../icon';
 
 import type { ModalSize, ModalType } from './modal.variants';
@@ -123,7 +124,11 @@ export class ModalComponent implements OnDestroy {
 
   private focusInitial(dialog: HTMLDialogElement): void {
     const target = this.resolve(this.initialFocusRef());
-    if (target && dialog.contains(target)) target.focus();
+    if (!target || !dialog.contains(target)) return;
+    // The canonical jump: scrolled inside the body, ringed in every input modality.
+    const body = dialog.querySelector<HTMLElement>('.afi-modal__body');
+    const container = body?.contains(target) ? body : dialog;
+    if (!focusField(target, { scroll: 'nearest', container })) target.focus();
   }
 
   private returnFocus(): void {

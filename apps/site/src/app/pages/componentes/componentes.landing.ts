@@ -48,6 +48,7 @@ export class ComponentesLandingPage {
     { slug: 'badge', name: 'Badge', description: '5 intents, modo dot, sm/md' },
     { slug: 'loading-overlay', name: 'LoadingOverlay', description: 'Spinner + line-reveal' },
     { slug: 'page-header', name: 'PageHeader', description: 'Chrome adaptativo con slots' },
+    { slug: 'focus-field', name: 'FocusField', description: 'Salto a un campo con anillo visible' },
     { slug: 'shell', name: 'Shell', description: '5 tipos via @switch dispatcher' },
   ];
 }

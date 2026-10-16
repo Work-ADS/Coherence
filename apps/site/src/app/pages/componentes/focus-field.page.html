@@ -1,0 +1,104 @@
+<site-doc-page-shell
+  title="FocusField"
+  overline="COMPONENTS"
+  description="El salto programático a un campo: desplaza dentro de su contenedor, enfoca y dibuja el anillo aunque el foco llegue tras un clic de ratón. Es una función, no un componente."
+  componentName="focus-field"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>FocusField</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Guardar con errores</span> — llevar al primer campo inválido de un Drawer o un Modal.</li>
+    <li><span class="use-cases__label">Avisos que señalan un campo</span> — un botón «Ir al siguiente» que recorre los campos afectados.</li>
+    <li><span class="use-cases__label">Foco inicial</span> — Modal y Drawer lo usan para <code>initialFocusRef</code>.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Salto</span>
+      <afi-button variant="secondary" size="sm" (clicked)="jumpToLast()">Ir al último campo</afi-button>
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Foco inicial</span>
+      <afi-button variant="secondary" size="sm" (clicked)="openDrawer()">Abrir drawer con el campo al final</afi-button>
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Validación</span>
+      <afi-button variant="secondary" size="sm" (clicked)="saveWithErrors()">Guardar con errores</afi-button>
+      <afi-button variant="ghost" size="sm" (clicked)="reset()">Restablecer</afi-button>
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="preview__form" tabindex="-1">
+      <afi-input label="Nombre" [error]="showErrors() ? 'Indica un nombre' : null" />
+      <afi-input label="Importe" [error]="showErrors() ? 'Indica un importe' : null" />
+      <afi-input label="Referencia" />
+      <afi-input label="Notas" />
+      <afi-input #lastField label="Último campo" />
+    </div>
+    <p class="preview__result" aria-live="polite">{{ result() }}</p>
+    <afi-drawer
+      [open]="drawerOpen()"
+      [initialFocusRef]="drawerField()"
+      title="Foco inicial"
+      (closed)="closeDrawer()"
+    >
+      <div class="preview__drawer">
+        <p>El campo de abajo recibe el foco al abrir: el cuerpo se desplaza hasta él y el anillo se ve aunque se abriera con el ratón.</p>
+        <afi-input label="Campo uno" />
+        <afi-input label="Campo dos" />
+        <afi-input label="Campo tres" />
+        <afi-input label="Campo cuatro" />
+        <afi-input label="Campo cinco" />
+        <afi-input label="Campo seis" />
+        <afi-input #drawerInput label="Campo con el foco inicial" />
+      </div>
+    </afi-drawer>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>El anillo de foco solo se pinta con <code>:focus-visible</code>. Tras un clic de ratón, un salto del producto aterriza sin anillo en casi todos los controles; <code>FocusField</code> marca la caja visible del control hasta que pierde el foco, sea cual sea la modalidad de entrada.</li>
+      <li>Un campo inválido (<code>aria-invalid="true"</code>) recibe el anillo de error.</li>
+      <li>Un destino ausente, oculto o deshabilitado devuelve <code>false</code> y no mueve nada; el producto decide qué hacer.</li>
+      <li>Con <code>prefers-reduced-motion</code> el desplazamiento es instantáneo y el asentamiento del anillo no se reproduce.</li>
+      <li>El desplazamiento ocurre dentro del contenedor del campo (cuerpo del Drawer o del Modal), nunca en la página de detrás.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section">
+    <h2 class="prose-section__title">Uso</h2>
+    <ul class="prose-section__list">
+      <li><code>FocusField.focus(target, &#123; scroll, container, highlight &#125;)</code>: el destino es un elemento, un <code>ElementRef</code> o un selector. Un envoltorio (<code>.afi-field</code>) se resuelve a su primer control. <code>scroll</code>: <code>'center'</code> (por defecto), <code>'nearest'</code> o <code>'none'</code>.</li>
+      <li><code>FocusField.firstInvalid(root?)</code>: enfoca el primer campo con <code>aria-invalid</code> del Modal abierto, el Drawer abierto o la página. Llámalo cuando ya se hayan pintado los errores.</li>
+      <li>Los estilos del anillo son globales (<code>libs/ui/src/focus-field/_focus-field.scss</code>), porque la función marca controles de otros componentes.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Úsalo siempre que el producto mueva el foco a un campo.</li>
+          <li>Llama a <code>firstInvalid</code> tras pintar los errores.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No lo uses para el foco que el usuario mueve por sí mismo.</li>
+          <li>No escribas un desplazamiento, foco y anillo propios.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

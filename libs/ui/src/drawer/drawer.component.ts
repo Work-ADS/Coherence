@@ -11,6 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 
+import { focusField } from '../focus-field';
 import { onOverlayEscape } from '../floating-panel';
 import { IconComponent } from '../icon';
 import type { DrawerSize } from './drawer.variants';
@@ -107,7 +108,7 @@ export class DrawerComponent implements OnDestroy {
           document.body.style.overflow = 'hidden';
         }
         const target = this.resolve(this.initialFocusRef());
-        (target && panel.contains(target) ? target : panel).focus({ preventScroll: true });
+        this.focusInitial(panel, target);
         if (this.closeOnEsc()) this.disposeEscape = onOverlayEscape(() => this.onClose('esc'));
       } else if (!active && this.shown) {
         this.release();
@@ -184,6 +185,13 @@ export class DrawerComponent implements OnDestroy {
       back?.focus({ preventScroll: true });
       this.opener = null;
     }
+  }
+
+  /** Focus the named control (scrolled into the body, ringed in every input modality) or the panel. */
+  private focusInitial(panel: HTMLElement, target: HTMLElement | null): void {
+    const body = panel.querySelector<HTMLElement>('.afi-drawer__body');
+    if (target && body?.contains(target) && focusField(target, { scroll: 'nearest', container: body })) return;
+    (target && panel.contains(target) ? target : panel).focus({ preventScroll: true });
   }
 
   private resolve(ref: HTMLElement | ElementRef<HTMLElement> | null): HTMLElement | null {

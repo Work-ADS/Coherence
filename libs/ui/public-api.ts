@@ -176,6 +176,8 @@ export { InlineEditComponent as EditableTextComponent } from './src/inline-edit'
 export { TopBarComponent } from './src/top-bar';
 export { FloatingPanel, escapeConsumed, onOverlayEscape } from './src/floating-panel';
 export type { FloatingAlign, FloatingPanelOptions, FloatingSide } from './src/floating-panel';
+export { FocusField, focusField, focusFirstInvalid } from './src/focus-field';
+export type { FocusFieldOptions, FocusFieldTarget } from './src/focus-field';
 export { TooltipComponent } from './src/tooltip';
 export type { TooltipPosition } from './src/tooltip';
 export { ToastComponent, ToastHostComponent, ToastService, TOAST_DEFAULT_DURATION } from './src/toast';

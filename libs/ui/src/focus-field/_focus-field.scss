@@ -1,0 +1,42 @@
+// =============================================================================
+// FocusField ring — global on purpose
+// =============================================================================
+// focusField() toggles data-afi-jump on the painted box of controls owned by
+// other components, so these rules cannot live in a component stylesheet.
+// Imported once from apps/site/src/styles.scss. Encapsulated component rules
+// (the control's own :focus-visible ring and border) outrank an attribute
+// selector here, hence the !important on the two ring declarations.
+
+[data-afi-jump] {
+  box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus) !important;
+  border-color: var(--input-border-focus) !important;
+}
+
+[data-afi-jump][data-afi-jump-tone='error'] {
+  box-shadow: 0 0 0 var(--border-width-thick) var(--feedback-error-border) !important;
+  border-color: var(--feedback-error-foreground) !important;
+}
+
+// One settle of the ring: a translucent halo opens outside it and fades. It
+// animates the outline, not the shadow: an !important declaration beats a
+// running animation, so the ring's own box-shadow could never be the one that moves.
+[data-afi-jump-play] {
+  outline-offset: var(--border-width-thick);
+  animation: afi-jump-settle var(--duration-slow) var(--easing-enter);
+}
+
+@keyframes afi-jump-settle {
+  from {
+    outline: calc(var(--border-width-thick) * 2) solid
+      color-mix(in srgb, var(--border-focus) 35%, transparent);
+  }
+  to {
+    outline: calc(var(--border-width-thick) * 2) solid transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-afi-jump-play] {
+    animation: none;
+  }
+}

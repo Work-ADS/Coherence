@@ -407,6 +407,52 @@
   }
 }
 
+// Reference row (`variant: 'reference'`) — the baseline the data is measured
+// against. Pinned above the data by the component; here it reads as one:
+// hairline above, quiet surface, secondary italic text, tabular figures. Inert,
+// so it never takes the hover fill (the component also leaves its class off).
+.afi-table__row--reference > .afi-table__td,
+.afi-table__row--reference > .afi-table__td-select,
+.afi-table__row--reference > .afi-table__td-actions {
+  background: var(--surface-subtle);
+  border-block-start: var(--border-width-hairline) solid var(--border-default);
+}
+
+.afi-table__row--reference > .afi-table__td {
+  color: var(--foreground-secondary-default);
+  font-style: italic;
+  font-variant-numeric: tabular-nums;
+}
+
+// A group row you can reach with the keyboard shows where focus is.
+.afi-table__row:focus-visible {
+  outline: var(--border-width-thick) solid var(--border-focus);
+  outline-offset: calc(-1 * var(--border-width-thick));
+}
+
+// Totals row — one size with the body; weight, primary ink and the thick rule carry the emphasis.
+.afi-table__foot-cell {
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  border-block-start: var(--border-width-thick) solid var(--border-default);
+  font: var(--table-footer-font);
+  font-variant-numeric: tabular-nums;
+  color: var(--table-footer-foreground);
+  vertical-align: middle;
+
+  &:first-child {
+    padding-inline-start: var(--afi-table-first-cell-pad, 0);
+  }
+
+  &.afi-table__td--end {
+    text-align: end;
+  }
+
+  &.afi-table__td--center {
+    text-align: center;
+  }
+}
+
 // Muted row — reference / baseline rows that should not draw the eye
 // (e.g. the "Objetivo" target row in Consecución de objetivos). Italic
 // + tertiary foreground; tone modifiers on individual cells still win

@@ -22,7 +22,7 @@ import type {
   TableRowAction,
   TableSortState,
 } from './table.types';
-import type { TableActionsReveal, TableDensity } from './table.variants';
+import type { TableActionsReveal, TableDensity, TableHover } from './table.variants';
 
 /**
  * Data table primitive.
@@ -58,6 +58,12 @@ export class TableComponent {
   readonly emptyText = input<string>('Sin datos');
   readonly rowHoverable = input<boolean>(true);
   readonly density = input<TableDensity>('compact');
+  /** When rows show the hover fill. See `TableHover`. `rowHoverable=false` still turns it off. */
+  readonly hover = input<TableHover>('on');
+  /** A totals row under the body, keyed by column key (`{ nombre: 'Total', valor: '1.200 €' }`). */
+  readonly footer = input<Record<string, unknown> | null>(null);
+  /** Names a row for assistive technology («Seleccionar {label}»). Defaults to the first column's text. */
+  readonly rowLabel = input<((row: Record<string, unknown>) => string) | null>(null);
   readonly rowActions = input<TableRowAction[]>([]);
   /**
    * When + how trailing row actions reveal. See `TableActionsReveal` JSDoc
@@ -126,6 +132,32 @@ export class TableComponent {
   readonly skeletonRows = [0, 1, 2, 3, 4];
 
   readonly visibleColumns = computed(() => this.columns().filter((c) => !c.hidden));
+
+  /** Reference rows first (pinned above the data whatever the sort), then the data in the given order. */
+  readonly orderedRows = computed(() => {
+    const all = this.rows();
+    if (!all.some((r) => this.isReference(r))) return all;
+    return [...all.filter((r) => this.isReference(r)), ...all.filter((r) => !this.isReference(r))];
+  });
+
+  /** The selectable rows: reference rows are baselines, never part of a selection. */
+  private readonly dataRows = computed(() => this.rows().filter((r) => !this.isReference(r)));
+
+  /** Fill rows on hover? `auto` follows interactivity. */
+  readonly hoverEnabled = computed(() => {
+    if (!this.rowHoverable()) return false;
+    const mode = this.hover();
+    if (mode === 'off') return false;
+    if (mode === 'on') return true;
+    return (
+      this.selectable() ||
+      this.hasRowActions() ||
+      !!this.expandDetailTpl() ||
+      this.rows().some((r) => this.hasChildren(r))
+    );
+  });
+
+  readonly checkboxSize = computed(() => (this.density() === 'comfortable' ? 'md' : 'sm'));
 
   /**
    * True if the trailing-actions column must be rendered at all. Considers
@@ -263,7 +295,7 @@ export class TableComponent {
   );
 
   readonly allSelected = computed(() => {
-    const r = this.rows();
+    const r = this.dataRows();
     const s = this.selected();
     return r.length > 0 && s.length === r.length;
   });
@@ -303,8 +335,8 @@ export class TableComponent {
     return this.expandedKeys().includes(key);
   }
 
-  toggleExpand(row: Record<string, unknown>, event: MouseEvent): void {
-    event.stopPropagation();
+  toggleExpand(row: Record<string, unknown>, event?: Event): void {
+    event?.stopPropagation();
     const key = row[this.trackByKey()];
     const current = this.expandedKeys();
     const next = current.includes(key) ? current.filter((k) => k !== key) : [...current, key];
@@ -390,6 +422,16 @@ export class TableComponent {
       .join(' ');
   }
 
+  footCellClasses(col: TableColumn): string {
+    const align =
+      col.align === 'end'
+        ? 'afi-table__td--end'
+        : col.align === 'center'
+          ? 'afi-table__td--center'
+          : 'afi-table__td--start';
+    return ['afi-table__foot-cell', align].join(' ');
+  }
+
   private toneFor(col: TableColumn, row: Record<string, unknown> | null): TableCellTone | null {
     if (!col.toneKey || !row) return null;
     const v = row[col.toneKey];
@@ -420,11 +462,13 @@ export class TableComponent {
     highlighted: boolean,
     isChild = false,
     muted = false,
+    reference = false,
   ): string {
     return [
       'afi-table__row',
       `afi-table__row--${this.density()}`,
-      this.rowHoverable() ? 'afi-table__row--hoverable' : '',
+      this.hoverEnabled() && !reference ? 'afi-table__row--hoverable' : '',
+      reference ? 'afi-table__row--reference' : '',
       selected ? 'afi-table__row--selected' : '',
       highlighted ? 'afi-table__row--highlighted' : '',
       isChild ? 'afi-table__row--child' : '',
@@ -436,6 +480,33 @@ export class TableComponent {
 
   isMuted(row: Record<string, unknown>): boolean {
     return row['muted'] === true;
+  }
+
+  isReference(row: Record<string, unknown>): boolean {
+    return row['variant'] === 'reference';
+  }
+
+  /** What assistive technology calls this row: `rowLabel`, else the first column's text. */
+  labelOf(row: Record<string, unknown>): string {
+    const custom = this.rowLabel();
+    if (custom) return custom(row);
+    const first = this.visibleColumns()[0];
+    return first ? this.cellText(row, first) || 'fila' : 'fila';
+  }
+
+  /** Enter or Space on a focused group row opens or closes it (not when the key came from a control inside). */
+  onRowKeydown(row: Record<string, unknown>, event: KeyboardEvent): void {
+    if (event.target !== event.currentTarget) return;
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    if (!this.hasExpansion(row)) return;
+    event.preventDefault();
+    this.toggleExpand(row);
+  }
+
+  footerText(col: TableColumn): string {
+    const f = this.footer();
+    const v = f ? f[col.key] : null;
+    return v === null || v === undefined ? '' : String(v);
   }
 
   isHighlighted(row: Record<string, unknown>): boolean {
@@ -472,7 +543,7 @@ export class TableComponent {
   }
 
   toggleAll(checked: boolean): void {
-    this.selectedChange.emit(checked ? [...this.rows()] : []);
+    this.selectedChange.emit(checked ? [...this.dataRows()] : []);
   }
 
   toggleRow(row: Record<string, unknown>, checked: boolean): void {
@@ -485,6 +556,7 @@ export class TableComponent {
   }
 
   onRowClick(row: Record<string, unknown>, event: MouseEvent): void {
+    if (this.isReference(row)) return;
     const target = event.target as HTMLElement;
     if (target.closest('afi-checkbox') || target.closest('button') || target.closest('a')) return;
     this.rowClicked.emit({ row, event });

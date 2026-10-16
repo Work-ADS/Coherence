@@ -2,10 +2,21 @@
  * afi-table — type exports only.
  *
  * Per `docs/rules/component-skill.md §6`, variant + density logic lives in
- * `table.component.scss` via BEM modifiers (`&--compact`, `&--comfortable`).
+ * `table.component.scss` via BEM modifiers (`&--compact`, `&--comfortable`; `default` is the base padding).
  */
 
-export type TableDensity = 'compact' | 'comfortable';
+export type TableDensity = 'compact' | 'default' | 'comfortable';
+
+/**
+ * When a row shows the hover fill.
+ *
+ * - `on` — always (the default, so existing tables do not move).
+ * - `auto` — only when rows are interactive: selectable, with row actions, or expandable. A
+ *            consumer that reacts to `rowClicked` should use `on`: the table cannot see whether
+ *            an output has a listener.
+ * - `off` — never. `[rowHoverable]="false"` keeps working and means the same.
+ */
+export type TableHover = 'auto' | 'on' | 'off';
 
 /**
  * Reveal mode for trailing row actions.

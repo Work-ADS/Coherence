@@ -9,4 +9,4 @@ export type {
   TableRowActionVariant,
   TableSortState,
 } from './table.types';
-export type { TableActionsReveal, TableDensity } from './table.variants';
+export type { TableActionsReveal, TableDensity, TableHover } from './table.variants';

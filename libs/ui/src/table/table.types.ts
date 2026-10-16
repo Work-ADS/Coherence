@@ -124,9 +124,12 @@ export interface TableSortState {
  * - `actions` — per-row override of the table-level `[rowActions]` input.
  *   Pass `actions: []` to hide all actions on that row; pass a custom
  *   array to swap the action set entirely.
+ * - `variant: 'reference'` — a comparison baseline, not data (an "Objetivo" row): pinned above
+ *   the data whatever the sort, inert (no hover, click, actions or selection), hairline above,
+ *   italic secondary label, left out of selection. Distinct from `muted`, which only restyles.
  * - `muted` — when truthy, the row renders italic + tertiary foreground
  *   (BEM modifier `afi-table__row--muted`). Use for reference / baseline
  *   rows that should not draw the eye (e.g. the "Objetivo" target row
  *   in Consecución de objetivos).
  */
-export type TableReservedKey = 'children' | 'actions' | 'muted';
+export type TableReservedKey = 'children' | 'actions' | 'muted' | 'variant';

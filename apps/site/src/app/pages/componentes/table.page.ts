@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { TableComponent, SegmentedControlComponent } from '@coherence/ui';
-import type { TableActionsReveal, TableColumn, TableDensity, TableRowAction } from '@coherence/ui';
+import type {
+  TableActionsReveal,
+  TableColumn,
+  TableDensity,
+  TableHover,
+  TableRowAction,
+} from '@coherence/ui';
 
 import { DocPageShellComponent } from '../../components/doc-page-shell';
 import { DocTokensComponent, type DocTokenCategory } from '../../components/doc-tokens';
@@ -51,30 +57,58 @@ const TOKEN_CATEGORIES: DocTokenCategory[] = [
     value: 'visual',
     label: 'Visual',
     rows: [
-      { property: 'Header background', token: '--surface-default', semantic: '--surface-default', primitive: '--color-afi-control-0' },
-      { property: 'Header border', token: '--border-hairline', semantic: '--border-hairline', primitive: '--color-afi-gris-200' },
-      { property: 'Header text', token: '--foreground-primary-default', semantic: '--foreground-primary-default', primitive: '--color-afi-control-900' },
-      { property: 'Row background (hover)', token: '--surface-subtle', semantic: '--surface-subtle', primitive: '--color-afi-control-50' },
-      { property: 'Row text', token: '--foreground-primary-default', semantic: '--foreground-primary-default', primitive: '--color-afi-control-900' },
-      { property: 'Row divider', token: '--border-hairline', semantic: '--border-hairline', primitive: '--color-afi-gris-200' },
+      { property: 'Header font', token: '--table-header-font' },
+      { property: 'Header text', token: '--table-header-foreground' },
+      { property: 'Header divider', token: '--table-header-divider' },
+      { property: 'Cell font', token: '--table-cell-font' },
+      { property: 'Cell text', token: '--table-cell-foreground' },
+      { property: 'Child row text', token: '--table-child-foreground' },
+      { property: 'Row background (hover)', token: '--table-row-background-hover' },
+      { property: 'Row background (selected)', token: '--surface-selected' },
+      { property: 'Totals font', token: '--table-footer-font' },
+      { property: 'Totals text', token: '--table-footer-foreground' },
+      { property: 'Row divider', token: '--border-hairline' },
     ],
   },
   {
     value: 'sizing',
     label: 'Sizing',
     rows: [
-      { property: 'Compact row padding', token: '--space-sm', semantic: '--space-sm', primitive: '12px' },
-      { property: 'Comfortable row padding', token: '--space-md', semantic: '--space-md', primitive: '16px' },
-      { property: 'Cell padding inline', token: '--space-md', semantic: '--space-md', primitive: '16px' },
-      { property: 'Typography', token: '--type-body-sm-400', semantic: '--type-body-sm-400', primitive: '14px / 20px / 400' },
+      { property: 'Compact row padding', token: '--space-xs' },
+      { property: 'Default row padding', token: '--space-sm' },
+      { property: 'Comfortable row padding', token: '--space-md' },
+      { property: 'Cell padding inline', token: '--space-md' },
+      { property: 'Hover radius', token: '--radius-table' },
     ],
   },
 ];
 
 const DENSITY_OPTIONS = [
   { value: 'compact', label: 'Compact' },
+  { value: 'default', label: 'Default' },
   { value: 'comfortable', label: 'Comfortable' },
 ];
+
+const HOVER_OPTIONS = [
+  { value: 'on', label: 'On' },
+  { value: 'auto', label: 'Auto' },
+  { value: 'off', label: 'Off' },
+];
+
+const EXTRAS_OPTIONS = [
+  { value: 'off', label: 'Plain' },
+  { value: 'on', label: 'Reference + totals' },
+];
+
+const REFERENCE_ROW: Record<string, unknown> = {
+  id: '—',
+  nombre: 'Objetivo',
+  estado: 'Meta',
+  monto: '$60,000',
+  variant: 'reference',
+};
+
+const FOOTER_ROW: Record<string, unknown> = { id: '', nombre: 'Total', estado: '', monto: '$69,000' };
 
 @Component({
   selector: 'site-table-page',
@@ -92,14 +126,21 @@ const DENSITY_OPTIONS = [
 })
 export class TablePage {
   readonly density = signal<TableDensity>('compact');
+  readonly hover = signal<TableHover>('on');
+  readonly extras = signal<'on' | 'off'>('off');
   // Docs-page default mirrors the primitive default (`'hover'`, locked
   // 2026-05-28). The Opción 1 / 2 toggle stays as an educational affordance
   // so the team can demonstrate the contrast with `'soft'` from the docs.
   readonly actionReveal = signal<TableActionsReveal>('hover');
 
   readonly densityOptions = DENSITY_OPTIONS;
+  readonly hoverOptions = HOVER_OPTIONS;
+  readonly extrasOptions = EXTRAS_OPTIONS;
   readonly actionRevealOptions = ACTION_REVEAL_OPTIONS;
   readonly columns = SAMPLE_COLUMNS;
+  // The reference row is listed LAST on purpose: the table pins it above the data.
+  readonly displayRows = computed(() => (this.extras() === 'on' ? [...SAMPLE_ROWS, REFERENCE_ROW] : SAMPLE_ROWS));
+  readonly footerRow = computed(() => (this.extras() === 'on' ? FOOTER_ROW : null));
   readonly rows = SAMPLE_ROWS;
   readonly rowActions = SAMPLE_ROW_ACTIONS;
   readonly tokenCategories = TOKEN_CATEGORIES;

@@ -83,6 +83,12 @@ export class TabsComponent implements AfterViewInit {
   /** Tabs as data: the bar only, no projected panels. Strings or `{ value, label, icon, count, disabled }`. */
   readonly items = input<ReadonlyArray<string | TabsItem> | null>(null);
 
+  /**
+   * Prefix for the tab ids in `items` mode (`<prefix>-<value>`), so a consumer-owned
+   * `afi-tab-panel` can name itself through `aria-labelledby`.
+   */
+  readonly idPrefix = input<string | null>(null);
+
   /** Stretch the tabs to fill the width. */
   readonly fullWidth = input<boolean>(false);
 
@@ -119,7 +125,7 @@ export class TabsComponent implements AfterViewInit {
   private lastKey: string | null = null;
   private defaultApplied = false;
 
-  /** Counts tab changes after the first value: the panel animates only after one. */
+  /** Bumps on every change after the first value (a click or a change from outside); the panel animates when it is above zero. */
   readonly animationKey = signal(0);
 
   /** False until the first measurement settles, so the indicator does not fly in. */
@@ -231,16 +237,21 @@ export class TabsComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    if (typeof requestAnimationFrame === 'undefined') return;
     this.updateIndicator();
+    // Settle one frame after the first real measurement, so the bar is placed before its
+    // transition switches on.
     requestAnimationFrame(() => {
       this.updateIndicator();
-      this.indicatorSettled.set(true);
+      requestAnimationFrame(() => this.indicatorSettled.set(true));
     });
     document.fonts?.ready.then(() => this.updateIndicator());
   }
 
   tabId(index: number): string {
-    return `${this.baseId}-tab-${index}`;
+    const prefix = this.idPrefix();
+    const entry = this.entries()[index];
+    return prefix && entry ? `${prefix}-${entry.value}` : `${this.baseId}-tab-${index}`;
   }
 
   panelId(index: number): string {
@@ -263,7 +274,10 @@ export class TabsComponent implements AfterViewInit {
     const key = event.key;
     if (key !== 'ArrowRight' && key !== 'ArrowLeft' && key !== 'Home' && key !== 'End') return;
 
-    const at = Math.max(0, enabled.indexOf(this.entryIndex()));
+    // Start from the tab that has focus (it can differ from the selected one when the consumer
+    // owns the selection and has not echoed the change yet).
+    const focused = this.triggerEls().findIndex((t) => t.nativeElement === event.target);
+    const at = Math.max(0, enabled.indexOf(focused >= 0 ? focused : this.entryIndex()));
     const n = enabled.length;
     const to =
       key === 'Home' ? 0 : key === 'End' ? n - 1 : key === 'ArrowRight' ? (at + 1) % n : (at - 1 + n) % n;

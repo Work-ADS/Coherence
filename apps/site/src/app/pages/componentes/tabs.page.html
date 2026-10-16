@@ -81,11 +81,12 @@
     <p class="preview__caption">Bar only: tabs as data, with <code>afi-tab-panel</code> owning the content.</p>
     <afi-tabs
       [items]="barItems"
+      idPrefix="demo-bar"
       [value]="barTab()"
       (valueChange)="barTab.set($event)"
       ariaLabel="Demo bar only"
     />
-    <afi-tab-panel [value]="barTab()">
+    <afi-tab-panel [value]="barTab()" idPrefix="demo-bar">
       <div class="preview__panel">Contenido de {{ barTab() }}.</div>
     </afi-tab-panel>
   </div>

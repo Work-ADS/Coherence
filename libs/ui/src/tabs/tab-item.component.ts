@@ -26,7 +26,7 @@ import type { IconName } from '../icon';
 })
 export class TabItemComponent {
   readonly label = input.required<string>();
-  /** Stable key of the tab for `value` mode. Unset: the tab's position, as a string. */
+  /** Stable key of the tab for `value` mode. Unset: the tab's position, as a string (so do not also give another tab a numeric value like "1"). */
   readonly value = input<string | null>(null);
   readonly icon = input<IconName | null>(null);
   /** Trailing count chip. `badge` is the older name for the same chip. */

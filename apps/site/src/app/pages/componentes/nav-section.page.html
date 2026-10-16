@@ -1,7 +1,7 @@
 <site-doc-page-shell
   title="Nav Section"
   overline="COMPONENTS"
-  description="Agrupador colapsable de items dentro de un Sidebar. Soporta tree lines opcionales y posición del chevron (izquierda / derecha)."
+  description="Agrupador colapsable de items dentro de un Sidebar. El título va en mayúsculas con el chevron junto a la etiqueta; las tree lines y otras posiciones del chevron son opcionales."
   componentName="nav-section"
 >
   <span slot="breadcrumb">
@@ -13,6 +13,7 @@
   <ul slot="use-cases" class="use-cases">
     <li><span class="use-cases__label">Agrupar items relacionados</span> — <em>Components</em>, <em>Patterns</em>, <em>Settings</em>.</li>
     <li><span class="use-cases__label">Reducir ruido visual</span> — colapsar secciones que el usuario consulta poco.</li>
+    <li><span class="use-cases__label">Filas hijas</span> — todo <code>afi-nav-item</code> dentro de la sección se dibuja como fila hija: peso 400 (500 si es la actual) y sin la regla lateral; el relleno marca la selección.</li>
     <li><span class="use-cases__label">Jerarquía de sidebar</span> — mostrar dos niveles sin crear un menú anidado.</li>
   </ul>
 
@@ -24,6 +25,15 @@
         [(value)]="chevronPosition"
         size="sm"
         ariaLabel="Chevron position"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Tree lines</span>
+      <afi-segmented-control
+        [options]="treeLineOptions"
+        [(value)]="treeLines"
+        size="sm"
+        ariaLabel="Tree lines"
       />
     </div>
   </div>
@@ -50,7 +60,8 @@
     <h2 class="prose-section__title">Accessibility</h2>
     <ul class="prose-section__list">
       <li>Header de sección es un <code>&lt;button&gt;</code> con <code>aria-expanded</code> sincronizado.</li>
-      <li>Items hijos se ocultan del árbol de accesibilidad cuando la sección está colapsada.</li>
+      <li>Los items hijos quedan <code>inert</code> cuando la sección está colapsada: no reciben foco ni se leen.</li>
+      <li>El botón del título toma su nombre del texto visible; <code>ariaLabel</code> solo si hace falta otro.</li>
       <li><code>Tab</code> enfoca el header; <code>Enter</code> / <code>Space</code> colapsa o expande.</li>
     </ul>
   </section>

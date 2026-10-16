@@ -71,6 +71,29 @@
   &--right {
     margin-left: auto;
   }
+
+  &--down.is-expanded {
+    transform: rotate(180deg);
+  }
+}
+
+// The chevron follows its label: a fixed box, one --space-2xs after the label's own box.
+.nav-section__chevron-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--dimension-5);
+  height: var(--dimension-5);
+}
+
+.nav-section__trigger:has(.nav-section__chevron-box) {
+  gap: var(--space-2xs);
+  justify-content: flex-start;
+
+  .nav-section__label {
+    flex: 0 1 auto;
+  }
 }
 
 .nav-section__label {

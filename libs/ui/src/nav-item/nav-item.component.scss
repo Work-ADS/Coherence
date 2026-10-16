@@ -1,3 +1,5 @@
+@use '../styles/focus-ring-v1' as *;
+
 :host {
   display: block;
   position: relative;
@@ -7,32 +9,32 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: var(--nav-item-gap-inline, var(--space-sm));
+  gap: var(--nav-item-gap);
   width: 100%;
-  padding: var(--space-xs) var(--space-sm);
-  padding-inline-start: var(--nav-item-leading-pad, var(--space-sm));
+  padding: var(--space-xs) var(--nav-item-padding-x);
+  padding-inline-start: var(--nav-item-leading-pad, var(--nav-item-padding-x));
   border-radius: var(--nav-item-radius);
   border: none;
   background: var(--nav-item-background-default);
   color: var(--nav-item-foreground-default);
   font: var(--nav-item-font);
   cursor: pointer;
+  text-decoration: none;
   transition: background var(--duration-fast) var(--easing-enter),
               color var(--duration-fast) var(--easing-enter);
   text-align: start;
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled):not(.is-disabled) {
     background: var(--nav-item-background-hover);
     color: var(--nav-item-foreground-hover);
   }
 
-  &:active:not(:disabled) {
+  &:active:not(:disabled):not(.is-disabled) {
     background: var(--nav-item-background-active);
   }
 
   &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--border-width-thick) var(--border-focus);
+    @include focus-ring;
   }
 
   &.is-active {
@@ -72,7 +74,7 @@
   color: var(--nav-item-icon-default);
   transition: color var(--duration-fast) var(--easing-enter);
 
-  .nav-item:hover:not(:disabled) & {
+  .nav-item:hover:not(:disabled):not(.is-disabled) & {
     color: var(--nav-item-icon-hover);
   }
 
@@ -84,6 +86,46 @@
   .nav-item.is-disabled & {
     color: var(--nav-item-icon-disabled);
   }
+}
+
+.nav-item__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--nav-item-step-size);
+  height: var(--nav-item-step-size);
+  border-radius: var(--radius-full);
+  font: var(--type-body-sm-600);
+  font-variant-numeric: tabular-nums;
+  background: var(--nav-item-background-selected);
+  color: var(--nav-item-icon-default);
+
+  .nav-item.is-active & {
+    background: var(--brand-secondary-background-default);
+    color: var(--brand-secondary-foreground-default);
+  }
+}
+
+.nav-item__trail {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  color: var(--foreground-tertiary-default);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.nav-item__reason {
+  position: absolute;
+  inline-size: var(--border-width-hairline);
+  block-size: var(--border-width-hairline);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .nav-item__label {

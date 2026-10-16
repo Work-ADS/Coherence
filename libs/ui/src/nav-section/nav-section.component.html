@@ -25,6 +25,18 @@
   <!-- Label -->
   <span class="nav-section__label">{{ label() }}</span>
 
+  <!-- Chevron after the label -->
+  @if (chevronPosition() === 'after-label') {
+    <span class="nav-section__chevron-box" aria-hidden="true">
+      <svg
+        class="nav-section__chevron nav-section__chevron--down"
+        [class.is-expanded]="isExpanded()"
+        viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6l4 4 4-4" />
+      </svg>
+    </span>
+  }
+
   <!-- Trailing action slot -->
   <span class="nav-section__trailing" (click)="$event.stopPropagation()">
     <ng-content select="[slot=trailingAction]" />

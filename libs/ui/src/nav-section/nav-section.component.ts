@@ -36,11 +36,16 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
   readonly defaultExpanded = input<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
-  readonly showTreeLines = input<boolean>(true);
+  /** Vertical guide line and active-trail marker beside the children. Off by default (the zip has none). */
+  readonly showTreeLines = input<boolean>(false);
   /** Hide the section's own trigger row (use when an external nav-item acts as the parent) */
   readonly hideHeader = input<boolean>(false);
-  /** Position of the expand/collapse chevron */
-  readonly chevronPosition = input<'left' | 'right'>('right');
+  /**
+   * Where the expand/collapse chevron sits. `after-label` (default): in a
+   * fixed box one `--space-2xs` after the label, so the row keeps its full-width hit target
+   * and nothing shifts between open and closed. `left` and `right` as before.
+   */
+  readonly chevronPosition = input<'left' | 'right' | 'after-label'>('after-label');
 
   readonly expandedChange = output<boolean>();
   readonly parentClicked = output<{ event: MouseEvent }>();
@@ -52,7 +57,7 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
   readonly childrenId = `nav-section-${nextId++}`;
 
   readonly hasActiveChild = computed(() =>
-    this.childItems().some(item => item.active())
+    this.childItems().some(item => item.isSelected())
   );
 
   readonly isExpanded = computed(() => {
@@ -71,7 +76,7 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
   /** Index of the active child (persistent trail target) */
   readonly activeChildIndex = computed(() => {
     const items = this.childItems();
-    const idx = items.findIndex(item => item.active());
+    const idx = items.findIndex(item => item.isSelected());
     return idx >= 0 ? idx : null;
   });
 

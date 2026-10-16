@@ -10,6 +10,8 @@ import {
   OnDestroy,
 } from '@angular/core';
 
+import { IconComponent } from '../icon';
+
 import type { ModalSize, ModalType } from './modal.variants';
 
 let nextId = 0;
@@ -26,6 +28,7 @@ let nextId = 0;
 @Component({
   selector: 'afi-modal',
   standalone: true,
+  imports: [IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
@@ -37,8 +40,14 @@ export class ModalComponent implements OnDestroy {
   readonly title = input<string | null>(null);
   readonly description = input<string | null>(null);
   readonly closeOnEsc = input<boolean>(true);
+  /** The × in the header. Turn it off for blocking flows that must end in an action. */
+  readonly showClose = input<boolean>(true);
   readonly closeOnBackdrop = input<boolean>(false);
   readonly ariaLabel = input<string | null>(null);
+  /** Where focus lands on open. Defaults to the first focusable control. Must be inside the modal. */
+  readonly initialFocusRef = input<HTMLElement | ElementRef<HTMLElement> | null>(null);
+  /** Where focus goes on close. Defaults to the element that had it when the modal opened. */
+  readonly returnFocusRef = input<HTMLElement | ElementRef<HTMLElement> | null>(null);
 
   readonly openChange = output<boolean>();
   readonly closed = output<'esc' | 'backdrop' | 'button'>();
@@ -54,6 +63,8 @@ export class ModalComponent implements OnDestroy {
   );
 
   private triggerElement: Element | null = null;
+  /** The parent closed it (open went false); the native close event is then not a user dismissal. */
+  private closedByParent = false;
 
   constructor() {
     effect(() => {
@@ -64,7 +75,9 @@ export class ModalComponent implements OnDestroy {
       if (isOpen && !dialog.open) {
         this.triggerElement = document.activeElement;
         dialog.showModal();
+        this.focusInitial(dialog);
       } else if (!isOpen && dialog.open) {
+        this.closedByParent = true;
         dialog.close();
       }
     });
@@ -73,12 +86,24 @@ export class ModalComponent implements OnDestroy {
   ngOnDestroy(): void {
     const dialog = this.dialogEl()?.nativeElement;
     if (dialog?.open) {
+      this.closedByParent = true;
       dialog.close();
     }
   }
 
+  /** Escape: with `closeOnEsc` off the native dialog must not close itself. */
+  onCancel(event: Event): void {
+    if (!this.closeOnEsc()) event.preventDefault();
+  }
+
   onNativeClose(): void {
     this.returnFocus();
+    if (this.closedByParent) {
+      // Closed through `open` (including after our own × or backdrop emit): already reported.
+      this.closedByParent = false;
+      return;
+    }
+    // Dismissed by the browser (Escape): tell the parent, once.
     this.openChange.emit(false);
     this.closed.emit('esc');
   }
@@ -92,15 +117,28 @@ export class ModalComponent implements OnDestroy {
   }
 
   close(reason: 'esc' | 'backdrop' | 'button'): void {
-    this.returnFocus();
     this.openChange.emit(false);
     this.closed.emit(reason);
   }
 
+  private focusInitial(dialog: HTMLDialogElement): void {
+    const target = this.resolve(this.initialFocusRef());
+    if (target && dialog.contains(target)) target.focus();
+  }
+
   private returnFocus(): void {
-    if (this.triggerElement instanceof HTMLElement) {
-      this.triggerElement.focus();
-    }
+    const preferred = this.resolve(this.returnFocusRef());
+    const back = this.usable(preferred) ? preferred : this.triggerElement instanceof HTMLElement ? this.triggerElement : null;
+    if (this.usable(back)) back.focus({ preventScroll: true });
     this.triggerElement = null;
+  }
+
+  private resolve(ref: HTMLElement | ElementRef<HTMLElement> | null): HTMLElement | null {
+    if (!ref) return null;
+    return ref instanceof ElementRef ? ref.nativeElement : ref;
+  }
+
+  private usable(el: HTMLElement | null): el is HTMLElement {
+    return !!el && el.isConnected && !(el as HTMLButtonElement).disabled && el !== document.body;
   }
 }

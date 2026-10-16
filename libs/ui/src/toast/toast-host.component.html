@@ -1,0 +1,12 @@
+@if (toast(); as t) {
+  <afi-toast
+    [visible]="true"
+    [message]="t.message"
+    [tone]="t.tone"
+    [showUndo]="t.actionLabel !== null"
+    [undoLabel]="t.actionLabel ?? ''"
+    (undo)="onAction(t)"
+    (dismissed)="service.dismiss(t.id)"
+    (paused)="onPaused($event)"
+  />
+}

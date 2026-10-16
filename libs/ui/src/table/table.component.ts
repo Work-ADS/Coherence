@@ -5,6 +5,7 @@ import {
   effect,
   input,
   isDevMode,
+  untracked,
   output,
   signal,
   TemplateRef,
@@ -120,6 +121,7 @@ export class TableComponent {
   /**
    * Uncontrolled expansion: when set, the table keeps its own open rows, starting from these
    * keys, and ignores `expandedKeys`. `expandedKeysChange` still emits. Use one or the other.
+   * Binding a different array later re-seeds the open rows from it.
    */
   readonly defaultExpandedKeys = input<unknown[] | null>(null);
 
@@ -192,12 +194,19 @@ export class TableComponent {
   readonly treeAnatomy = computed(() => this.treeColumn() != null);
 
   constructor() {
+    // `defaultExpandedKeys` seeds the table's own state whenever it changes; toggles then carry on from there.
+    effect(() => {
+      const initial = this.defaultExpandedKeys();
+      untracked(() => this.innerExpanded.set(initial));
+    });
+
     effect(() => {
       const key = this.treeColumn();
       const cols = this.visibleColumns();
       if (isDevMode() && key != null && cols.length > 0 && !cols.some((c) => c.key === key)) {
+        const hidden = this.columns().some((c) => c.key === key);
         console.warn(
-          `[afi-table] treeColumn "${key}" matches no column key; the hierarchy falls back to the first column.`,
+          `[afi-table] treeColumn "${key}" ${hidden ? 'is a hidden column' : 'matches no column key'}; the hierarchy falls back to the first visible column.`,
         );
       }
     });
@@ -586,6 +595,7 @@ export class TableComponent {
       'afi-table__td',
       align,
       tree ? 'afi-table__td--tree' : '',
+      tree && this.treeIndex() === 0 ? 'afi-table__td--tree-first' : '',
       col.emphasis ? 'afi-table__td--emphasis' : '',
       tone ? `afi-table__td--tone-${tone}` : '',
     ]

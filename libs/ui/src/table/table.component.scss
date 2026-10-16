@@ -635,16 +635,21 @@
 
 .afi-table--tree .afi-table__row--child > .afi-table__td:first-child:not(.afi-table__td--tree),
 .afi-table--tree .afi-table__row--child > .afi-table__td-select + .afi-table__td:not(.afi-table__td--tree) {
-  padding-inline-start: var(--space-md);
+  padding-inline-start: var(--afi-table-first-cell-pad, 0);
 }
 
+// A tree cell's child label sits one step past its parent's label: the parent's padding plus the step.
 .afi-table--tree .afi-table__row--child > .afi-table__td.afi-table__td--tree {
-  padding-inline-start: calc(var(--afi-table-first-cell-pad, var(--space-md)) + var(--dimension-6));
+  padding-inline-start: calc(var(--space-md) + var(--dimension-6));
+}
+
+.afi-table--tree .afi-table__row--child > .afi-table__td.afi-table__td--tree-first {
+  padding-inline-start: calc(var(--afi-table-first-cell-pad, 0) + var(--dimension-6));
 }
 
 // Group row (a row with children): the level-1 roll-up of the rows beneath it, so label and
 // figures read at medium weight in primary ink. Cells that carry their own tone or emphasis keep it.
-.afi-table__row--group > .afi-table__td:not([class*='--tone-']):not(.afi-table__td--emphasis) {
+.afi-table__row--group:not(.afi-table__row--muted):not(.afi-table__row--reference) > .afi-table__td:not([class*='--tone-']):not(.afi-table__td--emphasis) {
   font: var(--table-group-font);
   font-variant-numeric: tabular-nums;
   color: var(--table-group-foreground);

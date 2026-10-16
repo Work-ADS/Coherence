@@ -1,5 +1,8 @@
 <!-- Parent row -->
-@if (!hideHeader()) {
+@if (!hideHeader() && rail()) {
+  <div class="nav-section__divider" role="separator"></div>
+}
+@if (!hideHeader() && !rail()) {
 <button
   type="button"
   class="nav-section__trigger"

@@ -1,0 +1,89 @@
+<site-doc-page-shell
+  title="Sidebar"
+  overline="COMPONENTS"
+  description="Navegación principal. Dos acabados nuevos del Wealth Planner (flush light e inset dark) junto a los originales: filas de 36 px, raíl estrecho y títulos de sección que pasan a ser reglas cuando el panel se contrae."
+  componentName="sidebar"
+>
+  <span slot="breadcrumb">
+    <a routerLink="/componentes">Components</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Sidebar</span>
+  </span>
+
+  <ul slot="use-cases" class="use-cases">
+    <li><span class="use-cases__label">Navegación del planificador</span> — secciones con páginas, una página activa y un botón de contraer.</li>
+    <li><span class="use-cases__label">Panel que se ajusta al texto</span> — en modo <code>static</code> los acabados nuevos miden lo que mide su etiqueta más larga, sin puntos suspensivos.</li>
+    <li><span class="use-cases__label">Raíl</span> — contraído, solo se ven los iconos y los títulos de sección pasan a ser reglas.</li>
+  </ul>
+
+  <div slot="controls" class="controls">
+    <div class="control-group">
+      <span class="control-group__label">Variant</span>
+      <afi-segmented-control
+        [options]="variantOptions"
+        [(value)]="variant"
+        size="sm"
+        ariaLabel="Variant"
+      />
+    </div>
+    <div class="control-group">
+      <span class="control-group__label">Mode</span>
+      <afi-segmented-control
+        [options]="modeOptions"
+        [(value)]="mode"
+        size="sm"
+        ariaLabel="Mode"
+      />
+    </div>
+  </div>
+
+  <div slot="preview" class="preview">
+    <div class="frame" [attr.data-variant]="variant()">
+      <afi-sidebar [variant]="variant()" [mode]="mode()" ariaLabel="Navegación de ejemplo">
+        <span slot="top" class="brand">Wealth Planner</span>
+
+        <afi-nav-section label="Situación actual" [defaultExpanded]="true">
+          <afi-nav-item label="Patrimonio"><afi-icon slot="icon" name="wallet" /></afi-nav-item>
+          <afi-nav-item label="Ingresos y gastos"><afi-icon slot="icon" name="clipboard-list" /></afi-nav-item>
+        </afi-nav-section>
+        <afi-nav-item label="Objetivos" [active]="true"><afi-icon slot="icon" name="target" /></afi-nav-item>
+        <afi-nav-item label="Plan de acción"><afi-icon slot="icon" name="route" /></afi-nav-item>
+        <afi-nav-item label="Optimización del asset allocation"><afi-icon slot="icon" name="flag" /></afi-nav-item>
+        <afi-nav-item label="Informe"><afi-icon slot="icon" name="file-text" /></afi-nav-item>
+      </afi-sidebar>
+    </div>
+  </div>
+
+  <site-doc-tokens slot="tokens" [categories]="tokenCategories" />
+
+  <section slot="accessibility" class="prose-section">
+    <h2 class="prose-section__title">Accessibility</h2>
+    <ul class="prose-section__list">
+      <li>El panel es un <code>&lt;aside&gt;</code> con un <code>&lt;nav aria-label&gt;</code> dentro; el estado abierto o cerrado vive en el botón de contraer (<code>aria-expanded</code>), no en el landmark.</li>
+      <li>La página actual lleva <code>aria-current="page"</code>.</li>
+      <li>El botón de contraer aparece al pasar el puntero y al enfocar con teclado, y sigue siendo enfocable cuando está oculto.</li>
+      <li>Las flechas, Inicio y Fin recorren las filas; los hijos de una sección contraída no reciben foco.</li>
+      <li>Con <code>prefers-reduced-motion</code> las transiciones se anulan.</li>
+    </ul>
+  </section>
+
+  <section slot="dos-donts" class="dos-donts">
+    <h2 class="dos-donts__title">Dos &amp; Don'ts</h2>
+    <div class="dos-donts__grid">
+      <div class="dos-donts__card dos-donts__card--do">
+        <p class="dos-donts__label">Do</p>
+        <ul>
+          <li>Da un icono a cada página: es lo único que se ve en el raíl.</li>
+          <li>Usa <code>mode="static"</code> con los acabados nuevos si el panel debe leerse siempre entero.</li>
+        </ul>
+      </div>
+      <div class="dos-donts__card dos-donts__card--dont">
+        <p class="dos-donts__label">Don't</p>
+        <ul>
+          <li>No pongas iconos en los títulos de sección: son solo texto.</li>
+          <li>No uses el panel como contenedor de acciones: para eso están Button y Menu.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</site-doc-page-shell>

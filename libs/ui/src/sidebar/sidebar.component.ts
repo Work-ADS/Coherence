@@ -2,13 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  forwardRef,
   input,
   output,
   signal,
 } from '@angular/core';
 
+import { IconComponent } from '../icon';
+import { SIDEBAR_CONTEXT } from './sidebar.token';
 import type { SidebarMode, SidebarVariant } from './sidebar.variants';
-import { sidebarWidths } from './sidebar.variants';
+import { planningVariants, sidebarWidths } from './sidebar.variants';
 
 /**
  * Primary navigation sidebar.
@@ -16,10 +19,17 @@ import { sidebarWidths } from './sidebar.variants';
  * Three modes: static (always expanded), collapsible (toggle button),
  * hover-expand (default — expand on hover/focus, collapse on leave).
  * Pin support for hover-expand mode.
+ *
+ * The `flush-light` and `inset-dark` variants carry the Wealth Planner chrome
+ * (compact rows, a narrow rail, section titles that become rules in the rail).
+ * In `static` mode their panel is as wide as its longest label, never narrower
+ * than `--sidebar-nav-width`.
  */
 @Component({
   selector: 'afi-sidebar',
   standalone: true,
+  imports: [IconComponent],
+  providers: [{ provide: SIDEBAR_CONTEXT, useExisting: forwardRef(() => SidebarComponent) }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
@@ -36,8 +46,9 @@ export class SidebarComponent {
   readonly variant = input<SidebarVariant>('neutral');
   readonly expanded = input<boolean | null>(null);
   readonly pinned = input<boolean>(false);
-  readonly ariaLabel = input<string>('Main navigation');
-  readonly width = input<{ collapsed: string; expanded: string }>(sidebarWidths);
+  readonly ariaLabel = input<string>('Navegación principal');
+  /** Overrides the panel widths. Unset: the new variants read the sidebar tokens, the original chrome keeps 64 and 240. */
+  readonly width = input<{ collapsed: string; expanded: string } | null>(null);
 
   readonly expandedChange = output<boolean>();
   readonly pinnedChange = output<boolean>();
@@ -58,9 +69,20 @@ export class SidebarComponent {
     return this.hovered() || this.focused();
   });
 
-  readonly currentWidth = computed(() => {
+  /** Wealth Planner chrome: `flush-light` or `inset-dark`. */
+  readonly isPlanning = computed(() => planningVariants.includes(this.variant()));
+
+  /** The narrow rail of the Wealth Planner chrome. */
+  readonly isRail = computed(() => this.isPlanning() && !this.isExpanded());
+
+  /** `null` lets the stylesheet size the panel (static planning panels fit their labels). */
+  readonly currentWidth = computed<string | null>(() => {
     const w = this.width();
-    return this.isExpanded() ? w.expanded : w.collapsed;
+    const open = this.isExpanded();
+    if (w) return open ? w.expanded : w.collapsed;
+    if (!this.isPlanning()) return open ? sidebarWidths.expanded : sidebarWidths.collapsed;
+    if (!open) return 'var(--sidebar-rail-width)';
+    return this.mode() === 'static' ? null : 'var(--sidebar-nav-width)';
   });
 
   /** For collapsible mode internal state */
@@ -101,7 +123,7 @@ export class SidebarComponent {
     const target = event.target as HTMLElement;
     const items = Array.from(
       (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(
-        'afi-nav-item button:not([disabled])'
+        'afi-nav-item .nav-item:not(:disabled)'
       )
     );
     const idx = items.indexOf(target);

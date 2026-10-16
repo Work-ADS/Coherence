@@ -34,10 +34,9 @@ export const componentes_routes: Routes = [
   { path: 'search', loadComponent: () => import('./search.page').then(m => m.SearchPage) },
   { path: 'multi-select', loadComponent: () => import('./multi-select.page').then(m => m.MultiSelectPage) },
   { path: 'select', loadComponent: () => import('./select.page').then(m => m.SelectPage) },
-  // Sidebar is a pattern (composes Logo + NavSection + NavItem + IconButton +
-  // Select). Lives at /patrones/sidebar-ia-comparison — this route is
-  // preserved as a redirect for old bookmarks and stale cross-references.
-  { path: 'sidebar', redirectTo: '/patrones/sidebar-ia-comparison', pathMatch: 'full' },
+  // The IA exploration still lives at /patrones/sidebar-ia-comparison; the
+  // primitive itself (variants, rail, tokens) is documented here.
+  { path: 'sidebar', loadComponent: () => import('./sidebar.page').then(m => m.SidebarPage) },
   { path: 'nav-section', loadComponent: () => import('./nav-section.page').then(m => m.NavSectionPage) },
   { path: 'menu', loadComponent: () => import('./menu.page').then(m => m.MenuPage) },
   { path: 'table', loadComponent: () => import('./table.page').then(m => m.TablePage) },

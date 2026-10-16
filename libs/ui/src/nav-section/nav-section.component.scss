@@ -115,6 +115,13 @@
   }
 }
 
+/* Rail: the title gives way to a rule marking where a grouping ends. */
+.nav-section__divider {
+  height: var(--border-width-hairline);
+  margin: var(--space-2xs) var(--space-sm);
+  background: var(--sidebar-divider, var(--border-subtle));
+}
+
 /* Collapsible children region */
 .nav-section__children-wrapper {
   display: grid;
@@ -137,6 +144,7 @@
   --nav-item-font: var(--type-body-md-400);
   --nav-item-font-selected: var(--type-body-md-500);
   --nav-item-rule-width: 0;
+  --nav-item-margin-inline: 0;
 }
 
 /* Tree lines */

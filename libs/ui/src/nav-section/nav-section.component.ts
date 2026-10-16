@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 
 import { NavItemComponent } from '../nav-item/nav-item.component';
+import { SIDEBAR_CONTEXT } from '../sidebar/sidebar.token';
 
 let nextId = 0;
 
@@ -51,6 +52,10 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
   readonly parentClicked = output<{ event: MouseEvent }>();
 
   private readonly el = inject(ElementRef);
+  private readonly sidebar = inject(SIDEBAR_CONTEXT, { optional: true });
+
+  /** In the Wealth Planner rail the title becomes a rule and every page stays visible. */
+  readonly rail = computed(() => this.sidebar?.isRail() ?? false);
   private readonly internalExpanded = signal<boolean | null>(null);
   private readonly childItems = contentChildren(NavItemComponent, { descendants: true });
 
@@ -60,7 +65,9 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
     this.childItems().some(item => item.isSelected())
   );
 
-  readonly isExpanded = computed(() => {
+  readonly isExpanded = computed(() => this.rail() || this.openState());
+
+  private readonly openState = computed(() => {
     const explicit = this.expanded();
     if (explicit !== null) return explicit;
 
@@ -123,7 +130,7 @@ export class NavSectionComponent implements AfterViewInit, OnDestroy {
   }
 
   toggle(): void {
-    const next = !this.isExpanded();
+    const next = !this.openState();
     this.internalExpanded.set(next);
     this.expandedChange.emit(next);
   }

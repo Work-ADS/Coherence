@@ -11,7 +11,7 @@
   <!-- Label (hidden when collapsed via parent CSS) -->
   <span
     class="nav-item__label"
-    [class.is-collapsed]="!sidebarExpanded()">
+    [class.is-collapsed]="labelHidden()">
     {{ label() }}
   </span>
 
@@ -47,6 +47,7 @@
     class="nav-item"
     [class.is-active]="isSelected()"
     [class.is-disabled]="disabled()"
+    [class.is-rail]="rail()"
     [attr.href]="disabled() ? null : href()"
     [attr.aria-current]="isSelected() ? 'page' : null"
     [attr.aria-disabled]="disabled() ? 'true' : null"
@@ -63,6 +64,7 @@
     class="nav-item"
     [class.is-active]="isSelected()"
     [class.is-disabled]="disabled()"
+    [class.is-rail]="rail()"
     [attr.aria-current]="isSelected() ? 'page' : null"
     [attr.aria-disabled]="disabled() && reasonShown() ? 'true' : null"
     [attr.aria-describedby]="reasonShown() ? reasonId : null"

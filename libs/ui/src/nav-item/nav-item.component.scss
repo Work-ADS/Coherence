@@ -3,6 +3,7 @@
 :host {
   display: block;
   position: relative;
+  margin-inline: var(--nav-item-margin-inline, 0);
 }
 
 .nav-item {
@@ -61,6 +62,18 @@
     background: var(--nav-item-background-disabled);
     color: var(--nav-item-foreground-disabled);
     cursor: not-allowed;
+  }
+}
+
+.nav-item.is-rail {
+  justify-content: center;
+  gap: 0;
+  padding-inline: 0;
+
+  .nav-item__trail,
+  .nav-item__badge,
+  .nav-item__chevron {
+    display: none;
   }
 }
 
@@ -136,6 +149,7 @@
   transition: opacity var(--duration-fast) var(--easing-standard);
 
   &.is-collapsed {
+    flex: 0 0 0;
     opacity: 0;
     width: 0;
     overflow: hidden;

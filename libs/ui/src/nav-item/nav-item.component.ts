@@ -3,10 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
   HostListener,
 } from '@angular/core';
+
+import { SIDEBAR_CONTEXT } from '../sidebar/sidebar.token';
 
 let nextId = 0;
 
@@ -53,6 +56,13 @@ export class NavItemComponent {
 
   /** Set by parent Sidebar — controls label visibility and tooltip */
   readonly sidebarExpanded = input<boolean>(true);
+
+  private readonly sidebar = inject(SIDEBAR_CONTEXT, { optional: true });
+
+  /** Labels hide when the consumer says the panel is narrow, or in the Wealth Planner rail. */
+  readonly labelHidden = computed(() => !this.sidebarExpanded() || (this.sidebar?.isRail() ?? false));
+  /** The Wealth Planner rail: rows centre on the icon. */
+  readonly rail = computed(() => this.sidebar?.isRail() ?? false);
 
   readonly isSelected = computed(() => this.active() || this.selected());
   readonly reasonShown = computed(() => this.disabled() && !!this.disabledReason());

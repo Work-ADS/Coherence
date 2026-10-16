@@ -29,3 +29,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.header-demo {
+  margin: 0;
+  padding-inline: var(--space-sm);
+  font: var(--type-body-sm-400);
+  color: var(--sidebar-foreground);
+}

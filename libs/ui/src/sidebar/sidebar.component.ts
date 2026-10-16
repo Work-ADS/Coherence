@@ -16,7 +16,7 @@ import {
 import { AvatarComponent } from '../avatar';
 import { IconComponent } from '../icon';
 import { TooltipComponent } from '../tooltip';
-import { SIDEBAR_CONTEXT } from './sidebar.token';
+import { DEFAULT_DOT_LABEL, SIDEBAR_CONTEXT } from './sidebar.token';
 import type {
   SidebarExpandMotion,
   SidebarMode,
@@ -64,7 +64,7 @@ export class SidebarComponent {
    * accessible name and shown, capitalised, in its tooltip. A nav item's own
    * `dotLabel` wins.
    */
-  readonly dotLabel = input<string>('pendiente de revisión');
+  readonly dotLabel = input<string>(DEFAULT_DOT_LABEL);
   /** Brand logotype, shown expanded. `[slot=top]` still works for a custom brand. */
   readonly logoSrc = input<string | null>(null);
   readonly logoAlt = input<string>('Afi');
@@ -98,8 +98,10 @@ export class SidebarComponent {
   readonly pinnedChange = output<boolean>();
 
   constructor() {
-    // The reveal animates a width that `max-content` cannot interpolate, so the panel is measured
-    // once after render (the only DOM read here) and animated between the two measurements.
+    // The reveal animates a width that `max-content` cannot interpolate, so after render this
+    // reads the panel's width (offsetWidth), the motion tokens (getComputedStyle) and the
+    // reduced-motion preference (matchMedia), then writes one Web Animations animation between
+    // the two widths. Imperative on purpose: a template binding cannot animate to a measured size.
     afterRenderEffect(() => {
       const el = this.panel()?.nativeElement;
       const open = this.isExpanded();
@@ -126,7 +128,11 @@ export class SidebarComponent {
       );
       this.revealing.set(true);
       if (this.revealTimer) clearTimeout(this.revealTimer);
-      this.revealTimer = setTimeout(() => this.revealing.set(false), duration + 150);
+      // The nav fade starts after --duration-fast and runs --duration-base: keep the class until it ends.
+      const fade =
+        (parseFloat(style.getPropertyValue('--duration-fast')) || 0) +
+        (parseFloat(style.getPropertyValue('--duration-base')) || 0);
+      this.revealTimer = setTimeout(() => this.revealing.set(false), Math.max(duration, fade));
     });
     this.destroyRef.onDestroy(() => {
       if (this.revealTimer) clearTimeout(this.revealTimer);

@@ -15,3 +15,6 @@ export interface SidebarContext {
 }
 
 export const SIDEBAR_CONTEXT = new InjectionToken<SidebarContext>('SIDEBAR_CONTEXT');
+
+/** Default wording of a row's status dot. */
+export const DEFAULT_DOT_LABEL = 'pendiente de revisión';

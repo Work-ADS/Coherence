@@ -17,7 +17,7 @@
         <img class="sidebar__mark" [src]="mark" [alt]="logoMarkAlt()" />
       }
     } @else if (logoSrc(); as logo) {
-      <span class="sidebar__lockup">
+      <span class="sidebar__lockup" [class.sidebar__lockup--named]="!!product()">
         <img class="sidebar__logo" [src]="logo" [alt]="logoAlt()" />
         @if (product(); as name) {
           <span class="sidebar__product">{{ name }}</span>

@@ -256,9 +256,14 @@
 
   .sidebar__logo {
     display: block;
-    height: var(--dimension-5-5);
+    height: var(--sidebar-logo-height);
     width: auto;
     flex: none;
+  }
+
+  // Beside a product name the logotype steps down so the pair still fits the panel.
+  .sidebar__lockup--named .sidebar__logo {
+    height: var(--sidebar-wordmark-height);
   }
 
   .sidebar__product {
@@ -270,19 +275,20 @@
 
   .sidebar__mark {
     display: block;
-    height: calc(var(--sidebar-logo-height) * 0.62);
+    height: var(--sidebar-mark-height);
     width: auto;
     transition: opacity var(--duration-fast) var(--easing-enter);
   }
 
-  // The mark gives way to the toggle on hover, and for KEYBOARD focus only: after a mouse click
-  // on the toggle it returns as soon as the pointer leaves. Two rules, so a browser without :has
+  // The mark gives way to the toggle on hover, and when the TOGGLE has keyboard focus: after a
+  // mouse click on it the mark returns as soon as the pointer leaves, and arrowing through the
+  // rows leaves the mark alone. Two rules, so a browser without :has
   // still gets the hover one.
   &.sidebar--rail:hover .sidebar__mark {
     opacity: 0;
   }
 
-  &.sidebar--rail:has(:focus-visible) .sidebar__mark {
+  &.sidebar--rail:has(.sidebar__toggle:focus-visible) .sidebar__mark {
     opacity: 0;
   }
 

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 import { NAV_SECTION_CONTEXT } from '../nav-section/nav-section.token';
-import { SIDEBAR_CONTEXT } from '../sidebar/sidebar.token';
+import { DEFAULT_DOT_LABEL, SIDEBAR_CONTEXT } from '../sidebar/sidebar.token';
 import { TooltipComponent } from '../tooltip';
 
 let nextId = 0;
@@ -76,7 +76,7 @@ export class NavItemComponent {
   readonly reasonId = `nav-item-reason-${nextId++}`;
 
   private readonly dotText = computed(
-    () => this.dotLabel()?.trim() || this.sidebar?.dotLabel() || 'pendiente de revisión',
+    () => this.dotLabel()?.trim() || this.sidebar?.dotLabel() || DEFAULT_DOT_LABEL,
   );
 
   /** In the rail the section name comes along: the icon is all the label there is. */

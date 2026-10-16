@@ -77,7 +77,9 @@
   --sidebar-rail-width:          var(--dimension-18);    // 72px collapsed
   --sidebar-padding-x:           var(--space-sm);        // 12px
   --sidebar-brand-padding-end:   var(--space-sm);
-  --sidebar-logo-height:         var(--dimension-8);     // 32px
+  --sidebar-logo-height:         var(--dimension-8);     // 32px, logotype alone
+  --sidebar-wordmark-height:     var(--dimension-5-5);   // 22px, logotype beside a product name
+  --sidebar-mark-height:         var(--dimension-5);     // 20px, rail mark
   --sidebar-icon-size:           var(--icon-xs);         // 12px
   --sidebar-toggle-icon-size:    var(--dimension-3-5);   // 14px
   --sidebar-brand-height:        var(--layout-shell-header);

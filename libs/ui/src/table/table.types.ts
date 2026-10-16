@@ -41,7 +41,9 @@ export type TableRowActionIcon =
   | 'delete'
   | 'more'
   | 'duplicate'
-  | 'archive';
+  | 'archive'
+  // Any other name is an `afi-icon` from the icon set (the five above keep their inline artwork).
+  | (string & {});
 
 export interface TableColumn {
   key: string;
@@ -87,6 +89,8 @@ export interface TableRowAction {
   icon?: TableRowActionIcon;
   ariaLabel?: string;
   variant?: TableRowActionVariant;
+  /** The action is shown but cannot be used: its button (or menu item) is disabled and a click is ignored. */
+  disabled?: boolean;
   /**
    * When true, the action does NOT render as an inline button. Instead it
    * appears inside the overflow `⋯` menu (rendered via `<afi-menu>`) at

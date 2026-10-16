@@ -514,7 +514,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--dimension-7);
+  min-height: var(--table-action-target);
   padding-block: var(--space-2xs);
   padding-inline: var(--space-sm);
   border: 0;
@@ -548,14 +548,26 @@
 
   // Icon-only action — square footprint, icon centered.
   &--icon {
-    min-width: var(--dimension-7);
+    min-width: var(--table-action-target);
     padding-inline: var(--space-2xs);
+  }
+
+  // The action exists but cannot be used.
+  &:disabled {
+    color: var(--disabled-foreground);
+    cursor: not-allowed;
+
+    &:hover {
+      background: transparent;
+      color: var(--disabled-foreground);
+    }
   }
 }
 
 .afi-table__action-icon {
-  width: var(--dimension-4);
-  height: var(--dimension-4);
+  --afi-icon-size: var(--table-action-icon-size);
+  width: var(--table-action-icon-size);
+  height: var(--table-action-icon-size);
   display: block;
 }
 
@@ -728,4 +740,51 @@
   50% {
     opacity: 0.55;
   }
+}
+
+// ─── Planning appearance ──────────────────────────────────────────────────
+// Opt-in (`appearance="planning"`). The table points its own --table-* roles at the planning set, so every
+// rule above (header, cell, group, child, footer) follows without a second copy. Row height belongs to the
+// appearance: a fixed minimum with balanced block padding; density still sets the inline padding.
+.afi-table--planning {
+  --table-header-font: var(--table-planning-header-font);
+  --table-header-foreground: var(--table-planning-header-foreground);
+  --table-header-divider: var(--table-planning-divider);
+  --table-cell-font: var(--table-planning-cell-font);
+  --table-cell-foreground: var(--table-planning-cell-foreground);
+  --table-group-font: var(--table-planning-group-font);
+  --table-group-foreground: var(--table-planning-group-foreground);
+  --table-child-foreground: var(--table-planning-child-foreground);
+  --table-footer-font: var(--table-planning-footer-font);
+  --table-footer-foreground: var(--table-planning-footer-foreground);
+}
+
+.afi-table--planning .afi-table__row .afi-table__td,
+.afi-table--planning .afi-table__row .afi-table__td-select,
+.afi-table--planning .afi-table__row .afi-table__td-actions {
+  box-sizing: border-box;
+  height: var(--table-planning-row-min-height);
+  padding-block: var(--table-planning-cell-padding-block);
+}
+
+// Headers may wrap; bottom-aligned so a one-line label shares the last line of a wrapped neighbour.
+.afi-table--planning .afi-table__th {
+  white-space: normal;
+  vertical-align: bottom;
+  text-wrap: pretty;
+}
+
+.afi-table--planning .afi-table__th--end,
+.afi-table--planning .afi-table__td--end {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.afi-table--planning .afi-table__th-label {
+  align-items: flex-end;
+}
+
+// Totals: one hairline above, like every other row boundary in this appearance.
+.afi-table--planning .afi-table__foot-cell {
+  border-block-start: var(--border-width-hairline) solid var(--table-planning-footer-divider);
 }

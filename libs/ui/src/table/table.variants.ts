@@ -8,6 +8,13 @@
 export type TableDensity = 'compact' | 'default' | 'comfortable';
 
 /**
+ * The table's register. `planning` is the planning-table look: Roboto 400 at 15/20 in the cells, wrapping
+ * 14/20 headers, 48px minimum rows, a hairline above the totals row. Density still sets the horizontal
+ * padding. Opt-in; `default` is unchanged.
+ */
+export type TableAppearance = 'default' | 'planning';
+
+/**
  * When a row shows the hover fill.
  *
  * - `on` — always (the default, so existing tables do not move).

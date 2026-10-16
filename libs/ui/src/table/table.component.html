@@ -134,6 +134,7 @@
           <tr
             [class]="rowClasses(isSelected(row), isHighlighted(row), !!isChild, isMuted(row), isReference(row), isMixed(row), hasChildren(row) && !isChild)"
             [attr.data-row-key]="row[trackByKey()]"
+            (animationend)="onRowAnimationEnd(row, $event)"
             [attr.tabindex]="!isReference(row) && ((!isChild && hasExpansion(row)) || (selectOnRowClick() && selectable() && !isChild)) ? 0 : null"
             (click)="onRowClick(row, $event)"
             (keydown)="onRowKeydown(row, $event)"
@@ -189,9 +190,12 @@
                       type="button"
                       [class]="actionClasses(action)"
                       [attr.aria-label]="action.ariaLabel ?? action.label"
+                      [disabled]="action.disabled"
                       (click)="onRowAction(action, row, $event)"
                     >
-                      @if (action.icon) {
+                      @if (action.icon && !isBuiltinIcon(action.icon)) {
+                        <afi-icon class="afi-table__action-icon" [name]="$any(action.icon)" />
+                      } @else if (action.icon) {
                         <svg
                           class="afi-table__action-icon"
                           width="16"
@@ -278,6 +282,7 @@
                         @for (action of overflowStandardActionsFor(row); track action.key) {
                           <afi-menu-item
                             [label]="action.label"
+                            [disabled]="!!action.disabled"
                             variant="default"
                             (clicked)="onOverflowAction(action, row, $event.event)"
                           />
@@ -288,6 +293,7 @@
                         @for (action of overflowDangerActionsFor(row); track action.key) {
                           <afi-menu-item
                             [label]="action.label"
+                            [disabled]="!!action.disabled"
                             variant="danger"
                             (clicked)="onOverflowAction(action, row, $event.event)"
                           />

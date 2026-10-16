@@ -110,6 +110,7 @@ export type {
   TableSortState,
   TableDensity,
   TableHover,
+  TableAppearance,
   TableSelectionMode,
 } from './src/table';
 export { DrawerComponent } from './src/drawer';

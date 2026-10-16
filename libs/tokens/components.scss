@@ -104,7 +104,7 @@
   // No header fill: a column header inherits whatever the container is painted,
   // so the same table reads on the canvas, in a card and in a modal. Header and
   // cells share one size; separation is weight and ink, plus the hairline.
-  // Action and planning roles join with their slice (5f-5).
+
   --table-header-font:       var(--type-body-sm-600);
   --table-header-foreground: var(--foreground-tertiary-default);
   --table-header-divider:    var(--border-subtle);
@@ -118,8 +118,27 @@
   // Totals row: same size as every other cell; emphasis is weight, primary ink and the thick rule above.
   --table-footer-font:       var(--type-body-sm-600);
   --table-footer-foreground: var(--foreground-primary-default);
+  // Row actions: an icon-only action is a control, not an ornament, so its target is larger than the glyph.
+  --table-action-target:     var(--control-size-lg);   // 32px
+  --table-action-icon-size:  var(--icon-md);           // 20px
   // Neutral (untinted) row hover.
   --table-row-background-hover: var(--color-afi-control-100);
+
+  // Planning appearance (`appearance="planning"`): the planning-table register. The table points its own
+  // --table-* roles at these, so nothing outside .afi-table--planning moves.
+  --table-planning-header-font:        400 14px/20px var(--font-family-sans);
+  --table-planning-header-foreground:  var(--foreground-secondary-default);
+  --table-planning-cell-font:          400 15px/20px var(--font-family-sans);
+  --table-planning-cell-foreground:    var(--foreground-primary-default);
+  --table-planning-group-font:         400 15px/20px var(--font-family-sans);
+  --table-planning-group-foreground:   var(--foreground-primary-default);
+  --table-planning-child-foreground:   var(--foreground-secondary-default);
+  --table-planning-footer-font:        400 15px/20px var(--font-family-sans);
+  --table-planning-footer-foreground:  var(--foreground-primary-default);
+  --table-planning-divider:            var(--border-subtle);
+  --table-planning-footer-divider:     var(--border-default);
+  --table-planning-row-min-height:     var(--dimension-12);   // 48px
+  --table-planning-cell-padding-block: var(--space-xs);
 
 
   // ===========================================================================

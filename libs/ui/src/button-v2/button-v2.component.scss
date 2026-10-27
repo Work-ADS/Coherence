@@ -1,11 +1,12 @@
 // afi-button-v2 — identity v2 (foundations-modern tokens only).
 //
-// Layering mirrors the Figma anatomy (Button set 2383:5319):
-//   host background-color = variable-bound base fill (transitions on hover)
-//   ::before (z-index -1)  = face gradient overlay, under the content
-//   ::after  (over content)= effect-style layer: raised / pressed inner shadows
-// Effect-style values live in libs/tokens/foundations-modern/component-button.scss
-// because they cannot be Figma variables (and raw values are banned here).
+// FLAT: no sheen, no raised/pressed depth. Layering:
+//   host background-color = variable-bound base fill (transitions on hover/press)
+//   ::after (over content) = the neutral outline for the secondary variant only
+//                            (--button-raised-neutral / --button-pressed-secondary;
+//                            every other variant resolves to `none`).
+// States are pure base-fill swaps. Values live in
+// libs/tokens/foundations-modern/component-button.scss.
 //
 // Touch targets: all sizes are dense-desktop opt-outs per accessibility.md —
 // heights follow --height-component-* (below the AAA target). Consumers on
@@ -32,18 +33,7 @@
     background-color var(--motion-duration-fast) var(--motion-easing-standard),
     color var(--motion-duration-fast) var(--motion-easing-standard);
 
-  // Face gradient — sits above the host background, below the label/icons.
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    pointer-events: none;
-    transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
-  }
-
-  // Effect-style layer — Figma draws raised/pressed shadows above the content.
+  // Outline layer — drawn above the content; empty for every variant except secondary.
   &::after {
     content: '';
     position: absolute;
@@ -53,25 +43,8 @@
     transition: box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
   }
 
-  // Press nudge — the label + icons sink one hairline step (--dimension-0-25)
-  // into the surface on press, pairing with the inset pressed shadow so the
-  // button reads as physically depressed. Container-first would move the whole
-  // box; here we deliberately move only the content for the "inset" feel
-  // Richard specified. Pseudo-elements (::before/::after) are not children, so
-  // they stay put. NB: `> *` is scoped to this component's content attribute
-  // under Emulated encapsulation, so it only reaches template-owned children —
-  // which is why the icons live in `.btn-v2__icon` wrappers (below) rather than
-  // projecting as bare slotted siblings that the nudge would miss.
-  & > * {
-    transition: transform var(--motion-duration-fast) var(--motion-easing-standard);
-  }
-
-  &:active:not(:disabled) > * {
-    transform: translateY(var(--dimension-0-25));
-  }
-
-  // Icon slot wrappers — template-owned so the press nudge reaches the projected
-  // icon inside them. Collapsed when no icon is projected so an empty wrapper
+  // Icon slot wrappers — template-owned wrappers around the projected
+  // icons. Collapsed when no icon is projected so an empty wrapper
   // never adds a phantom flex gap around a text-only button.
   &__icon {
     display: inline-flex;
@@ -127,12 +100,8 @@
     background-color: var(--brand-background-default);
     color: var(--content-inverse);
 
-    &::before {
-      background: var(--button-sheen);
-    }
-
     &::after {
-      box-shadow: var(--button-raised-primary); // Elevation/Raised
+      box-shadow: var(--button-raised-primary); // none (flat)
     }
 
     &:hover:not(:disabled) {
@@ -142,12 +111,9 @@
     &:active:not(:disabled) {
       background-color: var(--brand-background-pressed);
 
-      &::before {
-        opacity: 0;
-      }
 
       &::after {
-        box-shadow: var(--button-pressed-primary); // Elevation/pressed
+        box-shadow: var(--button-pressed-primary); // none (flat)
       }
     }
   }
@@ -158,7 +124,7 @@
     color: var(--content-primary);
 
     &::after {
-      box-shadow: var(--button-raised-neutral); // Elevation/Raised-Neutral
+      box-shadow: var(--button-raised-neutral); // flat outline
     }
 
     &:hover:not(:disabled) {
@@ -169,7 +135,7 @@
       background-color: var(--control-background-active);
 
       &::after {
-        box-shadow: var(--button-pressed-secondary); // Elevation/pressed/secondary
+        box-shadow: var(--button-pressed-secondary); // flat outline
       }
     }
   }
@@ -189,20 +155,13 @@
   }
 
   // ── Destructive ────────────────────────────────────────────────────────────
-  // Built on the same recipe as Primary: translucent shared sheen (::before)
-  // over a variable-bound base fill, so hover is a pure base swap (700 → 500).
-  // Replaces the old opaque Figma face gradient, which hid the base swap and
-  // made Figma's hover render identical to default (2026-07-13 decision).
+  // Variable-bound base fill; hover and press are pure base swaps (700 → 500 → 900).
   &--destructive {
     background-color: var(--button-destructive-background);
     color: var(--content-inverse);
 
-    &::before {
-      background: var(--button-sheen);
-    }
-
     &::after {
-      box-shadow: var(--button-raised-danger); // Elevation/Raised-Danger
+      box-shadow: var(--button-raised-danger); // none (flat)
     }
 
     &:hover:not(:disabled) {
@@ -212,9 +171,6 @@
     &:active:not(:disabled) {
       background-color: var(--button-destructive-pressed-background);
 
-      &::before {
-        opacity: 0;
-      }
 
       &::after {
         box-shadow: none;
@@ -226,10 +182,6 @@
   &:disabled:not(.btn-v2--loading) {
     background-color: var(--disabled-background);
     color: var(--disabled-content);
-
-    &::before {
-      opacity: 0;
-    }
 
     &::after {
       box-shadow: none;
@@ -281,7 +233,6 @@
 // spinner keeps communicating the loading state, slowed down.
 @media (prefers-reduced-motion: reduce) {
   .btn-v2,
-  .btn-v2::before,
   .btn-v2::after {
     transition: none;
   }
